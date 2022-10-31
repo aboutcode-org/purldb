@@ -7,10 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
-from collections import OrderedDict
 from functools import wraps
 import inspect
 import re
@@ -108,7 +105,7 @@ class Router(object):
         """
         'route_map' is an ordered mapping of pattern -> Rule.
         """
-        self.route_map = route_map or OrderedDict()
+        self.route_map = route_map or dict()
         # lazy cached pre-compiled regex match() for all route patterns
         self._is_routable = None
 

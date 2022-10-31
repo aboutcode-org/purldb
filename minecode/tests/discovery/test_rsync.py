@@ -7,9 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-# from __future__ import unicode_literals
-
+# 
 from unittest import skipIf
 import os
 

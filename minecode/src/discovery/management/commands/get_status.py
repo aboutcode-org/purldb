@@ -7,11 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from __future__ import print_function
 
-from collections import OrderedDict
 import json
 import logging
 import sys
@@ -30,7 +26,7 @@ class Command(BaseCommand):
     help = 'Print status information for the minecode system.'
 
     def handle(self, *args, **options):
-        counts = OrderedDict([
+        counts = dict([
             ('total_packages', Package.objects.count()),
             ('total_uri', ResourceURI.objects.count()),
             ('unique_uri', ResourceURI.objects.distinct().count()),

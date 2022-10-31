@@ -7,12 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from __future__ import print_function
 
-from collections import OrderedDict
-import json
 import logging
 import sys
 

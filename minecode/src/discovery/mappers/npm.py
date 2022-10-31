@@ -7,14 +7,10 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import json
 import logging
 
-from collections import OrderedDict
 
 from packagedcode.npm import NpmPackageJsonHandler
 
@@ -44,7 +40,7 @@ class NpmPackageMapper(Mapper):
         """
         if not resource_uri.data:
             return
-        visited_data = json.loads(resource_uri.data, object_pairs_hook=OrderedDict)
+        visited_data = json.loads(resource_uri.data)
         return build_packages(visited_data)
 
 

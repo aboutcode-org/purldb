@@ -9,8 +9,6 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 import unittest
 from unittest.case import expectedFailure

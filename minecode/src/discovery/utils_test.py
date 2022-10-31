@@ -7,11 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
-from collections import OrderedDict
 from itertools import chain
 from unittest import TestCase
 import codecs
@@ -235,7 +231,7 @@ class JsonBasedTesting(FileBasedTesting):
         Regen the expected JSON if `regen` is True.
         """
         if isinstance(results, str):
-            results = json.loads(results, object_pairs_hook=OrderedDict)
+            results = json.loads(results)
 
         results = self._normalize_package_uids(results)
 
@@ -244,9 +240,9 @@ class JsonBasedTesting(FileBasedTesting):
                 json.dump(results, expect, indent=2, separators=(',', ':'))
 
         with codecs.open(expected_loc, mode='rb', encoding='utf-8') as expect:
-            expected = json.load(expect, object_pairs_hook=OrderedDict)
+            expected = json.load(expect)
 
-        results = json.loads(json.dumps(results), object_pairs_hook=OrderedDict)
+        results = json.loads(json.dumps(results))
         self.assertEqual(expected, results)
 
     def check_expected_uris(self, uris, expected_loc, data_is_json=False, regen=False):
@@ -273,7 +269,7 @@ def model_to_dict(instance, fields=None, exclude=None):
     license: bsd-new
     see ABOUT file for details
 
-    Returns an OrderedDict containing the data in ``instance``.
+    Return a mapping containing the data in ``instance``.
 
     ``fields`` is an optional list of field names. If provided, only the
     named fields will be included in the returned dict.
@@ -286,7 +282,7 @@ def model_to_dict(instance, fields=None, exclude=None):
     to a boolean value to abstract test results from dates.
     """
     opts = instance._meta
-    data = OrderedDict()
+    data = dict()
     for f in chain(opts.concrete_fields, opts.private_fields, opts.many_to_many):
         if not getattr(f, 'editable', False):
             continue

@@ -7,10 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
-from collections import OrderedDict
 from functools import total_ordering
 import gzip
 import json
@@ -95,11 +92,11 @@ class URI(object):
         Return an ordered seralization of self.
         Treat data as JSON if `data_is_json` is True
         """
-        ordered_dict = OrderedDict()
+        ordered_dict = dict()
         for k in self.__slots__:
             value = getattr(self, k)
             if value and data_is_json and k == 'data':
-                value = json.loads(value, object_pairs_hook=OrderedDict)
+                value = json.loads(value)
             ordered_dict[k] = value
         return ordered_dict
 
@@ -243,7 +240,7 @@ class HttpJsonVisitor(HttpVisitor):
         return json.dumps(content)
 
     def loads(self, content):
-        return json.loads(content, object_pairs_hook=OrderedDict)
+        return json.loads(content)
 
 
 """

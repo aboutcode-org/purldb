@@ -7,10 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import print_function
 
-from collections import OrderedDict
 from functools import partial
 
 import yaml
@@ -108,10 +105,10 @@ SaneLoader.add_constructor(u'tag:yaml.org,2002:null', string_loader)
 
 def ordered_loader(loader, node):
     """
-    Ensure that YAML maps ordered is preserved and loaded in an OrderedDict.
+    Ensure that YAML maps ordered is preserved and loaded in an dict now always ordered
     """
     assert isinstance(node, yaml.MappingNode)
-    omap = OrderedDict()
+    omap = dict()
     yield omap
 
     for key, value in node.value:
@@ -149,7 +146,7 @@ def ordered_dumper(dumper, data):
     return dumper.represent_mapping(u'tag:yaml.org,2002:map', data.items())
 
 
-SaneDumper.add_representer(OrderedDict, ordered_dumper)
+SaneDumper.add_representer(dict, ordered_dumper)
 
 
 def null_dumper(dumper, value):

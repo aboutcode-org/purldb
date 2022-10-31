@@ -7,11 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
-from collections import OrderedDict
 import codecs
 import json
 import os
@@ -68,7 +64,7 @@ class TestNPMMapper(JsonBasedTesting):
 
     def test_build_packages(self):
         with open(self.get_test_loc('npm/0flux.json')) as npm_metadata:
-            metadata = json.load(npm_metadata, object_pairs_hook=OrderedDict)
+            metadata = json.load(npm_metadata)
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/0flux_npm_expected.json')
@@ -76,7 +72,7 @@ class TestNPMMapper(JsonBasedTesting):
 
     def test_build_package2(self):
         with open(self.get_test_loc('npm/2112.json')) as npm_metadata:
-            metadata = json.load(npm_metadata, object_pairs_hook=OrderedDict)
+            metadata = json.load(npm_metadata)
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/npm_2112_expected.json')
@@ -84,7 +80,7 @@ class TestNPMMapper(JsonBasedTesting):
 
     def test_build_package3(self):
         with open(self.get_test_loc('npm/microdata.json')) as npm_metadata:
-            metadata = json.load(npm_metadata, object_pairs_hook=OrderedDict)
+            metadata = json.load(npm_metadata)
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/microdata-node_expected.json')
@@ -100,14 +96,14 @@ class TestNPMMapper(JsonBasedTesting):
         assert len(uris_list) == 1001
         # Randomly pick a record from 0-1000
         metadata = uris_list[29].data
-        packages = mappers.npm.build_packages(json.loads(metadata, object_pairs_hook=OrderedDict))
+        packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/29_record_expected.json')
         self.check_expected_results(packages, expected_loc, regen=False)
 
         # Randomly pick a record from 0-1000
         metadata = uris_list[554].data
-        packages = mappers.npm.build_packages(json.loads(metadata, object_pairs_hook=OrderedDict))
+        packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/554_record_expected.json')
         self.check_expected_results(packages, expected_loc, regen=False)
@@ -123,7 +119,7 @@ class TestNPMMapper(JsonBasedTesting):
         # Pickup the first one,  since it's the one which is the problem package "angular2-autosize"
         # The zero element in json is the url for next visitor use, and data is empty and the url is
         metadata = uris_list[1].data
-        packages = mappers.npm.build_packages(json.loads(metadata, object_pairs_hook=OrderedDict))
+        packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/expected_ticket_439.json')
         self.check_expected_results(packages, expected_loc, regen=False)
@@ -139,7 +135,7 @@ class TestNPMMapper(JsonBasedTesting):
         # Pickup the index one instead of zero,  since it's the one which is the problem package "npm-research", https://registry.npmjs.org/npm-research,
         # The zero element in json is the url for next visitor use only
         metadata = uris_list[1].data
-        packages = mappers.npm.build_packages(json.loads(metadata, object_pairs_hook=OrderedDict))
+        packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/expected_ticket_440.json')
         self.check_expected_results(packages, expected_loc, regen=False)
@@ -160,7 +156,7 @@ class TestNPMMapper(JsonBasedTesting):
 
     def test_build_package_for_jsonp_filter(self):
         with open(self.get_test_loc('npm/jsonp-filter.json')) as npm_metadata:
-            metadata = json.load(npm_metadata, object_pairs_hook=OrderedDict)
+            metadata = json.load(npm_metadata)
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/jsonp-filter-expected.json')

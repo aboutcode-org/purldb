@@ -7,9 +7,6 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from __future__ import print_function
 
 import logging
 import signal
@@ -372,10 +369,9 @@ def merge_packages(existing_package, new_package_data, replace=False):
 
     # FIXME REMOVE this workaround when a ScanCode bug fixed with
     # https://github.com/nexB/scancode-toolkit/commit/9b687e6f9bbb695a10030a81be7b93c8b1d816c2
-    # https://github.com/nexB/minecode/issues/405
     qualifiers = new_package_data.get('qualifiers')
     if isinstance(qualifiers, dict):
-        # somehow we get an OrderedDict on the new value instead of a string
+        # somehow we get an dict on the new value instead of a string
         # this not likely the best place to fix this
         new_package_data['qualifiers'] = normalize_qualifiers(qualifiers, encode=True)
 

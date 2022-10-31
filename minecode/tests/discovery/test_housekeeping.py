@@ -7,11 +7,6 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from __future__ import print_function
-
-from collections import OrderedDict
 import codecs
 import json
 import os
@@ -47,9 +42,9 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
                 json.dump(results, expect, indent=2, separators=(',', ': '))
 
         with codecs.open(expected_loc, mode='rb', encoding='utf-8') as expect:
-            expected = json.load(expect, object_pairs_hook=OrderedDict)
+            expected = json.load(expect)
 
-        self.assertEqual(expected, results)
+        assert results == expected
 
     def test_find_ambiguous_packages_declared_license(self):
         packagedb.models.Package.objects.create(
@@ -59,7 +54,6 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
             type='maven'
         )
         packages = [p.to_dict() for p in find_ambiguous_packages()]
-
         expected_loc = self.get_test_loc('housekeeping/declared_license_search_expected.json')
         self.check_expected_package_results(packages, expected_loc, regen=False)
 

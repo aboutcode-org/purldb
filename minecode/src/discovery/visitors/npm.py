@@ -7,11 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
-from collections import OrderedDict
 import logging
 import json
 
@@ -59,7 +55,7 @@ class NpmRegistryVisitor(NonPersistentHttpVisitor):
 
         json_location = content
         with open(json_location) as c:
-            content = json.loads(c.read(), object_pairs_hook=OrderedDict)
+            content = json.loads(c.read())
 
         try:
             last_seq = content['last_seq']
