@@ -28,7 +28,7 @@ CLI_ARGS=$1
 ################################
 
 # Requirement arguments passed to pip and used by default or with --dev.
-REQUIREMENTS="--editable . --editable ../packagedb --constraint requirements.txt"
+REQUIREMENTS="--editable ../packagedb --editable . --constraint requirements.txt https://github.com/nexB/scancode-toolkit/archive/c108206fb4300d7f6655b3ea6125c6d1f0ebf6db.zip"
 DEV_REQUIREMENTS="--editable .[testing] --editable ../packagedb[testing] --constraint requirements.txt --constraint requirements-dev.txt"
 DOCS_REQUIREMENTS="--editable .[docs] --constraint requirements.txt"
 

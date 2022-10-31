@@ -46,7 +46,6 @@ MarkupSafe==2.1.1
 more-itertools==9.0.0
 natsort==8.2.0
 normality==2.4.0
-packagedb==1.2.4
 packageurl-python==0.10.4
 packaging==21.3
 parameter-expansion-patched==0.3.1
@@ -77,7 +76,7 @@ reppy2==0.3.6
 requests==2.28.1
 rubymarshal==1.0.3
 saneyaml==0.5.2
-scancode-toolkit==31.2.1
+scancode-toolkit
 setuptools==65.3.0
 six==1.16.0
 soupsieve==2.3.2.post1
