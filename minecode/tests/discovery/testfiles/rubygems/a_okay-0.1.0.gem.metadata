@@ -1,0 +1,64 @@
+--- !ruby/object:Gem::Specification 
+name: a_okay
+version: !ruby/object:Gem::Version 
+  version: 0.1.0
+platform: ruby
+authors: 
+- Richard Hart
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2009-11-15 00:00:00 +00:00
+default_executable: 
+dependencies: []
+
+description: A simple controller that just returns if everything is 'a okay'!
+email: richard@ur-ban.com
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- README.rdoc
+files: 
+- README.rdoc
+- Rakefile
+- VERSION
+- a_okay.gemspec
+- app/controllers/a_okay_controller.rb
+- config/routes.rb
+- lib/a_okay.rb
+- test/controllers/a_okay_controller_test.rb
+- test/test_helper.rb
+has_rdoc: true
+homepage: http://github.com/hates/a_okay
+licenses: []
+
+post_install_message: 
+rdoc_options: 
+- --charset=UTF-8
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+requirements: []
+
+rubyforge_project: 
+rubygems_version: 1.3.5
+signing_key: 
+specification_version: 3
+summary: A simple controller that just returns if everything is 'a okay'!
+test_files: 
+- test/controllers/a_okay_controller_test.rb
+- test/test_helper.rb

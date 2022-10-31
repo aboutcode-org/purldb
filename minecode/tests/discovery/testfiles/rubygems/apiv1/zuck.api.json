@@ -1,0 +1,230 @@
+[
+  {
+    "requirements": [], 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2015-09-22T00:00:00.000Z", 
+    "created_at": "2015-09-22T12:08:40.621Z", 
+    "downloads_count": 1516, 
+    "number": "3.0.0", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": ">= 0", 
+    "sha": "472980d6c7b305c37d3921ea1b99244ee68f87366086d6e5d0e245cbaca4c9bc", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }, 
+  {
+    "requirements": [], 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2015-04-15T00:00:00.000Z", 
+    "created_at": "2015-04-15T10:43:08.895Z", 
+    "downloads_count": 920, 
+    "number": "2.1.0", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": ">= 0", 
+    "sha": "faefaa6deab6b397b019ec221b513514ce667e19fb2261b28e9719096859694b", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }, 
+  {
+    "requirements": [], 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2015-01-09T00:00:00.000Z", 
+    "created_at": "2015-01-09T14:18:16.618Z", 
+    "downloads_count": 814, 
+    "number": "2.0.0", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": ">= 0", 
+    "sha": "d93f2edf98bd154706d1346ac3450976a650da2dd031036456a39249083ae41d", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }, 
+  {
+    "requirements": [], 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2014-04-23T00:00:00.000Z", 
+    "created_at": "2014-04-23T13:49:01.548Z", 
+    "downloads_count": 1119, 
+    "number": "1.0.0", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": ">= 0", 
+    "sha": "ea853e795254db9e31710ac76d18534388ebbc2e1d19cd6435f820b4031d0827", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }, 
+  {
+    "requirements": [], 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2013-09-13T00:00:00.000Z", 
+    "created_at": "2013-09-13T09:13:09.928Z", 
+    "downloads_count": 1708, 
+    "number": "0.2.0", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": null, 
+    "sha": "afcffc931857caec18cbe610f039d310ed2d006a1643d7c5e87512b453857dea", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }, 
+  {
+    "requirements": [], 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2013-07-19T00:00:00.000Z", 
+    "created_at": "2013-07-19T15:37:46.324Z", 
+    "downloads_count": 1252, 
+    "number": "0.1.0", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": null, 
+    "sha": "29ae1292ffc3f90e7daabd13c40453e349a00f8bb9e6929fb1215d0b7bcc46b2", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }, 
+  {
+    "requirements": null, 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2013-07-04T00:00:00.000Z", 
+    "created_at": "2013-07-04T08:45:20.709Z", 
+    "downloads_count": 1120, 
+    "number": "0.0.9", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": null, 
+    "sha": "f4907eb4fbad3d76ff26b0baeaa3cbefc280783cd96fd1c1dc54688a5b377343", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }, 
+  {
+    "requirements": null, 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2013-07-01T00:00:00.000Z", 
+    "created_at": "2013-07-01T14:24:43.111Z", 
+    "downloads_count": 1130, 
+    "number": "0.0.8", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": null, 
+    "sha": "62b17cdaef761e0c84405630e8a0a16fcc0d23b1f58958a8b78809f8df952bcf", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }, 
+  {
+    "requirements": null, 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2013-06-19T00:00:00.000Z", 
+    "created_at": "2013-06-19T14:18:38.603Z", 
+    "downloads_count": 1144, 
+    "number": "0.0.7", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": null, 
+    "sha": "f34fc69addb30904d6a142ed98999e8025c9900534600a336264359e295021ac", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }, 
+  {
+    "requirements": null, 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2013-03-26T00:00:00.000Z", 
+    "created_at": "2013-03-26T13:34:46.270Z", 
+    "downloads_count": 1200, 
+    "number": "0.0.6", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": null, 
+    "sha": "6bb830e1059c932db8aa163d67870d05342982c218e52d83c8ccd79a078ba072", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }, 
+  {
+    "requirements": null, 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2013-03-26T00:00:00.000Z", 
+    "created_at": "2013-03-26T11:34:05.444Z", 
+    "downloads_count": 3994, 
+    "number": "0.0.5", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": null, 
+    "sha": "653a4e07a097a02cf37af867557da72925967d1f00e1b2edad29ef80bd653531", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }, 
+  {
+    "requirements": null, 
+    "description": "This gem allows to easily access facebook's ads api in ruby. See https://developers.facebook.com/docs/reference/ads-api/", 
+    "platform": "ruby", 
+    "built_at": "2013-01-03T00:00:00.000Z", 
+    "created_at": "2013-01-03T11:51:33.402Z", 
+    "downloads_count": 1331, 
+    "number": "0.0.4", 
+    "summary": "Ruby adapter to facebook's ad api", 
+    "ruby_version": null, 
+    "sha": "a7b89602f56e239a0da0ff32eccdbdf5db00a514a03a0ab3992e7bb9cabda151", 
+    "prerelease": false, 
+    "authors": "Jannis Hermanns", 
+    "licenses": [
+      "MIT"
+    ], 
+    "rubygems_version": ">= 0", 
+    "metadata": {}
+  }
+]

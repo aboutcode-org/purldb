@@ -1,0 +1,198 @@
+[
+  {
+    "type": "gem",
+    "namespace": null,
+    "name": "m2r",
+    "version": "2.1.0",
+    "qualifiers": {},
+    "subpath": null,
+    "primary_language": null,
+    "description": "Mongrel2 interface and handler library for Ruby.\nMongrel2 Rack handler and pure handler. Works with Rack, so it works with Rails!",
+    "release_date": "2013-10-29",
+    "parties": [
+      {
+        "type": null,
+        "role": "author",
+        "name": "Colin Curtin",
+        "email": null,
+        "url": null
+      },
+      {
+        "type": null,
+        "role": "author",
+        "name": "Pradeep Elankumaran",
+        "email": null,
+        "url": null
+      },
+      {
+        "type": null,
+        "role": "author",
+        "name": "Pawel Pacana",
+        "email": null,
+        "url": null
+      },
+      {
+        "type": null,
+        "role": "author",
+        "name": "Robert Pankowecki",
+        "email": null,
+        "url": null
+      }
+    ],
+    "keywords": [],
+    "homepage_url": "http://github.com/perplexes/m2r",
+    "download_url": "https://rubygems.org/downloads/m2r-2.1.0.gem",
+    "size": null,
+    "sha1": null,
+    "md5": null,
+    "sha256": null,
+    "sha512": null,
+    "bug_tracking_url": null,
+    "code_view_url": null,
+    "vcs_url": null,
+    "copyright": null,
+    "license_expression": null,
+    "declared_license": "MIT",
+    "notice_text": null,
+    "source_packages": [],
+    "file_references": [],
+    "extra_data": {},
+    "dependencies": [
+      {
+        "purl": "ffi-rzmq",
+        "extracted_requirement": ">= 1.0.1",
+        "scope": "runtime",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "ffi",
+        "extracted_requirement": ">= 1.0.0",
+        "scope": "runtime",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "multi_json",
+        "extracted_requirement": null,
+        "scope": "runtime",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "tnetstring",
+        "extracted_requirement": null,
+        "scope": "runtime",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "rack",
+        "extracted_requirement": null,
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "rake",
+        "extracted_requirement": null,
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "minitest",
+        "extracted_requirement": "= 3.2.0",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "mocha",
+        "extracted_requirement": ">= 0.14.0",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "bbq",
+        "extracted_requirement": "= 0.0.4",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "capybara-mechanize",
+        "extracted_requirement": "= 0.3.0",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "activesupport",
+        "extracted_requirement": "~> 3.2.7",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "yard",
+        "extracted_requirement": "~> 0.8.2",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "kramdown",
+        "extracted_requirement": "~> 0.13.7",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      }
+    ],
+    "repository_homepage_url": null,
+    "repository_download_url": null,
+    "api_data_url": null,
+    "datasource_id": null,
+    "purl": "pkg:gem/m2r@2.1.0"
+  }
+]

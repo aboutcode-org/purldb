@@ -1,0 +1,159 @@
+{
+    "_id": "jsonp-filter", 
+    "_rev": "6-aab69a872a62f9f61825531b3fc82323", 
+    "name": "jsonp-filter", 
+    "description": "JSONP filter for express", 
+    "dist-tags": {
+        "latest": "0.0.3"
+    }, 
+    "versions": {
+        "0.0.2": {
+            "name": "jsonp-filter", 
+            "description": "JSONP filter for express", 
+            "version": "0.0.2", 
+            "homepage": "https://github.com/Postmedia/jsonp-filter", 
+            "author": {
+                "name": "Stephen Veerman", 
+                "email": "sveerman@postmedia.com"
+            }, 
+            "dependencies": {
+                "styout": ">= 0.6.0"
+            }, 
+            "bugs": {
+                "url": "https://github.com/Postmedia/jsonp-filter/issues"
+            }, 
+            "licenses": [
+                {
+                    "type": "MIT", 
+                    "url": "https://github.com/Postmedia/jsonp-filter/blob/master/LICENSE"
+                }
+            ], 
+            "keywords": [
+                "coffeescript", 
+                "express", 
+                "json", 
+                "jsonp"
+            ], 
+            "repository": {
+                "type": "git", 
+                "url": "git://github.com/Postmedia/jsonp-filter.git"
+            }, 
+            "main": "./lib/jsonp-filter", 
+            "scripts": {
+                "build": "cake build"
+            }, 
+            "engines": {
+                "node": ">= 0.4.5"
+            }, 
+            "_npmJsonOpts": {
+                "file": "/Users/sveerman/.npm/jsonp-filter/0.0.2/package/package.json", 
+                "wscript": false, 
+                "contributors": false, 
+                "serverjs": false
+            }, 
+            "_id": "jsonp-filter@0.0.2", 
+            "devDependencies": {}, 
+            "_engineSupported": true, 
+            "_npmVersion": "1.0.27", 
+            "_nodeVersion": "v0.4.8", 
+            "_defaultsLoaded": true, 
+            "dist": {
+                "shasum": "3d45b8ec22273b9e66599b391aed81c988f8bb63", 
+                "tarball": "https://registry.npmjs.org/jsonp-filter/-/jsonp-filter-0.0.2.tgz"
+            }, 
+            "maintainers": [
+                {
+                    "name": "veerman", 
+                    "email": "sveerman@postmedia.com"
+                }
+            ], 
+            "directories": {}
+        }, 
+        "0.0.3": {
+            "name": "jsonp-filter", 
+            "description": "JSONP filter for express", 
+            "version": "0.0.3", 
+            "homepage": "https://github.com/Postmedia/jsonp-filter", 
+            "author": {
+                "name": "Stephen Veerman", 
+                "email": "sveerman@postmedia.com"
+            }, 
+            "dependencies": {
+                "styout": ">= 0.6.0"
+            }, 
+            "url": {
+                "web": "https://github.com/Postmedia/jsonp-filter/issues"
+            }, 
+            "licenses": [
+                {
+                    "type": "MIT", 
+                    "url": "https://github.com/Postmedia/jsonp-filter/blob/master/LICENSE"
+                }
+            ], 
+            "keywords": [
+                "coffeescript", 
+                "express", 
+                "json", 
+                "jsonp"
+            ], 
+            "repository": {
+                "type": "git", 
+                "url": "git://github.com/Postmedia/jsonp-filter.git"
+            }, 
+            "main": "./lib/jsonp-filter", 
+            "scripts": {
+                "build": "cake build"
+            }, 
+            "engines": {
+                "node": ">= 0.4.5"
+            }, 
+            "_npmUser": {
+                "name": "veerman", 
+                "email": "sveerman@postmedia.com"
+            }, 
+            "_id": "jsonp-filter@0.0.3", 
+            "devDependencies": {}, 
+            "_engineSupported": true, 
+            "_npmVersion": "1.1.0-beta-4", 
+            "_nodeVersion": "v0.6.6", 
+            "_defaultsLoaded": true, 
+            "dist": {
+                "shasum": "427da0d4cd33158bd30ab04f3de21592c34b20ff", 
+                "tarball": "https://registry.npmjs.org/jsonp-filter/-/jsonp-filter-0.0.3.tgz"
+            }, 
+            "readme": "", 
+            "maintainers": [
+                {
+                    "name": "veerman", 
+                    "email": "sveerman@postmedia.com"
+                }
+            ], 
+            "directories": {}
+        }
+    }, 
+    "maintainers": [
+        {
+            "name": "veerman", 
+            "email": "sveerman@postmedia.com"
+        }, 
+        {
+            "name": "mred9", 
+            "email": "ed@degroot.ca"
+        }
+    ], 
+    "time": {
+        "modified": "2012-06-01T18:34:39.251Z", 
+        "created": "2011-10-03T14:32:39.270Z", 
+        "0.0.2": "2011-10-03T14:32:39.474Z", 
+        "0.0.3": "2012-04-12T18:19:59.857Z"
+    }, 
+    "author": {
+        "name": "Stephen Veerman", 
+        "email": "sveerman@postmedia.com"
+    }, 
+    "repository": {
+        "type": "git", 
+        "url": "git://github.com/Postmedia/jsonp-filter.git"
+    }, 
+    "_attachments": {}
+}

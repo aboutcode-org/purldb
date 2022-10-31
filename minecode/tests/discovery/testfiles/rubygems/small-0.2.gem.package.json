@@ -1,0 +1,46 @@
+[
+  {
+    "type": "gem",
+    "namespace": null,
+    "name": "small",
+    "version": "0.2",
+    "qualifiers": {},
+    "subpath": null,
+    "primary_language": null,
+    "description": "A small collection of useful Ruby utilities",
+    "release_date": "2012-04-23",
+    "parties": [
+      {
+        "type": null,
+        "role": "author",
+        "name": "Bryan Goines",
+        "email": null,
+        "url": null
+      }
+    ],
+    "keywords": [],
+    "homepage_url": "https://github.com/bry4n/small",
+    "download_url": "https://rubygems.org/downloads/small-0.2.gem",
+    "size": null,
+    "sha1": null,
+    "md5": null,
+    "sha256": null,
+    "sha512": null,
+    "bug_tracking_url": null,
+    "code_view_url": null,
+    "vcs_url": null,
+    "copyright": null,
+    "license_expression": null,
+    "declared_license": null,
+    "notice_text": null,
+    "source_packages": [],
+    "file_references": [],
+    "extra_data": {},
+    "dependencies": [],
+    "repository_homepage_url": null,
+    "repository_download_url": null,
+    "api_data_url": null,
+    "datasource_id": null,
+    "purl": "pkg:gem/small@0.2"
+  }
+]

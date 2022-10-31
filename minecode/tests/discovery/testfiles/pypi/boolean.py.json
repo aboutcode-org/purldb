@@ -1,0 +1,499 @@
+{
+    "info": {
+        "maintainer": null, 
+        "docs_url": null, 
+        "requires_python": null, 
+        "maintainer_email": null, 
+        "cheesecake_code_kwalitee_id": null, 
+        "keywords": "boolean expression,boolean algebra,logic,expression parser", 
+        "package_url": "http://pypi.python.org/pypi/boolean.py", 
+        "author": "Sebastian Kraemer", 
+        "author_email": "basti.kr@gmail.com", 
+        "download_url": "UNKNOWN", 
+        "platform": "UNKNOWN", 
+        "version": "3.0.dev5", 
+        "cheesecake_documentation_id": null, 
+        "_pypi_hidden": false, 
+        "description": "This library helps you deal with boolean expressions and algebra with variables\nand the boolean functions AND, OR, NOT.\n\nYou can parse expressions from strings and simplify and compare expressions.\nYou can also easily create your custom algreba and mini DSL and create custom\ntokenizers to handle custom expressions.  \n\nFor extensive documentation look either into the docs directory or view it online, at\nhttps://booleanpy.readthedocs.org/en/latest/\n\nhttps://github.com/bastikr/boolean.py\n\nCopyright (c) 2009-2016 Sebastian Kraemer, basti.kr@gmail.com and others\n\nReleased under revised BSD license.", 
+        "release_url": "http://pypi.python.org/pypi/boolean.py/3.0.dev5", 
+        "downloads": {
+            "last_month": 0, 
+            "last_week": 0, 
+            "last_day": 0
+        }, 
+        "_pypi_ordering": 10, 
+        "classifiers": [
+            "Development Status :: 4 - Beta", 
+            "Intended Audience :: Developers", 
+            "License :: OSI Approved :: BSD License", 
+            "Operating System :: OS Independent", 
+            "Programming Language :: Python", 
+            "Programming Language :: Python :: 2.7", 
+            "Programming Language :: Python :: 3", 
+            "Topic :: Scientific/Engineering :: Mathematics", 
+            "Topic :: Software Development :: Compilers", 
+            "Topic :: Software Development :: Libraries", 
+            "Topic :: Utilities"
+        ], 
+        "bugtrack_url": null, 
+        "name": "boolean.py", 
+        "license": "revised BSD license", 
+        "summary": "Define boolean algebras, create and parse boolean expressions and create custom boolean DSL.", 
+        "home_page": "https://github.com/bastikr/boolean.py", 
+        "cheesecake_installability_id": null
+    }, 
+    "releases": {
+        "1.1": [], 
+        "1.2": [
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-06T16:13:25", 
+                "comment_text": "", 
+                "python_version": "2.7", 
+                "url": "https://pypi.python.org/packages/ef/ad/33e7607ee7193ae92013f7f7212eed5616c25a85a25ef2b0bd2fe457a546/boolean.py-1.2-py2.py3-none-any.whl", 
+                "md5_digest": "01cc47b889dc4a863fbe1cb2a1eac599", 
+                "downloads": 11, 
+                "filename": "boolean.py-1.2-py2.py3-none-any.whl", 
+                "packagetype": "bdist_wheel", 
+                "path": "ef/ad/33e7607ee7193ae92013f7f7212eed5616c25a85a25ef2b0bd2fe457a546/boolean.py-1.2-py2.py3-none-any.whl", 
+                "size": 19700
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-06T16:13:10", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/75/9a/caab1fd21c3fa051516388d7fd8542014edd2edd17f1dec76aaeff0ee46d/boolean.py-1.2.tar.bz2", 
+                "md5_digest": "b8152df627e3a9916a4b0789f0345c64", 
+                "downloads": 11, 
+                "filename": "boolean.py-1.2.tar.bz2", 
+                "packagetype": "sdist", 
+                "path": "75/9a/caab1fd21c3fa051516388d7fd8542014edd2edd17f1dec76aaeff0ee46d/boolean.py-1.2.tar.bz2", 
+                "size": 24183
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-06T16:13:18", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/0e/0a/e5e4b4e62fecc361543183d93c2cc2776f4106fb5394a57675e5a2c050c5/boolean.py-1.2.zip", 
+                "md5_digest": "cc471456ee0e49523b7d9523d6b1f885", 
+                "downloads": 13, 
+                "filename": "boolean.py-1.2.zip", 
+                "packagetype": "sdist", 
+                "path": "0e/0a/e5e4b4e62fecc361543183d93c2cc2776f4106fb5394a57675e5a2c050c5/boolean.py-1.2.zip", 
+                "size": 32593
+            }
+        ], 
+        "2.0.0": [
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-11T14:57:28", 
+                "comment_text": "", 
+                "python_version": "2.7", 
+                "url": "https://pypi.python.org/packages/33/1f/d993f910c1f0370ec56d63836a7bb0850c8ebfbfa9623660dccf65ec815b/boolean.py-2.0.0-py2.py3-none-any.whl", 
+                "md5_digest": "2dc994e25e9c43f8f5453ade398b5612", 
+                "downloads": 14, 
+                "filename": "boolean.py-2.0.0-py2.py3-none-any.whl", 
+                "packagetype": "bdist_wheel", 
+                "path": "33/1f/d993f910c1f0370ec56d63836a7bb0850c8ebfbfa9623660dccf65ec815b/boolean.py-2.0.0-py2.py3-none-any.whl", 
+                "size": 21201
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-11T14:56:16", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/39/74/dfcb53efddab0bfacd9751776c90553625de8c42c4459bb08ef780b544d8/boolean.py-2.0.0.tar.bz2", 
+                "md5_digest": "dbebdf710585af1b77e8fed69b743f55", 
+                "downloads": 14, 
+                "filename": "boolean.py-2.0.0.tar.bz2", 
+                "packagetype": "sdist", 
+                "path": "39/74/dfcb53efddab0bfacd9751776c90553625de8c42c4459bb08ef780b544d8/boolean.py-2.0.0.tar.bz2", 
+                "size": 24597
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-11T14:56:52", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/d5/19/7daf4a982d6326bf74435fa9980ca8e7c9b4a3db988783efd3c676917b83/boolean.py-2.0.0.zip", 
+                "md5_digest": "285e5f73edc216c3db3fed166aa2a0ff", 
+                "downloads": 10, 
+                "filename": "boolean.py-2.0.0.zip", 
+                "packagetype": "sdist", 
+                "path": "d5/19/7daf4a982d6326bf74435fa9980ca8e7c9b4a3db988783efd3c676917b83/boolean.py-2.0.0.zip", 
+                "size": 33052
+            }
+        ], 
+        "2.0.dev1": [
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-27T16:15:53", 
+                "comment_text": "", 
+                "python_version": "2.7", 
+                "url": "https://pypi.python.org/packages/9a/91/ffe94b6f9da150113d7dd51b5196a90e23addfbf00f7bde57da94f81385c/boolean.py-2.0.dev1-py2.py3-none-any.whl", 
+                "md5_digest": "b9e5f6d88ce1d28aaa3770f5765a1f2a", 
+                "downloads": 11, 
+                "filename": "boolean.py-2.0.dev1-py2.py3-none-any.whl", 
+                "packagetype": "bdist_wheel", 
+                "path": "9a/91/ffe94b6f9da150113d7dd51b5196a90e23addfbf00f7bde57da94f81385c/boolean.py-2.0.dev1-py2.py3-none-any.whl", 
+                "size": 20496
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-27T16:15:28", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/de/a4/c450993759c93874fdfd173a1f1a6d96fc1b7e696fadb4664daa045f974f/boolean.py-2.0.dev1.tar.bz2", 
+                "md5_digest": "c0fef4c876907617330f765c2260e1d2", 
+                "downloads": 11, 
+                "filename": "boolean.py-2.0.dev1.tar.bz2", 
+                "packagetype": "sdist", 
+                "path": "de/a4/c450993759c93874fdfd173a1f1a6d96fc1b7e696fadb4664daa045f974f/boolean.py-2.0.dev1.tar.bz2", 
+                "size": 25111
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-27T16:15:42", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/a7/9b/a02c132ff3839561c94d2d369fe0816e836885573c47848286005934a2f7/boolean.py-2.0.dev1.zip", 
+                "md5_digest": "28b9d4862a68df27627a133b884e6b70", 
+                "downloads": 10, 
+                "filename": "boolean.py-2.0.dev1.zip", 
+                "packagetype": "sdist", 
+                "path": "a7/9b/a02c132ff3839561c94d2d369fe0816e836885573c47848286005934a2f7/boolean.py-2.0.dev1.zip", 
+                "size": 33741
+            }
+        ], 
+        "2.0.dev3": [
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-29T07:05:30", 
+                "comment_text": "", 
+                "python_version": "2.7", 
+                "url": "https://pypi.python.org/packages/96/d7/1a5727fb65dcd06cb7b8ae494751ccf64d1f49ab850a793eeece876dfe24/boolean.py-2.0.dev3-py2.py3-none-any.whl", 
+                "md5_digest": "ef3aa179f66d606def229f98719040c2", 
+                "downloads": 11, 
+                "filename": "boolean.py-2.0.dev3-py2.py3-none-any.whl", 
+                "packagetype": "bdist_wheel", 
+                "path": "96/d7/1a5727fb65dcd06cb7b8ae494751ccf64d1f49ab850a793eeece876dfe24/boolean.py-2.0.dev3-py2.py3-none-any.whl", 
+                "size": 21290
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-29T07:05:18", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/6b/25/517cc523b7aed438022f3ef78d8023ce2c45cfb80f9ed32c582b52bc6a09/boolean.py-2.0.dev3.tar.bz2", 
+                "md5_digest": "941a7ef11df896f370129c308d07803f", 
+                "downloads": 11, 
+                "filename": "boolean.py-2.0.dev3.tar.bz2", 
+                "packagetype": "sdist", 
+                "path": "6b/25/517cc523b7aed438022f3ef78d8023ce2c45cfb80f9ed32c582b52bc6a09/boolean.py-2.0.dev3.tar.bz2", 
+                "size": 25786
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-29T07:05:24", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/3e/59/38b3bd61b2e4d6e0b43a81af40a5597d0c1e8f4f6c085810e33e85e89a12/boolean.py-2.0.dev3.zip", 
+                "md5_digest": "18551328a972bd850ab8393d8c0d25b5", 
+                "downloads": 13, 
+                "filename": "boolean.py-2.0.dev3.zip", 
+                "packagetype": "sdist", 
+                "path": "3e/59/38b3bd61b2e4d6e0b43a81af40a5597d0c1e8f4f6c085810e33e85e89a12/boolean.py-2.0.dev3.zip", 
+                "size": 34534
+            }
+        ], 
+        "2.0.dev2": [
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-28T15:32:40", 
+                "comment_text": "", 
+                "python_version": "2.7", 
+                "url": "https://pypi.python.org/packages/4a/f9/972e037a5deb2b268e722ffbcb9f454e8c68cb62cc313f2301cdf187ab35/boolean.py-2.0.dev2-py2.py3-none-any.whl", 
+                "md5_digest": "9c91c51ca389298f5f44722475f2bd41", 
+                "downloads": 11, 
+                "filename": "boolean.py-2.0.dev2-py2.py3-none-any.whl", 
+                "packagetype": "bdist_wheel", 
+                "path": "4a/f9/972e037a5deb2b268e722ffbcb9f454e8c68cb62cc313f2301cdf187ab35/boolean.py-2.0.dev2-py2.py3-none-any.whl", 
+                "size": 21199
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-28T15:32:23", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/5d/96/719d2a0cf0eca4e3cbcd17d8f4133d40a570600f5195f709b4ae73e397d5/boolean.py-2.0.dev2.tar.bz2", 
+                "md5_digest": "7d11cf0e0a0cc962834accb4d5e7cad0", 
+                "downloads": 10, 
+                "filename": "boolean.py-2.0.dev2.tar.bz2", 
+                "packagetype": "sdist", 
+                "path": "5d/96/719d2a0cf0eca4e3cbcd17d8f4133d40a570600f5195f709b4ae73e397d5/boolean.py-2.0.dev2.tar.bz2", 
+                "size": 25706
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-04-28T15:32:34", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/74/51/7f0a6e49f023dd9bb7d6e560b87ac83fcc18379cac44e15a3eb17e119fec/boolean.py-2.0.dev2.zip", 
+                "md5_digest": "f15d50464c933de2124bc90c65e38314", 
+                "downloads": 10, 
+                "filename": "boolean.py-2.0.dev2.zip", 
+                "packagetype": "sdist", 
+                "path": "74/51/7f0a6e49f023dd9bb7d6e560b87ac83fcc18379cac44e15a3eb17e119fec/boolean.py-2.0.dev2.zip", 
+                "size": 34441
+            }
+        ], 
+        "3.0.dev2": [
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-13T14:14:46", 
+                "comment_text": "", 
+                "python_version": "2.7", 
+                "url": "https://pypi.python.org/packages/68/52/644abb4d85bb0ac4aa59cdcde32fefe82b2b2c4d1f244156d0c0f85729cf/boolean.py-3.0.dev2-py2.py3-none-any.whl", 
+                "md5_digest": "e734344ac73e51cb4546b2359d51cfc8", 
+                "downloads": 11, 
+                "filename": "boolean.py-3.0.dev2-py2.py3-none-any.whl", 
+                "packagetype": "bdist_wheel", 
+                "path": "68/52/644abb4d85bb0ac4aa59cdcde32fefe82b2b2c4d1f244156d0c0f85729cf/boolean.py-3.0.dev2-py2.py3-none-any.whl", 
+                "size": 21218
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-13T14:14:31", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/96/e5/4813fc4a8f248b1e073e30bf6e96b4580d8c6ea1e078770e976483f3cae3/boolean.py-3.0.dev2.tar.bz2", 
+                "md5_digest": "8c4ed7b12822b6eb73071be73d8b4deb", 
+                "downloads": 11, 
+                "filename": "boolean.py-3.0.dev2.tar.bz2", 
+                "packagetype": "sdist", 
+                "path": "96/e5/4813fc4a8f248b1e073e30bf6e96b4580d8c6ea1e078770e976483f3cae3/boolean.py-3.0.dev2.tar.bz2", 
+                "size": 24573
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-13T14:14:39", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/62/74/83848b5339c3dc9e23369fb6828bb20034489b61ae6bdb8a156b52d971c7/boolean.py-3.0.dev2.zip", 
+                "md5_digest": "cc2da2e557de113c4eb0015c4f349c76", 
+                "downloads": 10, 
+                "filename": "boolean.py-3.0.dev2.zip", 
+                "packagetype": "sdist", 
+                "path": "62/74/83848b5339c3dc9e23369fb6828bb20034489b61ae6bdb8a156b52d971c7/boolean.py-3.0.dev2.zip", 
+                "size": 33092
+            }
+        ], 
+        "3.0.dev3": [
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-25T15:17:23", 
+                "comment_text": "", 
+                "python_version": "2.7", 
+                "url": "https://pypi.python.org/packages/8d/02/7498f0119d6a36de26e49f57fc4136e38e8487d397b8102b282a8fbd1386/boolean.py-3.0.dev3-py2.py3-none-any.whl", 
+                "md5_digest": "46465829317985248ab346d299e02ade", 
+                "downloads": 12, 
+                "filename": "boolean.py-3.0.dev3-py2.py3-none-any.whl", 
+                "packagetype": "bdist_wheel", 
+                "path": "8d/02/7498f0119d6a36de26e49f57fc4136e38e8487d397b8102b282a8fbd1386/boolean.py-3.0.dev3-py2.py3-none-any.whl", 
+                "size": 21373
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-25T15:16:25", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/e3/8c/f9dcb119c5b5c26cd24a84567aa801ddd0b8593605ed62201a27b6320589/boolean.py-3.0.dev3.tar.bz2", 
+                "md5_digest": "80fdd51b316886e70e174853b5c6bfa5", 
+                "downloads": 15, 
+                "filename": "boolean.py-3.0.dev3.tar.bz2", 
+                "packagetype": "sdist", 
+                "path": "e3/8c/f9dcb119c5b5c26cd24a84567aa801ddd0b8593605ed62201a27b6320589/boolean.py-3.0.dev3.tar.bz2", 
+                "size": 24703
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-25T15:16:59", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/1b/f0/8a15dff97adddb5ddc8c0f8aa249d40fb48059c6a9cef7b24e20de75e705/boolean.py-3.0.dev3.zip", 
+                "md5_digest": "6de48f8592e36d165dac09f62d2e52cb", 
+                "downloads": 11, 
+                "filename": "boolean.py-3.0.dev3.zip", 
+                "packagetype": "sdist", 
+                "path": "1b/f0/8a15dff97adddb5ddc8c0f8aa249d40fb48059c6a9cef7b24e20de75e705/boolean.py-3.0.dev3.zip", 
+                "size": 33246
+            }
+        ], 
+        "3.0.dev1": [
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-13T13:12:50", 
+                "comment_text": "", 
+                "python_version": "2.7", 
+                "url": "https://pypi.python.org/packages/e6/7f/335bcbc81ed7f0703ba2add3b7ff8ae65560567c3366e6fdefe5ef201a93/boolean.py-3.0.dev1-py2.py3-none-any.whl", 
+                "md5_digest": "4c007f5e30f0ebadaab87462f2636f52", 
+                "downloads": 11, 
+                "filename": "boolean.py-3.0.dev1-py2.py3-none-any.whl", 
+                "packagetype": "bdist_wheel", 
+                "path": "e6/7f/335bcbc81ed7f0703ba2add3b7ff8ae65560567c3366e6fdefe5ef201a93/boolean.py-3.0.dev1-py2.py3-none-any.whl", 
+                "size": 21205
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-13T13:12:26", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/d2/e9/c38ea69aa60fee62e37cc7fb5bfaf75ae0ed96c6c4d5c4a4f032a4741fc4/boolean.py-3.0.dev1.tar.bz2", 
+                "md5_digest": "a37994e316a9fa0462be11376074c3cb", 
+                "downloads": 11, 
+                "filename": "boolean.py-3.0.dev1.tar.bz2", 
+                "packagetype": "sdist", 
+                "path": "d2/e9/c38ea69aa60fee62e37cc7fb5bfaf75ae0ed96c6c4d5c4a4f032a4741fc4/boolean.py-3.0.dev1.tar.bz2", 
+                "size": 24586
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-13T13:12:41", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/39/1b/317d13f91a2e3ab0033c1e6bb325240353ed7fb436f1a3f8b7ebf36f4b35/boolean.py-3.0.dev1.zip", 
+                "md5_digest": "53fde51edb917f98337c9ff1d93e7e9a", 
+                "downloads": 13, 
+                "filename": "boolean.py-3.0.dev1.zip", 
+                "packagetype": "sdist", 
+                "path": "39/1b/317d13f91a2e3ab0033c1e6bb325240353ed7fb436f1a3f8b7ebf36f4b35/boolean.py-3.0.dev1.zip", 
+                "size": 33080
+            }
+        ], 
+        "3.0.dev4": [
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-25T22:33:26", 
+                "comment_text": "", 
+                "python_version": "2.7", 
+                "url": "https://pypi.python.org/packages/57/ed/07448859d1a73b8c5791ad889c23082fdfe69d4ef200e2e7faeb2901c411/boolean.py-3.0.dev4-py2.py3-none-any.whl", 
+                "md5_digest": "16e22617c7b9f73574ca8ff536ee9d6f", 
+                "downloads": 12, 
+                "filename": "boolean.py-3.0.dev4-py2.py3-none-any.whl", 
+                "packagetype": "bdist_wheel", 
+                "path": "57/ed/07448859d1a73b8c5791ad889c23082fdfe69d4ef200e2e7faeb2901c411/boolean.py-3.0.dev4-py2.py3-none-any.whl", 
+                "size": 21375
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-25T22:32:43", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/76/e6/5a5c7250c07dd9cb537f936e270ee53f1b658f23c9192a0f2d165fdef12b/boolean.py-3.0.dev4.tar.bz2", 
+                "md5_digest": "2903c97d86d6f34b38c9b452f1b488d8", 
+                "downloads": 12, 
+                "filename": "boolean.py-3.0.dev4.tar.bz2", 
+                "packagetype": "sdist", 
+                "path": "76/e6/5a5c7250c07dd9cb537f936e270ee53f1b658f23c9192a0f2d165fdef12b/boolean.py-3.0.dev4.tar.bz2", 
+                "size": 24721
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-05-25T22:33:01", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/8e/35/122400481717cb66cf695fdbd1fb8059f9ec755ad32a34097b1383aba0ed/boolean.py-3.0.dev4.zip", 
+                "md5_digest": "a262286880a877488e9ea9615454145a", 
+                "downloads": 11, 
+                "filename": "boolean.py-3.0.dev4.zip", 
+                "packagetype": "sdist", 
+                "path": "8e/35/122400481717cb66cf695fdbd1fb8059f9ec755ad32a34097b1383aba0ed/boolean.py-3.0.dev4.zip", 
+                "size": 33246
+            }
+        ], 
+        "3.0.dev5": [
+            {
+                "has_sig": false, 
+                "upload_time": "2016-06-17T21:38:00", 
+                "comment_text": "", 
+                "python_version": "2.7", 
+                "url": "https://pypi.python.org/packages/dc/07/6c3ed91d7c02ba9a8584fbac997378b329a69a9b06dc90fa18242b8ef020/boolean.py-3.0.dev5-py2.py3-none-any.whl", 
+                "md5_digest": "c9198b656633d200475a886d658e193c", 
+                "downloads": 29, 
+                "filename": "boolean.py-3.0.dev5-py2.py3-none-any.whl", 
+                "packagetype": "bdist_wheel", 
+                "path": "dc/07/6c3ed91d7c02ba9a8584fbac997378b329a69a9b06dc90fa18242b8ef020/boolean.py-3.0.dev5-py2.py3-none-any.whl", 
+                "size": 21536
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-06-17T21:37:51", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/0a/bf/f80b3cbd880bea9557178a99338c437cd6fe0affbfe1537018c4aed9dc40/boolean.py-3.0.dev5.tar.bz2", 
+                "md5_digest": "f03ab10e704c0bc82491c351d8e8fbcc", 
+                "downloads": 28, 
+                "filename": "boolean.py-3.0.dev5.tar.bz2", 
+                "packagetype": "sdist", 
+                "path": "0a/bf/f80b3cbd880bea9557178a99338c437cd6fe0affbfe1537018c4aed9dc40/boolean.py-3.0.dev5.tar.bz2", 
+                "size": 24900
+            }, 
+            {
+                "has_sig": false, 
+                "upload_time": "2016-06-17T21:37:56", 
+                "comment_text": "", 
+                "python_version": "source", 
+                "url": "https://pypi.python.org/packages/14/7a/f14b5c210087f50a3332e38f14064c8e4d19dd61709a77924dd8c47a1bfb/boolean.py-3.0.dev5.zip", 
+                "md5_digest": "73c66ad9b3c96bdc59813addc0fdb39b", 
+                "downloads": 27, 
+                "filename": "boolean.py-3.0.dev5.zip", 
+                "packagetype": "sdist", 
+                "path": "14/7a/f14b5c210087f50a3332e38f14064c8e4d19dd61709a77924dd8c47a1bfb/boolean.py-3.0.dev5.zip", 
+                "size": 33412
+            }
+        ]
+    }, 
+    "urls": [
+        {
+            "has_sig": false, 
+            "upload_time": "2016-06-17T21:38:00", 
+            "comment_text": "", 
+            "python_version": "2.7", 
+            "url": "https://pypi.python.org/packages/dc/07/6c3ed91d7c02ba9a8584fbac997378b329a69a9b06dc90fa18242b8ef020/boolean.py-3.0.dev5-py2.py3-none-any.whl", 
+            "md5_digest": "c9198b656633d200475a886d658e193c", 
+            "downloads": 29, 
+            "filename": "boolean.py-3.0.dev5-py2.py3-none-any.whl", 
+            "packagetype": "bdist_wheel", 
+            "path": "dc/07/6c3ed91d7c02ba9a8584fbac997378b329a69a9b06dc90fa18242b8ef020/boolean.py-3.0.dev5-py2.py3-none-any.whl", 
+            "size": 21536
+        }, 
+        {
+            "has_sig": false, 
+            "upload_time": "2016-06-17T21:37:51", 
+            "comment_text": "", 
+            "python_version": "source", 
+            "url": "https://pypi.python.org/packages/0a/bf/f80b3cbd880bea9557178a99338c437cd6fe0affbfe1537018c4aed9dc40/boolean.py-3.0.dev5.tar.bz2", 
+            "md5_digest": "f03ab10e704c0bc82491c351d8e8fbcc", 
+            "downloads": 28, 
+            "filename": "boolean.py-3.0.dev5.tar.bz2", 
+            "packagetype": "sdist", 
+            "path": "0a/bf/f80b3cbd880bea9557178a99338c437cd6fe0affbfe1537018c4aed9dc40/boolean.py-3.0.dev5.tar.bz2", 
+            "size": 24900
+        }, 
+        {
+            "has_sig": false, 
+            "upload_time": "2016-06-17T21:37:56", 
+            "comment_text": "", 
+            "python_version": "source", 
+            "url": "https://pypi.python.org/packages/14/7a/f14b5c210087f50a3332e38f14064c8e4d19dd61709a77924dd8c47a1bfb/boolean.py-3.0.dev5.zip", 
+            "md5_digest": "73c66ad9b3c96bdc59813addc0fdb39b", 
+            "downloads": 27, 
+            "filename": "boolean.py-3.0.dev5.zip", 
+            "packagetype": "sdist", 
+            "path": "14/7a/f14b5c210087f50a3332e38f14064c8e4d19dd61709a77924dd8c47a1bfb/boolean.py-3.0.dev5.zip", 
+            "size": 33412
+        }
+    ]
+}

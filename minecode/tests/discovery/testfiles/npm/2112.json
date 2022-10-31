@@ -1,0 +1,92 @@
+{
+  "_id": "2112",
+  "_rev": "1-d18f7a46eeab0061711862fe6662064e",
+  "name": "2112",
+  "description": "Zshhweiiiiiiiinnngggg PA-RAM",
+  "dist-tags": {
+    "latest": "2.1.12"
+  },
+  "versions": {
+    "2.1.12": {
+      "name": "2112",
+      "version": "2.1.12",
+      "description": "Zshhweiiiiiiiinnngggg PA-RAM",
+      "main": "index.js",
+      "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ostera/2112.git"
+      },
+      "keywords": [
+        "rush",
+        "2112"
+      ],
+      "author": {
+        "name": "Leandro Ostera",
+        "email": "leandro@ostera.io"
+      },
+      "license": "MIT",
+      "bugs": {
+        "url": "https://github.com/ostera/2112/issues"
+      },
+      "homepage": "https://github.com/ostera/2112#readme",
+      "_id": "2112@2.1.12",
+      "_shasum": "98647bbba1111a3511783c48c35556191d0c71f0",
+      "_from": ".",
+      "_npmVersion": "3.3.12",
+      "_nodeVersion": "5.3.0",
+      "_npmUser": {
+        "name": "leostera",
+        "email": "leandro@ostera.io"
+      },
+      "dist": {
+        "shasum": "98647bbba1111a3511783c48c35556191d0c71f0",
+        "tarball": "https://registry.npmjs.org/2112/-/2112-2.1.12.tgz"
+      },
+      "maintainers": [
+        {
+          "name": "leostera",
+          "email": "leandro@ostera.io"
+        }
+      ],
+      "directories": {
+        
+      }
+    }
+  },
+  "readme": "ERROR: No README data found!",
+  "maintainers": [
+    {
+      "name": "leostera",
+      "email": "leandro@ostera.io"
+    }
+  ],
+  "time": {
+    "modified": "2016-01-14T18:54:39.392Z",
+    "created": "2016-01-14T18:54:39.392Z",
+    "2.1.12": "2016-01-14T18:54:39.392Z"
+  },
+  "homepage": "https://github.com/ostera/2112#readme",
+  "keywords": [
+    "rush",
+    "2112"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ostera/2112.git"
+  },
+  "author": {
+    "name": "Leandro Ostera",
+    "email": "leandro@ostera.io"
+  },
+  "bugs": {
+    "url": "https://github.com/ostera/2112/issues"
+  },
+  "license": "MIT",
+  "readmeFilename": "",
+  "_attachments": {
+    
+  }
+}

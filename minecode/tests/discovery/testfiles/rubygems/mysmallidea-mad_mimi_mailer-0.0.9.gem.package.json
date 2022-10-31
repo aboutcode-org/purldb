@@ -1,0 +1,46 @@
+[
+  {
+    "type": "gem",
+    "namespace": null,
+    "name": "mysmallidea-mad_mimi_mailer",
+    "version": "0.0.9",
+    "qualifiers": {},
+    "subpath": null,
+    "primary_language": null,
+    "description": "Extending ActionMailer::Base for Mad Mimi integration.\nUse Mad Mimi to send beautiful HTML emails using the ActionMailer API.",
+    "release_date": "2010-04-09",
+    "parties": [
+      {
+        "type": null,
+        "role": "author",
+        "name": "Dave Hoover",
+        "email": null,
+        "url": null
+      }
+    ],
+    "keywords": [],
+    "homepage_url": "http://developer.madmimi.com/",
+    "download_url": "https://rubygems.org/downloads/mysmallidea-mad_mimi_mailer-0.0.9.gem",
+    "size": null,
+    "sha1": null,
+    "md5": null,
+    "sha256": null,
+    "sha512": null,
+    "bug_tracking_url": null,
+    "code_view_url": null,
+    "vcs_url": null,
+    "copyright": null,
+    "license_expression": null,
+    "declared_license": null,
+    "notice_text": null,
+    "source_packages": [],
+    "file_references": [],
+    "extra_data": {},
+    "dependencies": [],
+    "repository_homepage_url": null,
+    "repository_download_url": null,
+    "api_data_url": null,
+    "datasource_id": null,
+    "purl": "pkg:gem/mysmallidea-mad_mimi_mailer@0.0.9"
+  }
+]

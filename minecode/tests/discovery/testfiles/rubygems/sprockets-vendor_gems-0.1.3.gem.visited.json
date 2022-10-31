@@ -1,0 +1,24 @@
+[
+  {
+    "uri":"https://rubygems.org/downloads/sprockets-vendor_gems-0.1.3.gem",
+    "canonical":"https://rubygems.org/downloads/sprockets-vendor_gems-0.1.3.gem",
+    "source_uri":null,
+    "priority":0,
+    "wip_date":false,
+    "file_name":null,
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":null,
+    "last_modified_date":false,
+    "mining_level":0,
+    "data":"--- !ruby/object:Gem::Specification\nname: sprockets-vendor_gems\nversion: !ruby/object:Gem::Version\n  version: 0.1.3\n  prerelease: \nplatform: ruby\nauthors:\n- John Bintz\nautorequire: \nbindir: bin\ncert_chain: []\ndate: 2012-08-03 00:00:00.000000000 Z\ndependencies:\n- !ruby/object:Gem::Dependency\n  name: sprockets\n  requirement: !ruby/object:Gem::Requirement\n    none: false\n    requirements:\n    - - ! '>='\n      - !ruby/object:Gem::Version\n        version: '0'\n  type: :runtime\n  prerelease: false\n  version_requirements: !ruby/object:Gem::Requirement\n    none: false\n    requirements:\n    - - ! '>='\n      - !ruby/object:Gem::Version\n        version: '0'\n- !ruby/object:Gem::Dependency\n  name: rake\n  requirement: !ruby/object:Gem::Requirement\n    none: false\n    requirements:\n    - - ! '>='\n      - !ruby/object:Gem::Version\n        version: '0'\n  type: :development\n  prerelease: false\n  version_requirements: !ruby/object:Gem::Requirement\n    none: false\n    requirements:\n    - - ! '>='\n      - !ruby/object:Gem::Version\n        version: '0'\n- !ruby/object:Gem::Dependency\n  name: rspec\n  requirement: !ruby/object:Gem::Requirement\n    none: false\n    requirements:\n    - - ! '>='\n      - !ruby/object:Gem::Version\n        version: '0'\n  type: :development\n  prerelease: false\n  version_requirements: !ruby/object:Gem::Requirement\n    none: false\n    requirements:\n    - - ! '>='\n      - !ruby/object:Gem::Version\n        version: '0'\n- !ruby/object:Gem::Dependency\n  name: mocha\n  requirement: !ruby/object:Gem::Requirement\n    none: false\n    requirements:\n    - - ! '>='\n      - !ruby/object:Gem::Version\n        version: '0'\n  type: :development\n  prerelease: false\n  version_requirements: !ruby/object:Gem::Requirement\n    none: false\n    requirements:\n    - - ! '>='\n      - !ruby/object:Gem::Version\n        version: '0'\n- !ruby/object:Gem::Dependency\n  name: fakefs\n  requirement: !ruby/object:Gem::Requirement\n    none: false\n    requirements:\n    - - ! '>='\n      - !ruby/object:Gem::Version\n        version: '0'\n  type: :development\n  prerelease: false\n  version_requirements: !ruby/object:Gem::Requirement\n    none: false\n    requirements:\n    - - ! '>='\n      - !ruby/object:Gem::Version\n        version: '0'\ndescription: Get the vendored assets paths in gems.\nemail:\n- john@coswellproductions.com\nexecutables: []\nextensions: []\nextra_rdoc_files: []\nfiles:\n- .gitignore\n- Gemfile\n- LICENSE\n- README.md\n- Rakefile\n- lib/sprockets-vendor_gems.rb\n- lib/sprockets-vendor_gems/extend_all.rb\n- spec/spec_helper.rb\n- spec/sprockets-vendor_gems_spec.rb\n- sprockets-vendor_gems.gemspec\nhomepage: ''\nlicenses: []\npost_install_message: \nrdoc_options: []\nrequire_paths:\n- lib\nrequired_ruby_version: !ruby/object:Gem::Requirement\n  none: false\n  requirements:\n  - - ! '>='\n    - !ruby/object:Gem::Version\n      version: '0'\nrequired_rubygems_version: !ruby/object:Gem::Requirement\n  none: false\n  requirements:\n  - - ! '>='\n    - !ruby/object:Gem::Version\n      version: '0'\nrequirements: []\nrubyforge_project: \nrubygems_version: 1.8.23\nsigning_key: \nspecification_version: 3\nsummary: Get the vendored assets paths in gems.\ntest_files:\n- spec/spec_helper.rb\n- spec/sprockets-vendor_gems_spec.rb\n",
+    "package_url":null,
+    "last_visit_date":true,
+    "is_visitable":true,
+    "visit_error":null,
+    "last_map_date":true,
+    "is_mappable":true,
+    "map_error":null
+  }
+]

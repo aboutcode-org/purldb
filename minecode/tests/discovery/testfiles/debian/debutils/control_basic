@@ -1,0 +1,17 @@
+Source: lastfm-python-mirbuild
+Section: python
+Priority: optional
+Maintainer: Marcus Holland-Moritz <marcus@last.fm>
+Build-Depends: debhelper (>= 5.0.37.2), python (>= 2.6),
+               python-setuptools, python-dateutil, python-debian,
+               python-pytest, cmake (>= 2.8)
+Build-Depends-Indep: python-support (>= 0.3)
+Standards-Version: 3.9.1
+
+Package: lastfm-python-mirbuild
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends}, python-setuptools,
+         python-dateutil, python-debian, python-pytest
+Description: Last.fm MIR build framework
+ This package provides Python modules that are used to build MIR libraries
+ and services at Last.fm.

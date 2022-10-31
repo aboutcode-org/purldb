@@ -1,0 +1,124 @@
+[
+  {
+    "type": "gem",
+    "namespace": null,
+    "name": "0mq",
+    "version": "0.4.1",
+    "qualifiers": {},
+    "subpath": null,
+    "primary_language": null,
+    "description": "0mq\nA Ruby-like wrapper for ffi-rzmq-core (ZeroMQ)",
+    "release_date": "2014-03-29",
+    "parties": [
+      {
+        "type": null,
+        "role": "author",
+        "name": "Joe McIlvain",
+        "email": null,
+        "url": null
+      },
+      {
+        "type": null,
+        "role": "author",
+        "name": "Alex McLain",
+        "email": null,
+        "url": null
+      }
+    ],
+    "keywords": [],
+    "homepage_url": "https://github.com/jemc/0mq/",
+    "download_url": "https://rubygems.org/downloads/0mq-0.4.1.gem",
+    "size": null,
+    "sha1": null,
+    "md5": null,
+    "sha256": null,
+    "sha512": null,
+    "bug_tracking_url": null,
+    "code_view_url": null,
+    "vcs_url": null,
+    "copyright": null,
+    "license_expression": null,
+    "declared_license": "MIT",
+    "notice_text": null,
+    "source_packages": [],
+    "file_references": [],
+    "extra_data": {},
+    "dependencies": [
+      {
+        "purl": "ffi-rzmq-core",
+        "extracted_requirement": "~> 1.0",
+        "scope": "runtime",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "bundler",
+        "extracted_requirement": null,
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "rake",
+        "extracted_requirement": null,
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "pry",
+        "extracted_requirement": null,
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "pry-rescue",
+        "extracted_requirement": null,
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "rspec",
+        "extracted_requirement": null,
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "fivemat",
+        "extracted_requirement": null,
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      }
+    ],
+    "repository_homepage_url": null,
+    "repository_download_url": null,
+    "api_data_url": null,
+    "datasource_id": null,
+    "purl": "pkg:gem/0mq@0.4.1"
+  }
+]

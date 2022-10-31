@@ -1,0 +1,55 @@
+[
+  {
+    "type":"npm",
+    "namespace":null,
+    "name":"nodotdot",
+    "version":"1.0.0",
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":"JavaScript",
+    "description":"Easier module requiring",
+    "release_date":null,
+    "parties":[
+      {
+        "type":"person",
+        "role":"author",
+        "name":"Wojtek Turyn",
+        "email":"w.turyn@gmail.com",
+        "url":null
+      },
+      {
+        "type":"person",
+        "role":"maintainer",
+        "name":"wturyn",
+        "email":"w.turyn@gmail.com",
+        "url":null
+      }
+    ],
+    "keywords":[],
+    "homepage_url":"https://github.com/wturyn/node-nodotdot",
+    "download_url":"https://registry.npmjs.org/nodotdot/-/nodotdot-1.0.0.tgz",
+    "size":null,
+    "sha1":"f844cfd83eacb7f6582b1a6fb800555c0173a3dc",
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":"https://github.com/wturyn/node-nodotdot/issues",
+    "code_view_url":null,
+    "vcs_url":"git+https://wturyn@github.com/wturyn/node-nodotdot@7daa559dc4439fc13fe0daf010d4ede39cff7d44",
+    "copyright":null,
+    "license_expression":"mit",
+    "declared_license":[
+      "MIT"
+    ],
+    "notice_text":null,
+    "source_packages":[],
+    "file_references":[],
+    "extra_data":{},
+    "dependencies":[],
+    "repository_homepage_url":"https://www.npmjs.com/package/nodotdot",
+    "repository_download_url":"https://registry.npmjs.org/nodotdot/-/nodotdot-1.0.0.tgz",
+    "api_data_url":"https://registry.npmjs.org/nodotdot/1.0.0",
+    "datasource_id":"npm_package_json",
+    "purl":"pkg:npm/nodotdot@1.0.0"
+  }
+]

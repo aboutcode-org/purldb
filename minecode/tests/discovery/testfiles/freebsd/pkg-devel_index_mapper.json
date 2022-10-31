@@ -1,0 +1,44 @@
+[
+  {
+    "type": "freebsd",
+    "namespace": null,
+    "name": "pkg-devel",
+    "version": "1.2.4_1",
+    "qualifiers": {
+      "origin": "ports-mgmt/pkg-devel",
+      "arch": "freebsd:10:x86:32"
+    },
+    "subpath": null,
+    "primary_language": null,
+    "contains_source_code": null,
+    "description": "New Generation package management tool for FreeBSD\n\nWWW: http://wiki.freebsd.org/pkgng",
+    "size": null,
+    "release_date": null,
+    "parties": [
+      {
+        "type": "person",
+        "role": "maintainer",
+        "name": null,
+        "email": "portmgr@FreeBSD.org",
+        "url": null
+      }
+    ],
+    "keywords": [
+      "ports-mgmt"
+    ],
+    "homepage_url": "http://wiki.freebsd.org/pkgng",
+    "download_url": "https://pkg.freebsd.org/freebsd:10:x86:32/latest/All/pkg-devel-1.2.4_1.txz",
+    "download_checksums": [],
+    "bug_tracking_url": null,
+    "code_view_url": "https://svnweb.freebsd.org/ports/head/ports-mgmt/pkg-devel",
+    "vcs_tool": null,
+    "vcs_repository": null,
+    "vcs_revision": null,
+    "copyright": null,
+    "license_expression": null,
+    "declared_license": "BSD2CLAUSE",
+    "notice_text": null,
+    "dependencies": [],
+    "related_packages": []
+  }
+]

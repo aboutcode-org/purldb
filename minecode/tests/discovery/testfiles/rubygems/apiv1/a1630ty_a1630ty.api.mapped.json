@@ -1,0 +1,46 @@
+[
+  {
+    "type":"gem",
+    "namespace":null,
+    "name":"a1630ty_a1630ty",
+    "version":"0.2.0",
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":null,
+    "description":"Write a short summary, because Rubygems requires one.\nWrite a longer description or delete this line.",
+    "release_date":"2016-07-09",
+    "parties":[
+      {
+        "type":null,
+        "role":"author",
+        "name":"Write your name",
+        "email":null,
+        "url":null
+      }
+    ],
+    "keywords":[],
+    "homepage_url":null,
+    "download_url":null,
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":"eda5675fe73adcc84c53a545217e754cc717109c258b229dfce4384ed40fb655",
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":null,
+    "copyright":null,
+    "license_expression":null,
+    "declared_license":null,
+    "notice_text":null,
+    "source_packages":[],
+    "file_references":[],
+    "extra_data":{},
+    "dependencies":[],
+    "repository_homepage_url":null,
+    "repository_download_url":null,
+    "api_data_url":null,
+    "datasource_id":null,
+    "purl":"pkg:gem/a1630ty_a1630ty@0.2.0"
+  }
+]

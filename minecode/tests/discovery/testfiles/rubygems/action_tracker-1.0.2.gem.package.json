@@ -1,0 +1,154 @@
+[
+  {
+    "type": "gem",
+    "namespace": null,
+    "name": "action_tracker",
+    "version": "1.0.2",
+    "qualifiers": {},
+    "subpath": null,
+    "primary_language": null,
+    "description": "Easy way to track actions in your application.\nEasy way to track actions in your application without adding unnecessary code to your controllers.",
+    "release_date": "2016-11-21",
+    "parties": [
+      {
+        "type": null,
+        "role": "author",
+        "name": "Andr\u00e9 Taiar",
+        "email": null,
+        "url": null
+      },
+      {
+        "type": null,
+        "role": "author",
+        "name": "Jo\u00e3o Fraga",
+        "email": null,
+        "url": null
+      }
+    ],
+    "keywords": [],
+    "homepage_url": "http://coders.appprova.com.br/",
+    "download_url": "https://rubygems.org/downloads/action_tracker-1.0.2.gem",
+    "size": null,
+    "sha1": null,
+    "md5": null,
+    "sha256": null,
+    "sha512": null,
+    "bug_tracking_url": null,
+    "code_view_url": null,
+    "vcs_url": null,
+    "copyright": null,
+    "license_expression": null,
+    "declared_license": "MIT",
+    "notice_text": null,
+    "source_packages": [],
+    "file_references": [],
+    "extra_data": {},
+    "dependencies": [
+      {
+        "purl": "activesupport",
+        "extracted_requirement": ">= 3.2, < 6.0",
+        "scope": "runtime",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "devise",
+        "extracted_requirement": "~> 4",
+        "scope": "runtime",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "bundler",
+        "extracted_requirement": "~> 1.11",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "rake",
+        "extracted_requirement": "~> 10.0",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "rspec-rails",
+        "extracted_requirement": "~> 3.0",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "rails",
+        "extracted_requirement": ">= 3.2, < 6.0",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "guard",
+        "extracted_requirement": "~> 2.13",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "byebug",
+        "extracted_requirement": "~> 5.0",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "guard-rspec",
+        "extracted_requirement": "~> 4.6",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      },
+      {
+        "purl": "jasmine",
+        "extracted_requirement": "~> 2.4",
+        "scope": "development",
+        "is_runtime": true,
+        "is_optional": false,
+        "is_resolved": false,
+        "resolved_package": {},
+        "extra_data": {}
+      }
+    ],
+    "repository_homepage_url": null,
+    "repository_download_url": null,
+    "api_data_url": null,
+    "datasource_id": null,
+    "purl": "pkg:gem/action_tracker@1.0.2"
+  }
+]
