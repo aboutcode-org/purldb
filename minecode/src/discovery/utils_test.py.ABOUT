@@ -2,7 +2,7 @@ about_resource: utils_test.py
 notes: |
  The function model_to_dict() was copied from Django 1.11.16
  django.forms.models.model_to_dict
- and modified to retur an OrderedDict instead of a plain dict
+ and modified to return an ordered mapping instead of a plain dict
 
 attribute: true
 
