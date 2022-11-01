@@ -1,7 +1,7 @@
 The following organizations or individuals have contributed to this repo:
 
 - nexB Inc.
-- Jono Yang
+- Jono Yang @JonoYang
 - Philippe Ombredanne
 - Li Ha
-- Steven Esser
+- Steven Esser @majurg
