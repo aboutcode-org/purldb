@@ -232,7 +232,6 @@ class SeedTest(MiningTestCase):
         # and needs to be updated each time we enable a new seed
         seeds = [c.__class__.__name__ for c in seed.get_active_seeders()]
         expected = [
-            'MavenSeed',
             'NpmSeed',
         ]
         assert sorted(expected) == sorted(seeds)
@@ -240,7 +239,6 @@ class SeedTest(MiningTestCase):
     def test_get_configured_seeders(self):
         seeders = seed.get_configured_seeders()
         expected = [
-            'discovery.visitors.maven.MavenSeed',
             'discovery.visitors.npm.NpmSeed',
         ]
         assert sorted(expected) == sorted(seeders)
