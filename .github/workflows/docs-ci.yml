@@ -24,14 +24,17 @@ jobs:
         run: chmod +x ./docs/scripts/doc8_style_check.sh
 
       - name: Install Dependencies
-        run:  pip install -e minecode[docs]
+        working-directory: ./minecode
+        run: ./configure --docs
 
       - name: Check Sphinx Documentation build minimally
         working-directory: ./docs
-        run: sphinx-build -E -W source build
+        run: |
+          source ../minecode/venv/bin/activate
+          sphinx-build -E -W source build
 
       - name: Check for documentation style errors
         working-directory: ./docs
-        run: ./scripts/doc8_style_check.sh
-
-
+        run: |
+          source ../minecode/venv/bin/activate
+          ./scripts/doc8_style_check.sh
