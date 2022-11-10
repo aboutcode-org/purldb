@@ -54,9 +54,9 @@ ROOT_URLCONF = 'minecodeio.urls'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'minecode',
-        'USER': 'minecode',
-        'PASSWORD': 'minecode',
+        'NAME': 'packagedb',
+        'USER': 'packagedb',
+        'PASSWORD': 'packagedb',
         'HOST': '127.0.0.1',
         'PORT': '5432',
         'ATOMIC_REQUESTS': True,
