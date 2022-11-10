@@ -24,7 +24,7 @@ jobs:
         run: chmod +x ./docs/scripts/doc8_style_check.sh
 
       - name: Install Dependencies
-        run:  pip install -e .[docs]
+        run:  pip install -e minecode[docs]
 
       - name: Check Sphinx Documentation build minimally
         working-directory: ./docs
