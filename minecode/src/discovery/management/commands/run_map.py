@@ -359,13 +359,9 @@ def merge_packages(existing_package, new_package_data, replace=False):
     """
     existing_mapping = existing_package.to_dict()
 
-    # MineCode Package model `to_dict` method serializes `package_url`
-    # while ScanCode Package model's `to_dict` method  does not. A KeyError
-    # will occur when we try to look up `package_url` in `new_mapping`, so
-    # we remove `package_url` from `existing_mapping`. This is acceptable
-    # because updating the `package_url` field is not necessary because the
-    # fields that `package_url` uses to create itself will be updated.
-    existing_mapping.pop('package_url')
+    # We remove `purl` from `existing_mapping` because we use the other purl
+    # fields (type, namespace, name, version, etc.) to generate the purl.
+    existing_mapping.pop('purl')
 
     # FIXME REMOVE this workaround when a ScanCode bug fixed with
     # https://github.com/nexB/scancode-toolkit/commit/9b687e6f9bbb695a10030a81be7b93c8b1d816c2

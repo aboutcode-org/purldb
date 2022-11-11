@@ -252,18 +252,18 @@ class PackageApiTestCase(TestCase):
         Package.objects.create(
             namespace='dummy-namespace',
             name='dummy-name',
-            version='12.34',
+            version='12.35',
             download_url='https://dummy.com/dummy'
         )
 
         for key, value in self.package_data.items():
-            # Skip since we only search on 1 field
+            # Skip since we only search on one field
             if key not in ['namespace', 'name', 'version', 'download_url']:
                 continue
 
             response = self.client.get('/api/packages/?search={}'.format(value))
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertEqual(1, response.data.get('count'))
+            assert response.status_code == status.HTTP_200_OK
+            assert response.data.get('count') == 1
 
     def test_package_api_retrieve_endpoint(self):
         response = self.client.get('/api/packages/{}/'.format(self.package.uuid))
@@ -302,7 +302,7 @@ class PackageApiTestCase(TestCase):
 
     def test_api_package_resources_action(self):
         # create 10 resources
-        for i in range(0,10):
+        for i in range(0, 10):
             Resource.objects.create(package=self.package, path='path{}/'.format(i))
 
         response = self.client.get(reverse('api:package-resources', args=[self.package.uuid]))
@@ -310,7 +310,7 @@ class PackageApiTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(10, len(response.data))
 
-        for result, i in zip(response.data, range(0,10)):
+        for result, i in zip(response.data, range(0, 10)):
             self.assertEqual(result.get('path'), 'path{}/'.format(i))
 
 

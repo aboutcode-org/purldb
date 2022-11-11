@@ -66,10 +66,10 @@ class DependentPackageSerializer(ModelSerializer):
 
 
 class PackageAPISerializer(HyperlinkedModelSerializer):
-    parties = PartySerializer(many=True)
     dependencies = DependentPackageSerializer(many=True)
-    url = HyperlinkedIdentityField(view_name='api:package-detail', lookup_field='uuid')
+    parties = PartySerializer(many=True)
     resources = HyperlinkedIdentityField(view_name='api:package-resources', lookup_field='uuid')
+    url = HyperlinkedIdentityField(view_name='api:package-detail', lookup_field='uuid')
 
     class Meta:
         model = Package
@@ -77,7 +77,7 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
             'url',
             'uuid',
             'filename',
-            'release_date',
+            'purl',
             'type',
             'namespace',
             'name',
@@ -86,13 +86,14 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
             'subpath',
             'primary_language',
             'description',
+            'release_date',
             'parties',
             'keywords',
             'homepage_url',
             'download_url',
             'size',
-            'sha1',
             'md5',
+            'sha1',
             'sha256',
             'sha512',
             'bug_tracking_url',
@@ -102,14 +103,15 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
             'license_expression',
             'declared_license',
             'notice_text',
-            'contains_source_code',
-            'root_path',
-            'dependencies',
             'source_packages',
-            'package_url',
-            'history',
-            'resources',
             'extra_data',
+            'api_data_url',
+            'datasource_id',
+            'manifest_path',
+            'contains_source_code',
+            'file_references',
+            'dependencies',
+            'resources',
         )
 
 
@@ -121,8 +123,8 @@ class PackageMetadataSerializer(ModelSerializer):
     This differs from PackageSerializer used for the API by the addition of
     the `package_url` field and the exclusion of the `uuid`, and `filename` fields.
     """
-    parties = PartySerializer(many=True)
     dependencies = DependentPackageSerializer(many=True)
+    parties = PartySerializer(many=True)
 
     class Meta:
         model = Package
@@ -141,8 +143,8 @@ class PackageMetadataSerializer(ModelSerializer):
             'homepage_url',
             'download_url',
             'size',
-            'sha1',
             'md5',
+            'sha1',
             'sha256',
             'sha512',
             'bug_tracking_url',
@@ -152,9 +154,13 @@ class PackageMetadataSerializer(ModelSerializer):
             'license_expression',
             'declared_license',
             'notice_text',
-            'root_path',
-            'dependencies',
-            'contains_source_code',
             'source_packages',
-            'package_url',
+            'extra_data',
+            'api_data_url',
+            'datasource_id',
+            'purl',
+            'manifest_path',
+            'contains_source_code',
+            'file_references',
+            'dependencies',
         )

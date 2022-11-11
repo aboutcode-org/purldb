@@ -22,6 +22,6 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "minecodeio.settings.production")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "minecodeio.settings")
 
 application = get_wsgi_application()
