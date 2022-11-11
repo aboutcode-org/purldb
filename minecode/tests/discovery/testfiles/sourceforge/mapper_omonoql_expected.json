@@ -1,0 +1,62 @@
+[
+  {
+    "type":"sourceforge",
+    "namespace":null,
+    "name":"monoql",
+    "version":null,
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":"php, JavaScript",
+    "description":"MonoQL is an AJAX web application to manage MySQL databases. MonoQL will provide all major features of phpMyAdmin for MySQL, including database & table design, data browsing & editing, advanced querying & more. MySQL 4+, MySQL 5+ and MySQL 6+ support",
+    "release_date":null,
+    "parties":[
+      {
+        "type":null,
+        "role":"contributor",
+        "name":"Damian O'Brien",
+        "email":null,
+        "url":"https://sourceforge.net/u/damianobrien/"
+      },
+      {
+        "type":null,
+        "role":"contributor",
+        "name":"Johnathan Hebert",
+        "email":null,
+        "url":"https://sourceforge.net/u/johnathanhebert/"
+      },
+      {
+        "type":null,
+        "role":"contributor",
+        "name":"JDCommerce Inc",
+        "email":null,
+        "url":"https://sourceforge.net/u/jdcommerce/"
+      }
+    ],
+    "keywords":[
+      "frontends"
+    ],
+    "homepage_url":"http://www.monoql.com",
+    "download_url":null,
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":null,
+    "copyright":null,
+    "license_expression":null,
+    "declared_license":"gpl\nGNU General Public License version 2.0 (GPLv2)",
+    "notice_text":null,
+    "source_packages":[],
+    "extra_data":{},
+    "repository_homepage_url":null,
+    "repository_download_url":null,
+    "api_data_url":null,
+    "package_uid":"pkg:sourceforge/monoql?uuid=fixed-uid-done-for-testing-5642512d1758",
+    "datafile_paths":[],
+    "datasource_ids":[],
+    "purl":"pkg:sourceforge/monoql"
+  }
+]

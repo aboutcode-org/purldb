@@ -1,0 +1,55 @@
+{"Project":{
+    "name":"FileZilla",
+    "created":"Feb 27, 2001",
+    "created_timestamp":983261072,
+    "id":21558,
+    "private":0,
+    "type":10,
+    "shortdesc":"filezilla",
+    "description":"FileZilla is a cross-platform graphical FTP, FTPS and SFTP client with a lot of features, supporting Windows, Linux, Mac OS X and more. FileZilla Server is a reliable FTP server for Windows.",
+    "percentile":99.9537184864,
+    "ranking":259,
+    "status":"A",
+    "download-page":"http://sourceforge.net/project/showfiles.php?group_id=21558",
+    "support-page":"http://sourceforge.net/projects/filezilla/support",
+    "summary-page":"http://sourceforge.net/projects/filezilla",
+    "mailing-list":"http://sourceforge.net/mail/?group_id=21558",
+    "homepage":"https://filezilla-project.org/",
+    "base_url":"http://sourceforge.net",
+    "CVSRepository":{
+        "anon-root":":pserver:anonymous@filezilla.cvs.sourceforge.net:/cvsroot/filezilla",
+        "module":"filezilla",
+        "browse":"http://filezilla.cvs.sourceforge.net/filezilla"
+        },
+    "licenses":[
+            {"name":"GNU General Public License version 2.0 (GPLv2)","url":"http://www.opensource.org/licenses/gpl-license.php"}        ],
+    "os":[
+    "Windows 7",    "Vista",    "Microsoft Windows Server 2003",    "WinXP",    "OS X",    "FreeBSD",    "Linux"    ],
+    "topics":[
+    "Networking",    "File Transfer Protocol (FTP)",    "File Sharing"    ],
+    "programming-languages":[
+    "C++"    ],
+    "audiences":[
+    "End Users/Desktop",    "Developers"    ],
+    "translations":[
+    "Hungarian",    "Arabic",    "Russian",    "Spanish",    "Japanese",    "German",    "Chinese (Simplified)",    "Swedish",    "Chinese (Traditional)",    "Portuguese",    "English",    "Greek",    "Hebrew",    "Polish",    "Dutch",    "French"    ],
+    "environments":[
+    "wxWidgets"    ],
+    "categories": [
+            "wxWidgets",            "Hungarian",            "Arabic",            "Russian",            "Spanish",            "Japanese",            "German",            "Chinese (Simplified)",            "Swedish",            "Chinese (Traditional)",            "Portuguese",            "English",            "Greek",            "Hebrew",            "Polish",            "Dutch",            "French",            "Networking",            "File Transfer Protocol (FTP)",            "File Sharing",            "C++",            "Windows 7",            "Vista",            "Microsoft Windows Server 2003",            "WinXP",            "OS X",            "FreeBSD",            "Linux",            "GNU General Public License version 2.0 (GPLv2)",            "End Users/Desktop",            "Developers",            "5 - Production/Stable"        ],
+    "trackers":[
+    {"name":"Bugs","location":"http://sourceforge.net/tracker/?group_id=21558&atid=372241"},    {"name":"Patches","location":"http://sourceforge.net/tracker/?group_id=21558&atid=372243"},    {"name":"Feature Requests","location":"http://sourceforge.net/tracker/?group_id=21558&atid=372244"},    {"name":"FileZilla 3 bug reports","location":"http://sourceforge.net/tracker/?group_id=21558&atid=887596"}    ],
+    "maintainers":[
+        {"name":"botg","homepage":"http://sourceforge.net/users/botg","mbox_sha1sum":"8244c364a8bd4d9c9dd52a4aea378573750d3d6c"}    ],
+    "developers":[
+        {"name":"ci-dev","homepage":"http://sourceforge.net/users/ci-dev","mbox_sha1sum":"07f861f355f0cd4bd274fafc0596be08114f23ac"},        {"name":"eddan","homepage":"http://sourceforge.net/users/eddan","mbox_sha1sum":"e046ade488941eed8d7306129185bdbaf4291eae"}    
+    ],
+    "donation": {
+    "donation-page":"http://sourceforge.net/donate/index.php?group_id=21558",
+        "comment":"All donations will be used to help the project.",
+        "status":"Accepting",
+        "charities":[
+        ]
+    
+    }
+}}

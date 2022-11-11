@@ -1,0 +1,64 @@
+[
+  {
+    "type":"sourceforge",
+    "namespace":null,
+    "name":"niftyphp",
+    "version":null,
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":"php, JavaScript",
+    "description":"Cognifty Framework offers the simplest way to build complex, vertical Web applications for your industry. Flexible enough to run other frameworks inside itself, Cognifty is the perfect choice for new integration or legacy development. ",
+    "release_date":null,
+    "parties":[
+      {
+        "type":null,
+        "role":"contributor",
+        "name":"Mark K",
+        "email":null,
+        "url":"https://sourceforge.net/u/hardcorelamer/"
+      },
+      {
+        "type":null,
+        "role":"contributor",
+        "name":"scottgilvin",
+        "email":null,
+        "url":"https://sourceforge.net/u/scottgilvin/"
+      },
+      {
+        "type":null,
+        "role":"contributor",
+        "name":"Mark Kimsal",
+        "email":null,
+        "url":"https://sourceforge.net/u/markkimsal/"
+      }
+    ],
+    "keywords":[
+      "filesharing",
+      "scheduling",
+      "dynamic"
+    ],
+    "homepage_url":"http://cognifty.com/",
+    "download_url":null,
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":null,
+    "copyright":null,
+    "license_expression":null,
+    "declared_license":"bsd\nBSD License",
+    "notice_text":null,
+    "source_packages":[],
+    "extra_data":{},
+    "repository_homepage_url":null,
+    "repository_download_url":null,
+    "api_data_url":null,
+    "package_uid":"pkg:sourceforge/niftyphp?uuid=fixed-uid-done-for-testing-5642512d1758",
+    "datafile_paths":[],
+    "datasource_ids":[],
+    "purl":"pkg:sourceforge/niftyphp"
+  }
+]
