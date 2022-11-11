@@ -28,9 +28,9 @@ CLI_ARGS=$1
 ################################
 
 # Requirement arguments passed to pip and used by default or with --dev.
-REQUIREMENTS="--editable ../packagedb --editable . --constraint requirements.txt https://github.com/nexB/scancode-toolkit/archive/refs/heads/develop.zip"
-DEV_REQUIREMENTS="--editable ../packagedb[testing] --editable .[testing] --constraint requirements.txt --constraint requirements-dev.txt https://github.com/nexB/scancode-toolkit/archive/refs/heads/develop.zip"
-DOCS_REQUIREMENTS="--editable ../packagedb[docs] --editable .[docs] --constraint requirements.txt https://github.com/nexB/scancode-toolkit/archive/refs/heads/develop.zip"
+REQUIREMENTS="--editable ../packagedb --editable . --constraint requirements.txt https://github.com/nexB/scancode-toolkit/archive/817161527c864aff937a235856ba9f4d40445c8a.zip"
+DEV_REQUIREMENTS="--editable ../packagedb[testing] --editable .[testing] --constraint requirements.txt --constraint requirements-dev.txt https://github.com/nexB/scancode-toolkit/archive/817161527c864aff937a235856ba9f4d40445c8a.zip"
+DOCS_REQUIREMENTS="--editable ../packagedb[docs] --editable .[docs] --constraint requirements.txt https://github.com/nexB/scancode-toolkit/archive/817161527c864aff937a235856ba9f4d40445c8a.zip"
 
 # where we create a virtualenv
 VIRTUALENV_DIR=venv
