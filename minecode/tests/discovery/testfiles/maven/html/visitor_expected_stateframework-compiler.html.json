@@ -1,0 +1,34 @@
+[
+  {
+    "uri":"http://jcenter.bintray.com/'com/virtualightning'/stateframework-compiler/0.1.1/",
+    "source_uri":"http://jcenter.bintray.com/'com/virtualightning'/stateframework-compiler/",
+    "package_url":null,
+    "file_name":null,
+    "size":null,
+    "date":null,
+    "md5":null,
+    "sha1":null,
+    "sha256":null,
+    "priority":0,
+    "data":null,
+    "visited":false,
+    "mining_level":0,
+    "visit_error":null
+  },
+  {
+    "uri":"http://jcenter.bintray.com/'com/virtualightning'/stateframework-compiler/maven-metadata.xml",
+    "source_uri":"http://jcenter.bintray.com/'com/virtualightning'/stateframework-compiler/",
+    "package_url":null,
+    "file_name":"maven-metadata.xml",
+    "size":null,
+    "date":null,
+    "md5":null,
+    "sha1":null,
+    "sha256":null,
+    "priority":0,
+    "data":null,
+    "visited":false,
+    "mining_level":0,
+    "visit_error":null
+  }
+]

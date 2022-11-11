@@ -1,0 +1,259 @@
+{
+  "type": "maven",
+  "namespace": "edu.psu.swe.commons",
+  "name": "commons-jaxrs",
+  "version": "1.21",
+  "qualifiers": {},
+  "subpath": null,
+  "primary_language": "Java",
+  "description": "Common JAXRS Libraries\nCommon classes to make creating REST services more consistent.",
+  "release_date": null,
+  "parties": [
+    {
+      "type": "person",
+      "role": "developper",
+      "name": "Shawn Smith",
+      "email": "ses44@psu.edu",
+      "url": "https://github.com/ussmith"
+    },
+    {
+      "type": "person",
+      "role": "developper",
+      "name": "Christopher Harm",
+      "email": "crh5255@psu.edu",
+      "url": "https://github.com/chrisharm"
+    },
+    {
+      "type": "person",
+      "role": "developper",
+      "name": "Steve Moyer",
+      "email": "smoyer@psu.edu",
+      "url": "https://github.com/smoyer64"
+    },
+    {
+      "type": "person",
+      "role": "developper",
+      "name": "Matt Teeter",
+      "email": "mat21@psu.edu",
+      "url": "https://github.com/mat328"
+    },
+    {
+      "type": "person",
+      "role": "developper",
+      "name": "Ben Homan",
+      "email": "bhoman@psu.edu",
+      "url": "https://github.com/bhoman127"
+    },
+    {
+      "type": "person",
+      "role": "developper",
+      "name": "Niraja Ramesh",
+      "email": "nur1@psu.edu",
+      "url": "https://github.com/nur1"
+    }
+  ],
+  "keywords": [],
+  "homepage_url": "https://github.com/PennState/commons-jaxrs",
+  "download_url": null,
+  "size": null,
+  "sha1": null,
+  "md5": null,
+  "sha256": null,
+  "sha512": null,
+  "bug_tracking_url": null,
+  "code_view_url": "https://github.com/PennState/commons-jaxrs",
+  "vcs_url": "git+ssh://git@github.com:PennState/commons-jaxrs.git",
+  "copyright": null,
+  "license_expression": "apache-2.0 AND unknown",
+  "declared_license": [
+    {
+      "name": "The Apache License, Version 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.txt",
+      "comments": null,
+      "distribution": null
+    }
+  ],
+  "notice_text": null,
+  "source_packages": [
+    "pkg:maven/edu.psu.swe.commons/commons-jaxrs@1.21?classifier=sources"
+  ],
+  "file_references": [],
+  "extra_data": {},
+  "dependencies": [
+    {
+      "purl": "pkg:maven/javax.mail/javax.mail-api@1.4.5",
+      "extracted_requirement": "1.4.5",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/bouncycastle/bcprov-jdk16@140",
+      "extracted_requirement": "140",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.8.8",
+      "extracted_requirement": "2.8.8",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/javax/javaee-api@7.0",
+      "extracted_requirement": "7.0",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.8.8",
+      "extracted_requirement": "2.8.8",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.module/jackson-module-jaxb-annotations@2.8.8",
+      "extracted_requirement": "2.8.8",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/commons-net/commons-net@3.4",
+      "extracted_requirement": "3.4",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/org.slf4j/slf4j-api@1.7.25",
+      "extracted_requirement": "1.7.25",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/org.jboss.resteasy/resteasy-jaxrs@3.1.2.Final",
+      "extracted_requirement": "3.1.2.Final",
+      "scope": "provided",
+      "is_runtime": true,
+      "is_optional": false,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/org.jboss.resteasy/resteasy-validator-provider-11@3.1.2.Final",
+      "extracted_requirement": "3.1.2.Final",
+      "scope": "provided",
+      "is_runtime": true,
+      "is_optional": false,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/org.projectlombok/lombok@1.16.16",
+      "extracted_requirement": "1.16.16",
+      "scope": "provided",
+      "is_runtime": true,
+      "is_optional": false,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/org.jboss.resteasy/resteasy-jaxb-provider@3.1.2.Final",
+      "extracted_requirement": "3.1.2.Final",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/org.jboss.resteasy/resteasy-jackson2-provider@3.1.2.Final",
+      "extracted_requirement": "3.1.2.Final",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/junit/junit@4.12",
+      "extracted_requirement": "4.12",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/pl.pragmatists/JUnitParams@1.1.0",
+      "extracted_requirement": "1.1.0",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/org.mockito/mockito-all@1.10.19",
+      "extracted_requirement": "1.10.19",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/org.slf4j/slf4j-simple@1.7.25",
+      "extracted_requirement": "1.7.25",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    }
+  ],
+  "repository_homepage_url": "https://repo1.maven.org/maven2/edu/psu/swe/commons/commons-jaxrs/1.21/",
+  "repository_download_url": "https://repo1.maven.org/maven2/edu/psu/swe/commons/commons-jaxrs/1.21/commons-jaxrs-1.21.jar",
+  "api_data_url": "https://repo1.maven.org/maven2/edu/psu/swe/commons/commons-jaxrs/1.21/commons-jaxrs-1.21.pom",
+  "datasource_id": "maven_pom",
+  "purl": "pkg:maven/edu.psu.swe.commons/commons-jaxrs@1.21"
+}

@@ -1,0 +1,207 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>struts-menu</groupId>
+  <artifactId>struts-menu</artifactId>
+  <name>Struts Menu</name>
+  <version>2.4.2</version>
+  <description>This application allows creation of many different
+        menu systems from an XML file or dynamically from a database.</description>
+  <url>http://struts-menu.sourceforge.net</url>
+  <issueManagement>
+    <url>http://issues.appfuse.org/browse/SM</url>
+  </issueManagement>
+  <ciManagement>
+    <notifiers>
+      <notifier>
+        <address>mraible@users.sourceforge.net</address>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+  <inceptionYear>2003</inceptionYear>
+  <mailingLists>
+    <mailingList>
+      <name>User Mailing List</name>
+      <subscribe>http://lists.sourceforge.net/lists/listinfo/${pom.groupId}-user</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/${pom.groupId}-user</unsubscribe>
+      <archive>http://www.mail-archive.com/struts-menu-user@lists.sf.net/</archive>
+    </mailingList>
+    <mailingList>
+      <name>Developer Mailing List</name>
+      <subscribe>http://lists.sourceforge.net/lists/listinfo/${pom.groupId}-devel</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/${pom.groupId}-devel</unsubscribe>
+      <archive>http://www.mail-archive.com/struts-menu-devel@lists.sf.net/</archive>
+    </mailingList>
+    <mailingList>
+      <name>CVS Commits Mailing List</name>
+      <subscribe>http://lists.sourceforge.net/lists/listinfo/${pom.groupId}-cvs</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/${pom.groupId}-cvs</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-cvs</archive>
+    </mailingList>
+  </mailingLists>
+  <developers>
+    <developer>
+      <id>ssayles</id>
+      <name>Scott Sayles</name>
+      <email>ssayles AT users.sourceforge.net</email>
+    </developer>
+    <developer>
+      <id>mraible</id>
+      <name>Matt Raible</name>
+      <email>mraible AT users.sourceforge.net</email>
+      <organization>Raible Designs, Inc.</organization>
+      <roles>
+        <role>Project Administrator</role>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>-7</timezone>
+    </developer>
+  </developers>
+  <contributors>
+    <contributor>
+      <name>Charles Miller</name>
+      <email>cmiller AT pastiche.org</email>
+      <organization></organization>
+      <timezone></timezone>
+    </contributor>
+    <contributor>
+      <name>Dan Luputan</name>
+      <email>dluputan AT iquestint.com</email>
+      <timezone></timezone>
+    </contributor>
+  </contributors>
+  <scm>
+    <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/struts-menu:navigator</connection>
+    <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/struts-menu:navigator</developerConnection>
+    <url>http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/struts-menu/navigator/</url>
+  </scm>
+  <organization>
+    <name>SourceForge</name>
+    <url>http://struts-menu.sourceforge.net/</url>
+  </organization>
+  <build>
+    <sourceDirectory>src/java</sourceDirectory>
+    <testSourceDirectory>src/test</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/java</directory>
+        <includes>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>${basedir}/src/conf</directory>
+        <includes>
+          <include>**/*.tld</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.6.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-digester</groupId>
+      <artifactId>commons-digester</artifactId>
+      <version>1.7</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.7.1</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.8</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.3</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.0.6</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>taglibs</groupId>
+      <artifactId>standard</artifactId>
+      <version>1.0.6</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>struts</groupId>
+      <artifactId>struts</artifactId>
+      <version>1.2.9</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>springframework</groupId>
+      <artifactId>spring</artifactId>
+      <version>1.2.6</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>velocity-tools</groupId>
+      <artifactId>velocity-tools-view</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>default</id>
+      <name>Default Repository</name>
+      <url>file:///home/groups/s/st/struts-menu/htdocs/builds/</url>
+    </repository>
+    <site>
+      <id>default</id>
+      <name>Default Site</name>
+      <url>scp://shell.sourceforge.net//home/groups/s/st/struts-menu/htdocs</url>
+    </site>
+  </distributionManagement>
+</project>
+

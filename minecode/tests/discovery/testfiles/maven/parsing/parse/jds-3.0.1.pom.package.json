@@ -1,0 +1,104 @@
+{
+  "type": "maven",
+  "namespace": "io.github.subiyacryolite",
+  "name": "jds",
+  "version": "3.0.1",
+  "qualifiers": {},
+  "subpath": null,
+  "primary_language": "Java",
+  "description": "Jenesis Data Store\nA dynamic, cross platform, high performance, ORM data-mapper. Designed to assist in rapid development and data mining",
+  "release_date": null,
+  "parties": [
+    {
+      "type": "person",
+      "role": "developper",
+      "name": "Ifunga Ndana",
+      "email": "ifungandana@gmail.com",
+      "url": null
+    }
+  ],
+  "keywords": [],
+  "homepage_url": "https://github.com/SubiyaCryolite/Jenesis-Data-Store",
+  "download_url": null,
+  "size": null,
+  "sha1": null,
+  "md5": null,
+  "sha256": null,
+  "sha512": null,
+  "bug_tracking_url": null,
+  "code_view_url": "https://github.com/SubiyaCryolite/Jenesis-Data-Store",
+  "vcs_url": "git+https://github.com/SubiyaCryolite/Jenesis-Data-Store.git",
+  "copyright": null,
+  "license_expression": "bsd-new AND unknown",
+  "declared_license": [
+    {
+      "name": "The 3-Clause BSD License",
+      "url": "https://opensource.org/licenses/BSD-3-Clause",
+      "comments": null,
+      "distribution": null
+    }
+  ],
+  "notice_text": null,
+  "source_packages": [
+    "pkg:maven/io.github.subiyacryolite/jds@3.0.1?classifier=sources"
+  ],
+  "file_references": [],
+  "extra_data": {},
+  "dependencies": [
+    {
+      "purl": "pkg:maven/junit/junit@4.12",
+      "extracted_requirement": "4.12",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/org.xerial/sqlite-jdbc@3.16.1",
+      "extracted_requirement": "3.16.1",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/com.microsoft.sqlserver/sqljdbc4@4.0",
+      "extracted_requirement": "4.0",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/org.postgresql/postgresql@42.0.0",
+      "extracted_requirement": "42.0.0",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/mysql/mysql-connector-java@6.0.6",
+      "extracted_requirement": "6.0.6",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    }
+  ],
+  "repository_homepage_url": "https://repo1.maven.org/maven2/io/github/subiyacryolite/jds/3.0.1/",
+  "repository_download_url": "https://repo1.maven.org/maven2/io/github/subiyacryolite/jds/3.0.1/jds-3.0.1.jar",
+  "api_data_url": "https://repo1.maven.org/maven2/io/github/subiyacryolite/jds/3.0.1/jds-3.0.1.pom",
+  "datasource_id": "maven_pom",
+  "purl": "pkg:maven/io.github.subiyacryolite/jds@3.0.1"
+}

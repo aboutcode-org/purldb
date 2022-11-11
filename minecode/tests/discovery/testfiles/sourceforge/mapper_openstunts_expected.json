@@ -1,0 +1,48 @@
+[
+  {
+    "type":"sourceforge",
+    "namespace":null,
+    "name":"openstunts",
+    "version":null,
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":"c",
+    "description":"This projects aims at bringing the original Stunts - 4D Driving Game from 1992 to the present time. We will use OpenGL for the graphics. It will be backward-compatible with tracks created for the original game and add more features!",
+    "release_date":null,
+    "parties":[
+      {
+        "type":null,
+        "role":"contributor",
+        "name":"nikazon",
+        "email":null,
+        "url":"https://sourceforge.net/u/nikazon/"
+      }
+    ],
+    "keywords":[
+      "simulation"
+    ],
+    "homepage_url":"https://openstunts.sourceforge.io",
+    "download_url":null,
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":null,
+    "copyright":null,
+    "license_expression":null,
+    "declared_license":"gpl\nGNU General Public License version 2.0 (GPLv2)",
+    "notice_text":null,
+    "source_packages":[],
+    "extra_data":{},
+    "repository_homepage_url":null,
+    "repository_download_url":null,
+    "api_data_url":null,
+    "package_uid":"pkg:sourceforge/openstunts?uuid=fixed-uid-done-for-testing-5642512d1758",
+    "datafile_paths":[],
+    "datasource_ids":[],
+    "purl":"pkg:sourceforge/openstunts"
+  }
+]

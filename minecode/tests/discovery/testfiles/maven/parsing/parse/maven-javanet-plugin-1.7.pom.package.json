@@ -1,0 +1,129 @@
+{
+  "type": "maven",
+  "namespace": "maven-javanet-plugin",
+  "name": "maven-javanet-plugin",
+  "version": null,
+  "qualifiers": {},
+  "subpath": null,
+  "primary_language": "Java",
+  "description": "Maven java.net plugin",
+  "release_date": null,
+  "parties": [
+    {
+      "type": "person",
+      "role": "developper",
+      "name": "Kohsuke Kawaguchi",
+      "email": "kk@kohsuke.org",
+      "url": null
+    },
+    {
+      "type": "person",
+      "role": "developper",
+      "name": "Ross Bamford",
+      "email": "ross@roscopeco.co.uk",
+      "url": null
+    },
+    {
+      "type": "organization",
+      "role": "owner",
+      "name": "java.net",
+      "email": null,
+      "url": "http://www.java.net/"
+    }
+  ],
+  "keywords": [],
+  "homepage_url": null,
+  "download_url": null,
+  "size": null,
+  "sha1": null,
+  "md5": null,
+  "sha256": null,
+  "sha512": null,
+  "bug_tracking_url": null,
+  "code_view_url": null,
+  "vcs_url": null,
+  "copyright": null,
+  "license_expression": null,
+  "declared_license": null,
+  "notice_text": null,
+  "source_packages": [],
+  "file_references": [],
+  "extra_data": {},
+  "dependencies": [
+    {
+      "purl": "pkg:maven/httpunit/httpunit@1.5.4",
+      "extracted_requirement": "1.5.4",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/xml-apis/xml-apis@2.0.0",
+      "extracted_requirement": "2.0.0",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/xerces/xerces@2.2.1",
+      "extracted_requirement": "2.2.1",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/jtidy/jtidy@4aug2000r7-dev",
+      "extracted_requirement": "4aug2000r7-dev",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/nekohtml/nekohtml@0.9.5",
+      "extracted_requirement": "0.9.5",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/dom4j/dom4j@1.4",
+      "extracted_requirement": "1.4",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    },
+    {
+      "purl": "pkg:maven/jaxen/jaxen@1.0-FCS-full",
+      "extracted_requirement": "1.0-FCS-full",
+      "scope": "compile",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true,
+      "resolved_package": {},
+      "extra_data": {}
+    }
+  ],
+  "repository_homepage_url": "https://repo1.maven.org/maven2/maven-javanet-plugin/maven-javanet-plugin/None/",
+  "repository_download_url": "https://repo1.maven.org/maven2/maven-javanet-plugin/maven-javanet-plugin/None/maven-javanet-plugin-None.jar",
+  "api_data_url": "https://repo1.maven.org/maven2/maven-javanet-plugin/maven-javanet-plugin/None/maven-javanet-plugin-None.pom",
+  "datasource_id": "maven_pom",
+  "purl": "pkg:maven/maven-javanet-plugin/maven-javanet-plugin"
+}
