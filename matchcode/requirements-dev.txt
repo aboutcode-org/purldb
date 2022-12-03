@@ -1,0 +1,14 @@
+aboutcode-toolkit==7.2.0
+black==22.10.0
+et-xmlfile==1.1.0
+exceptiongroup==1.0.4
+execnet==1.9.0
+iniconfig==1.1.1
+mypy-extensions==0.4.3
+openpyxl==3.0.10
+pathspec==0.10.2
+platformdirs==2.5.4
+pytest==7.2.0
+pytest-django==4.5.2
+pytest-xdist==3.0.2
+tomli==2.0.1

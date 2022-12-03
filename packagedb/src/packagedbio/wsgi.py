@@ -18,6 +18,6 @@ It exposes the WSGI callable as a module-level variable named ``application``.
 """
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'packagedbio.settings.production')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'packagedbio.settings')
 
 application = get_wsgi_application()
