@@ -55,6 +55,8 @@ INSTALLED_APPS = (
     # Must come before Third-party apps for proper templates override
     'matchcode',
     'packagedb',
+    'clearindex',
+    'clearcode',
     # Django built-in
     "django.contrib.auth",
     'django.contrib.contenttypes',
@@ -84,26 +86,15 @@ WSGI_APPLICATION = "matchcodeio.wsgi.application"
 
 # Database
 
-DATABASE_ROUTERS = ['matchcodeio.settings.dbrouter.PackagedbRouter']
-DATABASE_APPS_MAPPING = {'packagedb': 'packagedb'}
 DATABASES = {
     'default': {
         'ENGINE': env.str('MATCHCODEIO_DB_ENGINE', 'django.db.backends.postgresql'),
         'HOST': env.str('MATCHCODEIO_DB_HOST', 'localhost'),
-        'NAME': env.str('MATCHCODEIO_DB_NAME', 'matchcode'),
-        'USER': env.str('MATCHCODEIO_DB_USER', 'matchcode'),
-        'PASSWORD': env.str('MATCHCODEIO_DB_PASSWORD', 'matc34-u5er'),
+        'NAME': env.str('MATCHCODEIO_DB_NAME', 'packagedb'),
+        'USER': env.str('MATCHCODEIO_DB_USER', 'packagedb'),
+        'PASSWORD': env.str('MATCHCODEIO_DB_PASSWORD', 'packagedb'),
         'PORT': env.str('MATCHCODEIO_DB_PORT', '5432'),
         'ATOMIC_REQUESTS': True,
-    },
-    'packagedb': {
-        "ENGINE": env.str("PACKAGEDB_DB_ENGINE", "django.db.backends.postgresql"),
-        "HOST": env.str("PACKAGEDB_DB_HOST", "localhost"),
-        "NAME": env.str("PACKAGEDB_DB_NAME", "packagedb"),
-        "USER": env.str("PACKAGEDB_DB_USER", "packagedb"),
-        "PASSWORD": env.str("PACKAGEDB_DB_PASSWORD", "packagedb"),
-        "PORT": env.str("PACKAGEDB_DB_PORT", "5432"),
-        "ATOMIC_REQUESTS": True,
     }
 }
 
