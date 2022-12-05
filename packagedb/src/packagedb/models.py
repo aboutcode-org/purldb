@@ -487,8 +487,6 @@ class Package(
             return sorted_versions[-1]
 
 
-# TODO: Sync with DejaCode and insure that DejaCode and MineCode use the same definition
-# and same case for everything. We will need to check organization.models.Owner's OWNER_TYPE_CHOICES
 party_person = 'person'
 # often loosely defined
 party_project = 'project'

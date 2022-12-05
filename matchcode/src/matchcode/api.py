@@ -1,5 +1,10 @@
 #
-# Copyright (c) nexB Inc. http://www.nexb.com/ - All rights reserved.
+# Copyright (c) nexB Inc. and others. All rights reserved.
+# purldb is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/purldb for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
 
 from django.db.models import Q
@@ -80,7 +85,6 @@ class CharMultipleWidget(widgets.TextInput):
     """
     Enables the support for `MultiValueDict` `?field=a&field=b`
     reusing the `SelectMultiple.value_from_datadict()` but render as a `TextInput`.
-    Taken from https://github.com/nexB/dejacode/blob/80fded5521f682b554621a8781fec5560d0c1f09/dje/filters.py#L310
     """
     def value_from_datadict(self, data, files, name):
         value = widgets.SelectMultiple().value_from_datadict(data, files, name)
@@ -99,7 +103,6 @@ class CharMultipleWidget(widgets.TextInput):
 class MultipleCharField(MultipleChoiceField):
     """
     Overrides `MultipleChoiceField` to fit in `MultipleCharFilter`.
-    Taken from https://github.com/nexB/dejacode/blob/80fded5521f682b554621a8781fec5560d0c1f09/dje/filters.py#L330
     """
     widget = CharMultipleWidget
 
@@ -110,7 +113,6 @@ class MultipleCharField(MultipleChoiceField):
 class MultipleCharFilter(MultipleChoiceFilter):
     """
     Filters on multiple values for a CharField type using `?field=a&field=b` URL syntax.
-    Taken from https://github.com/nexB/dejacode/blob/80fded5521f682b554621a8781fec5560d0c1f09/dje/filters.py#L340
     """
     field_class = MultipleCharField
 
