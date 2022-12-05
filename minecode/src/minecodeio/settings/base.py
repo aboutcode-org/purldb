@@ -36,7 +36,9 @@ INSTALLED_APPS = (
     'rest_framework',
     'django_filters',
     'discovery',
+    'clearindex',
     'packagedb',
+    'clearcode',
 )
 
 MIDDLEWARE = (

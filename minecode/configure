@@ -27,10 +27,12 @@ CLI_ARGS=$1
 # Defaults. Change these variables to customize this script
 ################################
 
+CUSTOM_PACKAGES="https://github.com/nexB/scancode-toolkit/archive/refs/heads/maven-pom-parse-dep-backport.zip https://github.com/nexB/clearcode-toolkit/archive/e073e95878b375ec92d817a62c65d963408ff248.zip"
+
 # Requirement arguments passed to pip and used by default or with --dev.
-REQUIREMENTS="--editable ../packagedb --editable . --constraint requirements.txt https://github.com/nexB/scancode-toolkit/archive/817161527c864aff937a235856ba9f4d40445c8a.zip"
-DEV_REQUIREMENTS="--editable ../packagedb[testing] --editable .[testing] --constraint requirements.txt --constraint requirements-dev.txt https://github.com/nexB/scancode-toolkit/archive/817161527c864aff937a235856ba9f4d40445c8a.zip"
-DOCS_REQUIREMENTS="--editable ../packagedb[docs] --editable .[docs] --constraint requirements.txt https://github.com/nexB/scancode-toolkit/archive/817161527c864aff937a235856ba9f4d40445c8a.zip"
+REQUIREMENTS="--editable ../packagedb --editable . --constraint requirements.txt $CUSTOM_PACKAGES"
+DEV_REQUIREMENTS="--editable ../packagedb[testing] --editable .[testing] --constraint requirements.txt --constraint requirements-dev.txt $CUSTOM_PACKAGES"
+DOCS_REQUIREMENTS="--editable ../packagedb[docs] --editable .[docs] --constraint requirements.txt $CUSTOM_PACKAGES"
 
 # where we create a virtualenv
 VIRTUALENV_DIR=venv
