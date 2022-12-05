@@ -1,0 +1,92 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) nexB Inc. and others. All rights reserved.
+#
+# ClearCode is a free software tool from nexB Inc. and others.
+# Visit https://github.com/nexB/clearcode-toolkit/ for support and download.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Create project group
+  group:
+    name: "{{ project_name }}"
+    state: present
+
+- name: Create project user
+  user:
+    name: "{{ project_name }}"
+    group: "{{ project_name }}"
+    state: present
+    create_home: no
+    shell: /bin/bash
+
+# Copy the public key `ssh_public_key` value from the ansible output
+# into the github deploy keys at https://github.com/nexB/scancode.io/settings/keys
+# Title: scancodeio@<server>.scancode.io
+- name: Create a 4096-bit RSA SSH key for project user in .ssh/id_rsa
+  user:
+    name: "{{ project_name }}"
+    generate_ssh_key: yes
+    ssh_key_type: rsa
+    ssh_key_bits: 4096
+    ssh_key_file: .ssh/id_rsa
+
+- name: Create project /opt directory
+  file:
+    path: "/opt/{{ project_name }}"
+    state: directory
+    owner: "{{ project_name }}"
+    group: "{{ project_name }}"
+
+- name: Create project /var directory
+  file:
+    path: "/var/{{ project_name }}"
+    state: directory
+    owner: "{{ project_name }}"
+    group: "{{ project_name }}"
+
+- name: Create project /etc directory
+  file:
+    path: "/etc/{{ project_name }}"
+    state: directory
+    owner: "{{ project_name }}"
+    group: "{{ project_name }}"
+
+- name: Fetch project git repository
+  become: true
+  become_user: "{{ project_name }}"
+  become_method: sudo
+  git:
+    repo: "{{ project_repo }}"
+    dest: "/opt/{{ project_name }}"
+    version: "{{ git_branch }}"
+    accept_hostkey: true
+
+- name: Ensure everything is owned by project user + owner
+  become: true
+  become_user: root
+  become_method: sudo
+  file:
+    path: "/opt/{{ project_name }}"
+    state: directory
+    owner: "{{ project_name }}"
+    group: "{{ project_name }}"
+    recurse: true
+
+- name: Configure the project
+  become: true
+  become_user: "{{ project_name }}"
+  become_method: sudo
+  command: ./configure
+  args:
+    chdir: "/opt/{{ project_name }}/"

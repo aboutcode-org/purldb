@@ -102,6 +102,15 @@ test:
 shell:
 	${MANAGE} shell
 
+clearsync:
+	${ACTIVATE} clearsync --save-to-db --verbose -n 3
+
+clearindex:
+	${MANAGE} run_clearindex
+
+index_packages:
+	${MANAGE} index_packages
+
 bump:
 	@echo "-> Bump the version"
 	bin/bumpver update --no-fetch --patch

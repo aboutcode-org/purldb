@@ -55,14 +55,14 @@ ROOT_URLCONF = 'minecodeio.urls'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'packagedb',
         'USER': 'packagedb',
         'PASSWORD': 'packagedb',
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PORT': '5432',
         'ATOMIC_REQUESTS': True,
-    },
+    }
 }
 
 REST_FRAMEWORK = {

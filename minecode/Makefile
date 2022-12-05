@@ -95,6 +95,12 @@ test:
 	@echo "-> Run the test suite"
 	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs
 
+clearsync:
+	${ACTIVATE} clearsync --save-to-db --verbose -n 3
+
+clearindex:
+	${MANAGE} run_clearindex
+
 bump:
 	@echo "-> Bump the version"
 	bin/bumpver update --no-fetch --patch

@@ -14,7 +14,7 @@ import environ
 
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
-ROOT_DIR = PROJECT_DIR.parent.parent
+ROOT_DIR = PROJECT_DIR.parent
 
 
 # Environment
@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     # Must come before Third-party apps for proper templates override
     'matchcode',
     'packagedb',
+    'discovery',
     'clearindex',
     'clearcode',
     # Django built-in
