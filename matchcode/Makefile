@@ -17,8 +17,8 @@ VIRTUALENV_PYZ=../etc/thirdparty/virtualenv.pyz
 GET_SECRET_KEY=`base64 /dev/urandom | head -c50`
 # Customize with `$ make envfile ENV_FILE=/etc/purldb/.env`
 ENV_FILE=.env
-# Customize with `$ make postgres MATCHCODEIO_DB_PASSWORD=YOUR_PASSWORD`
-MATCHCODEIO_DB_PASSWORD=packagedb
+# Customize with `$ make postgres PACKAGEDB_DB_PASSWORD=YOUR_PASSWORD`
+PACKAGEDB_DB_PASSWORD=packagedb
 
 # Use sudo for postgres, but only on Linux
 UNAME := $(shell uname)
@@ -48,8 +48,8 @@ envfile:
 
 envfile-ci: envfile
 	@echo "-> Add Azure Pipelines Postgres DB name and password to .env"
-	@echo MATCHCODEIO_DB_USER="postgres" >> ${ENV_FILE}
-	@echo MATCHCODEIO_DB_PASSWORD="postgres" >> ${ENV_FILE}
+	@echo PACKAGEDB_DB_USER="postgres" >> ${ENV_FILE}
+	@echo PACKAGEDB_DB_PASSWORD="postgres" >> ${ENV_FILE}
 
 isort:
 	@echo "-> Apply isort changes to ensure proper imports ordering"
@@ -85,7 +85,7 @@ postgres:
 	@echo "-> Configure PostgreSQL database"
 	@echo "-> Create database user 'packagedb'"
 	${SUDO_POSTGRES} createuser --no-createrole --no-superuser --login --inherit --createdb packagedb || true
-	${SUDO_POSTGRES} psql -c "alter user packagedb with encrypted password '${MATCHCODEIO_DB_PASSWORD}';" || true
+	${SUDO_POSTGRES} psql -c "alter user packagedb with encrypted password '${PACKAGEDB_DB_PASSWORD}';" || true
 	@echo "-> Drop 'packagedb' database"
 	${SUDO_POSTGRES} dropdb packagedb || true
 	@echo "-> Create 'packagedb' database"
