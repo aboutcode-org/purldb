@@ -50,4 +50,5 @@ jobs:
       - name: Run tests
         working-directory: ./clearcode-toolkit
         run: |
+          source bin/activate
           python manage.py test clearcode --verbosity=2
