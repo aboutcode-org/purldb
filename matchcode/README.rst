@@ -8,42 +8,46 @@ Installation
 Requirements
 ############
 * Debian-based Linux distribution
-* Python 3.6
-* Postgres 10
+* Python 3.9 or later
+* Postgres 13
 * git
-* PackageDB (https://github.com/nexB/packagedb)
-* ClearCode Toolkit (https://github.com/nexB/clearcode-toolkit)
+* scancode-toolkit runtime dependencies (https://scancode-toolkit.readthedocs.io/en/stable/getting-started/install.html#install-prerequisites)
 
 Once the prerequisites have been installed, set up MatchCode with the following commands:
 ::
 
     git clone https://github.com/nexB/matchcode.git
     cd matchcode
-    source configure
-    sudo -u postgres createuser --no-createrole --no-superuser --login --inherit --createdb  --pwprompt matchcode
-    sudo -u postgres createdb --encoding=utf-8 matchcode --owner=matchcode
-    # update your local DB
-    python manage.py migrate
+    ./configure --dev
+    make postgres
 
 Once MatchCode and the database has been set up, run tests to ensure functionality:
 ::
 
-    python manage.py test
+    make test
+
 
 Post-Installation
 -----------------
 If you have an empty PackageDB without Package and Package Resource information, ClearCode Toolkit should be run for a while so it can populate the PackageDB with Package and Package Resource information from clearlydefined.
+::
+    make clearsync
+
+After some ClearlyDefined harvests and definitions have been obtained, run ``clearindex`` to create Packages and Resources from the harvests and definitions.
+::
+    make clearindex
+
 The Package and Package Resource information will be used to create the matching indices.
 Once the PackageDB has been populated, run the following command to create the matching indices from the collected Package data:
 ::
-    python manage.py index_packages
+    make index_packages
 
 
 Usage
 -----
 Start the MatchCode server by running:
 ::
-    python manage.py runserver
+    make run
 
 You can send a ScanCode JSON scan for matching at the api/match_request/ endpoint using the HTML view or API.
 
