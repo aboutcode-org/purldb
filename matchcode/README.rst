@@ -16,10 +16,11 @@ Requirements
 Once the prerequisites have been installed, set up MatchCode with the following commands:
 ::
 
-    git clone https://github.com/nexB/matchcode.git
-    cd matchcode
+    git clone https://github.com/nexb/purldb
+    cd purldb/matchcode
     ./configure --dev
     make postgres
+    make envfile
 
 Once MatchCode and the database has been set up, run tests to ensure functionality:
 ::
