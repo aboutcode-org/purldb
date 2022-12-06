@@ -46,11 +46,6 @@ envfile:
 	@mkdir -p $(shell dirname ${ENV_FILE}) && touch ${ENV_FILE}
 	@echo SECRET_KEY=\"${GET_SECRET_KEY}\" > ${ENV_FILE}
 
-envfile-ci: envfile
-	@echo "-> Add Azure Pipelines Postgres DB name and password to .env"
-	@echo PACKAGEDB_DB_USER="postgres" >> ${ENV_FILE}
-	@echo PACKAGEDB_DB_PASSWORD="postgres" >> ${ENV_FILE}
-
 isort:
 	@echo "-> Apply isort changes to ensure proper imports ordering"
 	${VENV}/bin/isort .
@@ -128,4 +123,4 @@ docker-images:
 	@mkdir -p dist/
 	@docker save minecode minecode_minecode nginx | gzip > dist/minecode-images-`git describe --tags`.tar.gz
 
-.PHONY: virtualenv conf dev envfile install check valid isort clean migrate postgres sqlite run test bump docs docker-images
+.PHONY: virtualenv conf dev envfile isort black doc8 valid check clean migrate postgres run test shell clearsync clearindex index_packages bump docs docker-images

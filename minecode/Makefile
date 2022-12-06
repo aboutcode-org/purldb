@@ -32,13 +32,13 @@ virtualenv:
 	@echo "-> Bootstrap the virtualenv with PYTHON_EXE=${PYTHON_EXE}"
 	@${PYTHON_EXE} ${VIRTUALENV_PYZ} --never-download --no-periodic-update ${VENV}
 
-conf: virtualenv
+conf:
 	@echo "-> Install dependencies"
-	@${ACTIVATE} pip install -e . -c requirements.txt
+	@./configure
 
-dev: virtualenv
+dev:
 	@echo "-> Configure and install development dependencies"
-	@${ACTIVATE} pip install -e .[dev] -c requirements.txt
+	@./configure --dev
 
 envfile:
 	@echo "-> Create the .env file and generate a secret key"
@@ -70,8 +70,7 @@ check:
 
 clean:
 	@echo "-> Clean the Python env"
-	rm -rf ${VENV} build/ dist/ packagedb.egg-info/ docs/_build/ pip-selfcheck.json
-	find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
+	@./configure --clean
 
 migrate:
 	@echo "-> Apply database migrations"
@@ -93,7 +92,10 @@ run:
 
 test:
 	@echo "-> Run the test suite"
-	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=minecodeio.settings ${PYTHON_EXE} -m pytest -vvs
+
+shell:
+	${MANAGE} shell
 
 clearsync:
 	${ACTIVATE} clearsync --save-to-db --verbose -n 3
@@ -118,4 +120,4 @@ docker-images:
 	@mkdir -p dist/
 	@docker save postgres packagedb_packagedb nginx | gzip > dist/packagedb-images-`git describe --tags`.tar.gz
 
-.PHONY: virtualenv conf dev envfile install check valid isort clean migrate postgres sqlite run test bump docs docker-images
+.PHONY: virtualenv conf dev envfile isort black doc8 valid check clean migrate postgres run test shell clearsync clearindex bump docs docker-images
