@@ -13,8 +13,8 @@ from pathlib import Path
 import environ
 
 
-PROJECT_DIR = Path(__file__).resolve().parent.parent
-ROOT_DIR = PROJECT_DIR.parent
+PROJECT_DIR = Path(__file__).resolve().parent
+ROOT_DIR = PROJECT_DIR.parent.parent
 
 
 # Environment
