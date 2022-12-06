@@ -20,8 +20,6 @@ from django.conf import settings
 from django.test import TestCase as DjangoTestCase
 
 from commoncode.resource import VirtualCodebase
-from packagedb.models import Package
-from packagedb.models import Resource
 
 
 ############## TEST UTILITIES ##############
@@ -98,6 +96,7 @@ def to_os_native_path(path):
 
 
 def load_resources_from_scan(scan_location, package):
+    from packagedb.models import Resource
     vc = VirtualCodebase(
         location=scan_location,
     )
@@ -118,6 +117,7 @@ def index_packages_sha1():
     """
     from matchcode.models import ExactPackageArchiveIndex
     from matchcode.models import get_or_create_indexable_package
+    from packagedb.models import Package
 
     for package in Package.objects.filter(sha1__isnull=False):
         indexable_package, _ = get_or_create_indexable_package(package)
