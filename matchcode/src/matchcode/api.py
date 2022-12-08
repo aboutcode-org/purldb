@@ -15,6 +15,7 @@ from django_filters.rest_framework import FilterSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.serializers import CharField
+from rest_framework.serializers import HyperlinkedRelatedField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import ReadOnlyField
 from rest_framework.serializers import Serializer
@@ -31,7 +32,7 @@ from matchcode.utils import hexstring_to_binarray
 
 class BaseFileIndexSerializer(ModelSerializer):
     sha1 = CharField(source='fingerprint')
-    purl = CharField(source='package.package_url')
+    package = HyperlinkedRelatedField(view_name='api:package-detail', lookup_field='uuid', read_only=True)
 
 
 class ExactFileIndexSerializer(BaseFileIndexSerializer):
@@ -39,7 +40,7 @@ class ExactFileIndexSerializer(BaseFileIndexSerializer):
         model = ExactFileIndex
         fields = (
             'sha1',
-            'purl'
+            'package'
         )
 
 
@@ -48,13 +49,13 @@ class ExactPackageArchiveIndexSerializer(BaseFileIndexSerializer):
         model = ExactPackageArchiveIndex
         fields = (
             'sha1',
-            'purl'
+            'package'
         )
 
 
 class BaseDirectoryIndexSerializer(ModelSerializer):
     fingerprint = ReadOnlyField()
-    purl = CharField(source='package.package_url')
+    package = HyperlinkedRelatedField(view_name='api:package-detail', lookup_field='uuid', read_only=True)
 
 
 class ApproximateDirectoryContentIndexSerializer(BaseDirectoryIndexSerializer):
@@ -62,7 +63,7 @@ class ApproximateDirectoryContentIndexSerializer(BaseDirectoryIndexSerializer):
         model = ApproximateDirectoryContentIndex
         fields = (
             'fingerprint',
-            'purl',
+            'package',
         )
 
 
@@ -71,14 +72,14 @@ class ApproximateDirectoryStructureIndexSerializer(BaseDirectoryIndexSerializer)
         model = ApproximateDirectoryStructureIndex
         fields = (
             'fingerprint',
-            'purl',
+            'package',
         )
 
 
 class BaseDirectoryIndexMatchSerializer(Serializer):
     fingerprint = CharField()
     matched_fingerprint = CharField()
-    purl = CharField()
+    package = HyperlinkedRelatedField(view_name='api:package-detail', lookup_field='uuid', read_only=True)
 
 
 class CharMultipleWidget(widgets.TextInput):
@@ -241,11 +242,15 @@ class BaseDirectoryIndexViewSet(ReadOnlyModelViewSet):
                     {
                         'fingerprint': fingerprint,
                         'matched_fingerprint': match.fingerprint(),
-                        'purl': match.package.package_url,
+                        'package': match.package,
                     }
                 )
 
-        serialized_match_results = BaseDirectoryIndexMatchSerializer(results, many=True)
+        serialized_match_results = BaseDirectoryIndexMatchSerializer(
+            results,
+            context={'request': request},
+            many=True
+        )
         return Response(serialized_match_results.data)
 
 

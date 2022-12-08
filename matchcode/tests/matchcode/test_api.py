@@ -60,9 +60,10 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
         results = response.data.get('results', [])
         self.assertEqual(1, len(results))
         result = results[0]
+        expected_package = 'http://testserver' + reverse('api:package-detail', args=[self.test_package1.uuid])
         expected_result = {
             'fingerprint': '00000007af7d63765c78fa516b5353f5ffa7df45',
-            'purl': 'pkg:npm/plugin-request@2.4.1'
+            'package': expected_package
         }
         self.assertEqual(expected_result, result)
 
@@ -76,9 +77,10 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
         results = response.data.get('results', [])
         self.assertEqual(1, len(results))
         result = results[0]
+        expected_package = 'http://testserver' + reverse('api:package-detail', args=[self.test_package2.uuid])
         expected_result = {
             'fingerprint': '00000004d10982208810240820080a6a3e852486',
-            'purl': 'pkg:npm/underscore@1.10.9'
+            'package': expected_package
         }
         self.assertEqual(expected_result, result)
 
@@ -113,8 +115,8 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
         self.assertEqual(test_fingerprint, result['fingerprint'])
         expected_matched_fingerprint = '00000007af7d63765c78fa516b5353f5ffa7df45'
         self.assertEqual(expected_matched_fingerprint, result['matched_fingerprint'])
-        expected_purl = 'pkg:npm/plugin-request@2.4.1'
-        self.assertEqual(expected_purl, result['purl'])
+        expected_package = 'http://testserver' + reverse('api:package-detail', args=[self.test_package1.uuid])
+        self.assertEqual(expected_package, result['package'])
 
     def test_api_approximate_directory_structure_index_match_close_match(self):
         # This test fingerprint has a hamming distance of 7 from the expected fingerprint
@@ -129,8 +131,8 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
         self.assertEqual(test_fingerprint, result['fingerprint'])
         expected_matched_fingerprint = '00000004d10982208810240820080a6a3e852486'
         self.assertEqual(expected_matched_fingerprint, result['matched_fingerprint'])
-        expected_purl = 'pkg:npm/underscore@1.10.9'
-        self.assertEqual(expected_purl, result['purl'])
+        expected_package = 'http://testserver' + reverse('api:package-detail', args=[self.test_package2.uuid])
+        self.assertEqual(expected_package, result['package'])
 
     def test_api_approximate_directory_content_index_match(self):
         test_fingerprint = '00000007af7d63765c78fa516b5353f5ffa7df45'
@@ -143,8 +145,8 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
         result = results[0]
         self.assertEqual(test_fingerprint, result['fingerprint'])
         self.assertEqual(test_fingerprint, result['matched_fingerprint'])
-        expected_purl = 'pkg:npm/plugin-request@2.4.1'
-        self.assertEqual(expected_purl, result['purl'])
+        expected_package = 'http://testserver' + reverse('api:package-detail', args=[self.test_package1.uuid])
+        self.assertEqual(expected_package, result['package'])
 
     def test_api_approximate_directory_structure_index_match(self):
         test_fingerprint = '00000004d10982208810240820080a6a3e852486'
@@ -157,5 +159,5 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
         result = results[0]
         self.assertEqual(test_fingerprint, result['fingerprint'])
         self.assertEqual(test_fingerprint, result['matched_fingerprint'])
-        expected_purl = 'pkg:npm/underscore@1.10.9'
-        self.assertEqual(expected_purl, result['purl'])
+        expected_package = 'http://testserver' + reverse('api:package-detail', args=[self.test_package2.uuid])
+        self.assertEqual(expected_package, result['package'])
