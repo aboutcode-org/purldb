@@ -45,53 +45,6 @@ def logger_debug(*args):
     return logger.debug(' '.join(isinstance(a, str) and a or repr(a) for a in args))
 
 
-class IndexablePackage(models.Model):
-    """
-    This is a model that mirrors the existing packages on a PackageDB instance.
-    """
-    uuid = models.UUIDField(
-        _('UUID'),
-        unique=True,
-        help_text='The UUID of a Package on an instance of PackageDB',
-        db_index=True,
-    )
-
-    last_indexed_date = models.DateTimeField(
-        help_text='Timestamp set to the date of the last indexing.  Used to track indexing status.'
-    )
-
-    index_error = models.TextField(
-        null=True,
-        blank=True,
-        help_text='Indexing errors messages. When present this means the indexing has failed.',
-    )
-
-    @property
-    def package(self):
-        # TODO: have option to get data from API vs DB query
-        return Package.objects.get(uuid=self.uuid)
-
-    @property
-    def resources(self):
-        # TODO: Return resources as Codebase
-        # TODO: have option to get data from API vs DB query
-        return Resource.objects.filter(package=self.package)
-
-
-def get_or_create_indexable_package(package):
-    created = False
-    try:
-        # Check to see if we have an IndexablePackage for this package
-        indexable_package = IndexablePackage.objects.get(uuid=package.uuid)
-    except ObjectDoesNotExist:
-        indexable_package = IndexablePackage.objects.create(
-            uuid=package.uuid,
-            last_indexed_date = timezone.now()
-        )
-        created = True
-    return indexable_package, created
-
-
 ###############################################################################
 # FILE MATCHING
 ###############################################################################
@@ -105,7 +58,7 @@ class BaseFileIndex(models.Model):
     )
 
     package = models.ForeignKey(
-        IndexablePackage,
+        Package,
         help_text='The Package that this file is from',
         null=False,
         on_delete=models.CASCADE,
@@ -115,12 +68,11 @@ class BaseFileIndex(models.Model):
         abstract = True
 
     @classmethod
-    def index(cls, sha1, indexable_package):
+    def index(cls, sha1, package):
         try:
-            package_data = indexable_package.package
             sha1_bin = hexstring_to_binarray(sha1)
             bfi, created = cls.objects.get_or_create(
-                package=indexable_package,
+                package=package,
                 sha1=sha1_bin
             )
             if created:
@@ -128,7 +80,7 @@ class BaseFileIndex(models.Model):
                     '{} - Inserted {} for Package {}:\t{}'.format(
                         datetime.utcnow().isoformat(),
                         bfi.__class__.__name__,
-                        package_data.download_url,
+                        package.download_url,
                         sha1
                     )
                 )
@@ -136,8 +88,8 @@ class BaseFileIndex(models.Model):
         except Exception as e:
             msg = f'Error creating {bfi.__class__.__name__}:\n'
             msg += get_error_message(e)
-            indexable_package.index_error = msg
-            indexable_package.save()
+            package.index_error = msg
+            package.save()
             logger.error(msg)
 
     @classmethod
@@ -155,8 +107,8 @@ class BaseFileIndex(models.Model):
         matches = cls.objects.filter(sha1=sha1_in_bin)
         if TRACE:
             for match in matches:
-                indexable_package = match.package
-                dct = model_to_dict(indexable_package.package)
+                package = match.package
+                dct = model_to_dict(package)
                 logger_debug(cls.__name__, 'match:', 'matched_file:', dct)
         return matches
 
@@ -228,7 +180,7 @@ class BaseDirectoryIndex(models.Model):
     )
 
     package = models.ForeignKey(
-        IndexablePackage,
+        Package,
         help_text='The Package that this directory is a part of',
         null=False,
         on_delete=models.CASCADE,
@@ -247,7 +199,7 @@ class BaseDirectoryIndex(models.Model):
         return self.fingerprint()
 
     @classmethod
-    def index(cls, directory_fingerprint, resource_path, indexable_package):
+    def index(cls, directory_fingerprint, resource_path, package):
         """
         Index the string `directory_fingerprint` into the BaseDirectoryIndex model
         """
@@ -261,14 +213,14 @@ class BaseDirectoryIndex(models.Model):
                 chunk3=fp_chunk3,
                 chunk4=fp_chunk4,
                 path=resource_path,
-                package=indexable_package,
+                package=package,
             )
             if created:
                 logger.info(
                     '{} - Inserted {} for Package {}:\t{}'.format(
                         datetime.utcnow().isoformat(),
                         bdi.__class__.__name__,
-                        indexable_package.package.download_url,
+                        package.download_url,
                         directory_fingerprint
                     )
                 )
@@ -276,8 +228,8 @@ class BaseDirectoryIndex(models.Model):
         except Exception as e:
             msg = f'Error creating {bdi.__class__.__name__}:\n'
             msg += get_error_message(e)
-            indexable_package.index_error = msg
-            indexable_package.save()
+            package.index_error = msg
+            package.save()
             logger.error(msg)
 
     @classmethod
@@ -317,7 +269,7 @@ class BaseDirectoryIndex(models.Model):
         if TRACE:
             for match in matches:
                 dct = model_to_dict(match)
-                logger_debug(cls.__name__, 'match:', 'matched_indexable_package:', dct)
+                logger_debug(cls.__name__, 'match:', 'matched_package:', dct)
 
         # Step 2: calculate Hamming distance of all matches
 
@@ -355,7 +307,7 @@ class BaseDirectoryIndex(models.Model):
         if TRACE:
             for match in good_matches:
                 dct = model_to_dict(match)
-                logger_debug(cls.__name__, 'match:', 'good_matched_indexable_package:', dct)
+                logger_debug(cls.__name__, 'match:', 'good_matched_package:', dct)
 
         return good_matches
 

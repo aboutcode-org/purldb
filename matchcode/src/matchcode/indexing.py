@@ -16,7 +16,6 @@ from commoncode.resource import VirtualCodebase
 from matchcode.fingerprinting import compute_directory_fingerprints
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
-from matchcode.models import get_or_create_indexable_package
 from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ExactFileIndex
 
@@ -28,18 +27,16 @@ logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
 
 
-def index_package_archives(indexable_package):
+def index_package_archives(package):
     """
     Index Package archives for matching
 
     Return True if an ExactPackageArchiveIndex has been created,
     otherwise return False
     """
-    package_data = indexable_package.package
-    package_sha1 = package_data.sha1
     _, created = ExactPackageArchiveIndex.index(
-        sha1=package_sha1,
-        indexable_package=indexable_package,
+        sha1=package.sha1,
+        package=package,
     )
     return created
 
@@ -48,26 +45,24 @@ def index_package_file(resource):
     """
     Index Package files for matching
 
-    Return a tuple of booleans, `created_exact_file_index` and `created_indexable_package`.
-    `created_exact_file_index` returns True if it has been created, False otherwise.
-    The same is true with `created_indexable_package`
+    Return a boolean, `created_exact_file_index`, which returns True if it has
+    been created, False otherwise.
     """
-    indexable_package, created_indexable_package = get_or_create_indexable_package(resource.package)
     _, created_exact_file_index = ExactFileIndex.index(
         sha1=resource.sha1,
-        indexable_package=indexable_package
+        package=resource.package
     )
-    return created_exact_file_index, created_indexable_package
+    return created_exact_file_index
 
 
-def _create_virtual_codebase_from_indexable_package(indexable_package):
+def _create_virtual_codebase_from_package_resources(package):
     """
-    Return a VirtualCodebase from the resources of `indexable_package`
+    Return a VirtualCodebase from the resources of `package`
     """
     # Create something that looks like a scancode scan so we can import it into a VirtualCodebase
     # TODO: Evolve this into something more elaborate, e.g.
     #       Codebase class methods can manipulate Resource table entries
-    package_resources = indexable_package.resources.order_by('path')
+    package_resources = package.resources.order_by('path')
     if not package_resources:
         return
 
@@ -93,7 +88,6 @@ def _create_virtual_codebase_from_indexable_package(indexable_package):
             break
 
     if make_new_root:
-        package = indexable_package.package
         new_root = '{}-{}'.format(package.name, package.version)
         for f in files:
             new_path = os.path.join(new_root, f.get('path', ''))
@@ -104,7 +98,7 @@ def _create_virtual_codebase_from_indexable_package(indexable_package):
     return VirtualCodebase(location=mock_scan)
 
 
-def index_directory_fingerprints(codebase, indexable_package):
+def index_directory_fingerprints(codebase, package):
     """
     Compute fingerprints for a directory from `codebase` and index them to
     ApproximateDirectoryContentIndex and ApproximateDirectoryStructureIndex
@@ -123,7 +117,7 @@ def index_directory_fingerprints(codebase, indexable_package):
             _, adci_created = ApproximateDirectoryContentIndex.index(
                 directory_fingerprint=directory_content_fingerprint,
                 resource_path=resource.path,
-                indexable_package=indexable_package,
+                package=package,
             )
             if adci_created:
                 indexed_adci += 1
@@ -132,7 +126,7 @@ def index_directory_fingerprints(codebase, indexable_package):
             _, adsi_created = ApproximateDirectoryStructureIndex.index(
                 directory_fingerprint=directory_structure_fingerprint,
                 resource_path=resource.path,
-                indexable_package=indexable_package,
+                package=package,
             )
             if adsi_created:
                 indexed_adsi += 1
@@ -140,21 +134,21 @@ def index_directory_fingerprints(codebase, indexable_package):
     return indexed_adci, indexed_adsi
 
 
-def index_package_directories(indexable_package):
+def index_package_directories(package):
     """
-    Index the directories of `indexable_package` to
-    ApproximateDirectoryContentIndex and ApproximateDirectoryStructureIndex
+    Index the directories of `package` to ApproximateDirectoryContentIndex and
+    ApproximateDirectoryStructureIndex
 
     Return a tuple of integers, `indexed_adci` and `indexed_adsi`, that
     represent the number of indexed ApproximateDirectoryContentIndex and
     ApproximateDirectoryStructureIndex created, respectivly.
 
-    Return 0, 0 if a VirtualCodebase cannot be created from the Resources of an
-    IndexablePackage
+    Return 0, 0 if a VirtualCodebase cannot be created from the Resources of a
+    Package
     """
-    vc = _create_virtual_codebase_from_indexable_package(indexable_package)
+    vc = _create_virtual_codebase_from_package_resources(package)
     if not vc:
         return 0, 0
 
     vc = compute_directory_fingerprints(vc)
-    return index_directory_fingerprints(vc, indexable_package)
+    return index_directory_fingerprints(vc, package)

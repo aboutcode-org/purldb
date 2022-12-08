@@ -21,7 +21,6 @@ from matchcode.match import APPROXIMATE_DIRECTORY_CONTENT_MATCH
 from matchcode.match import EXACT_FILE_MATCH
 from matchcode.match import do_match
 from matchcode.match import path_suffixes
-from matchcode.models import get_or_create_indexable_package
 from matchcode.utils import index_package_files_sha1
 from matchcode.utils import index_packages_sha1
 from matchcode.utils import load_resources_from_scan
@@ -97,13 +96,12 @@ class MatchPackagesTestCase(MatchcodeTestCase):
             type='maven'
         )
         self.test_package4_metadata = self.test_package4.to_dict()
-        self.test_indexable_package4, _ = get_or_create_indexable_package(self.test_package4)
 
         # Populate ExactPackageArchiveIndexFingerprint table
         index_packages_sha1()
 
         load_resources_from_scan(self.get_test_loc('models/match-test.json'), self.test_package4)
-        index_package_directories(self.test_indexable_package4)
+        index_package_directories(self.test_package4)
         index_package_files_sha1(self.test_package4, self.get_test_loc('models/match-test.json'))
 
     def test_do_match_package_archive_match(self):
@@ -150,8 +148,7 @@ class MatchNestedPackagesTestCase(MatchcodeTestCase):
             type='npm',
         )
         load_resources_from_scan(self.get_test_loc('match/nested/plugin-request-2.4.1-ip.json'), self.test_package1)
-        self.test_indexable_package1, _ = get_or_create_indexable_package(self.test_package1)
-        index_package_directories(self.test_indexable_package1)
+        index_package_directories(self.test_package1)
 
         self.test_package2, _ = Package.objects.get_or_create(
             filename='underscore-1.10.9.tgz',
@@ -163,8 +160,7 @@ class MatchNestedPackagesTestCase(MatchcodeTestCase):
             type='npm',
         )
         load_resources_from_scan(self.get_test_loc('match/nested/underscore-1.10.9-ip.json'), self.test_package2)
-        self.test_indexable_package2, _ = get_or_create_indexable_package(self.test_package2)
-        index_package_directories(self.test_indexable_package2)
+        index_package_directories(self.test_package2)
 
     def test_do_match_approximate_directory_structure_match(self):
         input_file = self.get_test_loc('match/nested/nested.json')
@@ -196,8 +192,7 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
             download_url='https://registry.npmjs.org/abbrev/-/abbrev-1.0.3.tgz',
         )
         load_resources_from_scan(self.get_test_loc('match/directory-matching/abbrev-1.0.3-i.json'), self.test_package1)
-        self.test_indexable_package1, _ = get_or_create_indexable_package(self.test_package1)
-        index_package_directories(self.test_indexable_package1)
+        index_package_directories(self.test_package1)
 
         self.test_package2, _ = Package.objects.get_or_create(
             filename='abbrev-1.0.4.tgz',
@@ -208,8 +203,7 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
             download_url='https://registry.npmjs.org/abbrev/-/abbrev-1.0.4.tgz',
         )
         load_resources_from_scan(self.get_test_loc('match/directory-matching/abbrev-1.0.4-i.json'), self.test_package2)
-        self.test_indexable_package2, _ = get_or_create_indexable_package(self.test_package2)
-        index_package_directories(self.test_indexable_package2)
+        index_package_directories(self.test_package2)
 
         self.test_package3, _ = Package.objects.get_or_create(
             filename='abbrev-1.0.5.tgz',
@@ -220,8 +214,7 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
             download_url='https://registry.npmjs.org/abbrev/-/abbrev-1.0.5.tgz',
         )
         load_resources_from_scan(self.get_test_loc('match/directory-matching/abbrev-1.0.5-i.json'), self.test_package3)
-        self.test_indexable_package3, _ = get_or_create_indexable_package(self.test_package3)
-        index_package_directories(self.test_indexable_package3)
+        index_package_directories(self.test_package3)
 
         self.test_package4, _ = Package.objects.get_or_create(
             filename='abbrev-1.0.6.tgz',
@@ -232,8 +225,7 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
             download_url='https://registry.npmjs.org/abbrev/-/abbrev-1.0.6.tgz',
         )
         load_resources_from_scan(self.get_test_loc('match/directory-matching/abbrev-1.0.6-i.json'), self.test_package4)
-        self.test_indexable_package4, _ = get_or_create_indexable_package(self.test_package4)
-        index_package_directories(self.test_indexable_package4)
+        index_package_directories(self.test_package4)
 
         self.test_package5, _ = Package.objects.get_or_create(
             filename='abbrev-1.0.7.tgz',
@@ -244,8 +236,7 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
             download_url='https://registry.npmjs.org/abbrev/-/abbrev-1.0.7.tgz',
         )
         load_resources_from_scan(self.get_test_loc('match/directory-matching/abbrev-1.0.7-i.json'), self.test_package5)
-        self.test_indexable_package5, _ = get_or_create_indexable_package(self.test_package5)
-        index_package_directories(self.test_indexable_package5)
+        index_package_directories(self.test_package5)
 
         self.test_package6, _ = Package.objects.get_or_create(
             filename='abbrev-1.0.9.tgz',
@@ -256,8 +247,7 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
             download_url='https://registry.npmjs.org/abbrev/-/abbrev-1.0.9.tgz',
         )
         load_resources_from_scan(self.get_test_loc('match/directory-matching/abbrev-1.0.9-i.json'), self.test_package6)
-        self.test_indexable_package6, _ = get_or_create_indexable_package(self.test_package6)
-        index_package_directories(self.test_indexable_package6)
+        index_package_directories(self.test_package6)
 
         self.test_package7, _ = Package.objects.get_or_create(
             filename='abbrev-1.1.0.tgz',
@@ -268,8 +258,7 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
             download_url='https://registry.npmjs.org/abbrev/-/abbrev-1.1.0.tgz',
         )
         load_resources_from_scan(self.get_test_loc('match/directory-matching/abbrev-1.1.0-i.json'), self.test_package7)
-        self.test_indexable_package7, _ = get_or_create_indexable_package(self.test_package7)
-        index_package_directories(self.test_indexable_package7)
+        index_package_directories(self.test_package7)
 
         self.test_package8, _ = Package.objects.get_or_create(
             filename='abbrev-1.1.1.tgz',
@@ -280,8 +269,7 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
             download_url='https://registry.npmjs.org/abbrev/-/abbrev-1.1.1.tgz',
         )
         load_resources_from_scan(self.get_test_loc('match/directory-matching/abbrev-1.1.1-i.json'), self.test_package8)
-        self.test_indexable_package8, _ = get_or_create_indexable_package(self.test_package8)
-        index_package_directories(self.test_indexable_package8)
+        index_package_directories(self.test_package8)
 
     def test_match_ApproximateDirectoryStructureIndex_abbrev_1_0_3(self):
         input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.3-i.json')

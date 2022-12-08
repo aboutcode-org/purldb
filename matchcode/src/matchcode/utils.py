@@ -116,14 +116,12 @@ def index_packages_sha1():
     Reindex all the packages for exact sha1 matching.
     """
     from matchcode.models import ExactPackageArchiveIndex
-    from matchcode.models import get_or_create_indexable_package
     from packagedb.models import Package
 
     for package in Package.objects.filter(sha1__isnull=False):
-        indexable_package, _ = get_or_create_indexable_package(package)
         sha1_in_bin = hexstring_to_binarray(package.sha1)
         _ = ExactPackageArchiveIndex.objects.create(
-            package=indexable_package,
+            package=package,
             sha1=sha1_in_bin
         )
 
@@ -133,9 +131,7 @@ def index_package_files_sha1(package, scan_location):
     Index for SHA1 the package files found in the JSON scan at scan_location
     """
     from matchcode.models import ExactFileIndex
-    from matchcode.models import get_or_create_indexable_package
 
-    indexable_package, _ = get_or_create_indexable_package(package)
     resource_attributes = dict()
     vc = VirtualCodebase(
         location=scan_location,
@@ -149,7 +145,7 @@ def index_package_files_sha1(package, scan_location):
         sha1_in_bin = hexstring_to_binarray(sha1)
         package_file, created = ExactFileIndex.objects.get_or_create(
             sha1=sha1_in_bin,
-            package=indexable_package,
+            package=package,
         )
 
 ################# GENERAL UTILITIES #################

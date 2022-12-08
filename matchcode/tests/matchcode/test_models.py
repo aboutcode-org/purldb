@@ -18,7 +18,6 @@ from matchcode.management.commands.index_packages import index_package_directori
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import create_halohash_chunks
-from matchcode.models import get_or_create_indexable_package
 from matchcode.models import hexstring_to_binarray
 from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ExactFileIndex
@@ -86,21 +85,20 @@ class BaseModelTest(MatchcodeTestCase):
             type='maven'
         )
         self.test_package4_metadata = self.test_package4.to_dict()
-        self.test_indexable_package4, _ = get_or_create_indexable_package(self.test_package4)
 
         # Populate ExactPackageArchiveIndexFingerprint table
         index_packages_sha1()
 
         # Populate ExactFileIndexFingerprint table
         load_resources_from_scan(self.get_test_loc('models/match-test.json'), self.test_package4)
-        index_package_directories(self.test_indexable_package4)
+        index_package_directories(self.test_package4)
         index_package_files_sha1(self.test_package4, self.get_test_loc('models/match-test.json'))
 
 
 class ExactPackageArchiveIndexModelTestCase(BaseModelTest):
     def test_ExactPackageArchiveIndex_single_sha1_single_match(self):
         result = ExactPackageArchiveIndex.match('51d28a27d919ce8690a40f4f335b9d591ceb16e9')
-        result = [r.package.package.to_dict() for r in result]
+        result = [r.package.to_dict() for r in result]
         expected = [self.test_package1_metadata]
         self.assertEqual(expected, result)
 
@@ -122,7 +120,7 @@ class ExactFileIndexModelTestCase(BaseModelTest):
         for resource in codebase.walk(topdown=True):
             matches = ExactFileIndex.match(resource.sha1)
             for match in matches:
-                p = match.package.package.to_dict()
+                p = match.package.to_dict()
                 p['match_type'] = 'exact'
                 codebase.attributes.matches.append(p)
                 resource.matched_to.append(p['purl'])
@@ -149,8 +147,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
         )
         self.test_package1_metadata = self.test_package1.to_dict()
         load_resources_from_scan(self.get_test_loc('models/directory-matching/async-0.2.10.tgz-i.json'), self.test_package1)
-        self.test_indexablepackage1, _ = get_or_create_indexable_package(self.test_package1)
-        index_package_directories(self.test_indexablepackage1)
+        index_package_directories(self.test_package1)
 
         self.test_package2, _ = Package.objects.get_or_create(
             filename='async-0.2.9.tgz',
@@ -164,8 +161,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
         )
         self.test_package2_metadata = self.test_package2.to_dict()
         load_resources_from_scan(self.get_test_loc('models/directory-matching/async-0.2.9-i.json'), self.test_package2)
-        self.test_indexablepackage2, _ = get_or_create_indexable_package(self.test_package2)
-        index_package_directories(self.test_indexablepackage2)
+        index_package_directories(self.test_package2)
 
     def test_ApproximateDirectoryStructureIndex_match_subdir(self):
         scan_location = self.get_test_loc('models/directory-matching/async-0.2.9-i.json')
@@ -182,7 +178,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             fp = resource.extra_data.get('directory_structure', '')
             matches = ApproximateDirectoryStructureIndex.match(fp)
             for match in matches:
-                p = match.package.package.to_dict()
+                p = match.package.to_dict()
                 p['match_type'] = 'approximate-directory-structure'
                 resource.packages.append(p)
                 resource.save(codebase)
@@ -205,7 +201,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             fp = resource.extra_data.get('directory_content', '')
             matches = ApproximateDirectoryContentIndex.match(fp)
             for match in matches:
-                p = match.package.package.to_dict()
+                p = match.package.to_dict()
                 p['match_type'] = 'approximate-directory-content'
                 resource.packages.append(p)
                 resource.save(codebase)

@@ -269,26 +269,26 @@ def get_or_create_package_from_cditem_definition(cditem):
     else:
         # TODO: This is temporary until we fold clearindex into minecode mapping
         # proper, otherwise we should base this decision off of mining level
-        if existing_package.mining_level < definition_mining_level:
-            new_package_data = ScannedPackage(
-                type=converted_package_type,
-                namespace=namespace,
-                name=name,
-                version=version,
-                download_url=download_url,
-                homepage_url=homepage_url,
-                sha1=sha1,
-                sha256=sha256,
-                release_date=release_date,
-                declared_license=declared_license,
-                license_expression=normalized_license_expression,
-                copyright=copyrights,
-            ).to_dict()
-            merge_packages(
-                existing_package=existing_package,
-                new_package_data=new_package_data,
-                replace=True
-            )
+        # if existing_package.mining_level < definition_mining_level:
+        new_package_data = ScannedPackage(
+            type=converted_package_type,
+            namespace=namespace,
+            name=name,
+            version=version,
+            download_url=download_url,
+            homepage_url=homepage_url,
+            sha1=sha1,
+            sha256=sha256,
+            release_date=release_date,
+            declared_license=declared_license,
+            license_expression=normalized_license_expression,
+            copyright=copyrights,
+        ).to_dict()
+        merge_packages(
+            existing_package=existing_package,
+            new_package_data=new_package_data,
+            replace=True
+        )
         package = existing_package
         package.append_to_history('Updated package from CDitem definition: {}'.format(cditem.path))
 

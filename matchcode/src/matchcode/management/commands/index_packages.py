@@ -18,8 +18,6 @@ from matchcode.indexing import index_package_archives
 from matchcode.indexing import index_package_directories
 from matchcode.indexing import index_package_file
 from matchcode.management.commands import VerboseCommand
-from matchcode.models import get_or_create_indexable_package
-from matchcode.models import IndexablePackage
 from packagedb.models import Package
 from packagedb.models import Resource
 
@@ -36,7 +34,6 @@ class Command(VerboseCommand):
 
     def handle(self, *args, **options):
         # Stats to keep track of during indexing
-        total_indexable_packages_created = 0
         total_indexed_package_archives = 0
         total_indexed_package_files = 0
         total_indexed_adci = 0
@@ -48,26 +45,20 @@ class Command(VerboseCommand):
         packages = Package.objects.filter(sha1__isnull=False)
         for package in packages.iterator():
             with transaction.atomic():
-                indexable_package, created_indexable_package = get_or_create_indexable_package(package)
-                if created_indexable_package:
-                    total_indexable_packages_created += 1
-                created_package_archive = index_package_archives(indexable_package)
+                created_package_archive = index_package_archives(package)
                 if created_package_archive:
                     total_indexed_package_archives += 1
 
         resources = Resource.objects.filter(sha1__isnull=False)
         for resource in resources.iterator():
             with transaction.atomic():
-                created_package_file, created_indexable_package = index_package_file(resource)
+                created_package_file = index_package_file(resource)
                 if created_package_file:
                     total_indexed_package_files += 1
-                if created_indexable_package:
-                    total_indexable_packages_created += 1
 
-        indexable_packages = IndexablePackage.objects.all()
-        for indexable_package in indexable_packages.iterator():
+        for package in Package.objects.all().iterator():
             with transaction.atomic():
-                indexed_adci, indexed_adsi = index_package_directories(indexable_package)
+                indexed_adci, indexed_adsi = index_package_directories(package)
                 total_indexed_adci += indexed_adci
                 total_indexed_adsi += indexed_adsi
 
@@ -76,7 +67,6 @@ class Command(VerboseCommand):
         total_duration = int(time.time() - start)
         print('Total run duration: {} seconds'.format(total_duration))
         print('Created:')
-        print('IndexablePackages: {}'.format(total_indexable_packages_created))
         print('ExactPackageArchiveIndex: {}'.format(total_indexed_package_archives))
         print('ExactFileIndex: {}'.format(total_indexed_package_files))
         print('ApproximateDirectoryContentIndex: {}'.format(total_indexed_adci))

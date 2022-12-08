@@ -12,7 +12,7 @@ import os
 from commoncode.resource import VirtualCodebase
 
 from matchcode.fingerprinting import compute_directory_fingerprints
-from matchcode.indexing import _create_virtual_codebase_from_indexable_package
+from matchcode.indexing import _create_virtual_codebase_from_package_resources
 from matchcode.indexing import index_directory_fingerprints
 from matchcode.indexing import index_package_archives
 from matchcode.indexing import index_package_directories
@@ -22,10 +22,8 @@ from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import create_halohash_chunks
 from matchcode.models import hexstring_to_binarray
-from matchcode.models import IndexablePackage
 from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ExactFileIndex
-from matchcode.models import get_or_create_indexable_package
 from matchcode.utils import load_resources_from_scan
 from matchcode.utils import MatchcodeTestCase
 from packagedb.models import Package
@@ -55,10 +53,9 @@ class IndexPackagesTestCase(MatchcodeTestCase):
         load_resources_from_scan(self.scan1, self.test_package1)
 
     def test_index_packages(self):
-        # Ensure ApproximateDirectoryStructureIndex, IndexablePackage,
-        # ExactPackageArchiveIndex, and ExactFileIndex tables are empty
+        # Ensure ApproximateDirectoryStructureIndex, ExactPackageArchiveIndex,
+        # and ExactFileIndex tables are empty
         self.assertFalse(ApproximateDirectoryStructureIndex.objects.all())
-        self.assertFalse(IndexablePackage.objects.all())
         self.assertFalse(ExactPackageArchiveIndex.objects.all())
         self.assertFalse(ExactFileIndex.objects.all())
 
@@ -67,19 +64,12 @@ class IndexPackagesTestCase(MatchcodeTestCase):
         package_indexer.handle()
 
         # See if the tables have been populated properly
-        indexable_packages = IndexablePackage.objects.all()
-        self.assertEqual(1, len(indexable_packages))
-        indexable_package = indexable_packages[0]
-        self.assertEqual(self.test_package1.uuid, indexable_package.uuid)
-        self.assertTrue(indexable_package.last_indexed_date)
-        self.assertFalse(indexable_package.index_error)
-
         package_archive_sha1s = ExactPackageArchiveIndex.objects.all()
         self.assertEqual(1, len(package_archive_sha1s))
         package_archive_sha1 = package_archive_sha1s[0]
         expected_sha1 = self.test_package1.sha1
         self.assertEqual(expected_sha1, package_archive_sha1.fingerprint())
-        self.assertEqual(indexable_package, package_archive_sha1.package)
+        self.assertEqual(self.test_package1, package_archive_sha1.package)
 
         vc = VirtualCodebase(location=self.scan1)
         expected_resources = [r for r in vc.walk(topdown=True) if r.type == 'file']
@@ -87,16 +77,16 @@ class IndexPackagesTestCase(MatchcodeTestCase):
         self.assertEqual(len(expected_resources), len(package_file_sha1s))
         for expected_resource, package_file_sha1 in zip(expected_resources, package_file_sha1s):
             self.assertEqual(expected_resource.sha1, package_file_sha1.fingerprint())
-            self.assertEqual(indexable_package, package_file_sha1.package)
+            self.assertEqual(self.test_package1, package_file_sha1.package)
 
-        directory_structure_fingerprints = ApproximateDirectoryStructureIndex.objects.filter(package=indexable_package).order_by('path')
+        directory_structure_fingerprints = ApproximateDirectoryStructureIndex.objects.filter(package=self.test_package1).order_by('path')
         # Only one directory should be indexed since we do not create directory
         # fingerprints for directories with only one file in them
         self.assertEqual(1, len(directory_structure_fingerprints))
 
         result_1 = directory_structure_fingerprints[0]
         self.assertEqual('test', result_1.path)
-        self.assertEqual(indexable_package, result_1.package)
+        self.assertEqual(self.test_package1, result_1.package)
         r1_chunk1, r1_chunk2, r1_chunk3, r1_chunk4 = create_halohash_chunks('160440008028c38c24a8038040006040')
         self.assertEqual(r1_chunk1, result_1.chunk1)
         self.assertEqual(r1_chunk2, result_1.chunk2)
@@ -104,14 +94,13 @@ class IndexPackagesTestCase(MatchcodeTestCase):
         self.assertEqual(r1_chunk4, result_1.chunk4)
 
     def test_index_packages_index_directory_structure_fingerprints(self):
-        indexable_package, _ = get_or_create_indexable_package(self.test_package1)
-        index_packages.index_package_directories(indexable_package)
-        directory_structure_fingerprints = ApproximateDirectoryStructureIndex.objects.filter(package=indexable_package).order_by('path')
+        index_packages.index_package_directories(self.test_package1)
+        directory_structure_fingerprints = ApproximateDirectoryStructureIndex.objects.filter(package=self.test_package1).order_by('path')
         self.assertEqual(1, len(directory_structure_fingerprints))
 
         result_1 = directory_structure_fingerprints[0]
         self.assertEqual('test', result_1.path)
-        self.assertEqual(indexable_package, result_1.package)
+        self.assertEqual(self.test_package1, result_1.package)
 
         expected_chunk1 = hexstring_to_binarray('16044000')
         expected_chunk2 = hexstring_to_binarray('8028c38c')
@@ -127,11 +116,8 @@ class IndexPackagesTestCase(MatchcodeTestCase):
         # Ensure ExactPackageArchiveIndex table is empty
         self.assertFalse(ExactPackageArchiveIndex.objects.all())
 
-        # Create indexable_package from test_package
-        indexable_package, _ = get_or_create_indexable_package(self.test_package1)
-
         # Load ExactPackageArchiveIndex table
-        created = index_package_archives(indexable_package)
+        created = index_package_archives(self.test_package1)
 
         # Check to see if new ExactPackageArchiveIndex was created
         self.assertTrue(created)
@@ -141,18 +127,15 @@ class IndexPackagesTestCase(MatchcodeTestCase):
         result = ExactPackageArchiveIndex.objects.all()[0]
 
         self.assertEqual(self.test_package1.sha1, result.fingerprint())
-        self.assertEqual(indexable_package, result.package)
+        self.assertEqual(self.test_package1, result.package)
 
     def test_index_package_file(self):
-        # Create indexable_package from test_package
-        indexable_package, _ = get_or_create_indexable_package(self.test_package1)
-
         # Ensure ExactFileIndex is empty prior to test
         self.assertFalse(ExactFileIndex.objects.all())
 
         # Get one resource from test_package1 and index it
-        resource = indexable_package.resources.filter(is_file=True)[0]
-        created_exact_file_index, _ = index_package_file(resource)
+        resource = self.test_package1.resources.filter(is_file=True)[0]
+        created_exact_file_index = index_package_file(resource)
 
         self.assertTrue(created_exact_file_index)
         self.assertEqual(1, ExactFileIndex.objects.all().count())
@@ -160,13 +143,10 @@ class IndexPackagesTestCase(MatchcodeTestCase):
 
         expected_fingerprint = '86f7e437faa5a7fce15d1ddcb9eaeaea377667b8'
         self.assertEqual(expected_fingerprint, result.fingerprint())
-        self.assertEqual(indexable_package, result.package)
+        self.assertEqual(self.test_package1, result.package)
 
-    def test__create_virtual_codebase_from_indexable_package(self):
-        # Create indexable_package from test_package
-        indexable_package, _ = get_or_create_indexable_package(self.test_package1)
-
-        vc = _create_virtual_codebase_from_indexable_package(indexable_package)
+    def test__create_virtual_codebase_from_package_resources(self):
+        vc = _create_virtual_codebase_from_package_resources(self.test_package1)
         expected_vc = VirtualCodebase(location=self.scan1)
 
         # Ensure that at least the directory structure is the same
@@ -174,16 +154,14 @@ class IndexPackagesTestCase(MatchcodeTestCase):
             self.assertEqual(expected_r.path, r.path)
 
     def test_index_directory_fingerprints(self):
-        # Create indexable_package from test_package
-        indexable_package, _ = get_or_create_indexable_package(self.test_package1)
-        vc = _create_virtual_codebase_from_indexable_package(indexable_package)
+        vc = _create_virtual_codebase_from_package_resources(self.test_package1)
         vc = compute_directory_fingerprints(vc)
 
         # Ensure tables are empty prior to indexing
         self.assertFalse(ApproximateDirectoryContentIndex.objects.all())
         self.assertFalse(ApproximateDirectoryStructureIndex.objects.all())
 
-        indexed_adci, indexed_adsi = index_directory_fingerprints(vc, indexable_package)
+        indexed_adci, indexed_adsi = index_directory_fingerprints(vc, self.test_package1)
 
         # Check to see if anything has been indexed
         self.assertEqual(1, indexed_adci)
@@ -201,14 +179,11 @@ class IndexPackagesTestCase(MatchcodeTestCase):
         self.assertEqual(expected_adsi_fingerprint, adsi.fingerprint())
 
     def test_index_package_directories(self):
-        # Create indexable_package from test_package
-        indexable_package, _ = get_or_create_indexable_package(self.test_package1)
-
         # Ensure tables are empty prior to indexing
         self.assertFalse(ApproximateDirectoryContentIndex.objects.all())
         self.assertFalse(ApproximateDirectoryStructureIndex.objects.all())
 
-        indexed_adci, indexed_adsi = index_package_directories(indexable_package)
+        indexed_adci, indexed_adsi = index_package_directories(self.test_package1)
 
         # Check to see if anything has been indexed
         self.assertEqual(1, indexed_adci)

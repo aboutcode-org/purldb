@@ -31,7 +31,7 @@ from matchcode.utils import hexstring_to_binarray
 
 class BaseFileIndexSerializer(ModelSerializer):
     sha1 = CharField(source='fingerprint')
-    purl = CharField(source='package.package.package_url')
+    purl = CharField(source='package.package_url')
 
 
 class ExactFileIndexSerializer(BaseFileIndexSerializer):
@@ -54,7 +54,7 @@ class ExactPackageArchiveIndexSerializer(BaseFileIndexSerializer):
 
 class BaseDirectoryIndexSerializer(ModelSerializer):
     fingerprint = ReadOnlyField()
-    purl = CharField(source='package.package.package_url')
+    purl = CharField(source='package.package_url')
 
 
 class ApproximateDirectoryContentIndexSerializer(BaseDirectoryIndexSerializer):
@@ -241,7 +241,7 @@ class BaseDirectoryIndexViewSet(ReadOnlyModelViewSet):
                     {
                         'fingerprint': fingerprint,
                         'matched_fingerprint': match.fingerprint(),
-                        'purl': match.package.package.package_url,
+                        'purl': match.package.package_url,
                     }
                 )
 

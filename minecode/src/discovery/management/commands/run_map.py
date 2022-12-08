@@ -39,7 +39,7 @@ from discovery.models import ScannableURI
 from discovery.utils import stringify_null_purl_fields
 
 
-TRACE = False
+TRACE = True
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)

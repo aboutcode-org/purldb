@@ -14,7 +14,6 @@ from django.urls import reverse
 from packagedb.models import Package
 
 from matchcode.indexing import index_package_directories
-from matchcode.models import get_or_create_indexable_package
 from matchcode.utils import load_resources_from_scan
 from matchcode.utils import MatchcodeTestCase
 
@@ -37,8 +36,7 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
             type='npm',
         )
         load_resources_from_scan(self.get_test_loc('match/nested/plugin-request-2.4.1-ip.json'), self.test_package1)
-        self.test_indexable_package1, _ = get_or_create_indexable_package(self.test_package1)
-        index_package_directories(self.test_indexable_package1)
+        index_package_directories(self.test_package1)
 
         self.test_package2, _ = Package.objects.get_or_create(
             filename='underscore-1.10.9.tgz',
@@ -50,8 +48,7 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
             type='npm',
         )
         load_resources_from_scan(self.get_test_loc('match/nested/underscore-1.10.9-ip.json'), self.test_package2)
-        self.test_indexable_package2, _ = get_or_create_indexable_package(self.test_package2)
-        index_package_directories(self.test_indexable_package2)
+        index_package_directories(self.test_package2)
 
     def test_api_approximate_directory_content_index_list_fingerprint_lookup(self):
         test_fingerprint = '00000007af7d63765c78fa516b5353f5ffa7df45'

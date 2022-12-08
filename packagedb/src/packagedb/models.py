@@ -427,7 +427,16 @@ class Package(
         help_text=_('A list of source package URLs (aka. "purl") for this package. '
                     'For instance an SRPM is the "source package" for a binary RPM.'),
     )
-
+    last_indexed_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text='Timestamp set to the date of the last indexing. Used to track indexing status.'
+    )
+    index_error = models.TextField(
+        null=True,
+        blank=True,
+        help_text='Indexing errors messages. When present this means the indexing has failed.',
+    )
     search_vector = SearchVectorField(null=True)
 
     objects = PackageQuerySet.as_manager()

@@ -203,7 +203,8 @@ def map_scancode_harvest(cditem):
             # download_url value.
             download_url = package_scan.get('download_url')
             if not download_url:
-                err_msg = 'CDitemError: empty download_url for package_scan: {}'.format(package_scan)
+                purl = package_scan.get('purl')
+                err_msg = 'CDitemError: empty download_url for package: {}'.format(purl)
                 logger.error(err_msg)
 
                 cditem.map_error = err_msg

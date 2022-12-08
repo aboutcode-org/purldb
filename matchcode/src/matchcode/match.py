@@ -198,11 +198,11 @@ def tag_matched_resources(resource, codebase, matches, match_type):
     """
     for match in matches:
         # Prep matched package data and append to `codebase`
-        matched_package_info = match.package.package.to_dict()
+        matched_package_info = match.package.to_dict()
         matched_package_info['match_type'] = match_type
         codebase.attributes.matches.append(matched_package_info)
 
-        purl = match.package.package.package_url
+        purl = match.package.package_url
         # Tag the Resource where we found a match
         tag_matched_resource(resource, codebase, purl)
 
