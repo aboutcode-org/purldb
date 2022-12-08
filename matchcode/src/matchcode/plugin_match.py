@@ -26,26 +26,21 @@ PACKAGEDB_RESOURCES_ENDPOINT = 'http://127.0.0.1:8001/api/resources/'
 
 
 class PackageInfo:
-    def __init__(self, purl):
-        self.purl = purl
-        self.package_resources = self.get_resources_from_packagedb(purl)
+    def __init__(self, packagedb_url):
+        self.packagedb_url = packagedb_url
+        self.package_resources = self.get_resources_from_packagedb(packagedb_url)
         self.package_resource_by_paths = self.create_package_resource_by_paths()
 
     @classmethod
-    def get_resources_from_packagedb(cls, purl):
+    def get_resources_from_packagedb(cls, packagedb_url):
         # Get package resources
-        payload = {
-            'purl': purl
-        }
         package_resources = []
-        response = requests.get(PACKAGEDB_RESOURCES_ENDPOINT, params=payload)
-        while response:
-            jsoned_response = response.json()
-            package_resources.extend(jsoned_response.get('results', []))
-            next_page = jsoned_response.get('next')
-            if not next_page:
-                break
-            response = requests.get(next_page)
+        response = requests.get(packagedb_url)
+        if response:
+            package_data = response.json()
+            resources_url = package_data.get('resources')
+            response = requests.get(resources_url)
+            package_resources.extend(response.json())
         return package_resources
 
     def create_package_resource_by_paths(self):
@@ -74,16 +69,16 @@ def check_resource_path(resource, package_resources_by_path):
     return False
 
 
-def determine_best_package_match(directory, codebase, package_info_by_purl):
+def determine_best_package_match(directory, codebase, package_info_by_packagedb_url):
     """
     For all potential package matches in `package_info_by_purl`, return the
     package whose codebase structure matches ours the most.
     """
     # Calculate the percent of package files found in codebase
-    purls_by_match_ratio = {}
-    matched_codebase_paths_by_purl = defaultdict(list)
-    for matched_package_purl, package_info in package_info_by_purl.items():
-        matched_codebase_paths = matched_codebase_paths_by_purl[matched_package_purl]
+    packgedb_urls_by_match_ratio = {}
+    matched_codebase_paths_by_packagedb_url = defaultdict(list)
+    for matched_packagedb_url, package_info in package_info_by_packagedb_url.items():
+        matched_codebase_paths = matched_codebase_paths_by_packagedb_url[matched_packagedb_url]
         package_resource_by_paths = package_info.package_resource_by_paths
 
         # TODO: Theres a problem when try to match the directory with
@@ -101,11 +96,11 @@ def determine_best_package_match(directory, codebase, package_info_by_purl):
 
         matching_resources_count = len(matched_codebase_paths)
         ratio = matching_resources_count / len(package_resource_by_paths)
-        purls_by_match_ratio[ratio] = matched_package_purl
+        packgedb_urls_by_match_ratio[ratio] = matched_packagedb_url
 
-    highest_match_ratio = max(match_ratio for match_ratio, _ in purls_by_match_ratio.items())
-    best_package_match_purl = purls_by_match_ratio[highest_match_ratio]
-    return best_package_match_purl, matched_codebase_paths_by_purl[best_package_match_purl]
+    highest_match_ratio = max(match_ratio for match_ratio, _ in packgedb_urls_by_match_ratio.items())
+    best_package_match_packagedb_url = packgedb_urls_by_match_ratio[highest_match_ratio]
+    return best_package_match_packagedb_url, matched_codebase_paths_by_packagedb_url[best_package_match_packagedb_url]
 
 
 @post_scan_impl
@@ -159,31 +154,30 @@ class Match(PostScanPlugin):
             response = requests.get(MATCHCODE_ENDPOINT, params=payload)
             if response:
                 results = response.json()
-                matched_purls = [result.get('purl', '') for result in results]
-            if not matched_purls:
+                matched_packagedb_urls = [result.get('package', '') for result in results]
+            if not matched_packagedb_urls:
                 continue
 
             # Get the paths of the resources from matched packages
-            package_info_by_purl = {}
-            for purl in matched_purls:
-                package_info_by_purl[purl] = PackageInfo(purl)
+            package_info_by_packagedb_url = {}
+            for packagedb_url in matched_packagedb_urls:
+                package_info_by_packagedb_url[packagedb_url] = PackageInfo(packagedb_url)
 
             # Calculate the percent of package files found in codebase
-            best_package_match_purl, matched_codebase_paths = determine_best_package_match(resource, codebase, package_info_by_purl)
+            best_package_match_packagedb_url, matched_codebase_paths = determine_best_package_match(
+                resource,
+                codebase,
+                package_info_by_packagedb_url
+            )
 
             # Query PackageDB for info on the best matched package
-            payload = {
-                'purl': best_package_match_purl
-            }
-            response = requests.get(PACKAGEDB_ENDPOINT, params=payload)
+            response = requests.get(best_package_match_packagedb_url)
             if response:
                 # Create DiscoveredPackage for the best matched package
-                packagedb_results = response.json().get('results', [])
-                for package in packagedb_results:
-                    package.pop('uuid')
-                    if package in codebase.attributes.matches:
-                        continue
-                    codebase.attributes.matches.append(package)
+                package_data = response.json()
+                if package_data not in codebase.attributes.matches:
+                    codebase.attributes.matches.append(package_data)
+                best_package_match_purl = package_data['purl']
 
             # Associate the package to the resource and its children
             for matched_codebase_path in matched_codebase_paths:

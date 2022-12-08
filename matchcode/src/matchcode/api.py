@@ -32,7 +32,11 @@ from matchcode.utils import hexstring_to_binarray
 
 class BaseFileIndexSerializer(ModelSerializer):
     sha1 = CharField(source='fingerprint')
-    package = HyperlinkedRelatedField(view_name='api:package-detail', lookup_field='uuid', read_only=True)
+    package = HyperlinkedRelatedField(
+        view_name='api:package-detail',
+        lookup_field='uuid',
+        read_only=True
+    )
 
 
 class ExactFileIndexSerializer(BaseFileIndexSerializer):
@@ -55,8 +59,11 @@ class ExactPackageArchiveIndexSerializer(BaseFileIndexSerializer):
 
 class BaseDirectoryIndexSerializer(ModelSerializer):
     fingerprint = ReadOnlyField()
-    package = HyperlinkedRelatedField(view_name='api:package-detail', lookup_field='uuid', read_only=True)
-
+    package = HyperlinkedRelatedField(
+        view_name='api:package-detail',
+        lookup_field='uuid',
+        read_only=True
+    )
 
 class ApproximateDirectoryContentIndexSerializer(BaseDirectoryIndexSerializer):
     class Meta:
@@ -79,7 +86,11 @@ class ApproximateDirectoryStructureIndexSerializer(BaseDirectoryIndexSerializer)
 class BaseDirectoryIndexMatchSerializer(Serializer):
     fingerprint = CharField()
     matched_fingerprint = CharField()
-    package = HyperlinkedRelatedField(view_name='api:package-detail', lookup_field='uuid', read_only=True)
+    package = HyperlinkedRelatedField(
+        view_name='api:package-detail',
+        lookup_field='uuid',
+        read_only=True
+    )
 
 
 class CharMultipleWidget(widgets.TextInput):
