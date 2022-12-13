@@ -8,8 +8,9 @@
 #
 
 from collections import defaultdict
-import attr
+import os
 
+import attr
 import requests
 
 from commoncode.cliutils import PluggableCommandLineOption
@@ -19,10 +20,8 @@ from matchcode.utils import path_suffixes
 from plugincode.post_scan import post_scan_impl
 from plugincode.post_scan import PostScanPlugin
 
-
-MATCHCODE_ENDPOINT = 'http://127.0.0.1:8001/api/approximate_directory_content_index/match/'
-PACKAGEDB_ENDPOINT = 'http://127.0.0.1:8001/api/packages/'
-PACKAGEDB_RESOURCES_ENDPOINT = 'http://127.0.0.1:8001/api/resources/'
+MATCHCODE_DIRECTORY_CONTENT_MATCHING_ENDPOINT = os.environ.get('MATCHCODE_DIRECTORY_CONTENT_MATCHING_ENDPOINT')
+MATCHCODE_DIRECTORY_STRUCTURE_MATCHING_ENDPOINT = os.environ.get('MATCHCODE_DIRECTORY_STRUCTURE_MATCHING_ENDPOINT')
 
 
 class PackageInfo:
@@ -40,6 +39,7 @@ class PackageInfo:
             package_data = response.json()
             resources_url = package_data.get('resources')
             response = requests.get(resources_url)
+            print(response.json())
             package_resources.extend(response.json())
         return package_resources
 
@@ -103,6 +103,63 @@ def determine_best_package_match(directory, codebase, package_info_by_packagedb_
     return best_package_match_packagedb_url, matched_codebase_paths_by_packagedb_url[best_package_match_packagedb_url]
 
 
+def do_directory_matching(codebase, fingerprint_key, matching_endpoint):
+    for resource in codebase.walk(topdown=True):
+        # Collect directory fingerprints, if available
+        directory_fingerprint = resource.extra_data.get(fingerprint_key, '')
+
+        # Skip resource if it is not a directory, does not contain directory
+        # fingerprints, or if it has already been matched
+        if (resource.is_file
+                or not directory_fingerprint
+                or resource.extra_data.get('matched', False)):
+            continue
+
+        # Send fingerprint to matchcode for matching and get the purls of
+        # the matched packages
+        payload = {
+            'fingerprint': [directory_fingerprint]
+        }
+        response = requests.get(matching_endpoint, params=payload)
+        if response:
+            results = response.json()
+            matched_packagedb_urls = [result.get('package', '') for result in results]
+        if not matched_packagedb_urls:
+            continue
+
+        # Get the paths of the resources from matched packages
+        package_info_by_packagedb_url = {}
+        for packagedb_url in matched_packagedb_urls:
+            package_info_by_packagedb_url[packagedb_url] = PackageInfo(packagedb_url)
+
+        # Calculate the percent of package files found in codebase
+        best_package_match_packagedb_url, matched_codebase_paths = determine_best_package_match(
+            resource,
+            codebase,
+            package_info_by_packagedb_url
+        )
+
+        # Query PackageDB for info on the best matched package
+        response = requests.get(best_package_match_packagedb_url)
+        if response:
+            # Create DiscoveredPackage for the best matched package
+            package_data = response.json()
+            if package_data not in codebase.attributes.matches:
+                codebase.attributes.matches.append(package_data)
+            best_package_match_purl = package_data['purl']
+
+        # Associate the package to the resource and its children
+        for matched_codebase_path in matched_codebase_paths:
+            #print('matched_codebase_path: ' + matched_codebase_path)
+            r = codebase.get_resource(matched_codebase_path)
+            if best_package_match_purl in r.matched_to:
+                continue
+            r.matched_to.append(best_package_match_purl)
+            r.extra_data['matched'] = True
+            r.save(codebase)
+    return codebase
+
+
 @post_scan_impl
 class Match(PostScanPlugin):
     codebase_attributes = dict(
@@ -135,55 +192,13 @@ class Match(PostScanPlugin):
 
     def process_codebase(self, codebase, **kwargs):
         codebase = compute_directory_fingerprints(codebase)
-        for resource in codebase.walk(topdown=True):
-            # Collect directory fingerprints, if available
-            directory_content_fingerprint = resource.extra_data.get('directory_content', '')
-
-            # Skip resource if it is not a directory, does not contain directory
-            # fingerprints, or if it has already been matched
-            if (resource.is_file
-                    or not directory_content_fingerprint
-                    or resource.extra_data.get('matched', False)):
-                continue
-
-            # Send fingerprint to matchcode for matching and get the purls of
-            # the matched packages
-            payload = {
-                'fingerprint': [directory_content_fingerprint]
-            }
-            response = requests.get(MATCHCODE_ENDPOINT, params=payload)
-            if response:
-                results = response.json()
-                matched_packagedb_urls = [result.get('package', '') for result in results]
-            if not matched_packagedb_urls:
-                continue
-
-            # Get the paths of the resources from matched packages
-            package_info_by_packagedb_url = {}
-            for packagedb_url in matched_packagedb_urls:
-                package_info_by_packagedb_url[packagedb_url] = PackageInfo(packagedb_url)
-
-            # Calculate the percent of package files found in codebase
-            best_package_match_packagedb_url, matched_codebase_paths = determine_best_package_match(
-                resource,
-                codebase,
-                package_info_by_packagedb_url
-            )
-
-            # Query PackageDB for info on the best matched package
-            response = requests.get(best_package_match_packagedb_url)
-            if response:
-                # Create DiscoveredPackage for the best matched package
-                package_data = response.json()
-                if package_data not in codebase.attributes.matches:
-                    codebase.attributes.matches.append(package_data)
-                best_package_match_purl = package_data['purl']
-
-            # Associate the package to the resource and its children
-            for matched_codebase_path in matched_codebase_paths:
-                r = codebase.get_resource(matched_codebase_path)
-                if best_package_match_purl in r.matched_to:
-                    continue
-                r.matched_to.append(best_package_match_purl)
-                r.extra_data['matched'] = True
-                r.save(codebase)
+        codebase = do_directory_matching(
+            codebase,
+            'directory_content',
+            MATCHCODE_DIRECTORY_CONTENT_MATCHING_ENDPOINT
+        )
+        codebase = do_directory_matching(
+            codebase,
+            'directory_structure',
+            MATCHCODE_DIRECTORY_STRUCTURE_MATCHING_ENDPOINT
+        )
