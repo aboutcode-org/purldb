@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # purldb is a trademark of nexB Inc.
@@ -7,16 +8,12 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import socket
+import os
+import sys
 
 
-PRODUCTION_HOSTNAME = 'TBD'
+if __name__ == '__main__':
+    from django.core.management import execute_from_command_line
 
-hostname = socket.gethostname()
-
-if hostname.endswith(PRODUCTION_HOSTNAME):
-    from minecodeio.settings.production import *
-else:
-    from minecodeio.settings.dev import *
-
-# DO NOT ADD ANYTHING MORE HERE
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'purldb.settings')
+    execute_from_command_line(sys.argv)

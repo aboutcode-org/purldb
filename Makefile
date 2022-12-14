@@ -92,10 +92,19 @@ run:
 
 test:
 	@echo "-> Run the test suite"
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=packagedbio.settings ${PYTHON_EXE} -m pytest -vvs
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb.settings ${PYTHON_EXE} -m pytest -vvs
 
 shell:
 	${MANAGE} shell
+
+clearsync:
+	${ACTIVATE} clearsync --save-to-db --verbose -n 3
+
+clearindex:
+	${MANAGE} run_clearindex
+
+index_packages:
+	${MANAGE} index_packages
 
 bump:
 	@echo "-> Bump the version"
@@ -112,6 +121,6 @@ docker-images:
 	docker-compose pull
 	@echo "-> Save the service images to a compressed tar archive in the dist/ directory"
 	@mkdir -p dist/
-	@docker save postgres packagedb_packagedb nginx | gzip > dist/packagedb-images-`git describe --tags`.tar.gz
+	@docker save minecode minecode_minecode nginx | gzip > dist/minecode-images-`git describe --tags`.tar.gz
 
-.PHONY: virtualenv conf dev envfile isort black doc8 valid check clean migrate postgres run test shell bump docs docker-images
+.PHONY: virtualenv conf dev envfile isort black doc8 valid check clean migrate postgres run test shell clearsync clearindex index_packages bump docs docker-images

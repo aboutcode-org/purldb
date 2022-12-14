@@ -14,12 +14,12 @@ import environ
 
 
 PROJECT_DIR = Path(__file__).resolve().parent
-ROOT_DIR = PROJECT_DIR.parent.parent
+ROOT_DIR = PROJECT_DIR.parent
 
 
 # Environment
 
-ENV_FILE = "/etc/matchcodeio/.env"
+ENV_FILE = "/etc/purldb/.env"
 if not Path(ENV_FILE).exists():
     ENV_FILE = ROOT_DIR / ".env"
 
@@ -33,20 +33,20 @@ SECRET_KEY = env.str("SECRET_KEY")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[".localhost", "127.0.0.1", "[::1]"])
 
 # SECURITY WARNING: do not run with debug turned on in production
-DEBUG = env.bool("MATCHCODEIO_DEBUG", default=False)
+DEBUG = env.bool("PURLDB_DEBUG", default=False)
 
-MATCHCODEIO_REQUIRE_AUTHENTICATION = env.bool(
-    "MATCHCODEIO_REQUIRE_AUTHENTICATION", default=False
+PURLDB_REQUIRE_AUTHENTICATION = env.bool(
+    "PURLDB_REQUIRE_AUTHENTICATION", default=False
 )
 
 # SECURITY WARNING: do not  run with debug turned on in production
-DEBUG_TOOLBAR = env.bool("MATCHCODEIO_DEBUG_TOOLBAR", default=False)
+DEBUG_TOOLBAR = env.bool("PURLDB_DEBUG_TOOLBAR", default=False)
 
-MATCHCODEIO_PASSWORD_MIN_LENGTH = env.int("MATCHCODEIO_PASSWORD_MIN_LENGTH", default=14)
+PURLDB_PASSWORD_MIN_LENGTH = env.int("PURLDB_PASSWORD_MIN_LENGTH", default=14)
 
-# Matchcode.io
+# PurlDB
 
-MATCHCODEIO_LOG_LEVEL = env.str("MATCHCODEIO_LOG_LEVEL", "INFO")
+PURLDB_LOG_LEVEL = env.str("PURLDB_LOG_LEVEL", "INFO")
 
 # Application definition
 
@@ -81,9 +81,9 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'matchcodeio.urls'
+ROOT_URLCONF = 'purldb.urls'
 
-WSGI_APPLICATION = "matchcodeio.wsgi.application"
+WSGI_APPLICATION = "purldb.wsgi.application"
 
 # Database
 
@@ -134,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
         "OPTIONS": {
-            "min_length": MATCHCODEIO_PASSWORD_MIN_LENGTH,
+            "min_length": PURLDB_PASSWORD_MIN_LENGTH,
         },
     },
     {
@@ -182,16 +182,16 @@ LOGGING = {
     "loggers": {
         "scanpipe": {
             "handlers": ["null"] if IS_TESTS else ["console"],
-            "level": MATCHCODEIO_LOG_LEVEL,
+            "level": PURLDB_LOG_LEVEL,
             "propagate": False,
         },
         "django": {
             "handlers": ["null"] if IS_TESTS else ["console"],
             "propagate": False,
         },
-        # Set MATCHCODEIO_LOG_LEVEL=DEBUG to display all SQL queries in the console.
+        # Set PURLDB_LOG_LEVEL=DEBUG to display all SQL queries in the console.
         "django.db.backends": {
-            "level": MATCHCODEIO_LOG_LEVEL,
+            "level": PURLDB_LOG_LEVEL,
         },
     },
 }
@@ -210,7 +210,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/var/matchcodeio/static/'
+STATIC_ROOT = '/var/purldb/static/'
 
 STATICFILES_DIRS = [
     PROJECT_DIR / 'static',
@@ -232,12 +232,12 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
     ),
-    'DEFAULT_PAGINATION_CLASS': 'matchcode.api_custom.PageSizePagination',
+    'DEFAULT_PAGINATION_CLASS': 'packagedb.api_custom.PageSizePagination',
     # Limit the load on the Database returning a small number of records by default. https://github.com/nexB/vulnerablecode/issues/819
     "PAGE_SIZE": 10,
 }
 
-if not MATCHCODEIO_REQUIRE_AUTHENTICATION:
+if not PURLDB_REQUIRE_AUTHENTICATION:
     REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] = (
         "rest_framework.permissions.AllowAny",
     )
@@ -267,3 +267,8 @@ if DEBUG_TOOLBAR:
     INTERNAL_IPS = [
         "127.0.0.1",
     ]
+
+# Active seeders: each active seeder class need to be added explictly here
+ACTIVE_SEEDERS = [
+    'discovery.visitors.npm.NpmSeed',
+]
