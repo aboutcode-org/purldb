@@ -30,9 +30,9 @@ CLI_ARGS=$1
 CUSTOM_PACKAGES="https://github.com/nexB/commoncode/archive/refs/heads/48-correctly-assign-codebase-attributes.zip https://github.com/nexB/scancode-toolkit/archive/refs/heads/maven-pom-parse-dep-backport.zip"
 
 # Requirement arguments passed to pip and used by default or with --dev.
-REQUIREMENTS="$CUSTOM_PACKAGES --editable ./clearcode-toolkit --editable . --constraint requirements.txt"
-DEV_REQUIREMENTS="$CUSTOM_PACKAGES --editable ./clearcode-toolkit --editable .[testing] --constraint requirements.txt --constraint requirements-dev.txt"
-DOCS_REQUIREMENTS="$CUSTOM_PACKAGES --editable ./clearcode-toolkit --editable .[docs] --constraint requirements.txt"
+REQUIREMENTS="$CUSTOM_PACKAGES --editable . --constraint requirements.txt"
+DEV_REQUIREMENTS="$CUSTOM_PACKAGES --editable .[testing] --constraint requirements.txt --constraint requirements-dev.txt"
+DOCS_REQUIREMENTS="$CUSTOM_PACKAGES --editable .[docs] --constraint requirements.txt"
 
 # where we create a virtualenv
 VIRTUALENV_DIR=venv

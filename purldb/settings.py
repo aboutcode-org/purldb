@@ -53,11 +53,11 @@ PURLDB_LOG_LEVEL = env.str("PURLDB_LOG_LEVEL", "INFO")
 INSTALLED_APPS = (
     # Local apps
     # Must come before Third-party apps for proper templates override
+    'clearcode',
+    'clearindex',
+    'discovery',
     'matchcode',
     'packagedb',
-    'discovery',
-    'clearindex',
-    'clearcode',
     # Django built-in
     "django.contrib.auth",
     'django.contrib.contenttypes',

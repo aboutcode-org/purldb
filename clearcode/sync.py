@@ -99,10 +99,6 @@ def fetch_and_save_latest_definitions(
     """
     assert output_dir or save_to_db, 'You must select one of the --output-dir or --save-to-db options.'
 
-    if save_to_db:
-        from clearcode import dbconf
-        dbconf.configure(verbose=verbose)
-
     definitions_url = cdutils.append_path_to_url(base_api_url, extra_path='definitions')
     if by_latest:
         definitions_url = cdutils.update_url(definitions_url, qs_mapping=dict(sort='releaseDate', sortDesc='true'))
@@ -280,9 +276,6 @@ def fetch_and_save_harvests(
     (Note: Return a tuple of (etag, md5, url) for usage as a callback)
     """
     assert output_dir or save_to_db, 'You must select one of the --output-dir or --save-to-db options.'
-    if save_to_db:
-        from clearcode import dbconf
-        dbconf.configure(verbose=verbose)
 
     url = coordinate.get_harvests_api_url()
     etag, checksum, content = cache.get_content(

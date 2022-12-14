@@ -10,6 +10,7 @@
 from django.conf.urls import include
 from django.urls import re_path
 
+from clearcode.api import CDitemViewSet
 from packagedb.api import PackageViewSet
 from packagedb.api import ResourceViewSet
 from rest_framework import routers
@@ -27,6 +28,7 @@ api_router.register(r'approximate_directory_content_index', ApproximateDirectory
 api_router.register(r'approximate_directory_structure_index', ApproximateDirectoryStructureIndexViewSet)
 api_router.register(r'exact_file_index', ExactFileIndexViewSet)
 api_router.register(r'exact_package_archive_index', ExactPackageArchiveIndexViewSet)
+api_router.register(r'cditems', CDitemViewSet, 'cditems')
 
 urlpatterns = [
     re_path(r'^api/', include((api_router.urls, 'api'))),

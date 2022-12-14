@@ -32,7 +32,7 @@ Load ClearlyDefined definitions and harvests from the filesystem
 Operation
 ---------
 This script walks a given `--input-dir` location and loads any ClearlyDefined data
-into a Database (currently postgreSQL). 
+into a Database (currently postgreSQL).
 
 Usage
 -----
@@ -52,8 +52,6 @@ def walk_and_load_from_filesystem(input_dir, cd_root_dir):
     CDitem.path = npm/npmjs/@actions/github/revision/2.1.1.json.gz
     CDitem.content = 'the file: 2.1.1.json.gz in bytes'
     """
-    from clearcode import dbconf
-    dbconf.configure()
 
     # for now, we count dirs too
     file_counter = 1
@@ -67,13 +65,13 @@ def walk_and_load_from_filesystem(input_dir, cd_root_dir):
             # TODO: check if the location is actually a CD data item.
             full_gzip_path = os.path.join(root, filename)
             full_json_path = full_gzip_path.rstrip('.gz')
-            
+
             # normalize the `path` value by removing the arbitrary parent directory
             cditem_rel_path = os.path.relpath(full_json_path, cd_root_dir)
-            
+
             with open(full_gzip_path, mode='rb') as f:
                 content = f.read()
-            
+
             from clearcode import models
             # Save to DB
             try:
@@ -97,8 +95,8 @@ def walk_and_load_from_filesystem(input_dir, cd_root_dir):
 
 def cli(input_dir=None, cd_root_dir=None, *arg, **kwargs):
     """
-    Handle ClearlyDefined gzipped JSON scans by walking a clearsync directory structure, 
-    creating CDItem objects and loading them into a PostgreSQL database. 
+    Handle ClearlyDefined gzipped JSON scans by walking a clearsync directory structure,
+    creating CDItem objects and loading them into a PostgreSQL database.
     """
     if not input_dir:
         sys.exit('Please specify an input directory using the `--input-dir` option.')
