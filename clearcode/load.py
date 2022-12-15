@@ -81,6 +81,23 @@ def walk_and_load_from_filesystem(input_dir, cd_root_dir):
                 continue
 
 
+def load(input_dir=None, cd_root_dir=None, *arg, **kwargs):
+    """
+    Handle ClearlyDefined gzipped JSON scans by walking a clearsync directory structure,
+    creating CDItem objects and loading them into a PostgreSQL database.
+    """
+    if not input_dir:
+        sys.exit('Please specify an input directory using the `--input-dir` option.')
+    if not cd_root_dir:
+        sys.exit('Please specify the cd-root-directory using the --cd-root-dir option.')
+
+    # get proper DB setup
+
+    walk_and_load_from_filesystem(input_dir, cd_root_dir)
+    print('                                        ', end='\r')
+    print("Loading complete")
+
+
 @click.command()
 
 @click.option('--input-dir',
@@ -98,16 +115,12 @@ def cli(input_dir=None, cd_root_dir=None, *arg, **kwargs):
     Handle ClearlyDefined gzipped JSON scans by walking a clearsync directory structure,
     creating CDItem objects and loading them into a PostgreSQL database.
     """
-    if not input_dir:
-        sys.exit('Please specify an input directory using the `--input-dir` option.')
-    if not cd_root_dir:
-        sys.exit('Please specify the cd-root-directory using the --cd-root-dir option.')
-
-    # get proper DB setup
-
-    walk_and_load_from_filesystem(input_dir, cd_root_dir)
-    print('                                        ', end='\r')
-    print("Loading complete")
+    load(
+        input_dir=input_dir,
+        cd_root_dir=cd_root_dir,
+        *arg,
+        **kwargs
+    )
 
 
 if __name__ == '__main__':

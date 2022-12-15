@@ -7,10 +7,6 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from __future__ import print_function
-
 import logging
 import signal
 import sys
@@ -21,13 +17,6 @@ from django.db import transaction
 from django.db.utils import OperationalError
 from django.utils import timezone
 
-from clearcode.models import CDitem
-from clearindex.utils import get_error_message
-from clearindex.utils import VerboseCommand
-from discovery.management.commands.run_map import merge_packages
-from discovery.utils import stringify_null_purl_fields
-
-from packagedb.models import Package
 from packagedcode import licensing
 from packagedcode import maven
 from packagedcode import npm
@@ -36,10 +25,14 @@ from packagedcode import pypi
 from packagedcode import rubygems
 from packagedcode.models import Package as ScannedPackage
 
-
+from clearcode.models import CDitem
 from clearindex import harvest
-from clearindex.utils import get_error_message
-from clearindex.utils import VerboseCommand
+from discovery.management.commands import get_error_message
+from discovery.management.commands import VerboseCommand
+from discovery.management.commands.run_map import merge_packages
+from discovery.utils import stringify_null_purl_fields
+from packagedb.models import Package
+
 
 TRACE = False
 

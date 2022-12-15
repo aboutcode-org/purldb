@@ -7,18 +7,12 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import logging
 import sys
 
-from django.db import IntegrityError
 from django.db import transaction
 from django.utils import timezone
 
-from clearcode.models import CDitem
 from packagedb.models import Package
 from packagedb.models import Resource
 

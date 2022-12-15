@@ -13,20 +13,16 @@ import binascii
 import logging
 import sys
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.forms.models import model_to_dict
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from discovery.management.commands import get_error_message
 from matchcode.fingerprinting import create_halohash_chunks
 from matchcode.fingerprinting import split_fingerprint
 from matchcode.halohash import byte_hamming_distance
-from matchcode.utils import get_error_message
 from matchcode.utils import hexstring_to_binarray
-
 from packagedb.models import Package
-from packagedb.models import Resource
 
 
 TRACE = False

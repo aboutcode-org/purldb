@@ -393,57 +393,7 @@ class Cache(object):
         return cache
 
 
-@click.command()
-
-@click.option('--output-dir',
-    type=click.Path(), metavar='DIR',
-    help='Save fetched content as compressed gzipped files to this output directory.')
-
-@click.option('--save-to-db',
-    is_flag=True,
-    help='Save fetched content as compressed gzipped blobs in the configured database.')
-
-@click.option('--unsorted',
-    is_flag=True,
-    help='Fetch data without any sorting. The default is to fetch data sorting by latest updated first.')
-
-@click.option('--base-api-url',
-    type=str,
-    default='https://api.clearlydefined.io', show_default=True,
-    help='ClearlyDefined base API URL.')
-
-@click.option('--wait',
-    type=int, metavar='INT',
-    default=60, show_default=True,
-    help='Set the number of seconds to wait for new or updated definitions '
-         'between two loops.')
-
-@click.option('-n', '--processes',
-    type=int, metavar='INT',
-    default=1, show_default=True,
-    help='Set the number of parallel processes to use. '
-         'Disable parallel processing if 0.')
-
-@click.option('--max-def',
-    type=int, metavar='INT',
-    default=0,
-    help='Set the maximum number of definitions to fetch.')
-
-@click.option('--only-definitions',
-    is_flag=True,
-    help='Only fetch definitions and no other data item.')
-
-@click.option('--log-file',
-    type=click.Path(), default=None,
-    help='Path to a file where to log fetched paths, one per line. '
-         'Log entries will be appended to this file if it exists.')
-
-@click.option('--verbose',
-    is_flag=True,
-    help='Display more verbose progress messages.')
-
-@click.help_option('-h', '--help')
-def cli(output_dir=None, save_to_db=False,
+def sync(output_dir=None, save_to_db=False,
         base_api_url='https://api.clearlydefined.io',
         wait=60, processes=1, unsorted=False,
         log_file=None, max_def=0, only_definitions=False, session=session,
@@ -571,6 +521,83 @@ def cli(output_dir=None, save_to_db=False,
         print('TOTAL cycles:', cycles,
               'with:', total_defs_count, 'defs and combined harvests,',
               'in:', int(total_duration), 'sec.')
+
+
+@click.command()
+
+@click.option('--output-dir',
+    type=click.Path(), metavar='DIR',
+    help='Save fetched content as compressed gzipped files to this output directory.')
+
+@click.option('--save-to-db',
+    is_flag=True,
+    help='Save fetched content as compressed gzipped blobs in the configured database.')
+
+@click.option('--unsorted',
+    is_flag=True,
+    help='Fetch data without any sorting. The default is to fetch data sorting by latest updated first.')
+
+@click.option('--base-api-url',
+    type=str,
+    default='https://api.clearlydefined.io', show_default=True,
+    help='ClearlyDefined base API URL.')
+
+@click.option('--wait',
+    type=int, metavar='INT',
+    default=60, show_default=True,
+    help='Set the number of seconds to wait for new or updated definitions '
+         'between two loops.')
+
+@click.option('-n', '--processes',
+    type=int, metavar='INT',
+    default=1, show_default=True,
+    help='Set the number of parallel processes to use. '
+         'Disable parallel processing if 0.')
+
+@click.option('--max-def',
+    type=int, metavar='INT',
+    default=0,
+    help='Set the maximum number of definitions to fetch.')
+
+@click.option('--only-definitions',
+    is_flag=True,
+    help='Only fetch definitions and no other data item.')
+
+@click.option('--log-file',
+    type=click.Path(), default=None,
+    help='Path to a file where to log fetched paths, one per line. '
+         'Log entries will be appended to this file if it exists.')
+
+@click.option('--verbose',
+    is_flag=True,
+    help='Display more verbose progress messages.')
+
+@click.help_option('-h', '--help')
+def cli(output_dir=None, save_to_db=False,
+        base_api_url='https://api.clearlydefined.io',
+        wait=60, processes=1, unsorted=False,
+        log_file=None, max_def=0, only_definitions=False, session=session,
+        verbose=False, *arg, **kwargs):
+    """
+    Fetch the latest definitions and harvests from ClearlyDefined and save these
+    as gzipped JSON either as as files in output-dir or in a PostgreSQL
+    database. Loop forever after waiting some seconds between each cycles.
+    """
+    sync(
+        output_dir=output_dir,
+        save_to_db=save_to_db,
+        base_api_url=base_api_url,
+        wait=wait,
+        processes=processes,
+        unsorted=unsorted,
+        log_file=log_file,
+        max_def=max_def,
+        only_definitions=only_definitions,
+        session=session,
+        verbose=verbose,
+        *arg,
+        **kwargs,
+    )
 
 
 if __name__ == '__main__':

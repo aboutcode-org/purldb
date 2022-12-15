@@ -156,23 +156,6 @@ def hexstring_to_binarray(hex_string):
     return bytearray(binascii.unhexlify(hex_string))
 
 
-def get_error_message(e):
-    """
-    Return an error message with a traceback given an exception.
-    """
-    tb = traceback.format_exc()
-    msg = e.__class__.__name__ + ' ' + repr(e)
-    msg += '\n' + tb
-    return msg
-
-
-def get_settings(var_name):
-    """
-    Return the settings value from the environment or Django settings.
-    """
-    return getenv(var_name) or getattr(settings, var_name, None) or ''
-
-
 def path_suffixes(path):
     """
     Yield all the suffixes of `path`, starting from the longest (e.g. more segments).
