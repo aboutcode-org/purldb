@@ -43,8 +43,23 @@ Once PurlDB and the database has been set up, run tests to ensure functionality:
     make test
 
 
-Post-Installation
------------------
+Usage
+-----
+Start the PurlDB server by running:
+::
+
+    make run
+
+To start visiting upstream package repositories for package metadata:
+::
+
+    make run_visit
+
+To populate the PackageDB using visited package metadata:
+::
+
+    make run_map
+
 If you have an empty PackageDB without Package and Package Resource information,
 ClearCode should be run for a while so it can populate the PackageDB
 with Package and Package Resource information from clearlydefined.
@@ -68,32 +83,40 @@ matching indices from the collected Package data:
     make index_packages
 
 
-Usage
------
-Start the PurlDB server by running:
-::
+API Endpoints
+-------------
 
-    make run
+* ``api/packages``
 
-You can send a ScanCode JSON scan for matching at the api/match_request/ endpoint using the HTML view or API.
+  * Contains all of the Packages stored in the PackageDB
 
-There are currently four types of matching that MatchCode provides:
+* ``api/resources``
 
-* Exact Package archive matching
+  * Contains all of the Resources stored in the PackageDB
 
-  * Check the SHA1 values of archives from a scan to determine if they are known Packages
+* ``api/cditems``
 
-* Exact Package file matching
+  * Contains the visited ClearlyDefined harvests or definitions
 
-  * Check the SHA1 values of files from a scan to see what Packages also has that file
+* ``api/approximate_directory_content_index``
 
-* Approximate Directory structure matching
+  * Contains the directory content fingerprints for Packages with Resources
+  * Used to check if a directory and the files under it is from a known Package using the SHA1 values of the files
 
-  * Check to see if a directory and the files under it is from a known Package using the name of the files
+* ``api/approximate_directory_structure_index``
 
-* Approximate Directory content matching
+  * Contains the directory structure fingerprints for Packages with Resources
+  * Used to check if a directory and the files under it is from a known Package using the name of the files
 
-  * Check to see if a directory and the files under it is from a known Package using the SHA1 values of the files
+* ``api/exact_file_index``
+
+  * Contains the SHA1 values of Package Resources
+  * Used to check the SHA1 values of files from a scan to see what Packages also has that file
+
+* ``api/exact_package_archive_index``
+
+  * Contains the SHA1 values of Package archives
+  * Used to check the SHA1 values of archives from a scan to determine if they are known Packages
 
 
 License

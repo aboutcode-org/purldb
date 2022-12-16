@@ -90,6 +90,15 @@ postgres:
 run:
 	${MANAGE} runserver 8001 --insecure
 
+seed:
+	${MANAGE} seed
+
+run_visit: seed
+	${MANAGE} run_visit
+
+run_map:
+	${MANAGE} run_map
+
 test:
 	@echo "-> Run the test suite"
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb.settings ${PYTHON_EXE} -m pytest -vvs
