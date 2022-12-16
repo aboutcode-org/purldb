@@ -14,7 +14,7 @@ import time
 
 from django.db import transaction
 
-from discovery.management.commands import VerboseCommand
+from minecode.management.commands import VerboseCommand
 from matchcode.indexing import index_package_archives
 from matchcode.indexing import index_package_directories
 from matchcode.indexing import index_package_file

@@ -55,7 +55,7 @@ INSTALLED_APPS = (
     # Must come before Third-party apps for proper templates override
     'clearcode',
     'clearindex',
-    'discovery',
+    'minecode',
     'matchcode',
     'packagedb',
     # Django built-in
@@ -270,5 +270,5 @@ if DEBUG_TOOLBAR:
 
 # Active seeders: each active seeder class need to be added explictly here
 ACTIVE_SEEDERS = [
-    'discovery.visitors.npm.NpmSeed',
+    'minecode.visitors.npm.NpmSeed',
 ]

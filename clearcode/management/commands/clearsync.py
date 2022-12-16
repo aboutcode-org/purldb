@@ -8,7 +8,7 @@
 #
 
 from clearcode.sync import sync
-from discovery.management.commands import VerboseCommand
+from minecode.management.commands import VerboseCommand
 
 
 class Command(VerboseCommand):

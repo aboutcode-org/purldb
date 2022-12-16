@@ -17,7 +17,7 @@ import traceback
 from django.core.management.base import BaseCommand
 from django.test import TestCase as DjangoTestCase
 
-from discovery.utils_test import JsonBasedTesting
+from minecode.utils_test import JsonBasedTesting
 
 
 """

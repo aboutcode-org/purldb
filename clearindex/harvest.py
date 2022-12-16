@@ -16,8 +16,8 @@ from django.utils import timezone
 from packagedb.models import Package
 from packagedb.models import Resource
 
-from discovery.management.commands.run_map import merge_packages
-from discovery.utils import stringify_null_purl_fields
+from minecode.management.commands.run_map import merge_packages
+from minecode.utils import stringify_null_purl_fields
 
 
 logger = logging.getLogger(__name__)
