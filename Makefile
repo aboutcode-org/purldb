@@ -98,7 +98,7 @@ shell:
 	${MANAGE} shell
 
 clearsync:
-	${ACTIVATE} clearsync --save-to-db --verbose -n 3
+	${MANAGE} clearsync --save-to-db --verbose -n 3
 
 clearindex:
 	${MANAGE} run_clearindex

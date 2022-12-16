@@ -28,13 +28,11 @@ class Command(VerboseCommand):
         parser.add_argument(
             '--save-to-db',
             dest='save_to_db',
-            default=True,
-            action='store_false',
+            action='store_true',
             help='Save fetched content as compressed gzipped blobs in the configured database.')
         parser.add_argument(
             '--unsorted',
             dest='unsorted',
-            default=False,
             action='store_true',
             help='Fetch data without any sorting. The default is to fetch data sorting by latest updated first.')
         parser.add_argument(
@@ -66,33 +64,32 @@ class Command(VerboseCommand):
         parser.add_argument(
             '--only-definitions',
             dest='only_definitions',
-            default=False,
             action='store_true',
             help='Only fetch definitions and no other data item.')
         parser.add_argument(
             '--log-file',
             dest='log_file',
             default=None,
+            type=str,
             help='Path to a file where to log fetched paths, one per line. '
                  'Log entries will be appended to this file if it exists.')
         parser.add_argument(
             '--verbose',
             dest='verbose',
-            default=False,
             action='store_true',
             help='Display more verbose progress messages.')
 
     def handle(self, *args, **options):
         output_dir = options.get('output_dir')
-        save_to_db = options.get('save_to_db', True)
-        base_api_url = options.get('base_api_url', 'https://api.clearlydefined.io')
-        wait = options.get('wait', 60)
-        processes = options.get('processes', 1)
-        unsorted = options.get('unsorted', False)
+        save_to_db = options.get('save_to_db')
+        base_api_url = options.get('base_api_url')
+        wait = options.get('wait')
+        processes = options.get('processes')
+        unsorted = options.get('unsorted')
         log_file = options.get('log_file')
-        max_def = options.get('max_def', 0)
-        only_definitions = options.get('only_definitions', False)
-        verbose = options.get('verbose', False)
+        max_def = options.get('max_def')
+        only_definitions = options.get('only_definitions')
+        verbose = options.get('verbose')
 
         sync(
             output_dir=output_dir,
