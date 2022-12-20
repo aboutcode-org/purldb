@@ -38,9 +38,15 @@ class PackageInfo:
         if response:
             package_data = response.json()
             resources_url = package_data.get('resources')
-            response = requests.get(resources_url)
-            print(response.json())
-            package_resources.extend(response.json())
+            count = 1
+            while True:
+                url = f'{resources_url}?page={count}'
+                response = requests.get(url)
+                if response:
+                    package_resources.extend(response.json())
+                    count += 1
+                else:
+                    break
         return package_resources
 
     def create_package_resource_by_paths(self):
