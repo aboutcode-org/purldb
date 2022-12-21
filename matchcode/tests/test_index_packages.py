@@ -12,6 +12,7 @@ import os
 from commoncode.resource import VirtualCodebase
 
 from matchcode.fingerprinting import compute_directory_fingerprints
+from matchcode.fingerprinting import hexstring_to_binarray
 from matchcode.indexing import _create_virtual_codebase_from_package_resources
 from matchcode.indexing import index_directory_fingerprints
 from matchcode.indexing import index_package_archives
@@ -21,7 +22,6 @@ from matchcode.management.commands import index_packages
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import create_halohash_chunks
-from matchcode.models import hexstring_to_binarray
 from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ExactFileIndex
 from matchcode.utils import load_resources_from_scan

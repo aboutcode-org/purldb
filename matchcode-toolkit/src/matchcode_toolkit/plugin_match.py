@@ -15,13 +15,22 @@ import requests
 
 from commoncode.cliutils import PluggableCommandLineOption
 from commoncode.cliutils import POST_SCAN_GROUP
-from matchcode.fingerprinting import compute_directory_fingerprints
-from matchcode.utils import path_suffixes
+from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
 from plugincode.post_scan import post_scan_impl
 from plugincode.post_scan import PostScanPlugin
 
-MATCHCODE_DIRECTORY_CONTENT_MATCHING_ENDPOINT = os.environ.get('MATCHCODE_DIRECTORY_CONTENT_MATCHING_ENDPOINT')
-MATCHCODE_DIRECTORY_STRUCTURE_MATCHING_ENDPOINT = os.environ.get('MATCHCODE_DIRECTORY_STRUCTURE_MATCHING_ENDPOINT')
+MATCHCODE_DIRECTORY_CONTENT_MATCHING_ENDPOINT = "http://127.0.0.1:8001/api/approximate_directory_content_index/match/" #os.environ.get('MATCHCODE_DIRECTORY_CONTENT_MATCHING_ENDPOINT')
+MATCHCODE_DIRECTORY_STRUCTURE_MATCHING_ENDPOINT = "http://127.0.0.1:8001/api/approximate_directory_structure_index/match/" #os.environ.get('MATCHCODE_DIRECTORY_STRUCTURE_MATCHING_ENDPOINT')
+
+
+def path_suffixes(path):
+    """
+    Yield all the suffixes of `path`, starting from the longest (e.g. more segments).
+    """
+    segments = path.strip('/').split('/')
+    suffixes = (segments[i:] for i in range(len(segments)))
+    for suffix in suffixes:
+        yield '/'.join(suffix)
 
 
 class PackageInfo:

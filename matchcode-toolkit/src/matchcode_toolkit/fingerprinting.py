@@ -9,7 +9,7 @@
 
 import binascii
 
-from matchcode.halohash import BitAverageHaloHash
+from matchcode_toolkit.halohash import BitAverageHaloHash
 
 
 def _create_directory_fingerprint(inputs):

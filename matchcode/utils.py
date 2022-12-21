@@ -7,19 +7,18 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from os import getenv
 from unittest import TestCase
-import binascii
+
 import json
 import ntpath
 import os
 import posixpath
-import traceback
 
-from django.conf import settings
 from django.test import TestCase as DjangoTestCase
 
 from commoncode.resource import VirtualCodebase
+
+from matchcode.fingerprinting import hexstring_to_binarray
 
 
 ############## TEST UTILITIES ##############
@@ -147,20 +146,3 @@ def index_package_files_sha1(package, scan_location):
             sha1=sha1_in_bin,
             package=package,
         )
-
-################# GENERAL UTILITIES #################
-def hexstring_to_binarray(hex_string):
-    """
-    Convert a hex string to binary form, then store in a bytearray
-    """
-    return bytearray(binascii.unhexlify(hex_string))
-
-
-def path_suffixes(path):
-    """
-    Yield all the suffixes of `path`, starting from the longest (e.g. more segments).
-    """
-    segments = path.strip('/').split('/')
-    suffixes = (segments[i:] for i in range(len(segments)))
-    for suffix in suffixes:
-        yield '/'.join(suffix)

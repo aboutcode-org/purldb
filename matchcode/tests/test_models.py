@@ -14,11 +14,11 @@ from packagedb.models import Package
 import attr
 
 from matchcode.fingerprinting import compute_directory_fingerprints
+from matchcode.fingerprinting import hexstring_to_binarray
 from matchcode.management.commands.index_packages import index_package_directories
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import create_halohash_chunks
-from matchcode.models import hexstring_to_binarray
 from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ExactFileIndex
 from matchcode.utils import index_packages_sha1
