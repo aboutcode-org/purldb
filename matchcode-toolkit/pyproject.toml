@@ -1,3 +1,7 @@
+[project]
+name = "matchcode-toolkit"
+version = "0.0.1"
+
 [build-system]
 requires = ["setuptools >= 50", "wheel", "setuptools_scm[toml] >= 6"]
 build-backend = "setuptools.build_meta"
@@ -5,7 +9,7 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools_scm]
 # this is used populated when creating a git archive
 # and when there is .git dir and/or there is no git installed
-fallback_version = "0.0.1"
+fallback_version = "9999.$Format:%h-%cs$"
 
 [tool.pytest.ini_options]
 norecursedirs = [
