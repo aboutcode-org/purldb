@@ -21,9 +21,9 @@ from rest_framework.serializers import ReadOnlyField
 from rest_framework.serializers import Serializer
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from matchcode.fingerprinting import create_halohash_chunks
-from matchcode.fingerprinting import hexstring_to_binarray
-from matchcode.fingerprinting import split_fingerprint
+from matchcode_toolkit.fingerprinting import create_halohash_chunks
+from matchcode_toolkit.fingerprinting import hexstring_to_binarray
+from matchcode_toolkit.fingerprinting import split_fingerprint
 from matchcode.models import ExactFileIndex
 from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ApproximateDirectoryContentIndex

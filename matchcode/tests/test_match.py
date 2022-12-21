@@ -13,7 +13,7 @@ import attr
 from commoncode.resource import VirtualCodebase
 from packagedb.models import Package
 
-from matchcode.fingerprinting import compute_directory_fingerprints
+from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
 from matchcode.management.commands.index_packages import index_package_directories
 from matchcode.match import EXACT_PACKAGE_ARCHIVE_MATCH
 from matchcode.match import APPROXIMATE_DIRECTORY_STRUCTURE_MATCH

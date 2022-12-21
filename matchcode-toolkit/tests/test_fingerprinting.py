@@ -12,13 +12,13 @@ import os
 from commoncode.resource import VirtualCodebase
 from commoncode.testcase import FileBasedTesting
 
-from matchcode.fingerprinting import _create_directory_fingerprint
-from matchcode.fingerprinting import _get_resource_subpath
-from matchcode.fingerprinting import compute_directory_fingerprints
-from matchcode.fingerprinting import create_content_fingerprint
-from matchcode.fingerprinting import create_halohash_chunks
-from matchcode.fingerprinting import create_structure_fingerprint
-from matchcode.fingerprinting import split_fingerprint
+from matchcode_toolkit.fingerprinting import _create_directory_fingerprint
+from matchcode_toolkit.fingerprinting import _get_resource_subpath
+from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
+from matchcode_toolkit.fingerprinting import create_content_fingerprint
+from matchcode_toolkit.fingerprinting import create_halohash_chunks
+from matchcode_toolkit.fingerprinting import create_structure_fingerprint
+from matchcode_toolkit.fingerprinting import split_fingerprint
 
 
 class Resource():

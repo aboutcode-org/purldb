@@ -13,7 +13,7 @@ import sys
 
 from commoncode.resource import VirtualCodebase
 
-from matchcode.fingerprinting import compute_directory_fingerprints
+from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ExactPackageArchiveIndex

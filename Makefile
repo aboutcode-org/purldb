@@ -101,7 +101,8 @@ run_map:
 
 test:
 	@echo "-> Run the test suite"
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb.settings ${PYTHON_EXE} -m pytest -vvs
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode-toolkit
+	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs matchcode-toolkit
 
 shell:
 	${MANAGE} shell

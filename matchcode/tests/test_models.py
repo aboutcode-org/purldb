@@ -13,8 +13,8 @@ from commoncode.resource import VirtualCodebase
 from packagedb.models import Package
 import attr
 
-from matchcode.fingerprinting import compute_directory_fingerprints
-from matchcode.fingerprinting import hexstring_to_binarray
+from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
+from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode.management.commands.index_packages import index_package_directories
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex

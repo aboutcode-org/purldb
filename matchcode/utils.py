@@ -18,7 +18,7 @@ from django.test import TestCase as DjangoTestCase
 
 from commoncode.resource import VirtualCodebase
 
-from matchcode.fingerprinting import hexstring_to_binarray
+from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 
 
 ############## TEST UTILITIES ##############

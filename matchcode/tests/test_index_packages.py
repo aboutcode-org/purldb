@@ -11,8 +11,8 @@ import os
 
 from commoncode.resource import VirtualCodebase
 
-from matchcode.fingerprinting import compute_directory_fingerprints
-from matchcode.fingerprinting import hexstring_to_binarray
+from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
+from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode.indexing import _create_virtual_codebase_from_package_resources
 from matchcode.indexing import index_directory_fingerprints
 from matchcode.indexing import index_package_archives

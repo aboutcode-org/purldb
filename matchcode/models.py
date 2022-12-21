@@ -18,10 +18,10 @@ from django.forms.models import model_to_dict
 from django.utils.translation import gettext_lazy as _
 
 from minecode.management.commands import get_error_message
-from matchcode.fingerprinting import create_halohash_chunks
-from matchcode.fingerprinting import hexstring_to_binarray
-from matchcode.fingerprinting import split_fingerprint
-from matchcode.halohash import byte_hamming_distance
+from matchcode_toolkit.fingerprinting import create_halohash_chunks
+from matchcode_toolkit.fingerprinting import hexstring_to_binarray
+from matchcode_toolkit.fingerprinting import split_fingerprint
+from matchcode_toolkit.halohash import byte_hamming_distance
 from packagedb.models import Package
 
 
