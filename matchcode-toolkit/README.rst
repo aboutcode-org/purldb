@@ -10,8 +10,11 @@ Usage
 
 Ensure that the PurlDB server is up. Set the following environment variables:
   * ``MATCHCODE_DIRECTORY_CONTENT_MATCHING_ENDPOINT``
+
     * ``export MATCHCODE_DIRECTORY_CONTENT_MATCHING_ENDPOINT="http://127.0.0.1:8001/api/approximate_directory_content_index/match/"``
+
   * ``MATCHCODE_DIRECTORY_STRUCTURE_MATCHING_ENDPOINT``
+
     * ``export MATCHCODE_DIRECTORY_STRUCTURE_MATCHING_ENDPOINT="http://127.0.0.1:8001/api/approximate_directory_structure_index/match/"``
 
 Install the matchcode-toolkit plugin into scancode-toolkit:
@@ -20,6 +23,9 @@ Install the matchcode-toolkit plugin into scancode-toolkit:
 
 Run scancode with matching enabled:
   * The ``--info`` option has to be enabled on the scan you are running:
+
     * ``scancode --info --match <scan target directory> --json-pp -``
+
     or on the scan you are importing:
+
     * ``scancode --from-scan <path to scan JSON with --info> --match --json-pp -``
