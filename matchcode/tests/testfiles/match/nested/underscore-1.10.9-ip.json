@@ -1,0 +1,260 @@
+{
+  "headers": [
+    {
+      "tool_name": "scancode-toolkit",
+      "tool_version": "3.2.2rc3",
+      "options": {
+        "input": [
+          "/tmp/test/underscore/"
+        ],
+        "--info": true,
+        "--json-pp": "/tmp/test/underscore-ip.json",
+        "--package": true,
+        "--processes": "2"
+      },
+      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/nexB/scancode-toolkit/ for support and download.",
+      "start_timestamp": "2020-11-07T201338.623038",
+      "end_timestamp": "2020-11-07T201343.409115",
+      "duration": 4.78609824180603,
+      "message": null,
+      "errors": [],
+      "extra_data": {
+        "files_count": 4
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "underscore",
+      "type": "directory",
+      "name": "underscore",
+      "base_name": "underscore",
+      "extension": "",
+      "size": 0,
+      "date": null,
+      "sha1": null,
+      "md5": null,
+      "sha256": null,
+      "mime_type": null,
+      "file_type": null,
+      "programming_language": null,
+      "is_binary": false,
+      "is_text": false,
+      "is_archive": false,
+      "is_media": false,
+      "is_source": false,
+      "is_script": false,
+      "packages": [],
+      "files_count": 4,
+      "dirs_count": 0,
+      "size_count": 216071,
+      "scan_errors": []
+    },
+    {
+      "path": "underscore/index.d.ts",
+      "type": "file",
+      "name": "index.d.ts",
+      "base_name": "index.d",
+      "extension": ".ts",
+      "size": 212101,
+      "date": "2020-07-15",
+      "sha1": "4f2b85857c3a162c5d536e342ba417fa6c03d40a",
+      "md5": "ae0acb15531b2efe7253a9bd1fee1b86",
+      "sha256": "92c3d4b6cf13af286895b484b680b314be34a62a41d1440a2d62d5d5cf0e93b3",
+      "mime_type": "text/plain",
+      "file_type": "UTF-8 Unicode text, with very long lines",
+      "programming_language": "TypeScript",
+      "is_binary": false,
+      "is_text": true,
+      "is_archive": false,
+      "is_media": false,
+      "is_source": true,
+      "is_script": false,
+      "packages": [],
+      "files_count": 0,
+      "dirs_count": 0,
+      "size_count": 0,
+      "scan_errors": []
+    },
+    {
+      "path": "underscore/LICENSE",
+      "type": "file",
+      "name": "LICENSE",
+      "base_name": "LICENSE",
+      "extension": "",
+      "size": 1141,
+      "date": "2020-07-15",
+      "sha1": "689ec0681815ecc32bee639c68e7740add7bd301",
+      "md5": "d4a904ca135bb7bc912156fee12726f0",
+      "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+      "mime_type": "text/plain",
+      "file_type": "ASCII text",
+      "programming_language": null,
+      "is_binary": false,
+      "is_text": true,
+      "is_archive": false,
+      "is_media": false,
+      "is_source": false,
+      "is_script": false,
+      "packages": [],
+      "files_count": 0,
+      "dirs_count": 0,
+      "size_count": 0,
+      "scan_errors": []
+    },
+    {
+      "path": "underscore/package.json",
+      "type": "file",
+      "name": "package.json",
+      "base_name": "package",
+      "extension": ".json",
+      "size": 1940,
+      "date": "2020-07-15",
+      "sha1": "e751d5da4a71b9eaec5114e8a5b5eceef15d0b4d",
+      "md5": "a8b2dc907f99ba2e34a97954075d9b8f",
+      "sha256": "31e806866fe2800471fd3544fc17ed77f9b58885ff8f0590d3dc8d623b897206",
+      "mime_type": "application/json",
+      "file_type": "JSON data",
+      "programming_language": null,
+      "is_binary": false,
+      "is_text": true,
+      "is_archive": false,
+      "is_media": false,
+      "is_source": false,
+      "is_script": false,
+      "packages": [
+        {
+          "type": "npm",
+          "namespace": "@types",
+          "name": "underscore",
+          "version": "1.10.9",
+          "qualifiers": {},
+          "subpath": null,
+          "primary_language": "JavaScript",
+          "description": "TypeScript definitions for Underscore",
+          "release_date": null,
+          "parties": [
+            {
+              "type": "person",
+              "role": "contributor",
+              "name": "Boris Yankov",
+              "email": null,
+              "url": "https://github.com/borisyankov"
+            },
+            {
+              "type": "person",
+              "role": "contributor",
+              "name": "Josh Baldwin",
+              "email": null,
+              "url": "https://github.com/jbaldwin"
+            },
+            {
+              "type": "person",
+              "role": "contributor",
+              "name": "Christopher Currens",
+              "email": null,
+              "url": "https://github.com/ccurrens"
+            },
+            {
+              "type": "person",
+              "role": "contributor",
+              "name": "Ard Timmerman",
+              "email": null,
+              "url": "https://github.com/confususs"
+            },
+            {
+              "type": "person",
+              "role": "contributor",
+              "name": "Julian Gonggrijp",
+              "email": null,
+              "url": "https://github.com/jgonggrijp"
+            },
+            {
+              "type": "person",
+              "role": "contributor",
+              "name": "Florian Keller",
+              "email": null,
+              "url": "https://github.com/ffflorian"
+            },
+            {
+              "type": "person",
+              "role": "contributor",
+              "name": "Regev Brody",
+              "email": null,
+              "url": "https://github.com/regevbr"
+            },
+            {
+              "type": "person",
+              "role": "contributor",
+              "name": "Piotr B\u0142a\u017cejewicz",
+              "email": null,
+              "url": "https://github.com/peterblazejewicz"
+            },
+            {
+              "type": "person",
+              "role": "contributor",
+              "name": "Michael Ness",
+              "email": null,
+              "url": "https://github.com/reubenrybnik"
+            }
+          ],
+          "keywords": [],
+          "homepage_url": null,
+          "download_url": "https://registry.npmjs.org/@types/underscore/-/underscore-1.10.9.tgz",
+          "size": null,
+          "sha1": null,
+          "md5": null,
+          "sha256": null,
+          "sha512": null,
+          "bug_tracking_url": null,
+          "code_view_url": null,
+          "vcs_url": "git+https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+          "copyright": null,
+          "license_expression": "mit",
+          "declared_license": [
+            "MIT"
+          ],
+          "notice_text": null,
+          "root_path": "underscore",
+          "dependencies": [],
+          "contains_source_code": null,
+          "source_packages": [],
+          "purl": "pkg:npm/%40types/underscore@1.10.9",
+          "repository_homepage_url": "https://www.npmjs.com/package/@types/underscore",
+          "repository_download_url": "https://registry.npmjs.org/@types/underscore/-/underscore-1.10.9.tgz",
+          "api_data_url": "https://registry.npmjs.org/@types%2funderscore"
+        }
+      ],
+      "files_count": 0,
+      "dirs_count": 0,
+      "size_count": 0,
+      "scan_errors": []
+    },
+    {
+      "path": "underscore/README.md",
+      "type": "file",
+      "name": "README.md",
+      "base_name": "README",
+      "extension": ".md",
+      "size": 889,
+      "date": "2020-07-15",
+      "sha1": "0a9a39ef14ee88de5e8c4ed6aaeef3ee64f9421f",
+      "md5": "c8223d72fe3e5f79ac77f9566e7e8e28",
+      "sha256": "abd4f29b3bf6e302720577ad706f15f68fa13ff227aeeb9e1b091d66e54bc5d9",
+      "mime_type": "text/plain",
+      "file_type": "UTF-8 Unicode text, with very long lines, with CRLF line terminators",
+      "programming_language": null,
+      "is_binary": false,
+      "is_text": true,
+      "is_archive": false,
+      "is_media": false,
+      "is_source": false,
+      "is_script": false,
+      "packages": [],
+      "files_count": 0,
+      "dirs_count": 0,
+      "size_count": 0,
+      "scan_errors": []
+    }
+  ]
+}
