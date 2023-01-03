@@ -5,3 +5,4 @@ The following organizations or individuals have contributed to this repo:
 - Philippe Ombredanne
 - Li Ha
 - Steven Esser
+- Armin Tänzer
