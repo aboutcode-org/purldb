@@ -102,21 +102,28 @@ class DebutilsTest(BaseDebianTest):
         result = debcon.get_paragraph_data_from_file(dsc_file)
         expected_loc = self.get_test_loc('debian/debutils/3dldf_2.0.3+dfsg-2.dsc-expected')
         self.check_expected_deb822(result, expected_loc, regen=False)
+
     #################################################################
 
-    @expectedFailure
     def test_parse_email(self):
         content = 'Debian TeX Maintainers <debian-tex-maint@lists.debian.org>'
         name, email = debutils.parse_email(content)
         self.assertEquals('Debian TeX Maintainers', name)
-        self.assertEquals('debian-tex-maint@lists.debian.org', email)
+        self.assertEquals('debian-tex-main.debian.org', email)
 
-    @expectedFailure
     def test_parse_email_2(self):
-        content = 'Debian TeX Maintainers '
+        # Space left Purposefully
+        content = '        Debian TeX Maintainers '
         name, email = debutils.parse_email(content)
         self.assertEquals('Debian TeX Maintainers', name)
         self.assertEquals(None, email)
+
+    def test_parse_email_3(self):
+        # Space left Purposefully
+        content = '<       debian-tex-maint@lists.debian.org   >'
+        name, email = debutils.parse_email(content)
+        self.assertEquals(None, name)
+        self.assertEquals("debian-tex-maint@lists.debian.org", email)
 
     def test_comma_separated(self):
         tags = 'implemented-in::perl, role::program, use::converting, works-with::pim'

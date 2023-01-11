@@ -8,7 +8,6 @@
 #
 
 
-
 def parse_email(text):
     """
     Return a tuple of (name, email) extracted from a `text` string.
@@ -17,12 +16,10 @@ def parse_email(text):
     if not text:
         return None, None
     name, _, email = text.partition('<')
+    email = email.strip('>')
     name = name.strip()
     email = email.strip()
-    if not email:
-        return name, email
-    email = email.strip('>')
-    return name, email
+    return name or None, email or None
 
 
 def comma_separated(text):
