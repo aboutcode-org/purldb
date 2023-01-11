@@ -22,7 +22,7 @@ from discovery import map_router
 from discovery.mappers import Mapper
 from discovery.utils import form_vcs_url
 # from discovery import debutils
-
+from discovery.debutils import comma_separated
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -37,9 +37,9 @@ def get_dependencies(data):
     Return a list of DependentPackage extracted from a Debian `data` mapping.
     """
     scopes = {
-        'Build-Depends': dict(is_runtime=False, is_optional=True),
-        'Depends': dict(is_runtime=True, is_optional=False),
-        'Pre-Depends': dict(is_runtime=True, is_optional=False),
+        "Build-Depends": dict(is_runtime=False, is_optional=True),
+        "Depends": dict(is_runtime=True, is_optional=False),
+        "Pre-Depends": dict(is_runtime=True, is_optional=False),
         # 'Provides': dict(is_runtime=True, is_optional=False),
         # 'Recommends': dict(is_runtime=True, is_optional=True),
         # 'Suggests': dict(is_runtime=True, is_optional=True),
@@ -50,14 +50,28 @@ def get_dependencies(data):
         if not depends:
             continue
 
-        dependencies = None  # debutils.comma_separated(depends)
-        if not dependencies:
-            continue
+        dependencies = comma_separated(depends)
+        name_version = []
+        for dependency in dependencies:
+            version_constraint = None
+            if "(" in dependency and ")" in dependency:
+                start = dependency.index("(")
+                end = dependency.index(")")
+                version_constraint = dependency[start + 1:end]
+            name = dependency.split(" ")[0]
+            name_version.append([name, version_constraint])
+
         # break each dep in package names and version constraints
         # FIXME:!!!
-        for name in dependencies:
-            purl = PackageURL(type='deb', namespace='debian', name=name)
-            dep = scan_models.DependentPackage(purl=purl.to_string(), score=scope, **flags)
+        # FIXED !!!
+        for name, version_constraint in name_version:
+            purl = PackageURL(type="deb", namespace="debian", name=name)
+            dep = DependentPackage(
+                purl=purl.to_string(),
+                scope=scope,
+                requirement=version_constraint,
+                **flags,
+            )
             dep_pkgs.append(dep)
 
     return dep_pkgs
