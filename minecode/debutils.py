@@ -21,7 +21,7 @@ def parse_email(text):
     email = email.strip()
     if not email:
         return name, email
-    email.strip('>')
+    email = email.strip('>')
     return name, email
 
 

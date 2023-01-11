@@ -21,8 +21,8 @@ from minecode import ls
 from minecode import map_router
 from minecode.mappers import Mapper
 from minecode.utils import form_vcs_url
-# from minecode import debutils
-
+from minecode import debutils
+from packagedb.models import DependentPackage
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -50,17 +50,31 @@ def get_dependencies(data):
         if not depends:
             continue
 
-        dependencies = None  # debutils.comma_separated(depends)
-        if not dependencies:
-            continue
+        dependencies = debutils.comma_separated(depends)
+        name_version = []
+        for dependency in dependencies:
+            version_constraint = None
+            if "(" in dependency and ")" in dependency:
+                start = dependency.index("(")
+                end = dependency.index(")")
+                version_constraint = dependency[start + 1:end]
+            name = dependency.split(" ")[0]
+            name_version.append([name, version_constraint])
+
         # break each dep in package names and version constraints
         # FIXME:!!!
-        for name in dependencies:
-            purl = PackageURL(type='deb', namespace='debian', name=name)
-            dep = scan_models.DependentPackage(purl=purl.to_string(), score=scope, **flags)
+        # FIXED !!!
+        for name, version_constraint in name_version:
+            purl = PackageURL(type="deb", namespace="debian", name=name)
+            dep = DependentPackage(
+                purl=purl.to_string(),
+                scope=scope,
+                requirement=version_constraint,
+                **flags,
+            )
             dep_pkgs.append(dep)
 
-    return dep_pkgs
+        return dep_pkgs
 
 
 def get_vcs_repo(description):
