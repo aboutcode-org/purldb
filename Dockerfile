@@ -50,11 +50,12 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN mkdir /app/src
 COPY setup.cfg setup.py /app/
+RUN mkdir -p /app/matchcode-toolkit/src/
+COPY matchcode-toolkit/setup.cfg matchcode-toolkit/setup.py /app/matchcode-toolkit/
 RUN pip install https://github.com/nexB/commoncode/archive/refs/heads/48-correctly-assign-codebase-attributes.zip
 RUN pip install https://github.com/nexB/scancode-toolkit/archive/refs/heads/maven-pom-parse-dep-backport.zip
-RUN pip install -e matchcode-toolkit/
+RUN pip install -e matchcode-toolkit
 RUN pip install -e .
 
 COPY . /app
