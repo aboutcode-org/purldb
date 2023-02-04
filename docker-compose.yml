@@ -1,0 +1,90 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:13
+    env_file:
+      - docker.env
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+
+  web:
+    build: .
+    command: sh -c "
+        ./manage.py migrate &&
+        ./manage.py collectstatic --no-input --verbosity 0 --clear &&
+        gunicorn purldb.wsgi:application --bind :8000 --timeout 600 --workers 8"
+    env_file:
+      - docker.env
+    expose:
+      - 8000
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+      - static:/var/purldb/static/
+    depends_on:
+      - db
+
+  visitor:
+    build: .
+    command: sh -c "
+        wait-for-it web:8000 -- python manage.py seed &&
+        python manage.py run_visit --ignore-robots --ignore-throttle"
+    env_file:
+      - docker.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - visit_and_map
+    depends_on:
+      - db
+      - web # Ensure that potential db migrations run first
+
+  mapper:
+    build: .
+    command: wait-for-it web:8000 -- python manage.py run_map
+    env_file:
+      - docker.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - visit_and_map
+    depends_on:
+      - db
+      - web # Ensure that potential db migrations run first
+
+  clearsync:
+    build: .
+    command: wait-for-it web:8000 -- clearsync --save-to-db  --verbose -n 3
+    env_file:
+      - docker.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - clearsync
+    depends_on:
+      - db
+      - web # Ensure that potential db migrations run first
+
+  clearindex:
+    build: .
+    command: wait-for-it web:8000 -- python manage.py run_clearindex
+    profiles:
+      - clearsync
+    depends_on:
+      - db
+      - web # Ensure that potential db migrations run first
+
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./etc/nginx/conf.d/:/etc/nginx/conf.d/
+      - static:/var/purldb/static/
+    depends_on:
+      - web
+
+volumes:
+  db_data:
+  static:
