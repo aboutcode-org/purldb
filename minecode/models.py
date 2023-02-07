@@ -241,13 +241,13 @@ class ResourceURIManager(models.Manager):
         """
         Limit the QuerySet to ResourceURIs that were visited successfully.
         """
-        return self.visited().filter(visit_error__isnull=True)
+        return self.visited().filter(has_visit_error=False)
 
     def unsuccessfully_visited(self):
         """
         Limit the QuerySet to ResourceURIs that were visited with errors.
         """
-        return self.visited().filter(visit_error__isnull=False)
+        return self.visited().filter(has_visit_error=True)
 
     def get_revisitables(self, hours):
         """
@@ -258,8 +258,9 @@ class ResourceURIManager(models.Manager):
             last_visit_date__lt=timezone.now() - timedelta(hours=hours)
         ).exclude(
             is_mappable=True, last_map_date__isnull=True
+        ).exclude(
+            is_visitable=False
         )
-
         return revisitables
 
     def get_visitables(self):
@@ -271,7 +272,10 @@ class ResourceURIManager(models.Manager):
         never_visited = self.never_visited().filter(is_visitable__exact=True)
         revisitables = self.get_revisitables(hours=240)
 
-        if revisitables:
+        if revisitables.exists():
+            # Combine both QuerySets
+
+            # TODO: consider returning chunks (.iterator())
             visitables = never_visited.union(revisitables)
         else:
             visitables = never_visited
@@ -309,18 +313,9 @@ class ResourceURIManager(models.Manager):
         # inconsistent view of the data, so this is not suitable for
         # general purpose work, but can be used to avoid lock contention
         # with multiple consumers accessing a queue-like table.
-        visitables = self.get_visitables().select_for_update(skip_locked=True)
-
-        # keep the top record if there is one
-        resource_uris = visitables[:1]
-
-        # This force the evaluation of the query but only once
-        # (previously exists then get was evaluating two QS)
-        resource_uris = list(resource_uris)
-        if not resource_uris:
+        resource_uri = self.get_visitables().select_for_update(skip_locked=True).first()
+        if not resource_uri:
             return
-
-        resource_uri = resource_uris[0]
 
         # Mark the URI as wip: Callers mark this done by resetting
         # wip_date to null
@@ -346,13 +341,13 @@ class ResourceURIManager(models.Manager):
         """
         Limit the QuerySet to ResourceURIs that were mapped successfully.
         """
-        return self.mapped().filter(map_error__isnull=True)
+        return self.mapped().filter(has_map_error=False)
 
     def unsuccessfully_mapped(self):
         """
         Limit the QuerySet to ResourceURIs that were mapped with errors.
         """
-        return self.mapped().filter(map_error__isnull=False)
+        return self.mapped().filter(has_map_error=True)
 
     def get_mappables(self):
         """
@@ -360,7 +355,7 @@ class ResourceURIManager(models.Manager):
         Note: this does not evaluate the query set and does not lock the
         database for update.
         """
-        qs = self.never_mapped().filter(is_mappable__exact=True, map_error__isnull=True)
+        qs = self.never_mapped().filter(is_mappable__exact=True, has_map_error=False)
         # NOTE: this matches an index for efficient ordering
         qs = qs.order_by('-priority')
         return qs
@@ -424,6 +419,13 @@ class ResourceURI(BaseURI):
                   'route available to process it.'
     )
 
+    has_visit_error = models.BooleanField(
+        db_index=True,
+        default=False,
+        help_text='When set to True (Yes), this field indicates that '
+                  'an error has occured when visiting this URI.'
+    )
+
     visit_error = models.TextField(
         null=True,
         blank=True,
@@ -446,6 +448,13 @@ class ResourceURI(BaseURI):
         'route available to process it.'
     )
 
+    has_map_error = models.BooleanField(
+        db_index=True,
+        default=False,
+        help_text='When set to True (Yes), this field indicates that '
+                  'an error has occured when mapping this URI.'
+    )
+
     map_error = models.TextField(
         null=True,
         blank=True,
@@ -461,13 +470,30 @@ class ResourceURI(BaseURI):
         indexes = [
             # to get the next visitable
             models.Index(
-                fields=['is_visitable', 'last_visit_date', 'wip_date']),
+                fields=[
+                    'is_visitable',
+                    'last_visit_date',
+                    'wip_date',
+                    'has_visit_error',
+                ]
+            ),
             # to get the next mappable
             models.Index(
-                fields=['is_mappable', 'last_visit_date', 'wip_date', 'last_map_date', 'visit_error']),
+                fields=[
+                    'is_mappable',
+                    'last_visit_date',
+                    'wip_date',
+                    'last_map_date',
+                    'has_visit_error',
+                    'has_map_error',
+                ]
+            ),
             # ordered by for the main queue query e.g. '-priority'
             models.Index(
-                fields=['-priority'])
+                fields=[
+                    '-priority'
+                ]
+            )
         ]
 
     def _set_defauts(self):
@@ -486,6 +512,8 @@ class ResourceURI(BaseURI):
         """
         self._set_defauts()
         self.normalize_fields()
+        self.has_map_error = True if self.map_error else False
+        self.has_visit_error = True if self.visit_error else False
         super(ResourceURI, self).save(*args, **kwargs)
 
 
