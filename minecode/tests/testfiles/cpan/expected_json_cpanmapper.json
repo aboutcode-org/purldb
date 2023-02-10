@@ -1,0 +1,49 @@
+[
+  {
+    "type":"cpan",
+    "namespace":null,
+    "name":"Regexp-Common",
+    "version":"2016010701",
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":null,
+    "description":"Provide commonly requested regular expressions",
+    "release_date":null,
+    "parties":[
+      {
+        "type":"person",
+        "role":"author",
+        "name":"Abigail",
+        "email":"regexp-common@abigail.be",
+        "url":null
+      }
+    ],
+    "keywords":[
+      "regular expression",
+      "pattern"
+    ],
+    "homepage_url":null,
+    "download_url":"http://www.cpan.org/authors/id/A/AB/ABIGAIL/Regexp-Common-2016010701.tar.gzdata",
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":"git+git://github.com/Abigail/Regexp--Common.git",
+    "copyright":null,
+    "license_expression":null,
+    "declared_license":"mit",
+    "notice_text":null,
+    "source_packages":[],
+    "file_references":[],
+    "extra_data":{},
+    "dependencies":[],
+    "repository_homepage_url":null,
+    "repository_download_url":null,
+    "api_data_url":null,
+    "datasource_id":null,
+    "purl":"pkg:cpan/Regexp-Common@2016010701"
+  }
+]

@@ -1,0 +1,3763 @@
+{
+  "@context": {
+    "@vocab": "http://schema.nuget.org/schema#"
+  },
+  "totalHits": 48406,
+  "lastReopen": "2016-03-21T22:21:08.9203493Z",
+  "index": "v3-lucene0-031115",
+  "data": [
+    {
+      "@id": "https://api.nuget.org/v3/registration1/entityframework/6.1.3.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/entityframework/index.json",
+      "id": "EntityFramework",
+      "description": "Entity Framework is Microsoft's recommended data access technology for new applications.",
+      "summary": "Entity Framework is Microsoft's recommended data access technology for new applications.",
+      "title": "EntityFramework",
+      "iconUrl": "http://go.microsoft.com/fwlink/?LinkID=386613",
+      "licenseUrl": "http://go.microsoft.com/fwlink/?LinkID=320539",
+      "projectUrl": "http://go.microsoft.com/fwlink/?LinkID=320540",
+      "tags": [
+        "Microsoft",
+        "EF",
+        "Database",
+        "Data",
+        "O/RM",
+        "ADO.NET"
+      ],
+      "authors": [
+        "Microsoft"
+      ],
+      "totalDownloads": 16603306,
+      "version": "6.1.3",
+      "versions": [
+        {
+          "version": "4.1.10311",
+          "downloads": 50013,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/4.1.10311.0.json"
+        },
+        {
+          "version": "4.1.10331",
+          "downloads": 536907,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/4.1.10331.0.json"
+        },
+        {
+          "version": "4.1.10715",
+          "downloads": 751496,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/4.1.10715.0.json"
+        },
+        {
+          "version": "4.2.0",
+          "downloads": 379340,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/4.2.0.0.json"
+        },
+        {
+          "version": "4.3.0-beta1",
+          "downloads": 4225,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/4.3.0-beta1.json"
+        },
+        {
+          "version": "4.3.0",
+          "downloads": 81140,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/4.3.0.json"
+        },
+        {
+          "version": "4.3.1",
+          "downloads": 432483,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/4.3.1.json"
+        },
+        {
+          "version": "5.0.0-beta1",
+          "downloads": 5652,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/5.0.0-beta1.json"
+        },
+        {
+          "version": "5.0.0-beta2",
+          "downloads": 15952,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/5.0.0-beta2.json"
+        },
+        {
+          "version": "5.0.0-rc",
+          "downloads": 118549,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/5.0.0-rc.json"
+        },
+        {
+          "version": "5.0.0",
+          "downloads": 3100413,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/5.0.0.json"
+        },
+        {
+          "version": "6.0.0-alpha1",
+          "downloads": 31357,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.0.0-alpha1.json"
+        },
+        {
+          "version": "6.0.0-alpha2",
+          "downloads": 46298,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.0.0-alpha2.json"
+        },
+        {
+          "version": "6.0.0-alpha3",
+          "downloads": 53326,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.0.0-alpha3.json"
+        },
+        {
+          "version": "6.0.0-beta1",
+          "downloads": 72565,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.0.0-beta1.json"
+        },
+        {
+          "version": "6.0.0-rc1",
+          "downloads": 69610,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.0.0-rc1.json"
+        },
+        {
+          "version": "6.0.0",
+          "downloads": 1112213,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.0.0.json"
+        },
+        {
+          "version": "6.0.1",
+          "downloads": 898695,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.0.1.json"
+        },
+        {
+          "version": "6.0.2-beta1",
+          "downloads": 43852,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.0.2-beta1.json"
+        },
+        {
+          "version": "6.0.2",
+          "downloads": 1489113,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.0.2.json"
+        },
+        {
+          "version": "6.1.0-alpha1",
+          "downloads": 47320,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.1.0-alpha1.json"
+        },
+        {
+          "version": "6.1.0-beta1",
+          "downloads": 72775,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.1.0-beta1.json"
+        },
+        {
+          "version": "6.1.0",
+          "downloads": 1186320,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.1.0.json"
+        },
+        {
+          "version": "6.1.1-beta1",
+          "downloads": 39063,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.1.1-beta1.json"
+        },
+        {
+          "version": "6.1.1",
+          "downloads": 1842870,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.1.1.json"
+        },
+        {
+          "version": "6.1.2-beta1",
+          "downloads": 62196,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.1.2-beta1.json"
+        },
+        {
+          "version": "6.1.2-beta2",
+          "downloads": 38842,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.1.2-beta2.json"
+        },
+        {
+          "version": "6.1.2",
+          "downloads": 972132,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.1.2.json"
+        },
+        {
+          "version": "6.1.3-beta1",
+          "downloads": 29985,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.1.3-beta1.json"
+        },
+        {
+          "version": "6.1.3",
+          "downloads": 2964346,
+          "@id": "https://api.nuget.org/v3/registration1/entityframework/6.1.3.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/8.0.3.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/newtonsoft.json/index.json",
+      "id": "Newtonsoft.Json",
+      "description": "Json.NET is a popular high-performance JSON framework for .NET",
+      "title": "Json.NET",
+      "iconUrl": "http://www.newtonsoft.com/content/images/nugeticon.png",
+      "licenseUrl": "https://raw.github.com/JamesNK/Newtonsoft.Json/master/LICENSE.md",
+      "projectUrl": "http://www.newtonsoft.com/json",
+      "tags": [
+        "json"
+      ],
+      "authors": [
+        ""
+      ],
+      "totalDownloads": 25890583,
+      "version": "8.0.3",
+      "versions": [
+        {
+          "version": "3.5.8",
+          "downloads": 21931,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/3.5.8.json"
+        },
+        {
+          "version": "4.0.1",
+          "downloads": 19337,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.0.1.json"
+        },
+        {
+          "version": "4.0.2",
+          "downloads": 49739,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.0.2.json"
+        },
+        {
+          "version": "4.0.3",
+          "downloads": 28346,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.0.3.json"
+        },
+        {
+          "version": "4.0.4",
+          "downloads": 27411,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.0.4.json"
+        },
+        {
+          "version": "4.0.5",
+          "downloads": 66448,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.0.5.json"
+        },
+        {
+          "version": "4.0.6",
+          "downloads": 12198,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.0.6.json"
+        },
+        {
+          "version": "4.0.7",
+          "downloads": 255375,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.0.7.json"
+        },
+        {
+          "version": "4.0.8",
+          "downloads": 216793,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.0.8.json"
+        },
+        {
+          "version": "4.5.1",
+          "downloads": 157658,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.5.1.json"
+        },
+        {
+          "version": "4.5.2",
+          "downloads": 11616,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.5.2.json"
+        },
+        {
+          "version": "4.5.3",
+          "downloads": 23258,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.5.3.json"
+        },
+        {
+          "version": "4.5.4",
+          "downloads": 42724,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.5.4.json"
+        },
+        {
+          "version": "4.5.5",
+          "downloads": 61889,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.5.5.json"
+        },
+        {
+          "version": "4.5.6",
+          "downloads": 766503,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.5.6.json"
+        },
+        {
+          "version": "4.5.7",
+          "downloads": 214577,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.5.7.json"
+        },
+        {
+          "version": "4.5.8",
+          "downloads": 203119,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.5.8.json"
+        },
+        {
+          "version": "4.5.9",
+          "downloads": 161913,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.5.9.json"
+        },
+        {
+          "version": "4.5.10",
+          "downloads": 267466,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.5.10.json"
+        },
+        {
+          "version": "4.5.11",
+          "downloads": 2313546,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/4.5.11.json"
+        },
+        {
+          "version": "5.0.1",
+          "downloads": 286020,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/5.0.1.json"
+        },
+        {
+          "version": "5.0.2",
+          "downloads": 226649,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/5.0.2.json"
+        },
+        {
+          "version": "5.0.3",
+          "downloads": 243805,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/5.0.3.json"
+        },
+        {
+          "version": "5.0.4",
+          "downloads": 611198,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/5.0.4.json"
+        },
+        {
+          "version": "5.0.5",
+          "downloads": 414376,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/5.0.5.json"
+        },
+        {
+          "version": "5.0.6",
+          "downloads": 1621503,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/5.0.6.json"
+        },
+        {
+          "version": "5.0.7",
+          "downloads": 381790,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/5.0.7.json"
+        },
+        {
+          "version": "5.0.8",
+          "downloads": 1771367,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/5.0.8.json"
+        },
+        {
+          "version": "6.0.1",
+          "downloads": 941091,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/6.0.1.json"
+        },
+        {
+          "version": "6.0.2",
+          "downloads": 554217,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/6.0.2.json"
+        },
+        {
+          "version": "6.0.3",
+          "downloads": 1230504,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/6.0.3.json"
+        },
+        {
+          "version": "6.0.4",
+          "downloads": 2461999,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/6.0.4.json"
+        },
+        {
+          "version": "6.0.5",
+          "downloads": 1154509,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/6.0.5.json"
+        },
+        {
+          "version": "6.0.6",
+          "downloads": 1969810,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/6.0.6.json"
+        },
+        {
+          "version": "6.0.7",
+          "downloads": 509541,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/6.0.7.json"
+        },
+        {
+          "version": "6.0.8",
+          "downloads": 2627115,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/6.0.8.json"
+        },
+        {
+          "version": "7.0.1",
+          "downloads": 2630513,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/7.0.1.json"
+        },
+        {
+          "version": "8.0.1",
+          "downloads": 229452,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/8.0.1.json"
+        },
+        {
+          "version": "8.0.2",
+          "downloads": 846996,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/8.0.2.json"
+        },
+        {
+          "version": "8.0.3",
+          "downloads": 98116,
+          "@id": "https://api.nuget.org/v3/registration1/newtonsoft.json/8.0.3.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.3.6.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/bootstrap/index.json",
+      "id": "bootstrap",
+      "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
+      "summary": "Bootstrap framework in CSS. Includes fonts and JavaScript",
+      "title": "Bootstrap CSS",
+      "iconUrl": "http://getbootstrap.com/apple-touch-icon.png",
+      "licenseUrl": "https://github.com/twbs/bootstrap/blob/master/LICENSE",
+      "projectUrl": "http://getbootstrap.com",
+      "tags": [
+        "css",
+        "js",
+        "less",
+        "mobile-first",
+        "responsive",
+        "front-end",
+        "framework",
+        "web"
+      ],
+      "authors": [
+        ""
+      ],
+      "totalDownloads": 4521157,
+      "version": "3.3.6",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "downloads": 4509,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/1.0.0.json"
+        },
+        {
+          "version": "2.3.1",
+          "downloads": 44667,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/2.3.1.json"
+        },
+        {
+          "version": "2.3.2",
+          "downloads": 26485,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/2.3.2.json"
+        },
+        {
+          "version": "3.0.0",
+          "downloads": 1512776,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.0.0.json"
+        },
+        {
+          "version": "3.0.1",
+          "downloads": 128147,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.0.1.json"
+        },
+        {
+          "version": "3.0.2",
+          "downloads": 66805,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.0.2.json"
+        },
+        {
+          "version": "3.0.3",
+          "downloads": 197863,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.0.3.json"
+        },
+        {
+          "version": "3.1.0",
+          "downloads": 52635,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.1.0.json"
+        },
+        {
+          "version": "3.1.1",
+          "downloads": 367302,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.1.1.json"
+        },
+        {
+          "version": "3.2.0",
+          "downloads": 411200,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.2.0.json"
+        },
+        {
+          "version": "3.3.0",
+          "downloads": 89505,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.3.0.json"
+        },
+        {
+          "version": "3.3.1",
+          "downloads": 246469,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.3.1.json"
+        },
+        {
+          "version": "3.3.2",
+          "downloads": 208231,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.3.2.json"
+        },
+        {
+          "version": "3.3.4",
+          "downloads": 414801,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.3.4.json"
+        },
+        {
+          "version": "3.3.5",
+          "downloads": 400955,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.3.5.json"
+        },
+        {
+          "version": "3.3.6",
+          "downloads": 323988,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/3.3.6.json"
+        },
+        {
+          "version": "4.0.0-alpha",
+          "downloads": 13656,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/4.0.0-alpha.json"
+        },
+        {
+          "version": "4.0.0-alpha2",
+          "downloads": 11163,
+          "@id": "https://api.nuget.org/v3/registration1/bootstrap/4.0.0-alpha2.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/jquery/2.2.1.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/jquery/index.json",
+      "id": "jQuery",
+      "description": "jQuery is a new kind of JavaScript Library.\n        jQuery is a fast and concise JavaScript Library that simplifies HTML document traversing, event handling, animating, and Ajax interactions for rapid web development. jQuery is designed to change the way that you write JavaScript.\n        NOTE: This package is maintained on behalf of the library owners by the NuGet Community Packages project at http://nugetpackages.codeplex.com/",
+      "title": "jQuery",
+      "licenseUrl": "http://jquery.org/license",
+      "projectUrl": "http://jquery.com/",
+      "tags": [
+        "jQuery"
+      ],
+      "authors": [
+        ""
+      ],
+      "totalDownloads": 19527044,
+      "version": "2.2.1",
+      "versions": [
+        {
+          "version": "1.4.1",
+          "downloads": 51075,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.4.1.json"
+        },
+        {
+          "version": "1.4.2",
+          "downloads": 3642,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.4.2.json"
+        },
+        {
+          "version": "1.4.3",
+          "downloads": 2182,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.4.3.json"
+        },
+        {
+          "version": "1.4.4",
+          "downloads": 278026,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.4.4.json"
+        },
+        {
+          "version": "1.5.0",
+          "downloads": 11477,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.5.json"
+        },
+        {
+          "version": "1.5.1",
+          "downloads": 344565,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.5.1.json"
+        },
+        {
+          "version": "1.5.2",
+          "downloads": 50722,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.5.2.json"
+        },
+        {
+          "version": "1.6.0",
+          "downloads": 41200,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.6.json"
+        },
+        {
+          "version": "1.6.1",
+          "downloads": 33737,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.6.1.json"
+        },
+        {
+          "version": "1.6.2",
+          "downloads": 790593,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.6.2.json"
+        },
+        {
+          "version": "1.6.3",
+          "downloads": 37885,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.6.3.json"
+        },
+        {
+          "version": "1.6.4",
+          "downloads": 667991,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.6.4.json"
+        },
+        {
+          "version": "1.7.0",
+          "downloads": 381644,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.7.json"
+        },
+        {
+          "version": "1.7.1",
+          "downloads": 219208,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.7.1.json"
+        },
+        {
+          "version": "1.7.1.1",
+          "downloads": 835261,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.7.1.1.json"
+        },
+        {
+          "version": "1.7.2",
+          "downloads": 345076,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.7.2.json"
+        },
+        {
+          "version": "1.8.0",
+          "downloads": 239618,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.8.0.json"
+        },
+        {
+          "version": "1.8.1",
+          "downloads": 127826,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.8.1.json"
+        },
+        {
+          "version": "1.8.2",
+          "downloads": 1095578,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.8.2.json"
+        },
+        {
+          "version": "1.8.3",
+          "downloads": 534433,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.8.3.json"
+        },
+        {
+          "version": "1.9.0",
+          "downloads": 525388,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.9.0.json"
+        },
+        {
+          "version": "1.9.1",
+          "downloads": 1387072,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.9.1.json"
+        },
+        {
+          "version": "1.10.0",
+          "downloads": 335274,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.10.0.json"
+        },
+        {
+          "version": "1.10.0.1",
+          "downloads": 246306,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.10.0.1.json"
+        },
+        {
+          "version": "1.10.1",
+          "downloads": 277731,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.10.1.json"
+        },
+        {
+          "version": "1.10.2",
+          "downloads": 1903614,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.10.2.json"
+        },
+        {
+          "version": "1.11.0",
+          "downloads": 431364,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.11.0.json"
+        },
+        {
+          "version": "1.11.1",
+          "downloads": 419049,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.11.1.json"
+        },
+        {
+          "version": "1.11.2",
+          "downloads": 270339,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.11.2.json"
+        },
+        {
+          "version": "1.11.3",
+          "downloads": 210791,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.11.3.json"
+        },
+        {
+          "version": "1.12.0",
+          "downloads": 39353,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/1.12.0.json"
+        },
+        {
+          "version": "2.0.0",
+          "downloads": 543227,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.0.0.json"
+        },
+        {
+          "version": "2.0.1",
+          "downloads": 432830,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.0.1.json"
+        },
+        {
+          "version": "2.0.1.1",
+          "downloads": 466724,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.0.1.1.json"
+        },
+        {
+          "version": "2.0.2",
+          "downloads": 540822,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.0.2.json"
+        },
+        {
+          "version": "2.0.3",
+          "downloads": 1048639,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.0.3.json"
+        },
+        {
+          "version": "2.1.0",
+          "downloads": 791670,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.1.0.json"
+        },
+        {
+          "version": "2.1.1",
+          "downloads": 1131379,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.1.1.json"
+        },
+        {
+          "version": "2.1.2",
+          "downloads": 279289,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.1.2.json"
+        },
+        {
+          "version": "2.1.3",
+          "downloads": 796412,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.1.3.json"
+        },
+        {
+          "version": "2.1.4",
+          "downloads": 1022506,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.1.4.json"
+        },
+        {
+          "version": "2.2.0",
+          "downloads": 232759,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.2.0.json"
+        },
+        {
+          "version": "2.2.1",
+          "downloads": 102767,
+          "@id": "https://api.nuget.org/v3/registration1/jquery/2.2.1.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.2.3.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/index.json",
+      "id": "Microsoft.AspNet.Mvc",
+      "description": "This package contains the runtime assemblies for ASP.NET MVC. ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that enables a clean separation of concerns and that gives you full control over markup.",
+      "summary": "This package contains the runtime assemblies for ASP.NET MVC.",
+      "title": "Microsoft ASP.NET MVC",
+      "iconUrl": "http://go.microsoft.com/fwlink/?LinkID=288859",
+      "licenseUrl": "http://www.microsoft.com/web/webpi/eula/net_library_eula_ENU.htm",
+      "projectUrl": "http://www.asp.net/mvc",
+      "tags": [
+        "Microsoft",
+        "AspNet",
+        "Mvc",
+        "AspNetMvc"
+      ],
+      "authors": [
+        "Microsoft"
+      ],
+      "totalDownloads": 15210735,
+      "version": "5.2.3",
+      "versions": [
+        {
+          "version": "3.0.20105.1",
+          "downloads": 134887,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/3.0.20105.1.json"
+        },
+        {
+          "version": "3.0.50813.1",
+          "downloads": 113747,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/3.0.50813.1.json"
+        },
+        {
+          "version": "4.0.20505",
+          "downloads": 187133,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/4.0.20505.0.json"
+        },
+        {
+          "version": "4.0.20710",
+          "downloads": 2191535,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/4.0.20710.0.json"
+        },
+        {
+          "version": "4.0.30506",
+          "downloads": 1711391,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/4.0.30506.0.json"
+        },
+        {
+          "version": "4.0.40804",
+          "downloads": 607677,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/4.0.40804.0.json"
+        },
+        {
+          "version": "5.0.0-beta1",
+          "downloads": 28476,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.0.0-beta1.json"
+        },
+        {
+          "version": "5.0.0-beta2",
+          "downloads": 38379,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.0.0-beta2.json"
+        },
+        {
+          "version": "5.0.0-rc1",
+          "downloads": 35814,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.0.0-rc1.json"
+        },
+        {
+          "version": "5.0.0",
+          "downloads": 1322613,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.0.0.json"
+        },
+        {
+          "version": "5.0.1",
+          "downloads": 271346,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.0.1.json"
+        },
+        {
+          "version": "5.0.2",
+          "downloads": 189671,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.0.2.json"
+        },
+        {
+          "version": "5.1.0-rc1",
+          "downloads": 30032,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.1.0-rc1.json"
+        },
+        {
+          "version": "5.1.0",
+          "downloads": 492493,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.1.0.json"
+        },
+        {
+          "version": "5.1.1",
+          "downloads": 725657,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.1.1.json"
+        },
+        {
+          "version": "5.1.2",
+          "downloads": 1051289,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.1.2.json"
+        },
+        {
+          "version": "5.1.3",
+          "downloads": 225822,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.1.3.json"
+        },
+        {
+          "version": "5.2.0-rc",
+          "downloads": 40944,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.2.0-rc.json"
+        },
+        {
+          "version": "5.2.0",
+          "downloads": 899218,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.2.0.json"
+        },
+        {
+          "version": "5.2.2-rc",
+          "downloads": 23433,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.2.2-rc.json"
+        },
+        {
+          "version": "5.2.2",
+          "downloads": 1716156,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.2.2.json"
+        },
+        {
+          "version": "5.2.3-beta1",
+          "downloads": 29091,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.2.3-beta1.json"
+        },
+        {
+          "version": "5.2.3",
+          "downloads": 2555406,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/5.2.3.json"
+        },
+        {
+          "version": "6.0.0-beta1",
+          "downloads": 89149,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/6.0.0-beta1.json"
+        },
+        {
+          "version": "6.0.0-beta2",
+          "downloads": 37947,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/6.0.0-beta2.json"
+        },
+        {
+          "version": "6.0.0-beta3",
+          "downloads": 87560,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/6.0.0-beta3.json"
+        },
+        {
+          "version": "6.0.0-beta4",
+          "downloads": 79174,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/6.0.0-beta4.json"
+        },
+        {
+          "version": "6.0.0-beta5",
+          "downloads": 41096,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/6.0.0-beta5.json"
+        },
+        {
+          "version": "6.0.0-beta6",
+          "downloads": 45991,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/6.0.0-beta6.json"
+        },
+        {
+          "version": "6.0.0-beta7",
+          "downloads": 41628,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/6.0.0-beta7.json"
+        },
+        {
+          "version": "6.0.0-beta8",
+          "downloads": 36796,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/6.0.0-beta8.json"
+        },
+        {
+          "version": "6.0.0-rc1-final",
+          "downloads": 129184,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.mvc/6.0.0-rc1-final.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/webgrease/1.6.0.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/webgrease/index.json",
+      "id": "WebGrease",
+      "description": "Web Grease is a suite of tools for optimizing javascript, css files and images.",
+      "title": "WebGrease",
+      "licenseUrl": "http://www.microsoft.com/web/webpi/eula/aspnetcomponent_rtw_ENU.htm",
+      "projectUrl": "http://webgrease.codeplex.com/",
+      "authors": [
+        "webgrease@microsoft.com"
+      ],
+      "totalDownloads": 8203564,
+      "version": "1.6.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "downloads": 90737,
+          "@id": "https://api.nuget.org/v3/registration1/webgrease/1.0.0.json"
+        },
+        {
+          "version": "1.1.0",
+          "downloads": 1047901,
+          "@id": "https://api.nuget.org/v3/registration1/webgrease/1.1.0.json"
+        },
+        {
+          "version": "1.3.0",
+          "downloads": 1277410,
+          "@id": "https://api.nuget.org/v3/registration1/webgrease/1.3.0.json"
+        },
+        {
+          "version": "1.5.2",
+          "downloads": 2720018,
+          "@id": "https://api.nuget.org/v3/registration1/webgrease/1.5.2.json"
+        },
+        {
+          "version": "1.6.0",
+          "downloads": 3062723,
+          "@id": "https://api.nuget.org/v3/registration1/webgrease/1.6.0.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.29.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/microsoft.net.http/index.json",
+      "id": "Microsoft.Net.Http",
+      "description": "This package includes HttpClient for sending requests over HTTP, as well as HttpRequestMessage and HttpResponseMessage for processing HTTP messages.\n\nThis package is not supported in Visual Studio 2010, and is only required for projects targeting .NET Framework 4.5, Windows 8, or Windows Phone 8.1 when consuming a library that uses this package.\n\nSupported Platforms:\n- .NET Framework 4\n- Windows 8\n- Windows Phone 8.1\n- Windows Phone Silverlight 7.5\n- Silverlight 4\n- Portable Class Libraries",
+      "summary": "This package provides a programming interface for modern HTTP/REST based applications.",
+      "title": "Microsoft HTTP Client Libraries",
+      "iconUrl": "http://go.microsoft.com/fwlink/?LinkID=288859",
+      "licenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
+      "projectUrl": "http://go.microsoft.com/fwlink/?LinkID=280055",
+      "tags": [
+        "BCL",
+        "HTTP",
+        "HttpClient",
+        "REST",
+        "Microsoft",
+        "System",
+        "Networking"
+      ],
+      "authors": [
+        "Microsoft"
+      ],
+      "totalDownloads": 9627240,
+      "version": "2.2.29",
+      "versions": [
+        {
+          "version": "2.0.20505",
+          "downloads": 186830,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.0.20505.0.json"
+        },
+        {
+          "version": "2.0.20710",
+          "downloads": 3176045,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.0.20710.0.json"
+        },
+        {
+          "version": "2.1.3-beta",
+          "downloads": 37965,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.1.3-beta.json"
+        },
+        {
+          "version": "2.1.6-rc",
+          "downloads": 26799,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.1.6-rc.json"
+        },
+        {
+          "version": "2.1.10",
+          "downloads": 403735,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.1.10.json"
+        },
+        {
+          "version": "2.2.3-beta",
+          "downloads": 23057,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.3-beta.json"
+        },
+        {
+          "version": "2.2.7-beta",
+          "downloads": 23108,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.7-beta.json"
+        },
+        {
+          "version": "2.2.10-rc",
+          "downloads": 20661,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.10-rc.json"
+        },
+        {
+          "version": "2.2.13",
+          "downloads": 443386,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.13.json"
+        },
+        {
+          "version": "2.2.15",
+          "downloads": 435262,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.15.json"
+        },
+        {
+          "version": "2.2.18",
+          "downloads": 1085112,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.18.json"
+        },
+        {
+          "version": "2.2.19",
+          "downloads": 264492,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.19.json"
+        },
+        {
+          "version": "2.2.20",
+          "downloads": 312800,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.20.json"
+        },
+        {
+          "version": "2.2.22",
+          "downloads": 888511,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.22.json"
+        },
+        {
+          "version": "2.2.23-beta",
+          "downloads": 22649,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.23-beta.json"
+        },
+        {
+          "version": "2.2.27-beta",
+          "downloads": 29802,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.27-beta.json"
+        },
+        {
+          "version": "2.2.28",
+          "downloads": 925882,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.28.json"
+        },
+        {
+          "version": "2.2.29",
+          "downloads": 1321144,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.net.http/2.2.29.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.2.3.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/index.json",
+      "id": "Microsoft.AspNet.WebApi",
+      "description": "This package contains everything you need to host ASP.NET Web API on IIS. ASP.NET Web API is a framework that makes it easy to build HTTP services that reach a broad range of clients, including browsers and mobile devices. ASP.NET Web API is an ideal platform for building RESTful applications on the .NET Framework.",
+      "summary": "This package contains everything you need to host ASP.NET Web API on IIS.",
+      "title": "Microsoft ASP.NET Web API 2.2",
+      "iconUrl": "http://go.microsoft.com/fwlink/?LinkID=288859",
+      "licenseUrl": "http://www.microsoft.com/web/webpi/eula/net_library_eula_ENU.htm",
+      "projectUrl": "http://www.asp.net/web-api",
+      "tags": [
+        "Microsoft",
+        "AspNet",
+        "WebApi",
+        "AspNetWebApi"
+      ],
+      "authors": [
+        "Microsoft"
+      ],
+      "totalDownloads": 9449911,
+      "version": "5.2.3",
+      "versions": [
+        {
+          "version": "4.0.20505",
+          "downloads": 156816,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/4.0.20505.0.json"
+        },
+        {
+          "version": "4.0.20710",
+          "downloads": 1971342,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/4.0.20710.0.json"
+        },
+        {
+          "version": "4.0.30506",
+          "downloads": 1357085,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/4.0.30506.0.json"
+        },
+        {
+          "version": "5.0.0-beta1",
+          "downloads": 18876,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.0.0-beta1.json"
+        },
+        {
+          "version": "5.0.0-beta2",
+          "downloads": 30067,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.0.0-beta2.json"
+        },
+        {
+          "version": "5.0.0-rc1",
+          "downloads": 33158,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.0.0-rc1.json"
+        },
+        {
+          "version": "5.0.0",
+          "downloads": 978860,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.0.0.json"
+        },
+        {
+          "version": "5.0.1",
+          "downloads": 214205,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.0.1.json"
+        },
+        {
+          "version": "5.1.0-rc1",
+          "downloads": 24201,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.1.0-rc1.json"
+        },
+        {
+          "version": "5.1.0",
+          "downloads": 271517,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.1.0.json"
+        },
+        {
+          "version": "5.1.1",
+          "downloads": 397330,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.1.1.json"
+        },
+        {
+          "version": "5.1.2",
+          "downloads": 569638,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.1.2.json"
+        },
+        {
+          "version": "5.2.0-rc",
+          "downloads": 26694,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.2.0-rc.json"
+        },
+        {
+          "version": "5.2.0",
+          "downloads": 553287,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.2.0.json"
+        },
+        {
+          "version": "5.2.2-rc",
+          "downloads": 16117,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.2.2-rc.json"
+        },
+        {
+          "version": "5.2.2",
+          "downloads": 1077237,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.2.2.json"
+        },
+        {
+          "version": "5.2.3-beta1",
+          "downloads": 21619,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.2.3-beta1.json"
+        },
+        {
+          "version": "5.2.3",
+          "downloads": 1731862,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi/5.2.3.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/2.2.1.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/index.json",
+      "id": "Microsoft.AspNet.Identity.EntityFramework",
+      "description": "ASP.NET Identity providers that use Entity Framework.",
+      "summary": "ASP.NET Identity providers that use Entity Framework.",
+      "title": "Microsoft ASP.NET Identity EntityFramework",
+      "licenseUrl": "http://www.microsoft.com/web/webpi/eula/net_library_eula_ENU.htm",
+      "tags": [
+        "Identity",
+        "Membership"
+      ],
+      "authors": [
+        "Microsoft"
+      ],
+      "totalDownloads": 2392662,
+      "version": "2.2.1",
+      "versions": [
+        {
+          "version": "1.0.0-alpha1",
+          "downloads": 5893,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/1.0.0-alpha1.json"
+        },
+        {
+          "version": "1.0.0-beta1",
+          "downloads": 11893,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/1.0.0-beta1.json"
+        },
+        {
+          "version": "1.0.0-rc1",
+          "downloads": 6562,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/1.0.0-rc1.json"
+        },
+        {
+          "version": "1.0.0",
+          "downloads": 371030,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/1.0.0.json"
+        },
+        {
+          "version": "2.0.0-alpha1",
+          "downloads": 14601,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/2.0.0-alpha1.json"
+        },
+        {
+          "version": "2.0.0-beta1",
+          "downloads": 5550,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/2.0.0-beta1.json"
+        },
+        {
+          "version": "2.0.0",
+          "downloads": 151365,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/2.0.0.json"
+        },
+        {
+          "version": "2.0.1",
+          "downloads": 117868,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/2.0.1.json"
+        },
+        {
+          "version": "2.1.0-alpha1",
+          "downloads": 32287,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/2.1.0-alpha1.json"
+        },
+        {
+          "version": "2.1.0",
+          "downloads": 627436,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/2.1.0.json"
+        },
+        {
+          "version": "2.2.0-alpha1",
+          "downloads": 5059,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/2.2.0-alpha1.json"
+        },
+        {
+          "version": "2.2.0",
+          "downloads": 142547,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/2.2.0.json"
+        },
+        {
+          "version": "2.2.1",
+          "downloads": 767616,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/2.2.1.json"
+        },
+        {
+          "version": "3.0.0-beta1",
+          "downloads": 9694,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/3.0.0-beta1.json"
+        },
+        {
+          "version": "3.0.0-beta2",
+          "downloads": 5197,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/3.0.0-beta2.json"
+        },
+        {
+          "version": "3.0.0-beta3",
+          "downloads": 6388,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/3.0.0-beta3.json"
+        },
+        {
+          "version": "3.0.0-beta4",
+          "downloads": 16712,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/3.0.0-beta4.json"
+        },
+        {
+          "version": "3.0.0-beta5",
+          "downloads": 13773,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/3.0.0-beta5.json"
+        },
+        {
+          "version": "3.0.0-beta6",
+          "downloads": 8398,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/3.0.0-beta6.json"
+        },
+        {
+          "version": "3.0.0-beta7",
+          "downloads": 11397,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/3.0.0-beta7.json"
+        },
+        {
+          "version": "3.0.0-beta8",
+          "downloads": 11053,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/3.0.0-beta8.json"
+        },
+        {
+          "version": "3.0.0-rc1-final",
+          "downloads": 50343,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.entityframework/3.0.0-rc1-final.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/3.0.1.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/index.json",
+      "id": "Microsoft.Owin.Host.SystemWeb",
+      "description": "OWIN server that enables OWIN-based applications to run on IIS using the ASP.NET request pipeline.",
+      "title": "Microsoft.Owin.Host.SystemWeb",
+      "licenseUrl": "http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm",
+      "projectUrl": "http://katanaproject.codeplex.com/",
+      "tags": [
+        "Microsoft",
+        "OWIN",
+        "Katana"
+      ],
+      "authors": [
+        "Microsoft"
+      ],
+      "totalDownloads": 4166849,
+      "version": "3.0.1",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "downloads": 67348,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/1.0.0.json"
+        },
+        {
+          "version": "1.0.1",
+          "downloads": 220902,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/1.0.1.json"
+        },
+        {
+          "version": "1.1.0-beta1",
+          "downloads": 5851,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/1.1.0-beta1.json"
+        },
+        {
+          "version": "1.1.0-beta2",
+          "downloads": 15255,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/1.1.0-beta2.json"
+        },
+        {
+          "version": "2.0.0-rc1",
+          "downloads": 13340,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/2.0.0-rc1.json"
+        },
+        {
+          "version": "2.0.0",
+          "downloads": 341245,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/2.0.0.json"
+        },
+        {
+          "version": "2.0.1",
+          "downloads": 157553,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/2.0.1.json"
+        },
+        {
+          "version": "2.0.2",
+          "downloads": 340352,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/2.0.2.json"
+        },
+        {
+          "version": "2.1.0-rc1",
+          "downloads": 1742,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/2.1.0-rc1.json"
+        },
+        {
+          "version": "2.1.0",
+          "downloads": 739757,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/2.1.0.json"
+        },
+        {
+          "version": "3.0.0-alpha1",
+          "downloads": 5369,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/3.0.0-alpha1.json"
+        },
+        {
+          "version": "3.0.0-beta1",
+          "downloads": 19203,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/3.0.0-beta1.json"
+        },
+        {
+          "version": "3.0.0-rc1",
+          "downloads": 1256,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/3.0.0-rc1.json"
+        },
+        {
+          "version": "3.0.0-rc2",
+          "downloads": 5501,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/3.0.0-rc2.json"
+        },
+        {
+          "version": "3.0.0",
+          "downloads": 805252,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/3.0.0.json"
+        },
+        {
+          "version": "3.0.1",
+          "downloads": 1398807,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin.host.systemweb/3.0.1.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.11.4.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/jquery.ui.combined/index.json",
+      "id": "jQuery.UI.Combined",
+      "description": "jQuery UI is an open source library of interface components — interactions, full-featured widgets, and animation effects — based on the stellar jQuery javascript library . Each component is built according to jQuery's event-driven architecture (find something, manipulate it) and is themeable, making it easy for developers of any skill level to integrate and extend into their own code.\n    NOTE: This package is maintained on behalf of the library owners by the NuGet Community Packages project at http://nugetpackages.codeplex.com/",
+      "summary": "The full jQuery UI library as a single combined file. Includes the base theme.",
+      "title": "jQuery UI (Combined Library)",
+      "iconUrl": "http://nuget.org/Media/Default/Packages/jQuery.UI.Combined/1.8.9/jQueryUILogo.png",
+      "licenseUrl": "http://jquery.org/license",
+      "projectUrl": "http://jqueryui.com/",
+      "tags": [
+        "jQuery",
+        "jQueryUI",
+        "plugins"
+      ],
+      "authors": [
+        "jQuery UI Team"
+      ],
+      "totalDownloads": 7564522,
+      "version": "1.11.4",
+      "versions": [
+        {
+          "version": "1.8.9",
+          "downloads": 1658,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.9.json"
+        },
+        {
+          "version": "1.8.10",
+          "downloads": 859,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.10.json"
+        },
+        {
+          "version": "1.8.11",
+          "downloads": 481054,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.11.json"
+        },
+        {
+          "version": "1.8.12",
+          "downloads": 27451,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.12.json"
+        },
+        {
+          "version": "1.8.13",
+          "downloads": 29248,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.13.json"
+        },
+        {
+          "version": "1.8.14",
+          "downloads": 30136,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.14.json"
+        },
+        {
+          "version": "1.8.15",
+          "downloads": 25522,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.15.json"
+        },
+        {
+          "version": "1.8.16",
+          "downloads": 352960,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.16.json"
+        },
+        {
+          "version": "1.8.17",
+          "downloads": 84916,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.17.json"
+        },
+        {
+          "version": "1.8.18",
+          "downloads": 66645,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.18.json"
+        },
+        {
+          "version": "1.8.19",
+          "downloads": 52894,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.19.json"
+        },
+        {
+          "version": "1.8.20",
+          "downloads": 106511,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.20.json"
+        },
+        {
+          "version": "1.8.20.1",
+          "downloads": 839764,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.20.1.json"
+        },
+        {
+          "version": "1.8.21",
+          "downloads": 47395,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.21.json"
+        },
+        {
+          "version": "1.8.22",
+          "downloads": 81550,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.22.json"
+        },
+        {
+          "version": "1.8.23",
+          "downloads": 119058,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.23.json"
+        },
+        {
+          "version": "1.8.24",
+          "downloads": 900125,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.8.24.json"
+        },
+        {
+          "version": "1.9.0-RC1",
+          "downloads": 0,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.9-rc1.json"
+        },
+        {
+          "version": "1.9.0",
+          "downloads": 285097,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.9.0.json"
+        },
+        {
+          "version": "1.9.1",
+          "downloads": 168992,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.9.1.json"
+        },
+        {
+          "version": "1.9.2",
+          "downloads": 405338,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.9.2.json"
+        },
+        {
+          "version": "1.10.0",
+          "downloads": 307341,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.10.0.json"
+        },
+        {
+          "version": "1.10.1",
+          "downloads": 240944,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.10.1.json"
+        },
+        {
+          "version": "1.10.2",
+          "downloads": 295081,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.10.2.json"
+        },
+        {
+          "version": "1.10.3",
+          "downloads": 638715,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.10.3.json"
+        },
+        {
+          "version": "1.10.4",
+          "downloads": 515583,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.10.4.json"
+        },
+        {
+          "version": "1.11.0",
+          "downloads": 147680,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.11.0.json"
+        },
+        {
+          "version": "1.11.1",
+          "downloads": 285375,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.11.1.json"
+        },
+        {
+          "version": "1.11.2",
+          "downloads": 275869,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.11.2.json"
+        },
+        {
+          "version": "1.11.3",
+          "downloads": 171539,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.11.3.json"
+        },
+        {
+          "version": "1.11.4",
+          "downloads": 559430,
+          "@id": "https://api.nuget.org/v3/registration1/jquery.ui.combined/1.11.4.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/2.2.1.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/index.json",
+      "id": "Microsoft.AspNet.Identity.Owin",
+      "description": "Owin implementation for ASP.NET Identity.",
+      "summary": "Owin implementation for ASP.NET Identity.",
+      "title": "Microsoft ASP.NET Identity Owin",
+      "licenseUrl": "http://www.microsoft.com/web/webpi/eula/net_library_eula_ENU.htm",
+      "tags": [
+        "Identity",
+        "Membership"
+      ],
+      "authors": [
+        "Microsoft"
+      ],
+      "totalDownloads": 2448874,
+      "version": "2.2.1",
+      "versions": [
+        {
+          "version": "1.0.0-rc1",
+          "downloads": 5881,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/1.0.0-rc1.json"
+        },
+        {
+          "version": "1.0.0",
+          "downloads": 399173,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/1.0.0.json"
+        },
+        {
+          "version": "2.0.0-alpha1",
+          "downloads": 14374,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/2.0.0-alpha1.json"
+        },
+        {
+          "version": "2.0.0-beta1",
+          "downloads": 7833,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/2.0.0-beta1.json"
+        },
+        {
+          "version": "2.0.0",
+          "downloads": 148153,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/2.0.0.json"
+        },
+        {
+          "version": "2.0.1",
+          "downloads": 172004,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/2.0.1.json"
+        },
+        {
+          "version": "2.1.0-alpha1",
+          "downloads": 32626,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/2.1.0-alpha1.json"
+        },
+        {
+          "version": "2.1.0",
+          "downloads": 655010,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/2.1.0.json"
+        },
+        {
+          "version": "2.2.0-alpha1",
+          "downloads": 7941,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/2.2.0-alpha1.json"
+        },
+        {
+          "version": "2.2.0",
+          "downloads": 135111,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/2.2.0.json"
+        },
+        {
+          "version": "2.2.1",
+          "downloads": 870768,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.identity.owin/2.2.1.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/nunit/3.2.0.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/nunit/index.json",
+      "id": "NUnit",
+      "description": "NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible.\n\nThis package includes the NUnit 3.0 framework assembly, which is referenced by your tests. You will need to install version 3.0 of the nunit3-console program or a third-party runner that supports NUnit 3.0 in order to execute tests. Runners intended for use with NUnit 2.x will not run 3.0 tests correctly.\n\nSupported platforms:\n  - .NET 2.0+\n  - .NET Core (Universal Windows Apps 10+, DNX Core 5+)\n  - Windows 8\n  - Windows Phone 8 (Silverlight)\n  - Universal (Windows Phone 8.1+, Windows 8.1+)\n  - Xamarin (MonoTouch, MonoAndroid, Xamarin iOS Universal)\n  - Portable Libraries (supporting Profile259)",
+      "summary": "NUnit is a unit-testing framework for all .Net languages with a strong TDD focus.",
+      "title": "NUnit",
+      "iconUrl": "http://nunit.org/nuget/nunitv3_32x32.png",
+      "licenseUrl": "http://nunit.org/nuget/nunit3-license.txt",
+      "projectUrl": "http://nunit.org",
+      "tags": [
+        "nunit",
+        "test",
+        "testing",
+        "tdd",
+        "framework",
+        "fluent",
+        "assert",
+        "theory",
+        "plugin",
+        "addin"
+      ],
+      "authors": [
+        ""
+      ],
+      "totalDownloads": 4199269,
+      "version": "3.2.0",
+      "versions": [
+        {
+          "version": "2.5.7.10213",
+          "downloads": 22882,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/2.5.7.10213.json"
+        },
+        {
+          "version": "2.5.9.10348",
+          "downloads": 22433,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/2.5.9.10348.json"
+        },
+        {
+          "version": "2.5.10.11092",
+          "downloads": 210959,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/2.5.10.11092.json"
+        },
+        {
+          "version": "2.6.0.12054",
+          "downloads": 241808,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/2.6.0.12054.json"
+        },
+        {
+          "version": "2.6.1",
+          "downloads": 152963,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/2.6.1.json"
+        },
+        {
+          "version": "2.6.2",
+          "downloads": 694657,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/2.6.2.json"
+        },
+        {
+          "version": "2.6.3",
+          "downloads": 1249917,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/2.6.3.json"
+        },
+        {
+          "version": "2.6.4",
+          "downloads": 1285756,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/2.6.4.json"
+        },
+        {
+          "version": "3.0.0-alpha",
+          "downloads": 4670,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-alpha.json"
+        },
+        {
+          "version": "3.0.0-alpha-2",
+          "downloads": 2170,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-alpha-2.json"
+        },
+        {
+          "version": "3.0.0-alpha-3",
+          "downloads": 2636,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-alpha-3.json"
+        },
+        {
+          "version": "3.0.0-alpha-4",
+          "downloads": 3063,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-alpha-4.json"
+        },
+        {
+          "version": "3.0.0-alpha-5",
+          "downloads": 4919,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-alpha-5.json"
+        },
+        {
+          "version": "3.0.0-beta-1",
+          "downloads": 3926,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-beta-1.json"
+        },
+        {
+          "version": "3.0.0-beta-2",
+          "downloads": 6246,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-beta-2.json"
+        },
+        {
+          "version": "3.0.0-beta-3",
+          "downloads": 5016,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-beta-3.json"
+        },
+        {
+          "version": "3.0.0-beta-4",
+          "downloads": 4994,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-beta-4.json"
+        },
+        {
+          "version": "3.0.0-beta-5",
+          "downloads": 2170,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-beta-5.json"
+        },
+        {
+          "version": "3.0.0-rc",
+          "downloads": 1068,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-rc.json"
+        },
+        {
+          "version": "3.0.0-rc-2",
+          "downloads": 1002,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-rc-2.json"
+        },
+        {
+          "version": "3.0.0-rc-3",
+          "downloads": 258,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0-rc-3.json"
+        },
+        {
+          "version": "3.0.0",
+          "downloads": 53194,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.0.json"
+        },
+        {
+          "version": "3.0.1",
+          "downloads": 187614,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.0.1.json"
+        },
+        {
+          "version": "3.2.0",
+          "downloads": 30670,
+          "@id": "https://api.nuget.org/v3/registration1/nunit/3.2.0.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/angularjs/1.5.2.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/angularjs/index.json",
+      "id": "angularjs",
+      "description": "AngularJS. HTML enhanced for web apps!",
+      "title": "AngularJS",
+      "iconUrl": "https://secure.gravatar.com/avatar/6e1b5ab3ef1593413f1bee4e5a6e6ae7?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png",
+      "projectUrl": "http://angularjs.org",
+      "tags": [
+        "angular",
+        "angularjs",
+        "SPA"
+      ],
+      "authors": [
+        ""
+      ],
+      "totalDownloads": 1002640,
+      "version": "1.5.2",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "downloads": 329,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.0.0.json"
+        },
+        {
+          "version": "1.0.1",
+          "downloads": 908,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.0.1.json"
+        },
+        {
+          "version": "1.0.2-Unstable",
+          "downloads": 0,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.0.2-unstable.json"
+        },
+        {
+          "version": "1.0.2",
+          "downloads": 1865,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.0.2.json"
+        },
+        {
+          "version": "1.0.3",
+          "downloads": 4492,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.0.3.json"
+        },
+        {
+          "version": "1.0.4",
+          "downloads": 2058,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.0.4.json"
+        },
+        {
+          "version": "1.0.5",
+          "downloads": 8780,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.0.5.json"
+        },
+        {
+          "version": "1.0.6",
+          "downloads": 9967,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.0.6.json"
+        },
+        {
+          "version": "1.0.7",
+          "downloads": 33043,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.0.7.json"
+        },
+        {
+          "version": "1.0.8",
+          "downloads": 22570,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.0.8.json"
+        },
+        {
+          "version": "1.1.0-Unstable",
+          "downloads": 0,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.1.0-unstable.json"
+        },
+        {
+          "version": "1.1.1-Unstable",
+          "downloads": 0,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.1.1-unstable.json"
+        },
+        {
+          "version": "1.1.2-Unstable",
+          "downloads": 0,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.1.2-unstable.json"
+        },
+        {
+          "version": "1.1.3-Unstable",
+          "downloads": 0,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.1.3-unstable.json"
+        },
+        {
+          "version": "1.1.4-Unstable",
+          "downloads": 0,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.1.4-unstable.json"
+        },
+        {
+          "version": "1.1.5-Unstable",
+          "downloads": 0,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.1.5-unstable.json"
+        },
+        {
+          "version": "1.2.0-RC1",
+          "downloads": 0,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.0-rc1.json"
+        },
+        {
+          "version": "1.2.0-RC2",
+          "downloads": 0,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.0-rc2.json"
+        },
+        {
+          "version": "1.2.0-RC3",
+          "downloads": 0,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.0-rc3.json"
+        },
+        {
+          "version": "1.2.0",
+          "downloads": 9299,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.0.json"
+        },
+        {
+          "version": "1.2.1",
+          "downloads": 2237,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.1.json"
+        },
+        {
+          "version": "1.2.2",
+          "downloads": 79246,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.2.json"
+        },
+        {
+          "version": "1.2.3",
+          "downloads": 311,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.3.json"
+        },
+        {
+          "version": "1.2.4",
+          "downloads": 250,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.4.json"
+        },
+        {
+          "version": "1.2.5",
+          "downloads": 261,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.5.json"
+        },
+        {
+          "version": "1.2.6.1",
+          "downloads": 234,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.6.1.json"
+        },
+        {
+          "version": "1.2.7",
+          "downloads": 233,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.7.json"
+        },
+        {
+          "version": "1.2.8",
+          "downloads": 262,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.8.json"
+        },
+        {
+          "version": "1.2.9",
+          "downloads": 746,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.9.json"
+        },
+        {
+          "version": "1.2.10",
+          "downloads": 288,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.10.json"
+        },
+        {
+          "version": "1.2.11",
+          "downloads": 212,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.11.json"
+        },
+        {
+          "version": "1.2.12",
+          "downloads": 902,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.12.json"
+        },
+        {
+          "version": "1.2.13",
+          "downloads": 8119,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.13.json"
+        },
+        {
+          "version": "1.2.14",
+          "downloads": 25739,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.14.json"
+        },
+        {
+          "version": "1.2.15",
+          "downloads": 9203,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.15.json"
+        },
+        {
+          "version": "1.2.16",
+          "downloads": 59430,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.16.json"
+        },
+        {
+          "version": "1.2.17",
+          "downloads": 10712,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.17.json"
+        },
+        {
+          "version": "1.2.18",
+          "downloads": 18615,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.18.json"
+        },
+        {
+          "version": "1.2.19",
+          "downloads": 11429,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.19.json"
+        },
+        {
+          "version": "1.2.20",
+          "downloads": 9355,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.20.json"
+        },
+        {
+          "version": "1.2.21",
+          "downloads": 15652,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.21.json"
+        },
+        {
+          "version": "1.2.22",
+          "downloads": 8005,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.22.json"
+        },
+        {
+          "version": "1.2.23",
+          "downloads": 18562,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.23.json"
+        },
+        {
+          "version": "1.2.24",
+          "downloads": 5799,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.24.json"
+        },
+        {
+          "version": "1.2.25",
+          "downloads": 13947,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.25.json"
+        },
+        {
+          "version": "1.2.26",
+          "downloads": 14234,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.26.json"
+        },
+        {
+          "version": "1.2.27",
+          "downloads": 1208,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.27.json"
+        },
+        {
+          "version": "1.2.28",
+          "downloads": 3561,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.28.json"
+        },
+        {
+          "version": "1.2.29",
+          "downloads": 607,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.2.29.json"
+        },
+        {
+          "version": "1.3.0-beta1",
+          "downloads": 285,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-beta1.json"
+        },
+        {
+          "version": "1.3.0-beta2",
+          "downloads": 168,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-beta2.json"
+        },
+        {
+          "version": "1.3.0-beta3",
+          "downloads": 728,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-beta3.json"
+        },
+        {
+          "version": "1.3.0-beta4",
+          "downloads": 273,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-beta4.json"
+        },
+        {
+          "version": "1.3.0-beta5",
+          "downloads": 548,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-beta5.json"
+        },
+        {
+          "version": "1.3.0-beta6",
+          "downloads": 2151,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-beta6.json"
+        },
+        {
+          "version": "1.3.0-beta7",
+          "downloads": 483,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-beta7.json"
+        },
+        {
+          "version": "1.3.0-beta8",
+          "downloads": 443,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-beta8.json"
+        },
+        {
+          "version": "1.3.0-beta9",
+          "downloads": 94,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-beta9.json"
+        },
+        {
+          "version": "1.3.0-rc0",
+          "downloads": 2414,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-rc0.json"
+        },
+        {
+          "version": "1.3.0-rc1",
+          "downloads": 321,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-rc1.json"
+        },
+        {
+          "version": "1.3.0-rc2",
+          "downloads": 634,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-rc2.json"
+        },
+        {
+          "version": "1.3.0-rc3",
+          "downloads": 314,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-rc3.json"
+        },
+        {
+          "version": "1.3.0-rc4",
+          "downloads": 822,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-rc4.json"
+        },
+        {
+          "version": "1.3.0-rc5",
+          "downloads": 110,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0-rc5.json"
+        },
+        {
+          "version": "1.3.0",
+          "downloads": 18576,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.0.json"
+        },
+        {
+          "version": "1.3.1",
+          "downloads": 11348,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.1.json"
+        },
+        {
+          "version": "1.3.2",
+          "downloads": 9436,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.2.json"
+        },
+        {
+          "version": "1.3.3",
+          "downloads": 11844,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.3.json"
+        },
+        {
+          "version": "1.3.4",
+          "downloads": 6703,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.4.json"
+        },
+        {
+          "version": "1.3.5",
+          "downloads": 5758,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.5.json"
+        },
+        {
+          "version": "1.3.6",
+          "downloads": 6142,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.6.json"
+        },
+        {
+          "version": "1.3.7",
+          "downloads": 3769,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.7.json"
+        },
+        {
+          "version": "1.3.8",
+          "downloads": 25586,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.8.json"
+        },
+        {
+          "version": "1.3.9",
+          "downloads": 4575,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.9.json"
+        },
+        {
+          "version": "1.3.10",
+          "downloads": 14279,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.10.json"
+        },
+        {
+          "version": "1.3.11",
+          "downloads": 222,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.11.json"
+        },
+        {
+          "version": "1.3.12",
+          "downloads": 6268,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.12.json"
+        },
+        {
+          "version": "1.3.13",
+          "downloads": 31401,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.13.json"
+        },
+        {
+          "version": "1.3.14",
+          "downloads": 25182,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.14.json"
+        },
+        {
+          "version": "1.3.15",
+          "downloads": 64413,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.15.json"
+        },
+        {
+          "version": "1.3.16",
+          "downloads": 1513,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.16.json"
+        },
+        {
+          "version": "1.3.17",
+          "downloads": 144,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.17.json"
+        },
+        {
+          "version": "1.3.18",
+          "downloads": 787,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.3.18.json"
+        },
+        {
+          "version": "1.4.0-beta1",
+          "downloads": 1306,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.0-beta1.json"
+        },
+        {
+          "version": "1.4.0-beta3",
+          "downloads": 300,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.0-beta3.json"
+        },
+        {
+          "version": "1.4.0-beta4",
+          "downloads": 725,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.0-beta4.json"
+        },
+        {
+          "version": "1.4.0-beta5",
+          "downloads": 830,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.0-beta5.json"
+        },
+        {
+          "version": "1.4.0-beta6",
+          "downloads": 1295,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.0-beta6.json"
+        },
+        {
+          "version": "1.4.0-rc0",
+          "downloads": 667,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.0-rc0.json"
+        },
+        {
+          "version": "1.4.0-rc1",
+          "downloads": 1099,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.0-rc1.json"
+        },
+        {
+          "version": "1.4.0-rc2",
+          "downloads": 1066,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.0-rc2.json"
+        },
+        {
+          "version": "1.4.0",
+          "downloads": 23092,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.0.json"
+        },
+        {
+          "version": "1.4.1",
+          "downloads": 20214,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.1.json"
+        },
+        {
+          "version": "1.4.2",
+          "downloads": 13903,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.2.json"
+        },
+        {
+          "version": "1.4.3",
+          "downloads": 33733,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.3.json"
+        },
+        {
+          "version": "1.4.4",
+          "downloads": 25091,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.4.json"
+        },
+        {
+          "version": "1.4.5",
+          "downloads": 20463,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.5.json"
+        },
+        {
+          "version": "1.4.6",
+          "downloads": 20592,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.6.json"
+        },
+        {
+          "version": "1.4.7",
+          "downloads": 45034,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.7.json"
+        },
+        {
+          "version": "1.4.8",
+          "downloads": 50538,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.8.json"
+        },
+        {
+          "version": "1.4.9",
+          "downloads": 13503,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.4.9.json"
+        },
+        {
+          "version": "1.5.0",
+          "downloads": 33283,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.5.0.json"
+        },
+        {
+          "version": "1.5.1",
+          "downloads": 26,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.5.1.json"
+        },
+        {
+          "version": "1.5.2",
+          "downloads": 340,
+          "@id": "https://api.nuget.org/v3/registration1/angularjs/1.5.2.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.2.3.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/index.json",
+      "id": "Microsoft.AspNet.WebPages",
+      "description": "This package contains core runtime assemblies shared between ASP.NET MVC and ASP.NET Web Pages.",
+      "summary": "This package contains core runtime assemblies shared between ASP.NET MVC and ASP.NET Web Pages.",
+      "title": "Microsoft ASP.NET Web Pages",
+      "iconUrl": "http://go.microsoft.com/fwlink/?LinkID=288859",
+      "licenseUrl": "http://www.microsoft.com/web/webpi/eula/net_library_eula_ENU.htm",
+      "projectUrl": "http://www.asp.net/web-pages",
+      "tags": [
+        "Microsoft",
+        "AspNet",
+        "WebPages",
+        "AspNetWebPages"
+      ],
+      "authors": [
+        "Microsoft"
+      ],
+      "totalDownloads": 14837087,
+      "version": "3.2.3",
+      "versions": [
+        {
+          "version": "1.0.20105.408",
+          "downloads": 204156,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/1.0.20105.408.json"
+        },
+        {
+          "version": "2.0.20505",
+          "downloads": 266750,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/2.0.20505.0.json"
+        },
+        {
+          "version": "2.0.20710",
+          "downloads": 2627976,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/2.0.20710.0.json"
+        },
+        {
+          "version": "2.0.30506",
+          "downloads": 1898280,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/2.0.30506.0.json"
+        },
+        {
+          "version": "3.0.0-beta1",
+          "downloads": 30790,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.0.0-beta1.json"
+        },
+        {
+          "version": "3.0.0-beta2",
+          "downloads": 43707,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.0.0-beta2.json"
+        },
+        {
+          "version": "3.0.0-rc1",
+          "downloads": 40771,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.0.0-rc1.json"
+        },
+        {
+          "version": "3.0.0",
+          "downloads": 1422782,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.0.0.json"
+        },
+        {
+          "version": "3.0.1",
+          "downloads": 336575,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.0.1.json"
+        },
+        {
+          "version": "3.1.0-rc1",
+          "downloads": 34246,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.1.0-rc1.json"
+        },
+        {
+          "version": "3.1.0",
+          "downloads": 580271,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.1.0.json"
+        },
+        {
+          "version": "3.1.1",
+          "downloads": 764883,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.1.1.json"
+        },
+        {
+          "version": "3.1.2",
+          "downloads": 1120970,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.1.2.json"
+        },
+        {
+          "version": "3.2.0-rc",
+          "downloads": 42690,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.2.0-rc.json"
+        },
+        {
+          "version": "3.2.0",
+          "downloads": 909758,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.2.0.json"
+        },
+        {
+          "version": "3.2.1-beta",
+          "downloads": 30171,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.2.1-beta.json"
+        },
+        {
+          "version": "3.2.2-rc",
+          "downloads": 25062,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.2.2-rc.json"
+        },
+        {
+          "version": "3.2.2",
+          "downloads": 1774187,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.2.2.json"
+        },
+        {
+          "version": "3.2.3-beta1",
+          "downloads": 33178,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.2.3-beta1.json"
+        },
+        {
+          "version": "3.2.3",
+          "downloads": 2649883,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webpages/3.2.3.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1510.2205.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/moq/index.json",
+      "id": "Moq",
+      "description": "Moq is the most popular and friendly mocking framework for .NET",
+      "title": "Moq: an enjoyable mocking library",
+      "licenseUrl": "http://www.opensource.org/licenses/bsd-license.php",
+      "projectUrl": "http://www.moqthis.com/",
+      "tags": [
+        "moq",
+        "tdd",
+        "mocking",
+        "mocks",
+        "unittesting",
+        "agile",
+        "unittest"
+      ],
+      "authors": [
+        "Daniel Cazzulino,  kzu"
+      ],
+      "totalDownloads": 5553156,
+      "version": "4.2.1510.2205",
+      "versions": [
+        {
+          "version": "3.1.416.3",
+          "downloads": 26232,
+          "@id": "https://api.nuget.org/v3/registration1/moq/3.1.416.3.json"
+        },
+        {
+          "version": "4.0.10827",
+          "downloads": 1196336,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.0.10827.json"
+        },
+        {
+          "version": "4.1.1308.2120",
+          "downloads": 11945,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.1.1308.2120.json"
+        },
+        {
+          "version": "4.1.1308.2316",
+          "downloads": 863,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.1.1308.2316.json"
+        },
+        {
+          "version": "4.1.1308.2321",
+          "downloads": 49932,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.1.1308.2321.json"
+        },
+        {
+          "version": "4.1.1309.800",
+          "downloads": 649,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.1.1309.0800.json"
+        },
+        {
+          "version": "4.1.1309.801",
+          "downloads": 4683,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.1.1309.0801.json"
+        },
+        {
+          "version": "4.1.1309.919",
+          "downloads": 201053,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.1.1309.0919.json"
+        },
+        {
+          "version": "4.1.1309.1617",
+          "downloads": 211094,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.1.1309.1617.json"
+        },
+        {
+          "version": "4.1.1311.615",
+          "downloads": 187537,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.1.1311.0615.json"
+        },
+        {
+          "version": "4.2.1312.1319",
+          "downloads": 3288,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1312.1319.json"
+        },
+        {
+          "version": "4.2.1312.1323",
+          "downloads": 823,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1312.1323.json"
+        },
+        {
+          "version": "4.2.1312.1416",
+          "downloads": 9010,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1312.1416.json"
+        },
+        {
+          "version": "4.2.1312.1615",
+          "downloads": 1510,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1312.1615.json"
+        },
+        {
+          "version": "4.2.1312.1621",
+          "downloads": 782,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1312.1621.json"
+        },
+        {
+          "version": "4.2.1312.1622",
+          "downloads": 258800,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1312.1622.json"
+        },
+        {
+          "version": "4.2.1402.2112",
+          "downloads": 661374,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1402.2112.json"
+        },
+        {
+          "version": "4.2.1408.619",
+          "downloads": 11555,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1408.0619.json"
+        },
+        {
+          "version": "4.2.1408.717",
+          "downloads": 459783,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1408.0717.json"
+        },
+        {
+          "version": "4.2.1409.1722",
+          "downloads": 484631,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1409.1722.json"
+        },
+        {
+          "version": "4.2.1502.911",
+          "downloads": 818098,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1502.0911.json"
+        },
+        {
+          "version": "4.2.1506.2016",
+          "downloads": 17548,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1506.2016.json"
+        },
+        {
+          "version": "4.2.1506.2515",
+          "downloads": 32616,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1506.2515.json"
+        },
+        {
+          "version": "4.2.1507.118",
+          "downloads": 480036,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1507.0118.json"
+        },
+        {
+          "version": "4.2.1510.2205",
+          "downloads": 408334,
+          "@id": "https://api.nuget.org/v3/registration1/moq/4.2.1510.2205.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.2.3.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/index.json",
+      "id": "Microsoft.AspNet.WebApi.Client",
+      "description": "This package adds support for formatting and content negotiation to System.Net.Http. It includes support for JSON, XML, and form URL encoded data.",
+      "summary": "This package adds support for formatting and content negotiation to System.Net.Http.",
+      "title": "Microsoft ASP.NET Web API 2.2 Client Libraries",
+      "iconUrl": "http://go.microsoft.com/fwlink/?LinkID=288859",
+      "licenseUrl": "http://www.microsoft.com/web/webpi/eula/net_library_eula_ENU.htm",
+      "projectUrl": "http://www.asp.net/web-api",
+      "tags": [
+        "Microsoft",
+        "AspNet",
+        "WebApi",
+        "AspNetWebApi",
+        "HttpClient"
+      ],
+      "authors": [
+        "Microsoft"
+      ],
+      "totalDownloads": 11458301,
+      "version": "5.2.3",
+      "versions": [
+        {
+          "version": "4.0.20505",
+          "downloads": 176282,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/4.0.20505.0.json"
+        },
+        {
+          "version": "4.0.20710",
+          "downloads": 2136001,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/4.0.20710.0.json"
+        },
+        {
+          "version": "4.0.30506",
+          "downloads": 1674564,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/4.0.30506.0.json"
+        },
+        {
+          "version": "4.1.0-alpha-120809",
+          "downloads": 60369,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/4.1.0-alpha-120809.json"
+        },
+        {
+          "version": "5.0.0-alpha1",
+          "downloads": 21826,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.0.0-alpha1.json"
+        },
+        {
+          "version": "5.0.0-beta1",
+          "downloads": 20247,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.0.0-beta1.json"
+        },
+        {
+          "version": "5.0.0-beta2",
+          "downloads": 41465,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.0.0-beta2.json"
+        },
+        {
+          "version": "5.0.0-rc1",
+          "downloads": 40572,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.0.0-rc1.json"
+        },
+        {
+          "version": "5.0.0",
+          "downloads": 1097824,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.0.0.json"
+        },
+        {
+          "version": "5.1.0-rc1",
+          "downloads": 29753,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.1.0-rc1.json"
+        },
+        {
+          "version": "5.1.0",
+          "downloads": 409620,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.1.0.json"
+        },
+        {
+          "version": "5.1.1",
+          "downloads": 481807,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.1.1.json"
+        },
+        {
+          "version": "5.1.2",
+          "downloads": 719764,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.1.2.json"
+        },
+        {
+          "version": "5.2.0-rc",
+          "downloads": 35293,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.2.0-rc.json"
+        },
+        {
+          "version": "5.2.0",
+          "downloads": 595225,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.2.0.json"
+        },
+        {
+          "version": "5.2.2-rc",
+          "downloads": 18834,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.2.2-rc.json"
+        },
+        {
+          "version": "5.2.2",
+          "downloads": 1413060,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.2.2.json"
+        },
+        {
+          "version": "5.2.3-beta1",
+          "downloads": 31831,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.2.3-beta1.json"
+        },
+        {
+          "version": "5.2.3",
+          "downloads": 2453963,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.aspnet.webapi.client/5.2.3.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/3.0.1.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/microsoft.owin/index.json",
+      "id": "Microsoft.Owin",
+      "description": "Provides a set of helper types and abstractions for simplifying the creation of OWIN components.",
+      "title": "Microsoft.Owin",
+      "licenseUrl": "http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm",
+      "projectUrl": "http://katanaproject.codeplex.com/",
+      "tags": [
+        "Microsoft",
+        "OWIN",
+        "Katana"
+      ],
+      "authors": [
+        "Microsoft"
+      ],
+      "totalDownloads": 4852696,
+      "version": "3.0.1",
+      "versions": [
+        {
+          "version": "1.1.0-beta1",
+          "downloads": 6251,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/1.1.0-beta1.json"
+        },
+        {
+          "version": "1.1.0-beta2",
+          "downloads": 19387,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/1.1.0-beta2.json"
+        },
+        {
+          "version": "2.0.0-rc1",
+          "downloads": 23726,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/2.0.0-rc1.json"
+        },
+        {
+          "version": "2.0.0",
+          "downloads": 320765,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/2.0.0.json"
+        },
+        {
+          "version": "2.0.1",
+          "downloads": 161759,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/2.0.1.json"
+        },
+        {
+          "version": "2.0.2",
+          "downloads": 546975,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/2.0.2.json"
+        },
+        {
+          "version": "2.1.0-rc1",
+          "downloads": 3528,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/2.1.0-rc1.json"
+        },
+        {
+          "version": "2.1.0",
+          "downloads": 1018264,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/2.1.0.json"
+        },
+        {
+          "version": "3.0.0-alpha1",
+          "downloads": 6741,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/3.0.0-alpha1.json"
+        },
+        {
+          "version": "3.0.0-beta1",
+          "downloads": 25341,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/3.0.0-beta1.json"
+        },
+        {
+          "version": "3.0.0-rc1",
+          "downloads": 1955,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/3.0.0-rc1.json"
+        },
+        {
+          "version": "3.0.0-rc2",
+          "downloads": 9219,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/3.0.0-rc2.json"
+        },
+        {
+          "version": "3.0.0",
+          "downloads": 930250,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/3.0.0.json"
+        },
+        {
+          "version": "3.0.1",
+          "downloads": 1778532,
+          "@id": "https://api.nuget.org/v3/registration1/microsoft.owin/3.0.1.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/automapper/4.2.1.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/automapper/index.json",
+      "id": "AutoMapper",
+      "description": "A convention-based object-object mapper. AutoMapper uses a fluent configuration API to define an object-object mapping strategy. AutoMapper uses a convention-based matching algorithm to match up source to destination values. Currently, AutoMapper is designed for model projection scenarios to flatten complex object models to DTOs and other simple objects, whose design is better suited for serialization, communication, messaging, or simply an anti-corruption layer between the domain and application layer.",
+      "summary": "A convention-based object-object mapper",
+      "title": "AutoMapper",
+      "iconUrl": "https://s3.amazonaws.com/automapper/icon.png",
+      "licenseUrl": "https://github.com/AutoMapper/AutoMapper/blob/master/LICENSE.txt",
+      "projectUrl": "http://automapper.org/",
+      "tags": [
+        ""
+      ],
+      "authors": [
+        ""
+      ],
+      "totalDownloads": 3455792,
+      "version": "4.2.1",
+      "versions": [
+        {
+          "version": "1.1.0.118",
+          "downloads": 55152,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/1.1.0.118.json"
+        },
+        {
+          "version": "2.0.0",
+          "downloads": 79055,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.0.0.json"
+        },
+        {
+          "version": "2.1.1",
+          "downloads": 1415,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.1.1.json"
+        },
+        {
+          "version": "2.1.262",
+          "downloads": 356,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.1.262.json"
+        },
+        {
+          "version": "2.1.265",
+          "downloads": 23398,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.1.265.json"
+        },
+        {
+          "version": "2.1.266",
+          "downloads": 13858,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.1.266.json"
+        },
+        {
+          "version": "2.1.267",
+          "downloads": 148127,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.1.267.json"
+        },
+        {
+          "version": "2.2.0",
+          "downloads": 159583,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.0.json"
+        },
+        {
+          "version": "2.2.1-ci10",
+          "downloads": 328,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci10.json"
+        },
+        {
+          "version": "2.2.1-ci1000",
+          "downloads": 147,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci1000.json"
+        },
+        {
+          "version": "2.2.1-ci11",
+          "downloads": 150,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci11.json"
+        },
+        {
+          "version": "2.2.1-ci15",
+          "downloads": 324,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci15.json"
+        },
+        {
+          "version": "2.2.1-ci16",
+          "downloads": 154,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci16.json"
+        },
+        {
+          "version": "2.2.1-ci17",
+          "downloads": 320,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci17.json"
+        },
+        {
+          "version": "2.2.1-ci4",
+          "downloads": 142,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci4.json"
+        },
+        {
+          "version": "2.2.1-ci5",
+          "downloads": 316,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci5.json"
+        },
+        {
+          "version": "2.2.1-ci6",
+          "downloads": 333,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci6.json"
+        },
+        {
+          "version": "2.2.1-ci7",
+          "downloads": 457,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci7.json"
+        },
+        {
+          "version": "2.2.1-ci8",
+          "downloads": 1910,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci8.json"
+        },
+        {
+          "version": "2.2.1-ci9",
+          "downloads": 2802,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci9.json"
+        },
+        {
+          "version": "2.2.1-ci9000",
+          "downloads": 17066,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci9000.json"
+        },
+        {
+          "version": "2.2.1-ci9001",
+          "downloads": 3846,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci9001.json"
+        },
+        {
+          "version": "2.2.1-ci9002",
+          "downloads": 321,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci9002.json"
+        },
+        {
+          "version": "2.2.1-ci9003",
+          "downloads": 143,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci9003.json"
+        },
+        {
+          "version": "2.2.1-ci9004",
+          "downloads": 2241,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci9004.json"
+        },
+        {
+          "version": "2.2.1-ci9005",
+          "downloads": 316,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci9005.json"
+        },
+        {
+          "version": "2.2.1-ci9006",
+          "downloads": 185,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1-ci9006.json"
+        },
+        {
+          "version": "2.2.1",
+          "downloads": 344457,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/2.2.1.json"
+        },
+        {
+          "version": "3.0.0-ci1026",
+          "downloads": 448,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1026.json"
+        },
+        {
+          "version": "3.0.0-ci1028",
+          "downloads": 2889,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1028.json"
+        },
+        {
+          "version": "3.0.0-ci1029",
+          "downloads": 595,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1029.json"
+        },
+        {
+          "version": "3.0.0-ci1031",
+          "downloads": 235,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1031.json"
+        },
+        {
+          "version": "3.0.0-ci1032",
+          "downloads": 434,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1032.json"
+        },
+        {
+          "version": "3.0.0-ci1033",
+          "downloads": 269,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1033.json"
+        },
+        {
+          "version": "3.0.0-ci1034",
+          "downloads": 405,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1034.json"
+        },
+        {
+          "version": "3.0.0-ci1035",
+          "downloads": 3247,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1035.json"
+        },
+        {
+          "version": "3.0.0-ci1036",
+          "downloads": 2077,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1036.json"
+        },
+        {
+          "version": "3.0.0-ci1037",
+          "downloads": 5594,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1037.json"
+        },
+        {
+          "version": "3.0.0-ci1038",
+          "downloads": 256,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1038.json"
+        },
+        {
+          "version": "3.0.0-ci1039",
+          "downloads": 240,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1039.json"
+        },
+        {
+          "version": "3.0.0-ci1040",
+          "downloads": 148,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1040.json"
+        },
+        {
+          "version": "3.0.0-ci1041",
+          "downloads": 145,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1041.json"
+        },
+        {
+          "version": "3.0.0-ci1042",
+          "downloads": 314,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1042.json"
+        },
+        {
+          "version": "3.0.0-ci1043",
+          "downloads": 348,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1043.json"
+        },
+        {
+          "version": "3.0.0-ci1053",
+          "downloads": 156,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0-ci1053.json"
+        },
+        {
+          "version": "3.0.0",
+          "downloads": 229816,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.0.0.json"
+        },
+        {
+          "version": "3.1.0-ci1014",
+          "downloads": 170,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1014.json"
+        },
+        {
+          "version": "3.1.0-ci1016",
+          "downloads": 326,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1016.json"
+        },
+        {
+          "version": "3.1.0-ci1017",
+          "downloads": 155,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1017.json"
+        },
+        {
+          "version": "3.1.0-ci1018",
+          "downloads": 166,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1018.json"
+        },
+        {
+          "version": "3.1.0-ci1019",
+          "downloads": 210,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1019.json"
+        },
+        {
+          "version": "3.1.0-ci1020",
+          "downloads": 1449,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1020.json"
+        },
+        {
+          "version": "3.1.0-ci1021",
+          "downloads": 796,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1021.json"
+        },
+        {
+          "version": "3.1.0-ci1022",
+          "downloads": 157,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1022.json"
+        },
+        {
+          "version": "3.1.0-ci1023",
+          "downloads": 676,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1023.json"
+        },
+        {
+          "version": "3.1.0-ci1024",
+          "downloads": 805,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1024.json"
+        },
+        {
+          "version": "3.1.0-ci1026",
+          "downloads": 699,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1026.json"
+        },
+        {
+          "version": "3.1.0-ci1027",
+          "downloads": 542,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1027.json"
+        },
+        {
+          "version": "3.1.0-ci1032",
+          "downloads": 2753,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1032.json"
+        },
+        {
+          "version": "3.1.0-ci1033",
+          "downloads": 182,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1033.json"
+        },
+        {
+          "version": "3.1.0-ci1034",
+          "downloads": 322,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1034.json"
+        },
+        {
+          "version": "3.1.0-ci1035",
+          "downloads": 157,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1035.json"
+        },
+        {
+          "version": "3.1.0-ci1036",
+          "downloads": 1207,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1036.json"
+        },
+        {
+          "version": "3.1.0-ci1037",
+          "downloads": 218,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1037.json"
+        },
+        {
+          "version": "3.1.0-ci1038",
+          "downloads": 327,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1038.json"
+        },
+        {
+          "version": "3.1.0-ci1043",
+          "downloads": 216,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1043.json"
+        },
+        {
+          "version": "3.1.0-ci1044",
+          "downloads": 423,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1044.json"
+        },
+        {
+          "version": "3.1.0-ci1045",
+          "downloads": 281,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1045.json"
+        },
+        {
+          "version": "3.1.0-ci1046",
+          "downloads": 144,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1046.json"
+        },
+        {
+          "version": "3.1.0-ci1047",
+          "downloads": 312,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1047.json"
+        },
+        {
+          "version": "3.1.0-ci1048",
+          "downloads": 483,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1048.json"
+        },
+        {
+          "version": "3.1.0-ci1049",
+          "downloads": 844,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1049.json"
+        },
+        {
+          "version": "3.1.0-ci1050",
+          "downloads": 140,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1050.json"
+        },
+        {
+          "version": "3.1.0-ci1051",
+          "downloads": 1168,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1051.json"
+        },
+        {
+          "version": "3.1.0-ci1053",
+          "downloads": 205,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1053.json"
+        },
+        {
+          "version": "3.1.0-ci1056",
+          "downloads": 1066,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1056.json"
+        },
+        {
+          "version": "3.1.0-ci1058",
+          "downloads": 171,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0-ci1058.json"
+        },
+        {
+          "version": "3.1.0",
+          "downloads": 78949,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.0.json"
+        },
+        {
+          "version": "3.1.1-ci1000",
+          "downloads": 9384,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.1-ci1000.json"
+        },
+        {
+          "version": "3.1.1-ci1003",
+          "downloads": 590,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.1-ci1003.json"
+        },
+        {
+          "version": "3.1.1",
+          "downloads": 254461,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.1.1.json"
+        },
+        {
+          "version": "3.2.0-ci1000",
+          "downloads": 371,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1000.json"
+        },
+        {
+          "version": "3.2.0-ci1001",
+          "downloads": 213,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1001.json"
+        },
+        {
+          "version": "3.2.0-ci1002",
+          "downloads": 928,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1002.json"
+        },
+        {
+          "version": "3.2.0-ci1003",
+          "downloads": 530,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1003.json"
+        },
+        {
+          "version": "3.2.0-ci1004",
+          "downloads": 535,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1004.json"
+        },
+        {
+          "version": "3.2.0-ci1005",
+          "downloads": 331,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1005.json"
+        },
+        {
+          "version": "3.2.0-ci1008",
+          "downloads": 137,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1008.json"
+        },
+        {
+          "version": "3.2.0-ci1009",
+          "downloads": 143,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1009.json"
+        },
+        {
+          "version": "3.2.0-ci1010",
+          "downloads": 706,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1010.json"
+        },
+        {
+          "version": "3.2.0-ci1011",
+          "downloads": 1615,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1011.json"
+        },
+        {
+          "version": "3.2.0-ci1014",
+          "downloads": 142,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1014.json"
+        },
+        {
+          "version": "3.2.0-ci1015",
+          "downloads": 137,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1015.json"
+        },
+        {
+          "version": "3.2.0-ci1016",
+          "downloads": 142,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1016.json"
+        },
+        {
+          "version": "3.2.0-ci1017",
+          "downloads": 1034,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1017.json"
+        },
+        {
+          "version": "3.2.0-ci1021",
+          "downloads": 283,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1021.json"
+        },
+        {
+          "version": "3.2.0-ci1022",
+          "downloads": 148,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1022.json"
+        },
+        {
+          "version": "3.2.0-ci1023",
+          "downloads": 100,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1023.json"
+        },
+        {
+          "version": "3.2.0-ci1024",
+          "downloads": 96,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1024.json"
+        },
+        {
+          "version": "3.2.0-ci1025",
+          "downloads": 185,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1025.json"
+        },
+        {
+          "version": "3.2.0-ci1026",
+          "downloads": 99,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1026.json"
+        },
+        {
+          "version": "3.2.0-ci1027",
+          "downloads": 225,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1027.json"
+        },
+        {
+          "version": "3.2.0-ci1028",
+          "downloads": 103,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1028.json"
+        },
+        {
+          "version": "3.2.0-ci1029",
+          "downloads": 100,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1029.json"
+        },
+        {
+          "version": "3.2.0-ci1030",
+          "downloads": 95,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1030.json"
+        },
+        {
+          "version": "3.2.0-ci1033",
+          "downloads": 102,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1033.json"
+        },
+        {
+          "version": "3.2.0-ci1034",
+          "downloads": 96,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1034.json"
+        },
+        {
+          "version": "3.2.0-ci1035",
+          "downloads": 112,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1035.json"
+        },
+        {
+          "version": "3.2.0-ci1036",
+          "downloads": 96,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1036.json"
+        },
+        {
+          "version": "3.2.0-ci1037",
+          "downloads": 107,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1037.json"
+        },
+        {
+          "version": "3.2.0-ci1038",
+          "downloads": 139,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1038.json"
+        },
+        {
+          "version": "3.2.0-ci1039",
+          "downloads": 103,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1039.json"
+        },
+        {
+          "version": "3.2.0-ci1040",
+          "downloads": 100,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1040.json"
+        },
+        {
+          "version": "3.2.0-ci1041",
+          "downloads": 95,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1041.json"
+        },
+        {
+          "version": "3.2.0-ci1042",
+          "downloads": 302,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1042.json"
+        },
+        {
+          "version": "3.2.0-ci1043",
+          "downloads": 147,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0-ci1043.json"
+        },
+        {
+          "version": "3.2.0",
+          "downloads": 26316,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.0.json"
+        },
+        {
+          "version": "3.2.1-ci1000",
+          "downloads": 486,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.1-ci1000.json"
+        },
+        {
+          "version": "3.2.1-ci1001",
+          "downloads": 2436,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.1-ci1001.json"
+        },
+        {
+          "version": "3.2.1-ci1002",
+          "downloads": 127,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.1-ci1002.json"
+        },
+        {
+          "version": "3.2.1",
+          "downloads": 492840,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.2.1.json"
+        },
+        {
+          "version": "3.3.0-ci1000",
+          "downloads": 126,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1000.json"
+        },
+        {
+          "version": "3.3.0-ci1001",
+          "downloads": 150,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1001.json"
+        },
+        {
+          "version": "3.3.0-ci1002",
+          "downloads": 204,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1002.json"
+        },
+        {
+          "version": "3.3.0-ci1003",
+          "downloads": 162,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1003.json"
+        },
+        {
+          "version": "3.3.0-ci1004",
+          "downloads": 114,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1004.json"
+        },
+        {
+          "version": "3.3.0-ci1005",
+          "downloads": 113,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1005.json"
+        },
+        {
+          "version": "3.3.0-ci1006",
+          "downloads": 431,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1006.json"
+        },
+        {
+          "version": "3.3.0-ci1007",
+          "downloads": 187,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1007.json"
+        },
+        {
+          "version": "3.3.0-ci1008",
+          "downloads": 1343,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1008.json"
+        },
+        {
+          "version": "3.3.0-ci1009",
+          "downloads": 247,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1009.json"
+        },
+        {
+          "version": "3.3.0-ci1016",
+          "downloads": 157,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1016.json"
+        },
+        {
+          "version": "3.3.0-ci1017",
+          "downloads": 7635,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1017.json"
+        },
+        {
+          "version": "3.3.0-ci1018",
+          "downloads": 124,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1018.json"
+        },
+        {
+          "version": "3.3.0-ci1019",
+          "downloads": 230,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1019.json"
+        },
+        {
+          "version": "3.3.0-ci1020",
+          "downloads": 170,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1020.json"
+        },
+        {
+          "version": "3.3.0-ci1021",
+          "downloads": 148,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1021.json"
+        },
+        {
+          "version": "3.3.0-ci1022",
+          "downloads": 906,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1022.json"
+        },
+        {
+          "version": "3.3.0-ci1023",
+          "downloads": 301,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1023.json"
+        },
+        {
+          "version": "3.3.0-ci1024",
+          "downloads": 538,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1024.json"
+        },
+        {
+          "version": "3.3.0-ci1025",
+          "downloads": 149,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1025.json"
+        },
+        {
+          "version": "3.3.0-ci1026",
+          "downloads": 126,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1026.json"
+        },
+        {
+          "version": "3.3.0-ci1027",
+          "downloads": 15393,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1027.json"
+        },
+        {
+          "version": "3.3.0-ci1028",
+          "downloads": 353,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1028.json"
+        },
+        {
+          "version": "3.3.0-ci1029",
+          "downloads": 170,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1029.json"
+        },
+        {
+          "version": "3.3.0-ci1030",
+          "downloads": 318,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1030.json"
+        },
+        {
+          "version": "3.3.0-ci1031",
+          "downloads": 92,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1031.json"
+        },
+        {
+          "version": "3.3.0-ci1032",
+          "downloads": 149,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1032.json"
+        },
+        {
+          "version": "3.3.0-ci1033",
+          "downloads": 123,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0-ci1033.json"
+        },
+        {
+          "version": "3.3.0",
+          "downloads": 162799,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.0.json"
+        },
+        {
+          "version": "3.3.1",
+          "downloads": 580010,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/3.3.1.json"
+        },
+        {
+          "version": "4.0.0-alpha1",
+          "downloads": 6478,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/4.0.0-alpha1.json"
+        },
+        {
+          "version": "4.0.0",
+          "downloads": 3827,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/4.0.0.json"
+        },
+        {
+          "version": "4.0.1",
+          "downloads": 875,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/4.0.1.json"
+        },
+        {
+          "version": "4.0.2",
+          "downloads": 813,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/4.0.2.json"
+        },
+        {
+          "version": "4.0.3",
+          "downloads": 1849,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/4.0.3.json"
+        },
+        {
+          "version": "4.0.4",
+          "downloads": 248968,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/4.0.4.json"
+        },
+        {
+          "version": "4.1.0",
+          "downloads": 17293,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/4.1.0.json"
+        },
+        {
+          "version": "4.1.1",
+          "downloads": 253211,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/4.1.1.json"
+        },
+        {
+          "version": "4.2.0",
+          "downloads": 76141,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/4.2.0.json"
+        },
+        {
+          "version": "4.2.1",
+          "downloads": 50826,
+          "@id": "https://api.nuget.org/v3/registration1/automapper/4.2.1.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://api.nuget.org/v3/registration1/antlr/3.5.0.2.json",
+      "@type": "Package",
+      "registration": "https://api.nuget.org/v3/registration1/antlr/index.json",
+      "id": "Antlr",
+      "description": "ANother Tool for Language Recognition, is a language tool that provides a framework for constructing recognizers, interpreters, compilers, and translators from grammatical descriptions containing actions in a variety of target languages.",
+      "summary": "ANother Tool for Language Recognition, is a language tool that provides a framework for constructing recognizers, interpreters, compilers, and translators from grammatical descriptions containing actions in a variety of target languages.",
+      "title": "ANTLRv3",
+      "iconUrl": "http://www.antlr.org/images/antlr-link.gif",
+      "licenseUrl": "http://www.antlr3.org/license.html",
+      "projectUrl": "https://github.com/antlr/antlrcs",
+      "authors": [
+        "Sam Harwell, Terence Parr"
+      ],
+      "totalDownloads": 4860048,
+      "version": "3.5.0.2",
+      "versions": [
+        {
+          "version": "3.1.1",
+          "downloads": 27733,
+          "@id": "https://api.nuget.org/v3/registration1/antlr/3.1.1.json"
+        },
+        {
+          "version": "3.1.3.42154",
+          "downloads": 71317,
+          "@id": "https://api.nuget.org/v3/registration1/antlr/3.1.3.42154.json"
+        },
+        {
+          "version": "3.4.1.9004-pre",
+          "downloads": 375,
+          "@id": "https://api.nuget.org/v3/registration1/antlr/3.4.1.9004-pre.json"
+        },
+        {
+          "version": "3.4.1.9004",
+          "downloads": 2747771,
+          "@id": "https://api.nuget.org/v3/registration1/antlr/3.4.1.9004.json"
+        },
+        {
+          "version": "3.5.0.2",
+          "downloads": 2012852,
+          "@id": "https://api.nuget.org/v3/registration1/antlr/3.5.0.2.json"
+        }
+      ]
+    }
+  ]
+}

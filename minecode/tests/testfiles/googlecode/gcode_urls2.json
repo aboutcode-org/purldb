@@ -1,0 +1,20 @@
+{
+ "http://code.google.com/a/apache-extras.org/hosting/search?q=": null,
+ "http://code.google.com/a/apache-extras.org/hosting/search?q=label%3ADirectorya&projectsearch=Search+projects": null,
+ "http://code.google.com/a/apache-extras.org/p/piwi/downloads/list": "piwi",
+ "http://code.google.com/a/apache-extras.org/p/pylucene-extra/": "apache-extras.org/pylucene-extra",
+ "http://code.google.com/a/apache-extras.org/p/pylucene-extra/downloads/detail?name=lucene-3.1.0-py2.5-linux-x86_64.egg": "apache-extras.org/pylucene-extra",
+ "http://code.google.com/a/apache-extras.org/p/pylucene-extra/downloads/list?can=1": "apache-extras.org/pylucene-extra",
+ "http://code.google.com/a/apache-extras.org/p/pylucene-extra/downloads/list?can=1&num=10&start=0": "apache-extras.org/pylucene-extra",
+ "http://code.google.com/a/apache-extras.org/p/pylucene-extra/downloads/list?can=1&num=1000&start=0": "apache-extras.org/pylucene-extra",
+ "http://code.google.com/a/apache-extras.org/p/pylucene-extra/source/checkout": "apache-extras.org/pylucene-extra",
+ "http://code.google.com/a/eclipselabs.org/hosting/search?q=wtp": null,
+ "http://code.google.com/a/eclipselabs.org/p/smebs/": "eclipselabs.org/smebs",
+ "https://code.google.com/a/apache-extras.org/p/pylucene-extra/": "apache-extras.org/pylucene-extra",
+ "http://pylucene-extra.apache-extras.org.codespot.com/files/lucene-3.6.2-py2.7-win32.egg": "apache-extras.org/pylucene-extra",
+ " http://svn.codespot.com/a/eclipselabs.org/restclient-tool/trunk/": "eclipselabs.org/restclient-tool",
+ "http://svn.codespot.com/a/eclipselabs.org/mobile-web-development-with-phonegap/tags/r1.2/download/":"eclipselabs.org/mobile-web-development-with-phonegap",
+ "http://eclipselabs.org/p/mercurialeclipse/":"eclipselabs.org/mercurialeclipse",
+ "http://apache-extras.org/p/metcat/":"apache-extras.org/metcat",
+ "http://svn.codespot.com/a/apache-extras.org/metcat/trunk/": "apache-extras.org/metcat"
+ }

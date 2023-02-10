@@ -1,0 +1,31 @@
+{
+  "bug-database":"https://issues.apache.org/jira/browse/FELIX",
+  "category":"network-server",
+  "created":"2007-06-27",
+  "doap":"http://svn.apache.org/repos/asf/felix/trunk/doap/doap_Felix.rdf",
+  "download-page":"http://felix.apache.org/downloads.cgi",
+  "homepage":"http://felix.apache.org",
+  "implements":[
+    {
+      "body":"OSGi Alliance",
+      "id":"OSGi R6",
+      "title":"OSGi R6 Specification",
+      "url":"http://www.osgi.org"
+    }
+  ],
+  "license":"http://usefulinc.com/doap/licenses/asl20",
+  "mailing-list":"http://felix.apache.org/mailinglists.html",
+  "maintainer":[
+    {
+      "mbox":"mailto:dev@felix.apache.org",
+      "name":"Felix PMC"
+    }
+  ],
+  "name":"Apache Felix",
+  "pmc":"felix",
+  "programming-language":"Java",
+  "repository":[
+    "https://svn.apache.org/repos/asf/felix"
+  ],
+  "shortdesc":"OSGi framework implementation and related technologies."
+}

@@ -1,0 +1,31 @@
+{
+"bug-database": "https://issues.apache.org/jira/browse/METAMODEL",
+"category": "database, big-data, library",
+"created": "2014-11-27",
+"description": "With MetaModel you get a uniform connector and query API to many very different datastore types, including: Relational (JDBC) databases, CSV files, Excel spreadsheets, XML files, JSON files, Fixed width files, MongoDB, Apache CouchDB, Apache HBase, Apache Cassandra, ElasticSearch, OpenOffice.org databases, Salesforce.com, SugarCRM and even collections of plain old Java objects (POJOs).\n\nMetaModel isn't a data mapping framework. Instead we emphasize abstraction of metadata and ability to add data sources at runtime, making MetaModel great for generic data processing applications, less so for applications modeled around a particular domain.",
+"doap": "https://git-wip-us.apache.org/repos/asf?p=metamodel.git;f=doap_MetaModel.rdf;a=blob_plain;hb=HEAD",
+"download-page": "http://metamodel.apache.org/#download",
+"homepage": "http://metamodel.apache.org",
+"license": "http://spdx.org/licenses/Apache-2.0",
+"mailing-list": "http://metamodel.apache.org/#community",
+"maintainer": [
+{
+"mbox": "mailto:kaspersor@apache.org",
+"name": "Kasper Sørensen"
+}
+],
+"name": "Apache MetaModel",
+"pmc": "metamodel",
+"programming-language": "Java",
+"release": [
+{
+"created": "2014-12-14",
+"name": "MetaModel 4.3.1",
+"revision": "4.3.1"
+}
+],
+"repository": [
+"https://git-wip-us.apache.org/repos/asf/metamodel.git"
+],
+"shortdesc": "Providing a common interface for discovery, exploration of metadata and querying of different types of data sources."
+}

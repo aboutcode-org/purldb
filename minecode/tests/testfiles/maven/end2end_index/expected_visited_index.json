@@ -16,9 +16,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -38,9 +40,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -60,9 +64,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -82,9 +88,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -104,9 +112,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -126,9 +136,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -148,9 +160,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -170,9 +184,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -192,9 +208,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -214,9 +232,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -236,9 +256,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -258,9 +280,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -280,9 +304,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -302,9 +328,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -324,9 +352,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -346,9 +376,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -368,9 +400,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -390,9 +424,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -412,9 +448,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -434,9 +472,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -456,9 +496,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -478,9 +520,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -500,9 +544,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -522,9 +568,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -544,9 +592,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -566,9 +616,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -588,9 +640,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -610,9 +664,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -632,9 +688,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -654,9 +712,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -676,9 +736,11 @@
     "package_url":null,
     "last_visit_date":true,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   }
 ]

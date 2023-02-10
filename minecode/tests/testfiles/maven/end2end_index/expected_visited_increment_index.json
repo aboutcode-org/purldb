@@ -16,9 +16,11 @@
     "package_url":"pkg:maven/cnuernber/dtype-next@0.4.2",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -38,9 +40,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light@1.2.20-modified2",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -60,9 +64,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light@1.2.20-modified3",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -82,9 +88,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light@1.2.20-modified",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -104,9 +112,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light-html@1.2.20-modified2",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -126,9 +136,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light-html@1.2.20-modified3",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -148,9 +160,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light-html@1.2.20-modified",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -170,9 +184,11 @@
     "package_url":"pkg:maven/davewm/formative@0.8.10",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -192,9 +208,11 @@
     "package_url":"pkg:maven/funcool/promesa@6.0.0",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -214,9 +232,11 @@
     "package_url":"pkg:maven/hiccup-icons/hiccup-icons@0.4.4",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -236,9 +256,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -258,9 +280,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -280,9 +304,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -302,9 +328,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -324,9 +352,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -346,9 +376,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -368,9 +400,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -390,9 +424,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -412,9 +448,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -434,9 +472,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -456,9 +496,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -478,9 +520,11 @@
     "package_url":null,
     "last_visit_date":true,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -500,9 +544,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -522,9 +568,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -544,9 +592,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -566,9 +616,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -588,9 +640,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -610,9 +664,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -632,9 +688,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -654,9 +712,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -676,9 +736,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -698,9 +760,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -720,9 +784,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -742,9 +808,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -764,9 +832,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -786,9 +856,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -808,9 +880,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -830,9 +904,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -852,9 +928,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -874,9 +952,11 @@
     "package_url":null,
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -896,9 +976,11 @@
     "package_url":null,
     "last_visit_date":true,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":false,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -918,9 +1000,11 @@
     "package_url":"pkg:maven/lein-jlink/lein-jlink@0.3.1",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -940,9 +1024,11 @@
     "package_url":"pkg:maven/twarc/twarc@0.1.15",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -962,9 +1048,11 @@
     "package_url":"pkg:maven/uncomplicate/clojurecuda@0.11.0",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -984,9 +1072,11 @@
     "package_url":"pkg:maven/uncomplicate/neanderthal@0.38.0",
     "last_visit_date":false,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1006,9 +1096,11 @@
     "package_url":"pkg:maven/cnuernber/dtype-next@0.4.2",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1028,9 +1120,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light@1.2.20-modified2",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1050,9 +1144,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light@1.2.20-modified3",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1072,9 +1168,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light@1.2.20-modified",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1094,9 +1192,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light-html@1.2.20-modified2",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1116,9 +1216,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light-html@1.2.20-modified3",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1138,9 +1240,11 @@
     "package_url":"pkg:maven/com.custom.jdi/jdi-light-html@1.2.20-modified",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1160,9 +1264,11 @@
     "package_url":"pkg:maven/davewm/formative@0.8.10",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1182,9 +1288,11 @@
     "package_url":"pkg:maven/funcool/promesa@6.0.0",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1204,9 +1312,11 @@
     "package_url":"pkg:maven/hiccup-icons/hiccup-icons@0.4.4",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1226,9 +1336,11 @@
     "package_url":"pkg:maven/lein-jlink/lein-jlink@0.3.1",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1248,9 +1360,11 @@
     "package_url":"pkg:maven/twarc/twarc@0.1.15",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1270,9 +1384,11 @@
     "package_url":"pkg:maven/uncomplicate/clojurecuda@0.11.0",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   },
   {
@@ -1292,9 +1408,11 @@
     "package_url":"pkg:maven/uncomplicate/neanderthal@0.38.0",
     "last_visit_date":true,
     "is_visitable":false,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":false,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   }
 ]

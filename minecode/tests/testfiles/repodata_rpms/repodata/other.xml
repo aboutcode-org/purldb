@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otherdata xmlns="http://linux.duke.edu/metadata/other" packages="384">
+<package pkgid="36547e200627ea25c4e3fb6f9735d58e682f8e35cd815dceed796c83628e60d5" name="python-ceilometerclient" arch="src">
+    <version epoch="0" ver="1.5.0" rel="1.el7"/>
+
+<changelog author="Jakub Ruzicka &lt;jruzicka@redhat.com&gt; 1.0.8-1" date="1387195200">- Update to upstream 1.0.8
+- New dependency: python-six</changelog>
+
+</package>
+</otherdata>

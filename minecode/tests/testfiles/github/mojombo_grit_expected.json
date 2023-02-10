@@ -1,0 +1,47 @@
+{
+  "name":"grit",
+  "description":"**Grit is no longer maintained. Check out libgit2/rugged.** Grit gives you object oriented read/write access to Git repositories via Ruby.",
+  "blobs_url":null,
+  "language":"Ruby",
+  "size":7954,
+  "homepage":"http://grit.rubyforge.org/",
+  "html_url":"https://github.com/mojombo/grit",
+  "etag":null,
+  "full_name":"mojombo/grit",
+  "repo_id":1,
+  "ssh_url":"git@github.com:mojombo/grit.git",
+  "source_url":null,
+  "clone_url":"https://github.com/mojombo/grit.git",
+  "watchers_count":null,
+  "master_branch":null,
+  "updated_at":null,
+  "pushed_at":null,
+  "downloads":[
+    {
+      "name":"grit-1.0.1.gem",
+      "url":"https://api.github.com/repos/mojombo/grit/downloads/5",
+      "size":1861632,
+      "s3_url":null,
+      "created_at":null,
+      "download_count":187,
+      "description":null,
+      "redirect":null,
+      "signature":null,
+      "html_url":"https://github.com/downloads/mojombo/grit/grit-1.0.1.gem",
+      "bucket":null,
+      "acl":null,
+      "accesskeyid":null,
+      "expirationdate":null
+    }
+  ],
+  "tags":[
+    {
+      "name":"v2.5.0",
+      "tarball_url":"https://api.github.com/repos/mojombo/grit/tarball/v2.5.0",
+      "zipball_url":"https://api.github.com/repos/mojombo/grit/zipball/v2.5.0"
+    }
+  ],
+  "labels":[
+    "label 1"
+  ]
+}

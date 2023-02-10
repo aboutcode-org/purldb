@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+
+    <title>
+        NuGet Gallery
+        | Packages
+    </title>
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <link title="NuGet.org" type="application/opensearchdescription+xml" href="/opensearch.xml" rel="search">
+
+    <link href="/Content/gallery/css/site.min.css?v=K2fcXI5bWOIIFGvogPwvPlV_OEuPyFAEl9Ci-now6941" rel="stylesheet"/>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    
+
+                    <script>
+                    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+                    ga('create', 'UA-62780441-33', 'auto');
+                    ga('set', 'anonymizeIp', true);
+                    ga('set', 'page', '');
+                    ga('set', 'title', '');
+                    ga('send', 'pageview');
+                </script>
+
+    
+    
+                <!-- Telemetry -->
+            <script type="text/javascript">
+                var appInsights = window.appInsights || function (config) {
+                    function s(config) {
+                        t[config] = function () {
+                            var i = arguments;
+                            t.queue.push(function () { t[config].apply(t, i) })
+                        }
+                    }
+
+                    var t = { config: config }, r = document, f = window, e = "script", o = r.createElement(e), i, u;
+                    for (o.src = config.url || "//az416426.vo.msecnd.net/scripts/a/ai.0.js", r.getElementsByTagName(e)[0].parentNode.appendChild(o), t.cookie = r.cookie, t.queue = [], i = ["Event", "Exception", "Metric", "PageView", "Trace"]; i.length;) s("track" + i.pop());
+                    return config.disableExceptionTracking || (i = "onerror", s("_" + i), u = f[i], f[i] = function (config, r, f, e, o) {
+                        var s = u && u(config, r, f, e, o);
+                        return s !== !0 && t["_" + i](config, r, f, e, o), s
+                    }), t
+                }({
+                    instrumentationKey: 'df3a36b9-dfba-401c-82ab-35690083be3e',
+                    samplingPercentage: 100
+                });
+
+                window.appInsights = appInsights;
+                appInsights.trackPageView();
+            </script>
+
+</head>
+<body>
+    
+
+
+
+
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <a href="#" id="skipToContent" class="showOnFocus" title="Skip To Content">Skip To Content</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="/">
+                        <img class="navbar-logo" width="94" height="29" alt="NuGet home"
+                             src="/Content/gallery/img/logo-header.svg"
+                                 onerror="this.src='https://www.nuget.org/Content/gallery/img/logo-header-94x29.png'; this.onerror = null;"
+ />
+                    </a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav" role="tablist">
+                            <li class="active" role="presentation">
+        <a role="tab" aria-selected="true" href="/packages">
+            <span>Packages</span>
+        </a>
+    </li>
+
+                            <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="/packages/manage/upload">
+            <span>Upload</span>
+        </a>
+    </li>
+
+    <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="/stats">
+            <span>Statistics</span>
+        </a>
+    </li>
+                                                    <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="https://docs.microsoft.com/en-us/nuget/what-is-nuget">
+            <span>Documentation</span>
+        </a>
+    </li>
+
+                            <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="/downloads">
+            <span>Downloads</span>
+        </a>
+    </li>
+
+                            <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="https://blog.nuget.org/">
+            <span>Blog</span>
+        </a>
+    </li>
+
+                    </ul>
+                        <ul class="nav navbar-nav navbar-right" role="tablist">
+    <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="/users/account/LogOn?returnUrl=%2Fpackages%3Fpage%3D1" title="Sign in to an existing NuGet.org account">
+            <span>Sign in</span>
+        </a>
+    </li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="container search-container">
+            <div class="row">
+                <form aria-label="Package search bar" class="col-sm-12" action="/packages" method="get">
+                    <div class="input-group">
+    <input name="q" type="text" class="form-control" id="search" aria-label="Enter packages to search"
+           placeholder="Search for packages..." autocomplete="off"
+           value=""
+            />
+    <span class="input-group-btn">
+        <button class="btn btn-default btn-warning btn-search" type="submit"
+                title="Search for packages" aria-label="Search">
+            <span class="ms-Icon ms-Icon--Search" aria-hidden="true"></span>
+        </button>
+    </span>
+</div>
+                    <div id="autocomplete-results-container" class="text-left" tabindex="0"></div>
+
+<script type="text/html" id="autocomplete-results-row">
+    <!-- ko if: $data -->
+    <!-- ko if: $data.PackageRegistration -->
+    <div class="col-sm-4 autocomplete-row-id autocomplete-row-data">
+        <span data-bind="attr: { id: 'autocomplete-result-id-' + $data.PackageRegistration.Id, title: $data.PackageRegistration.Id }, text: $data.PackageRegistration.Id"></span>
+    </div>
+    <div class="col-sm-4 autocomplete-row-downloadcount text-right autocomplete-row-data">
+        <span data-bind="text: $data.DownloadCount + ' downloads'"></span>
+    </div>
+    <div class="col-sm-4 autocomplete-row-owners text-left autocomplete-row-data">
+        <span data-bind="text: $data.OwnersString + ' '"></span>
+    </div>
+    <!-- /ko -->
+    <!-- ko ifnot: $data.PackageRegistration -->
+    <div class="col-sm-12 autocomplete-row-id autocomplete-row-data">
+        <span data-bind="attr: { id: 'autocomplete-result-id-' + $data, title: $data  }, text: $data"></span>
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->
+</script>
+
+<script type="text/html" id="autocomplete-results-template">
+    <!-- ko if: $data.data.length > 0 -->
+    <div data-bind="foreach: $data.data" id="autocomplete-results-list">
+        <a data-bind="attr: { id: 'autocomplete-result-row-' + $data, href: '/packages/' + $data, title: $data }" tabindex="-1">
+            <div data-bind="attr:{ id: 'autocomplete-container-' + $data }" class="autocomplete-results-row">
+            </div>
+        </a>
+    </div>
+    <!-- /ko -->
+</script>
+
+                </form>
+            </div>
+        </div>
+</nav>
+
+
+
+
+
+
+    <div id="skippedToContent">
+    
+
+<section role="main" class="container main-container page-list-packages">
+    <div class="row-heading clearfix">
+        <div class="cell-heading">
+            <h1 role="alert">
+                        There are 154,204 packages
+            </h1>
+        </div>
+        <div class="cell-controls">
+            <form action="/packages" method="get">
+                <input id="search-term" name="q" type="hidden" value="" />
+                <label>
+                    <input type="checkbox" id="include-prerelease" checked />
+                    Include prerelease
+                </label>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="list-packages" role="list">
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/NUnit/">NUnit</a>
+
+                    <img class="reserved-indicator"
+                         src="/Content/gallery/img/reserved-indicator.svg"
+                             onerror="this.src='https://www.nuget.org/Content/gallery/img/reserved-indicator-20x20.png'; this.onerror = null;"
+
+                         title="The ID prefix of this package has been reserved for one of the owners of this package by NuGet.org." />
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/charliepoole" title="View charliepoole's profile">charliepoole</a>
+                            <a href="/profiles/rprouse" title="View rprouse's profile">rprouse</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        41,849,726 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2019-05-15T00:24:28.3900000+00:00">5/15/2019</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">3.12.0 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22nunit%22" title="Search for nunit">nunit</a>
+                                <a href="/packages?q=Tags%3A%22test%22" title="Search for test">test</a>
+                                <a href="/packages?q=Tags%3A%22testing%22" title="Search for testing">testing</a>
+                                <a href="/packages?q=Tags%3A%22tdd%22" title="Search for tdd">tdd</a>
+                                <a href="/packages?q=Tags%3A%22framework%22" title="Search for framework">framework</a>
+                                <a href="/packages?q=Tags%3A%22fluent%22" title="Search for fluent">fluent</a>
+                                <a href="/packages?q=Tags%3A%22assert%22" title="Search for assert">assert</a>
+                                <a href="/packages?q=Tags%3A%22theory%22" title="Search for theory">theory</a>
+                                <a href="/packages?q=Tags%3A%22plugin%22" title="Search for plugin">plugin</a>
+                                <a href="/packages?q=Tags%3A%22addin%22" title="Search for addin">addin</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible.
+
+This package includes the NUnit 3 framework assembly, which is referenced by your tests. You will need to install version 3 of the nunit3-console program or a third-party runner that supports...
+<a href="/packages/NUnit/3.12.0">More information</a>            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://www.newtonsoft.com/content/images/nugeticon.png"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/Newtonsoft.Json/">Newtonsoft.<wbr>Json</a>
+
+                    <img class="reserved-indicator"
+                         src="/Content/gallery/img/reserved-indicator.svg"
+                             onerror="this.src='https://www.nuget.org/Content/gallery/img/reserved-indicator-20x20.png'; this.onerror = null;"
+
+                         title="The ID prefix of this package has been reserved for one of the owners of this package by NuGet.org." />
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/newtonsoft" title="View newtonsoft's profile">newtonsoft</a>
+                            <a href="/profiles/jamesnk" title="View jamesnk's profile">jamesnk</a>
+                    </span>
+            </div>
+
+                <div class="package-title">
+                    Json.<wbr>NET
+                </div>
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        222,846,889 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2019-04-22T01:21:49.9000000+00:00">4/22/2019</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">12.0.2 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22json%22" title="Search for json">json</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                Json.NET is a popular high-performance JSON framework for .NET
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="http://go.microsoft.com/fwlink/?LinkID=386613"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/EntityFramework/6.3.0-preview5-19254-05">EntityFramework</a>
+
+                    <img class="reserved-indicator"
+                         src="/Content/gallery/img/reserved-indicator.svg"
+                             onerror="this.src='https://www.nuget.org/Content/gallery/img/reserved-indicator-20x20.png'; this.onerror = null;"
+
+                         title="The ID prefix of this package has been reserved for one of the owners of this package by NuGet.org." />
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/Microsoft" title="View Microsoft's profile">Microsoft</a>
+                            <a href="/profiles/EntityFramework" title="View EntityFramework's profile">EntityFramework</a>
+                            <a href="/profiles/aspnet" title="View aspnet's profile">aspnet</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        62,917,171 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2019-05-07T23:48:04.5500000+00:00">5/7/2019</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">6.3.0-preview5-19254-05 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22Microsoft%22" title="Search for Microsoft">Microsoft</a>
+                                <a href="/packages?q=Tags%3A%22EntityFramework%22" title="Search for EntityFramework">EntityFramework</a>
+                                <a href="/packages?q=Tags%3A%22EF%22" title="Search for EF">EF</a>
+                                <a href="/packages?q=Tags%3A%22Database%22" title="Search for Database">Database</a>
+                                <a href="/packages?q=Tags%3A%22Data%22" title="Search for Data">Data</a>
+                                <a href="/packages?q=Tags%3A%22O%2FRM%22" title="Search for O/RM">O/RM</a>
+                                <a href="/packages?q=Tags%3A%22ADO.NET%22" title="Search for ADO.NET">ADO.NET</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                Entity Framework is Microsoft&#39;s recommended data access technology for new applications.
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="http://www.mysql.com/common/logos/logo-mysql-170x115.png"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/MySql.Data/">MySql.<wbr>Data</a>
+
+                    <img class="reserved-indicator"
+                         src="/Content/gallery/img/reserved-indicator.svg"
+                             onerror="this.src='https://www.nuget.org/Content/gallery/img/reserved-indicator-20x20.png'; this.onerror = null;"
+
+                         title="The ID prefix of this package has been reserved for one of the owners of this package by NuGet.org." />
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/MySQL" title="View MySQL's profile">MySQL</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        7,171,940 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2019-04-26T13:01:59.4370000+00:00">4/26/2019</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">8.0.16 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22MySql%22" title="Search for MySql">MySql</a>
+                                <a href="/packages?q=Tags%3A%22.NET%22" title="Search for .NET">.NET</a>
+                                <a href="/packages?q=Tags%3A%22Connector%22" title="Search for Connector">Connector</a>
+                                <a href="/packages?q=Tags%3A%22Connector%2FNET%22" title="Search for Connector/NET">Connector/NET</a>
+                                <a href="/packages?q=Tags%3A%22netcore%22" title="Search for netcore">netcore</a>
+                                <a href="/packages?q=Tags%3A%22.Net%22" title="Search for .Net">.Net</a>
+                                <a href="/packages?q=Tags%3A%22Core%22" title="Search for Core">Core</a>
+                                <a href="/packages?q=Tags%3A%22Conector%2FNet%22" title="Search for Conector/Net">Conector/Net</a>
+                                <a href="/packages?q=Tags%3A%22coreclr%22" title="Search for coreclr">coreclr</a>
+                                <a href="/packages?q=Tags%3A%22C%2FNET%22" title="Search for C/NET">C/NET</a>
+                                <a href="/packages?q=Tags%3A%22C%2FNet%22" title="Search for C/Net">C/Net</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                MySql.Data.MySqlClient .Net Core Class Library
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://www.nuget.org/Content/gallery/img/default-package-icon.svg"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/NuGet.Core/">NuGet.<wbr>Core</a>
+
+                    <img class="reserved-indicator"
+                         src="/Content/gallery/img/reserved-indicator.svg"
+                             onerror="this.src='https://www.nuget.org/Content/gallery/img/reserved-indicator-20x20.png'; this.onerror = null;"
+
+                         title="The ID prefix of this package has been reserved for one of the owners of this package by NuGet.org." />
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/Microsoft" title="View Microsoft's profile">Microsoft</a>
+                            <a href="/profiles/nuget" title="View nuget's profile">nuget</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        4,553,846 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2016-12-14T23:46:00.8270000+00:00">12/14/2016</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">2.14.0 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22nuget%22" title="Search for nuget">nuget</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                NuGet.Core is the core framework assembly for NuGet that the rest of NuGet builds upon.
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://www.nuget.org/Content/gallery/img/default-package-icon.svg"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/jQuery/">jQuery</a>
+
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/outercurve" title="View outercurve's profile">outercurve</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        63,897,332 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2019-05-02T18:16:50.5070000+00:00">5/2/2019</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">3.4.1 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22jQuery%22" title="Search for jQuery">jQuery</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                jQuery is a new kind of JavaScript Library.
+        jQuery is a fast and concise JavaScript Library that simplifies HTML document traversing, event handling, animating, and Ajax interactions for rapid web development. jQuery is designed to change the way that you write JavaScript.
+        NOTE: This...
+<a href="/packages/jQuery/3.4.1">More information</a>            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://getbootstrap.com/docs/4.3/assets/img/favicons/apple-touch-icon.png"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/bootstrap/">bootstrap</a>
+
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/Supergibbs" title="View Supergibbs's profile">Supergibbs</a>
+                            <a href="/profiles/twbs" title="View twbs's profile">twbs</a>
+                    </span>
+            </div>
+
+                <div class="package-title">
+                    Bootstrap CSS
+                </div>
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        27,030,375 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2019-02-13T21:33:44.5430000+00:00">2/13/2019</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">4.3.1 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22css%22" title="Search for css">css</a>
+                                <a href="/packages?q=Tags%3A%22mobile-first%22" title="Search for mobile-first">mobile-first</a>
+                                <a href="/packages?q=Tags%3A%22responsive%22" title="Search for responsive">responsive</a>
+                                <a href="/packages?q=Tags%3A%22front-end%22" title="Search for front-end">front-end</a>
+                                <a href="/packages?q=Tags%3A%22framework%22" title="Search for framework">framework</a>
+                                <a href="/packages?q=Tags%3A%22web%22" title="Search for web">web</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                The most popular front-end framework for developing responsive, mobile first projects on the web.
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://www.nuget.org/Content/gallery/img/default-package-icon.svg"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/Microsoft.Web.Xdt/">Microsoft.<wbr>Web.<wbr>Xdt</a>
+
+                    <img class="reserved-indicator"
+                         src="/Content/gallery/img/reserved-indicator.svg"
+                             onerror="this.src='https://www.nuget.org/Content/gallery/img/reserved-indicator-20x20.png'; this.onerror = null;"
+
+                         title="The ID prefix of this package has been reserved for one of the owners of this package by NuGet.org." />
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/Microsoft" title="View Microsoft's profile">Microsoft</a>
+                            <a href="/profiles/aspnet" title="View aspnet's profile">aspnet</a>
+                    </span>
+            </div>
+
+                <div class="package-title">
+                    Microsoft Xml Document Transformation
+                </div>
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        3,418,333 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2018-12-07T23:29:49.1800000+00:00">12/7/2018</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">3.0.0 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22Microsoft%22" title="Search for Microsoft">Microsoft</a>
+                                <a href="/packages?q=Tags%3A%22Xdt%22" title="Search for Xdt">Xdt</a>
+                                <a href="/packages?q=Tags%3A%22XmlDocumentTransform%22" title="Search for XmlDocumentTransform">XmlDocumentTransform</a>
+                                <a href="/packages?q=Tags%3A%22XmlTransform%22" title="Search for XmlTransform">XmlTransform</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                Microsoft Xml Document Transformation (XDT) enables transformig XML files. This is the same technology used to transform web.config files for Visual Studio web projects.
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://zzzprojects.github.io/images/logo/logo-64.png"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/HtmlAgilityPack/">HtmlAgilityPack</a>
+
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/zzzprojects" title="View zzzprojects's profile">zzzprojects</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        14,742,278 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2019-04-29T13:53:02.4730000+00:00">4/29/2019</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">1.11.4 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22HTML%22" title="Search for HTML">HTML</a>
+                                <a href="/packages?q=Tags%3A%22parse%22" title="Search for parse">parse</a>
+                                <a href="/packages?q=Tags%3A%22crawler%22" title="Search for crawler">crawler</a>
+                                <a href="/packages?q=Tags%3A%22spider%22" title="Search for spider">spider</a>
+                                <a href="/packages?q=Tags%3A%22linq%22" title="Search for linq">linq</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                This is an agile HTML parser that builds a read/write DOM and supports plain XPATH or XSLT (you actually don&#39;t HAVE to understand XPATH nor XSLT to use it, don&#39;t worry...). It is a .NET code library that allows you to parse &quot;out of the web&quot; HTML files. The parser is very tolerant with &quot;real world&quot;...
+<a href="/packages/HtmlAgilityPack/1.11.4">More information</a>            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://www.nuget.org/Content/gallery/img/default-package-icon.svg"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/Dapper/">Dapper</a>
+
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/StackExchange" title="View StackExchange's profile">StackExchange</a>
+                            <a href="/profiles/nick.craver" title="View nick.craver's profile">nick.craver</a>
+                            <a href="/profiles/marc.gravell" title="View marc.gravell's profile">marc.gravell</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        19,297,830 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2019-03-30T17:30:51.2130000+00:00">3/30/2019</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">1.60.6 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22orm%22" title="Search for orm">orm</a>
+                                <a href="/packages?q=Tags%3A%22sql%22" title="Search for sql">sql</a>
+                                <a href="/packages?q=Tags%3A%22micro-orm%22" title="Search for micro-orm">micro-orm</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                A high performance Micro-ORM supporting SQL Server, MySQL, Sqlite, SqlCE, Firebird etc..
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://www.nuget.org/Content/gallery/img/default-package-icon.svg"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/SlowCheetah.Xdt/1.1.7-beta">SlowCheetah.<wbr>Xdt</a>
+
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/sayedha" title="View sayedha's profile">sayedha</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        209,974 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2015-03-17T17:17:04.3530000+00:00">3/17/2015</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">1.1.7-beta </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22XDT%22" title="Search for XDT">XDT</a>
+                                <a href="/packages?q=Tags%3A%22web.config%22" title="Search for web.config">web.config</a>
+                                <a href="/packages?q=Tags%3A%22transform%22" title="Search for transform">transform</a>
+                                <a href="/packages?q=Tags%3A%22xml%22" title="Search for xml">xml</a>
+                                <a href="/packages?q=Tags%3A%22SlowCheetah%22" title="Search for SlowCheetah">SlowCheetah</a>
+                                <a href="/packages?q=Tags%3A%22Slow%22" title="Search for Slow">Slow</a>
+                                <a href="/packages?q=Tags%3A%22Cheetah%22" title="Search for Cheetah">Cheetah</a>
+                                <a href="/packages?q=Tags%3A%22Visual%22" title="Search for Visual">Visual</a>
+                                <a href="/packages?q=Tags%3A%22Studio%22" title="Search for Studio">Studio</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                This package contains extensions for XDT (XML Document Transforms). Included here is an MSBuild task as well as other extensions.
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="http://go.microsoft.com/fwlink/?LinkID=288859"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/Microsoft.AspNet.Mvc/">Microsoft.<wbr>AspNet.<wbr>Mvc</a>
+
+                    <img class="reserved-indicator"
+                         src="/Content/gallery/img/reserved-indicator.svg"
+                             onerror="this.src='https://www.nuget.org/Content/gallery/img/reserved-indicator-20x20.png'; this.onerror = null;"
+
+                         title="The ID prefix of this package has been reserved for one of the owners of this package by NuGet.org." />
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/Microsoft" title="View Microsoft's profile">Microsoft</a>
+                            <a href="/profiles/aspnet" title="View aspnet's profile">aspnet</a>
+                    </span>
+            </div>
+
+                <div class="package-title">
+                    Microsoft ASP.<wbr>NET MVC
+                </div>
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        58,533,108 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2018-11-29T00:05:58.7830000+00:00">11/29/2018</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">5.2.7 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22Microsoft%22" title="Search for Microsoft">Microsoft</a>
+                                <a href="/packages?q=Tags%3A%22AspNet%22" title="Search for AspNet">AspNet</a>
+                                <a href="/packages?q=Tags%3A%22Mvc%22" title="Search for Mvc">Mvc</a>
+                                <a href="/packages?q=Tags%3A%22AspNetMvc%22" title="Search for AspNetMvc">AspNetMvc</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                This package contains the runtime assemblies for ASP.NET MVC. ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that enables a clean separation of concerns and that gives you full control over markup.
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://www.apache.org/images/feather.png"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/log4net/">log4net</a>
+
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/cincura.net" title="View cincura.net's profile">cincura.net</a>
+                            <a href="/profiles/Apache.Logging" title="View Apache.Logging's profile">Apache.Logging</a>
+                    </span>
+            </div>
+
+                <div class="package-title">
+                    Apache log4net
+                </div>
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        29,303,773 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2017-03-11T19:44:47.5630000+00:00">3/11/2017</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">2.0.8 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22logging%22" title="Search for logging">logging</a>
+                                <a href="/packages?q=Tags%3A%22log%22" title="Search for log">log</a>
+                                <a href="/packages?q=Tags%3A%22tracing%22" title="Search for tracing">tracing</a>
+                                <a href="/packages?q=Tags%3A%22logfiles%22" title="Search for logfiles">logfiles</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                log4net is a tool to help the programmer output log statements to a variety of output targets. In case of problems with an application, it is helpful to enable logging so that the problem can be located. With log4net it is possible to enable logging at runtime without modifying the application...
+<a href="/packages/log4net/2.0.8">More information</a>            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://nlog-project.org/N.png"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/NLog/">NLog</a>
+
+                    <img class="reserved-indicator"
+                         src="/Content/gallery/img/reserved-indicator.svg"
+                             onerror="this.src='https://www.nuget.org/Content/gallery/img/reserved-indicator-20x20.png'; this.onerror = null;"
+
+                         title="The ID prefix of this package has been reserved for one of the owners of this package by NuGet.org." />
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/304NotModified" title="View 304NotModified's profile">304NotModified</a>
+                    </span>
+            </div>
+
+                <div class="package-title">
+                    NLog for .<wbr>NET Framework and .<wbr>NET Standard
+                </div>
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        27,004,348 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2019-04-30T20:12:12.6400000+00:00">4/30/2019</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">4.6.3 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22NLog%22" title="Search for NLog">NLog</a>
+                                <a href="/packages?q=Tags%3A%22logging%22" title="Search for logging">logging</a>
+                                <a href="/packages?q=Tags%3A%22log%22" title="Search for log">log</a>
+                                <a href="/packages?q=Tags%3A%22structured%22" title="Search for structured">structured</a>
+                                <a href="/packages?q=Tags%3A%22tracing%22" title="Search for tracing">tracing</a>
+                                <a href="/packages?q=Tags%3A%22logfiles%22" title="Search for logfiles">logfiles</a>
+                                <a href="/packages?q=Tags%3A%22database%22" title="Search for database">database</a>
+                                <a href="/packages?q=Tags%3A%22eventlog%22" title="Search for eventlog">eventlog</a>
+                                <a href="/packages?q=Tags%3A%22email%22" title="Search for email">email</a>
+                                <a href="/packages?q=Tags%3A%22wcf%22" title="Search for wcf">wcf</a>
+                                <a href="/packages?q=Tags%3A%22console%22" title="Search for console">console</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                NLog is a logging platform for .NET with rich log routing and management capabilities.
+NLog supports traditional logging, structured logging and the combination of both.
+
+Supported platforms:
+
+- .NET Framework 3.5, 4, 4.5, 4.6, 4.7 &amp; 4.8
+- .NET Standard 1.3+ and 2.0+;
+- .NET Framework 4 client...
+<a href="/packages/NLog/4.6.3">More information</a>            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://raw.githubusercontent.com/restsharp/RestSharp/master/restsharp.png"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/RestSharp/">RestSharp</a>
+
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/hallem" title="View hallem's profile">hallem</a>
+                            <a href="/profiles/alexey_zimarev" title="View alexey_zimarev's profile">alexey_zimarev</a>
+                            <a href="/profiles/restsharp" title="View restsharp's profile">restsharp</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        20,451,879 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2019-02-27T20:20:25.8730000+00:00">2/27/2019</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">106.6.9 </span>
+                    </span>
+                </li>
+            </ul>
+
+            <div class="package-details">
+                Simple REST and HTTP API Client
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="http://code-bude.net/downloads/qrcoder-logo.png"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/QRCoder/">QRCoder</a>
+
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/codebude" title="View codebude's profile">codebude</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        538,020 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2018-11-23T09:56:30.4100000+00:00">11/23/2018</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">1.3.5 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22c%23%22" title="Search for c#">c#</a>
+                                <a href="/packages?q=Tags%3A%22csharp%22" title="Search for csharp">csharp</a>
+                                <a href="/packages?q=Tags%3A%22qr%22" title="Search for qr">qr</a>
+                                <a href="/packages?q=Tags%3A%22qrcoder%22" title="Search for qrcoder">qrcoder</a>
+                                <a href="/packages?q=Tags%3A%22qrcode%22" title="Search for qrcode">qrcode</a>
+                                <a href="/packages?q=Tags%3A%22qr-generator%22" title="Search for qr-generator">qr-generator</a>
+                                <a href="/packages?q=Tags%3A%22qr-code-generator%22" title="Search for qr-code-generator">qr-code-generator</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                QRCoder is a simple library, written in C#.NET, which enables you to create QR Codes. It&#39;s licensed under the MIT-license.
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://github.com/tonyqus/npoi/raw/master/logo/60_60.jpg"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/NPOI/">NPOI</a>
+
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/tonyqus" title="View tonyqus's profile">tonyqus</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        2,680,218 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2018-12-18T01:29:52.1400000+00:00">12/18/2018</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">2.4.1 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22npoi%22" title="Search for npoi">npoi</a>
+                                <a href="/packages?q=Tags%3A%22xlsx%22" title="Search for xlsx">xlsx</a>
+                                <a href="/packages?q=Tags%3A%22xls%22" title="Search for xls">xls</a>
+                                <a href="/packages?q=Tags%3A%22Excel%22" title="Search for Excel">Excel</a>
+                                <a href="/packages?q=Tags%3A%22Word%22" title="Search for Word">Word</a>
+                                <a href="/packages?q=Tags%3A%22docx%22" title="Search for docx">docx</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                Neuzilla is the studio behind NPOI. 
+	
+Neuzilla provides commercial software customization and consulting service. For details, please contact support@neuzilla.com
+            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="https://raw.githubusercontent.com/micjahn/ZXing.Net/master/Icons/logo.jpg"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/ZXing.Net/">ZXing.<wbr>Net</a>
+
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/micjahn" title="View micjahn's profile">micjahn</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        1,326,283 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2018-04-14T19:09:04.3800000+00:00">4/14/2018</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">0.16.4 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22ZXing%22" title="Search for ZXing">ZXing</a>
+                                <a href="/packages?q=Tags%3A%22barcode%22" title="Search for barcode">barcode</a>
+                                <a href="/packages?q=Tags%3A%22scanning%22" title="Search for scanning">scanning</a>
+                                <a href="/packages?q=Tags%3A%221D%22" title="Search for 1D">1D</a>
+                                <a href="/packages?q=Tags%3A%222D%22" title="Search for 2D">2D</a>
+                                <a href="/packages?q=Tags%3A%22UPC-A%22" title="Search for UPC-A">UPC-A</a>
+                                <a href="/packages?q=Tags%3A%22UPC-E%22" title="Search for UPC-E">UPC-E</a>
+                                <a href="/packages?q=Tags%3A%22EAN-8%22" title="Search for EAN-8">EAN-8</a>
+                                <a href="/packages?q=Tags%3A%22EAN-13%22" title="Search for EAN-13">EAN-13</a>
+                                <a href="/packages?q=Tags%3A%22QR%22" title="Search for QR">QR</a>
+                                <a href="/packages?q=Tags%3A%22ITF%22" title="Search for ITF">ITF</a>
+                                <a href="/packages?q=Tags%3A%22Codabar%22" title="Search for Codabar">Codabar</a>
+                                <a href="/packages?q=Tags%3A%22RSS-14%22" title="Search for RSS-14">RSS-14</a>
+                                <a href="/packages?q=Tags%3A%22Data%22" title="Search for Data">Data</a>
+                                <a href="/packages?q=Tags%3A%22Matrix%22" title="Search for Matrix">Matrix</a>
+                                <a href="/packages?q=Tags%3A%22PDF%22" title="Search for PDF">PDF</a>
+                                <a href="/packages?q=Tags%3A%22417%22" title="Search for 417">417</a>
+                                <a href="/packages?q=Tags%3A%22PDF417%22" title="Search for PDF417">PDF417</a>
+                                <a href="/packages?q=Tags%3A%22Aztec%22" title="Search for Aztec">Aztec</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                ZXing.Net is a port of ZXing, an open-source, multi-format 1D/2D barcode image processing library originally implemented in Java.
+It has been ported by hand with a lot of optimizations and improvements.
+
+It is compatible with .Net 2.0, .Net 3.5, .Net 4.0, .Net 4.5, .Net 4.6, .Net 4.7, Windows RT...
+<a href="/packages/ZXing.Net/0.16.4">More information</a>            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="http://www.oracle.com/technetwork/topics/dotnet/products/oracle-4747171.png"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/Oracle.ManagedDataAccess/">Oracle.<wbr>ManagedDataAccess</a>
+
+                    <img class="reserved-indicator"
+                         src="/Content/gallery/img/reserved-indicator.svg"
+                             onerror="this.src='https://www.nuget.org/Content/gallery/img/reserved-indicator-20x20.png'; this.onerror = null;"
+
+                         title="The ID prefix of this package has been reserved for one of the owners of this package by NuGet.org." />
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/Oracle" title="View Oracle's profile">Oracle</a>
+                    </span>
+            </div>
+
+                <div class="package-title">
+                    Official Oracle ODP.<wbr>NET, Managed Driver
+                </div>
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        2,605,685 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2019-03-20T23:30:32.0100000+00:00">3/20/2019</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">18.6.0 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22ODP.NET%22" title="Search for ODP.NET">ODP.NET</a>
+                                <a href="/packages?q=Tags%3A%22Oracle%22" title="Search for Oracle">Oracle</a>
+                                <a href="/packages?q=Tags%3A%22DB%22" title="Search for DB">DB</a>
+                                <a href="/packages?q=Tags%3A%22database%22" title="Search for database">database</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                ODP.NET, Managed Driver is a 100% native .NET code driver. No additional Oracle Client software is required to be installed to connect to Oracle Database.
+
+Note: The 32-bit Oracle Developer Tools for Visual Studio download from http://otn.oracle.com/dotnet is required for Entity Framework...
+<a href="/packages/Oracle.ManagedDataAccess/18.6.0">More information</a>            </div>
+        </div>
+    </div>
+</article>
+<article class="package" role="listitem">
+
+    <div class="row">
+        <div class="col-sm-1 hidden-xs hidden-sm">
+            <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                 src="http://itextpdf.com/sites/default/files/ITSC-avatar.png"
+                     onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+        </div>
+        <div class="col-sm-11">
+            <div class="package-header">
+                <a class="package-title" href="/packages/iTextSharp/">iTextSharp</a>
+
+
+
+                    <span class="package-by">
+                        by:
+                            <a href="/profiles/iText" title="View iText's profile">iText</a>
+                            <a href="/profiles/Ericssony" title="View Ericssony's profile">Ericssony</a>
+                            <a href="/profiles/bigsan" title="View bigsan's profile">bigsan</a>
+                    </span>
+            </div>
+
+
+            <ul class="package-list">
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                        5,887,783 total downloads
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                        last updated <span data-datetime="2018-01-31T08:41:08.4070000+00:00">1/31/2018</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="icon-text">
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        Latest version: <span class="text-nowrap">5.5.13 </span>
+                    </span>
+                </li>
+                    <li class="package-tags">
+                        <span class="icon-text">
+                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                <a href="/packages?q=Tags%3A%22itext%22" title="Search for itext">itext</a>
+                                <a href="/packages?q=Tags%3A%22itextsharp%22" title="Search for itextsharp">itextsharp</a>
+                                <a href="/packages?q=Tags%3A%22c%23%22" title="Search for c#">c#</a>
+                                <a href="/packages?q=Tags%3A%22.net%22" title="Search for .net">.net</a>
+                                <a href="/packages?q=Tags%3A%22csharp%22" title="Search for csharp">csharp</a>
+                                <a href="/packages?q=Tags%3A%22pdf%22" title="Search for pdf">pdf</a>
+                        </span>
+                    </li>
+            </ul>
+
+            <div class="package-details">
+                iText is a PDF library that allows you to CREATE, ADAPT, INSPECT and MAINTAIN documents in the Portable Document Format (PDF), allowing you to add PDF functionality to your software projects with ease.  We even have documentation to help you get coding.
+
+We have two currently supported versions:...
+<a href="/packages/iTextSharp/5.5.13">More information</a>            </div>
+        </div>
+    </div>
+</article>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 clearfix">
+                    <ul class="pager">
+            <li class="previous">
+                    Previous
+            </li>
+            <li class="next">
+                    <a href="/packages?page=2" title="Go to the next page.">Next</a>
+            </li>
+        </ul>
+
+        </div>
+    </div>
+</section>
+
+
+    </div>
+    <footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <span class="footer-heading"><a href="/policies/Contact">Contact</a></span>
+                <p>
+                    Got questions about NuGet or the NuGet Gallery?
+                </p>
+            </div>
+            <div class="col-sm-4">
+                <span class="footer-heading"><a href="https://status.nuget.org/">Status</a></span>
+                <p>
+                    Find out the service status of NuGet.org and its related services.
+                </p>
+            </div>
+            <div class="col-sm-4">
+                <span class="footer-heading">
+                    <a href="https://docs.microsoft.com/en-us/nuget/policies/nuget-faq">
+                        <abbr title="Frequently Asked Questions">FAQ</abbr>
+                    </a>
+                </span>
+                <p>
+                    Read the Frequently Asked Questions about NuGet and see if your question made the list.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 row-gap">
+                <img alt="" aria-hidden="true" width="184" height="57"
+                     src="/Content/gallery/img/logo-footer.svg"
+                         onerror="this.src='https://www.nuget.org/Content/gallery/img/logo-footer-184x57.png'; this.onerror = null;"
+ />
+            </div>
+            <div class="col-md-9 row-gap">
+                <div class="row">
+                        <div class="col-md-12 footer-release-info">
+                            <p>
+                                        &#169; Microsoft 2019 -
+                                <a href="/policies/About">About</a> -
+                                <a href="/policies/Terms">Terms of Use</a> -
+                                <a href="https://go.microsoft.com/fwlink/?LinkId=521839">Privacy Policy</a>
+                                    - <a href="https://www.microsoft.com/trademarks">Trademarks</a>
+                                <br />
+                            </p>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--
+    This is the NuGet Gallery version 4.4.5-master.
+        Deployed from 9501b35 Link: https://www.github.com/NuGet/NuGetGallery/commit/9501b35
+        Built on master Link: https://www.github.com/NuGet/NuGetGallery/tree/master
+        Built on 2019-05-06T23:46:50.0000000+00:00
+    You are on NuGetGallery_IN_2.
+-->
+
+</footer>
+
+    <script src="/Scripts/gallery/site.min.js?v=5VKch2kGTX2dC5I03E8yI60dmyuWfbXjJ1fRfKC5uKk1"></script>
+
+    
+    <script type="text/javascript">
+        $(function () {
+            $("#include-prerelease").on('change', function () {
+                var parameters = {};
+                var q = $('#search-term').val();
+                if (q) {
+                    parameters.q = q;
+                }
+                if (!$("#include-prerelease").is(':checked')) {
+                    parameters.prerel = 'false'
+                }
+                var queryString = $.param(parameters);
+                var url = [
+                    location.protocol,
+                    '//',
+                    location.host,
+                    location.pathname,
+                    queryString ? '?' : '',
+                    queryString
+                ].join('');
+                window.location.href = url;
+            })
+        });
+    </script>
+
+</body>
+</html>

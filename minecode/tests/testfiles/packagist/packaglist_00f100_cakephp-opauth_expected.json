@@ -1,0 +1,59 @@
+[
+  {
+    "type":"composer",
+    "namespace":null,
+    "name":"00f100/cakephp-opauth",
+    "version":"dev-master",
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":"PHP",
+    "description":"Opauth plugin for CakePHP v3.x, allowing simple plug-n-play 3rd-party authentication with CakePHP",
+    "release_date":null,
+    "parties":[
+      {
+        "type":null,
+        "role":"author",
+        "name":"Wouter van Os",
+        "email":"wouter@wouter0100.nl",
+        "url":"http://wouter0100.nl"
+      },
+      {
+        "type":null,
+        "role":"author",
+        "name":"Joao Moraes",
+        "email":"joaomoraesbr@gmail.com",
+        "url":null
+      }
+    ],
+    "keywords":[
+      "Authentication",
+      "oauth",
+      "cakephp",
+      "auth",
+      "OPAuth"
+    ],
+    "homepage_url":"http://opauth.org",
+    "download_url":"https://api.github.com/repos/00F100/cakephp-opauth/zipball/c82879adc50afb5a5e95436ef057dfefffe02607",
+    "size":null,
+    "sha1":"",
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":"git+https://github.com/00F100/cakephp-opauth.git",
+    "copyright":null,
+    "license_expression":null,
+    "declared_license":"MIT",
+    "notice_text":null,
+    "source_packages":[],
+    "extra_data":{},
+    "repository_homepage_url":null,
+    "repository_download_url":null,
+    "api_data_url":null,
+    "package_uid":"pkg:composer/00f100/cakephp-opauth@dev-master?uuid=fixed-uid-done-for-testing-5642512d1758",
+    "datafile_paths":[],
+    "datasource_ids":[],
+    "purl":"pkg:composer/00f100/cakephp-opauth@dev-master"
+  }
+]

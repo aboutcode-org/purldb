@@ -1,0 +1,4 @@
+[{'vcs_repository': u'https://code.google.com/p/swarming.client/',
+  'vcs_tool': u'git'},
+ {'vcs_repository': u'https://code.google.com/p/swarming/',
+  'vcs_tool': u'git'}]

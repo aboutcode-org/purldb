@@ -16,9 +16,11 @@
     "package_url":null,
     "last_visit_date":true,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":true,
     "is_mappable":true,
+    "has_map_error":false,
     "map_error":null
   }
 ]

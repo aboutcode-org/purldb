@@ -1,0 +1,428 @@
+{
+  "results": [
+    {
+      "path": "github.com/getgauge/common",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/jeanfric/goembed",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/golang/go/src/cmd/api",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/golang/go/src/cmd/fix",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/golang/go/src/cmd/vet",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/awakesecurity/turnpike",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/couchbase/cbauth",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/issue9/mux",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/issue9/assert",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/bhenderson/web",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/travis-ci/worker",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/pasiukevich/inmemory",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/ORBAT/krater",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/alindeman/lint2hub",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cespare/permute",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/dahernan/seisdb",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/hlandauf/btcdb",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/hlandauf/btcchain",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/hlandauf/btcutil",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/hlandauf/btcnet",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/hlandauf/btcwire",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/hlandauf/btcscript",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/gokyle/twofactor",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/dennwc/vk",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/oleksandr/conditions",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/endeveit/enca",
+      "import_count": 0
+    },
+    {
+      "path": "bufio",
+      "import_count": 0
+    },
+    {
+      "path": "hkjn.me/prober",
+      "import_count": 0
+    },
+    {
+      "path": "hkjn.me/probes",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/hlandau/ncbtcjsontypes",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/jordanorelli/lexnum",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/endeveit/guesslanguage",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/marlonche/connpool",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/matryer/is",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/inconshreveable/axiom",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/chrissnell/syslog",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cznic/zappy",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cznic/ql",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cznic/mathutil",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cznic/lexer",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cznic/lex",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cznic/kv",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cznic/goyacc",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cznic/golex",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/soniakeys/kdtree",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cznic/ebnfutil",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cznic/bufs",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/uberpkg/contextutil",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/Odinman/ogo",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/Odinman/gorp",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/dhui/passhash",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/getlantern/bytecounting",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/mabu/qa",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/alexkappa/mustache",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/scalingdata/gcfg",
+      "import_count": 0
+    },
+    {
+      "path": "sourcegraph.com/sourcegraph/makex",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cocotyty/tdc",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/donatj/appsettings",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/briandowns/spinner",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/rdwilliamson/clw11",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/rdwilliamson/cl11",
+      "import_count": 0
+    },
+    {
+      "path": "expvar",
+      "import_count": 0
+    },
+    {
+      "path": "bitbucket.org/mjl/sherpa/cmd/sherpadoc",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/davidrjenni/reftools/cmd/fixplurals",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/kirillDanshin/avgRating",
+      "import_count": 0
+    },
+    {
+      "path": "bitbucket.org/zombiezen/yaml",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/lytics/multibayes",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/tj/docopt",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/huangml/mux",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/chamaken/inotify",
+      "import_count": 0
+    },
+    {
+      "path": "errors",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/kylemcc/parse",
+      "import_count": 0
+    },
+    {
+      "path": "testing",
+      "import_count": 0
+    },
+    {
+      "path": "hash",
+      "import_count": 0
+    },
+    {
+      "path": "image",
+      "import_count": 0
+    },
+    {
+      "path": "log",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/sjmudd/mysql_defaults_file",
+      "import_count": 0
+    },
+    {
+      "path": "fmt",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/ratatootille/farina",
+      "import_count": 0
+    },
+    {
+      "path": "io",
+      "import_count": 0
+    },
+    {
+      "path": "time",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/ratatootille/stock",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/ratatootille/sou",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/ratatootille/sippet",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/xyproto/calendar",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/ratatootille/mirepoix",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/ratatootille/roux",
+      "import_count": 0
+    },
+    {
+      "path": "bitbucket.org/jyukoplago/migrator",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/hscells/doi",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cznic/wl",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/callum-ramage/jsonconfig",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/totherme/unstructured",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cheekybits/is",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/frozenkp/gotor",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/korylprince/macserial",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/korylprince/getpwd",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/yhat/phash",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/gazed/vu",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/pnegre/gogame",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/mikioh/ipoam",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/adamclerk/deck",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/rafaeljusto/etcetera",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/cnf/structhash",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/ynishi/redash",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/hanjos/nexus",
+      "import_count": 0
+    },
+    {
+      "path": "github.com/tyler-sommer/stick",
+      "import_count": 0
+    }
+  ]
+}

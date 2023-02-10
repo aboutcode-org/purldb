@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>libinput</title>
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+<link rel="stylesheet" href="../../xorg.css" type="text/css" />
+
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="//secure.freedesktop.org/write/www/ikiwiki.cgi?page=Software%2Flibinput&amp;do=edit" />
+
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+<div class="pageheader">
+<div class="header">
+<span class="logo"><img src="../../logo.png" /></span>
+
+
+<form method="get" action="https://www.google.com/search" id="searchform">
+ <div>
+  <input name="sitesearch" value="https://www.freedesktop.org/wiki/" type="hidden" />
+  <input name="q" value="" id="searchbox" size="16" maxlength="255" type="text"
+   />
+ </div>
+</form>
+
+
+<span class="headerpath">
+<span class="parentlinks">
+
+<a href="../../">www</a>/ 
+
+<a href="../">Software</a>/ 
+
+</span>
+<span class="title">
+libinput
+
+</span>
+</span>
+</div>
+
+
+<span class="actions">
+<ul>
+
+<li><a href="//secure.freedesktop.org/write/www/ikiwiki.cgi?page=Software%2Flibinput&amp;do=edit" rel="nofollow">Edit</a></li>
+
+
+
+<li><a href="https://secure.freedesktop.org/cgit/www/log/Software/libinput.mdwn">Page History</a></li>
+
+
+<li><a href="https://secure.freedesktop.org/cgit/www/">Repo Info</a></li>
+
+
+
+
+</ul>
+</span>
+
+
+
+
+
+
+</div>
+
+
+
+<div id="pagebody">
+
+<div id="content">
+<h1 id="libinput">libinput</h1>
+
+<p>libinput is a library to handle input devices in <a href="http://wayland.freedesktop.org">Wayland</a> compositors and to provide a generic <a href="http://x.org">X.Org</a> input driver. It provides device detection, device handling, input device event processing and abstraction so minimize the amount of custom input code compositors need to provide the common set of functionality that users expect.</p>
+
+<p>This wiki page provides only basic information, more documentation about libinput is available in the <a href="http://wayland.freedesktop.org/libinput/doc/latest/">API documentation</a>.</p>
+
+<h2 id="releases">Releases</h2>
+
+<ul>
+<li><a href="http://lists.freedesktop.org/archives/wayland-devel/2015-August/024085.html">1.0 - released August 26, 2015</a>
+<ul>
+<li><a href="http://lists.freedesktop.org/archives/wayland-devel/2015-September/024149.html">1.0.1 - released Sep 3, 2015</a></li>
+<li><a href="http://lists.freedesktop.org/archives/wayland-devel/2015-October/025010.html">1.0.2 - released Oct 20, 2015</a></li>
+</ul></li>
+<li><a href="http://lists.freedesktop.org/archives/wayland-devel/2015-October/025065.html">1.1 - released Oct 26, 2015</a>
+<ul>
+<li><a href="http://lists.freedesktop.org/archives/wayland-devel/2015-November/025436.html">1.1.1 - released Nov 16, 2015</a></li>
+<li><a href="http://lists.freedesktop.org/archives/wayland-devel/2015-December/026041.html">1.1.2 - released Dec 09, 2015</a></li>
+<li><a href="http://lists.freedesktop.org/archives/wayland-devel/2015-December/026157.html">1.1.3 - released Dec 16, 2015</a></li>
+<li><a href="http://lists.freedesktop.org/archives/wayland-devel/2015-December/026233.html">1.1.4 - released Dec 22, 2015</a></li>
+<li><a href="http://lists.freedesktop.org/archives/wayland-devel/2016-January/026701.html">1.1.5 - released Jan 25, 2016</a></li>
+<li><a href="http://lists.freedesktop.org/archives/wayland-devel/2016-February/026874.html">1.1.6 - released Feb 05, 2016</a></li>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-February/026964.html">1.1.7 - released Feb 10, 2016</a></li>
+</ul></li>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-February/027172.html">1.2 - released Feb 23, 2016</a> 
+<ul>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-February/thread.html">1.2.1 - released Feb 29, 2016</a></li>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-March/027456.html">1.2.2 - released Mar 15, 2016</a></li>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-April/027993.html">1.2.3 - released Apr 12, 2016</a></li>
+</ul></li>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-May/028704.html">1.3 - released May 10, 2016</a>
+<ul>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-May/029126.html">1.3.1 - released May 30, 2016</a></li>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-June/029485.html">1.3.2 - released Jun 16, 2016</a></li>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-June/029680.html">1.3.3 - released Jun 24, 2016</a></li>
+</ul></li>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-July/030121.html">1.4 - released Jul 18, 2016</a>
+<ul>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-August/030348.html">1.4.1 - released Aug 05, 2016</a></li>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-august/030857.html">1.4.2 - released Aug 30, 2016</a></li>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-September/031134.html">1.4.3 - released Sep 23, 2016</a></li>
+</ul></li>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-September/031054.html">1.5 - released Sep 14, 2016</a>
+<ul>
+<li><a href="https://lists.freedesktop.org/archives/wayland-devel/2016-November/031527.html">1.5.1 - released Nov 11, 2016</a></li>
+</ul></li>
+</ul>
+
+<h3 id="earlierreleases">Earlier releases</h3>
+
+<p>As of the 0.12 release, the API/ABI is stable.</p>
+
+<p><a href="http://lists.freedesktop.org/archives/wayland-devel/2014-February/013475.html">0.1.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2014-May/014989.html">0.2.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2014-June/015378.html">0.3.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2014-June/015589.html">0.4.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2014-July/016136.html">0.5.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2014-September/017224.html">0.6.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2014-December/018750.html">0.7.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-January/019383.html">0.8.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-January/019692.html">0.9.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-February/019827.html">0.10.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-February/020126.html">0.11.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-March/020475.html">0.12.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-March/020833.html">0.13.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-April/021484.html">0.14.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-April/021485.html">0.14.1</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-May/021773.html">0.15.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-June/022400.html">0.16.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-June/022448.html">0.17.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-June/022798.html">0.18.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-July/023184.html">0.19.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-July/023434.html">0.20.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-August/023783.html">0.21.0</a>,
+<a href="http://lists.freedesktop.org/archives/wayland-devel/2015-August/024004.html">0.99.1</a></p>
+
+<h2 id="gitrepository">git Repository</h2>
+
+<ul>
+<li>git://anongit.freedesktop.org/git/wayland/libinput</li>
+<li>ssh://git.freedesktop.org/git/wayland/libinput</li>
+</ul>
+
+<h2 id="cgitwebfrontend">cgit Web Frontend</h2>
+
+<ul>
+<li><a href="http://cgit.freedesktop.org/wayland/libinput">http://cgit.freedesktop.org/wayland/libinput</a></li>
+</ul>
+
+<h2 id="documentation">Documentation</h2>
+
+<ul>
+<li><a href="http://wayland.freedesktop.org/libinput/doc/latest/modules.html">API documentation (development branch)</a></li>
+<li><a href="http://wayland.freedesktop.org/libinput/doc/">API documentation (releases)</a></li>
+<li><a href="./developers/">Info for libinput developers</a></li>
+</ul>
+
+<h3 id="feature-specificdocumentation">Feature-specific documentation</h3>
+
+<p>Feature-specific documentation is available in the <a href="http://wayland.freedesktop.org/libinput/doc/latest/pages.html">Related Pages</a> section of the API documentation.</p>
+
+<p>A note on <a href="./feature_requests/">feature requests</a></p>
+
+<h2 id="downloads">Downloads</h2>
+
+<p>Source tarballs are available <a href="http://www.freedesktop.org/software/libinput/">http://www.freedesktop.org/software/libinput/</a></p>
+
+<h2 id="development">Development</h2>
+
+<p>Development and discusssion of libinput happens on the <a href="http://lists.freedesktop.org/mailman/listinfo/wayland-devel">wayland-devel@lists.freedesktop.org</a> mailing list.
+Please submit patches to this list as well.</p>
+
+<h2 id="reportingbugs">Reporting Bugs</h2>
+
+<p>libinput has a bugzilla component under the Wayland product <a href="https://bugs.freedesktop.org/enter_bug.cgi?product=wayland&amp;component=libinput">freedesktop.org Bugzilla</a></p>
+
+<ul>
+<li><a href="https://bugs.freedesktop.org/enter_bug.cgi?product=wayland&amp;component=libinput">File a new bug</a></li>
+<li><a href="https://bugs.freedesktop.org/buglist.cgi?component=libinput&amp;product=Wayland&amp;resolution=---">list of open libinput bugs</a></li>
+</ul>
+
+<p>Note that in almost all cases we require extra information to be able to
+triage and fix the bug correctly. Please read the <a href="http://wayland.freedesktop.org/libinput/doc/latest/reporting_bugs.html">Reporting
+Bugs</a>
+section.</p>
+
+<h1 id="x.orglibinputdriver">X.Org libinput driver</h1>
+
+<p>The X.Org libinput driver is a thin wrapper around libinput and allows for
+libinput to be used for input devices in X. This driver can be used as as drop-in replacement for evdev and synaptics. Simply build and install in your $PREFIX, then install the <a href="http://cgit.freedesktop.org/xorg/driver/xf86-input-libinput/tree/conf/99-libinput.conf">config file</a> in /etc/X11/xorg.conf.d/. Restart X and the libinput driver will take over your devices.</p>
+
+<ul>
+<li><a href="http://cgit.freedesktop.org/xorg/driver/xf86-input-libinput/">http://cgit.freedesktop.org/xorg/driver/xf86-input-libinput/</a></li>
+</ul>
+
+</div>
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter">
+
+<div id="pageinfo">
+
+
+
+
+
+
+<div id="backlinks">
+Links:
+
+<a href="../">Software</a>
+
+
+</div>
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Fri Nov 11 04:21:35 2016</span>
+<!-- Created <span class="date">Tue Jan 28 00:26:01 2014</span> -->
+</div>
+
+</div>
+
+
+<!-- from www -->
+</div>
+
+</div>
+
+</body>
+</html>

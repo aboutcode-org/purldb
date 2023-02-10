@@ -1,0 +1,17 @@
+[
+  {
+    "uri": "https://gitlab.com/api/v4/projects?page=1&per_page=20&statistics=true",
+    "source_uri": "https://gitlab.com/api/v4/projects",
+    "file_name": null,
+    "size": null,
+    "date": null,
+    "md5": null,
+    "sha1": null,
+    "sha256": null,
+    "priority": 0,
+    "data": null,
+    "visited": false,
+    "mining_level": 0,
+    "visit_error": null
+  }
+]

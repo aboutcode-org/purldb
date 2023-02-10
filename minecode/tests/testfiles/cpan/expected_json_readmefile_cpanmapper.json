@@ -1,0 +1,46 @@
+[
+  {
+    "type":"cpan",
+    "namespace":null,
+    "name":"Mojolicious::Plugin::Nour::Config - Robustly imports config from a\n./config sub-directory loaded with nested YAML files",
+    "version":"version 0.09",
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":null,
+    "description":"Mojolicious::Plugin::Nour::Config - Robustly imports config from a\n./config sub-directory loaded with nested YAML files",
+    "release_date":null,
+    "parties":[
+      {
+        "type":"person",
+        "role":"author",
+        "name":"",
+        "email":"",
+        "url":null
+      }
+    ],
+    "keywords":[],
+    "homepage_url":null,
+    "download_url":"http://www.cpan.org/authors/id/A/AM/AMIRITE/Mojolicious-Plugin-Nour-Config-0.09.readme",
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":null,
+    "copyright":null,
+    "license_expression":null,
+    "declared_license":null,
+    "notice_text":null,
+    "source_packages":[],
+    "file_references":[],
+    "extra_data":{},
+    "dependencies":[],
+    "repository_homepage_url":null,
+    "repository_download_url":null,
+    "api_data_url":null,
+    "datasource_id":null,
+    "purl":"pkg:cpan/Mojolicious::Plugin::Nour::Config%20-%20Robustly%20imports%20config%20from%20a%0A./config%20sub-directory%20loaded%20with%20nested%20YAML%20files@version%200.09"
+  }
+]

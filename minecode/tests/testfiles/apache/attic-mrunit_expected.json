@@ -1,0 +1,108 @@
+{
+  "bug-database":"http://issues.apache.org/jira/browse/MRUNIT",
+  "category":"library, retired",
+  "chair":{
+    "Person":{
+      "name":"Brock Noland"
+    }
+  },
+  "charter":"Apache MRUnit is a Java library that helps developers unit test Apache Hadoop map reduce jobs.",
+  "created":"2009-01-01",
+  "description":"The Apache MRUnit is a Java library that helps developers unit test Apache Hadoop map reduce jobs.",
+  "doap":"https://git-wip-us.apache.org/repos/asf?p=mrunit.git;f=doap_mrunit.rdf;a=blob_plain;hb=HEAD",
+  "download-page":"http://mrunit.apache.org/general/downloads.html",
+  "homepage":"http://mrunit.apache.org",
+  "license":"http://www.apache.org/licenses/LICENSE-2.0.txt",
+  "mailing-list":"http://mrunit.apache.org/mail-lists.html",
+  "maintainer":[
+    {
+      "mbox":"mailto:brock@apache.org",
+      "name":"Brock Noland"
+    },
+    {
+      "mbox":"mailto:cos@apache.org",
+      "name":"Konstantin Boudnik"
+    },
+    {
+      "mbox":"mailto:dbeech@apache.org",
+      "name":"Dave Beech"
+    },
+    {
+      "mbox":"mailto:dechouxb@apache.org",
+      "name":"Bertrand Dechoux"
+    },
+    {
+      "mbox":"mailto:esammer@apache.org",
+      "name":"Eric Sammer"
+    },
+    {
+      "mbox":"mailto:gwu@apache.org",
+      "name":"Garrett Wu"
+    },
+    {
+      "mbox":"mailto:jarcec@apache.org",
+      "name":"Jarek Jarcec Cecho"
+    },
+    {
+      "mbox":"mailto:jdonofrio@apache.org",
+      "name":"Jim Donofrio"
+    },
+    {
+      "mbox":"mailto:kimballa@apache.org",
+      "name":"Aaron Kimball"
+    },
+    {
+      "mbox":"mailto:kinley@apache.org",
+      "name":"James Robert Kinley"
+    },
+    {
+      "mbox":"mailto:mattmann@apache.org",
+      "name":"Chris Mattmann"
+    },
+    {
+      "mbox":"mailto:nigel@apache.org",
+      "name":"Nigel Daley"
+    },
+    {
+      "mbox":"mailto:phunt@apache.org",
+      "name":"Patrick D. Hunt"
+    }
+  ],
+  "name":"Apache MRUnit",
+  "pmc":"attic",
+  "programming-language":"Java",
+  "release":[
+    {
+      "name":"Latest stable release",
+      "revision":"1.1.0"
+    },
+    {
+      "name":"Apache MRUnit - 1.0.0",
+      "revision":"1.0.0"
+    },
+    {
+      "name":"Apache MRUnit - 0.9.0-incubating",
+      "revision":"0.9.0-incubating"
+    },
+    {
+      "name":"Apache MRUnit - 0.8.1-incubating",
+      "revision":"0.8.1-incubating"
+    },
+    {
+      "file-release":"http://repo.maven.apache.org/maven2/org/apache/mrunit/mrunit/0.8.0-incubating/mrunit-0.8.0-incubating.jar",
+      "name":"Apache MRUnit - 0.8.0-incubating",
+      "revision":"0.8.0-incubating"
+    },
+    {
+      "file-release":"http://repo.maven.apache.org/maven2/org/apache/mrunit/mrunit/0.5.0-incubating/mrunit-0.5.0-incubating.jar",
+      "name":"Apache MRUnit - 0.5.0-incubating",
+      "revision":"0.5.0-incubating"
+    }
+  ],
+  "repository":[
+    "git:http://git-wip-us.apache.org/repos/asf/mrunit.git",
+    "git:https://git-wip-us.apache.org/repos/asf/mrunit.git"
+  ],
+  "shortdesc":"Apache MRUnit is a Java library that helps developers unit test Apache Hadoop map reduce jobs.",
+  "vendor":"The Apache Software Foundation"
+}

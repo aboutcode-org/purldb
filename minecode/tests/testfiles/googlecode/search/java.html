@@ -1,0 +1,921 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+ <link rel="icon" type="image/vnd.microsoft.icon" href="http://www.gstatic.com/codesite/ph/images/phosting.ico">
+ 
+ 
+ <script type="text/javascript">
+ 
+ 
+ 
+ 
+ var codesite_token = null;
+ 
+ 
+ var CS_env = {"token":null,"assetHostPath":"http://www.gstatic.com/codesite/ph","domainName":null,"assetVersionPath":"http://www.gstatic.com/codesite/ph/1215397193597998757","projectName":null,"projectHomeUrl":null,"absoluteBaseUrl":"http://code.google.com","relativeBaseUrl":"","urlPrefix":null,"loggedInUserEmail":null};
+ </script>
+ 
+ 
+ <title>
+ 
+ 
+ Google Project Hosting
+ </title>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+ <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
+ 
+ <meta name="ROBOTS" content="NOINDEX,NOARCHIVE">
+ 
+ <link type="text/css" rel="stylesheet" href="http://www.gstatic.com/codesite/ph/1215397193597998757/css/ph_core.css">
+ 
+ <link type="text/css" rel="stylesheet" href="http://www.gstatic.com/codesite/ph/1215397193597998757/css/ph_list.css" >
+ 
+ 
+ 
+ 
+<!--[if IE]>
+ <link type="text/css" rel="stylesheet" href="http://www.gstatic.com/codesite/ph/1215397193597998757/css/d_ie.css" >
+<![endif]-->
+ <style type="text/css">
+ .menuIcon.off { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 -42px }
+ .menuIcon.on { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 -28px }
+ .menuIcon.down { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 0; }
+ 
+ 
+ 
+ .activity-level-High {
+ background:no-repeat url(http://www.gstatic.com/codesite/ph/images/activity-level.png) 0 0;
+ width: 16px;
+ height: 16px;
+ }
+ .activity-level-Low {
+ background:no-repeat url(http://www.gstatic.com/codesite/ph/images/activity-level.png) 0 -16px;
+ width: 16px;
+ height: 16px;
+ }
+ .activity-level-Medium {
+ background: no-repeat url(http://www.gstatic.com/codesite/ph/images/activity-level.png) -16px 0;
+ width: 16px;
+ height: 16px;
+ }
+ .activity-level-None {
+ background:no-repeat url(http://www.gstatic.com/codesite/ph/images/activity-level.png) -16px -16px;
+ width: 16px;
+ height: 16px;
+ }
+
+ .labels a:link { color: #080 }
+ .labels a:visited { color: #080 }
+ .labels a:active { color: #f00 }
+ .name { margin-top: 2ex; font-size: 120% }
+
+ </style>
+</head>
+<body class="">
+ <script type="text/javascript">
+ var _gaq = _gaq || [];
+ _gaq.push(
+ ['siteTracker._setAccount', 'UA-18071-1'],
+ ['siteTracker._trackPageview']);
+ 
+ (function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+ })();
+ </script>
+<div class="headbg">
+ <div id="gaia">
+ 
+
+ <span>
+ 
+ <a href="#" id="projects-dropdown" onclick="return false;"><u>My favorites</u> <small>&#9660;</small></a>
+ | <a href="https://www.google.com/accounts/ServiceLogin?service=code&amp;ltmpl=phosting&amp;continue=http%3A%2F%2Fcode.google.com%2Fhosting%2Fsearch%3Fq%3Dlabel%253Ajava&amp;followup=http%3A%2F%2Fcode.google.com%2Fhosting%2Fsearch%3Fq%3Dlabel%253Ajava" onclick="_CS_click('/gb/ph/signin');"><u>Sign in</u></a>
+ 
+ </span>
+
+ </div>
+ <div class="gbh" style="left: 0pt;"></div>
+ <div class="gbh" style="right: 0pt;"></div>
+ 
+ 
+ <div style="height: 1px"></div>
+<!--[if lte IE 7]>
+<div style="text-align:center;">
+Your version of Internet Explorer is not supported. Try a browser that
+contributes to open source, such as <a href="http://www.firefox.com">Firefox</a>,
+<a href="http://www.google.com/chrome">Google Chrome</a>, or
+<a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a>.
+</div>
+<![endif]-->
+
+
+
+
+ <table style="padding:0px; margin: 0px 0px 10px 0px; width:100%" cellpadding="0" cellspacing="0">
+ <tr style="height: 58px;">
+ 
+ <td id="plogo">
+ <a href="/">
+ 
+ <img src="http://www.gstatic.com/codesite/ph/images/code_small.png" alt="Logo">
+ 
+ </a>
+ </td>
+ 
+ <td style="padding-left: 0.5em">
+ 
+ </td>
+ <td style="white-space:nowrap;">
+ 
+ <form action="/hosting/search">
+ <input size="40" name="q" value="label:java" type="text">
+ <input type="submit" name="projectsearch" value="Search projects" >
+ </form>
+ 
+ </tr>
+ </table>
+
+</div>
+
+ 
+
+<script type="text/javascript">
+ var cancelBubble = false;
+ function _go(url) { document.location = url; }
+</script>
+<div id="maincol"
+ 
+>
+
+ 
+<!-- IE -->
+
+
+
+
+<script type="text/javascript">
+ function starClick(el, project_name) {
+ _CS_toggleStar(
+ el, '',
+ {'scope': 'projects',
+ 'user': '_CURRENT_USER',
+ 'item': project_name,
+ 'token': codesite_token
+ },
+ true,
+ '',
+ '',
+ '',
+ 'star_count-' + project_name,
+ 'plural-' + project_name);
+ }
+</script>
+<table class="mainhdr" width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr><td width="100%"></td>
+
+ <td style="padding:3px 1em; font-weight:normal; white-space:nowrap;">
+ Results 1 - 10 of 5801
+ <span style="font-size: 80%; margin: 1em">
+ <a class="buttonify capsule_left mode_button_active"
+ href="search?q=label%3Ajava&amp;start=0">List</a><a
+ class="buttonify capsule_right "
+ href="search?q=label%3Ajava&amp;start=0&amp;mode=grid">Grid</a>
+ </span>
+ </td>
+
+</tr>
+</table>
+<br/>
+<div id="serp">
+
+ 
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/google-web-toolkit/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="/p/google-web-toolkit/logo?cct=1308643200.0"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 1)"
+ href="/p/google-web-toolkit/" style="font-size:medium">google-web-toolkit &nbsp;- &nbsp;Google Web Toolkit (GWT)</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-google-web-toolkit">1439</span>
+ </span><br/>
+ 
+ 
+ To browse the Google Web Toolkit (GWT) source code, visit the &#39; Source&#39; tab.
+
+If you have isolated a problem or want a new feature to be included in the Google Web Toolkit (GWT), please  submit an i...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:Google">Google</a>, 
+ 
+ <a href="/hosting/search?q=label:Java">Java</a>, 
+ 
+ <a href="/hosting/search?q=label:JavaScript">JavaScript</a>, 
+ 
+ <a href="/hosting/search?q=label:AJAX">AJAX</a>, 
+ 
+ <a href="/hosting/search?q=label:Framework">Framework</a>, 
+ 
+ <a href="/hosting/search?q=label:GWT">GWT</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/ps3mediaserver/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="/p/ps3mediaserver/logo?cct=1308643200.0"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 2)"
+ href="/p/ps3mediaserver/" style="font-size:medium">ps3mediaserver &nbsp;- &nbsp;Java Upnp Media Server, dedicated to PS3</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-ps3mediaserver">3669</span>
+ </span><br/>
+ 
+ 
+ 
+
+PS3 Media Server is a DLNA compliant Upnp Media Server for the PS3, written in Java, with the purpose of streaming or transcoding any kind of media files, with minimum configuration. It&#39;s backed u...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:java">java</a>, 
+ 
+ <a href="/hosting/search?q=label:ps3">ps3</a>, 
+ 
+ <a href="/hosting/search?q=label:upnp">upnp</a>, 
+ 
+ <a href="/hosting/search?q=label:dlna">dlna</a>, 
+ 
+ <a href="/hosting/search?q=label:media">media</a>, 
+ 
+ <a href="/hosting/search?q=label:transcode">transcode</a>, 
+ 
+ <a href="/hosting/search?q=label:streaming">streaming</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/openmeetings/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="/p/openmeetings/logo?cct=1308643200.0"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 3)"
+ href="/p/openmeetings/" style="font-size:medium">openmeetings &nbsp;- &nbsp;Open-Source Web-Conferencing</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-openmeetings">847</span>
+ </span><br/>
+ 
+ 
+ OpenMeetings is a free browser-based software that allows you to set up instantly a conference in the Web. You can use your microphone or webcam, share documents on a white board, share your screen or...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:Red5">Red5</a>, 
+ 
+ <a href="/hosting/search?q=label:OpenLaszlo">OpenLaszlo</a>, 
+ 
+ <a href="/hosting/search?q=label:VideoConference">VideoConference</a>, 
+ 
+ <a href="/hosting/search?q=label:XML">XML</a>, 
+ 
+ <a href="/hosting/search?q=label:Java">Java</a>, 
+ 
+ <a href="/hosting/search?q=label:Hibernate">Hibernate</a>, 
+ 
+ <a href="/hosting/search?q=label:Streaming">Streaming</a>, 
+ 
+ <a href="/hosting/search?q=label:Groupware">Groupware</a>, 
+ 
+ <a href="/hosting/search?q=label:Onlinemeetings">Onlinemeetings</a>, 
+ 
+ <a href="/hosting/search?q=label:FlashMeeting">FlashMeeting</a>, 
+ 
+ <a href="/hosting/search?q=label:Web-Conferencing">Web-Conferencing</a>, 
+ 
+ <a href="/hosting/search?q=label:Cross-Plattform">Cross-Plattform</a>, 
+ 
+ <a href="/hosting/search?q=label:Multi-Language">Multi-Language</a>, 
+ 
+ <a href="/hosting/search?q=label:Moodle">Moodle</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/jmonkeyengine/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="/p/jmonkeyengine/logo?cct=1308643200.0"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 4)"
+ href="/p/jmonkeyengine/" style="font-size:medium">jmonkeyengine &nbsp;- &nbsp;jMonkeyEngine is a modern 3D game engine written entirely in Java</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-jmonkeyengine">371</span>
+ </span><br/>
+ 
+ 
+ jMonkeyEngine was made especially for game developers who want to create 3D games with modern technology standards. The software is programmed entirely in Java, intended for wide accessibility.
+
+The...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:Java">Java</a>, 
+ 
+ <a href="/hosting/search?q=label:Game">Game</a>, 
+ 
+ <a href="/hosting/search?q=label:Graphics">Graphics</a>, 
+ 
+ <a href="/hosting/search?q=label:Scenegraph">Scenegraph</a>, 
+ 
+ <a href="/hosting/search?q=label:Engine">Engine</a>, 
+ 
+ <a href="/hosting/search?q=label:3D">3D</a>, 
+ 
+ <a href="/hosting/search?q=label:lwjgl">lwjgl</a>, 
+ 
+ <a href="/hosting/search?q=label:opengl">opengl</a>, 
+ 
+ <a href="/hosting/search?q=label:jogl">jogl</a>, 
+ 
+ <a href="/hosting/search?q=label:android">android</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/zxing/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="/p/zxing/logo?cct=1308643200.0"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 5)"
+ href="/p/zxing/" style="font-size:medium">zxing &nbsp;- &nbsp;Multi-format 1D/2D barcode image processing library with clients for A...</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-zxing">2786</span>
+ </span><br/>
+ 
+ 
+ 
+
+
+ZXing (pronounced &quot;zebra crossing&quot;) is an open-source, multi-format 1D/2D barcode image processing library implemented in Java. Our focus is on using the built-in camera on mobile phones to phot...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:Google">Google</a>, 
+ 
+ <a href="/hosting/search?q=label:barcode">barcode</a>, 
+ 
+ <a href="/hosting/search?q=label:QRCode">QRCode</a>, 
+ 
+ <a href="/hosting/search?q=label:Java">Java</a>, 
+ 
+ <a href="/hosting/search?q=label:scanner">scanner</a>, 
+ 
+ <a href="/hosting/search?q=label:reader">reader</a>, 
+ 
+ <a href="/hosting/search?q=label:DataMatrix">DataMatrix</a>, 
+ 
+ <a href="/hosting/search?q=label:UPC">UPC</a>, 
+ 
+ <a href="/hosting/search?q=label:decoder">decoder</a>, 
+ 
+ <a href="/hosting/search?q=label:Android">Android</a>, 
+ 
+ <a href="/hosting/search?q=label:EAN">EAN</a>, 
+ 
+ <a href="/hosting/search?q=label:Code39">Code39</a>, 
+ 
+ <a href="/hosting/search?q=label:Code128">Code128</a>, 
+ 
+ <a href="/hosting/search?q=label:ITF">ITF</a>, 
+ 
+ <a href="/hosting/search?q=label:RSS14">RSS14</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/jpcsp/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 6)"
+ href="/p/jpcsp/" style="font-size:medium">jpcsp &nbsp;- &nbsp;Java psp emulator - debugger</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Yesterday
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-jpcsp">290</span>
+ </span><br/>
+ 
+ 
+ 
+
+Jpcsp is the most advanced PlayStation Portable emulator, allowing you to
+play your PSP games on a PC.
+Jpcsp has been started in July 2008 and is developed by a small but active team.
+
+Even th...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:psp">psp</a>, 
+ 
+ <a href="/hosting/search?q=label:emulator">emulator</a>, 
+ 
+ <a href="/hosting/search?q=label:java">java</a>, 
+ 
+ <a href="/hosting/search?q=label:mips">mips</a>, 
+ 
+ <a href="/hosting/search?q=label:allegrex">allegrex</a>, 
+ 
+ <a href="/hosting/search?q=label:emulation">emulation</a>, 
+ 
+ <a href="/hosting/search?q=label:playstation">playstation</a>, 
+ 
+ <a href="/hosting/search?q=label:portable">portable</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/beast-mcmc/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 7)"
+ href="/p/beast-mcmc/" style="font-size:medium">beast-mcmc &nbsp;- &nbsp;BEAST, a program for Bayesian MCMC of Evolution &amp; Phylogenetics using ...</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-beast-mcmc">23</span>
+ </span><br/>
+ 
+ 
+ BEAST, Bayesian Evolutionary Analysis Sampling Trees, is a cross-platform program for Bayesian MCMC analysis of molecular sequences. It is orientated towards (strict and relaxed) molecular clock analy...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:java">java</a>, 
+ 
+ <a href="/hosting/search?q=label:MCMC">MCMC</a>, 
+ 
+ <a href="/hosting/search?q=label:molecular">molecular</a>, 
+ 
+ <a href="/hosting/search?q=label:evolution">evolution</a>, 
+ 
+ <a href="/hosting/search?q=label:bioinformatics">bioinformatics</a>, 
+ 
+ <a href="/hosting/search?q=label:phylogeny">phylogeny</a>, 
+ 
+ <a href="/hosting/search?q=label:sequence">sequence</a>, 
+ 
+ <a href="/hosting/search?q=label:bayesian">bayesian</a>, 
+ 
+ <a href="/hosting/search?q=label:phylogenetics">phylogenetics</a>, 
+ 
+ <a href="/hosting/search?q=label:beast">beast</a>, 
+ 
+ <a href="/hosting/search?q=label:coalescent">coalescent</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/google-guice/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 8)"
+ href="/p/google-guice/" style="font-size:medium">google-guice &nbsp;- &nbsp;Guice (pronounced &#39;juice&#39;) is a lightweight dependency injection frame...</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-google-guice">1832</span>
+ </span><br/>
+ 
+ 
+ 
+
+Presentation Slides (PDF)
+
+
+
+Put simply, Guice alleviates the need for factories and the use of new in your Java code. Think of Guice&#39;s @Inject as the new new. You will still need to write fac...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:Java">Java</a>, 
+ 
+ <a href="/hosting/search?q=label:DependencyInjection">DependencyInjection</a>, 
+ 
+ <a href="/hosting/search?q=label:InversionOfControl">InversionOfControl</a>, 
+ 
+ <a href="/hosting/search?q=label:Google">Google</a>, 
+ 
+ <a href="/hosting/search?q=label:Testability">Testability</a>, 
+ 
+ <a href="/hosting/search?q=label:UnitTesting">UnitTesting</a>, 
+ 
+ <a href="/hosting/search?q=label:LooseCoupling">LooseCoupling</a>, 
+ 
+ <a href="/hosting/search?q=label:Components">Components</a>, 
+ 
+ <a href="/hosting/search?q=label:IOC">IOC</a>, 
+ 
+ <a href="/hosting/search?q=label:Guice">Guice</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/k9mail/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="/p/k9mail/logo?cct=1308643200.0"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 9)"
+ href="/p/k9mail/" style="font-size:medium">k9mail &nbsp;- &nbsp;K-9 Mail is an advanced email client for Android</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-k9mail">960</span>
+ </span><br/>
+ 
+ 
+ 
+
+K-9 is an opensource email client based on the Email application shipped with the initial release of Android.
+
+K-9 is focused on making it easy to chew through large volumes of email.  It&#39;s our ...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:android">android</a>, 
+ 
+ <a href="/hosting/search?q=label:mail">mail</a>, 
+ 
+ <a href="/hosting/search?q=label:imap">imap</a>, 
+ 
+ <a href="/hosting/search?q=label:email">email</a>, 
+ 
+ <a href="/hosting/search?q=label:pop3">pop3</a>, 
+ 
+ <a href="/hosting/search?q=label:exchange">exchange</a>, 
+ 
+ <a href="/hosting/search?q=label:java">java</a>, 
+ 
+ <a href="/hosting/search?q=label:client">client</a>, 
+ 
+ <a href="/hosting/search?q=label:uglyicon">uglyicon</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/guava-libraries/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 10)"
+ href="/p/guava-libraries/" style="font-size:medium">guava-libraries &nbsp;- &nbsp;Guava: Google Core Libraries for Java 1.5+</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-guava-libraries">1823</span>
+ </span><br/>
+ 
+ 
+ This project contains several of Google&#39;s core libraries that we rely on in our Java-based projects: collections, caching, primitives support, concurrency libraries, common annotations, basic string p...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:Java">Java</a>, 
+ 
+ <a href="/hosting/search?q=label:Libraries">Libraries</a>, 
+ 
+ <a href="/hosting/search?q=label:Google">Google</a>, 
+ 
+ <a href="/hosting/search?q=label:Collections">Collections</a>, 
+ 
+ <a href="/hosting/search?q=label:MapMaker">MapMaker</a>, 
+ 
+ <a href="/hosting/search?q=label:Concurrency">Concurrency</a>, 
+ 
+ <a href="/hosting/search?q=label:Primitives">Primitives</a>, 
+ 
+ <a href="/hosting/search?q=label:IO">IO</a>, 
+ 
+ <a href="/hosting/search?q=label:Utilities">Utilities</a>, 
+ 
+ <a href="/hosting/search?q=label:Helpers">Helpers</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+ </div>
+ <div style="clear:both">&nbsp;</div>
+
+
+<div style="text-align:center; font-size:medium; white-space:nowrap; margin-top:1em;">
+ 
+ 
+ 
+	1
+ 
+ 
+ 
+ <a href="search?q=label%3Ajava&amp;filter=0&amp;mode=&amp;start=10">2</a>
+ 
+ 
+ 
+ <a href="search?q=label%3Ajava&amp;filter=0&amp;mode=&amp;start=20">3</a>
+ 
+ 
+ 
+ <a href="search?q=label%3Ajava&amp;filter=0&amp;mode=&amp;start=30">4</a>
+ 
+ 
+ 
+ <a href="search?q=label%3Ajava&amp;filter=0&amp;mode=&amp;start=40">5</a>
+ 
+ 
+ 
+ <a href="search?q=label%3Ajava&amp;filter=0&amp;mode=&amp;start=50">6</a>
+ 
+ 
+ 
+ <a href="search?q=label%3Ajava&amp;filter=0&amp;mode=&amp;start=60">7</a>
+ 
+ 
+ 
+ <a href="search?q=label%3Ajava&amp;filter=0&amp;mode=&amp;start=70">8</a>
+ 
+ 
+ 
+ <a href="search?q=label%3Ajava&amp;filter=0&amp;mode=&amp;start=80">9</a>
+ 
+ 
+ 
+ <a href="search?q=label%3Ajava&amp;filter=0&amp;mode=&amp;start=90">10</a>
+ 
+ 
+ <a href="search?q=label%3Ajava&amp;filter=0&amp;mode=&amp;start=10">Next <b>&rsaquo;</b></a>
+</div>
+<br/>
+<br/>
+<div style="background:#F0F7F9; border-top:1px solid #6B90DA; border-bottom:1px solid #6B90DA; text-align:center;">
+ <br/>
+ <form action="/hosting/search">
+ <input type="text" size="30" name="q" value="label:java">
+ <input type="hidden" name="mode" value="list">
+ <input type="submit" name="projectsearch" value="Search projects" >
+ </form>
+ <br/>
+</div>
+<script type="text/javascript">
+function clk(el, cd) {
+ if (document.images) {
+ (new Image()).src = "/hosting/search?sa=T&ct=res&cd=" + cd + "&url="
+ + escape(el.href) + "&q=label%3Ajava";
+ }
+ return true;
+}
+</script>
+ 
+ 
+ 
+ <script type="text/javascript" src="http://www.gstatic.com/codesite/ph/1215397193597998757/js/ph_core.js"></script>
+ 
+ 
+ 
+ 
+ <script type="text/javascript" src="/js/codesite_product_dictionary_ph.pack.04102009.js"></script>
+</div> 
+<div id="footer" dir="ltr">
+ <div class="text">
+ &copy;2011 Google -
+ <a href="/projecthosting/terms.html">Terms</a> -
+ <a href="http://www.google.com/privacy.html">Privacy</a> -
+ <a href="/p/support/">Project Hosting Help</a>
+ </div>
+</div>
+ <div class="hostedBy" style="margin-top: -20px;">
+ <span style="vertical-align: top;">Powered by <a href="http://code.google.com/projecthosting/">Google Project Hosting</a></span>
+ </div>
+ 
+ 
+
+
+ 
+ </body>
+</html>
+
