@@ -17,6 +17,7 @@ from debian_inspector import debcon
 from packagedcode import models as scan_models
 from packageurl import PackageURL
 
+import debutils
 from minecode import ls
 from minecode import map_router
 from minecode.mappers import Mapper

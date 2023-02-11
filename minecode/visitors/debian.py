@@ -86,7 +86,7 @@ class DebianDirectoryIndexVisitor(NonPersistentHttpVisitor):
     Collect package URIs from Debian-like repos with an ls-LR directory listing.
     """
     def get_uris(self, content):
-        with gzip.open(content, 'rb') as f:
+        with gzip.open(content, 'rt') as f:
             content = f.read()
 
         url_template = self.uri.replace('ls-lR.gz', '{path}')
@@ -114,7 +114,7 @@ class DebianDirectoryIndexVisitor(NonPersistentHttpVisitor):
                 type='deb',
                 namespace=namespace,
                 name=name,
-                version=version,
+                version=str(version),
                 qualifiers=dict(arch=arch) if arch else None)
 
             yield URI(
