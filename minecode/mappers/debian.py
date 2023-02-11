@@ -50,31 +50,17 @@ def get_dependencies(data):
         if not depends:
             continue
 
-        dependencies = debutils.comma_separated(depends)
-        name_version = []
-        for dependency in dependencies:
-            version_constraint = None
-            if "(" in dependency and ")" in dependency:
-                start = dependency.index("(")
-                end = dependency.index(")")
-                version_constraint = dependency[start + 1:end]
-            name = dependency.split(" ")[0]
-            name_version.append([name, version_constraint])
-
+        dependencies = None  # debutils.comma_separated(depends)
+        if not dependencies:
+            continue
         # break each dep in package names and version constraints
         # FIXME:!!!
-        # FIXED !!!
-        for name, version_constraint in name_version:
-            purl = PackageURL(type="deb", namespace="debian", name=name)
-            dep = DependentPackage(
-                purl=purl.to_string(),
-                scope=scope,
-                requirement=version_constraint,
-                **flags,
-            )
+        for name in dependencies:
+            purl = PackageURL(type='deb', namespace='debian', name=name)
+            dep = scan_models.DependentPackage(purl=purl.to_string(), score=scope, **flags)
             dep_pkgs.append(dep)
 
-        return dep_pkgs
+    return dep_pkgs
 
 
 def get_vcs_repo(description):
