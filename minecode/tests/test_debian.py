@@ -109,7 +109,7 @@ class DebutilsTest(BaseDebianTest):
         content = 'Debian TeX Maintainers <debian-tex-maint@lists.debian.org>'
         name, email = debutils.parse_email(content)
         self.assertEquals('Debian TeX Maintainers', name)
-        self.assertEquals('debian-tex-main.debian.org', email)
+        self.assertEquals('debian-tex-maint@lists.debian.org', email)
 
     def test_parse_email_2(self):
         # Space left Purposefully
