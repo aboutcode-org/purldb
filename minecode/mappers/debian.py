@@ -22,12 +22,12 @@ from minecode import map_router
 from minecode.mappers import Mapper
 from minecode.utils import form_vcs_url
 from minecode import debutils
-from packagedb.models import DependentPackage
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
+
 
 # FIXME: We are not returning download URLs. Returned information is incorrect
 
@@ -345,6 +345,7 @@ def parse_packages(metadata, purl=None):
         if purl:
             package.set_purl(purl)
         yield package
+
 
 #################################################################################
 # FIXME: this cannot work since we do not fetch these yet AND what are the zip jar and gz in this???
