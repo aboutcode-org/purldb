@@ -34,8 +34,8 @@ Once the prerequisites have been installed, set up PurlDB with the following com
     git clone https://github.com/nexb/purldb
     cd purldb
     make dev
-    make postgres
     make envfile
+    make postgres
 
 Once PurlDB and the database has been set up, run tests to ensure functionality:
 ::
