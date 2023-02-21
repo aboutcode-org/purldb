@@ -332,7 +332,6 @@ class DebianPackagesTest(BaseDebianTest):
 
 class DebianLSLRTest(BaseDebianTest):
 
-    @expectedFailure
     def test_DebianDirectoryIndexVisitor_from_debian(self):
         uri = 'http://ftp.debian.org/debian/ls-lR.gz'
         test_loc = self.get_test_loc('debian/lslr/ls-lR_debian.gz')
@@ -342,7 +341,6 @@ class DebianLSLRTest(BaseDebianTest):
         expected_loc = self.get_test_loc('debian/lslr/ls-lR_debian.gz-expected.json')
         self.check_expected_uris(list(uris), expected_loc)
 
-    @expectedFailure
     def test_DebianDirectoryIndexVisitor_from_ubuntu(self):
         uri = 'http://archive.ubuntu.com/ubuntu/ls-lR.gz'
         test_loc = self.get_test_loc('debian/lslr/ls-lR_ubuntu.gz')
