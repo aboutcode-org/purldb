@@ -9,6 +9,7 @@
 
 
 import codecs
+import gzip
 import json
 import os
 from unittest.case import expectedFailure
@@ -334,7 +335,12 @@ class DebianLSLRTest(BaseDebianTest):
 
     def test_DebianDirectoryIndexVisitor_from_debian(self):
         uri = 'http://ftp.debian.org/debian/ls-lR.gz'
-        test_loc = self.get_test_loc('debian/lslr/ls-lR_debian.gz')
+        temp_gz_location = self.get_temp_file(extension=".gz")
+        with open('./testfiles/debian/lslr/ls-lR_debian', 'rb') as f:
+            text_content = f.read()
+        with gzip.open(temp_gz_location, 'wb') as f_out:
+            f_out.write(text_content)
+        test_loc = self.get_test_loc(temp_gz_location)
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = debian_visitor.DebianDirectoryIndexVisitor(uri)
@@ -343,7 +349,12 @@ class DebianLSLRTest(BaseDebianTest):
 
     def test_DebianDirectoryIndexVisitor_from_ubuntu(self):
         uri = 'http://archive.ubuntu.com/ubuntu/ls-lR.gz'
-        test_loc = self.get_test_loc('debian/lslr/ls-lR_ubuntu.gz')
+        temp_gz_location = self.get_temp_file(extension=".gz")
+        with open('./testfiles/debian/lslr/ls-lR_ubuntu', 'rb') as f:
+            text_content = f.read()
+        with gzip.open(temp_gz_location, 'wb') as f_out:
+            f_out.write(text_content)
+        test_loc = self.get_test_loc(temp_gz_location)
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = debian_visitor.DebianDirectoryIndexVisitor(uri)

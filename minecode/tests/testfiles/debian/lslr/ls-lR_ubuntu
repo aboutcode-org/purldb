@@ -1,0 +1,65 @@
+.:
+total 212
+drwxrwsr-x 117 lp_publish lp_publish   4096 Oct 27 17:39 dists
+drwxr-sr-x   2 lp_publish lp_publish 204800 Feb 21 04:16 indices
+drwxrwsr-x   6 lp_publish lp_publish   4096 Feb 27  2010 pool
+drwxr-sr-x   3 lp_publish lp_publish   4096 Jun 28  2013 project
+lrwxrwxrwx   1 lp_publish lp_publish      1 Nov 24  2010 ubuntu -> .
+
+./dists:
+total 460
+drwxr-sr-x 7 lp_publish lp_publish 4096 Oct 19  2017 artful
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jul 19  2018 artful-backports
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jul 19  2018 artful-proposed
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jul 19  2018 artful-security
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jul 19  2018 artful-updates
+
+./pool/main/libd/libdbi-perl:
+total 55216
+-rw-r--r-- 1 lp_publish lp_publish 841644 Nov 29  2011 libdbi-perl_1.616-1build2_armhf.deb
+-rw-r--r-- 1 lp_publish lp_publish  11256 Nov 15  2011 libdbi-perl_1.616-1build2.debian.tar.gz
+-rw-r--r-- 1 lp_publish lp_publish   2368 Nov 15  2011 libdbi-perl_1.616-1build2.dsc
+-rw-r--r-- 1 lp_publish lp_publish 848644 Nov 15  2011 libdbi-perl_1.616-1build2_i386.deb
+
+./pool/universe/s/scalapack-doc:
+total 6976
+-rw-r--r-- 1 lp_publish lp_publish 2702428 Dec 20  2006 scalapack-doc_1.5-10_all.deb
+-rw-r--r-- 1 lp_publish lp_publish   46065 Dec 20  2006 scalapack-doc_1.5-10.diff.gz
+-rw-r--r-- 1 lp_publish lp_publish     591 Dec 20  2006 scalapack-doc_1.5-10.dsc
+-rw-r--r-- 1 lp_publish lp_publish 2487320 Dec 10  2016 scalapack-doc_1.5-11_all.deb
+-rw-r--r-- 1 lp_publish lp_publish   46892 Dec 10  2016 scalapack-doc_1.5-11.diff.gz
+
+./dists/saucy/restricted/source:
+total 20
+-rw-r--r-- 1 lp_publish lp_publish  102 May  8  2014 Release
+-rw-r--r-- 1 lp_publish lp_publish 4759 May  8  2014 Sources.bz2
+-rw-r--r-- 1 lp_publish lp_publish 4678 May  8  2014 Sources.gz
+
+./dists/saucy-backports:
+total 272
+-rw-rw-r--  1 lp_publish lp_publish 40076 Jul 16  2014 Contents-amd64.gz
+-rw-rw-r--  1 lp_publish lp_publish 39292 Jul 16  2014 Contents-arm64.gz
+-rw-rw-r--  1 lp_publish lp_publish 40077 Jul 16  2014 Contents-armhf.gz
+
+./dists/xenial/main/binary-amd64:
+total 2708
+drwxr-sr-x 3 lp_publish lp_publish    4096 Apr 14  2016 by-hash
+-rw-r--r-- 1 lp_publish lp_publish 1557985 Apr 21  2016 Packages.gz
+-rw-r--r-- 1 lp_publish lp_publish 1200680 Apr 21  2016 Packages.xz
+-rw-r--r-- 1 lp_publish lp_publish      96 Apr 21  2016 Release
+
+./dists/wily-security:
+total 8388
+-rw-rw-r--  1 lp_publish lp_publish 1418642 Dec 10  2016 Contents-amd64.gz
+-rw-rw-r--  1 lp_publish lp_publish 1287374 Dec 10  2016 Contents-arm64.gz
+-rw-rw-r--  1 lp_publish lp_publish 1520831 Dec 10  2016 Contents-armhf.gz
+-rw-rw-r--  1 lp_publish lp_publish 1409691 Dec 10  2016 Contents-i386.gz
+-rw-rw-r--  1 lp_publish lp_publish 1498343 Dec 10  2016 Contents-powerpc.gz
+-rw-rw-r--  1 lp_publish lp_publish 1284413 Dec 10  2016 Contents-ppc64el.gz
+-rw-r--r--  1 lp_publish lp_publish   65872 Dec 10  2016 InRelease
+drwxr-sr-x 12 lp_publish lp_publish    4096 Nov 10  2015 main
+drwxr-sr-x 11 lp_publish lp_publish    4096 May  4  2015 multiverse
+-rw-r--r--  1 lp_publish lp_publish   64890 Dec 10  2016 Release
+-rw-r--r--  1 lp_publish lp_publish     933 Dec 10  2016 Release.gpg
+drwxr-sr-x 11 lp_publish lp_publish    4096 May  4  2015 restricted
+drwxr-sr-x 11 lp_publish lp_publish    4096 May  4  2015 universe
