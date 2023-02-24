@@ -1,0 +1,1221 @@
+{
+  "timed_out": false,
+  "_shards": {
+    "total": 3,
+    "successful": 3,
+    "failed": 0
+  },
+  "hits": {
+    "max_score": 1,
+    "total": 959,
+    "hits": [
+      {
+        "_source": {
+          "website": [],
+          "pauseid": "ANDREIPA",
+          "name": "Andrei-Marian Pavel",
+          "email": "andreipa@cpan.org",
+          "asciiname": ""
+        },
+        "_score": 1,
+        "_type": "author",
+        "_index": "cpan_v1_01",
+        "_id": "ANDREIPA"
+      },
+      {
+        "_score": 1,
+        "_source": {
+          "gravatar_url": "https://secure.gravatar.com/avatar/5e99c40c69361627c6760c4493768933?s=130&d=identicon",
+          "asciiname": "",
+          "is_pause_custodial_account": false,
+          "website": [
+            "https://www.facebook.com/frolov.shop2you"
+          ],
+          "name": "Alexandre Frolov",
+          "pauseid": "ITMFROLOV",
+          "email": "alexandre@frolov.pp.ru"
+        },
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_id": "ITMFROLOV"
+      },
+      {
+        "_score": 1,
+        "_source": {
+          "region": "AZ",
+          "email": [
+            "aberndt@cpan.org"
+          ],
+          "user": "oa-cmsLWTTOALauLxve1LA",
+          "name": "Alan Berndt",
+          "website": [
+            "http://eatabrick.org/"
+          ],
+          "city": "Phoenix",
+          "updated": "2014-02-19T18:49:49",
+          "profile": [
+            {
+              "name": "github",
+              "id": "bentglasstube"
+            },
+            {
+              "id": "115106164932588226758",
+              "name": "googleplus"
+            },
+            {
+              "id": "bentglasstube",
+              "name": "gittip"
+            }
+          ],
+          "gravatar_url": "https://secure.gravatar.com/avatar/888b4060c4844235ed6897de4946f9dd?s=130&d=identicon",
+          "country": "US",
+          "donation": [
+            {
+              "id": "",
+              "name": "paypal"
+            },
+            {
+              "id": "http://www.amazon.com/registry/wishlist/154SE4Z5UDYNW/",
+              "name": "wishlist"
+            },
+            {
+              "name": "flattr",
+              "id": ""
+            }
+          ],
+          "pauseid": "ABERNDT"
+        },
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_id": "ABERNDT"
+      },
+      {
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_score": 1,
+        "_source": {
+          "updated": "2015-08-26T18:05:07",
+          "profile": [
+            {
+              "name": "github",
+              "id": "alabamapaul"
+            }
+          ],
+          "country": "US",
+          "gravatar_url": "https://secure.gravatar.com/avatar/3ebd527ce0ee4b662e87af5a9cb99ec2",
+          "pauseid": "PDURDEN",
+          "user": "uHo7XQTWTCSLctZASEoe4g",
+          "email": [
+            "pdurden@cpan.org",
+            "alabamapaul@gmail.com"
+          ],
+          "website": [],
+          "name": "Paul Durden"
+        },
+        "_id": "PDURDEN"
+      },
+      {
+        "_id": "ATRICKETT",
+        "_type": "author",
+        "_index": "cpan_v1_01",
+        "_source": {
+          "gravatar_url": "https://secure.gravatar.com/avatar/806a74afe88d85a91411cbee1a06c4e5?s=130&d=identicon",
+          "country": "UK",
+          "profile": [
+            {
+              "id": "https://www.polaroidblipfoto.com/ajt",
+              "name": "Blipfoto"
+            },
+            {
+              "name": "googleplus",
+              "id": "101210341353704244977"
+            },
+            {
+              "id": "drajt",
+              "name": "lastfm"
+            },
+            {
+              "id": "in/drajt",
+              "name": "linkedin"
+            },
+            {
+              "name": "perlmonks",
+              "id": "113686"
+            },
+            {
+              "name": "slideshare",
+              "id": "drajt"
+            },
+            {
+              "name": "twitter",
+              "id": "drajt"
+            },
+            {
+              "name": "klout",
+              "id": "drajt"
+            }
+          ],
+          "updated": "2016-02-04T09:10:35",
+          "pauseid": "ATRICKETT",
+          "blog": [
+            {
+              "url": "http://www.iredale.net/b/",
+              "feed": "http://www.iredale.net/b/planetajt.rss"
+            }
+          ],
+          "region": "Hampshire",
+          "name": "Adam John Trickett",
+          "website": [
+            "http://www.iredale.net/"
+          ],
+          "email": [
+            "atrickett@cpan.org"
+          ],
+          "user": "wRZ7Z7rVTA-KUt-rlhr1qQ"
+        },
+        "_score": 1
+      },
+      {
+        "_type": "author",
+        "_index": "cpan_v1_01",
+        "_score": 1,
+        "_source": {
+          "gravatar_url": "https://secure.gravatar.com/avatar/a3fa9992023b4d45b194f5b28b640b61.png",
+          "country": "RO",
+          "city": "Bistrița",
+          "updated": "2011-09-27T21:42:05",
+          "profile": [
+            {
+              "name": "facebook",
+              "id": "arpad.szasz"
+            },
+            {
+              "id": "arpadszasz",
+              "name": "github"
+            },
+            {
+              "id": "101051285556959756262",
+              "name": "googleplus"
+            },
+            {
+              "id": "612074",
+              "name": "perlmonks"
+            },
+            {
+              "name": "twitter",
+              "id": "arpadszasz"
+            },
+            {
+              "id": "plenumarpadszasz",
+              "name": "linkedin"
+            }
+          ],
+          "pauseid": "ARPI",
+          "blog": [
+            {
+              "url": "http://arpi.plenum.ro/blog",
+              "feed": ""
+            }
+          ],
+          "location": [
+            47.13834,
+            24.513241
+          ],
+          "region": "Bistrița-Năsăud",
+          "asciiname": "Arpad Szasz",
+          "name": "Árpád Szász",
+          "website": [
+            "http://plenum.ro"
+          ],
+          "email": [
+            "arpad.szasz@plenum.ro"
+          ],
+          "user": "7WL-crTGS0S3EfBzEKrbqA"
+        },
+        "_id": "ARPI"
+      },
+      {
+        "_id": "FILIN",
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_source": {
+          "email": [
+            "filin@cpan.org",
+            "andrey.4ergik@gmail.com"
+          ],
+          "user": "8ABsCHjGTAydur1ZdhcM2g",
+          "pauseid": "FILIN",
+          "name": "Andrey  Chergik",
+          "website": [
+            "http://chergik.ru"
+          ],
+          "updated": "2012-03-27T17:17:14",
+          "gravatar_url": "https://secure.gravatar.com/avatar/9939ecca1e7c2e67e132298fe20e1086?s=130&d=identicon"
+        },
+        "_score": 1
+      },
+      {
+        "_id": "AVKHOZOV",
+        "_source": {
+          "user": "SD5sWzFWQjOTUjI6JRmC_Q",
+          "email": [
+            "avkhozov@cpan.org"
+          ],
+          "name": "Andrey Khozov",
+          "website": [],
+          "updated": "2013-04-09T07:58:29",
+          "profile": [
+            {
+              "id": "avkhozov",
+              "name": "coderwall"
+            },
+            {
+              "id": "avkhozov",
+              "name": "github"
+            }
+          ],
+          "country": "RU",
+          "gravatar_url": "https://gravatar.com/avatar/da01d883bf132ef2afa22b180b399514?s=250",
+          "pauseid": "AVKHOZOV"
+        },
+        "_score": 1,
+        "_type": "author",
+        "_index": "cpan_v1_01"
+      },
+      {
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_source": {
+          "asciiname": "Alexander Kuehne",
+          "region": "BW",
+          "email": [
+            "alexk@cpan.org"
+          ],
+          "user": "XnWFwY0RQN6Ae1v3hUdpmg",
+          "website": [],
+          "name": "Alexander Kühne",
+          "updated": "2014-09-12T09:35:07",
+          "gravatar_url": "https://secure.gravatar.com/avatar/7c4d2d27bdd83de30ad77182d6c61669?s=130&d=identicon",
+          "country": "DE",
+          "pauseid": "ALEXK"
+        },
+        "_score": 1,
+        "_id": "ALEXK"
+      },
+      {
+        "_source": {
+          "country": "BR",
+          "gravatar_url": "https://secure.gravatar.com/avatar/d8a1fff09fdb0cb5828034aae4dda105?s=130&d=identicon",
+          "updated": "2015-04-14T15:19:00",
+          "profile": [
+            {
+              "id": "glasswalk3r",
+              "name": "github"
+            }
+          ],
+          "city": "São Paulo",
+          "blog": [
+            {
+              "url": "http://slashlogging.blogspot.com",
+              "feed": ""
+            }
+          ],
+          "pauseid": "ARFREITAS",
+          "asciiname": "Alceu Rodrigues de Freitas Junior",
+          "website": [
+            "http://www.linkedin.com/in/alceufreitasjr"
+          ],
+          "name": "Alceu Rodrigues de Freitas Junior",
+          "user": "OZiYqmmORteb7Eb8Qqudaw",
+          "email": [
+            "arfreitas@cpan.org"
+          ]
+        },
+        "_score": 1,
+        "_type": "author",
+        "_index": "cpan_v1_01",
+        "_id": "ARFREITAS"
+      },
+      {
+        "_source": {
+          "pauseid": "AJPAGE",
+          "updated": "2013-09-02T11:17:23",
+          "profile": [
+            {
+              "id": "andrewjpage",
+              "name": "github"
+            },
+            {
+              "id": "andrewjpage",
+              "name": "twitter"
+            }
+          ],
+          "gravatar_url": "https://secure.gravatar.com/avatar/7bf5f3c11c7fde18231d803ec348aabf?s=130&d=identicon",
+          "country": "GB",
+          "email": [
+            "ajpage@cpan.org"
+          ],
+          "user": "08auEl_yQeOAmOdIypAAfw",
+          "name": "Andrew Page",
+          "website": [
+            "https://github.com/andrewjpage/"
+          ],
+          "region": "Cambridge"
+        },
+        "_score": 1,
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_id": "AJPAGE"
+      },
+      {
+        "_type": "author",
+        "_index": "cpan_v1_01",
+        "_score": 1,
+        "_source": {
+          "region": "Illinois",
+          "name": "Andy Lester",
+          "website": [
+            "http://petdance.com/",
+            "http://perlbuzz.com/"
+          ],
+          "user": "45pFPG2tQIWjleNIc9Kn4Q",
+          "email": [
+            "andy@petdance.com"
+          ],
+          "country": "US",
+          "gravatar_url": "https://secure.gravatar.com/avatar/8077a0584e451732420d43f5d0b3bd31?s=130&d=identicon",
+          "city": "McHenry",
+          "profile": [
+            {
+              "name": "flickr",
+              "id": "petdance"
+            },
+            {
+              "name": "github",
+              "id": "petdance"
+            },
+            {
+              "name": "googleplus",
+              "id": "petdance"
+            },
+            {
+              "id": "petdance",
+              "name": "lastfm"
+            },
+            {
+              "id": "petdance",
+              "name": "perlmonks"
+            },
+            {
+              "id": "petdance",
+              "name": "slideshare"
+            },
+            {
+              "name": "speakerdeck",
+              "id": "petdance"
+            },
+            {
+              "name": "stackoverflow",
+              "id": "8454"
+            },
+            {
+              "name": "twitter",
+              "id": "petdance"
+            },
+            {
+              "id": "perlbuzz",
+              "name": "twitter"
+            }
+          ],
+          "updated": "2016-06-28T14:49:15",
+          "pauseid": "PETDANCE",
+          "donation": [
+            {
+              "name": "paypal",
+              "id": ""
+            },
+            {
+              "id": "",
+              "name": "wishlist"
+            },
+            {
+              "name": "flattr",
+              "id": ""
+            }
+          ]
+        },
+        "_id": "PETDANCE"
+      },
+      {
+        "_id": "AMBS",
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_source": {
+          "blog": [
+            {
+              "url": "http://blogs.perl.org/users/alberto_simoes/",
+              "feed": ""
+            }
+          ],
+          "pauseid": "AMBS",
+          "gravatar_url": "https://secure.gravatar.com/avatar/f647420229636bb7c7e65f659b8d2b21?s=130&d=identicon",
+          "country": "PT",
+          "updated": "2015-06-01T18:10:59",
+          "profile": [
+            {
+              "id": "ambs",
+              "name": "github"
+            },
+            {
+              "id": "hashashin",
+              "name": "slideshare"
+            }
+          ],
+          "website": [
+            "http://ambs.perl-hackers.net/"
+          ],
+          "name": "Alberto Simões 🐪",
+          "email": [
+            "ambs@perl-hackers.net"
+          ],
+          "user": "k9akWvw-Sbidh3SxmlWEQQ",
+          "asciiname": "Alberto Manuel Brandao Simoes"
+        },
+        "_score": 1
+      },
+      {
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_source": {
+          "asciiname": "",
+          "website": [
+            "http://aare.in/"
+          ],
+          "name": "Aare Vesi",
+          "email": [
+            "aare@cpan.org"
+          ],
+          "user": "pkcbNDc-Rp6ItsyLaTbwfA",
+          "gravatar_url": "https://secure.gravatar.com/avatar/164ae86ff867b03a378e846686675113?s=130&d=identicon",
+          "updated": "2016-07-30T11:23:06",
+          "pauseid": "AARE"
+        },
+        "_score": 1,
+        "_id": "AARE"
+      },
+      {
+        "_id": "ATODOROV",
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_source": {
+          "user": "4tPB8i4HSh6XwlMSaCGH6w",
+          "email": [
+            "atodorov@otb.bg"
+          ],
+          "website": [
+            "http://about.me/atodorov",
+            "http://www.dif.io"
+          ],
+          "name": "Alexander Todorov",
+          "updated": "2012-07-26T12:01:26",
+          "profile": [
+            {
+              "name": "github",
+              "id": "atodorov"
+            }
+          ],
+          "gravatar_url": "https://secure.gravatar.com/avatar/8f11b7dc1f542903247477cae5161a76?s=130&d=identicon",
+          "pauseid": "ATODOROV"
+        },
+        "_score": 1
+      },
+      {
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_source": {
+          "gravatar_url": "https://s.gravatar.com/avatar/112b44f8f07f00d309f2b49a7c3a65aa?s=130&d=identicon",
+          "updated": "2015-10-24T10:51:18",
+          "website": [
+            "http://www.andybev.com/"
+          ],
+          "name": "Andrew Beverley",
+          "pauseid": "ABEVERLEY",
+          "email": [
+            "andy@andybev.com"
+          ],
+          "user": "uLjSgiUoTYGYFhoKGxS_RQ"
+        },
+        "_score": 1,
+        "_id": "ABEVERLEY"
+      },
+      {
+        "_type": "author",
+        "_index": "cpan_v1_01",
+        "_score": 1,
+        "_source": {
+          "region": "SCO",
+          "perlmongers": [
+            {
+              "name": "Edinburgh.pm",
+              "url": "http://edinburgh.pm/"
+            }
+          ],
+          "website": [
+            "http://aaroncrane.co.uk/",
+            "http://www.cutbot.net/"
+          ],
+          "name": "Aaron Crane",
+          "user": "S_EShlIcSGiUl1rCR3s6Vg",
+          "email": [
+            "arc@cpan.org",
+            "perl@aaroncrane.co.uk",
+            "cpan@aaroncrane.co.uk"
+          ],
+          "country": "GB",
+          "gravatar_url": "https://secure.gravatar.com/avatar/853f76a56abced1c6e5f1d1a17f9a9eb?s=130&d=identicon",
+          "profile": [
+            {
+              "id": "arc",
+              "name": "github"
+            },
+            {
+              "name": "googleplus",
+              "id": "112088759322802250628"
+            },
+            {
+              "name": "perlmonks",
+              "id": "arc"
+            },
+            {
+              "name": "stackoverflow",
+              "id": "1091123"
+            },
+            {
+              "name": "twitter",
+              "id": "aaroncrane"
+            }
+          ],
+          "city": "Edinburgh",
+          "updated": "2015-11-10T00:10:14",
+          "blog": [
+            {
+              "feed": "http://aaroncrane.co.uk/feed.atom",
+              "url": "http://aaroncrane.co.uk/"
+            }
+          ],
+          "pauseid": "ARC"
+        },
+        "_id": "ARC"
+      },
+      {
+        "_id": "ALQAFIR",
+        "_type": "author",
+        "_index": "cpan_v1_01",
+        "_score": 1,
+        "_source": {
+          "website": [],
+          "name": "Alfredo Mungo",
+          "pauseid": "ALQAFIR",
+          "email": [
+            "alqafir@cpan.org"
+          ],
+          "gravatar_url": "http://en.gravatar.com/userimage/25614303/0c214d70652b66a34e62c997723b9cad?size=130",
+          "updated": "2015-06-04T19:26:06"
+        }
+      },
+      {
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_score": 1,
+        "_source": {
+          "pauseid": "ABH",
+          "city": "Los Angeles",
+          "updated": "2012-04-12T18:41:55",
+          "profile": [
+            {
+              "name": "github",
+              "id": "abh"
+            }
+          ],
+          "gravatar_url": "https://secure.gravatar.com/avatar/da6e3db9f1fec3a74b86d03a8579683d?s=130&d=identicon",
+          "country": "US",
+          "email": [
+            "ask@perl.org"
+          ],
+          "user": "-yoDEgFMRFuyYBtC9iKdYA",
+          "website": [
+            "http://www.askbjoernhansen.com/"
+          ],
+          "name": "Ask Bjørn Hansen",
+          "asciiname": "Ask Bjoern Hansen",
+          "region": "California"
+        },
+        "_id": "ABH"
+      },
+      {
+        "_type": "author",
+        "_index": "cpan_v1_01",
+        "_source": {
+          "email": [
+            "alexbio@cpan.org"
+          ],
+          "user": "Fl046k3YSeungEC3fqeq2A",
+          "website": [
+            "http://www.ghedini.me"
+          ],
+          "name": "Alessandro Ghedini",
+          "location": [
+            44.494219,
+            11.346481
+          ],
+          "blog": [
+            {
+              "url": "http://blog.ghedini.me",
+              "feed": "http://blog.ghedini.me/feed.xml"
+            }
+          ],
+          "pauseid": "ALEXBIO",
+          "profile": [
+            {
+              "name": "bitbucket",
+              "id": "ghedo"
+            },
+            {
+              "name": "github",
+              "id": "ghedo"
+            },
+            {
+              "id": "al3xbio",
+              "name": "hackernews"
+            },
+            {
+              "id": "ghedo",
+              "name": "ohloh"
+            },
+            {
+              "id": "alexbio",
+              "name": "perlmonks"
+            },
+            {
+              "id": "429En4oFdJ",
+              "name": "prepan"
+            },
+            {
+              "id": "ghedo",
+              "name": "steam"
+            }
+          ],
+          "updated": "2013-09-07T14:28:41",
+          "city": "Bologna",
+          "gravatar_url": "https://identicons.github.com/ghedo.png",
+          "country": "IT"
+        },
+        "_score": 1,
+        "_id": "ALEXBIO"
+      },
+      {
+        "_score": 1,
+        "_source": {
+          "pauseid": "ASB",
+          "updated": "2014-10-22T19:28:00",
+          "profile": [
+            {
+              "id": "asb-capfan@github",
+              "name": "prepan"
+            }
+          ],
+          "gravatar_url": "https://secure.gravatar.com/avatar/ccf1be90f776c7b5a260a5a935ee245e?s=130&d=identicon",
+          "user": "DEYtpqURRJ2I2WIsfcoDgg",
+          "email": [
+            "asb.cpan+cpanpub@gmail.com"
+          ],
+          "name": "Alexander Becker",
+          "website": [
+            "http://www.perltk.de/"
+          ]
+        },
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_id": "ASB"
+      },
+      {
+        "_id": "ANDRE",
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_score": 1,
+        "_source": {
+          "asciiname": "Andre Walker",
+          "email": [
+            "andre@andrewalker.net"
+          ],
+          "website": [
+            "https://andrewalker.net/"
+          ],
+          "name": "Andre Walker",
+          "updated": "2015-12-29T11:27:57",
+          "gravatar_url": "https://secure.gravatar.com/avatar/023025c78ab07a6cf82683a9cd180caf?s=130",
+          "country": "NL",
+          "pauseid": "ANDRE"
+        }
+      },
+      {
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_source": {
+          "city": "Santa Clara",
+          "profile": [
+            {
+              "name": "github",
+              "id": "guillaumeaubert"
+            },
+            {
+              "id": "aubertguillaume",
+              "name": "linkedin"
+            }
+          ],
+          "updated": "2016-04-10T20:54:49",
+          "country": "US",
+          "gravatar_url": "https://avatars2.githubusercontent.com/u/1181372",
+          "pauseid": "AUBERTG",
+          "region": "CA",
+          "email": [
+            "aubertg@cpan.org"
+          ],
+          "name": "Guillaume Aubert",
+          "website": [
+            "https://guillaumeaubert.github.io/"
+          ]
+        },
+        "_score": 1,
+        "_id": "AUBERTG"
+      },
+      {
+        "_id": "ALEC",
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_source": {
+          "pauseid": "ALEC",
+          "blog": [
+            {
+              "feed": "http://feeds.feedburner.com/alecchen",
+              "url": "http://blog.alec.tw/"
+            }
+          ],
+          "gravatar_url": "https://secure.gravatar.com/avatar/58df68347248c2232f7acf06091cb9f4?s=130&d=identicon",
+          "country": "TW",
+          "updated": "2012-04-14T13:48:47",
+          "city": "Taipei",
+          "profile": [
+            {
+              "id": "alec929",
+              "name": "delicious"
+            },
+            {
+              "id": "alec.chen",
+              "name": "facebook"
+            },
+            {
+              "name": "flickr",
+              "id": "alec929"
+            },
+            {
+              "id": "alecchen",
+              "name": "github"
+            },
+            {
+              "id": "alec929",
+              "name": "lastfm"
+            },
+            {
+              "id": "alecchen",
+              "name": "linkedin"
+            },
+            {
+              "id": "927587",
+              "name": "stackoverflow"
+            },
+            {
+              "name": "twitter",
+              "id": "alec929"
+            },
+            {
+              "id": "alec929",
+              "name": "youtube"
+            },
+            {
+              "name": "coderwall",
+              "id": "alecchen"
+            }
+          ],
+          "website": [
+            "http://about.me/alecchen"
+          ],
+          "name": "陳衍良",
+          "email": [
+            "alec@cpan.org"
+          ],
+          "user": "YflEeAPyTtOPvbf_OXSZjA",
+          "asciiname": "Alec Chen"
+        },
+        "_score": 1
+      },
+      {
+        "_source": {
+          "name": "Joe Papperello",
+          "website": [],
+          "user": "2ukc2q6TTVO6h6bSsu3ymg",
+          "email": [
+            "antipasta@cpan.org"
+          ],
+          "gravatar_url": "https://secure.gravatar.com/avatar/6e53eff17383bb2a3c2d57f6bb268fac?s=130&d=identicon",
+          "profile": [
+            {
+              "id": "antipasta",
+              "name": "github"
+            }
+          ],
+          "updated": "2013-06-02T01:46:45",
+          "pauseid": "ANTIPASTA"
+        },
+        "_score": 1,
+        "_type": "author",
+        "_index": "cpan_v1_01",
+        "_id": "ANTIPASTA"
+      },
+      {
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_score": 1,
+        "_source": {
+          "pauseid": "ATHOMASON",
+          "gravatar_url": "https://secure.gravatar.com/avatar/d1c2b49b2e0c7ec777613b4e83ce1ef5?s=130&d=identicon",
+          "country": "US",
+          "updated": "2011-08-22T18:19:31",
+          "city": "San Francisco",
+          "profile": [
+            {
+              "name": "github",
+              "id": "athomason"
+            },
+            {
+              "name": "linkedin",
+              "id": "athomason"
+            },
+            {
+              "name": "perlmonks",
+              "id": "athomason"
+            },
+            {
+              "name": "stackoverflow",
+              "id": "204216"
+            },
+            {
+              "name": "coderwall",
+              "id": "athomason"
+            },
+            {
+              "name": "twitter",
+              "id": "daam"
+            }
+          ],
+          "website": [],
+          "name": "Adam Thomason",
+          "email": [
+            "athomason@cpan.org"
+          ],
+          "user": "LQ1vy8S8RyKUb5eQ41a5dg",
+          "region": "CA"
+        },
+        "_id": "ATHOMASON"
+      },
+      {
+        "_id": "ADUITSIS",
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_source": {
+          "asciiname": "Athanasios Douitsis",
+          "name": "Athanasios Douitsis",
+          "website": [],
+          "user": "O1IWkSH1S3Ol-IGyPyN-7w",
+          "email": [
+            "aduitsis@cpan.org"
+          ],
+          "country": "GR",
+          "gravatar_url": "https://secure.gravatar.com/avatar/49db97b38ff7df17319129030a58a897?s=130&d=identicon",
+          "city": "Athens",
+          "updated": "2011-08-21T20:48:27",
+          "profile": [
+            {
+              "name": "github",
+              "id": "aduitsis"
+            },
+            {
+              "id": "aduitsis",
+              "name": "github-meets-cpan"
+            },
+            {
+              "id": "aduitsis@gmail.com",
+              "name": "googleplus"
+            },
+            {
+              "id": "aduitsis",
+              "name": "linkedin"
+            }
+          ],
+          "pauseid": "ADUITSIS"
+        },
+        "_score": 1
+      },
+      {
+        "_id": "AMORETTE",
+        "_score": 1,
+        "_source": {
+          "user": "Cu9dkkDuQ1ytr9LceAtlVg",
+          "email": [
+            "amorette@cpan.org"
+          ],
+          "website": [],
+          "name": "Hojung Youn",
+          "pauseid": "AMORETTE",
+          "city": "Seoul",
+          "updated": "2012-12-20T05:32:22",
+          "profile": [
+            {
+              "name": "twitter",
+              "id": "am0c"
+            },
+            {
+              "id": "am0c",
+              "name": "github"
+            }
+          ],
+          "country": "KR",
+          "gravatar_url": "https://secure.gravatar.com/avatar/7f265acaa082d74fd03320dce955acbf?s=130&d=identicon"
+        },
+        "_index": "cpan_v1_01",
+        "_type": "author"
+      },
+      {
+        "_id": "AZAWAWI",
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_source": {
+          "email": [
+            "ahmad.zawawi@gmail.com",
+            "azawawi@cpan.org"
+          ],
+          "user": "FeyAIJs7QbGbPQUCznJjaw",
+          "name": "أحمد محمد زواوي - Ahmad M. Zawawi",
+          "website": [
+            "http://ahmadzawawi.blogspot.com/"
+          ],
+          "asciiname": "Ahmad M. Zawawi",
+          "blog": [
+            {
+              "feed": "http://ahmadzawawi.blogspot.com/atom.xml",
+              "url": "http://ahmadzawawi.blogspot.com/atom.xml"
+            }
+          ],
+          "pauseid": "AZAWAWI",
+          "updated": "2014-01-29T21:16:54",
+          "profile": [
+            {
+              "id": "azawawi",
+              "name": "twitter"
+            }
+          ],
+          "city": "Amman",
+          "gravatar_url": "https://secure.gravatar.com/avatar/ba123a09343642026432b843ff8d0776?s=130&d=http%3A%2F%2Fwww.gravatar.com%2Favatar%2F70ebafdecf974e15bcaba4cbe39efef1%3Fs%3D130%26d%3Didenticon",
+          "country": "JO"
+        },
+        "_score": 1
+      },
+      {
+        "_type": "author",
+        "_index": "cpan_v1_01",
+        "_score": 1,
+        "_source": {
+          "country": "GB",
+          "gravatar_url": "http://quietstars.com/images/adrian.jpg",
+          "updated": "2011-09-05T09:08:54",
+          "profile": [
+            {
+              "name": "delicious",
+              "id": "adrianh"
+            },
+            {
+              "id": "adrian.howard",
+              "name": "facebook"
+            },
+            {
+              "id": "adrianhoward",
+              "name": "flickr"
+            },
+            {
+              "name": "github",
+              "id": "adrianh"
+            },
+            {
+              "name": "lastfm",
+              "id": "adrianhoward"
+            },
+            {
+              "name": "linkedin",
+              "id": "adrianh"
+            },
+            {
+              "name": "perlmonks",
+              "id": "adrianh"
+            },
+            {
+              "name": "posterous",
+              "id": "adrianh"
+            },
+            {
+              "id": "adrianh",
+              "name": "slideshare"
+            },
+            {
+              "id": "adrianh",
+              "name": "stackoverflow"
+            },
+            {
+              "name": "twitter",
+              "id": "adrianh"
+            },
+            {
+              "id": "adrianh",
+              "name": "klout"
+            }
+          ],
+          "pauseid": "ADIE",
+          "donation": [
+            {
+              "id": "",
+              "name": "paypal"
+            },
+            {
+              "id": "http://www.amazon.co.uk/registry/wishlist/33AI6BT02V8YD/ref=cm_wl_rlist_go",
+              "name": "wishlist"
+            }
+          ],
+          "region": "Dorset",
+          "name": "Adrian Howard",
+          "website": [
+            "http://quietstars.com/"
+          ],
+          "user": "TPQhgr5OTw-2AzxaNHbiOQ",
+          "email": [
+            "adrianh@quietstars.com"
+          ]
+        },
+        "_id": "ADIE"
+      },
+      {
+        "_id": "ARNODF",
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_score": 1,
+        "_source": {
+          "website": [],
+          "name": "Arnaud Di Franco",
+          "pauseid": "ARNODF",
+          "email": "arnodf@cpan.org",
+          "asciiname": ""
+        }
+      },
+      {
+        "_type": "author",
+        "_index": "cpan_v1_01",
+        "_score": 1,
+        "_source": {
+          "asciiname": "",
+          "email": "abowling@cpan.org",
+          "website": [],
+          "pauseid": "ABOWLING",
+          "name": "Adam Bowling"
+        },
+        "_id": "ABOWLING"
+      },
+      {
+        "_id": "ALG",
+        "_source": {
+          "email": "alg@cpan.org",
+          "pauseid": "ALG",
+          "name": "AL GNUTI",
+          "website": [],
+          "asciiname": ""
+        },
+        "_score": 1,
+        "_index": "cpan_v1_01",
+        "_type": "author"
+      },
+      {
+        "_id": "AKINARD",
+        "_score": 1,
+        "_source": {
+          "pauseid": "AKINARD",
+          "website": [],
+          "name": "Ashley Kinard",
+          "email": "akinard@cpan.org",
+          "asciiname": ""
+        },
+        "_index": "cpan_v1_01",
+        "_type": "author"
+      },
+      {
+        "_id": "ANPARKER",
+        "_source": {
+          "asciiname": "Andre Parker",
+          "website": [],
+          "name": "Andre Parker",
+          "email": [
+            "anparker@cpan.org",
+            "anparker@cpan.org"
+          ],
+          "user": "AWGQR6P-714gJnwUgQGg",
+          "country": "UA",
+          "is_pause_custodial_account": false,
+          "updated": "2018-02-23T14:38:33",
+          "pauseid": "ANPARKER"
+        },
+        "_score": 1,
+        "_type": "author",
+        "_index": "cpan_v1_01"
+      },
+      {
+        "_index": "cpan_v1_01",
+        "_type": "author",
+        "_score": 1,
+        "_source": {
+          "pauseid": "AKIYM",
+          "gravatar_url": "https://secure.gravatar.com/avatar/e1423ea324cf224b96ceb3573f91e7a1?s=130&d=identicon",
+          "country": "JP",
+          "is_pause_custodial_account": false,
+          "city": "Kyoto",
+          "updated": "2017-09-30T08:47:56",
+          "profile": [
+            {
+              "id": "akiym",
+              "name": "github"
+            },
+            {
+              "name": "twitter",
+              "id": "akiym"
+            }
+          ],
+          "name": "Takumi Akiyama 🍙🍙🍙",
+          "website": [],
+          "email": [
+            "akiym@cpan.org",
+            "t.akiym@gmail.com"
+          ],
+          "user": "F6RSFAXnSc2v1Q-r440e4w",
+          "asciiname": "Takumi Akiyama"
+        },
+        "_id": "AKIYM"
+      }
+    ]
+  },
+  "took": 29
+}

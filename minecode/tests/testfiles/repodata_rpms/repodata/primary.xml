@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xmlns="http://linux.duke.edu/metadata/common" xmlns:rpm="http://linux.duke.edu/metadata/rpm" packages="384">
+<package type="rpm">
+  <name>python-ceilometerclient</name>
+  <arch>src</arch>
+  <version epoch="0" ver="1.5.0" rel="1.el7"/>
+  <checksum type="sha256" pkgid="YES">36547e200627ea25c4e3fb6f9735d58e682f8e35cd815dceed796c83628e60d5</checksum>
+  <summary>Python API and CLI for OpenStack Ceilometer</summary>
+  <packager>CBS &lt;cbs@centos.org&gt;</packager>
+  <url>https://github.com/openstack/python-ceilometerclient</url>
+  <time file="1446590411" build="1442515098"/>
+  <size package="101516" installed="99230" archive="99648"/>
+<location href="python-ceilometerclient-1.5.0-1.el7.src.rpm"/>
+  <format>
+    <rpm:license>ASL 2.0</rpm:license>
+    <rpm:vendor>CentOS</rpm:vendor>
+    <rpm:group>Development/Languages</rpm:group>
+    <rpm:buildhost>c1bk.rdu2.centos.org</rpm:buildhost>
+    <rpm:header-range start="880" end="4876"/>
+    <rpm:requires>
+      <rpm:entry name="python-d2to1"/>
+      <rpm:entry name="python-oslo-sphinx" flags="GE" epoch="0" ver="2.5.0"/>
+      <rpm:entry name="python-pbr"/>
+      <rpm:entry name="python-setuptools"/>
+      <rpm:entry name="python-sphinx"/>
+      <rpm:entry name="python2-devel"/>
+    </rpm:requires>
+  </format>
+</package>
+</metadata>

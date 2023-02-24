@@ -1,0 +1,14 @@
+wget -O people1.html http://code.google.com/p/chromium/people/list
+wget -O withnotice.html http://code.google.com/p/zffl/people/list
+date: 2014-04-08 18:46:57-07:00
+download_url: -O swarming.html https://code.google.com/p/swarming/people/list
+date: 2014-04-08 18:47:33-07:00
+download_url: -O invict.html https://code.google.com/p/projectinvictusarena/people/list
+date: 2014-04-08 18:48:21-07:00
+download_url: -O flare.html https://code.google.com/p/flare-browser/people/list
+date: 2014-04-08 18:48:44-07:00
+download_url: -O gae1.html https://code.google.com/p/googleappengine/people/list
+date: 2014-04-08 18:49:01-07:00
+download_url: -O gae2.html https://code.google.com/p/googleappengine/people/list?num=50&start=50
+date: 2014-04-08 18:49:26-07:00
+download_url: -O gae3.html https://code.google.com/p/googleappengine/people/list?num=50&start=100

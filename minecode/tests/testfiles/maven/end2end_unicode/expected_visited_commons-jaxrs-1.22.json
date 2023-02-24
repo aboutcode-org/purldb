@@ -16,9 +16,11 @@
     "package_url":null,
     "last_visit_date":true,
     "is_visitable":true,
+    "has_visit_error":false,
     "visit_error":null,
     "last_map_date":true,
     "is_mappable":true,
+    "has_map_error":true,
     "map_error":"No download_url for package:PackageData(type='maven', namespace='edu.psu.swe.commons', name='commons-jaxrs', version='1.22', datasource_id='maven_pom')\n"
   }
 ]

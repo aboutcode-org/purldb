@@ -1,0 +1,1766 @@
+<!doctype html>
+<html id="page">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>All versions of openfl</title>
+	<link href="/css/bootstrap-combined.min.css" rel="stylesheet" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
+	<link href="/css/style.css" rel="stylesheet">
+	<link href="/css/haxe-nav.css" rel="stylesheet">
+		
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+	<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:200,600,600italic,400" rel="stylesheet">
+	<link href="//fonts.googleapis.com/css?family=Open+Sans:400,700,700italic,400italic" rel="stylesheet">
+	<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+
+	<!-- Google -->
+	<link rel="author" href="https://plus.google.com/113704686911055424796/posts"/>
+	<link rel="publisher" href="https://plus.google.com/113704686911055424796/"/>
+	<meta name="description" content="The &quot;Open Flash Library&quot; for fast 2D development" />
+
+	<!-- Twitter card -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:creator" content="@haxelang" />
+	<meta name="twitter:site" content="@haxelang" />
+	<meta name="twitter:title" content="All versions of openfl" />
+	<meta name="twitter:description" value="The &quot;Open Flash Library&quot; for fast 2D development">
+
+	<!-- OpenGraph -->
+	<meta property="og:title" content="All versions of openfl" />
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://lib.haxe.org/p/openfl/versions/" />
+	<meta property="og:image" content="https://haxe.org/img/branding/haxe-logo-glyph.png" />
+	<meta property="og:description" content="The &quot;Open Flash Library&quot; for fast 2D development" />
+	<meta property="og:site_name" content="Haxe - The Cross-platform Toolkit" />
+
+	<!-- Facebook -->
+</head>
+
+<body>
+
+<nav class="section nav dark">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar-inner">
+			<button class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse" type="button"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button> <a class="brand haxe-logo" href="https://haxe.org/"><img alt="Haxe" height="21" onerror="this.src='https://haxe.org/img/haxe-logo-horizontal-on-dark.png'" src="https://haxe.org/img/haxe-logo-horizontal-on-dark.svg" width="107" /></a>
+			<a class="brand sub lib" href="/">LIB</a>
+
+			<div class="nav-collapse collapse">
+			<ul class="nav pull-right search-link-menu">
+				<li><a href="/search"><i class="fa fa-search"></i></a></li>
+			</ul>
+			<ul class="nav">
+				<li class="dropdown">
+					<a href="/all" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-folder-open-o"></i> Browse Projects <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="/all/"><i class="fa fa-star"></i> Browse by popularity</a></li>
+						<li><a href="/t/"><i class="fa fa-tags"></i> Browse by tag</a></li>
+						<li><a href="/u/"><i class="fa fa-user"></i>  Browse by author</a></li>
+						<li><a href="/recent/"><i class="fa fa-paperclip"></i> Recent library updates</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="/documentation" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-file-o"></i> Documentation <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						
+							<li ><a href="/documentation/">Getting Started</a></li>
+						
+							<li ><a href="/documentation/using-haxelib/">Using Haxelib</a></li>
+						
+							<li ><a href="/documentation/creating-a-haxelib-package/">Creating a Haxelib</a></li>
+						
+							<li ><a href="/documentation/per-project-setup/">Per project setup</a></li>
+						
+							<li ><a href="/documentation/haxelibs-in-projects/">Adding libraries to projects</a></li>
+						
+							<li ><a href="/documentation/faq/">FAQ</a></li>
+						
+						<li class="divider"></li>
+						<li><a href="/rss/"><i class="fa fa-rss"></i> Recent Updates RSS Feed</a></li>
+						<li><a href="//lib.haxe.org/legacy/"><i class="fa fa-folder-open-o"></i> Haxe 2 Haxelib repository</a></li>
+					</ul>
+				</li>
+				
+				<li class=" divider"></li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="https://haxe.org/documentation/">Learn Haxe <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="https://haxe.org/documentation/introduction/" rel="external">Introduction</a></li>
+						<li><a href="https://haxe.org/manual/" rel="external">Manual</a></li>
+						<li><a href="https://code.haxe.org" rel="external">Code Cookbook</a></li>
+						<li><a href="https://api.haxe.org" rel="external">API Documentation</a></li>
+						<li class="divider"></li>
+						<li><a href="https://haxe.org/videos/" rel="external">Videos</a></a></li>
+						<li class="divider"></li>
+						<li><a href="https://try.haxe.org" rel="external">Try Haxe online</a></li>
+						<li class="active"><a href="https://lib.haxe.org" rel="external">Haxelib</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="/HaxeFoundation" data-toggle="dropdown" class="dropdown-toggle">Connect <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="https://github.com/HaxeFoundation" rel="external"><i class="fa fa-github"></i> Github</a></li>
+						<li><a href="https://github.com/HaxeFoundation/haxe/issues" rel="external"><i class="fa fa-github"></i> Bug reports</a></li>
+						<li><a href="https://stackoverflow.com/questions/tagged/haxe" rel="external"><i class="fa fa-stack-exchange"></i> Stack Overflow</a></li>
+						<li><a href="http://community.haxe.org/" rel="external"><i class="fa fa-envelope-o"></i> Forums</a></li>
+						<li><a href="https://gitter.im/HaxeFoundation/haxe" rel="external nofollow"><i class="fa fa-comments-o"></i> Chat</a></li>
+						<li><a href="https://haxe.org/blog"><i class="fa fa-rss"></i> Blog</a></li>
+						<li class="divider"></li>
+						<li><a href="https://www.facebook.com/haxe.org/" rel="external"><i class="fa fa-facebook"></i> Facebook</a></li>
+						<li><a href="https://twitter.com/search?q=%23haxe" rel="external"><i class="fa fa-twitter"></i> #haxe</a></li>
+						<li><a href="https://twitter.com/haxelang" rel="external"><i class="fa fa-twitter"></i> @haxelang</a></li>
+						<li><a href="https://twitter.com/haxe_org" rel="external"><i class="fa fa-twitter"></i> @haxe_org</a></li>
+						<li class="divider"></li>
+						<li><a href="https://haxe.org/foundation/contact.html">Contact</a></li>
+					</ul>
+				</li>
+			</ul></div>
+		</div>
+	</div>
+</nav>
+
+<div class="page-wrap">
+	
+		<div class="section">
+			<div class="container">
+				
+<div>
+	<h1><i class="fa fa-star"></i> openfl</h1>
+	<p class="lead">The "Open Flash Library" for fast 2D development<br/><a href="http://www.openfl.org">http://www.openfl.org <span class="fa fa-external-link"></span></a></p>
+</div>
+
+<ul class="nav nav-tabs nav-justified" role="tablist">
+	<li><a href="/p/openfl/">openfl <small>8.6.4</small></a></li>
+	<li><a href="/p/openfl/8.6.4/files/">Files</a></li>
+	<li class="active"><a href="/p/openfl/versions/">All Versions <small>(151)</small></a></li>
+</ul>
+
+
+<div id="downloads-chart"></div>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+<script>
+var data = {
+  labels: [ 'v8.6.4', 'v8.6.3', 'v8.6.2', 'v8.6.1', 'v8.6.0', 'v8.5.1', 'v8.5.0', 'v8.4.1', 'v8.4.0', 'v8.3.0', 'v8.2.2', 'v8.2.1', 'v8.2.0', 'v8.1.1', 'v8.1.0', 'v8.0.2', 'v8.0.1', 'v8.0.0', 'v7.1.2', 'v7.1.1', 'v7.1.0', 'v7.0.0', 'v6.5.3', 'v6.5.2', 'v6.5.1', 'v6.5.0', 'v6.4.0', 'v6.3.0', 'v6.2.2', 'v6.2.1', 'v6.2.0', 'v6.1.2', 'v6.1.1', 'v6.1.0', 'v6.0.1', 'v6.0.0', 'v5.1.5', 'v5.1.4', 'v5.1.3', 'v5.1.2', 'v5.1.1', 'v5.1.0', 'v5.0.0', 'v4.9.2', 'v4.9.1', 'v4.9.0', 'v4.8.1', 'v4.8.0', 'v4.7.3', 'v4.7.2', 'v4.7.1', 'v4.7.0', 'v4.6.0', 'v4.5.3', 'v4.5.2', 'v4.5.1', 'v4.5.0', 'v4.4.1', 'v4.4.0', 'v4.3.1', 'v4.3.0', 'v4.2.0', 'v4.1.0', 'v4.0.3', 'v4.0.2', 'v4.0.1', 'v4.0.0', 'v3.6.1', 'v3.6.0', 'v3.5.3', 'v3.5.2', 'v3.5.1', 'v3.5.0', 'v3.4.0', 'v3.3.9', 'v3.3.8', 'v3.3.7', 'v3.3.6', 'v3.3.5', 'v3.3.4', 'v3.3.3', 'v3.3.2', 'v3.3.1', 'v3.3.0', 'v3.2.2', 'v3.2.1', 'v3.2.0', 'v3.1.4', 'v3.1.3', 'v3.1.2', 'v3.1.1', 'v3.1.0', 'v3.0.8', 'v3.0.7', 'v3.0.6', 'v3.0.5', 'v3.0.4', 'v3.0.3', 'v3.0.2', 'v3.0.2', 'v3.0.1', 'v3.0.1', 'v3.0.1', 'v3.0.1', 'v3.0.1', 'v3.0.1', 'v3.0.0', 'v3.0.0-beta.3', 'v3.0.0-beta.2', 'v3.0.0-beta', 'v2.2.8', 'v2.2.7', 'v2.2.6', 'v2.2.5', 'v2.2.4', 'v2.2.3', 'v2.2.2', 'v2.2.1', 'v2.2.0', 'v2.1.8', 'v2.1.7', 'v2.1.6', 'v2.1.5', 'v2.1.4', 'v2.1.3', 'v2.1.2', 'v2.1.1', 'v2.1.0', 'v2.0.1', 'v2.0.0', 'v2.0.0-beta.2', 'v2.0.0-beta', 'v1.4.0', 'v1.3.0', 'v1.2.3', 'v1.2.2', 'v1.2.1', 'v1.2.0', 'v1.1.1', 'v1.1.0', 'v1.0.6', 'v1.0.5', 'v1.0.4', 'v1.0.3', 'v1.0.2', 'v1.0.1', 'v1.0.0', 'v1.0.0-rc.4', 'v1.0.0-rc.3', 'v1.0.0-rc.2', 'v1.0.0-rc.1'],
+  series: [ [ {x: Date.parse('2018-10-19 21:28:37'), y: 1628},  {x: Date.parse('2018-10-19 21:28:24'), y: 4},  {x: Date.parse('2018-10-15 22:41:52'), y: 291},  {x: Date.parse('2018-10-15 18:49:04'), y: 20},  {x: Date.parse('2018-10-12 23:24:31'), y: 210},  {x: Date.parse('2018-09-27 18:45:58'), y: 759},  {x: Date.parse('2018-09-26 23:23:10'), y: 83},  {x: Date.parse('2018-08-13 18:40:10'), y: 2539},  {x: Date.parse('2018-08-09 21:55:53'), y: 377},  {x: Date.parse('2018-06-25 22:51:41'), y: 2540},  {x: Date.parse('2018-06-06 00:09:03'), y: 1333},  {x: Date.parse('2018-06-05 22:30:18'), y: 11},  {x: Date.parse('2018-06-02 00:05:02'), y: 313},  {x: Date.parse('2018-05-18 05:02:24'), y: 1147},  {x: Date.parse('2018-05-17 00:16:54'), y: 131},  {x: Date.parse('2018-05-12 15:13:35'), y: 445},  {x: Date.parse('2018-05-08 19:39:21'), y: 350},  {x: Date.parse('2018-05-04 22:20:50'), y: 462},  {x: Date.parse('2018-02-16 21:27:55'), y: 2732},  {x: Date.parse('2018-02-09 17:39:57'), y: 548},  {x: Date.parse('2018-02-08 00:41:50'), y: 133},  {x: Date.parse('2018-01-15 23:15:19'), y: 1528},  {x: Date.parse('2017-12-06 05:01:44'), y: 2255},  {x: Date.parse('2017-12-05 19:30:56'), y: 42},  {x: Date.parse('2017-11-29 22:02:06'), y: 466},  {x: Date.parse('2017-11-10 23:56:33'), y: 1040},  {x: Date.parse('2017-11-06 23:29:17'), y: 375},  {x: Date.parse('2017-10-24 16:35:08'), y: 730},  {x: Date.parse('2017-10-12 20:53:09'), y: 661},  {x: Date.parse('2017-10-10 22:06:04'), y: 248},  {x: Date.parse('2017-09-26 20:54:23'), y: 832},  {x: Date.parse('2017-09-13 20:52:40'), y: 776},  {x: Date.parse('2017-09-12 23:41:25'), y: 119},  {x: Date.parse('2017-08-25 22:20:59'), y: 1073},  {x: Date.parse('2017-08-03 22:02:26'), y: 1256},  {x: Date.parse('2017-08-01 01:47:54'), y: 301},  {x: Date.parse('2017-06-21 23:03:58'), y: 2573},  {x: Date.parse('2017-06-21 02:13:12'), y: 131},  {x: Date.parse('2017-06-07 23:44:52'), y: 873},  {x: Date.parse('2017-05-24 00:29:15'), y: 966},  {x: Date.parse('2017-05-21 04:13:26'), y: 288},  {x: Date.parse('2017-05-20 01:26:12'), y: 107},  {x: Date.parse('2017-05-05 01:27:00'), y: 1351},  {x: Date.parse('2017-03-29 00:15:34'), y: 2262},  {x: Date.parse('2017-03-17 20:39:55'), y: 912},  {x: Date.parse('2017-03-15 18:22:00'), y: 257},  {x: Date.parse('2017-02-16 02:14:12'), y: 2099},  {x: Date.parse('2017-02-13 23:37:26'), y: 240},  {x: Date.parse('2017-01-27 00:55:41'), y: 1309},  {x: Date.parse('2017-01-26 00:49:10'), y: 168},  {x: Date.parse('2017-01-25 23:00:55'), y: 24},  {x: Date.parse('2017-01-25 00:40:16'), y: 178},  {x: Date.parse('2017-01-20 22:07:24'), y: 516},  {x: Date.parse('2017-01-17 03:23:54'), y: 426},  {x: Date.parse('2016-12-20 15:49:31'), y: 1818},  {x: Date.parse('2016-12-17 07:55:42'), y: 280},  {x: Date.parse('2016-12-08 00:37:29'), y: 904},  {x: Date.parse('2016-11-01 22:22:15'), y: 2819},  {x: Date.parse('2016-10-31 19:53:35'), y: 151},  {x: Date.parse('2016-10-13 18:48:32'), y: 1320},  {x: Date.parse('2016-10-11 01:23:01'), y: 290},  {x: Date.parse('2016-09-19 20:07:55'), y: 1575},  {x: Date.parse('2016-08-30 00:18:47'), y: 1546},  {x: Date.parse('2016-07-27 19:19:39'), y: 2561},  {x: Date.parse('2016-07-22 19:50:50'), y: 574},  {x: Date.parse('2016-07-20 08:35:24'), y: 387},  {x: Date.parse('2016-07-09 05:34:06'), y: 1341},  {x: Date.parse('2016-03-29 17:24:58'), y: 42327},  {x: Date.parse('2016-01-22 21:37:07'), y: 2058},  {x: Date.parse('2015-12-16 23:42:53'), y: 194},  {x: Date.parse('2015-12-12 01:05:21'), y: 57},  {x: Date.parse('2015-12-10 01:02:49'), y: 32},  {x: Date.parse('2015-12-08 20:28:31'), y: 61},  {x: Date.parse('2015-10-28 18:54:49'), y: 249},  {x: Date.parse('2015-10-16 05:42:43'), y: 21},  {x: Date.parse('2015-10-06 05:38:48'), y: 34},  {x: Date.parse('2015-10-02 21:41:00'), y: 10},  {x: Date.parse('2015-09-24 08:53:26'), y: 24},  {x: Date.parse('2015-09-22 02:37:22'), y: 10},  {x: Date.parse('2015-09-20 02:07:41'), y: 17},  {x: Date.parse('2015-09-08 19:39:29'), y: 93},  {x: Date.parse('2015-08-27 00:03:56'), y: 25},  {x: Date.parse('2015-08-21 01:45:49'), y: 33},  {x: Date.parse('2015-08-13 21:40:09'), y: 18},  {x: Date.parse('2015-07-24 04:17:45'), y: 39},  {x: Date.parse('2015-07-23 04:47:41'), y: 12},  {x: Date.parse('2015-07-21 23:51:51'), y: 17},  {x: Date.parse('2015-07-18 02:21:16'), y: 21},  {x: Date.parse('2015-07-14 04:45:04'), y: 22},  {x: Date.parse('2015-07-10 01:10:48'), y: 29},  {x: Date.parse('2015-07-03 01:57:32'), y: 10},  {x: Date.parse('2015-06-09 00:48:44'), y: 75},  {x: Date.parse('2015-05-31 15:37:19'), y: 4},  {x: Date.parse('2015-05-31 08:27:28'), y: 1},  {x: Date.parse('2015-05-14 10:24:09'), y: 18},  {x: Date.parse('2015-05-13 21:59:50'), y: 2},  {x: Date.parse('2015-05-12 22:35:39'), y: 7},  {x: Date.parse('2015-04-22 00:02:35'), y: 11},  {x: Date.parse('2015-04-15 20:21:56'), y: 7},  {x: Date.parse('2015-04-15 20:46:47'), y: 0},  {x: Date.parse('2015-04-09 22:42:30'), y: 71},  {x: Date.parse('2015-04-09 23:17:18'), y: 0},  {x: Date.parse('2015-04-09 23:26:13'), y: 0},  {x: Date.parse('2015-04-10 00:01:58'), y: 0},  {x: Date.parse('2015-04-10 00:07:35'), y: 0},  {x: Date.parse('2015-04-10 00:09:25'), y: 0},  {x: Date.parse('2015-04-08 22:16:12'), y: 50},  {x: Date.parse('2015-03-26 21:20:27'), y: 1725},  {x: Date.parse('2015-03-25 11:37:26'), y: 339},  {x: Date.parse('2015-03-21 01:15:53'), y: 1017},  {x: Date.parse('2015-03-02 22:57:57'), y: 2890},  {x: Date.parse('2015-02-20 23:53:17'), y: 1346},  {x: Date.parse('2015-02-13 22:26:34'), y: 1155},  {x: Date.parse('2015-02-12 06:45:25'), y: 316},  {x: Date.parse('2015-01-23 00:45:15'), y: 3139},  {x: Date.parse('2015-01-13 21:14:47'), y: 1482},  {x: Date.parse('2015-01-10 21:04:40'), y: 527},  {x: Date.parse('2015-01-01 23:36:39'), y: 1313},  {x: Date.parse('2015-01-01 03:05:29'), y: 132},  {x: Date.parse('2014-12-21 18:03:51'), y: 1305},  {x: Date.parse('2014-12-04 21:28:48'), y: 2157},  {x: Date.parse('2014-11-20 22:38:23'), y: 2195},  {x: Date.parse('2014-11-01 23:55:38'), y: 2617},  {x: Date.parse('2014-10-28 01:53:36'), y: 837},  {x: Date.parse('2014-10-23 08:07:29'), y: 778},  {x: Date.parse('2014-10-20 20:11:30'), y: 466},  {x: Date.parse('2014-10-16 19:54:37'), y: 638},  {x: Date.parse('2014-10-14 23:03:08'), y: 479},  {x: Date.parse('2014-06-24 22:55:15'), y: 13064},  {x: Date.parse('2014-05-29 20:15:35'), y: 4170},  {x: Date.parse('2014-05-27 22:16:06'), y: 591},  {x: Date.parse('2014-05-27 03:54:22'), y: 232},  {x: Date.parse('2014-04-22 09:41:24'), y: 5888},  {x: Date.parse('2014-03-18 19:02:21'), y: 5950},  {x: Date.parse('2014-03-04 23:09:47'), y: 3303},  {x: Date.parse('2013-12-31 22:17:17'), y: 7523},  {x: Date.parse('2013-12-18 06:48:24'), y: 1883},  {x: Date.parse('2013-12-10 05:43:27'), y: 1293},  {x: Date.parse('2013-11-05 08:16:06'), y: 3506},  {x: Date.parse('2013-10-26 00:45:07'), y: 1738},  {x: Date.parse('2013-08-24 20:54:16'), y: 6655},  {x: Date.parse('2013-07-23 04:02:28'), y: 3793},  {x: Date.parse('2013-06-25 23:04:34'), y: 2376},  {x: Date.parse('2013-06-25 21:51:27'), y: 21},  {x: Date.parse('2013-06-23 19:43:49'), y: 248},  {x: Date.parse('2013-06-19 04:28:17'), y: 403},  {x: Date.parse('2013-06-15 23:51:02'), y: 325},  {x: Date.parse('2013-06-13 02:22:48'), y: 238},  {x: Date.parse('2013-06-05 20:57:55'), y: 414},  {x: Date.parse('2013-05-27 23:36:42'), y: 584},  {x: Date.parse('2013-05-26 11:11:46'), y: 86}] ]
+};
+
+
+var total = 0;
+
+var serieData = data.series[0];
+data.labels.reverse();
+serieData.reverse();
+for (var i=0;i<serieData.length;i++) {
+	var t = serieData[i].y;
+	serieData[i].y += total;
+	total += t;
+}
+
+console.log(serieData);
+
+var options = {
+	fullWidth: true
+};
+
+options.axisX = {
+	type: Chartist.FixedScaleAxis,
+	divisor: 10,
+	labelInterpolationFnc: function(value) {
+		var d = new Date(value);
+		var m = d.getMonth() + 1;
+		var YYYY = d.getFullYear();
+		var MM = m < 10 ? "0" + m : "" + m;
+		return YYYY + "/" + MM;
+	}
+}
+
+var serieData = data.series[0];
+if (serieData.length > 100) {
+	
+}
+new Chartist.Line('#downloads-chart', data, options);
+</script>
+
+
+<table class="table table-hover table-condensed">
+	<thead>
+		<tr>
+			<th width="100">Version</th>
+			<th>Release Notes</th>
+			<th width="220">Install</th>
+			<th width="100">Downloads</th>
+		</tr>
+	</thead>
+	<tbody>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.6.4/" class="text-nowrap">8.6.4</a>
+			<br /><small style="white-space: nowrap" title="2018-10-19 21:28:37">4 weeks ago</small>
+		</td>
+		<td>ES6 improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.6.4</code></td>
+		<td>1628</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.6.3/" class="text-nowrap">8.6.3</a>
+			<br /><small style="white-space: nowrap" title="2018-10-19 21:28:24">4 weeks ago</small>
+		</td>
+		<td>Fixed for Stage3D scissor, locked Lime version, other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.6.3</code></td>
+		<td>4</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.6.2/" class="text-nowrap">8.6.2</a>
+			<br /><small style="white-space: nowrap" title="2018-10-15 22:41:52">5 weeks ago</small>
+		</td>
+		<td>Minor NPM-related fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.6.2</code></td>
+		<td>291</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.6.1/" class="text-nowrap">8.6.1</a>
+			<br /><small style="white-space: nowrap" title="2018-10-15 18:49:04">5 weeks ago</small>
+		</td>
+		<td>Minor improvements and fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.6.1</code></td>
+		<td>20</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.6.0/" class="text-nowrap">8.6.0</a>
+			<br /><small style="white-space: nowrap" title="2018-10-12 23:24:31">5 weeks ago</small>
+		</td>
+		<td>Added initial support for PixelSnapping, DisplacementMapFilter, scrollRect fixes and more</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.6.0</code></td>
+		<td>210</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.5.1/" class="text-nowrap">8.5.1</a>
+			<br /><small style="white-space: nowrap" title="2018-09-27 18:45:58">7 weeks ago</small>
+		</td>
+		<td>Fixed a regression in indexed hardware graphics.drawTriangles rendering</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.5.1</code></td>
+		<td>759</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.5.0/" class="text-nowrap">8.5.0</a>
+			<br /><small style="white-space: nowrap" title="2018-09-26 23:23:10">7 weeks ago</small>
+		</td>
+		<td>Migrated display list renderer to Context3D, improved Stage3D support</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.5.0</code></td>
+		<td>83</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.4.1/" class="text-nowrap">8.4.1</a>
+			<br /><small style="white-space: nowrap" title="2018-08-13 18:40:10">3 months ago</small>
+		</td>
+		<td>Minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.4.1</code></td>
+		<td>2539</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.4.0/" class="text-nowrap">8.4.0</a>
+			<br /><small style="white-space: nowrap" title="2018-08-09 21:55:53">3 months ago</small>
+		</td>
+		<td>Improved native font auto-hinting, updated for Lime 7, better Stage3D state management</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.4.0</code></td>
+		<td>377</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.3.0/" class="text-nowrap">8.3.0</a>
+			<br /><small style="white-space: nowrap" title="2018-06-25 22:51:41">4 months ago</small>
+		</td>
+		<td>Added tile.blendMode, shader and text justify fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.3.0</code></td>
+		<td>2540</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.2.2/" class="text-nowrap">8.2.2</a>
+			<br /><small style="white-space: nowrap" title="2018-06-06 00:09:03">5 months ago</small>
+		</td>
+		<td>Fixed minor regression in TextField input cursor</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.2.2</code></td>
+		<td>1333</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.2.1/" class="text-nowrap">8.2.1</a>
+			<br /><small style="white-space: nowrap" title="2018-06-05 22:30:18">5 months ago</small>
+		</td>
+		<td>Fixed minor regressions in texture upload and TextField</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.2.1</code></td>
+		<td>11</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.2.0/" class="text-nowrap">8.2.0</a>
+			<br /><small style="white-space: nowrap" title="2018-06-02 00:05:02">5 months ago</small>
+		</td>
+		<td>Addition of ES6 modules for NPM, many fixes and improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.2.0</code></td>
+		<td>313</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.1.1/" class="text-nowrap">8.1.1</a>
+			<br /><small style="white-space: nowrap" title="2018-05-18 05:02:24">6 months ago</small>
+		</td>
+		<td>Fixed minor issues with some ActionScript 3.0 externs</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.1.1</code></td>
+		<td>1147</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.1.0/" class="text-nowrap">8.1.0</a>
+			<br /><small style="white-space: nowrap" title="2018-05-17 00:16:54">6 months ago</small>
+		</td>
+		<td>Added initial support for AS3 in NPM builds, Cairo mask fix</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.1.0</code></td>
+		<td>131</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.0.2/" class="text-nowrap">8.0.2</a>
+			<br /><small style="white-space: nowrap" title="2018-05-12 15:13:35">6 months ago</small>
+		</td>
+		<td>Improved SWF asset support, minor fixes and improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.0.2</code></td>
+		<td>445</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.0.1/" class="text-nowrap">8.0.1</a>
+			<br /><small style="white-space: nowrap" title="2018-05-08 19:39:21">6 months ago</small>
+		</td>
+		<td>CacheAsBitmap fixes, compile fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.0.1</code></td>
+		<td>350</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/8.0.0/" class="text-nowrap">8.0.0</a>
+			<br /><small style="white-space: nowrap" title="2018-05-04 22:20:50">6 months ago</small>
+		</td>
+		<td>Improved Tilemap, custom rendering, new custom shaders, added drawQuads</td>
+		<td><code class="text-nowrap">haxelib install openfl 8.0.0</code></td>
+		<td>462</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/7.1.2/" class="text-nowrap">7.1.2</a>
+			<br /><small style="white-space: nowrap" title="2018-02-16 21:27:55">9 months ago</small>
+		</td>
+		<td>Updated for Lime 6.2, improved compressed texture support, text-scroll fix</td>
+		<td><code class="text-nowrap">haxelib install openfl 7.1.2</code></td>
+		<td>2732</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/7.1.1/" class="text-nowrap">7.1.1</a>
+			<br /><small style="white-space: nowrap" title="2018-02-09 17:39:57">9 months ago</small>
+		</td>
+		<td>Minor improvement for use from CI environments, minor canvas render fix</td>
+		<td><code class="text-nowrap">haxelib install openfl 7.1.1</code></td>
+		<td>548</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/7.1.0/" class="text-nowrap">7.1.0</a>
+			<br /><small style="white-space: nowrap" title="2018-02-08 00:41:50">9 months ago</small>
+		</td>
+		<td>Initial support for Stage3D on NPM, additional fixes and improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 7.1.0</code></td>
+		<td>133</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/7.0.0/" class="text-nowrap">7.0.0</a>
+			<br /><small style="white-space: nowrap" title="2018-01-15 23:15:19">10 months ago</small>
+		</td>
+		<td>Added support for NPM-based OpenFL releases, many smaller improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 7.0.0</code></td>
+		<td>1528</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.5.3/" class="text-nowrap">6.5.3</a>
+			<br /><small style="white-space: nowrap" title="2017-12-06 05:01:44">11 months ago</small>
+		</td>
+		<td>Fixed a regression in Flash Player support</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.5.3</code></td>
+		<td>2255</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.5.2/" class="text-nowrap">6.5.2</a>
+			<br /><small style="white-space: nowrap" title="2017-12-05 19:30:56">11 months ago</small>
+		</td>
+		<td>Fixed setup issue, preparation for ES5 module support</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.5.2</code></td>
+		<td>42</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.5.1/" class="text-nowrap">6.5.1</a>
+			<br /><small style="white-space: nowrap" title="2017-11-29 22:02:06">1 year ago</small>
+		</td>
+		<td>Fixes for GL masking, ColorMatrixFilter and drawToBitmapData</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.5.1</code></td>
+		<td>466</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.5.0/" class="text-nowrap">6.5.0</a>
+			<br /><small style="white-space: nowrap" title="2017-11-10 23:56:33">1 year ago</small>
+		</td>
+		<td>Initial GL stencil-based mask support, TextField font and input improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.5.0</code></td>
+		<td>1040</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.4.0/" class="text-nowrap">6.4.0</a>
+			<br /><small style="white-space: nowrap" title="2017-11-06 23:29:17">1 year ago</small>
+		</td>
+		<td>Compressed texture support in Stage3D, better input TextField, other improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.4.0</code></td>
+		<td>375</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.3.0/" class="text-nowrap">6.3.0</a>
+			<br /><small style="white-space: nowrap" title="2017-10-24 16:35:08">1 year ago</small>
+		</td>
+		<td>Capture phase improvement, Tilemap colorTransform and URLRequest improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.3.0</code></td>
+		<td>730</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.2.2/" class="text-nowrap">6.2.2</a>
+			<br /><small style="white-space: nowrap" title="2017-10-12 20:53:09">1 year ago</small>
+		</td>
+		<td>Minor behavior improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.2.2</code></td>
+		<td>661</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.2.1/" class="text-nowrap">6.2.1</a>
+			<br /><small style="white-space: nowrap" title="2017-10-10 22:06:04">1 year ago</small>
+		</td>
+		<td>Improvements TextField, cacheAsBitmap and drawTriangles rendering, other improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.2.1</code></td>
+		<td>248</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.2.0/" class="text-nowrap">6.2.0</a>
+			<br /><small style="white-space: nowrap" title="2017-09-26 20:54:23">1 year ago</small>
+		</td>
+		<td>Added openfl.utils.Function, MouseEvent.RELEASE_OUTSIDE, additional improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.2.0</code></td>
+		<td>832</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.1.2/" class="text-nowrap">6.1.2</a>
+			<br /><small style="white-space: nowrap" title="2017-09-13 20:52:40">1 year ago</small>
+		</td>
+		<td>Fixed a minor regression in SWF processing</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.1.2</code></td>
+		<td>776</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.1.1/" class="text-nowrap">6.1.1</a>
+			<br /><small style="white-space: nowrap" title="2017-09-12 23:41:25">1 year ago</small>
+		</td>
+		<td>Improved HTML5 error messages, minor improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.1.1</code></td>
+		<td>119</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.1.0/" class="text-nowrap">6.1.0</a>
+			<br /><small style="white-space: nowrap" title="2017-08-25 22:20:59">1 year ago</small>
+		</td>
+		<td>Official support for Adobe AIR, improvements to Tilemap and TileArray</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.1.0</code></td>
+		<td>1073</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.0.1/" class="text-nowrap">6.0.1</a>
+			<br /><small style="white-space: nowrap" title="2017-08-03 22:02:26">1 year ago</small>
+		</td>
+		<td>Minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.0.1</code></td>
+		<td>1256</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/6.0.0/" class="text-nowrap">6.0.0</a>
+			<br /><small style="white-space: nowrap" title="2017-08-01 01:47:54">1 year ago</small>
+		</td>
+		<td>Added GL custom shader/colorTransform, SWF improvements, beta TileArray API</td>
+		<td><code class="text-nowrap">haxelib install openfl 6.0.0</code></td>
+		<td>301</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/5.1.5/" class="text-nowrap">5.1.5</a>
+			<br /><small style="white-space: nowrap" title="2017-06-21 23:03:58">1 year ago</small>
+		</td>
+		<td>Minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 5.1.5</code></td>
+		<td>2573</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/5.1.4/" class="text-nowrap">5.1.4</a>
+			<br /><small style="white-space: nowrap" title="2017-06-21 02:13:12">1 year ago</small>
+		</td>
+		<td>Renderer, Socket and Loader improvements, other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 5.1.4</code></td>
+		<td>131</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/5.1.3/" class="text-nowrap">5.1.3</a>
+			<br /><small style="white-space: nowrap" title="2017-06-07 23:44:52">1 year ago</small>
+		</td>
+		<td>Stability fixes, UTF-8 improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 5.1.3</code></td>
+		<td>873</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/5.1.2/" class="text-nowrap">5.1.2</a>
+			<br /><small style="white-space: nowrap" title="2017-05-24 00:29:15">1 year ago</small>
+		</td>
+		<td>Minor improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 5.1.2</code></td>
+		<td>966</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/5.1.1/" class="text-nowrap">5.1.1</a>
+			<br /><small style="white-space: nowrap" title="2017-05-21 04:13:26">1 year ago</small>
+		</td>
+		<td>Improve Flash code completion, minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 5.1.1</code></td>
+		<td>288</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/5.1.0/" class="text-nowrap">5.1.0</a>
+			<br /><small style="white-space: nowrap" title="2017-05-20 01:26:12">1 year ago</small>
+		</td>
+		<td>Additional GraphicsPath improvements, added StaticText/AVM1Movie, initial cacheAsBitmap support</td>
+		<td><code class="text-nowrap">haxelib install openfl 5.1.0</code></td>
+		<td>107</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/5.0.0/" class="text-nowrap">5.0.0</a>
+			<br /><small style="white-space: nowrap" title="2017-05-05 01:27:00">1 year ago</small>
+		</td>
+		<td>Improved GraphicsPath support, improved Vector and Stage3D</td>
+		<td><code class="text-nowrap">haxelib install openfl 5.0.0</code></td>
+		<td>1351</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.9.2/" class="text-nowrap">4.9.2</a>
+			<br /><small style="white-space: nowrap" title="2017-03-29 00:15:34">1 year ago</small>
+		</td>
+		<td>SWF Library and Context3D fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.9.2</code></td>
+		<td>2262</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.9.1/" class="text-nowrap">4.9.1</a>
+			<br /><small style="white-space: nowrap" title="2017-03-17 20:39:55">1 year ago</small>
+		</td>
+		<td>Fixed performance regression, minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.9.1</code></td>
+		<td>912</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.9.0/" class="text-nowrap">4.9.0</a>
+			<br /><small style="white-space: nowrap" title="2017-03-15 18:22:00">1 year ago</small>
+		</td>
+		<td>Runtime SWFLite loading, improved HTML5 embed, Stage3D improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.9.0</code></td>
+		<td>257</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.8.1/" class="text-nowrap">4.8.1</a>
+			<br /><small style="white-space: nowrap" title="2017-02-16 02:14:12">1 year ago</small>
+		</td>
+		<td>Improved support for loading Sound from bytes, minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.8.1</code></td>
+		<td>2099</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.8.0/" class="text-nowrap">4.8.0</a>
+			<br /><small style="white-space: nowrap" title="2017-02-13 23:37:26">1 year ago</small>
+		</td>
+		<td>Stage3D improvements, added Tile originX/originY, TextField improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.8.0</code></td>
+		<td>240</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.7.3/" class="text-nowrap">4.7.3</a>
+			<br /><small style="white-space: nowrap" title="2017-01-27 00:55:41">1 year ago</small>
+		</td>
+		<td>Fixed regression in textField.textWidth, Capabilities improvements, other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.7.3</code></td>
+		<td>1309</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.7.2/" class="text-nowrap">4.7.2</a>
+			<br /><small style="white-space: nowrap" title="2017-01-26 00:49:10">1 year ago</small>
+		</td>
+		<td>Fixed typo</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.7.2</code></td>
+		<td>168</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.7.1/" class="text-nowrap">4.7.1</a>
+			<br /><small style="white-space: nowrap" title="2017-01-25 23:00:55">1 year ago</small>
+		</td>
+		<td>Improved Event.ACTIVATE/DEACTIVATE behavior, stage and scale fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.7.1</code></td>
+		<td>24</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.7.0/" class="text-nowrap">4.7.0</a>
+			<br /><small style="white-space: nowrap" title="2017-01-25 00:40:16">1 year ago</small>
+		</td>
+		<td>Added support for high-DPI HTML5 output, TextField improvement, graphics improvement</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.7.0</code></td>
+		<td>178</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.6.0/" class="text-nowrap">4.6.0</a>
+			<br /><small style="white-space: nowrap" title="2017-01-20 22:07:24">1 year ago</small>
+		</td>
+		<td>Added (initial) support for PrintJob on HTML5, updated AGALMiniAssembler, TextField improvement</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.6.0</code></td>
+		<td>516</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.5.3/" class="text-nowrap">4.5.3</a>
+			<br /><small style="white-space: nowrap" title="2017-01-17 03:23:54">1 year ago</small>
+		</td>
+		<td>Updated for Lime 3.6, better AGALMiniAssembler, improved preloading, fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.5.3</code></td>
+		<td>426</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.5.2/" class="text-nowrap">4.5.2</a>
+			<br /><small style="white-space: nowrap" title="2016-12-20 15:49:31">1 year ago</small>
+		</td>
+		<td>Added sprite.dropTarget, other minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.5.2</code></td>
+		<td>1818</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.5.1/" class="text-nowrap">4.5.1</a>
+			<br /><small style="white-space: nowrap" title="2016-12-17 07:55:42">1 year ago</small>
+		</td>
+		<td>Improved preloader, improved SWF libraries, fixes for hit testing</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.5.1</code></td>
+		<td>280</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.5.0/" class="text-nowrap">4.5.0</a>
+			<br /><small style="white-space: nowrap" title="2016-12-08 00:37:29">2 years ago</small>
+		</td>
+		<td>Merged SWF library, many DOM renderer improvements, better framebuffer support</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.5.0</code></td>
+		<td>904</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.4.1/" class="text-nowrap">4.4.1</a>
+			<br /><small style="white-space: nowrap" title="2016-11-01 22:22:15">2 years ago</small>
+		</td>
+		<td>Modular HTML5 build support, improved HTML5 video, Stage3D improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.4.1</code></td>
+		<td>2819</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.4.0/" class="text-nowrap">4.4.0</a>
+			<br /><small style="white-space: nowrap" title="2016-10-31 19:53:35">2 years ago</small>
+		</td>
+		<td></td>
+		<td><code class="text-nowrap">haxelib install openfl 4.4.0</code></td>
+		<td>151</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.3.1/" class="text-nowrap">4.3.1</a>
+			<br /><small style="white-space: nowrap" title="2016-10-13 18:48:32">2 years ago</small>
+		</td>
+		<td>Added basic Perlin noise, fixes for Stage3D, improved htmlText</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.3.1</code></td>
+		<td>1320</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.3.0/" class="text-nowrap">4.3.0</a>
+			<br /><small style="white-space: nowrap" title="2016-10-11 01:23:01">2 years ago</small>
+		</td>
+		<td>Improved custom shader support, ConvolutionFilter and ColorMatrixFilter</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.3.0</code></td>
+		<td>290</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.2.0/" class="text-nowrap">4.2.0</a>
+			<br /><small style="white-space: nowrap" title="2016-09-19 20:07:55">2 years ago</small>
+		</td>
+		<td>Rewrote support for scrollRect, added support for disabling smoothing using StageQuality.LOW</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.2.0</code></td>
+		<td>1575</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.1.0/" class="text-nowrap">4.1.0</a>
+			<br /><small style="white-space: nowrap" title="2016-08-30 00:18:47">2 years ago</small>
+		</td>
+		<td>New Stage3D implementation, Mouse.cursor support, new openfl.Vector</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.1.0</code></td>
+		<td>1546</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.0.3/" class="text-nowrap">4.0.3</a>
+			<br /><small style="white-space: nowrap" title="2016-07-27 19:19:39">2 years ago</small>
+		</td>
+		<td>Added SoundMixer, Utils3D.projectVectors, Android fix</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.0.3</code></td>
+		<td>2561</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.0.2/" class="text-nowrap">4.0.2</a>
+			<br /><small style="white-space: nowrap" title="2016-07-22 19:50:50">2 years ago</small>
+		</td>
+		<td>Improvements to Tilemap and ByteArray compression, minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.0.2</code></td>
+		<td>574</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.0.1/" class="text-nowrap">4.0.1</a>
+			<br /><small style="white-space: nowrap" title="2016-07-20 08:35:24">2 years ago</small>
+		</td>
+		<td>Improvements to Tilemap, ability to disable vector upscaling</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.0.1</code></td>
+		<td>387</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/4.0.0/" class="text-nowrap">4.0.0</a>
+			<br /><small style="white-space: nowrap" title="2016-07-09 05:34:06">2 years ago</small>
+		</td>
+		<td>WebGL by default on HTML5, better Graphics rendering, many other improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 4.0.0</code></td>
+		<td>1341</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.6.1/" class="text-nowrap">3.6.1</a>
+			<br /><small style="white-space: nowrap" title="2016-03-29 17:24:58">2 years ago</small>
+		</td>
+		<td>Tilemap improvements, compile fixes, Haxe 3.3 support</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.6.1</code></td>
+		<td>42327</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.6.0/" class="text-nowrap">3.6.0</a>
+			<br /><small style="white-space: nowrap" title="2016-01-22 21:37:07">2 years ago</small>
+		</td>
+		<td>Standardized externs, enums, and inlining. Consistency improvements, fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.6.0</code></td>
+		<td>2058</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.5.3/" class="text-nowrap">3.5.3</a>
+			<br /><small style="white-space: nowrap" title="2015-12-16 23:42:53">3 years ago</small>
+		</td>
+		<td>Improved extern definitions, minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.5.3</code></td>
+		<td>194</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.5.2/" class="text-nowrap">3.5.2</a>
+			<br /><small style="white-space: nowrap" title="2015-12-12 01:05:21">3 years ago</small>
+		</td>
+		<td>Extern improvements, minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.5.2</code></td>
+		<td>57</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.5.1/" class="text-nowrap">3.5.1</a>
+			<br /><small style="white-space: nowrap" title="2015-12-10 01:02:49">3 years ago</small>
+		</td>
+		<td>Improved GameInput, other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.5.1</code></td>
+		<td>32</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.5.0/" class="text-nowrap">3.5.0</a>
+			<br /><small style="white-space: nowrap" title="2015-12-08 20:28:31">3 years ago</small>
+		</td>
+		<td>Improved openfl.utils.Object, included Flash externs and new abstract ByteArray</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.5.0</code></td>
+		<td>61</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.4.0/" class="text-nowrap">3.4.0</a>
+			<br /><small style="white-space: nowrap" title="2015-10-28 18:54:49">3 years ago</small>
+		</td>
+		<td>Consistency fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.4.0</code></td>
+		<td>249</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.3.9/" class="text-nowrap">3.3.9</a>
+			<br /><small style="white-space: nowrap" title="2015-10-16 05:42:43">3 years ago</small>
+		</td>
+		<td>URLLoader/Loader improvements, initial custom hardware shader/filter support</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.3.9</code></td>
+		<td>21</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.3.8/" class="text-nowrap">3.3.8</a>
+			<br /><small style="white-space: nowrap" title="2015-10-06 05:38:48">3 years ago</small>
+		</td>
+		<td>Updated for new Lime and SWF libraries and other improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.3.8</code></td>
+		<td>34</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.3.7/" class="text-nowrap">3.3.7</a>
+			<br /><small style="white-space: nowrap" title="2015-10-02 21:41:00">3 years ago</small>
+		</td>
+		<td>Added dynamic DisplayObject child access, continued improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.3.7</code></td>
+		<td>10</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.3.6/" class="text-nowrap">3.3.6</a>
+			<br /><small style="white-space: nowrap" title="2015-09-24 08:53:26">3 years ago</small>
+		</td>
+		<td>Minor updates</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.3.6</code></td>
+		<td>24</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.3.5/" class="text-nowrap">3.3.5</a>
+			<br /><small style="white-space: nowrap" title="2015-09-22 02:37:22">3 years ago</small>
+		</td>
+		<td>URLLoader improvements, hit test and graphics fixes, iOS improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.3.5</code></td>
+		<td>10</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.3.4/" class="text-nowrap">3.3.4</a>
+			<br /><small style="white-space: nowrap" title="2015-09-20 02:07:41">3 years ago</small>
+		</td>
+		<td>Improved bounds calculations, Graphics and TextField improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.3.4</code></td>
+		<td>17</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.3.3/" class="text-nowrap">3.3.3</a>
+			<br /><small style="white-space: nowrap" title="2015-09-08 19:39:29">3 years ago</small>
+		</td>
+		<td>Updated DisplayObject transform code, futures in openfl.Assets, more fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.3.3</code></td>
+		<td>93</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.3.2/" class="text-nowrap">3.3.2</a>
+			<br /><small style="white-space: nowrap" title="2015-08-27 00:03:56">3 years ago</small>
+		</td>
+		<td>Improved hit testing, bitmapData improvements, many more fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.3.2</code></td>
+		<td>25</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.3.1/" class="text-nowrap">3.3.1</a>
+			<br /><small style="white-space: nowrap" title="2015-08-21 01:45:49">3 years ago</small>
+		</td>
+		<td>Improved text, better pixel font support, multiple window support, other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.3.1</code></td>
+		<td>33</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.3.0/" class="text-nowrap">3.3.0</a>
+			<br /><small style="white-space: nowrap" title="2015-08-13 21:40:09">3 years ago</small>
+		</td>
+		<td>New TextField, better performance, many other improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.3.0</code></td>
+		<td>18</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.2.2/" class="text-nowrap">3.2.2</a>
+			<br /><small style="white-space: nowrap" title="2015-07-24 04:17:45">3 years ago</small>
+		</td>
+		<td>Minor improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.2.2</code></td>
+		<td>39</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.2.1/" class="text-nowrap">3.2.1</a>
+			<br /><small style="white-space: nowrap" title="2015-07-23 04:47:41">3 years ago</small>
+		</td>
+		<td>Stability fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.2.1</code></td>
+		<td>12</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.2.0/" class="text-nowrap">3.2.0</a>
+			<br /><small style="white-space: nowrap" title="2015-07-21 23:51:51">3 years ago</small>
+		</td>
+		<td>Moved to BGRA/premultiplied data, speed improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.2.0</code></td>
+		<td>17</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.1.4/" class="text-nowrap">3.1.4</a>
+			<br /><small style="white-space: nowrap" title="2015-07-18 02:21:16">3 years ago</small>
+		</td>
+		<td>Updated to Lime 2.5, improved Cairo renderer</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.1.4</code></td>
+		<td>21</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.1.3/" class="text-nowrap">3.1.3</a>
+			<br /><small style="white-space: nowrap" title="2015-07-14 04:45:04">3 years ago</small>
+		</td>
+		<td>Continued improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.1.3</code></td>
+		<td>22</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.1.2/" class="text-nowrap">3.1.2</a>
+			<br /><small style="white-space: nowrap" title="2015-07-10 01:10:48">3 years ago</small>
+		</td>
+		<td>Improved use of async actions, improved scrollRect, Cairo fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.1.2</code></td>
+		<td>29</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.1.1/" class="text-nowrap">3.1.1</a>
+			<br /><small style="white-space: nowrap" title="2015-07-03 01:57:32">3 years ago</small>
+		</td>
+		<td>TextField improvements, better EventDispatcher behavior and other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.1.1</code></td>
+		<td>10</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.1.0/" class="text-nowrap">3.1.0</a>
+			<br /><small style="white-space: nowrap" title="2015-06-09 00:48:44">3 years ago</small>
+		</td>
+		<td>Enable Cairo graphics, add hxscout support</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.1.0</code></td>
+		<td>75</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.8/" class="text-nowrap">3.0.8</a>
+			<br /><small style="white-space: nowrap" title="2015-05-31 15:37:19">3 years ago</small>
+		</td>
+		<td>Guard hybrid Cairo + GL behavior behind #if cairo_graphics for now</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.8</code></td>
+		<td>4</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.7/" class="text-nowrap">3.0.7</a>
+			<br /><small style="white-space: nowrap" title="2015-05-31 08:27:28">3 years ago</small>
+		</td>
+		<td>Added hybrid Cairo supports, graphics improvements, other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.7</code></td>
+		<td>1</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.6/" class="text-nowrap">3.0.6</a>
+			<br /><small style="white-space: nowrap" title="2015-05-14 10:24:09">3 years ago</small>
+		</td>
+		<td>Minor fix</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.6</code></td>
+		<td>18</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.5/" class="text-nowrap">3.0.5</a>
+			<br /><small style="white-space: nowrap" title="2015-05-13 21:59:50">3 years ago</small>
+		</td>
+		<td>Minor improvements to errors and events</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.5</code></td>
+		<td>2</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.4/" class="text-nowrap">3.0.4</a>
+			<br /><small style="white-space: nowrap" title="2015-05-12 22:35:39">3 years ago</small>
+		</td>
+		<td>Big improvements to canvas Graphics accuracy, text input support, HTML5 scrollRect</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.4</code></td>
+		<td>7</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.3/" class="text-nowrap">3.0.3</a>
+			<br /><small style="white-space: nowrap" title="2015-04-22 00:02:35">3 years ago</small>
+		</td>
+		<td>Improvements to text, sound, bitmapData.draw</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.3</code></td>
+		<td>11</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.2/" class="text-nowrap">3.0.2</a>
+			<br /><small style="white-space: nowrap" title="2015-04-15 20:21:56">3 years ago</small>
+		</td>
+		<td>Improvements to keyboard, TextField, and other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.2</code></td>
+		<td>7</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.2/" class="text-nowrap">3.0.2</a>
+			<br /><small style="white-space: nowrap" title="2015-04-15 20:46:47">3 years ago</small>
+		</td>
+		<td>Improvements to keyboard, TextField, and other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.2</code></td>
+		<td>0</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.1/" class="text-nowrap">3.0.1</a>
+			<br /><small style="white-space: nowrap" title="2015-04-09 22:42:30">3 years ago</small>
+		</td>
+		<td>Improved -Dhybrid support</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.1</code></td>
+		<td>71</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.1/" class="text-nowrap">3.0.1</a>
+			<br /><small style="white-space: nowrap" title="2015-04-09 23:17:18">3 years ago</small>
+		</td>
+		<td>Improved -Dhybrid support</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.1</code></td>
+		<td>0</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.1/" class="text-nowrap">3.0.1</a>
+			<br /><small style="white-space: nowrap" title="2015-04-09 23:26:13">3 years ago</small>
+		</td>
+		<td>Improved -Dhybrid support</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.1</code></td>
+		<td>0</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.1/" class="text-nowrap">3.0.1</a>
+			<br /><small style="white-space: nowrap" title="2015-04-10 00:01:58">3 years ago</small>
+		</td>
+		<td>Improved -Dhybrid support</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.1</code></td>
+		<td>0</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.1/" class="text-nowrap">3.0.1</a>
+			<br /><small style="white-space: nowrap" title="2015-04-10 00:07:35">3 years ago</small>
+		</td>
+		<td>Improved -Dhybrid support</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.1</code></td>
+		<td>0</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.1/" class="text-nowrap">3.0.1</a>
+			<br /><small style="white-space: nowrap" title="2015-04-10 00:09:25">3 years ago</small>
+		</td>
+		<td>Improved -Dhybrid support</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.1</code></td>
+		<td>0</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.0/" class="text-nowrap">3.0.0</a>
+			<br /><small style="white-space: nowrap" title="2015-04-08 22:16:12">3 years ago</small>
+		</td>
+		<td>Added -Dhybrid, additional fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.0</code></td>
+		<td>50</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.0-beta.3/" class="text-nowrap">3.0.0-beta.3</a>
+			<br /><small style="white-space: nowrap" title="2015-03-26 21:20:27">3 years ago</small>
+		</td>
+		<td>Updated for Lime 2.3, iOS fix</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.0-beta.3</code></td>
+		<td>1725</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.0-beta.2/" class="text-nowrap">3.0.0-beta.2</a>
+			<br /><small style="white-space: nowrap" title="2015-03-25 11:37:26">3 years ago</small>
+		</td>
+		<td>Minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.0-beta.2</code></td>
+		<td>339</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/3.0.0-beta/" class="text-nowrap">3.0.0-beta</a>
+			<br /><small style="white-space: nowrap" title="2015-03-21 01:15:53">3 years ago</small>
+		</td>
+		<td>Introduce new renderer/backend by default, use -Dv2 or -Dlegacy for compatibility mode</td>
+		<td><code class="text-nowrap">haxelib install openfl 3.0.0-beta</code></td>
+		<td>1017</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.2.8/" class="text-nowrap">2.2.8</a>
+			<br /><small style="white-space: nowrap" title="2015-03-02 22:57:57">3 years ago</small>
+		</td>
+		<td>Added MOUSE_OVER/MOUSE_OUT and SimpleButton support on next, other improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.2.8</code></td>
+		<td>2890</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.2.7/" class="text-nowrap">2.2.7</a>
+			<br /><small style="white-space: nowrap" title="2015-02-20 23:53:17">3 years ago</small>
+		</td>
+		<td>Added canvas mask support and TILE_BLEND_SUBTRACT, other improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.2.7</code></td>
+		<td>1346</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.2.6/" class="text-nowrap">2.2.6</a>
+			<br /><small style="white-space: nowrap" title="2015-02-13 22:26:34">3 years ago</small>
+		</td>
+		<td>Minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.2.6</code></td>
+		<td>1155</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.2.5/" class="text-nowrap">2.2.5</a>
+			<br /><small style="white-space: nowrap" title="2015-02-12 06:45:25">3 years ago</small>
+		</td>
+		<td>Fixed BlackBerry simulator support, other improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.2.5</code></td>
+		<td>316</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.2.4/" class="text-nowrap">2.2.4</a>
+			<br /><small style="white-space: nowrap" title="2015-01-23 00:45:15">3 years ago</small>
+		</td>
+		<td>Added bitmapData.encode, improved HTML5 -final, other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.2.4</code></td>
+		<td>3139</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.2.3/" class="text-nowrap">2.2.3</a>
+			<br /><small style="white-space: nowrap" title="2015-01-13 21:14:47">3 years ago</small>
+		</td>
+		<td>Added initial support for Stage3D APIs</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.2.3</code></td>
+		<td>1482</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.2.2/" class="text-nowrap">2.2.2</a>
+			<br /><small style="white-space: nowrap" title="2015-01-10 21:04:40">3 years ago</small>
+		</td>
+		<td>Improved getObjectsUnderPoint, fixed Neko crash</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.2.2</code></td>
+		<td>527</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.2.1/" class="text-nowrap">2.2.1</a>
+			<br /><small style="white-space: nowrap" title="2015-01-01 23:36:39">3 years ago</small>
+		</td>
+		<td>Better stage behavior for document class, other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.2.1</code></td>
+		<td>1313</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.2.0/" class="text-nowrap">2.2.0</a>
+			<br /><small style="white-space: nowrap" title="2015-01-01 03:05:29">3 years ago</small>
+		</td>
+		<td>Improved event support, better support, other key fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.2.0</code></td>
+		<td>132</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.1.8/" class="text-nowrap">2.1.8</a>
+			<br /><small style="white-space: nowrap" title="2014-12-21 18:03:51">4 years ago</small>
+		</td>
+		<td>Minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.1.8</code></td>
+		<td>1305</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.1.7/" class="text-nowrap">2.1.7</a>
+			<br /><small style="white-space: nowrap" title="2014-12-04 21:28:48">4 years ago</small>
+		</td>
+		<td>Graphic improvement, right-click on HTML5, compile guards</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.1.7</code></td>
+		<td>2157</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.1.6/" class="text-nowrap">2.1.6</a>
+			<br /><small style="white-space: nowrap" title="2014-11-20 22:38:23">4 years ago</small>
+		</td>
+		<td>Improvements to &#039;next&#039; rendering</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.1.6</code></td>
+		<td>2195</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.1.5/" class="text-nowrap">2.1.5</a>
+			<br /><small style="white-space: nowrap" title="2014-11-01 23:55:38">4 years ago</small>
+		</td>
+		<td>Use true font name on all platforms, minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.1.5</code></td>
+		<td>2617</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.1.4/" class="text-nowrap">2.1.4</a>
+			<br /><small style="white-space: nowrap" title="2014-10-28 01:53:36">4 years ago</small>
+		</td>
+		<td>Minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.1.4</code></td>
+		<td>837</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.1.3/" class="text-nowrap">2.1.3</a>
+			<br /><small style="white-space: nowrap" title="2014-10-23 08:07:29">4 years ago</small>
+		</td>
+		<td>Restore OpenFL command</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.1.3</code></td>
+		<td>778</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.1.2/" class="text-nowrap">2.1.2</a>
+			<br /><small style="white-space: nowrap" title="2014-10-20 20:11:30">4 years ago</small>
+		</td>
+		<td>Library preload support, minor improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.1.2</code></td>
+		<td>466</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.1.1/" class="text-nowrap">2.1.1</a>
+			<br /><small style="white-space: nowrap" title="2014-10-16 19:54:37">4 years ago</small>
+		</td>
+		<td>Minor patch</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.1.1</code></td>
+		<td>638</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.1.0/" class="text-nowrap">2.1.0</a>
+			<br /><small style="white-space: nowrap" title="2014-10-14 23:03:08">4 years ago</small>
+		</td>
+		<td>Updated for Lime 2.0, moving toward a unified codebase, many improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.1.0</code></td>
+		<td>479</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.0.1/" class="text-nowrap">2.0.1</a>
+			<br /><small style="white-space: nowrap" title="2014-06-24 22:55:15">4 years ago</small>
+		</td>
+		<td>Minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.0.1</code></td>
+		<td>13064</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.0.0/" class="text-nowrap">2.0.0</a>
+			<br /><small style="white-space: nowrap" title="2014-05-29 20:15:35">4 years ago</small>
+		</td>
+		<td>Stable release</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.0.0</code></td>
+		<td>4170</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.0.0-beta.2/" class="text-nowrap">2.0.0-beta.2</a>
+			<br /><small style="white-space: nowrap" title="2014-05-27 22:16:06">4 years ago</small>
+		</td>
+		<td>Patches for FirefoxOS, custom backends, Flash SWF</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.0.0-beta.2</code></td>
+		<td>591</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/2.0.0-beta/" class="text-nowrap">2.0.0-beta</a>
+			<br /><small style="white-space: nowrap" title="2014-05-27 03:54:22">4 years ago</small>
+		</td>
+		<td>Updated native backend, better HTML5 library</td>
+		<td><code class="text-nowrap">haxelib install openfl 2.0.0-beta</code></td>
+		<td>232</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.4.0/" class="text-nowrap">1.4.0</a>
+			<br /><small style="white-space: nowrap" title="2014-04-22 09:41:24">4 years ago</small>
+		</td>
+		<td>Updated native backend, better HTML5 library</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.4.0</code></td>
+		<td>5888</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.3.0/" class="text-nowrap">1.3.0</a>
+			<br /><small style="white-space: nowrap" title="2014-03-18 19:02:21">4 years ago</small>
+		</td>
+		<td>New HTML5 backend, Firefox OS support</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.3.0</code></td>
+		<td>5950</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.2.3/" class="text-nowrap">1.2.3</a>
+			<br /><small style="white-space: nowrap" title="2014-03-04 23:09:47">4 years ago</small>
+		</td>
+		<td>Update for Haxe 3.1</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.2.3</code></td>
+		<td>3303</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.2.2/" class="text-nowrap">1.2.2</a>
+			<br /><small style="white-space: nowrap" title="2013-12-31 22:17:17">5 years ago</small>
+		</td>
+		<td>Minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.2.2</code></td>
+		<td>7523</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.2.1/" class="text-nowrap">1.2.1</a>
+			<br /><small style="white-space: nowrap" title="2013-12-18 06:48:24">5 years ago</small>
+		</td>
+		<td>Update for Lime</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.2.1</code></td>
+		<td>1883</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.2.0/" class="text-nowrap">1.2.0</a>
+			<br /><small style="white-space: nowrap" title="2013-12-10 05:43:27">5 years ago</small>
+		</td>
+		<td>New Tizen target, other fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.2.0</code></td>
+		<td>1293</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.1.1/" class="text-nowrap">1.1.1</a>
+			<br /><small style="white-space: nowrap" title="2013-11-05 08:16:06">5 years ago</small>
+		</td>
+		<td>Minor fixes</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.1.1</code></td>
+		<td>3506</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.1.0/" class="text-nowrap">1.1.0</a>
+			<br /><small style="white-space: nowrap" title="2013-10-26 00:45:07">5 years ago</small>
+		</td>
+		<td>Minor improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.1.0</code></td>
+		<td>1738</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.0.6/" class="text-nowrap">1.0.6</a>
+			<br /><small style="white-space: nowrap" title="2013-08-24 20:54:16">5 years ago</small>
+		</td>
+		<td>Minor improvements</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.0.6</code></td>
+		<td>6655</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.0.5/" class="text-nowrap">1.0.5</a>
+			<br /><small style="white-space: nowrap" title="2013-07-23 04:02:28">5 years ago</small>
+		</td>
+		<td>Fix CLI support for Mac using Neko 64-bit</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.0.5</code></td>
+		<td>3793</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.0.4/" class="text-nowrap">1.0.4</a>
+			<br /><small style="white-space: nowrap" title="2013-06-25 23:04:34">5 years ago</small>
+		</td>
+		<td>Fix for Int/UInt on Socket</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.0.4</code></td>
+		<td>2376</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.0.3/" class="text-nowrap">1.0.3</a>
+			<br /><small style="white-space: nowrap" title="2013-06-25 21:51:27">5 years ago</small>
+		</td>
+		<td>Minor setup improvement</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.0.3</code></td>
+		<td>21</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.0.2/" class="text-nowrap">1.0.2</a>
+			<br /><small style="white-space: nowrap" title="2013-06-23 19:43:49">5 years ago</small>
+		</td>
+		<td>Simplify setup</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.0.2</code></td>
+		<td>248</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.0.1/" class="text-nowrap">1.0.1</a>
+			<br /><small style="white-space: nowrap" title="2013-06-19 04:28:17">5 years ago</small>
+		</td>
+		<td>Minor code completion change</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.0.1</code></td>
+		<td>403</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.0.0/" class="text-nowrap">1.0.0</a>
+			<br /><small style="white-space: nowrap" title="2013-06-15 23:51:02">5 years ago</small>
+		</td>
+		<td>Initial release</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.0.0</code></td>
+		<td>325</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.0.0-rc.4/" class="text-nowrap">1.0.0-rc.4</a>
+			<br /><small style="white-space: nowrap" title="2013-06-13 02:22:48">5 years ago</small>
+		</td>
+		<td>Initial release</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.0.0-rc.4</code></td>
+		<td>238</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.0.0-rc.3/" class="text-nowrap">1.0.0-rc.3</a>
+			<br /><small style="white-space: nowrap" title="2013-06-05 20:57:55">5 years ago</small>
+		</td>
+		<td>Initial release</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.0.0-rc.3</code></td>
+		<td>414</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.0.0-rc.2/" class="text-nowrap">1.0.0-rc.2</a>
+			<br /><small style="white-space: nowrap" title="2013-05-27 23:36:42">5 years ago</small>
+		</td>
+		<td>Initial release</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.0.0-rc.2</code></td>
+		<td>584</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<a href="/p/openfl/1.0.0-rc.1/" class="text-nowrap">1.0.0-rc.1</a>
+			<br /><small style="white-space: nowrap" title="2013-05-26 11:11:46">5 years ago</small>
+		</td>
+		<td>Initial release</td>
+		<td><code class="text-nowrap">haxelib install openfl 1.0.0-rc.1</code></td>
+		<td>86</td>
+	</tr>
+	
+	</tbody>
+</table>
+	
+			</div>
+		</div>
+	
+</div>
+
+<div class="section info">
+	<div class="container">
+		
+		<div class="row">
+			<div class="span4">
+				<h3><i class="fa fa-big fa-rocket"></i> All libraries are free</h3>
+				<p>Every month, more than a thousand developers use Haxelib to find, share, and reuse code — and assemble it in powerful new ways.
+				Enjoy Haxe; It is great!</p>
+			</div>
+			<div class="span4">
+				<h3><i class="fa fa-big fa-gears"></i> Explore Haxe</h3>
+				<p>
+					<p><i class="fa fa-external-link"></i> <a href="https://haxe.org/manual">Haxe Manual</a></p>
+					<p><i class="fa fa-external-link"></i> <a href="https://code.haxe.org">Haxe Code Cookbook</a></p>
+					<p><i class="fa fa-external-link"></i> <a href="https://api.haxe.org">Haxe API documentation</a></p>
+					<p>You can try Haxe in the browser! <a href="https://try.haxe.org">try.haxe.org</a></p>
+				</p>
+			</div>
+			<div class="span4">
+				<h3><i class="fa fa-big fa-globe"></i> Join us on Github!</h3>
+				<p>Haxe is being developed on GitHub. Feel free to contribute or report issues to our projects.</p>
+				<p><i class="fa fa-github"></i> <a href="https://github.com/HaxeFoundation/">Haxe on Github</a></p>
+			</div>
+		</div>
+  </div>
+</div>
+
+<footer class="section dark site-footer">
+	<div class="container">
+		<div class="copyright">
+			<p>&copy;2018
+				<a href="//haxe.org/foundation/" title="Haxe Foundation Website" class="hf-link">Haxe Foundation</a> | 
+				<a href="https://github.com/HaxeFoundation/haxelib" title="Haxelib Github Repository" class="hf-link">Haxelib on Github</a>
+			</p>
+		</div>
+	</div>
+</footer>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-N6H4RQ"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NXV3XR');</script>
+<!-- End Google Tag Manager -->
+</body>

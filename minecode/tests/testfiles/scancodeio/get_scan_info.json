@@ -1,0 +1,17 @@
+{
+    "url": "http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/",
+    "uuid": "177eb27a-25d2-4ef0-b608-5a84ea9b1ef1",
+    "uri": "http://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar",
+    "sha1": "feff0d7bacd11d37a9c96daed87dc1db163065b1",
+    "md5": "57431f2f6d5841eebdb964b04091b8ed",
+    "size": 47069,
+    "created_date": "2018-10-22T19:45:51.667927Z",
+    "task_start_date": "2018-10-22T19:45:51.689498Z",
+    "task_end_date": "2018-10-22T19:45:59.980194Z",
+    "task_exitcode": 0,
+    "task_output": "Extracting archives...\nExtracting done.\nSetup plugins...\nCollect file inventory...\nScan files for: info, licenses, copyrights, packages with 3 process(es)...\nScanning done.\nSummary:        info, licenses, copyrights, packages with 3 process(es)\nErrors count:   0\nScan Speed:     12.54 files/sec. 21.23 KB/sec.\nInitial counts: 65 resource(s): 45 file(s) and 20 directorie(s) \nFinal counts:   65 resource(s): 45 file(s) and 20 directorie(s) for 76.18 KB\nTimings:\n  scan_start: 2018-10-22T194553.118456\n  scan_end: 2018-10-22T194559.300398\n  setup_scan:licenses: 2.04s\n  setup: 2.04s\n  scan:packages: 0.10s\n  scan: 3.59s\n  post-scan:summary: 0.34s\n  post-scan: 0.42s\n  total: 6.21s",
+    "status": "completed",
+    "execution_time": 8.290696,
+    "data_url": "http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/data/",
+    "summary_url": "http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/summary/"
+}

@@ -1,0 +1,447 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+  <link rel="stylesheet" href="http://st.pimg.net/tucs/style.css?3" type="text/css" />
+<style>
+.styleswitch {
+  text-align: right;
+}
+</style>
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://st.pimg.net/tucs/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="http://st.pimg.net/tucs/js/sh_main.min.js"></script>
+<script type="text/javascript" src="http://st.pimg.net/tucs/js/sh_perl.min.js"></script>
+<script type="text/javascript" src="http://st.pimg.net/tucs/js/jquery.styleswitch.js"></script>
+
+<link rel="stylesheet" href="http://st.pimg.net/tucs/print.css" type="text/css" media="print" />
+  <link rel="alternate" type="application/rss+xml" title="RSS 1.0" href="http://search.cpan.org/uploads.rdf" />
+  <link rel="search" href="http://st.pimg.net/tucs/opensearch.xml" type="application/opensearchdescription+xml" title="SearchCPAN" />
+  <title>Net::ZooTool - search.cpan.org</title>
+ <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3528438-1']);
+    _gaq.push(["_setCustomVar",3,"Module","Net::ZooTool",3]);
+    _gaq.push(["_setCustomVar",1,"Author","QUELCOM",3]);
+    _gaq.push(["_setCustomVar",2,"Distribution","Net-ZooTool",3]);
+    _gaq.push(["_setCustomVar",5,"Release","Net-ZooTool-0.0031",3]);
+    _gaq.push(['_trackPageview']);
+  </script>
+ </head>
+ <body id="cpansearch">
+   <div class="header">
+<center><div class="logo"><a href="/"><img src="http://st.pimg.net/tucs/img/cpan_banner.png" alt="CPAN"></a></div></center>
+<div class="menubar">
+ <a href="/">Home</a>
+&middot; <a href="/author/">Authors</a>
+&middot; <a href="/recent">Recent</a>
+&middot; <a href="http://log.perl.org/cpansearch/">News</a>
+&middot; <a href="/mirror">Mirrors</a>
+&middot; <a href="/faq.html">FAQ</a>
+&middot; <a href="/feedback">Feedback</a>
+</div>
+<form method="get" action="/search" name="f" class="searchbox">
+<input type="text" name="query" value="" size="35">
+<br>in <select name="mode">
+ <option value="all">All</option>
+ <option value="module" >Modules</option>
+ <option value="dist" >Distributions</option>
+ <option value="author" >Authors</option>
+</select>&nbsp;<input type="submit" value="CPAN Search">
+</form>
+</div>
+
+
+ <a name="_top"></a>
+  <div class=path>
+<div id=permalink class="noprint"><a href="/perldoc?Net%3A%3AZooTool">permalink</a></div>
+  <a href="/~quelcom/">Josep Roca</a> &gt;
+  <a href="/~quelcom/Net-ZooTool-0.0031/">Net-ZooTool-0.0031</a> &gt;
+  Net::ZooTool
+ </div>
+
+<div class="noprint" style="float:right;align:left;width:19ex">
+<a href="http://hexten.net/cpan-faces/"><img src="http://www.gravatar.com/avatar/62f74fcdf9b678b2a2252dac5d8a7549?r=g&s=80&d=http%3A%2F%2Fst.pimg.net%2Ftucs%2Fimg%2Fwho.png" width=80 height=80 
+style="float:right"
+/></a>
+<br style="clear:both"/>
+<p style="text-align:right">Download:<br/> <a href="/CPAN/authors/id/Q/QU/QUELCOM/Net-ZooTool-0.0031.tar.gz">Net-ZooTool-0.0031.tar.gz</a></p>
+<p style="text-align:right"><a href="http://deps.cpantesters.org/?module=Net%3A%3AZooTool;perl=latest">Dependencies</a></p>
+<p style="text-align:right"><a href="http://www.annocpan.org/~QUELCOM/Net-ZooTool-0.0031/lib/Net/ZooTool.pm">Annotate this POD
+</a></p>
+
+<div style="float:right">
+<div class=box style='width:150px'>
+<h1 class=t5>CPAN RT</h1>
+<div style="margin:2px">
+<table style="margin-left:auto;margin-right:auto">
+<tr><td>New&nbsp;</td><td style="text-align:right"> 1</td></tr>
+<tr><td>Open&nbsp;</td><td style="text-align:right"> 0</td></tr>
+</table>
+<a href="https://rt.cpan.org/Public/Dist/Display.html?Name=Net-ZooTool">View/Report Bugs</a><br/>
+</div>
+</div>
+
+</div>
+</div>
+  Module Version:  0.003 &nbsp;
+<span class="noprint">
+  <a href="/src/QUELCOM/Net-ZooTool-0.0031/lib/Net/ZooTool.pm">Source</a> &nbsp;
+</span>
+<a name="___top"></a>
+<div class=pod>
+<div class=toc>
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#PACKAGE_METHODS'>PACKAGE METHODS</a>
+  <li class='indexItem indexItem1'><a href='#OBJECT_METHODS'>OBJECT METHODS</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+</div>
+
+<h1><a class='u'
+name="NAME"
+>NAME <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>Net::ZooTool - Moose interface to the Zootool API: <a href="http://zootool.com" class="podlinkurl"
+>http://zootool.com</a></p>
+
+<h1><a class='u'
+name="SYNOPSIS"
+>SYNOPSIS <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<pre class="sh_perl">    my $zoo = Net::ZooTool-&#62;new({ apikey   =&#62; $config{apikey} });
+
+    my $weekly_popular = $zoo-&#62;item-&#62;popular({ type =&#62; &#34;week&#34; });
+
+    # Info about a specific item
+    print Dumper($zoo-&#62;item-&#62;info({ uid =&#62; &#34;6a80z&#34; }));
+
+    # Examples with authenticated calls
+    my $auth_zoo = Net::ZooTool-&#62;new(
+        {
+            apikey   =&#62; $config{apikey},
+            user     =&#62; $config{user},
+            password =&#62; $config{password},
+        }
+    );
+
+    my $data = $auth_zoo-&#62;user-&#62;validate({ username =&#62; $config{user}, login =&#62; &#39;true&#39; });
+    print Dumper($data);
+
+    # In some methods authentication is optional.
+    # Public items only
+    my $public_items = $auth_zoo-&#62;user-&#62;items({ username =&#62; $config{user} });
+    # Include also your private items
+    my $all_items = $auth_zoo-&#62;user-&#62;items({ username =&#62; $config{user}, login =&#62; &#39;true&#39; });</pre>
+
+<h1><a class='u'
+name="DESCRIPTION"
+>DESCRIPTION <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>Net::ZooTool is a wrapper to the Zootool bookmarking service. It attempts to follow the api defined in <a href="http://zootool.com/api/docs/general" class="podlinkurl"
+>http://zootool.com/api/docs/general</a> as much as possible. Please refer to their API Documentation site for more information.</p>
+
+<h1><a class='u'
+name="PACKAGE_METHODS"
+>PACKAGE METHODS <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<dl>
+<dt><a name='new'></a><a name="new(\%ARGS)"
+>new(\%ARGS)</a></dt>
+
+<dd>
+<p>Create a new Net::ZooTool object.</p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><b>apikey</b>
+<p><i>string</i>. Your Zootool apikey (required)</p>
+</li>
+
+<li><b>user</b>
+<p><i>string</i>. Your Zootool username (optional)</p>
+</li>
+
+<li><b>password</b>
+<p><i>string</i>. Your Zootool password (optional)</p>
+</li>
+</ul>
+</dd>
+</dl>
+
+<h1><a class='u'
+name="OBJECT_METHODS"
+>OBJECT METHODS <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<dl>
+<dt><a name='zoo'></a><a name="$zoo-&#62;user()"
+>$zoo-&#62;user()</a></dt>
+
+<dd>
+<p>Net::ZooTool::User object</p>
+
+<dt><a name='zoo'></a><a name="$zoo-&#62;item()"
+>$zoo-&#62;item()</a></dt>
+
+<dd>
+<p>Net::ZooTool::Item object</p>
+
+<dt><a name='zoo'></a><a name="$zoo-&#62;add(\%ARGS)"
+>$zoo-&#62;add(\%ARGS)</a></dt>
+
+<dd>
+<p>Adds a new item to your zoo (authentication is required).</p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><b>apikey</b>
+<p><i>string</i>. Your Zootool api key (required)</p>
+</li>
+
+<li><b>url</b>
+<p><i>string</i>. Url to add (required)</p>
+</li>
+
+<li><b>title</b>
+<p><i>string</i>. Item title (required)</p>
+</li>
+
+<li><b>tags</b>
+<p><i>string</i>. Comma separated if you want to include more than one (optional)</p>
+</li>
+
+<li><b>description</b>
+<p><i>string</i>. Entry description (optional)</p>
+</li>
+
+<li><b>referer</b>
+<p><i>string</i>. Entry referer, must be a valid url (optional)</p>
+</li>
+
+<li><b>public</b>
+<p><i>string</i>. Whether or not the item is public (&#39;y&#39; or &#39;n&#39;)</p>
+</li>
+
+<li><b>login</b>
+<p><i>boolean</i>. Add method requires authenticated call (required)</p>
+</li>
+</ul>
+
+<dt><a name='zoo'></a><a name="$zoo-&#62;user-&#62;items(\%ARGS)"
+>$zoo-&#62;user-&#62;items(\%ARGS)</a></dt>
+
+<dd>
+<p>Get the latest items from all users or specify a username to get all items from a specific user. Authenticate to get all private items of a user as well. Use authentication if you want to get private items as well).</p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><b>apikey</b>
+<p><i>string</i>. Your Zootool api key (required)</p>
+</li>
+
+<li><b>username</b>
+<p><i>string</i>. Zootool username (required)</p>
+</li>
+
+<li><b>login</b>
+<p><i>string</i>. must be true if you want to make an authenticated call via digest (optional).</p>
+</li>
+
+<li><b>tag</b>
+<p><i>string</i>. Tag search (optional)</p>
+</li>
+
+<li><b>offset</b>
+<p><i>int</i>. Search offset (optional)</p>
+</li>
+
+<li><b>limit</b>
+<p><i>int</i>. Search limit (optional)</p>
+</li>
+
+<li><b>login</b>
+<p><i>boolean</i>. Set to true to get private items as well.</p>
+</li>
+</ul>
+
+<dt><a name='zoo'></a><a name="$zoo-&#62;user-&#62;info(\%ARGS)"
+>$zoo-&#62;user-&#62;info(\%ARGS)</a></dt>
+
+<dd>
+<p>Get info about a certain user. Authentication is optional (if you want to get the email address from the user, you need to sign in).</p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><b>apikey</b>
+<p><i>string</i>. Your Zootool api key (required)</p>
+</li>
+
+<li><b>username</b>
+<p><i>string</i>. Zootool username (required)</p>
+</li>
+
+<li><b>login</b>
+<p><i>boolean</i>. Set to true to get email address</p>
+</li>
+</ul>
+
+<dt><a name='zoo'></a><a name="$zoo-&#62;user-&#62;validate(\%ARGS)"
+>$zoo-&#62;user-&#62;validate(\%ARGS)</a></dt>
+
+<dd>
+<p>Validate the user credentials. Useful for logins.</p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><b>apikey</b>
+<p><i>string</i>. Your Zootool api key (required)</p>
+</li>
+
+<li><b>username</b>
+<p><i>string</i>. Your zootool username (required)</p>
+</li>
+</ul>
+</dd>
+</dl>
+
+<h1><a class='u'
+name="SEE_ALSO"
+>SEE ALSO <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p><a href="http://zootool.com/" class="podlinkurl"
+>http://zootool.com/</a></p>
+
+<p><a href="http://zootool.com/api/docs" class="podlinkurl"
+>http://zootool.com/api/docs</a></p>
+
+<h1><a class='u'
+name="AUTHOR"
+>AUTHOR <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>Josep Roca, &#60;quelcom@gmail.com&#62;</p>
+
+<h1><a class='u'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE <img alt='^' src='http://st.pimg.net/tucs/img/up.gif'></a></h1>
+
+<p>Copyright (C) 2011 by Josep Roca</p>
+
+<p>This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself, either Perl version 5.10.1 or, at your option, any later version of Perl 5 you may have available.</p>
+
+</div>
+<!-- This should probably be put in the <div class="footer"></div> -->
+<script type="text/javascript">
+    $(document).ready(function(){
+        var startingStyle = $.cookie('css') ? $.cookie('css') : 'http://st.pimg.net/tucs/css/sh_none.min.css';
+        $.fn.styleSwitch(startingStyle);
+        $("#styleswitch").val(startingStyle);
+        sh_highlightDocument();
+        $("#styleswitch").bind(($.browser.msie ? "click" : "change"), function() {
+            $.fn.styleSwitch($(this).val());
+        });
+    });
+</script>
+<div class="styleswitch">
+    syntax highlighting:
+    <select id="styleswitch">
+        <option value="http://st.pimg.net/tucs/css/sh_none.min.css">no syntax highlighting</option>
+        <option value="http://st.pimg.net/tucs/css/sh_acid.min.css">acid</option>
+        <option value="http://st.pimg.net/tucs/css/sh_berries-dark.min.css">berries-dark</option>
+        <option value="http://st.pimg.net/tucs/css/sh_berries-light.min.css">berries-light</option>
+        <option value="http://st.pimg.net/tucs/css/sh_bipolar.min.css">bipolar</option>
+        <option value="http://st.pimg.net/tucs/css/sh_blacknblue.min.css">blacknblue</option>
+        <option value="http://st.pimg.net/tucs/css/sh_bright.min.css">bright</option>
+        <option value="http://st.pimg.net/tucs/css/sh_contrast.min.css">contrast</option>
+        <option value="http://st.pimg.net/tucs/css/sh_cpan.min.css">cpan</option>
+        <option value="http://st.pimg.net/tucs/css/sh_darkblue.min.css">darkblue</option>
+        <option value="http://st.pimg.net/tucs/css/sh_darkness.min.css">darkness</option>
+        <option value="http://st.pimg.net/tucs/css/sh_desert.min.css">desert</option>
+        <option value="http://st.pimg.net/tucs/css/sh_dull.min.css">dull</option>
+        <option value="http://st.pimg.net/tucs/css/sh_easter.min.css">easter</option>
+        <option value="http://st.pimg.net/tucs/css/sh_emacs.min.css">emacs</option>
+        <option value="http://st.pimg.net/tucs/css/sh_golden.min.css">golden</option>
+        <option value="http://st.pimg.net/tucs/css/sh_greenlcd.min.css">greenlcd</option>
+        <option value="http://st.pimg.net/tucs/css/sh_ide-anjuta.min.css">ide-anjuta</option>
+        <option value="http://st.pimg.net/tucs/css/sh_ide-codewarrior.min.css">ide-codewarrior</option>
+        <option value="http://st.pimg.net/tucs/css/sh_ide-devcpp.min.css">ide-devcpp</option>
+        <option value="http://st.pimg.net/tucs/css/sh_ide-eclipse.min.css">ide-eclipse</option>
+        <option value="http://st.pimg.net/tucs/css/sh_ide-kdev.min.css">ide-kdev</option>
+        <option value="http://st.pimg.net/tucs/css/sh_ide-msvcpp.min.css">ide-msvcpp</option>
+        <option value="http://st.pimg.net/tucs/css/sh_kwrite.min.css">kwrite</option>
+        <option value="http://st.pimg.net/tucs/css/sh_matlab.min.css">matlab</option>
+        <option value="http://st.pimg.net/tucs/css/sh_navy.min.css">navy</option>
+        <option value="http://st.pimg.net/tucs/css/sh_nedit.min.css">nedit</option>
+        <option value="http://st.pimg.net/tucs/css/sh_neon.min.css">neon</option>
+        <option value="http://st.pimg.net/tucs/css/sh_night.min.css">night</option>
+        <option value="http://st.pimg.net/tucs/css/sh_pablo.min.css">pablo</option>
+        <option value="http://st.pimg.net/tucs/css/sh_peachpuff.min.css">peachpuff</option>
+        <option value="http://st.pimg.net/tucs/css/sh_print.min.css">print</option>
+        <option value="http://st.pimg.net/tucs/css/sh_rand01.min.css">rand01</option>
+	<option value="http://st.pimg.net/tucs/css/sh_solarized-dark.min.css">solarized-dark</option>
+	<option value="http://st.pimg.net/tucs/css/sh_solarized-light.min.css">solarized-light</option>
+        <option value="http://st.pimg.net/tucs/css/sh_style.min.css">style</option>
+        <option value="http://st.pimg.net/tucs/css/sh_the.min.css">the</option>
+        <option value="http://st.pimg.net/tucs/css/sh_typical.min.css">typical</option>
+        <option value="http://st.pimg.net/tucs/css/sh_vampire.min.css">vampire</option>
+        <option value="http://st.pimg.net/tucs/css/sh_vim-dark.min.css">vim-dark</option>
+        <option value="http://st.pimg.net/tucs/css/sh_vim.min.css">vim</option>
+        <option value="http://st.pimg.net/tucs/css/sh_whatis.min.css">whatis</option>
+        <option value="http://st.pimg.net/tucs/css/sh_whitengrey.min.css">whitengrey</option>
+        <option value="http://st.pimg.net/tucs/css/sh_zellner.min.css">zellner</option>
+    </select>
+</div>
+
+
+
+<div class="footer"><div class="cpanstats">118024 Uploads, 34484 Distributions
+174434 Modules, 12878 Uploaders
+</div>
+<div class="sponsor">
+hosted by <a href="http://www.yellowbot.com">YellowBot</a><br/>
+<a href="http://www.yellowbot.com"><img alt="do. tag. write. share." src="http://st.pimg.net/tucs/img/yellowbot_logo.gif"></a>
+</div>
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript" src="http://ipv4.v6test.develooper.com/js/v1/v6test.js"></script>
+
+<script type="text/javascript">
+   // v6.target = '';
+   if (!v6.target) { v6.only_once = true }
+   v6.site = '7A0D89A6-2B82-11DF-B9DA-F61CBD13F020';
+   v6.api_server = 'http://ipv4.v6test.develooper.com';
+   try {
+     v6.test();
+   } catch(err) {}
+</script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("a[href^=http:]").click(function(){
+      var href = $(this).attr('href');
+      var m = href.match('\/\/([^\/:]+)');
+      _gaq.push(['_trackEvent','External',m[1],'Module']);
+    });
+    $("a[href^=/CPAN/]").click(function(){
+      var href = $(this).attr('href');
+      _gaq.push(['_trackEvent','Download',href,'Module']);
+    });
+  });
+</script>
+<!-- Tue Nov  8 15:46:38 2016 GMT (0.0392501354217529) @cpansearch2 -->
+ </body>
+</html>

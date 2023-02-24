@@ -1,0 +1,57 @@
+{
+   "abstract" : "Provide commonly requested regular expressions",
+   "author" : [
+      "Abigail <regexp-common@abigail.be>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "ExtUtils::MakeMaker version 7.0401, CPAN::Meta::Converter version 2.150001",
+   "keywords" : [
+      "regular expression",
+      "pattern"
+   ],
+   "license" : [
+      "mit"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Regexp-Common",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0",
+            "strict" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0",
+            "strict" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "perl" : "5.00473",
+            "strict" : "0",
+            "vars" : "0"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "repository" : {
+         "url" : "git://github.com/Abigail/Regexp--Common.git"
+      }
+   },
+   "version" : "2016010701",
+   "x_test_requires" : {
+      "strict" : 0
+   }
+}

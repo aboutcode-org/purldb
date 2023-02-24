@@ -1,0 +1,16 @@
+{
+    "url": "http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/",
+    "uuid": "177eb27a-25d2-4ef0-b608-5a84ea9b1ef1",
+    "uri": "http://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar",
+    "sha1": null,
+    "md5": null,
+    "size": null,
+    "created_date": "2018-10-22T19:45:51.667927Z",
+    "task_start_date": null,
+    "task_end_date": null,
+    "task_exitcode": null,
+    "status": "not started yet",
+    "execution_time": null,
+    "data_url": "http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/data/",
+    "summary_url": "http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/summary/"
+}

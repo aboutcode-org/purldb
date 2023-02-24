@@ -1,0 +1,30 @@
+{
+"bug-database": "http://issues.apache.org/bugzilla/buglist.cgi?product=Ant",
+"category": "build-management",
+"created": "2006-09-13",
+"description": "This is a library of Ant tasks that help developing\n.NET software.  It includes the \"old\" .NET tasks like a C# compiler task but also comes with support for NUnit testing or running the popular NAnt or MSBuild build tools.",
+"doap": "http://svn.apache.org/repos/asf/ant/antlibs/dotnet/trunk/doap_DotnetAntlib.rdf",
+"download-page": "http://ant.apache.org/antlibs/bindownload.cgi",
+"homepage": "http://ant.apache.org/antlibs/dotnet/",
+"license": "http://usefulinc.com/doap/licenses/asl20",
+"mailing-list": "http://ant.apache.org/mail.html",
+"name": "Apache .NET Ant Library",
+"pmc": "ant",
+"programming-language": "Java",
+"release": [
+{
+"created": "2011-02-04",
+"name": "Apache .NET Ant Library 1.1",
+"revision": "1.1"
+},
+{
+"created": "2006-11-06",
+"name": "Apache .NET Ant Library 1.0",
+"revision": "1.0"
+}
+],
+"repository": [
+"http://svn.apache.org/repos/asf/ant/antlibs/dotnet"
+],
+"shortdesc": "Support for Mono and Microsoft .NET development using Ant"
+}

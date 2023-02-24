@@ -1,0 +1,46 @@
+[
+  {
+    "type":"cpan",
+    "namespace":null,
+    "name":"variable",
+    "version":"2009110702",
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":null,
+    "description":"Perl pragma to declare (scalar) variables without a leading C<.",
+    "release_date":null,
+    "parties":[
+      {
+        "type":"person",
+        "role":"author",
+        "name":"Abigail",
+        "email":"cpan@abigail.be",
+        "url":null
+      }
+    ],
+    "keywords":[],
+    "homepage_url":null,
+    "download_url":"http://www.cpan.org/authors/id/A/AB/ABIGAIL/variable-2009110702.tar.gzdata",
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":"git+git://github.com/Abigail/variable.git",
+    "copyright":null,
+    "license_expression":null,
+    "declared_license":"mit",
+    "notice_text":null,
+    "source_packages":[],
+    "file_references":[],
+    "extra_data":{},
+    "dependencies":[],
+    "repository_homepage_url":null,
+    "repository_download_url":null,
+    "api_data_url":null,
+    "datasource_id":null,
+    "purl":"pkg:cpan/variable@2009110702"
+  }
+]

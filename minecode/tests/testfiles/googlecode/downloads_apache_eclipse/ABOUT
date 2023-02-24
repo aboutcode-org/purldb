@@ -1,0 +1,2 @@
+wget -O detail3.html "http://code.google.com/a/apache-extras.org/p/pylucene-extra/downloads/detail?name=lucene-3.1.0-py2.5-linux-x86_64.egg"
+wget -O apache_with_notice.html "http://code.google.com/a/apache-extras.org/p/pylucene-extra/downloads/detail?name=lucene-3.1.0-py2.5-linux-x86_64.egg"

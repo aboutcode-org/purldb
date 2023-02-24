@@ -1,0 +1,76 @@
+{
+  "@id": "https://api.nuget.org/v3/catalog0/data/2015.03.10.22.48.27/entityframework.6.1.3.json",
+  "@type": [
+    "PackageDetails",
+    "catalog:Permalink"
+  ],
+  "authors": "Microsoft",
+  "catalog:commitId": "1dfc92d3-7a09-4525-88cf-7da116e7dcfc",
+  "catalog:commitTimeStamp": "2015-03-10T22:48:27.2216445Z",
+  "created": "2015-03-10T22:47:06.327Z",
+  "description": "Entity Framework is Microsoft's recommended data access technology for new applications.",
+  "frameworkAssemblyGroup": {
+    "@id": "https://api.nuget.org/v3/catalog0/data/2015.03.10.22.48.27/entityframework.6.1.3.json#frameworkassemblygroup",
+    "assembly": "System.ComponentModel.DataAnnotations"
+  },
+  "iconUrl": "http://go.microsoft.com/fwlink/?LinkID=386613",
+  "id": "EntityFramework",
+  "isPrerelease": false,
+  "language": "en-US",
+  "lastEdited": "0001-01-01T00:00:00Z",
+  "licenseUrl": "http://go.microsoft.com/fwlink/?LinkID=320539",
+  "packageHash": "2xzFHAF3VVdmTR3//MygtQpwfbDjeaq+nQwCcokLzen7MKHOojPaxNPQPa4diHY1QtcR7zlHAJHNRqPB7W2Syw==",
+  "packageHashAlgorithm": "SHA512",
+  "packageSize": 4255648,
+  "projectUrl": "http://go.microsoft.com/fwlink/?LinkID=320540",
+  "published": "2015-03-10T22:47:06.327Z",
+  "requireLicenseAcceptance": true,
+  "summary": "Entity Framework is Microsoft's recommended data access technology for new applications.",
+  "title": "EntityFramework",
+  "version": "6.1.3",
+  "tags": [
+    "Microsoft",
+    "EF",
+    "Database",
+    "Data",
+    "O/RM",
+    "ADO.NET"
+  ],
+  "@context": {
+    "@vocab": "http://schema.nuget.org/schema#",
+    "catalog": "http://schema.nuget.org/catalog#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dependencies": {
+      "@id": "dependency",
+      "@container": "@set"
+    },
+    "dependencyGroups": {
+      "@id": "dependencyGroup",
+      "@container": "@set"
+    },
+    "packageEntries": {
+      "@id": "packageEntry",
+      "@container": "@set"
+    },
+    "supportedFrameworks": {
+      "@id": "supportedFramework",
+      "@container": "@set"
+    },
+    "tags": {
+      "@id": "tag",
+      "@container": "@set"
+    },
+    "published": {
+      "@type": "xsd:dateTime"
+    },
+    "created": {
+      "@type": "xsd:dateTime"
+    },
+    "lastEdited": {
+      "@type": "xsd:dateTime"
+    },
+    "catalog:commitTimeStamp": {
+      "@type": "xsd:dateTime"
+    }
+  }
+}

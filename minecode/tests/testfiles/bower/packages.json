@@ -1,0 +1,18 @@
+[
+    {
+        "name": "0x100-angular-steps", 
+        "url": "https://github.com/0x100/angular-steps.git"
+    }, 
+    {
+        "name": "10digit-geo", 
+        "url": "https://github.com/10digit/geo.git"
+    }, 
+    {
+        "name": "zzStar-test", 
+        "url": "http://git.oschina.net/wankoo/test"
+    }, 
+    {
+        "name": "zzxcxc", 
+        "url": "https://github.com/jzaefferer/jquery-validation.git"
+    }
+]

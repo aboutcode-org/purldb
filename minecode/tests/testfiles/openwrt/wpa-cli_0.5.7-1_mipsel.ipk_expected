@@ -1,0 +1,12 @@
+{
+  "Maintainer":"OpenWrt Developers Team <openwrt-devel@openwrt.org>",
+  "Description":"WPA Supplicant command line interface",
+  "Package":"wpa-cli",
+  "Section":"net",
+  "Priority":"optional",
+  "Source":"package/wpa_supplicant",
+  "Depends":"wpa-supplicant",
+  "Version":"0.5.7-1",
+  "Architecture":"mipsel",
+  "Provides":""
+}

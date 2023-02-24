@@ -1,0 +1,99 @@
+[
+  [
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=10", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=20", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=30", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=40", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=50", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=60", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=70", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=80", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=90", 
+    "http://code.google.com/hosting/search?q=label:api", 
+    "http://code.google.com/hosting/search?q=label:app", 
+    "http://code.google.com/hosting/search?q=label:appengine", 
+    "http://code.google.com/hosting/search?q=label:atom", 
+    "http://code.google.com/hosting/search?q=label:atompub", 
+    "http://code.google.com/hosting/search?q=label:bioinformatics", 
+    "http://code.google.com/hosting/search?q=label:client", 
+    "http://code.google.com/hosting/search?q=label:cocoa", 
+    "http://code.google.com/hosting/search?q=label:database", 
+    "http://code.google.com/hosting/search?q=label:force.com", 
+    "http://code.google.com/hosting/search?q=label:gdata", 
+    "http://code.google.com/hosting/search?q=label:google", 
+    "http://code.google.com/hosting/search?q=label:historian", 
+    "http://code.google.com/hosting/search?q=label:interactions", 
+    "http://code.google.com/hosting/search?q=label:java", 
+    "http://code.google.com/hosting/search?q=label:logger", 
+    "http://code.google.com/hosting/search?q=label:macosx", 
+    "http://code.google.com/hosting/search?q=label:mashup", 
+    "http://code.google.com/hosting/search?q=label:objective-c", 
+    "http://code.google.com/hosting/search?q=label:python", 
+    "http://code.google.com/hosting/search?q=label:realtime", 
+    "http://code.google.com/hosting/search?q=label:rest", 
+    "http://code.google.com/hosting/search?q=label:rss", 
+    "http://code.google.com/hosting/search?q=label:saas", 
+    "http://code.google.com/hosting/search?q=label:salesforce", 
+    "http://code.google.com/hosting/search?q=label:service", 
+    "http://code.google.com/hosting/search?q=label:soap", 
+    "http://code.google.com/hosting/search?q=label:tcl", 
+    "http://code.google.com/hosting/search?q=label:time", 
+    "http://code.google.com/hosting/search?q=label:web", 
+    "http://code.google.com/hosting/search?q=label:webservice", 
+    "http://code.google.com/hosting/search?q=label:webservices", 
+    "http://code.google.com/hosting/search?q=label:wsdl", 
+    "http://code.google.com/hosting/search?q=label:xml"
+  ], 
+  [
+    {
+      "url": "http://code.google.com/p/gdata-python-client/", 
+      "last_updated": "2014-02-02T00:00:00+00:00", 
+      "stars": 982
+    }, 
+    {
+      "url": "http://code.google.com/p/gdata-java-client/", 
+      "last_updated": "2014-02-02T00:00:00+00:00", 
+      "stars": 610
+    }, 
+    {
+      "url": "http://code.google.com/p/gdata-objectivec-client/", 
+      "last_updated": "2014-02-02T00:00:00+00:00", 
+      "stars": 521
+    }, 
+    {
+      "url": "http://code.google.com/p/websmash/", 
+      "last_updated": "2014-01-01T00:00:00+00:00", 
+      "stars": 3
+    }, 
+    {
+      "url": "http://code.google.com/p/tclws/", 
+      "last_updated": "2014-01-03T00:00:00+00:00", 
+      "stars": 7
+    }, 
+    {
+      "url": "http://code.google.com/p/sfdc-wsc/", 
+      "last_updated": "2014-01-26T00:00:00+00:00", 
+      "stars": 63
+    }, 
+    {
+      "url": "http://code.google.com/p/psicquic/", 
+      "last_updated": "2014-01-26T00:00:00+00:00", 
+      "stars": 12
+    }, 
+    {
+      "url": "http://code.google.com/p/webserviceservlet/", 
+      "last_updated": "2014-01-03T00:00:00+00:00", 
+      "stars": 7
+    }, 
+    {
+      "url": "http://code.google.com/p/nimbits-server/", 
+      "last_updated": "2014-01-26T00:00:00+00:00", 
+      "stars": 5
+    }, 
+    {
+      "url": "http://code.google.com/p/gdata-javascript-client/", 
+      "last_updated": "2014-01-26T00:00:00+00:00", 
+      "stars": 100
+    }
+  ]
+]

@@ -1,0 +1,57 @@
+[
+  {
+    "type":"bower",
+    "namespace":null,
+    "name":"jquery.easing",
+    "version":"1.3.1",
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":null,
+    "description":"jQuery Easing plugin",
+    "release_date":null,
+    "parties":[
+      {
+        "type":null,
+        "role":"author",
+        "name":"George McGinley Smith",
+        "email":null,
+        "url":null
+      },
+      {
+        "type":null,
+        "role":"author",
+        "name":"Jozef Izso",
+        "email":null,
+        "url":null
+      }
+    ],
+    "keywords":[
+      "jquery",
+      "jquery plugin",
+      "easing"
+    ],
+    "homepage_url":"http://gsgd.co.uk/sandbox/jquery/easing/",
+    "download_url":null,
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":null,
+    "copyright":null,
+    "license_expression":null,
+    "declared_license":"NewBSD",
+    "notice_text":null,
+    "source_packages":[],
+    "extra_data":{},
+    "repository_homepage_url":null,
+    "repository_download_url":null,
+    "api_data_url":null,
+    "package_uid":"pkg:bower/jquery.easing@1.3.1?uuid=fixed-uid-done-for-testing-5642512d1758",
+    "datafile_paths":[],
+    "datasource_ids":[],
+    "purl":"pkg:bower/jquery.easing@1.3.1"
+  }
+]

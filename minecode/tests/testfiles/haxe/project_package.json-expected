@@ -1,0 +1,84 @@
+[
+  {
+    "type":"haxe",
+    "namespace":null,
+    "name":"openfl",
+    "version":"8.5.1",
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":"Haxe",
+    "description":"A fast, productive library for 2D cross-platform development.",
+    "release_date":null,
+    "parties":[
+      {
+        "type":"person",
+        "role":"contributor",
+        "name":"Joshua Granick",
+        "email":null,
+        "url":"https://lib.haxe.org/u/Joshua Granick"
+      },
+      {
+        "type":"person",
+        "role":"contributor",
+        "name":"Other OpenFL contributors",
+        "email":null,
+        "url":"https://lib.haxe.org/u/Other OpenFL contributors"
+      }
+    ],
+    "keywords":null,
+    "homepage_url":null,
+    "download_url":"https://lib.haxe.org/p/openfl/8.5.1/download/",
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":null,
+    "copyright":null,
+    "license_expression":"mit",
+    "declared_license":"MIT",
+    "notice_text":null,
+    "source_packages":[],
+    "file_references":[],
+    "extra_data":{},
+    "dependencies":[
+      {
+        "purl":"pkg:haxe/file-saver@%5E1.3.8",
+        "extracted_requirement":null,
+        "scope":null,
+        "is_runtime":true,
+        "is_optional":false,
+        "is_resolved":true,
+        "resolved_package":{},
+        "extra_data":{}
+      },
+      {
+        "purl":"pkg:haxe/howler@%5E2.0.15",
+        "extracted_requirement":null,
+        "scope":null,
+        "is_runtime":true,
+        "is_optional":false,
+        "is_resolved":true,
+        "resolved_package":{},
+        "extra_data":{}
+      },
+      {
+        "purl":"pkg:haxe/pako@%5E1.0.6",
+        "extracted_requirement":null,
+        "scope":null,
+        "is_runtime":true,
+        "is_optional":false,
+        "is_resolved":true,
+        "resolved_package":{},
+        "extra_data":{}
+      }
+    ],
+    "repository_homepage_url":"https://lib.haxe.org/p/openfl",
+    "repository_download_url":"https://lib.haxe.org/p/openfl/8.5.1/download/",
+    "api_data_url":null,
+    "datasource_id":"haxelib_json",
+    "purl":"pkg:haxe/openfl@8.5.1"
+  }
+]
