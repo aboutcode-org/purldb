@@ -67,6 +67,17 @@ class BaseDebianTest(JsonBasedTesting):
             expected = expect.read()
             assert expected == result
 
+    def get_tmp_gz_file(self, loc):
+        """
+        Creates a .gz file at a temporary location, and returns that location.
+        """
+        temp_gz_location = self.get_temp_file(extension=".gz")
+        with open(loc, 'rb') as f:
+            file_content = f.read()
+        with gzip.open(temp_gz_location, 'wb') as f_out:
+            f_out.write(file_content)
+        return temp_gz_location
+
 
 class DebutilsTest(BaseDebianTest):
 
@@ -335,11 +346,7 @@ class DebianLSLRTest(BaseDebianTest):
 
     def test_DebianDirectoryIndexVisitor_from_debian(self):
         uri = 'http://ftp.debian.org/debian/ls-lR.gz'
-        temp_gz_location = self.get_temp_file(extension=".gz")
-        with open('./testfiles/debian/lslr/ls-lR_debian', 'rb') as f:
-            text_content = f.read()
-        with gzip.open(temp_gz_location, 'wb') as f_out:
-            f_out.write(text_content)
+        temp_gz_location = self.get_tmp_gz_file('./testfiles/debian/lslr/ls-lR_debian')
         test_loc = self.get_test_loc(temp_gz_location)
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
@@ -349,11 +356,7 @@ class DebianLSLRTest(BaseDebianTest):
 
     def test_DebianDirectoryIndexVisitor_from_ubuntu(self):
         uri = 'http://archive.ubuntu.com/ubuntu/ls-lR.gz'
-        temp_gz_location = self.get_temp_file(extension=".gz")
-        with open('./testfiles/debian/lslr/ls-lR_ubuntu', 'rb') as f:
-            text_content = f.read()
-        with gzip.open(temp_gz_location, 'wb') as f_out:
-            f_out.write(text_content)
+        temp_gz_location = self.get_tmp_gz_file('./testfiles/debian/lslr/ls-lR_ubuntu')
         test_loc = self.get_test_loc(temp_gz_location)
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
