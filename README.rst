@@ -27,6 +27,7 @@ Requirements
 * Postgres 13
 * git
 * scancode-toolkit runtime dependencies (https://scancode-toolkit.readthedocs.io/en/stable/getting-started/install.html#install-prerequisites)
+* If you are using Ubuntu-20 or Ubuntu-22 LTS  ``sudo apt install libpq-dev``
 
 Once the prerequisites have been installed, set up PurlDB with the following commands:
 ::
