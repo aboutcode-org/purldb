@@ -50,12 +50,12 @@ class Command(scanning.ScanningCommand):
         Process a ScannableURI based on its status.
         - For requested but not completed scans, check remote status and
           update status and timestamps accordingly.
-        - For completed scans, fetch the scan, then process the scan results
+        - For completed scans, fetch the scan, then procpythess the scan results
           to update the PackageDB as needed. Update status and timestamps accordingly
         """
         logger.info('Checking or processing scan for URI: {}'.format(scannable_uri))
 
-        scan_info = scanning.get_scan_info(scannable_uri.scan_uuid, api_url=cls.api_url, api_auth=cls.api_auth)
+        scan_info = scanning.get_scan_info(scannable_uri.scan_uuid, api_url=cls.api_url, api_auth_headers=cls.api_auth_headers)
 
         if scannable_uri.scan_status in (ScannableURI.SCAN_SUBMITTED, ScannableURI.SCAN_IN_PROGRESS):
             scannable_uri.scan_status = get_scan_status(scan_info)
@@ -63,20 +63,15 @@ class Command(scanning.ScanningCommand):
             logger.info('Indexing scanned files for URI: {}'.format(scannable_uri))
 
             package = scannable_uri.package
-            scan_index_errors = update_package_checksums(package, scan_info)
+            scan_data = scanning.get_scan_data(
+                scannable_uri.scan_uuid, api_url=cls.api_url, api_auth_headers=cls.api_auth_headers)
+            scan_index_errors = index_package_files(package, scan_data)
+            # TODO: We should rerun the specific indexers that have failed
             if scan_index_errors:
                 scannable_uri.index_error = '\n'.join(scan_index_errors)
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
             else:
-                scan_data = scanning.get_scan_data(
-                    scannable_uri.scan_uuid, api_url=cls.api_url, api_auth=cls.api_auth)
-                scan_index_errors = index_package_files(package, scan_data)
-                # TODO: We should rerun the specific indexers that have failed
-                if scan_index_errors:
-                    scannable_uri.index_error = '\n'.join(scan_index_errors)
-                    scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
-                else:
-                    scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
+                scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
 
         scannable_uri.wip_date = None
         scannable_uri.save()
@@ -90,13 +85,13 @@ def get_scan_status(scan_object):
     """
     Return a ScannableURI status from scan_object Scan
     """
-    if scan_object.pending:
+    if scan_object.not_started or scan_object.queued:
         scan_status = ScannableURI.SCAN_SUBMITTED
-    elif scan_object.in_progress:
+    elif scan_object.running:
         scan_status = ScannableURI.SCAN_IN_PROGRESS
-    elif scan_object.failed:
+    elif scan_object.failure or scan_object.stopped or scan_object.stale:
         scan_status = ScannableURI.SCAN_FAILED
-    elif scan_object.completed:
+    elif scan_object.success:
         scan_status = ScannableURI.SCAN_COMPLETED
     else:
         # TODO: Consider not raising an exception
@@ -171,7 +166,7 @@ def index_package_files(package, scan_data):
 
             copyrights = []
             for copyright_mapping in resource.copyrights:
-                copyright = copyright_mapping.get('value')
+                copyright = copyright_mapping.get('copyright')
                 if not copyright:
                     continue
                 copyrights.append(copyright)

@@ -52,11 +52,10 @@ class Command(scanning.ScanningCommand):
         """
         max_scan_requests = options.get('max_scan_requests', '')
         if isinstance(max_scan_requests, int):
-            submitted_and_in_progress = len(
-                ScannableURI.objects.filter(
-                    Q(scan_status=ScannableURI.SCAN_SUBMITTED) | Q(scan_status=ScannableURI.SCAN_IN_PROGRESS)
-                )
-            )
+            submitted_and_in_progress = ScannableURI.objects.filter(
+                Q(scan_status=ScannableURI.SCAN_SUBMITTED) | Q(scan_status=ScannableURI.SCAN_IN_PROGRESS)
+            ).count()
+
             if submitted_and_in_progress >= max_scan_requests:
                 return
 
@@ -66,7 +65,7 @@ class Command(scanning.ScanningCommand):
 
         try:
             cls.logger.info('Requesting scan from ScanCode.io for URI: "{uri}"'.format(**locals()))
-            scan = scanning.submit_scan(uri, api_url=cls.api_url, api_auth=cls.api_auth)
+            scan = scanning.submit_scan(uri, api_url=cls.api_url, api_auth_headers=cls.api_auth_headers)
             scancodeio_uuid = scan.uuid
 
         except Exception as e:
