@@ -346,20 +346,20 @@ class DebianLSLRTest(BaseDebianTest):
 
     def test_DebianDirectoryIndexVisitor_from_debian(self):
         uri = 'http://ftp.debian.org/debian/ls-lR.gz'
-        temp_gz_location = self.get_tmp_gz_file('debian/lslr/ls-lR_debian')
-        test_loc = self.get_test_loc(temp_gz_location)
+        test_loc = self.get_test_loc('debian/lslr/ls-lR_debian')
+        temp_gz_location = self.get_tmp_gz_file(test_loc)
         with patch('requests.get') as mock_http_get:
-            mock_http_get.return_value = mocked_requests_get(uri, test_loc)
+            mock_http_get.return_value = mocked_requests_get(uri, temp_gz_location)
             uris, _, _ = debian_visitor.DebianDirectoryIndexVisitor(uri)
         expected_loc = self.get_test_loc('debian/lslr/ls-lR_debian.gz-expected.json')
         self.check_expected_uris(list(uris), expected_loc)
 
     def test_DebianDirectoryIndexVisitor_from_ubuntu(self):
         uri = 'http://archive.ubuntu.com/ubuntu/ls-lR.gz'
-        temp_gz_location = self.get_tmp_gz_file('debian/lslr/ls-lR_ubuntu')
-        test_loc = self.get_test_loc(temp_gz_location)
+        test_loc = self.get_test_loc('debian/lslr/ls-lR_ubuntu')
+        temp_gz_location = self.get_tmp_gz_file(test_loc)
         with patch('requests.get') as mock_http_get:
-            mock_http_get.return_value = mocked_requests_get(uri, test_loc)
+            mock_http_get.return_value = mocked_requests_get(uri, temp_gz_location)
             uris, _, _ = debian_visitor.DebianDirectoryIndexVisitor(uri)
         expected_loc = self.get_test_loc(
             'debian/lslr/ls-lR_ubuntu.gz-expected.json')
