@@ -17,6 +17,7 @@ from django.db import transaction
 from license_expression import Licensing
 from commoncode.resource import VirtualCodebase
 
+from matchcode.indexing import index_directory_fingerprints
 from minecode.management import scanning
 from minecode.management.commands import get_error_message
 from minecode.models import ScannableURI
@@ -190,6 +191,7 @@ def index_package_files(package, scan_data):
                 license_expression=license_expression,
                 is_file=is_file,
             )
+        _, _ = index_directory_fingerprints(vc, package)
 
     except Exception as e:
         msg = get_error_message(e)
