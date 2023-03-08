@@ -9,6 +9,7 @@
 
 
 import codecs
+import gzip
 import json
 import os
 from unittest.case import expectedFailure
@@ -65,6 +66,17 @@ class BaseDebianTest(JsonBasedTesting):
         with codecs.open(expected_loc, mode='rb', encoding='utf-8') as expect:
             expected = expect.read()
             assert expected == result
+
+    def get_tmp_gz_file(self, loc):
+        """
+        Creates a .gz file at a temporary location, and returns that location.
+        """
+        temp_gz_location = self.get_temp_file(extension=".gz")
+        with open(loc, 'rb') as f:
+            file_content = f.read()
+        with gzip.open(temp_gz_location, 'wb') as f_out:
+            f_out.write(file_content)
+        return temp_gz_location
 
 
 class DebutilsTest(BaseDebianTest):
@@ -332,22 +344,22 @@ class DebianPackagesTest(BaseDebianTest):
 
 class DebianLSLRTest(BaseDebianTest):
 
-    @expectedFailure
     def test_DebianDirectoryIndexVisitor_from_debian(self):
         uri = 'http://ftp.debian.org/debian/ls-lR.gz'
-        test_loc = self.get_test_loc('debian/lslr/ls-lR_debian.gz')
+        test_loc = self.get_test_loc('debian/lslr/ls-lR_debian')
+        temp_gz_location = self.get_tmp_gz_file(test_loc)
         with patch('requests.get') as mock_http_get:
-            mock_http_get.return_value = mocked_requests_get(uri, test_loc)
+            mock_http_get.return_value = mocked_requests_get(uri, temp_gz_location)
             uris, _, _ = debian_visitor.DebianDirectoryIndexVisitor(uri)
         expected_loc = self.get_test_loc('debian/lslr/ls-lR_debian.gz-expected.json')
         self.check_expected_uris(list(uris), expected_loc)
 
-    @expectedFailure
     def test_DebianDirectoryIndexVisitor_from_ubuntu(self):
         uri = 'http://archive.ubuntu.com/ubuntu/ls-lR.gz'
-        test_loc = self.get_test_loc('debian/lslr/ls-lR_ubuntu.gz')
+        test_loc = self.get_test_loc('debian/lslr/ls-lR_ubuntu')
+        temp_gz_location = self.get_tmp_gz_file(test_loc)
         with patch('requests.get') as mock_http_get:
-            mock_http_get.return_value = mocked_requests_get(uri, test_loc)
+            mock_http_get.return_value = mocked_requests_get(uri, temp_gz_location)
             uris, _, _ = debian_visitor.DebianDirectoryIndexVisitor(uri)
         expected_loc = self.get_test_loc(
             'debian/lslr/ls-lR_ubuntu.gz-expected.json')
