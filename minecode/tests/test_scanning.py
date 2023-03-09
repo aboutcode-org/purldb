@@ -29,27 +29,24 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
             mock_get.return_value.json.return_value = json.loads(f.read())
 
         api_url = 'http://127.0.0.1:8001/api/'
-        api_auth = ('', '')
-        uri = 'http://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar'
-        result = scanning.query_scans(uri=uri, api_url=api_url, api_auth=api_auth)
+        api_auth_headers = {}
+        uri = 'https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar'
+        response = scanning.query_scans(uri=uri, api_url=api_url, api_auth_headers=api_auth_headers)
+        result = scanning.Scan.from_response(**response)
 
         expected = scanning.Scan(
-            url='http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/',
-            uuid='177eb27a-25d2-4ef0-b608-5a84ea9b1ef1',
-            uri='http://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
-            sha1=None,
-            md5=None,
-            size=None,
-            created_date='2018-10-22T19:45:51.667927Z',
-            task_start_date=None,
-            task_end_date=None,
-            task_exitcode=None,
-            status='not started yet',
-            execution_time=None,
-            data_url='http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/data/',
-            summary_url='http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/summary/'
+            url='http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/',
+            uuid='54dc4afe-70ea-4f1c-9ed3-989efd9a991f',
+            run_uuid='4711ea01-d3b1-4ce4-972b-859ac9c1d391',
+            uri='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
+            created_date='2023-03-08T23:35:45.679962Z',
+            task_start_date='2023-03-08T23:35:45.687840Z',
+            task_end_date='2023-03-08T23:35:56.780375Z',
+            task_exitcode=0,
+            status='success',
+            execution_time=11
         )
-
+        result = attr.asdict(result)
         expected = attr.asdict(expected)
         self.assertEqual(expected, result)
 
@@ -60,24 +57,20 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
         with open(test_loc, 'rb') as f:
             mock_post.return_value.json.return_value = json.loads(f.read())
         api_url = 'http://127.0.0.1:8001/api/'
-        api_auth = ('', '')
-        uri = 'http://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar'
-        result = scanning.submit_scan(uri=uri, api_url=api_url, api_auth=api_auth)
+        api_auth_headers = {}
+        uri = 'https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar'
+        result = scanning.submit_scan(uri=uri, api_url=api_url, api_auth_headers=api_auth_headers)
         expected = scanning.Scan(
-            url='http://127.0.0.1:8001/api/scans/5463cc42-abe8-4ac7-9eda-58b03ec7e881/',
-            uuid='5463cc42-abe8-4ac7-9eda-58b03ec7e881',
-            uri='http://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
-            sha1=None,
-            md5=None,
-            size=None,
-            created_date='2019-02-04T23:06:46.343135Z',
+            url='http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/',
+            uuid='54dc4afe-70ea-4f1c-9ed3-989efd9a991f',
+            run_uuid='4711ea01-d3b1-4ce4-972b-859ac9c1d391',
+            uri='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
+            created_date='2023-03-08T23:35:45.679962Z',
             task_start_date=None,
             task_end_date=None,
             task_exitcode=None,
-            status='not started yet',
+            status='not_started',
             execution_time=None,
-            data_url='http://127.0.0.1:8001/api/scans/5463cc42-abe8-4ac7-9eda-58b03ec7e881/data/',
-            summary_url='http://127.0.0.1:8001/api/scans/5463cc42-abe8-4ac7-9eda-58b03ec7e881/summary/'
         )
         expected = attr.asdict(expected)
         result = attr.asdict(result)
@@ -93,30 +86,26 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
             mock_post.return_value.json.return_value = json.loads(f.read())
 
         mock_get.return_value = mock.Mock(ok=True)
-        scan_info_response_loc = self.get_test_loc('scancodeio/new_scan_request.json')
+        scan_info_response_loc = self.get_test_loc('scancodeio/scan_request_response.json')
         with open(scan_info_response_loc, 'rb') as f:
             mock_get.return_value.json.return_value = json.loads(f.read())
 
         api_url = 'http://127.0.0.1:8001/api/'
-        api_auth = ('', '')
-        uri = 'http://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar'
-        result = scanning.submit_scan(uri=uri, api_url=api_url, api_auth=api_auth)
+        api_auth_headers = {}
+        uri = 'https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar'
+        result = scanning.submit_scan(uri=uri, api_url=api_url, api_auth_headers=api_auth_headers)
 
         expected = scanning.Scan(
-            url='http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/',
-            uuid='177eb27a-25d2-4ef0-b608-5a84ea9b1ef1',
-            uri='http://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
-            sha1=None,
-            md5=None,
-            size=None,
-            created_date='2018-10-22T19:45:51.667927Z',
+            url='http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/',
+            uuid='54dc4afe-70ea-4f1c-9ed3-989efd9a991f',
+            run_uuid='4711ea01-d3b1-4ce4-972b-859ac9c1d391',
+            uri='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
+            created_date='2023-03-08T23:35:45.679962Z',
             task_start_date=None,
             task_end_date=None,
             task_exitcode=None,
-            status='not started yet',
+            status='not_started',
             execution_time=None,
-            data_url='http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/data/',
-            summary_url='http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/summary/'
         )
 
         expected = attr.asdict(expected)
@@ -125,13 +114,13 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
 
     def testscanning_get_scan_url(self):
         scan_uuid = '177eb27a-25d2-4ef0-b608-5a84ea9b1ef1'
-        api_url_scans = 'http://127.0.0.1:8001/api/scans/'
-        suffix = 'data'
-        result = scanning.get_scan_url(scan_uuid=scan_uuid, api_url=api_url_scans)
-        expected = 'http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/'
+        api_url_projects = 'http://127.0.0.1:8001/api/projects/'
+        suffix = 'results'
+        result = scanning.get_scan_url(scan_uuid=scan_uuid, api_url=api_url_projects)
+        expected = 'http://127.0.0.1:8001/api/projects/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/'
         self.assertEqual(expected, result)
-        result_with_suffix = scanning.get_scan_url(scan_uuid=scan_uuid, api_url=api_url_scans, suffix=suffix)
-        expected_with_suffix = 'http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/data/'
+        result_with_suffix = scanning.get_scan_url(scan_uuid=scan_uuid, api_url=api_url_projects, suffix=suffix)
+        expected_with_suffix = 'http://127.0.0.1:8001/api/projects/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/results/'
         self.assertEqual(expected_with_suffix, result_with_suffix)
 
     @mock.patch('requests.get')
@@ -140,72 +129,24 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
         mock_get.return_value = mock.Mock(ok=True)
         with open(test_loc, 'rb') as f:
             mock_get.return_value.json.return_value = json.loads(f.read())
-        scan_uuid = '177eb27a-25d2-4ef0-b608-5a84ea9b1ef1'
+        scan_uuid = '54dc4afe-70ea-4f1c-9ed3-989efd9a991f'
         api_url = 'http://127.0.0.1:8001/api/'
-        api_auth = ('', '')
-        result = scanning.get_scan_info(scan_uuid=scan_uuid, api_url=api_url, api_auth=api_auth)
+        api_auth_headers = {}
+        result = scanning.get_scan_info(scan_uuid=scan_uuid, api_url=api_url, api_auth_headers=api_auth_headers)
         expected = scanning.Scan(
-            url='http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/',
-            uuid='177eb27a-25d2-4ef0-b608-5a84ea9b1ef1',
-            uri='http://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
-            sha1='feff0d7bacd11d37a9c96daed87dc1db163065b1',
-            md5='57431f2f6d5841eebdb964b04091b8ed',
-            size=47069,
-            created_date='2018-10-22T19:45:51.667927Z',
-            task_start_date='2018-10-22T19:45:51.689498Z',
-            task_end_date='2018-10-22T19:45:59.980194Z',
+            url='http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/',
+            uuid='54dc4afe-70ea-4f1c-9ed3-989efd9a991f',
+            run_uuid='4711ea01-d3b1-4ce4-972b-859ac9c1d391',
+            uri='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
+            created_date='2023-03-08T23:35:45.679962Z',
+            task_start_date='2023-03-08T23:35:45.687840Z',
+            task_end_date='2023-03-08T23:35:56.780375Z',
             task_exitcode=0,
-            status='completed',
-            execution_time=8.290696,
-            data_url='http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/data/',
-            summary_url='http://127.0.0.1:8001/api/scans/177eb27a-25d2-4ef0-b608-5a84ea9b1ef1/summary/'
+            status='success',
+            execution_time=11,
         )
         expected = attr.asdict(expected)
         result = attr.asdict(result)
-        self.assertEqual(expected, result)
-
-    @mock.patch('requests.get')
-    def testscanning_get_scan_summary(self, mock_get):
-        test_loc = self.get_test_loc('scancodeio/get_scan_summary.json')
-        mock_get.return_value = mock.Mock(ok=True)
-        with open(test_loc, 'rb') as f:
-            mock_get.return_value.json.return_value = json.loads(f.read())
-        scan_uuid = '177eb27a-25d2-4ef0-b608-5a84ea9b1ef1'
-        api_url = 'http://127.0.0.1:8001/api/'
-        api_auth = ('', '')
-        result = scanning.get_scan_summary(scan_uuid=scan_uuid, api_url=api_url, api_auth=api_auth)
-        expected = {
-            'license_expressions': [
-                {
-                    'value': None,
-                    'count': 45
-                }
-            ],
-            'copyrights': [
-                {
-                    'value': None,
-                    'count': 45
-                }
-            ],
-            'holders': [
-                {
-                    'value': None,
-                    'count': 45
-                }
-            ],
-            'authors': [
-                {
-                    'value': None,
-                    'count': 45
-                }
-            ],
-            'programming_language': [
-                {
-                    'value': None,
-                    'count': 45
-                }
-            ]
-        }
         self.assertEqual(expected, result)
 
     @mock.patch('requests.get')
@@ -214,11 +155,11 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
         mock_get.return_value = mock.Mock(ok=True)
         with open(test_loc, 'rb') as f:
             mock_get.return_value.json.return_value = json.loads(f.read())
-        scan_uuid = '177eb27a-25d2-4ef0-b608-5a84ea9b1ef1'
+        scan_uuid = '54dc4afe-70ea-4f1c-9ed3-989efd9a991f'
         api_url = 'http://127.0.0.1:8001/api/'
-        api_auth = ('', '')
+        api_auth_headers = {}
         expected_loc = self.get_test_loc('scancodeio/get_scan_data_expected.json')
-        result = scanning.get_scan_summary(scan_uuid=scan_uuid, api_url=api_url, api_auth=api_auth)
+        result = scanning.get_scan_data(scan_uuid=scan_uuid, api_url=api_url, api_auth_headers=api_auth_headers)
         with open(expected_loc, 'rb') as f:
             expected = json.loads(f.read())
         self.assertEqual(expected['files'], result['files'])

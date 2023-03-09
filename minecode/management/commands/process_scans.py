@@ -46,7 +46,7 @@ class Command(scanning.ScanningCommand):
         return scannable_uri
 
     @classmethod
-    def process_scan(cls, scannable_uri, **kwargs):
+    def process_scan(cls, scannable_uri, get_scan_info_save_loc='', get_scan_data_save_loc='', **kwargs):
         """
         Process a ScannableURI based on its status.
         - For requested but not completed scans, check remote status and
@@ -56,7 +56,12 @@ class Command(scanning.ScanningCommand):
         """
         logger.info('Checking or processing scan for URI: {}'.format(scannable_uri))
 
-        scan_info = scanning.get_scan_info(scannable_uri.scan_uuid, api_url=cls.api_url, api_auth_headers=cls.api_auth_headers)
+        scan_info = scanning.get_scan_info(
+            scannable_uri.scan_uuid,
+            api_url=cls.api_url,
+            api_auth_headers=cls.api_auth_headers,
+            get_scan_info_save_loc=get_scan_info_save_loc
+        )
 
         if scannable_uri.scan_status in (ScannableURI.SCAN_SUBMITTED, ScannableURI.SCAN_IN_PROGRESS):
             scannable_uri.scan_status = get_scan_status(scan_info)
@@ -65,7 +70,11 @@ class Command(scanning.ScanningCommand):
 
             package = scannable_uri.package
             scan_data = scanning.get_scan_data(
-                scannable_uri.scan_uuid, api_url=cls.api_url, api_auth_headers=cls.api_auth_headers)
+                scannable_uri.scan_uuid,
+                api_url=cls.api_url,
+                api_auth_headers=cls.api_auth_headers,
+                get_scan_data_save_loc=get_scan_data_save_loc
+            )
             scan_index_errors = index_package_files(package, scan_data)
             # TODO: We should rerun the specific indexers that have failed
             if scan_index_errors:

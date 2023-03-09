@@ -8,6 +8,7 @@ from __future__ import unicode_literals
 import logging
 import sys
 import time
+import json
 
 import attr
 import requests
@@ -131,20 +132,29 @@ class Scan(object):
         return self.status == 'stale'
 
 
-def query_scans(uri, api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANCODEIO_AUTH_HEADERS):
+def query_scans(uri, api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANCODEIO_AUTH_HEADERS, response_save_loc=''):
     """
     Return scan information for `uri` if `uri` has already been scanned by ScanCode.io
     """
     payload = {'name': uri}
     response = requests.get(url=api_url, params=payload, headers=api_auth_headers)
+    response_json = response.json()
+    if response_save_loc:
+        with open(response_save_loc, 'w') as f:
+            json.dump(response_json, f)
     if not response.ok:
         response.raise_for_status()
-    results = response.json()['results']
+    results = response_json['results']
     if results and len(results) == 1:
         return results[0]
 
 
-def submit_scan(uri, api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANCODEIO_AUTH_HEADERS):
+def submit_scan(
+    uri,
+    api_url=SCANCODEIO_API_URL_PROJECTS,
+    api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    response_save_loc=''
+):
     """
     Submit a scan request for `uri` to ScanCode.io and return a Scan object on
     success. Raise an exception on error.
@@ -160,9 +170,14 @@ def submit_scan(uri, api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANC
     }
 
     response = requests.post(url=api_url, data=request_args, headers=api_auth_headers)
+    response_json = response.json()
+    if response_save_loc:
+        with open(response_save_loc, 'w') as f:
+            json.dump(response_json, f)
+
     if not response.ok:
         if response.status_code == requests.codes.bad_request:
-            name = response.json().get('name')
+            name = response_json.get('name')
             if name and 'project with this name already exists.' in name:
                 query_results = query_scans(uri, api_url=api_url, api_auth_headers=api_auth_headers)
                 if query_results:
@@ -170,11 +185,11 @@ def submit_scan(uri, api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANC
             else:
                 response.raise_for_status()
     else:
-        scan = Scan.from_response(**response.json())
+        scan = Scan.from_response(**response_json)
         uuid = scan.uuid
         if not uuid:
             msg = 'Failed to to submit scan UUID for URI: "{uri}".\n'.format(**locals())
-            msg += repr(response.json())
+            msg += repr(response_json)
             raise Exception(msg)
     return scan
 
@@ -212,22 +227,39 @@ def _call_scan_get_api(scan_uuid, endpoint='',
     return response.json()
 
 
-def get_scan_info(scan_uuid, api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANCODEIO_AUTH_HEADERS):
+def get_scan_info(
+    scan_uuid,
+    api_url=SCANCODEIO_API_URL_PROJECTS,
+    api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    get_scan_info_save_loc=''
+):
     """
     Return a Scan object for `scan_uuid` fetched from ScanCode.io or None.
     Raise an exception on error.
     """
     results = _call_scan_get_api(scan_uuid, endpoint='', api_url=api_url, api_auth_headers=api_auth_headers)
+    if get_scan_info_save_loc:
+        with open(get_scan_info_save_loc, 'w') as f:
+            json.dump(results, f)
     return Scan.from_response(**results)
 
 
-def get_scan_data(scan_uuid, api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANCODEIO_AUTH_HEADERS):
+def get_scan_data(
+    scan_uuid,
+    api_url=SCANCODEIO_API_URL_PROJECTS,
+    api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    get_scan_data_save_loc=''
+):
     """
     Return scan details data as a mapping for a `scan_uuid` fetched from
     ScanCode.io or None. Raise an exception on error.
     """
     # FIXME: we should return a temp location instead
-    return _call_scan_get_api(scan_uuid, endpoint='results', api_url=api_url, api_auth_headers=api_auth_headers)
+    results = _call_scan_get_api(scan_uuid, endpoint='results', api_url=api_url, api_auth_headers=api_auth_headers)
+    if get_scan_data_save_loc:
+        with open(get_scan_data_save_loc, 'w') as f:
+            json.dump(results, f)
+    return results
 
 
 class ScanningCommand(VerboseCommand):

@@ -46,7 +46,7 @@ class Command(scanning.ScanningCommand):
         return scannable_uri
 
     @classmethod
-    def process_scan(cls, scannable_uri, options, **kwargs):
+    def process_scan(cls, scannable_uri, options, response_save_loc='', **kwargs):
         """
         Request a ScanCode.io scan for a `scannable_uri` ScannableURI.
         """
@@ -65,7 +65,12 @@ class Command(scanning.ScanningCommand):
 
         try:
             cls.logger.info('Requesting scan from ScanCode.io for URI: "{uri}"'.format(**locals()))
-            scan = scanning.submit_scan(uri, api_url=cls.api_url, api_auth_headers=cls.api_auth_headers)
+            scan = scanning.submit_scan(
+                uri,
+                api_url=cls.api_url,
+                api_auth_headers=cls.api_auth_headers,
+                response_save_loc=response_save_loc
+            )
             scancodeio_uuid = scan.uuid
 
         except Exception as e:
