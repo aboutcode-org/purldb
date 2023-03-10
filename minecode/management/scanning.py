@@ -5,6 +5,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import hashlib
 import logging
 import sys
 import time
@@ -132,11 +133,19 @@ class Scan(object):
         return self.status == 'stale'
 
 
+def uri_fingerprint(uri):
+    """
+    Return the SHA1 hex digest of `uri`
+    """
+    encoded_uri = uri.encode('utf-8')
+    return hashlib.sha1(encoded_uri).hexdigest()
+
+
 def query_scans(uri, api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANCODEIO_AUTH_HEADERS, response_save_loc=''):
     """
     Return scan information for `uri` if `uri` has already been scanned by ScanCode.io
     """
-    payload = {'name': uri}
+    payload = {'name': uri_fingerprint(uri)}
     response = requests.get(url=api_url, params=payload, headers=api_auth_headers)
     response_json = response.json()
     if response_save_loc:
@@ -161,7 +170,7 @@ def submit_scan(
     """
     logger.debug('submit_scan: uri', uri, 'api_url:', api_url, 'api_auth_headers:', api_auth_headers)
     request_args = {
-        'name': uri,
+        'name': uri_fingerprint(uri),
         'pipeline': 'scan_and_fingerprint_codebase',
         'input_urls': [
             uri

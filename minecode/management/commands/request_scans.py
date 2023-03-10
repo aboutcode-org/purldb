@@ -33,7 +33,9 @@ class Command(scanning.ScanningCommand):
             '--max-scan-requests',
             dest='max_scan_requests',
             action='store',
-            help='Limit the number of scan requests that can be made')
+            help='Limit the number of scan requests that can be made',
+            default=3,
+        )
 
     def handle(self, *args, **options):
         self.logger.setLevel(self.get_verbosity(**options))
@@ -50,18 +52,19 @@ class Command(scanning.ScanningCommand):
         """
         Request a ScanCode.io scan for a `scannable_uri` ScannableURI.
         """
-        max_scan_requests = options.get('max_scan_requests', '')
+        uri = scannable_uri.uri
+        max_scan_requests = options.get('max_scan_requests', 3)
         if isinstance(max_scan_requests, int):
             submitted_and_in_progress = ScannableURI.objects.filter(
                 Q(scan_status=ScannableURI.SCAN_SUBMITTED) | Q(scan_status=ScannableURI.SCAN_IN_PROGRESS)
             ).count()
 
             if submitted_and_in_progress >= max_scan_requests:
+                cls.logger.info(f'Max scan requests reached: {max_scan_requests} Skipping URI "{uri}"')
                 return
 
         scan_errors = []
         scancodeio_uuid = scan_error = None
-        uri = scannable_uri.uri
 
         try:
             cls.logger.info('Requesting scan from ScanCode.io for URI: "{uri}"'.format(**locals()))

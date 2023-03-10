@@ -525,7 +525,7 @@ class ScannableURIManager(models.Manager):
         database for update.
         """
         qs = self.filter(scan_status__exact=ScannableURI.SCAN_NEW,
-                         wip_date=None, scan_error=None)
+                         scan_error=None)
         # NOTE: this matches an index for efficient ordering
         qs = qs.order_by('-priority')
         return qs
