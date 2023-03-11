@@ -44,6 +44,10 @@ DEBUG_TOOLBAR = env.bool("PURLDB_DEBUG_TOOLBAR", default=False)
 
 PURLDB_PASSWORD_MIN_LENGTH = env.int("PURLDB_PASSWORD_MIN_LENGTH", default=14)
 
+# SCANCODE.IO
+SCANCODEIO_URL = env.str("SCANCODEIO_URL")
+SCANCODEIO_API_KEY = env.str("SCANCODEIO_API_KEY")
+
 # PurlDB
 
 PURLDB_LOG_LEVEL = env.str("PURLDB_LOG_LEVEL", "INFO")
@@ -270,5 +274,5 @@ if DEBUG_TOOLBAR:
 
 # Active seeders: each active seeder class need to be added explictly here
 ACTIVE_SEEDERS = [
-    'minecode.visitors.npm.NpmSeed',
+    'minecode.visitors.maven.MavenSeed',
 ]

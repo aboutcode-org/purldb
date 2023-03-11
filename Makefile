@@ -94,10 +94,16 @@ seed:
 	${MANAGE} seed
 
 run_visit: seed
-	${MANAGE} run_visit
+	${MANAGE} run_visit --ignore-robots --ignore-throttle
 
 run_map:
 	${MANAGE} run_map
+
+request_scans:
+	${MANAGE} request_scans
+
+process_scans:
+	${MANAGE} process_scans
 
 test:
 	@echo "-> Run the test suite"
