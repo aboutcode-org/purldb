@@ -25,12 +25,10 @@ from minecode.visitors import HttpVisitor
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
 
-
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
-
 
 """
 Collect Debian and Debian derivative packages (such as Ubuntu).
@@ -38,6 +36,8 @@ There are two approaches:
 1. get the directory listings of all available packages (and files)
 2. get and navigate through the tree of Debian control files
 """
+
+
 # DEBIAN_BASE_URL = 'http://ftp.debian.org/debian/'
 # Other URLs and sources to consider
 # rsync://archive.debian.org/debian-archive
@@ -85,8 +85,9 @@ class DebianDirectoryIndexVisitor(NonPersistentHttpVisitor):
     """
     Collect package URIs from Debian-like repos with an ls-LR directory listing.
     """
+
     def get_uris(self, content):
-        with gzip.open(content, 'rb') as f:
+        with gzip.open(content, 'rt') as f:
             content = f.read()
 
         url_template = self.uri.replace('ls-lR.gz', '{path}')
@@ -109,17 +110,20 @@ class DebianDirectoryIndexVisitor(NonPersistentHttpVisitor):
                 logger.error('Unknown Debian URI namespace: {}'.format(self.uri))
                 continue
 
-            name, version, arch = debian_inspector.package.get_nva(file_name)
-            package_url = PackageURL(
-                type='deb',
-                namespace=namespace,
-                name=name,
-                version=version,
-                qualifiers=dict(arch=arch) if arch else None)
+            if file_name.endswith(('.deb', '.udeb', '.tar.gz', '.tar.xz', '.tar.bz2', '.tar.lzma')):
+                name, version, arch = debian_inspector.package.get_nva(file_name)
+                package_url = PackageURL(
+                    type='deb',
+                    namespace=namespace,
+                    name=name,
+                    version=str(version),
+                    qualifiers=dict(arch=arch) if arch else None).to_string()
+            else:
+                package_url = None
 
             yield URI(
                 uri=url_template.format(path=path),
-                package_url=package_url.to_string(),
+                package_url=None or package_url,
                 file_name=file_name,
                 date=entry.date,
                 size=entry.size,
@@ -214,6 +218,7 @@ class DebianSourcesVisitor(NonPersistentHttpVisitor):
     """
     Collect package URIs from a Sources gz data file.
     """
+
     def get_uris(self, content):
         base_url = 'http://ftp.debian.org/debian'
         with gzip.open(content, 'rb') as f:
@@ -242,6 +247,7 @@ class DebianPackagesVisitor(NonPersistentHttpVisitor):
     """
     Collect URIs  to actual .deb Packages and the content itself from a Packages gz data file.
     """
+
     def get_uris(self, content):
         base_url = 'http://ftp.debian.org/debian'
         with gzip.open(content, 'rb') as f:
@@ -281,7 +287,7 @@ class DebianDescriptionVisitor(HttpVisitor):
     """
 
     def dumps(self, content):
-        dsc = debcon. Debian822.from_string(content)
+        dsc = debcon.Debian822.from_string(content)
         # FIXME: this does not make sense as this is a mapping-time thing
         return json.dumps(dsc.to_dict())
 

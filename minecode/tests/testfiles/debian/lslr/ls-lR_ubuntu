@@ -1,0 +1,197 @@
+.:
+total 160
+drwxrwsr-x 126 lp_publish lp_publish   4096 Oct 24 23:16 dists
+drwxr-sr-x   2 lp_publish lp_publish 147456 Apr 24 09:34 indices
+drwxrwsr-x   6 lp_publish lp_publish   4096 Feb 27  2010 pool
+drwxr-sr-x   3 lp_publish lp_publish   4096 Jun 28  2013 project
+lrwxrwxrwx   1 lp_publish lp_publish      1 Nov 24  2010 ubuntu -> .
+
+./dists:
+total 496
+drwxr-sr-x 7 lp_publish lp_publish 4096 Oct 19  2017 artful
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 24 09:30 artful-backports
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 24 09:30 artful-proposed
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 24 09:30 artful-security
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 24 09:30 artful-updates
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 24 09:29 bionic
+drwxr-sr-x 7 lp_publish lp_publish 4096 Oct 25 09:04 bionic-backports
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 24 09:30 bionic-proposed
+drwxr-sr-x 7 lp_publish lp_publish 4096 Oct 25 09:04 bionic-security
+drwxr-sr-x 7 lp_publish lp_publish 4096 Oct 25 09:04 bionic-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 dapper
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 dapper-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 dapper-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 dapper-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 dapper-updates
+lrwxrwxrwx 1 lp_publish lp_publish    6 Oct 24 23:16 devel -> bionic
+lrwxrwxrwx 1 lp_publish lp_publish   16 Oct 24 23:16 devel-backports -> bionic-backports
+lrwxrwxrwx 1 lp_publish lp_publish   15 Oct 24 23:16 devel-proposed -> bionic-proposed
+lrwxrwxrwx 1 lp_publish lp_publish   15 Oct 24 23:16 devel-security -> bionic-security
+lrwxrwxrwx 1 lp_publish lp_publish   14 Oct 24 23:16 devel-updates -> bionic-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 edgy-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 edgy-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 edgy-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 edgy-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 feisty
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 feisty-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 feisty-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 feisty-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 feisty-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 gutsy
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 gutsy-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 gutsy-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 gutsy-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 gutsy-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 hardy
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 hardy-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 hardy-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 hardy-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 hardy-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 intrepid
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 intrepid-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 intrepid-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 intrepid-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 intrepid-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 jaunty
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 jaunty-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 jaunty-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 jaunty-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 jaunty-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 karmic
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 karmic-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 karmic-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 karmic-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 karmic-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 lucid
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 lucid-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 lucid-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 lucid-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 lucid-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 maverick
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 maverick-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 maverick-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 maverick-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 maverick-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 natty
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 natty-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 natty-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 natty-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 natty-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 oneiric
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 oneiric-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 oneiric-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 oneiric-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 oneiric-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 precise
+drwxr-sr-x 6 lp_publish lp_publish 4096 Sep 19  2017 precise-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Sep  1  2017 precise-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 May 16  2017 precise-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 May 16  2017 precise-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 quantal
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 quantal-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 quantal-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 quantal-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 quantal-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 raring
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 raring-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 raring-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 raring-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 raring-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 saucy
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 saucy-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 saucy-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 saucy-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 saucy-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 trusty
+drwxr-sr-x 6 lp_publish lp_publish 4096 Dec 15 09:49 trusty-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Apr 20 11:02 trusty-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Apr 23 18:18 trusty-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Apr 23 20:17 trusty-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 utopic
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 utopic-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 utopic-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 utopic-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 utopic-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 vivid
+drwxr-sr-x 6 lp_publish lp_publish 4096 Sep 19  2017 vivid-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Sep 17  2017 vivid-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Aug 10  2017 vivid-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct 12  2017 vivid-updates
+drwxr-sr-x 6 lp_publish lp_publish 4096 Oct  7  2015 wily
+drwxr-sr-x 6 lp_publish lp_publish 4096 Jun  4  2016 wily-backports
+drwxr-sr-x 6 lp_publish lp_publish 4096 Jul 25  2017 wily-proposed
+drwxr-sr-x 6 lp_publish lp_publish 4096 Dec 10  2016 wily-security
+drwxr-sr-x 6 lp_publish lp_publish 4096 Dec 10  2016 wily-updates
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 21  2016 xenial
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 24 09:33 xenial-backports
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 24 09:33 xenial-proposed
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 24 09:31 xenial-security
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 24 09:32 xenial-updates
+drwxr-sr-x 7 lp_publish lp_publish 4096 Oct 13  2016 yakkety
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jul 25  2017 yakkety-backports
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jul 26  2017 yakkety-proposed
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jul 21  2017 yakkety-security
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jul 21  2017 yakkety-updates
+drwxr-sr-x 7 lp_publish lp_publish 4096 Apr 13  2017 zesty
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jan 16 03:22 zesty-backports
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jan 16 03:33 zesty-proposed
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jan 16 03:21 zesty-security
+drwxr-sr-x 7 lp_publish lp_publish 4096 Jan 16 03:22 zesty-updates
+
+./dists/artful:
+total 211576
+drwxr-sr-x  3 lp_publish lp_publish     4096 Apr 21  2017 by-hash
+-rw-rw-r--  2 lp_publish lp_publish 36909535 Oct 19  2017 Contents-amd64.gz
+-rw-rw-r--  2 lp_publish lp_publish 36066347 Oct 19  2017 Contents-arm64.gz
+-rw-rw-r--  2 lp_publish lp_publish 35846031 Oct 19  2017 Contents-armhf.gz
+-rw-rw-r--  2 lp_publish lp_publish 36609232 Oct 19  2017 Contents-i386.gz
+-rw-rw-r--  2 lp_publish lp_publish 35499788 Oct 19  2017 Contents-ppc64el.gz
+-rw-rw-r--  2 lp_publish lp_publish 35186788 Oct 19  2017 Contents-s390x.gz
+-rw-r--r--  1 lp_publish lp_publish   236651 Oct 19  2017 InRelease
+drwxr-sr-x 20 lp_publish lp_publish     4096 Apr 25  2017 main
+drwxr-sr-x 12 lp_publish lp_publish     4096 Apr 21  2017 multiverse
+-rw-r--r--  1 lp_publish lp_publish   235783 Oct 19  2017 Release
+-rw-r--r--  1 lp_publish lp_publish      819 Oct 19  2017 Release.gpg
+drwxr-sr-x 11 lp_publish lp_publish     4096 Apr 20  2017 restricted
+drwxr-sr-x 12 lp_publish lp_publish     4096 Apr 21  2017 universe
+
+./dists/artful/by-hash:
+total 4
+drwxr-sr-x 2 lp_publish lp_publish 4096 Oct 20  2017 SHA256
+
+./dists/artful/by-hash/SHA256:
+total 211088
+-rw-rw-r-- 2 lp_publish lp_publish 35186788 Oct 19  2017 3605b41a526e222fda67f26c81154d78749b9eb25f728cb071a5184ed0f33870
+-rw-rw-r-- 2 lp_publish lp_publish 36066347 Oct 19  2017 6606eaf4c36613cce53506b96b715d2a395037bc2a6e2c9f389e392e577be5d7
+-rw-rw-r-- 2 lp_publish lp_publish 36609232 Oct 19  2017 7a1fbad55fa347eb678d2e22ba1afb233aa7230a7413078040c80e60ccab71c5
+-rw-rw-r-- 2 lp_publish lp_publish 36909535 Oct 19  2017 9b13affd02f2621357699b2daa1c4301a608c708895dd58866a4a87b36aa79ee
+-rw-rw-r-- 2 lp_publish lp_publish 35499788 Oct 19  2017 f1e04240c7959c4fa306d6387e6b393d41f55f91aed5e51769672d08f22383c4
+-rw-rw-r-- 2 lp_publish lp_publish 35846031 Oct 19  2017 f96b18256e1f74535648a51f37f61ccb7cca8694bd109d88060538e0615c48c3
+
+./dists/artful/main:
+total 80
+drwxr-sr-x  3 lp_publish lp_publish  4096 Oct 19  2017 binary-amd64
+drwxr-sr-x  3 lp_publish lp_publish  4096 Oct 19  2017 binary-arm64
+drwxr-sr-x  3 lp_publish lp_publish  4096 Oct 19  2017 binary-armhf
+drwxr-sr-x  3 lp_publish lp_publish  4096 Oct 19  2017 binary-i386
+drwxr-sr-x  3 lp_publish lp_publish  4096 Oct 19  2017 binary-ppc64el
+drwxr-sr-x  3 lp_publish lp_publish  4096 Oct 19  2017 binary-s390x
+drwxr-sr-x  8 lp_publish lp_publish  4096 Apr 20  2017 debian-installer
+drwxr-sr-x  3 lp_publish lp_publish  4096 Oct 19  2017 dep11
+drwxr-sr-x  5 lp_publish lp_publish  4096 Oct 10  2017 dist-upgrader-all
+drwxr-sr-x  3 lp_publish lp_publish 12288 Oct 19  2017 i18n
+drwxr-sr-x  3 lp_publish lp_publish  4096 Dec  1 15:15 installer-amd64
+drwxr-sr-x  3 lp_publish lp_publish  4096 Dec  1 15:15 installer-arm64
+drwxr-sr-x  3 lp_publish lp_publish  4096 Dec  1 15:15 installer-armhf
+drwxr-sr-x  3 lp_publish lp_publish  4096 Dec  1 15:15 installer-i386
+drwxr-sr-x  3 lp_publish lp_publish  4096 Dec  1 15:15 installer-ppc64el
+drwxr-sr-x  3 lp_publish lp_publish  4096 Dec  1 15:15 installer-s390x
+drwxr-sr-x  3 lp_publish lp_publish  4096 Oct 19  2017 source
+drwxr-sr-x 11 lp_publish lp_publish  4096 Apr 20  2017 uefi
+
+./dists/artful/main/binary-amd64:
+total 2440
+drwxr-sr-x 3 lp_publish lp_publish    4096 Apr 20  2017 by-hash
+-rw-r--r-- 2 lp_publish lp_publish 1416260 Oct 19  2017 Packages.gz
+-rw-r--r-- 2 lp_publish lp_publish 1070580 Oct 19  2017 Packages.xz
+-rw-r--r-- 1 lp_publish lp_publish      96 Oct 19  2017 Release
