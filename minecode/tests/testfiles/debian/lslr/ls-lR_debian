@@ -1,0 +1,30 @@
+.:
+total 336
+-rw-rw-r--  2 dak debadmin   1499 Sep  5 10:41 README
+-rw-rw-r--  2 dak debadmin   1290 Jun 26  2010 README.CD-manufacture
+-rw-rw-r--  2 dak debadmin   3185 Sep  5 10:41 README.html
+-rw-r--r--  2 dak debadmin 180352 Jan 16 13:52 README.mirrors.html
+-rw-r--r--  2 dak debadmin  96067 Jan 16 13:52 README.mirrors.txt
+drwxr-sr-x 23 dak debadmin   4096 Jan 18 16:36 dists
+drwxr-sr-x  4 dak debadmin   4096 Jan 19 19:52 doc
+-rw-r--r--  2 dak debadmin  22802 Jan 19 15:37 extrafiles
+drwxr-sr-x  3 dak debadmin   4096 Jul 27 08:09 indices
+-rw-r--r--  1 dak debadmin      0 Jan 19 21:28 ls-lR.gz
+drwxr-sr-x  5 dak debadmin   4096 Dec 19  2000 pool
+drwxr-sr-x  4 dak debadmin   4096 Nov 17  2008 project
+drwxr-xr-x  3 dak debadmin   4096 Oct 10  2012 tools
+
+
+./pool/main/a/asterisk-addons:
+total 2024
+-rw-rw-r-- 2 dak debadmin   8120 May 25  2010 asterisk-addons_1.6.2.1-1.debian.tar.gz
+-rw-rw-r-- 2 dak debadmin   1494 May 25  2010 asterisk-addons_1.6.2.1-1.dsc
+-rw-rw-r-- 2 dak debadmin 880340 May 25  2010 asterisk-addons_1.6.2.1.orig.tar.gz
+-rw-rw-r-- 2 dak debadmin  41128 May 25  2010 asterisk-mobile_1.6.2.1-1_amd64.deb
+-rw-rw-r-- 2 dak debadmin  37930 May 25  2010 asterisk-mobile_1.6.2.1-1_i386.deb
+-rw-rw-r-- 2 dak debadmin  38118 May 25  2010 asterisk-mp3_1.6.2.1-1_amd64.deb
+-rw-rw-r-- 2 dak debadmin  34232 May 25  2010 asterisk-mp3_1.6.2.1-1_i386.deb
+-rw-rw-r-- 2 dak debadmin  52416 May 25  2010 asterisk-mysql_1.6.2.1-1_amd64.deb
+-rw-rw-r-- 2 dak debadmin  47444 May 25  2010 asterisk-mysql_1.6.2.1-1_i386.deb
+-rw-rw-r-- 2 dak debadmin 464236 May 25  2010 asterisk-ooh323c_1.6.2.1-1_amd64.deb
+-rw-rw-r-- 2 dak debadmin 443770 May 25  2010 asterisk-ooh323c_1.6.2.1-1_i386.deb
