@@ -2,22 +2,17 @@
 # Copyright (c) 2018 by nexB, Inc. http://www.nexb.com/ - All rights reserved.
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 from collections import OrderedDict
-import json
 import logging
-import os
 import signal
 import sys
 
 from django.db import transaction
 
 from license_expression import Licensing
-from commoncode.resource import VirtualCodebase
 
-from matchcode.indexing import index_directory_fingerprints
+from matchcode.models import ApproximateDirectoryContentIndex
+from matchcode.models import ApproximateDirectoryStructureIndex
 from minecode.management import scanning
 from minecode.management.commands import get_error_message
 from minecode.models import ScannableURI
@@ -162,27 +157,22 @@ def index_package_files(package, scan_data):
     """
     scan_index_errors = []
     try:
-        resource_attributes = dict()
-        vc = VirtualCodebase(
-            location=scan_data,
-            resource_attributes=resource_attributes
-        )
-        for resource in vc.walk(topdown=True):
-            path = resource.path
-            sha1 = resource.sha1
-            size = resource.size
-            md5 = resource.md5
-            is_file = resource.type == 'file'
+        for resource in scan_data.get('files', []):
+            path = resource.get('path')
+            sha1 = resource.get('sha1')
+            size = resource.get('size')
+            md5 = resource.get('md5')
+            is_file = resource.get('type') == 'file'
 
             copyrights = []
-            for copyright_mapping in resource.copyrights:
+            for copyright_mapping in resource.get('copyrights', []):
                 copyright = copyright_mapping.get('copyright')
                 if not copyright:
                     continue
                 copyrights.append(copyright)
             copyrights = '\n'.join(copyrights)
 
-            combined_license_expression = combine_expressions(resource.license_expressions)
+            combined_license_expression = combine_expressions(resource.get('license_expressions', []))
             if combined_license_expression:
                 license_expression = str(Licensing().parse(combined_license_expression).simplify())
             else:
@@ -200,7 +190,23 @@ def index_package_files(package, scan_data):
                 license_expression=license_expression,
                 is_file=is_file,
             )
-        _, _ = index_directory_fingerprints(vc, package)
+
+            resource_extra_data = resource.get('extra_data', {})
+            directory_content_fingerprint = resource_extra_data.get('directory_content', '')
+            directory_structure_fingerprint = resource_extra_data.get('directory_structure', '')
+
+            if directory_content_fingerprint:
+                _, _ = ApproximateDirectoryContentIndex.index(
+                    directory_fingerprint=directory_content_fingerprint,
+                    resource_path=path,
+                    package=package,
+                )
+            if directory_structure_fingerprint:
+                _, _ = ApproximateDirectoryStructureIndex.index(
+                    directory_fingerprint=directory_structure_fingerprint,
+                    resource_path=path,
+                    package=package,
+                )
 
     except Exception as e:
         msg = get_error_message(e)
