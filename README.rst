@@ -63,9 +63,36 @@ To populate the PackageDB using visited package metadata:
 
     make run_map
 
-If you have an empty PackageDB without Package and Package Resource information,
-ClearCode should be run for a while so it can populate the PackageDB
-with Package and Package Resource information from clearlydefined.
+Populating Package Resource Data
+--------------------------------
+
+The Resources of Packages can be collected using the scan queue. By default, a
+scan request will be created for each mapped Package.
+
+The following environment variables will have to be set for the scan queue
+commands to work:
+::
+    SCANCODEIO_URL=<ScanCode.io API URL>
+    SCANCODEIO_API_KEY=<ScanCode.io API Key>
+
+The scan queue is run using two commands:
+::
+    make request_scans
+
+``request_scans`` will send a Package scan request to a configured ScanCode.io
+instance. ScanCode.io will download, extract, and scan the files of the
+requested Package.
+::
+    make process_scans
+
+``process_scans`` will poll ScanCode.io for the status of the Package scans
+requested by ``request_scans``. When a Package scan on ScanCode.io is ready,
+``process_scans`` will use that data to create Resources and populate the
+MatchCode directory fingerprint indices.
+
+Package Resource data can also be gathered by running ClearCode, where Package
+scan data from clearlydefined is collected and its results are used to create
+Packages and Resources.
 ::
 
     make clearsync

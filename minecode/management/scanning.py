@@ -5,9 +5,11 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import hashlib
 import logging
 import sys
 import time
+import json
 
 import attr
 import requests
@@ -27,11 +29,12 @@ REQUEST_TIMEOUT = 10
 
 SCANCODEIO_URL = get_settings('SCANCODEIO_URL').rstrip('/')
 
-# TODO: Simplify this: this is 'user:pass' atm
-# TODO: Look at DejaCode toolkit for auth
-SCANCODEIO_AUTH = tuple(get_settings('SCANCODEIO_AUTH').split(':'))
+SCANCODEIO_API_KEY = get_settings('SCANCODEIO_API_KEY')
+SCANCODEIO_AUTH_HEADERS = {
+    'Authorization': f'Token {SCANCODEIO_API_KEY}'
+} if SCANCODEIO_API_KEY else {}
 
-SCANCODEIO_API_URL_SCANS = '{}/scans/'.format(SCANCODEIO_URL) if SCANCODEIO_URL else None
+SCANCODEIO_API_URL_PROJECTS = f'{SCANCODEIO_URL}/projects/' if SCANCODEIO_URL else None
 
 
 @attr.attrs(slots=True)
@@ -46,18 +49,11 @@ class Scan(object):
     # this is the UUDI for for scan:
     # "uuid": "ac85c2f0-09b9-4ca1-b0e4-91523a636ccf",
     uuid = attr.ib(default=None)
+    # The UUID for the scan run
+    run_uuid = attr.ib(default=None)
     # the actual URI being scanned:
     # "uri": "https://repo1.maven.org/maven2/io/github/subiyacryolite/jds/3.0.1/jds-3.0.1-sources.jar",
     uri = attr.ib(default=None)
-    # sha1 of URI being scanned:
-    # "sha1": "9165ed2d6033039b9a2e1f4a67b512b7b7347155",
-    sha1 = attr.ib(default=None)
-    # md5 of URI being scanned:
-    # "md5": "bb19d01dfc9715944638e92e22489fd1",
-    md5 = attr.ib(default=None)
-    # size of URI being scanned:
-    # "size": "74150",
-    size = attr.ib(default=None)
     # set at creation of a scan request
     # "created_date": "2018-06-19T08:33:34.953429Z",
     created_date = attr.ib(default=None)
@@ -75,111 +71,158 @@ class Scan(object):
     status = attr.ib(default=None)
     # as a time stamp
     execution_time = attr.ib(default=None)
-    # actual full scan details API URL
-    # "data_url": "https://scancode.io/api/scans/ac85c2f0-09b9-4ca1-b0e4-91523a636ccf/data/",
-    data_url = attr.ib(default=None)
-    # scan summary API URL
-    # "summary_url": "https://scancode.io/api/scans/ac85c2f0-09b9-4ca1-b0e4-91523a636ccf/summary/"
-    summary_url = attr.ib(default=None)
 
     @classmethod
-    def from_response(self, url, uuid, uri, sha1, md5, size, created_date,
-                      task_start_date, task_end_date, task_exitcode,
-                      status, execution_time, data_url, summary_url,
-                      **kwargs):
+    def from_response(cls, url, uuid, runs, input_sources, **kwargs):
         """
         Return a Scan object built from an API response data arguments.
         """
+        run_data = {}
+        if len(runs) > 0:
+            run_data = runs[0]
+
+        run_uuid = run_data.get("uuid")
+        created_date = run_data.get("created_date")
+        task_start_date = run_data.get("task_start_date")
+        task_end_date = run_data.get("task_end_date")
+        task_exitcode = run_data.get("task_exitcode")
+        status = run_data.get("status")
+        execution_time = run_data.get('execution_time')
+
+        if len(input_sources) > 0:
+            uri = input_sources[0]["source"]
+
         return Scan(
-            url=url, uuid=uuid, uri=uri, sha1=sha1, md5=md5, size=size,
+            url=url, uuid=uuid, run_uuid=run_uuid, uri=uri,
             created_date=created_date, task_start_date=task_start_date,
             task_end_date=task_end_date, task_exitcode=task_exitcode,
-            status=status, data_url=data_url, summary_url=summary_url,
-            execution_time=execution_time
+            status=status, execution_time=execution_time
         )
 
     @property
-    def pending(self):
-        return self.status == 'not started yet'
+    def results_url(self):
+        url = self.url.rstrip('/')
+        return f'{url}/results/'
 
     @property
-    def in_progress(self):
-        return self.status == 'in progress'
+    def not_started(self):
+        return self.status == 'not_started'
 
     @property
-    def completed(self):
-        return self.status == 'completed'
+    def queued(self):
+        return self.status == 'queued'
 
     @property
-    def failed(self):
-        return self.status == 'failed'
+    def running(self):
+        return self.status == 'running'
+
+    @property
+    def success(self):
+        return self.status == 'success'
+
+    @property
+    def failure(self):
+        return self.status == 'failure'
+
+    @property
+    def stopped(self):
+        return self.status == 'stopped'
+
+    @property
+    def stale(self):
+        return self.status == 'stale'
 
 
-def query_scans(uri, api_url=SCANCODEIO_API_URL_SCANS, api_auth=SCANCODEIO_AUTH):
+def uri_fingerprint(uri):
+    """
+    Return the SHA1 hex digest of `uri`
+    """
+    encoded_uri = uri.encode('utf-8')
+    return hashlib.sha1(encoded_uri).hexdigest()
+
+
+def query_scans(uri, api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANCODEIO_AUTH_HEADERS, response_save_loc=''):
     """
     Return scan information for `uri` if `uri` has already been scanned by ScanCode.io
     """
-    payload = {'uri': uri}
-    response = requests.get(url=api_url, params=payload, auth=api_auth)
+    payload = {'name': uri_fingerprint(uri)}
+    response = requests.get(url=api_url, params=payload, headers=api_auth_headers)
+    response_json = response.json()
+    if response_save_loc:
+        with open(response_save_loc, 'w') as f:
+            json.dump(response_json, f)
     if not response.ok:
         response.raise_for_status()
-    results = response.json()['results']
+    results = response_json['results']
     if results and len(results) == 1:
         return results[0]
 
 
-def submit_scan(uri, email=None,
-                api_url=SCANCODEIO_API_URL_SCANS, api_auth=SCANCODEIO_AUTH):
+def submit_scan(
+    uri,
+    api_url=SCANCODEIO_API_URL_PROJECTS,
+    api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    response_save_loc=''
+):
     """
     Submit a scan request for `uri` to ScanCode.io and return a Scan object on
     success. Raise an exception on error.
     """
-    logger.debug('submit_scan: uri', uri, 'api_url:', api_url, 'api_auth:', api_auth)
-    request_args = {'uri': uri, 'timeout': REQUEST_TIMEOUT}
-    if email:
-        request_args['email'] = email
+    logger.debug('submit_scan: uri', uri, 'api_url:', api_url, 'api_auth_headers:', api_auth_headers)
+    request_args = {
+        'name': uri_fingerprint(uri),
+        'pipeline': 'scan_and_fingerprint_codebase',
+        'input_urls': [
+            uri
+        ],
+        'execute_now': True
+    }
 
-    response = requests.post(url=api_url, json=request_args, auth=api_auth)
+    response = requests.post(url=api_url, data=request_args, headers=api_auth_headers)
+    response_json = response.json()
+    if response_save_loc:
+        with open(response_save_loc, 'w') as f:
+            json.dump(response_json, f)
+
     if not response.ok:
         if response.status_code == requests.codes.bad_request:
-            if 'scan with this URI already exists.' in response.json()['uri']:
-                query_results = query_scans(uri, api_url=api_url, api_auth=api_auth)
+            name = response_json.get('name')
+            if name and 'project with this name already exists.' in name:
+                query_results = query_scans(uri, api_url=api_url, api_auth_headers=api_auth_headers)
                 if query_results:
                     scan = Scan.from_response(**query_results)
-        else:
-            response.raise_for_status()
+            else:
+                response.raise_for_status()
     else:
-        scan = Scan.from_response(**response.json())
+        scan = Scan.from_response(**response_json)
         uuid = scan.uuid
         if not uuid:
             msg = 'Failed to to submit scan UUID for URI: "{uri}".\n'.format(**locals())
-            msg += repr(response.json())
+            msg += repr(response_json)
             raise Exception(msg)
     return scan
 
 
-def get_scan_url(scan_uuid, api_url=SCANCODEIO_API_URL_SCANS, suffix=''):
+def get_scan_url(scan_uuid, api_url=SCANCODEIO_API_URL_PROJECTS, suffix=''):
     """
     Return a scancode.io scan API URL built from the Scan UUID `scan_uuid` or
     None. Return the basic URL to get scan request information. Optionally adds
     a `suffix` (such as /data or /summary) to get scans data.
 
     For example:
-        https://scancode.io/api/scans/b15f2dcb-46ef-43e1-b5e3-563871ce59cc/
+        https://scancode.io/api/projects/b15f2dcb-46ef-43e1-b5e3-563871ce59cc/
     """
 
-    # FIXME: Why would scan_uuid be empty?
-    if scan_uuid:
-        base_url = api_url and api_url.rstrip('/') or ''
-        url = '{base_url}/{scan_uuid}/{suffix}'.format(**locals())
-        # scancode.io seems to demand a trailing slash
-        url = url.rstrip('/')
-        url = url + '/'
-        return url
+    base_url = api_url and api_url.rstrip('/') or ''
+    url = f'{base_url}/{scan_uuid}/{suffix}'
+    # scancode.io seems to demand a trailing slash
+    url = url.rstrip('/')
+    url = url + '/'
+    return url
 
 
 def _call_scan_get_api(scan_uuid, endpoint='',
-                       api_url=SCANCODEIO_API_URL_SCANS, api_auth=SCANCODEIO_AUTH):
+                       api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANCODEIO_AUTH_HEADERS):
     """
     Send a get request to the scan API for `scan_uuid` and return response
     mapping from a JSON response. Call either the plain scan enpoint or the data
@@ -187,36 +230,45 @@ def _call_scan_get_api(scan_uuid, endpoint='',
     exception on error.
     """
     scan_url = get_scan_url(scan_uuid, api_url=api_url, suffix=endpoint)
-    response = requests.get(url=scan_url, timeout=REQUEST_TIMEOUT, auth=api_auth)
+    response = requests.get(url=scan_url, timeout=REQUEST_TIMEOUT, headers=api_auth_headers)
     if not response.ok:
         response.raise_for_status()
     return response.json()
 
 
-def get_scan_info(scan_uuid, api_url=SCANCODEIO_API_URL_SCANS, api_auth=SCANCODEIO_AUTH):
+def get_scan_info(
+    scan_uuid,
+    api_url=SCANCODEIO_API_URL_PROJECTS,
+    api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    get_scan_info_save_loc=''
+):
     """
     Return a Scan object for `scan_uuid` fetched from ScanCode.io or None.
     Raise an exception on error.
     """
-    results = _call_scan_get_api(scan_uuid, endpoint='', api_url=api_url, api_auth=api_auth)
+    results = _call_scan_get_api(scan_uuid, endpoint='', api_url=api_url, api_auth_headers=api_auth_headers)
+    if get_scan_info_save_loc:
+        with open(get_scan_info_save_loc, 'w') as f:
+            json.dump(results, f)
     return Scan.from_response(**results)
 
 
-def get_scan_summary(scan_uuid, api_url=SCANCODEIO_API_URL_SCANS, api_auth=SCANCODEIO_AUTH):
-    """
-    Return scan summary data as a mapping for a `scan_uuid` fetched from
-    ScanCode.io or None. Raise an exception on error.
-    """
-    return _call_scan_get_api(scan_uuid, endpoint='summary', api_url=api_url, api_auth=api_auth)
-
-
-def get_scan_data(scan_uuid, api_url=SCANCODEIO_API_URL_SCANS, api_auth=SCANCODEIO_AUTH):
+def get_scan_data(
+    scan_uuid,
+    api_url=SCANCODEIO_API_URL_PROJECTS,
+    api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    get_scan_data_save_loc=''
+):
     """
     Return scan details data as a mapping for a `scan_uuid` fetched from
     ScanCode.io or None. Raise an exception on error.
     """
     # FIXME: we should return a temp location instead
-    return _call_scan_get_api(scan_uuid, endpoint='data', api_url=api_url, api_auth=api_auth)
+    results = _call_scan_get_api(scan_uuid, endpoint='results', api_url=api_url, api_auth_headers=api_auth_headers)
+    if get_scan_data_save_loc:
+        with open(get_scan_data_save_loc, 'w') as f:
+            json.dump(results, f)
+    return results
 
 
 class ScanningCommand(VerboseCommand):
@@ -226,9 +278,9 @@ class ScanningCommand(VerboseCommand):
     # subclasses must override
     logger = None
 
-    api_url = SCANCODEIO_API_URL_SCANS
+    api_url = SCANCODEIO_API_URL_PROJECTS
 
-    api_auth = SCANCODEIO_AUTH
+    api_auth_headers = SCANCODEIO_AUTH_HEADERS
 
     def add_arguments(self, parser):
         parser.add_argument(

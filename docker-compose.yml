@@ -74,6 +74,24 @@ services:
       - db
       - web # Ensure that potential db migrations run first
 
+  request_scan:
+    build: .
+    command: wait-for-it web:8000 -- python manage.py request_scans
+    profiles:
+      - scan_queue
+    depends_on:
+      - db
+      - web
+
+  process_scan:
+    build: .
+    command: wait-for-it web:8000 -- python manage.py process_scans
+    profiles:
+      - scan_queue
+    depends_on:
+      - db
+      - web
+
   nginx:
     image: nginx
     ports:

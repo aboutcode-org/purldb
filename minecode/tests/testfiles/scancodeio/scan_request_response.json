@@ -1,18 +1,33 @@
 {
-    "url": "http://127.0.0.1:8001/api/scans/5463cc42-abe8-4ac7-9eda-58b03ec7e881/",
-    "uuid": "5463cc42-abe8-4ac7-9eda-58b03ec7e881",
-    "uri": "http://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar",
-    "filename": null,
-    "sha1": null,
-    "md5": null,
-    "size": null,
-    "created_date": "2019-02-04T23:06:46.343135Z",
-    "scancode_version": "",
-    "task_start_date": null,
-    "task_end_date": null,
-    "task_exitcode": null,
-    "status": "not started yet",
-    "execution_time": null,
-    "data_url": "http://127.0.0.1:8001/api/scans/5463cc42-abe8-4ac7-9eda-58b03ec7e881/data/",
-    "summary_url": "http://127.0.0.1:8001/api/scans/5463cc42-abe8-4ac7-9eda-58b03ec7e881/summary/"
+    "name": "https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar",
+    "url": "http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/",
+    "uuid": "54dc4afe-70ea-4f1c-9ed3-989efd9a991f",
+    "created_date": "2023-03-08T23:35:45.678414Z",
+    "is_archived": false,
+    "input_sources": [
+        {
+            "filename": "wagon-api-20040705.181715.jar",
+            "source": "https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar"
+        }
+    ],
+    "next_run": "scan_and_fingerprint_codebase",
+    "runs": [
+        {
+            "url": "http://127.0.0.1:8001/api/runs/4711ea01-d3b1-4ce4-972b-859ac9c1d391/",
+            "pipeline_name": "scan_and_fingerprint_codebase",
+            "status": "not_started",
+            "description": "A pipeline to scan a codebase with ScanCode-toolkit and compute directory\nfingerprints.\n\nInput files are copied to the project's codebase/ directory and are extracted\nin place before running the scan.\nAlternatively, the code can be manually copied to the project codebase/\ndirectory.",
+            "project": "http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/",
+            "uuid": "4711ea01-d3b1-4ce4-972b-859ac9c1d391",
+            "created_date": "2023-03-08T23:35:45.679962Z",
+            "scancodeio_version": "",
+            "task_id": null,
+            "task_start_date": null,
+            "task_end_date": null,
+            "task_exitcode": null,
+            "task_output": "",
+            "log": "",
+            "execution_time": null
+        }
+    ]
 }

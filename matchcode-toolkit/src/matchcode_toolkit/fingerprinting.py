@@ -60,7 +60,10 @@ def create_structure_fingerprint(directory, children):
         if not child.path:
             continue
         child_subpath = _get_resource_subpath(child, directory)
-        rounded_child_size = int(child.size / 10) * 10
+        if not child.size:
+            rounded_child_size = 0
+        else:
+            rounded_child_size = int(child.size / 10) * 10
         path_feature = str(rounded_child_size) + child_subpath
         features.append(path_feature)
     return _create_directory_fingerprint(features)

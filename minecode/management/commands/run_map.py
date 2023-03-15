@@ -316,7 +316,7 @@ def map_uri(resource_uri, _map_router=map_router):
                     # Add this Package to the scan queue
                     _, created = ScannableURI.objects.get_or_create(
                         uri=package_uri,
-                        package_id=created_package.id,
+                        package=created_package,
                     )
                     if created:
                         logger.debug(' + Inserted ScannableURI\t: {}'.format(package_uri))

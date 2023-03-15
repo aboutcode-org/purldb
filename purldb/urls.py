@@ -9,6 +9,7 @@
 
 from django.conf.urls import include
 from django.urls import re_path
+from django.views.generic import RedirectView
 
 from clearcode.api import CDitemViewSet
 from packagedb.api import PackageViewSet
@@ -32,4 +33,5 @@ api_router.register(r'cditems', CDitemViewSet, 'cditems')
 
 urlpatterns = [
     re_path(r'^api/', include((api_router.urls, 'api'))),
+    re_path("", RedirectView.as_view(url="api/")),
 ]
