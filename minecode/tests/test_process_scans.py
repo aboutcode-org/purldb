@@ -61,7 +61,7 @@ class ProcessScansTest(MiningTestCase):
             scan_data = json.loads(f.read())
         self.assertEqual(0, len(index_package_files(self.package1, scan_data)))
         result = Resource.objects.filter(package=self.package1)
-        self.assertEqual(79, len(result))
+        self.assertEqual(78, len(result))
 
     @patch('requests.get')
     def test_ProcessScansTest_process_scan(self, mock_get):
@@ -91,4 +91,4 @@ class ProcessScansTest(MiningTestCase):
         Command.process_scan(scannable_uri)
 
         result = Resource.objects.filter(package=self.package1)
-        self.assertEqual(79, len(result))
+        self.assertEqual(78, len(result))

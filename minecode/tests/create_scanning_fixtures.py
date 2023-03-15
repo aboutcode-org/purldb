@@ -36,7 +36,7 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting, TestCase):
             package=self.package1
         )
 
-    def test_generate_api_responses(self):
+    def generate_api_responses(self):
         scan_request_response_loc = self.get_test_loc('scancodeio/scan_request_response.json')
         RequestScansCommand.process_scan(
             self.scannable_uri1,
