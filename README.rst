@@ -72,17 +72,40 @@ scan request will be created for each mapped Package.
 The following environment variables will have to be set for the scan queue
 commands to work:
 ::
+
     SCANCODEIO_URL=<ScanCode.io API URL>
     SCANCODEIO_API_KEY=<ScanCode.io API Key>
 
+``matchcode-toolkit`` will also have to be installed in the same environment as
+ScanCode.io. If running ScanCode.io in a virtual environment from a git
+checkout, you can install ``matchcode-toolkit`` in editable mode:
+::
+
+    pip install -e <Path to purldb/matchcode-toolkit>
+
+Otherwise, you can create a wheel from ``matchcode-toolkit`` and install it in
+the ScanCode.io virutal environment or modify the ScanCode.io Dockerfile to
+install the ``matchcode-toolkit`` wheel.
+
+To build the ``matchcode-toolkit`` wheel:
+::
+
+    # From the matchcode-toolkit directory
+    python setup.py bdist_wheel
+
+The wheel ``matchcode_toolkit-0.0.1-py3-none-any.whl`` will be created in the
+``matchcode-toolkit/dist/`` directory.
+
 The scan queue is run using two commands:
 ::
+
     make request_scans
 
 ``request_scans`` will send a Package scan request to a configured ScanCode.io
 instance. ScanCode.io will download, extract, and scan the files of the
 requested Package.
 ::
+
     make process_scans
 
 ``process_scans`` will poll ScanCode.io for the status of the Package scans
