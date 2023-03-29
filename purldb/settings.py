@@ -274,5 +274,5 @@ if DEBUG_TOOLBAR:
 
 # Active seeders: each active seeder class need to be added explictly here
 ACTIVE_SEEDERS = [
-    'minecode.visitors.npm.NpmSeed',
+    'minecode.visitors.maven.MavenSeed',
 ]
