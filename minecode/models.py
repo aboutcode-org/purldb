@@ -755,3 +755,136 @@ class ScannableURI(BaseURI):
             self.canonical = get_canonical(self.uri)
         self.normalize_fields()
         super(ScannableURI, self).save(*args, **kwargs)
+
+
+# TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
+class PriorityResourceURIManager(models.Manager):
+
+    def in_progress(self):
+        """
+        Limit the QuerySet to PriorityResourceURI being processed.
+        """
+        return self.filter(wip_date__isnull=False)
+
+    def never_processed(self):
+        """
+        Limit the QuerySet to PriorityResourceURIs that have never been processed.
+        This is usually the state of a PriorityResourceURI after upon creation.
+        """
+        return self.filter(
+            processed_date__isnull=True,
+            wip_date__isnull=True
+        ).order_by(
+            'request_date'
+        )
+
+    def get_requests(self):
+        """
+        Return an ordered query set of all processable PriorityResourceURIs.
+        """
+        never_processed = self.never_processed()
+        return never_processed
+
+    def get_next_request(self):
+        """
+        Return the next PriorityResourceURI request for processing and mark it
+        as being "in_progress" by setting the wip_date field.
+
+        Return None when there is no request left to visit.
+
+        NOTE: this method can only be called from within a transaction.atomic
+        block.
+        """
+        priority_resource_uri = self.get_requests().select_for_update(skip_locked=True).first()
+        if not priority_resource_uri:
+            return
+        priority_resource_uri.wip_date = timezone.now()
+        priority_resource_uri.save(update_fields=['wip_date'])
+        return priority_resource_uri
+
+
+class PriorityResourceURI(BaseURI):
+    """
+    Stores URI that are crawled (aka. visited) and the progress of this process.
+    Also used as a processing "to do" queue for visiting and mapping these URIs.
+
+    The states of a ResourceURI are based on multiple "last_xxxx_date"
+    timestamps and "is_xxxable" flags.
+
+    The standard lifecycle of a ResourceURI that contains package metadata is:
+     - at creation it is "is_visitable" if there is a visitor for it (e.g. it is eligible for visiting.)
+     - when the visit starts, the "wip_date" is set. The visiting takes place.
+     - once the visit is done, the "wip_date" is reset. The "last_visit_date" is set.
+     - If "is_mappable" and the visit was done without "visit_errors", the mapping starts.
+     - when the mapping starts, the "wip_date" is set. The mapping takes place.
+     - once the mapping is done, the "wip_date" is reset. The "last_map_date" is set.
+    """
+
+    uri = models.CharField(
+        max_length=2048,
+        null=True,
+        blank=True,
+        help_text='URI for this resource. This is the unmodified original URI.',
+    )
+
+    canonical = models.CharField(
+        max_length=3000,
+        null=True,
+        blank=True,
+        help_text='Canonical form of the URI for this resource that must be '
+                  'unique across all ResourceURI.',
+    )
+
+    # This is a text blob that contains either HTML, JSON or anything
+    # stored as a string. This is the raw content of visiting a URI.
+    # NOTE: some visited URLS (such as an actual package archive will/shoud NOT be stored there)
+    data = models.TextField(
+        null=True,
+        blank=True,
+        help_text='Text content of the file represented by this '
+                  'ResourceURI. This contains the data that was fetched or '
+                  'extracted from a remote ResourceURI such as HTML or JSON.',
+    )
+
+    package_url = models.CharField(
+        max_length=2048,
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text="""Package URL for this resource. It stands for a package "mostly universal" URL."""
+    )
+
+    request_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text='Timestamp set to the date of when this Package info was requested.',
+    )
+
+    processed_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text='Timestamp set to the date of when this Package info was requested.',
+    )
+
+    objects = PriorityResourceURIManager()
+
+    class Meta:
+        verbose_name = 'Priority Resource URI'
+
+    def _set_defauts(self):
+        """
+        Set defaults for computed fields.
+        """
+        uri = self.uri
+        if not self.canonical:
+            self.canonical = get_canonical(uri)
+
+    def save(self, *args, **kwargs):
+        """
+        Save, adding defaults for computed fields and validating fields.
+        """
+        self._set_defauts()
+        self.normalize_fields()
+        super(ResourceURI, self).save(*args, **kwargs)
