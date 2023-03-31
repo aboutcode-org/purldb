@@ -873,18 +873,9 @@ class PriorityResourceURI(BaseURI):
     class Meta:
         verbose_name = 'Priority Resource URI'
 
-    def _set_defauts(self):
-        """
-        Set defaults for computed fields.
-        """
-        uri = self.uri
-        if not self.canonical:
-            self.canonical = get_canonical(uri)
-
     def save(self, *args, **kwargs):
         """
         Save, adding defaults for computed fields and validating fields.
         """
-        self._set_defauts()
         self.normalize_fields()
-        super(ResourceURI, self).save(*args, **kwargs)
+        super(PriorityResourceURI, self).save(*args, **kwargs)
