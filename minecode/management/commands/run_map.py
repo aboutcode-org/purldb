@@ -163,162 +163,17 @@ def map_uri(resource_uri, _map_router=map_router):
             # existing one
 
             for scanned_package in mapped_scanned_packages:
-
-                if not isinstance(scanned_package, PackageData):
-                    msg = 'Not a ScanCode PackageData type:' + repr(scanned_package)
-                    map_error += msg + '\n'
-                    logger.error(msg)
-                    raise RuntimeError(msg)
-
-                try:
-                    handler = get_package_handler(scanned_package)
-                    scanned_package.license_expression = handler.compute_normalized_license(scanned_package)
-                except UnknownPackageDatasource:
-                    # TODO: Should we report an error if we can't compute a normalized license?
-                    pass
-
-                if not scanned_package.download_url:
-                    # TODO: there could be valid cases where we have no download URL
-                    # and still want to create a package???
-                    msg = 'No download_url for package:' + repr(scanned_package)
-                    map_error += msg + '\n'
-                    logger.error(msg)
-                    continue
-
-                package_uri = scanned_package.download_url
-
-                logger.debug('Package URI: {}'.format(package_uri))
-
                 visit_level = resource_uri.mining_level
-
-                stored_package = None
-                # Check if we already have an existing PackageDB record to update
-                # TODO: for now this is done using the package_uri only and
-                # we need to refine this to also (or only) use the package_url
-                try:
-                    # FIXME: also consider the Package URL fields!!!
-                    stored_package = Package.objects.get(download_url=package_uri)
-                except ObjectDoesNotExist:
-                    pass
-
-                if stored_package:
-                    # Here we have a pre-existing package that we are updating.
-                    # Based on the mining levels, we replace or merge fields
-                    # differently
-
-                    existing_level = stored_package.mining_level
-
-                    if visit_level < existing_level:
-                        # if the level of the new visit is lower than the level
-                        # of the current package, then existing package data
-                        # wins and is more important. Its attributes can only be
-                        # updated if there was a null values and there is a non-
-                        # null values in the new package data from the visit.
-                        merge_packages(
-                            existing_package=stored_package,
-                            new_package_data=scanned_package.to_dict(),
-                            replace=False)
-                        stored_package.append_to_history('Existing Package values retained due to ResourceURI mining level via map_uri().')
-                        # for a foreign key, such as dependencies and parties, we will adopt the
-                        # same logic. In this case, parties or dependencies coming from a scanned
-                        # package are only added if there is no parties or dependencies in the
-                        # existing stored package
-                    else:
-                        # if the level of the new visit is higher or equal to
-                        # the level of the existing package, then new package
-                        # data from the visit is more important and wins and its
-                        # non-null values replace the values of the existing
-                        # package which is updated in the DB.
-                        merge_packages(
-                            existing_package=stored_package,
-                            new_package_data=scanned_package.to_dict(),
-                            replace=True)
-                        stored_package.append_to_history('Existing Package values replaced due to ResourceURI mining level via map_uri().')
-                        # for a foreign key, such as dependencies and parties, we will adopt the
-                        # same logic. In this case, parties or dependencies coming from a scanned
-                        # package will override existing values. If there are parties in the scanned
-                        # package and the existing package, the existing package parties should be
-                        # deleted first and then the new package's parties added.
-
-                        stored_package.mining_level = visit_level
-
-                    stored_package.last_modified_date = timezone.now()
-                    stored_package.save()
-                    logger.debug(' + Updated package\t: {}'.format(package_uri))
-
-                else:
-                    # Here a pre-existing packagedb record does not exist
-                    # We create a new one from scratch
-
-                    package_data = dict(
-                        # FIXME: we should get the file_name in the
-                        # PackageData object instead.
-                        filename=fileutils.file_name(package_uri),
-                        # TODO: update the PackageDB model
-                        release_date=scanned_package.release_date,
-                        mining_level=visit_level,
-                        type=scanned_package.type,
-                        namespace=scanned_package.namespace,
-                        name=scanned_package.name,
-                        version=scanned_package.version,
-                        qualifiers=normalize_qualifiers(scanned_package.qualifiers, encode=True),
-                        subpath=scanned_package.subpath,
-                        primary_language=scanned_package.primary_language,
-                        description=scanned_package.description,
-                        keywords=scanned_package.keywords,
-                        homepage_url=scanned_package.homepage_url,
-                        download_url=scanned_package.download_url,
-                        size=scanned_package.size,
-                        sha1=scanned_package.sha1,
-                        md5=scanned_package.md5,
-                        sha256=scanned_package.sha256,
-                        sha512=scanned_package.sha512,
-                        bug_tracking_url=scanned_package.bug_tracking_url,
-                        code_view_url=scanned_package.code_view_url,
-                        vcs_url=scanned_package.vcs_url,
-                        copyright=scanned_package.copyright,
-                        license_expression=scanned_package.license_expression,
-                        declared_license=scanned_package.declared_license,
-                        notice_text=scanned_package.notice_text,
-                        source_packages=scanned_package.source_packages
-                    )
-
-                    stringify_null_purl_fields(package_data)
-
-                    created_package = Package.objects.create(**package_data)
-                    created_package.append_to_history('New Package created from ResourceURI: {} via map_uri().'.format(resource_uri))
-
-                    for party in scanned_package.parties:
-                        Party.objects.create(
-                            package=created_package,
-                            type=party.type,
-                            role=party.role,
-                            name=party.name,
-                            email=party.email,
-                            url=party.url,
-                        )
-
-                    for dependency in scanned_package.dependencies:
-                        DependentPackage.objects.create(
-                            package=created_package,
-                            purl=dependency.purl,
-                            requirement=dependency.extracted_requirement,
-                            scope=dependency.scope,
-                            is_runtime=dependency.is_runtime,
-                            is_optional=dependency.is_optional,
-                            is_resolved=dependency.is_resolved,
-                        )
-
-                    created_package.last_modified_date = timezone.now()
-                    created_package.save()
-                    logger.debug(' + Inserted package\t: {}'.format(package_uri))
-
+                package, package_created, _, m_err = merge_or_create_package(scanned_package, visit_level)
+                map_error += m_err
+                if package_created:
                     # Add this Package to the scan queue
-                    _, created = ScannableURI.objects.get_or_create(
+                    package_uri = scanned_package.download_url
+                    _, scannable_uri_created = ScannableURI.objects.get_or_create(
                         uri=package_uri,
-                        package=created_package,
+                        package=package,
                     )
-                    if created:
+                    if scannable_uri_created:
                         logger.debug(' + Inserted ScannableURI\t: {}'.format(package_uri))
 
     except Exception as e:
@@ -454,3 +309,170 @@ def merge_packages(existing_package, new_package_data, replace=False):
 
         if TRACE:
             logger.debug('  Nothing done')
+
+
+def merge_or_create_package(scanned_package, visit_level):
+    """
+    Update Package from `scanned_package` instance if `visit_level` is greater
+    than the mining level of the existing package.
+
+    If `scanned_package` does not exist in the PackageDB, create a new entry in
+    the PackageDB for `scanned_package`.
+    """
+    created = False
+    merged = False
+    package = None
+    map_error = ''
+
+    if not isinstance(scanned_package, PackageData):
+        msg = 'Not a ScanCode PackageData type:' + repr(scanned_package)
+        map_error += msg + '\n'
+        logger.error(msg)
+        raise RuntimeError(msg)
+
+    try:
+        handler = get_package_handler(scanned_package)
+        scanned_package.license_expression = handler.compute_normalized_license(scanned_package)
+    except UnknownPackageDatasource:
+        # TODO: Should we report an error if we can't compute a normalized license?
+        pass
+
+    if not scanned_package.download_url:
+        # TODO: there could be valid cases where we have no download URL
+        # and still want to create a package???
+        msg = 'No download_url for package:' + repr(scanned_package)
+        map_error += msg + '\n'
+        logger.error(msg)
+        return package, created, merged, map_error
+
+    package_uri = scanned_package.download_url
+
+    logger.debug('Package URI: {}'.format(package_uri))
+
+    stored_package = None
+    # Check if we already have an existing PackageDB record to update
+    # TODO: for now this is done using the package_uri only and
+    # we need to refine this to also (or only) use the package_url
+    try:
+        # FIXME: also consider the Package URL fields!!!
+        stored_package = Package.objects.get(download_url=package_uri)
+    except ObjectDoesNotExist:
+        pass
+
+    if stored_package:
+        # Here we have a pre-existing package that we are updating.
+        # Based on the mining levels, we replace or merge fields
+        # differently
+
+        existing_level = stored_package.mining_level
+
+        if visit_level < existing_level:
+            # if the level of the new visit is lower than the level
+            # of the current package, then existing package data
+            # wins and is more important. Its attributes can only be
+            # updated if there was a null values and there is a non-
+            # null values in the new package data from the visit.
+            merge_packages(
+                existing_package=stored_package,
+                new_package_data=scanned_package.to_dict(),
+                replace=False)
+            stored_package.append_to_history('Existing Package values retained due to ResourceURI mining level via map_uri().')
+            # for a foreign key, such as dependencies and parties, we will adopt the
+            # same logic. In this case, parties or dependencies coming from a scanned
+            # package are only added if there is no parties or dependencies in the
+            # existing stored package
+        else:
+            # if the level of the new visit is higher or equal to
+            # the level of the existing package, then new package
+            # data from the visit is more important and wins and its
+            # non-null values replace the values of the existing
+            # package which is updated in the DB.
+            merge_packages(
+                existing_package=stored_package,
+                new_package_data=scanned_package.to_dict(),
+                replace=True)
+            stored_package.append_to_history('Existing Package values replaced due to ResourceURI mining level via map_uri().')
+            # for a foreign key, such as dependencies and parties, we will adopt the
+            # same logic. In this case, parties or dependencies coming from a scanned
+            # package will override existing values. If there are parties in the scanned
+            # package and the existing package, the existing package parties should be
+            # deleted first and then the new package's parties added.
+
+            stored_package.mining_level = visit_level
+
+        stored_package.last_modified_date = timezone.now()
+        stored_package.save()
+        logger.debug(' + Updated package\t: {}'.format(package_uri))
+        package = stored_package
+        merged = True
+
+    else:
+        # Here a pre-existing packagedb record does not exist
+        # We create a new one from scratch
+
+        package_data = dict(
+            # FIXME: we should get the file_name in the
+            # PackageData object instead.
+            filename=fileutils.file_name(package_uri),
+            # TODO: update the PackageDB model
+            release_date=scanned_package.release_date,
+            mining_level=visit_level,
+            type=scanned_package.type,
+            namespace=scanned_package.namespace,
+            name=scanned_package.name,
+            version=scanned_package.version,
+            qualifiers=normalize_qualifiers(scanned_package.qualifiers, encode=True),
+            subpath=scanned_package.subpath,
+            primary_language=scanned_package.primary_language,
+            description=scanned_package.description,
+            keywords=scanned_package.keywords,
+            homepage_url=scanned_package.homepage_url,
+            download_url=scanned_package.download_url,
+            size=scanned_package.size,
+            sha1=scanned_package.sha1,
+            md5=scanned_package.md5,
+            sha256=scanned_package.sha256,
+            sha512=scanned_package.sha512,
+            bug_tracking_url=scanned_package.bug_tracking_url,
+            code_view_url=scanned_package.code_view_url,
+            vcs_url=scanned_package.vcs_url,
+            copyright=scanned_package.copyright,
+            license_expression=scanned_package.license_expression,
+            declared_license=scanned_package.declared_license,
+            notice_text=scanned_package.notice_text,
+            source_packages=scanned_package.source_packages
+        )
+
+        stringify_null_purl_fields(package_data)
+
+        created_package = Package.objects.create(**package_data)
+        created_package.append_to_history('New Package created from ResourceURI: {} via map_uri().'.format(package_uri))
+
+        for party in scanned_package.parties:
+            Party.objects.create(
+                package=created_package,
+                type=party.type,
+                role=party.role,
+                name=party.name,
+                email=party.email,
+                url=party.url,
+            )
+
+        for dependency in scanned_package.dependencies:
+            DependentPackage.objects.create(
+                package=created_package,
+                purl=dependency.purl,
+                requirement=dependency.extracted_requirement,
+                scope=dependency.scope,
+                is_runtime=dependency.is_runtime,
+                is_optional=dependency.is_optional,
+                is_resolved=dependency.is_resolved,
+            )
+
+        created_package.last_modified_date = timezone.now()
+        created_package.save()
+        package = created_package
+        created = True
+        logger.debug(' + Inserted package\t: {}'.format(package_uri))
+
+    return package, created, merged, map_error
