@@ -22,6 +22,7 @@ from packageurl import PackageURL
 import requests
 
 from minecode.management.commands import VerboseCommand
+from minecode.management.commands.run_map import merge_or_create_package
 from minecode.models import PriorityResourceURI
 from minecode.utils import stringify_null_purl_fields
 from packagedb.models import DependentPackage
@@ -90,7 +91,7 @@ class Command(VerboseCommand):
 
             # process request
             logger.info('Processing {}'.format(priority_resource_uri))
-            process_request(priority_resource_uri.package_url)
+            process_request(priority_resource_uri.uri)
             priority_resource_uri.processed_date = timezone.now()
             priority_resource_uri.save()
             processed_counter += 1
@@ -98,7 +99,6 @@ class Command(VerboseCommand):
         return processed_counter
 
 
-# TODO: use purl in uri field (?)
 def process_request(package_url):
     purl = PackageURL.from_string(package_url)
     has_version = bool(purl.version)
@@ -124,12 +124,19 @@ def process_request(package_url):
             text=pom_contents
         )
 
+        # If sha1 exists for a jar, we know we can create the package
+        # Use pom info as base and create packages for binary and source package
+        # TODO: relate the two when we have PackageRelation
+
         # Check to see if source and binary are available
         download_url = urls['repository_download_url']
         binary_sha1_url = f'{download_url}.sha1'
         response = requests.get(binary_sha1_url)
-        if response:
-            create_package(package)
+        if response.ok:
+            # Create Package for binary package, if available
+            package.sha1 = response.text
+            package.download_url = download_url
+            _, _, _, _ = merge_or_create_package(package, visit_level=0)
 
         # Check to see if the sources are available
         purl.qualifiers['classifier'] = 'sources'
@@ -142,99 +149,14 @@ def process_request(package_url):
         download_url = sources_urls['repository_download_url']
         sources_sha1_url = f'{download_url}.sha1'
         response = requests.get(sources_sha1_url)
-        if response:
+        if response.ok:
+            # Create Package for source package, if available
+            package.sha1 = response.text
             package.download_url = download_url
             package.repository_download_url = download_url
-            create_package(package, classifier='sources')
-
-
-
-
-
-
-        # if sha1 exists for a jar, we know we can create the package
-        # use pom info as base and create packages for binary and source package
-        # TODO: relate the two when we have PAckageRelation
-
-        # Create Package from pom metadata and save to packagedb
+            package.qualifiers['classifier'] = 'sources'
+            _, _, _, _ = merge_or_create_package(package, visit_level=0)
 
         # Download artifacts for scanning
     else:
         pass
-
-
-def create_package(package, extension='.jar', classifier=None):
-    filename = build_filename(
-        artifact_id=package.name,
-        version=package.version,
-        extension=extension,
-        classifier=classifier,
-    )
-    if not package.download_url:
-        download_url = package.repository_download_url
-    else:
-        download_url = package.download_url
-
-    if classifier:
-        package.qualifiers['classifier'] = classifier
-
-    package_data = dict(
-        filename=filename,
-        release_date=package.release_date,
-        type=package.type,
-        namespace=package.namespace,
-        name=package.name,
-        version=package.version,
-        qualifiers=normalize_qualifiers(package.qualifiers, encode=True),
-        subpath=package.subpath,
-        primary_language=package.primary_language,
-        description=package.description,
-        keywords=package.keywords,
-        homepage_url=package.homepage_url,
-        download_url=download_url,
-        size=package.size,
-        sha1=package.sha1,
-        md5=package.md5,
-        sha256=package.sha256,
-        sha512=package.sha512,
-        bug_tracking_url=package.bug_tracking_url,
-        code_view_url=package.code_view_url,
-        vcs_url=package.vcs_url,
-        copyright=package.copyright,
-        license_expression=package.license_expression,
-        declared_license=package.declared_license,
-        notice_text=package.notice_text,
-        source_packages=package.source_packages
-    )
-
-    stringify_null_purl_fields(package_data)
-
-    created_package = Package.objects.create(**package_data)
-    created_package.append_to_history(
-        f'New Package created from PriorityResourceURI: {download_url} via create_package().'
-    )
-
-    for party in package.parties:
-        Party.objects.create(
-            package=created_package,
-            type=party.type,
-            role=party.role,
-            name=party.name,
-            email=party.email,
-            url=party.url,
-        )
-
-    for dependency in package.dependencies:
-        DependentPackage.objects.create(
-            package=created_package,
-            purl=dependency.purl,
-            requirement=dependency.extracted_requirement,
-            scope=dependency.scope,
-            is_runtime=dependency.is_runtime,
-            is_optional=dependency.is_optional,
-            is_resolved=dependency.is_resolved,
-        )
-
-    created_package.last_modified_date = timezone.now()
-    created_package.save()
-    return created_package
