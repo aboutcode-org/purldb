@@ -724,41 +724,43 @@ class Resource(AbstractResource):
         ordering = ('package', 'path')
 
 
+class PackageRelation(models.Model):
+    """
+    A directed relationship between two packages.
 
-# FIXME: This is not clearly specified and needs to be reworked.
-# class PackageRelationship(models.Model):
-#     """
-#     A directed relationship between two packages.
+    This consists of three attributes:
+    - The "from" (or subject) package in the relationship,
+    - the "to" (or object) package in the relationship,
+    - and the "relationship" (or predicate) choice that specifies the relationship.
+    """
 
-#     This consists of three attributes:
-#     - The "from" (or subject) package "purl" in the relationship,
-#     - the "to" (or object) package "purl" in the relationship,
-#     - and the "relationship" (or predicate) string that specifies the relationship.
-#     """
-#     package = models.ForeignKey(
-#         Package,
-#         help_text='The Package that this package relationship is related to'
-#     )
+    class Relationship(models.TextChoices):
+        SOURCE_PACKAGE = "source_package"
 
-#     from_purl = models.CharField(
-#         max_length=2048,
-#         blank=True,
-#         null=True,
-#         help_text='A compact purl package URL.'
-#     )
+    from_package = models.ForeignKey(
+        Package,
+        related_name="related_to",
+        on_delete=models.CASCADE,
+        editable=False,
+    )
 
-#     relationship = models.CharField(
-#         max_length=2048,
-#         blank=True,
-#         null=True,
-#         help_text='Relationship between the from and to package '
-#                   'URLs such as "source_of" when a package is the source '
-#                   'code package for another package.'
-#     )
+    to_package = models.ForeignKey(
+        Package,
+        related_name="related_from",
+        on_delete=models.CASCADE,
+        editable=False,
+    )
 
-#     to_purl = models.CharField(
-#         max_length=2048,
-#         blank=True,
-#         null=True,
-#         help_text='A compact purl package URL.'
-#     )
+    relationship = models.CharField(
+        max_length=30,
+        choices=Relationship.choices,
+        help_text='Relationship between the from and to package '
+                  'URLs such as "source_package" when a package '
+                  'is the source code package for another package.'
+    )
+
+    def __str__(self):
+        return (
+            f"{self.from_package.purl} is the "
+            f"{self.relationship.upper()} to {self.to_package.purl}"
+        )
