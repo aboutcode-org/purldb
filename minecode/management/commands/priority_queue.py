@@ -14,20 +14,21 @@ import time
 
 from django.db import transaction
 from django.utils import timezone
-from packagedcode.maven import build_filename
 from packagedcode.maven import get_urls
 from packagedcode.maven import _parse
-from packageurl import normalize_qualifiers
 from packageurl import PackageURL
 import requests
 
 from minecode.management.commands import VerboseCommand
 from minecode.management.commands.run_map import merge_or_create_package
+from minecode.management.commands.process_scans import get_scan_status
+from minecode.management.commands.process_scans import index_package_files
+from minecode.management.scanning import submit_scan
+from minecode.management.scanning import get_scan_info
+from minecode.management.scanning import get_scan_data
 from minecode.models import PriorityResourceURI
-from minecode.utils import stringify_null_purl_fields
-from packagedb.models import DependentPackage
-from packagedb.models import Package
-from packagedb.models import Party
+from minecode.models import ScannableURI
+from packagedb.models import PackageRelation
 
 
 logger = logging.getLogger(__name__)
@@ -100,6 +101,9 @@ class Command(VerboseCommand):
 
 
 def process_request(package_url):
+    """
+    TODO: move this to Maven visitor/mapper
+    """
     purl = PackageURL.from_string(package_url)
     has_version = bool(purl.version)
     if has_version:
@@ -136,7 +140,7 @@ def process_request(package_url):
             # Create Package for binary package, if available
             package.sha1 = response.text
             package.download_url = download_url
-            _, _, _, _ = merge_or_create_package(package, visit_level=0)
+            binary_package, _, _, _ = merge_or_create_package(package, visit_level=0)
 
         # Check to see if the sources are available
         purl.qualifiers['classifier'] = 'sources'
@@ -155,8 +159,51 @@ def process_request(package_url):
             package.download_url = download_url
             package.repository_download_url = download_url
             package.qualifiers['classifier'] = 'sources'
-            _, _, _, _ = merge_or_create_package(package, visit_level=0)
+            source_package, _, _, _ = merge_or_create_package(package, visit_level=0)
 
-        # Download artifacts for scanning
+        if source_package and binary_package:
+            make_relationship(
+                from_package=source_package,
+                to_package=binary_package,
+                relationship=PackageRelation.Relationship.SOURCE_PACKAGE
+            )
+
+        # Submit packages for scanning
+        if binary_package:
+            uri = binary_package.download_url
+            scan = submit_scan(uri)
+            scan_uuid = scan.uuid
+            scan_status = None
+            scan_done = False
+            while not scan_done:
+                scan_info = get_scan_info(scan_uuid)
+                scan_status = get_scan_status(scan_info)
+
+                if scan_status in (ScannableURI.SCAN_SUBMITTED, ScannableURI.SCAN_IN_PROGRESS):
+                    scan_status = get_scan_status(scan_info)
+                elif scan_status in (ScannableURI.SCAN_COMPLETED,):
+                    logger.info('Indexing scanned files for URI: {}'.format(uri))
+                    scan_data = get_scan_data(scan_uuid)
+                    scan_index_errors = index_package_files(binary_package, scan_data)
+                    # TODO: We should rerun the specific indexers that have failed
+                    if scan_index_errors:
+                        scan_status = ScannableURI.SCAN_INDEX_FAILED
+                        index_error = '\n'.join(scan_index_errors)
+                    else:
+                        scan_status = ScannableURI.SCAN_INDEXED
+                    scan_done = True
     else:
         pass
+
+
+def make_relationship(
+    from_package, to_package, relationship
+):
+    """
+    from scio
+    """
+    return PackageRelation.objects.create(
+        from_package=from_package,
+        to_package=to_package,
+        relationship=relationship,
+    )
