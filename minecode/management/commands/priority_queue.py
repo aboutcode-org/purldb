@@ -92,7 +92,9 @@ class Command(VerboseCommand):
 
             # process request
             logger.info('Processing {}'.format(priority_resource_uri))
-            process_request(priority_resource_uri.uri)
+            errors = process_request(priority_resource_uri.uri)
+            if errors:
+                priority_resource_uri.processing_error = errors
             priority_resource_uri.processed_date = timezone.now()
             priority_resource_uri.save()
             processed_counter += 1
@@ -106,6 +108,7 @@ def process_request(package_url):
     """
     purl = PackageURL.from_string(package_url)
     has_version = bool(purl.version)
+    error = ''
     if has_version:
         urls = get_urls(
             namespace=purl.namespace,
@@ -117,7 +120,10 @@ def process_request(package_url):
         pom_url = urls['api_data_url']
         response = requests.get(pom_url)
         if not response:
-            raise Exception("package does not exist on maven")
+            msg = 'Package does not exist on maven: ' + repr(package_url)
+            error += msg + '\n'
+            logger.error(msg)
+            return error
 
         # Create Package from POM info
         pom_contents = str(response.content)
@@ -141,6 +147,11 @@ def process_request(package_url):
             package.sha1 = response.text
             package.download_url = download_url
             binary_package, _, _, _ = merge_or_create_package(package, visit_level=0)
+        else:
+            msg = 'Failed to retrieve binary JAR: ' + repr(package_url)
+            error += msg + '\n'
+            logger.error(msg)
+            return error
 
         # Check to see if the sources are available
         purl.qualifiers['classifier'] = 'sources'
@@ -160,6 +171,11 @@ def process_request(package_url):
             package.repository_download_url = download_url
             package.qualifiers['classifier'] = 'sources'
             source_package, _, _, _ = merge_or_create_package(package, visit_level=0)
+        else:
+            msg = 'Failed to retrieve binary JAR: ' + repr(package_url)
+            error += msg + '\n'
+            logger.error(msg)
+            return error
 
         if source_package and binary_package:
             make_relationship(
@@ -189,9 +205,14 @@ def process_request(package_url):
                     if scan_index_errors:
                         scan_status = ScannableURI.SCAN_INDEX_FAILED
                         index_error = '\n'.join(scan_index_errors)
+                        error += msg + '\n'
+                        logger.error(msg)
+                        return error
                     else:
                         scan_status = ScannableURI.SCAN_INDEXED
                     scan_done = True
+                # Wait for 5 seconds before starting next iteration
+                time.sleep(5)
     else:
         pass
 

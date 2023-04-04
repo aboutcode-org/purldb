@@ -868,6 +868,19 @@ class PriorityResourceURI(BaseURI):
         help_text='Timestamp set to the date of when this Package info was requested.',
     )
 
+    has_processing_error = models.BooleanField(
+        db_index=True,
+        default=False,
+        help_text='When set to True (Yes), this field indicates that '
+                  'an error has occured when processing this URI.'
+    )
+
+    processing_error = models.TextField(
+        null=True,
+        blank=True,
+        help_text='Processing errors messages. When present this means the processing failed.',
+    )
+
     objects = PriorityResourceURIManager()
 
     class Meta:
