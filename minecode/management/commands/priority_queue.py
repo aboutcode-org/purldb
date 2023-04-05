@@ -17,6 +17,7 @@ from django.db import transaction
 from django.utils import timezone
 from packagedcode.maven import get_urls
 from packagedcode.maven import _parse
+from packagedcode.maven import get_maven_pom
 from packageurl import PackageURL
 import requests
 
@@ -133,6 +134,7 @@ def process_request(priority_resource_uri):
 
         # Create Package from POM info
         pom_contents = str(response.content)
+        pom = get_maven_pom(text=pom_contents)
         package = _parse(
             'maven_pom',
             'maven',
@@ -140,11 +142,54 @@ def process_request(priority_resource_uri):
             text=pom_contents
         )
 
+        # Create Parent Package, if available
+        parent_group_id = pom.parent.group_id
+        parent_artifact_id = pom.parent.artifact_id
+        parent_version = pom.parent.version.version
+        parent_package = None
+        if (
+            pom.parent
+            and parent_group_id
+            and parent_artifact_id
+            and parent_version
+        ):
+            parent_urls = get_urls(
+                namespace=parent_group_id,
+                name=parent_artifact_id,
+                version=str(parent_version),
+                qualifiers={}
+            )
+            # Get and parse parent POM info
+            parent_pom_url = parent_urls['api_data_url']
+            response = requests.get(parent_pom_url)
+            if not response:
+                msg = 'Parent Package does not exist on maven: ' + repr(package_url)
+                error += msg + '\n'
+                logger.error(msg)
+            parent_pom_contents = str(response.content)
+            parent_package = _parse(
+                'maven_pom',
+                'maven',
+                'Java',
+                text=parent_pom_contents
+            )
+
+        if parent_package:
+            check_fields = (
+                'license_expression',
+                'homepage_url',
+            )
+            for field in check_fields:
+                # If `field` is empty on the package we're looking at, populate
+                # those fields with values from the parent package.
+                if not getattr(package, field):
+                    value = getattr(parent_package, field)
+                    setattr(package, field, value)
+
         # If sha1 exists for a jar, we know we can create the package
         # Use pom info as base and create packages for binary and source package
-        # TODO: relate the two when we have PackageRelation
 
-        # Check to see if source and binary are available
+        # Check to see if binary is available
         binary_package = None
         download_url = urls['repository_download_url']
         binary_sha1_url = f'{download_url}.sha1'
