@@ -144,14 +144,23 @@ def process_request(package_url):
         response = requests.get(binary_sha1_url)
         if response.ok:
             # Create Package for binary package, if available
-            package.sha1 = response.text
+            package.sha1 = response.text.strip()
             package.download_url = download_url
             binary_package, _, _, _ = merge_or_create_package(package, visit_level=0)
         else:
             msg = 'Failed to retrieve binary JAR: ' + repr(package_url)
             error += msg + '\n'
             logger.error(msg)
-            return error
+
+        # Submit packages for scanning
+        if binary_package:
+            uri = binary_package.download_url
+            _, scannable_uri_created = ScannableURI.objects.get_or_create(
+                uri=uri,
+                package=binary_package,
+            )
+            if scannable_uri_created:
+                logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
 
         # Check to see if the sources are available
         purl.qualifiers['classifier'] = 'sources'
@@ -166,33 +175,15 @@ def process_request(package_url):
         response = requests.get(sources_sha1_url)
         if response.ok:
             # Create Package for source package, if available
-            package.sha1 = response.text
+            package.sha1 = response.text.strip()
             package.download_url = download_url
             package.repository_download_url = download_url
             package.qualifiers['classifier'] = 'sources'
             source_package, _, _, _ = merge_or_create_package(package, visit_level=0)
         else:
-            msg = 'Failed to retrieve binary JAR: ' + repr(package_url)
+            msg = 'Failed to retrieve sources JAR: ' + repr(package_url)
             error += msg + '\n'
             logger.error(msg)
-            return error
-
-        if source_package and binary_package:
-            make_relationship(
-                from_package=source_package,
-                to_package=binary_package,
-                relationship=PackageRelation.Relationship.SOURCE_PACKAGE
-            )
-
-        # Submit packages for scanning
-        if binary_package:
-            uri = binary_package.download_url
-            _, scannable_uri_created = ScannableURI.objects.get_or_create(
-                uri=uri,
-                package=binary_package,
-            )
-            if scannable_uri_created:
-                logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
 
         if source_package:
             uri = source_package.download_url
@@ -202,6 +193,15 @@ def process_request(package_url):
             )
             if scannable_uri_created:
                 logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
+
+        if source_package and binary_package:
+            make_relationship(
+                from_package=source_package,
+                to_package=binary_package,
+                relationship=PackageRelation.Relationship.SOURCE_PACKAGE
+            )
+
+        return error
     else:
         pass
 
@@ -218,25 +218,10 @@ def make_relationship(
         relationship=relationship,
     )
 
-import time
-
-from selenium import webdriver
-from selenium.webdriver import Chrome
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-
-
-def scrape_page():
-    # start by defining the options
-    options = webdriver.ChromeOptions()
-    options.headless = True # it's more scalable to work in headless mode
-    # normally, selenium waits for all resources to download
-    # we don't need it as the page also populated with the running javascript code.
-    options.page_load_strategy = 'none'
-    # this returns the path web driver downloaded
-    chrome_path = ChromeDriverManager().install()
-    chrome_service = Service(chrome_path)
-    # pass the defined options and service objects to initialize the web driver
-    driver = Chrome(options=options, service=chrome_service)
-    driver.implicitly_wait(5)
+def validate_sha1(sha1):
+    if sha1 and len(sha1) != 40:
+        logger.warning(
+            f'Invalid SHA1 length ({len(sha1)}): "{sha1}": SHA1 ignored!'
+        )
+        sha1 = None
+    return sha1
