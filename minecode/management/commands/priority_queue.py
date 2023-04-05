@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import hashlib
 import logging
 import signal
 import sys
@@ -19,13 +20,9 @@ from packagedcode.maven import _parse
 from packageurl import PackageURL
 import requests
 
+from minecode.management.commands import get_error_message
 from minecode.management.commands import VerboseCommand
 from minecode.management.commands.run_map import merge_or_create_package
-from minecode.management.commands.process_scans import get_scan_status
-from minecode.management.commands.process_scans import index_package_files
-from minecode.management.scanning import submit_scan
-from minecode.management.scanning import get_scan_info
-from minecode.management.scanning import get_scan_data
 from minecode.models import PriorityResourceURI
 from minecode.models import ScannableURI
 from packagedb.models import PackageRelation
@@ -92,20 +89,29 @@ class Command(VerboseCommand):
 
             # process request
             logger.info('Processing {}'.format(priority_resource_uri))
-            errors = process_request(priority_resource_uri.uri)
-            if errors:
-                priority_resource_uri.processing_error = errors
-            priority_resource_uri.processed_date = timezone.now()
-            priority_resource_uri.save()
-            processed_counter += 1
+            try:
+                errors = process_request(priority_resource_uri)
+            except Exception as e:
+                errors = 'Error: Failed to process PriorityResourceURI: {}\n'.format(
+                    repr(priority_resource_uri))
+                errors += get_error_message(e)
+            finally:
+                if errors:
+                    priority_resource_uri.processing_error = errors
+                    logger.error(errors)
+                priority_resource_uri.processed_date = timezone.now()
+                priority_resource_uri.wip_date = None
+                priority_resource_uri.save()
+                processed_counter += 1
 
         return processed_counter
 
 
-def process_request(package_url):
+def process_request(priority_resource_uri):
     """
     TODO: move this to Maven visitor/mapper
     """
+    package_url = priority_resource_uri.uri
     purl = PackageURL.from_string(package_url)
     has_version = bool(purl.version)
     error = ''
@@ -139,12 +145,22 @@ def process_request(package_url):
         # TODO: relate the two when we have PackageRelation
 
         # Check to see if source and binary are available
+        binary_package = None
         download_url = urls['repository_download_url']
         binary_sha1_url = f'{download_url}.sha1'
         response = requests.get(binary_sha1_url)
         if response.ok:
             # Create Package for binary package, if available
-            package.sha1 = response.text.strip()
+            sha1 = response.text.strip()
+            sha1 = validate_sha1(sha1)
+            if not sha1:
+                response = requests.get(download_url)
+                if response:
+                    sha1_hash = hashlib.new('sha1', response.content)
+                    sha1 = sha1_hash.hexdigest()
+                else:
+                    sha1 = priority_resource_uri.sha1
+            package.sha1 = sha1
             package.download_url = download_url
             binary_package, _, _, _ = merge_or_create_package(package, visit_level=0)
         else:
@@ -170,12 +186,22 @@ def process_request(package_url):
             version=purl.version,
             qualifiers=purl.qualifiers
         )
+        source_package = None
         download_url = sources_urls['repository_download_url']
         sources_sha1_url = f'{download_url}.sha1'
         response = requests.get(sources_sha1_url)
         if response.ok:
             # Create Package for source package, if available
-            package.sha1 = response.text.strip()
+            sha1 = response.text.strip()
+            sha1 = validate_sha1(sha1)
+            if not sha1:
+                response = requests.get(download_url)
+                if response:
+                    sha1_hash = hashlib.new('sha1', response.content)
+                    sha1 = sha1_hash.hexdigest()
+                else:
+                    sha1 = None
+            package.sha1 = sha1
             package.download_url = download_url
             package.repository_download_url = download_url
             package.qualifiers['classifier'] = 'sources'

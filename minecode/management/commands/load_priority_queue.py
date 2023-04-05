@@ -53,5 +53,5 @@ class Command(VerboseCommand):
                         version = matched_package.get('v', '')
                         if namespace and name and version:
                             purl = f'pkg:maven/{namespace}/{name}@{version}'
-                            PriorityResourceURI.objects.create(uri=purl, package_url=purl)
+                            PriorityResourceURI.objects.create(uri=purl, package_url=purl, sha1=resource.sha1)
                             logger.info(f'Added {purl} to priority queue')
