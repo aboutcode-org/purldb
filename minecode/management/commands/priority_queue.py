@@ -187,61 +187,21 @@ def process_request(package_url):
         # Submit packages for scanning
         if binary_package:
             uri = binary_package.download_url
-            scan = submit_scan(uri)
-            scan_uuid = scan.uuid
-            scan_status = None
-            scan_done = False
-            while not scan_done:
-                scan_info = get_scan_info(scan_uuid)
-                scan_status = get_scan_status(scan_info)
-
-                if scan_status in (ScannableURI.SCAN_SUBMITTED, ScannableURI.SCAN_IN_PROGRESS):
-                    scan_status = get_scan_status(scan_info)
-                elif scan_status in (ScannableURI.SCAN_COMPLETED,):
-                    logger.info('Indexing scanned files for URI: {}'.format(uri))
-                    scan_data = get_scan_data(scan_uuid)
-                    scan_index_errors = index_package_files(binary_package, scan_data)
-                    # TODO: We should rerun the specific indexers that have failed
-                    if scan_index_errors:
-                        scan_status = ScannableURI.SCAN_INDEX_FAILED
-                        index_error = '\n'.join(scan_index_errors)
-                        error += msg + '\n'
-                        logger.error(msg)
-                        return error
-                    else:
-                        scan_status = ScannableURI.SCAN_INDEXED
-                    scan_done = True
-                # Wait for 5 seconds before starting next iteration
-                time.sleep(5)
+            _, scannable_uri_created = ScannableURI.objects.get_or_create(
+                uri=uri,
+                package=binary_package,
+            )
+            if scannable_uri_created:
+                logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
 
         if source_package:
             uri = source_package.download_url
-            scan = submit_scan(uri)
-            scan_uuid = scan.uuid
-            scan_status = None
-            scan_done = False
-            while not scan_done:
-                scan_info = get_scan_info(scan_uuid)
-                scan_status = get_scan_status(scan_info)
-
-                if scan_status in (ScannableURI.SCAN_SUBMITTED, ScannableURI.SCAN_IN_PROGRESS):
-                    scan_status = get_scan_status(scan_info)
-                elif scan_status in (ScannableURI.SCAN_COMPLETED,):
-                    logger.info('Indexing scanned files for URI: {}'.format(uri))
-                    scan_data = get_scan_data(scan_uuid)
-                    scan_index_errors = index_package_files(binary_package, scan_data)
-                    # TODO: We should rerun the specific indexers that have failed
-                    if scan_index_errors:
-                        scan_status = ScannableURI.SCAN_INDEX_FAILED
-                        index_error = '\n'.join(scan_index_errors)
-                        error += msg + '\n'
-                        logger.error(msg)
-                        return error
-                    else:
-                        scan_status = ScannableURI.SCAN_INDEXED
-                    scan_done = True
-                # Wait for 5 seconds before starting next iteration
-                time.sleep(5)
+            _, scannable_uri_created = ScannableURI.objects.get_or_create(
+                uri=uri,
+                package=source_package,
+            )
+            if scannable_uri_created:
+                logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
     else:
         pass
 
