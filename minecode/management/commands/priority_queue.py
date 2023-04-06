@@ -143,20 +143,17 @@ def process_request(priority_resource_uri):
         )
 
         # Create Parent Package, if available
-        parent_group_id = pom.parent.group_id
-        parent_artifact_id = pom.parent.artifact_id
-        parent_version = pom.parent.version.version
         parent_package = None
         if (
             pom.parent
-            and parent_group_id
-            and parent_artifact_id
-            and parent_version
+            and pom.parent.group_id
+            and pom.parent.artifact_id
+            and pom.parent.version.version
         ):
             parent_urls = get_urls(
-                namespace=parent_group_id,
-                name=parent_artifact_id,
-                version=str(parent_version),
+                namespace=pom.parent.group_id,
+                name=pom.parent.artifact_id,
+                version=str(pom.parent.version.version),
                 qualifiers={}
             )
             # Get and parse parent POM info
@@ -178,6 +175,7 @@ def process_request(priority_resource_uri):
             check_fields = (
                 'license_expression',
                 'homepage_url',
+                'parties',
             )
             for field in check_fields:
                 # If `field` is empty on the package we're looking at, populate
