@@ -330,13 +330,6 @@ def merge_or_create_package(scanned_package, visit_level):
         logger.error(msg)
         raise RuntimeError(msg)
 
-    try:
-        handler = get_package_handler(scanned_package)
-        scanned_package.license_expression = handler.compute_normalized_license(scanned_package)
-    except UnknownPackageDatasource:
-        # TODO: Should we report an error if we can't compute a normalized license?
-        pass
-
     if not scanned_package.download_url:
         # TODO: there could be valid cases where we have no download URL
         # and still want to create a package???
