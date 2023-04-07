@@ -108,62 +108,116 @@ class Command(VerboseCommand):
         return processed_counter
 
 
-def process_request(priority_resource_uri):
+def get_pom_contents(namespace, name, version, qualifiers):
     """
-    TODO: move this to Maven visitor/mapper
+    Return the contents of the POM file of the package described by the purl
+    field arguments in a string.
     """
-    package_url = priority_resource_uri.uri
-    purl = PackageURL.from_string(package_url)
-    has_version = bool(purl.version)
+    # Create URLs using purl fields
+    urls = get_urls(
+        namespace=namespace,
+        name=name,
+        version=version,
+        qualifiers=qualifiers
+    )
+    # Get and parse POM info
+    pom_url = urls['api_data_url']
+    response = requests.get(pom_url)
+    if not response:
+        return
+    return str(response.content)
+
+
+def get_package_sha1(package):
+    """
+    Return the sha1 value for `package` by checking if the sha1 file exists for
+    `package` on maven and returning the contents if it does.
+
+    If the sha1 is invalid, we download the package's JAR and calculate the sha1
+    from that.
+    """
+    download_url = package.repository_download_url
+    sha1_download_url = f'{download_url}.sha1'
+    response = requests.get(sha1_download_url)
+    if response.ok:
+        sha1_contents = response.text.strip().split()
+        sha1 = sha1_contents[0]
+        sha1 = validate_sha1(sha1)
+        if not sha1:
+            # Download JAR and calculate sha1 if we cannot get it from the repo
+            response = requests.get(download_url)
+            if response:
+                sha1_hash = hashlib.new('sha1', response.content)
+                sha1 = sha1_hash.hexdigest()
+        return sha1
+
+
+def add_package_to_scan_queue(package):
+    """
+    Add a Package `package` to the scan queue
+    """
+    uri = package.download_url
+    _, scannable_uri_created = ScannableURI.objects.get_or_create(
+        uri=uri,
+        package=package,
+    )
+    if scannable_uri_created:
+        logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
+
+
+def map_maven_package(package_url):
+    """
+    Add a maven `package_url` to the PackageDB.
+
+    Return an error string if errors have occured in the process.
+    """
     error = ''
-    if has_version:
-        urls = get_urls(
-            namespace=purl.namespace,
-            name=purl.name,
-            version=purl.version,
-            qualifiers=purl.qualifiers
-        )
-        # Get and parse POM info
-        pom_url = urls['api_data_url']
-        response = requests.get(pom_url)
-        if not response:
-            msg = 'Package does not exist on maven: ' + repr(package_url)
-            error += msg + '\n'
-            logger.error(msg)
-            return error
 
-        # Create Package from POM info
-        pom_contents = str(response.content)
-        pom = get_maven_pom(text=pom_contents)
-        package = _parse(
-            'maven_pom',
-            'maven',
-            'Java',
-            text=pom_contents
-        )
+    pom_contents = get_pom_contents(
+        namespace=package_url.namespace,
+        name=package_url.name,
+        version=package_url.version,
+        qualifiers=package_url.qualifiers
+    )
+    if not pom_contents:
+        msg = f'Package does not exist on maven: {package_url}'
+        error += msg + '\n'
+        logger.error(msg)
+        return error
 
-        # Create Parent Package, if available
-        parent_package = None
-        if (
-            pom.parent
-            and pom.parent.group_id
-            and pom.parent.artifact_id
-            and pom.parent.version.version
-        ):
-            parent_urls = get_urls(
-                namespace=pom.parent.group_id,
-                name=pom.parent.artifact_id,
-                version=str(pom.parent.version.version),
-                qualifiers={}
+    package = _parse(
+        'maven_pom',
+        'maven',
+        'Java',
+        text=pom_contents
+    )
+
+    # Create Parent Package, if available
+    parent_package = None
+    pom = get_maven_pom(text=pom_contents)
+    if (
+        pom.parent
+        and pom.parent.group_id
+        and pom.parent.artifact_id
+        and pom.parent.version.version
+    ):
+        parent_namespace = pom.parent.group_id
+        parent_name = pom.parent.artifact_id
+        parent_version = str(pom.parent.version.version)
+        parent_pom_contents = get_pom_contents(
+            namespace=parent_namespace,
+            name=parent_name,
+            version=parent_version,
+            qualifiers={}
+        )
+        if not parent_pom_contents:
+            parent_purl = PackageURL(
+                namespace=parent_namespace,
+                name=parent_name,
+                version=parent_version,
             )
-            # Get and parse parent POM info
-            parent_pom_url = parent_urls['api_data_url']
-            response = requests.get(parent_pom_url)
-            if not response:
-                msg = 'Parent Package does not exist on maven: ' + repr(package_url)
-                error += msg + '\n'
-                logger.error(msg)
-            parent_pom_contents = str(response.content)
+            logger.debug(f'\tParent POM does not exist on maven {parent_purl}')
+        else:
             parent_package = _parse(
                 'maven_pom',
                 'maven',
@@ -171,102 +225,71 @@ def process_request(priority_resource_uri):
                 text=parent_pom_contents
             )
 
-        if parent_package:
-            check_fields = (
-                'license_expression',
-                'homepage_url',
-                'parties',
-            )
-            for field in check_fields:
-                # If `field` is empty on the package we're looking at, populate
-                # those fields with values from the parent package.
-                if not getattr(package, field):
-                    value = getattr(parent_package, field)
-                    setattr(package, field, value)
-
-        # If sha1 exists for a jar, we know we can create the package
-        # Use pom info as base and create packages for binary and source package
-
-        # Check to see if binary is available
-        binary_package = None
-        download_url = urls['repository_download_url']
-        binary_sha1_url = f'{download_url}.sha1'
-        response = requests.get(binary_sha1_url)
-        if response.ok:
-            # Create Package for binary package, if available
-            sha1 = response.text.strip()
-            sha1 = validate_sha1(sha1)
-            if not sha1:
-                response = requests.get(download_url)
-                if response:
-                    sha1_hash = hashlib.new('sha1', response.content)
-                    sha1 = sha1_hash.hexdigest()
-                else:
-                    sha1 = priority_resource_uri.sha1
-            package.sha1 = sha1
-            package.download_url = download_url
-            binary_package, _, _, _ = merge_or_create_package(package, visit_level=0)
-        else:
-            msg = 'Failed to retrieve binary JAR: ' + repr(package_url)
-            error += msg + '\n'
-            logger.error(msg)
-
-        # Submit packages for scanning
-        if binary_package:
-            uri = binary_package.download_url
-            _, scannable_uri_created = ScannableURI.objects.get_or_create(
-                uri=uri,
-                package=binary_package,
-            )
-            if scannable_uri_created:
-                logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
-
-        # Check to see if the sources are available
-        purl.qualifiers['classifier'] = 'sources'
-        sources_urls = get_urls(
-            namespace=purl.namespace,
-            name=purl.name,
-            version=purl.version,
-            qualifiers=purl.qualifiers
+    if parent_package:
+        check_fields = (
+            'license_expression',
+            'homepage_url',
+            'parties',
         )
-        source_package = None
-        download_url = sources_urls['repository_download_url']
-        sources_sha1_url = f'{download_url}.sha1'
-        response = requests.get(sources_sha1_url)
-        if response.ok:
-            # Create Package for source package, if available
-            sha1 = response.text.strip()
-            sha1 = validate_sha1(sha1)
-            if not sha1:
-                response = requests.get(download_url)
-                if response:
-                    sha1_hash = hashlib.new('sha1', response.content)
-                    sha1 = sha1_hash.hexdigest()
-                else:
-                    sha1 = None
-            package.sha1 = sha1
-            package.download_url = download_url
-            package.repository_download_url = download_url
-            package.qualifiers['classifier'] = 'sources'
-            source_package, _, _, _ = merge_or_create_package(package, visit_level=0)
-        else:
-            msg = 'Failed to retrieve sources JAR: ' + repr(package_url)
-            error += msg + '\n'
-            logger.error(msg)
+        for field in check_fields:
+            # If `field` is empty on the package we're looking at, populate
+            # those fields with values from the parent package.
+            if not getattr(package, field):
+                value = getattr(parent_package, field)
+                setattr(package, field, value)
 
-        if source_package:
-            uri = source_package.download_url
-            _, scannable_uri_created = ScannableURI.objects.get_or_create(
-                uri=uri,
-                package=source_package,
-            )
-            if scannable_uri_created:
-                logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
+    # If sha1 exists for a jar, we know we can create the package
+    # Use pom info as base and create packages for binary and source package
 
-        if source_package and binary_package:
+    # Check to see if binary is available
+    db_package = None
+    sha1 = get_package_sha1(package)
+    if sha1:
+        package.sha1 = sha1
+        package.download_url = package.repository_download_url
+        db_package, _, _, _ = merge_or_create_package(package, visit_level=0)
+    else:
+        msg = f'Failed to retrieve JAR: {package_url}'
+        error += msg + '\n'
+        logger.error(msg)
+
+    # Submit package for scanning
+    if db_package:
+        add_package_to_scan_queue(db_package)
+
+    return db_package, error
+
+
+def process_request(priority_resource_uri):
+    """
+    Process `priority_resource_uri` containing a maven Package URL (PURL) as a
+    URI.
+
+    This involves obtaining Package information for the PURL from maven and
+    using it to create a new PackageDB entry. The package is then added to the
+    scan queue afterwards. We also get the Package information for the
+    accompanying source package and add it to the PackageDB and scan queue, if
+    available.
+    """
+    purl_str = priority_resource_uri.uri
+    package_url = PackageURL.from_string(purl_str)
+    has_version = bool(package_url.version)
+    error = ''
+    if has_version:
+        package, emsg = map_maven_package(package_url)
+        if emsg:
+            error += emsg
+
+        source_package_url = package_url
+        source_package_url.qualifiers['classifier'] = 'sources'
+        source_package, emsg = map_maven_package(source_package_url)
+        if emsg:
+            error += emsg
+
+        if package and source_package:
             make_relationship(
                 from_package=source_package,
-                to_package=binary_package,
+                to_package=package,
                 relationship=PackageRelation.Relationship.SOURCE_PACKAGE
             )
 
@@ -278,9 +301,6 @@ def process_request(priority_resource_uri):
 def make_relationship(
     from_package, to_package, relationship
 ):
-    """
-    from scio
-    """
     return PackageRelation.objects.create(
         from_package=from_package,
         to_package=to_package,
@@ -288,6 +308,11 @@ def make_relationship(
     )
 
 def validate_sha1(sha1):
+    """
+    Validate a `sha1` string.
+
+    Return `sha1` if it is valid, None otherwise.
+    """
     if sha1 and len(sha1) != 40:
         logger.warning(
             f'Invalid SHA1 length ({len(sha1)}): "{sha1}": SHA1 ignored!'
