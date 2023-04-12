@@ -190,19 +190,19 @@ class ResourceAPITestCase(TestCase):
 class PackageApiTestCase(TestCase):
 
     def setUp(self):
+
         self.package_data = {
             'type': 'generic',
             'namespace': 'generic',
             'name': 'Foo',
             'version': '12.34',
-            'qualifiers': 'testqual',
-            'subpath': 'testsub',
+            'qualifiers': 'test_quals',
+            'subpath': 'test_subpath',
             'download_url': 'http://example.com',
             'filename': 'Foo.zip',
             'sha1': 'testsha1',
             'md5': 'testmd5',
-            'size': 100,
-            'extra_data': json.dumps({'test2': 'data2'})
+            'size': 101,
         }
 
         self.package = Package.objects.create(**self.package_data)
@@ -211,6 +211,38 @@ class PackageApiTestCase(TestCase):
         self.package.append_to_history('test-message')
         self.package.save()
 
+        self.package_data2 = {
+            'type': 'npm',
+            'namespace': 'example',
+            'name': 'Bar',
+            'version': '56.78',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': 'http://somethingelse.org',
+            'filename': 'Bar.zip',
+            'sha1': 'testsha1-2',
+            'md5': 'testmd5-2',
+            'size': 100,
+        }
+        self.package2 = Package.objects.create(**self.package_data2)
+        self.package2.refresh_from_db()
+
+        self.package_data3 = {
+            'type': 'jar',
+            'namespace': 'sample',
+            'name': 'Baz',
+            'version': '90.12',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': 'http://anotherexample.com',
+            'filename': 'Baz.zip',
+            'sha1': 'testsha1-3',
+            'md5': 'testmd5-3',
+            'size': 100,
+        }
+        self.package3 = Package.objects.create(**self.package_data3)
+        self.package3.refresh_from_db()
+
         self.test_url = 'http://testserver/api/packages/{}/'
 
         self.client = APIClient()
@@ -218,7 +250,7 @@ class PackageApiTestCase(TestCase):
     def test_package_api_list_endpoint(self):
         response = self.client.get('/api/packages/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, response.data.get('count'))
+        self.assertEqual(3, response.data.get('count'))
 
     def test_package_api_list_endpoint_filter(self):
         for key, value in self.package_data.items():
@@ -229,15 +261,14 @@ class PackageApiTestCase(TestCase):
     def test_package_api_list_endpoint_filter_by_purl_fields_ignores_case(self):
         for key, value in self.package_data.items():
             # Skip non-purl fields
-            if key not in ['type', 'namespace', 'name', 'version', 'qualifiers', 'subpath',
-                           'download_url', 'filename']:
+            if key not in ['type', 'namespace', 'name', 'version', 'qualifiers', 'subpath']:
                 continue
 
-            response = self.client.get('/api/packages/?{}__iexact={}'.format(key, value.lower()))
+            response = self.client.get('/api/packages/?{}={}'.format(key, value.lower()))
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(1, response.data.get('count'))
 
-            response = self.client.get('/api/packages/?{}__iexact={}'.format(key, value.upper()))
+            response = self.client.get('/api/packages/?{}={}'.format(key, value.upper()))
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(1, response.data.get('count'))
 
@@ -313,6 +344,22 @@ class PackageApiTestCase(TestCase):
         for result, i in zip(response.data, range(0, 10)):
             self.assertEqual(result.get('path'), 'path{}/'.format(i))
 
+    def test_api_package_list_endpoint_multiple_char_filters(self):
+        filters = f'?md5={self.package.md5}&md5={self.package2.md5}'
+        response = self.client.get(f'/api/packages/{filters}')
+        self.assertEqual(2, response.data['count'])
+        purls = [result.get('purl') for result in response.data['results']]
+        self.assertIn(self.package.purl, purls)
+        self.assertIn(self.package2.purl, purls)
+        self.assertNotIn(self.package3.purl, purls)
+
+        filters = f'?sha1={self.package2.sha1}&sha1={self.package3.sha1}'
+        response = self.client.get(f'/api/packages/{filters}')
+        self.assertEqual(2, response.data["count"])
+        purls = [result.get('purl') for result in response.data['results']]
+        self.assertIn(self.package2.purl, purls)
+        self.assertIn(self.package3.purl, purls)
+        self.assertNotIn(self.package.purl, purls)
 
 class PackageApiPurlFilterTestCase(TestCase):
 
