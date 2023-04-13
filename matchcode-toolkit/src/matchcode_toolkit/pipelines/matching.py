@@ -26,8 +26,10 @@ from os import getenv
 from django.conf import settings
 import requests
 
+from packagedcode.models import build_package_uid
 from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
 from scanpipe.pipelines import Pipeline
+from scanpipe.pipes import update_or_create_dependency
 from scanpipe.pipes import update_or_create_package
 from scanpipe.pipes.scancode import set_codebase_resource_for_package
 from scanpipe.pipes.codebase import ProjectCodebase
@@ -41,9 +43,9 @@ def get_settings(var_name):
 
 
 PURLDB_URL = get_settings('PURLDB_URL').rstrip('/')
-MATCHCODE_ENDPOINT = f'{PURLDB_URL}/approximate_directory_content_index/match/' if PURLDB_URL else None
-PURLDB_PACKAGE_ENDPOINT = f'{PURLDB_URL}/packages/' if PURLDB_URL else None
-PURLDB_RESOURCE_ENDPOINT = f'{PURLDB_URL}/resources/' if PURLDB_URL else None
+MATCHCODE_ENDPOINT = f'{PURLDB_URL}/approximate_directory_content_index/match' if PURLDB_URL else None
+PURLDB_PACKAGE_ENDPOINT = f'{PURLDB_URL}/packages' if PURLDB_URL else None
+PURLDB_RESOURCE_ENDPOINT = f'{PURLDB_URL}/resources' if PURLDB_URL else None
 
 PURLDB_API_KEY = get_settings('PURLDB_API_KEY')
 PURLDB_AUTH_HEADERS = {
@@ -208,3 +210,32 @@ class Matching(Pipeline):
                 set_codebase_resource_for_package(r, discovered_package)
                 r.extra_data['matched'] = True
                 r.save()
+
+        # Try sha1 matching against PackageDB
+        unmatched = self.project.codebaseresources.exclude(extra_data__contains={'matched': True})
+        for resource in unmatched:
+            sha1_lookup_url = f'{PURLDB_PACKAGE_ENDPOINT}/?sha1={resource.sha1}'
+            response = requests.get(sha1_lookup_url)
+            if response:
+                results = response.json().get('results', [])
+                for result in results:
+                    purl = result.get('purl', '')
+                    uuid = result.pop('uuid')
+                    package_uid = f'{purl}?uuid={uuid}'
+                    result['package_uid'] = package_uid
+                    dependencies = result.pop('dependencies')
+                    discovered_package = update_or_create_package(self.project, result, resource)
+                    if dependencies:
+                        for dependency in dependencies:
+                            purl = dependency.get('purl', '')
+                            dep = {
+                                'purl': purl,
+                                'extracted_requirement': dependency.get('requirement', ''),
+                                'scope': dependency.get('scope', ''),
+                                'dependency_uid': build_package_uid(purl),
+                                'is_runtime': dependency.get('is_runtime', False),
+                                'is_optional': dependency.get('is_optional', False),
+                                'is_resolved': dependency.get('is_resolved', False),
+                                'for_package_uid': package_uid,
+                            }
+                            discovered_dependency = update_or_create_dependency(self.project, dep)
