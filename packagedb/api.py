@@ -12,12 +12,14 @@ from django.db.models import Q
 from django_filters.rest_framework import FilterSet
 from django_filters.filters import Filter
 from django_filters.filters import OrderingFilter
+import django_filters
 
 from packageurl.contrib.django.utils import purl_to_lookups
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from matchcode.api import MultipleCharFilter
 from packagedb.models import Package
 from packagedb.models import Resource
 from packagedb.serializers import PackageAPISerializer
@@ -107,6 +109,27 @@ class PackageSearchFilter(Filter):
 
 
 class PackageFilter(FilterSet):
+    type = django_filters.CharFilter(
+        lookup_expr="iexact",
+        help_text="Exact type. (case-insensitive)",
+    )
+    namespace = django_filters.CharFilter(
+        lookup_expr="iexact",
+        help_text="Exact namespace. (case-insensitive)",
+    )
+    name = MultipleCharFilter(
+        lookup_expr="iexact",
+        help_text="Exact name. Multi-value supported. (case-insensitive)",
+    )
+    version = MultipleCharFilter(
+        help_text="Exact version. Multi-value supported.",
+    )
+    md5 = MultipleCharFilter(
+        help_text="Exact MD5. Multi-value supported.",
+    )
+    sha1 = MultipleCharFilter(
+        help_text="Exact SHA1. Multi-value supported.",
+    )
     purl = MultiplePackageURLFilter(label='Package URL')
     search = PackageSearchFilter(label='Search')
 
