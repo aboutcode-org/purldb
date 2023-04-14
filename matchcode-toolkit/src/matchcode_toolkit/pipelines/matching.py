@@ -43,9 +43,9 @@ def get_settings(var_name):
 
 
 PURLDB_URL = get_settings('PURLDB_URL').rstrip('/')
-MATCHCODE_ENDPOINT = f'{PURLDB_URL}/approximate_directory_content_index/match' if PURLDB_URL else None
-PURLDB_PACKAGE_ENDPOINT = f'{PURLDB_URL}/packages' if PURLDB_URL else None
-PURLDB_RESOURCE_ENDPOINT = f'{PURLDB_URL}/resources' if PURLDB_URL else None
+MATCHCODE_ENDPOINT = f'{PURLDB_URL}/approximate_directory_content_index/match/' if PURLDB_URL else None
+PURLDB_PACKAGE_ENDPOINT = f'{PURLDB_URL}/packages/' if PURLDB_URL else None
+PURLDB_RESOURCE_ENDPOINT = f'{PURLDB_URL}/resources/' if PURLDB_URL else None
 
 PURLDB_API_KEY = get_settings('PURLDB_API_KEY')
 PURLDB_AUTH_HEADERS = {
@@ -212,7 +212,7 @@ class Matching(Pipeline):
                 r.save()
 
         # Try sha1 matching against PackageDB
-        unmatched = self.project.codebaseresources.exclude(extra_data__contains={'matched': True})
+        unmatched = self.project.codebaseresources.exclude(extra_data__contains={'matched': True}).exclude(sha1__isnull=True)
         for resource in unmatched:
             sha1_lookup_url = f'{PURLDB_PACKAGE_ENDPOINT}/?sha1={resource.sha1}'
             response = requests.get(sha1_lookup_url)

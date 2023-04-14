@@ -18,13 +18,12 @@ from django.utils import timezone
 # UnusedImport here!
 # But importing the mappers and visitors module triggers routes registration
 from minecode import visitors  # NOQA
-from minecode import visit_router
+from minecode import priority_router
 from minecode.management.commands import get_error_message
 from minecode.management.commands import VerboseCommand
 from minecode.models import PriorityResourceURI
 from minecode.models import ScannableURI
 from minecode.route import NoRouteAvailable
-from packagedb.models import PackageRelation
 
 
 logger = logging.getLogger(__name__)
@@ -119,13 +118,13 @@ def add_package_to_scan_queue(package):
         logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
 
 
-def process_request(priority_resource_uri, _visit_router=visit_router):
+def process_request(priority_resource_uri, _priority_router=priority_router):
     purl_to_visit = priority_resource_uri.uri
     try:
         if TRACE:
             logger.debug('visit_uri: uri: {}'.format(purl_to_visit))
 
-        errors = _visit_router.process(purl_to_visit)
+        errors = _priority_router.process(purl_to_visit)
         if TRACE:
             new_uris_to_visit = list(new_uris_to_visit or [])
             logger.debug('visit_uri: new_uris_to_visit: {}'.format(new_uris_to_visit))
