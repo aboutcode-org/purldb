@@ -9,11 +9,13 @@
 
 from collections import namedtuple
 import gzip
+import hashlib
 import io
 import json
 import logging
 
 import arrow
+import requests
 from bs4 import BeautifulSoup
 from dateutil import tz
 
@@ -23,13 +25,20 @@ import javaproperties
 from packageurl import PackageURL
 from packagedcode.maven import build_filename
 from packagedcode.maven import build_url
+from packagedcode.maven import get_urls
+from packagedcode.maven import _parse
+from packagedcode.maven import get_maven_pom
+from packageurl import PackageURL
 
 from minecode import seed
+from minecode import priority_router
 from minecode import visit_router
 from minecode.visitors import java_stream
 from minecode.visitors import HttpVisitor
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
+from packagedb.models import make_relationship
+from packagedb.models import PackageRelation
 
 """
 This module handles the Maven repositories such as central and other
@@ -91,6 +100,201 @@ class MavenSeed(seed.Seeder):
         # clojars is not a mirror, but its own repo: https://clojars.org/repo/.index/
         # other mirrors https://www.google.com/search?q=allinurl%3A%20.index%2Fnexus-maven-repository-index.properties&pws=0&gl=us&gws_rd=cr
         # also has a npm mirrors: https://maven-eu.nuxeo.org/nexus/#view-repositories;npmjs~browsestorage
+
+
+def get_pom_contents(namespace, name, version, qualifiers):
+    """
+    Return the contents of the POM file of the package described by the purl
+    field arguments in a string.
+    """
+    # Create URLs using purl fields
+    urls = get_urls(
+        namespace=namespace,
+        name=name,
+        version=version,
+        qualifiers=qualifiers
+    )
+    # Get and parse POM info
+    pom_url = urls['api_data_url']
+    response = requests.get(pom_url)
+    if not response:
+        return
+    return str(response.content)
+
+
+def get_package_sha1(package):
+    """
+    Return the sha1 value for `package` by checking if the sha1 file exists for
+    `package` on maven and returning the contents if it does.
+
+    If the sha1 is invalid, we download the package's JAR and calculate the sha1
+    from that.
+    """
+    download_url = package.repository_download_url
+    sha1_download_url = f'{download_url}.sha1'
+    response = requests.get(sha1_download_url)
+    if response.ok:
+        sha1_contents = response.text.strip().split()
+        sha1 = sha1_contents[0]
+        sha1 = validate_sha1(sha1)
+        if not sha1:
+            # Download JAR and calculate sha1 if we cannot get it from the repo
+            response = requests.get(download_url)
+            if response:
+                sha1_hash = hashlib.new('sha1', response.content)
+                sha1 = sha1_hash.hexdigest()
+        return sha1
+
+
+def map_maven_package(package_url):
+    """
+    Add a maven `package_url` to the PackageDB.
+
+    Return an error string if errors have occured in the process.
+    """
+    from minecode.management.commands.priority_queue import add_package_to_scan_queue
+    from minecode.management.commands.run_map import merge_or_create_package
+
+    error = ''
+
+    pom_contents = get_pom_contents(
+        namespace=package_url.namespace,
+        name=package_url.name,
+        version=package_url.version,
+        qualifiers=package_url.qualifiers
+    )
+    if not pom_contents:
+        msg = f'Package does not exist on maven: {package_url}'
+        error += msg + '\n'
+        logger.error(msg)
+        return error
+
+    package = _parse(
+        'maven_pom',
+        'maven',
+        'Java',
+        text=pom_contents
+    )
+
+    # Create Parent Package, if available
+    parent_package = None
+    pom = get_maven_pom(text=pom_contents)
+    if (
+        pom.parent
+        and pom.parent.group_id
+        and pom.parent.artifact_id
+        and pom.parent.version.version
+    ):
+        parent_namespace = pom.parent.group_id
+        parent_name = pom.parent.artifact_id
+        parent_version = str(pom.parent.version.version)
+        parent_pom_contents = get_pom_contents(
+            namespace=parent_namespace,
+            name=parent_name,
+            version=parent_version,
+            qualifiers={}
+        )
+        if not parent_pom_contents:
+            parent_purl = PackageURL(
+                namespace=parent_namespace,
+                name=parent_name,
+                version=parent_version,
+            )
+            logger.debug(f'\tParent POM does not exist on maven {parent_purl}')
+        else:
+            parent_package = _parse(
+                'maven_pom',
+                'maven',
+                'Java',
+                text=parent_pom_contents
+            )
+
+    if parent_package:
+        check_fields = (
+            'license_expression',
+            'homepage_url',
+            'parties',
+        )
+        for field in check_fields:
+            # If `field` is empty on the package we're looking at, populate
+            # those fields with values from the parent package.
+            if not getattr(package, field):
+                value = getattr(parent_package, field)
+                setattr(package, field, value)
+
+    # If sha1 exists for a jar, we know we can create the package
+    # Use pom info as base and create packages for binary and source package
+
+    # Check to see if binary is available
+    db_package = None
+    sha1 = get_package_sha1(package)
+    if sha1:
+        package.sha1 = sha1
+        package.download_url = package.repository_download_url
+        db_package, _, _, _ = merge_or_create_package(package, visit_level=0)
+    else:
+        msg = f'Failed to retrieve JAR: {package_url}'
+        error += msg + '\n'
+        logger.error(msg)
+
+    # Submit package for scanning
+    if db_package:
+        add_package_to_scan_queue(db_package)
+
+    return db_package, error
+
+
+def validate_sha1(sha1):
+    """
+    Validate a `sha1` string.
+
+    Return `sha1` if it is valid, None otherwise.
+    """
+    if sha1 and len(sha1) != 40:
+        logger.warning(
+            f'Invalid SHA1 length ({len(sha1)}): "{sha1}": SHA1 ignored!'
+        )
+        sha1 = None
+    return sha1
+
+
+@priority_router.route('pkg:maven/.*')
+def process_request(purl_str):
+    """
+    Process `priority_resource_uri` containing a maven Package URL (PURL) as a
+    URI.
+
+    This involves obtaining Package information for the PURL from maven and
+    using it to create a new PackageDB entry. The package is then added to the
+    scan queue afterwards. We also get the Package information for the
+    accompanying source package and add it to the PackageDB and scan queue, if
+    available.
+    """
+
+    package_url = PackageURL.from_string(purl_str)
+    has_version = bool(package_url.version)
+    error = ''
+    if has_version:
+        package, emsg = map_maven_package(package_url)
+        if emsg:
+            error += emsg
+
+        source_package_url = package_url
+        source_package_url.qualifiers['classifier'] = 'sources'
+        source_package, emsg = map_maven_package(source_package_url)
+        if emsg:
+            error += emsg
+
+        if package and source_package:
+            make_relationship(
+                from_package=source_package,
+                to_package=package,
+                relationship=PackageRelation.Relationship.SOURCE_PACKAGE
+            )
+
+        return error
+    else:
+        pass
 
 
 @visit_router.route('http://repo1\.maven\.org/maven2/\.index/nexus-maven-repository-index.properties')

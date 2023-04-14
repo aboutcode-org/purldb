@@ -764,3 +764,13 @@ class PackageRelation(models.Model):
             f"{self.from_package.purl} is the "
             f"{self.relationship.upper()} to {self.to_package.purl}"
         )
+
+
+def make_relationship(
+    from_package, to_package, relationship
+):
+    return PackageRelation.objects.create(
+        from_package=from_package,
+        to_package=to_package,
+        relationship=relationship,
+    )
