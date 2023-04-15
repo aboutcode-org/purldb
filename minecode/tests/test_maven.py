@@ -29,7 +29,8 @@ from minecode.management.commands.run_visit import visit_uri
 from minecode.mappers import maven as maven_mapper
 from minecode.models import ResourceURI
 from minecode.visitors import maven as maven_visitor
-
+from packagedcode.maven import _parse
+from packageurl import PackageURL
 
 # TODO: add tests from /maven-indexer/indexer-core/src/test/java/org/acche/maven/index/artifact
 
@@ -701,3 +702,69 @@ class MavenMapperGetPackageTest(JsonBasedTesting, MavenPackageTester, DjangoTest
 
     def test_get_package_from_pom_does_create_a_correct_qualifier(self):
         'https://repo1.maven.org/maven2/org/hspconsortium/reference/hspc-reference-auth-server-webapp/1.9.1/hspc-reference-auth-server-webapp-1.9.1.pom'
+
+
+class MavenPriorityQueueTests(JsonBasedTesting, MavenPackageTester, DjangoTestCase):
+    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+
+    def setUp(self):
+        super(MavenPriorityQueueTests, self).setUp()
+
+        expected_pom_loc = self.get_test_loc('maven/pom/classworlds-1.1.pom')
+        with open(expected_pom_loc) as f:
+            self.expected_pom_contents = f.read()
+
+        self.scan_package = _parse(
+            'maven_pom',
+            'maven',
+            'Java',
+            text=self.expected_pom_contents,
+        )
+
+    def test_get_pom_contents(self, regen=False):
+        pom_contents = maven_visitor.get_pom_contents(
+            namespace=self.scan_package.namespace,
+            name=self.scan_package.name,
+            version=self.scan_package.version
+        )
+        if regen:
+            with open(self.expected_pom_loc, 'w') as f:
+                f.write(pom_contents)
+        self.assertEqual(self.expected_pom_contents, pom_contents)
+
+    def test_get_package_sha1(self):
+        sha1 = maven_visitor.get_package_sha1(self.package)
+        expected_sha1 = '60c708f55deeb7c5dfce8a7886ef09cbc1388eca'
+        self.assertEqual(expected_sha1, sha1)
+
+    def test_map_maven_package(self):
+        package_count = packagedb.models.Package.objects.all().count()
+        self.assertEqual(0, package_count)
+        package_url = PackageURL.from_string(self.scan_package.purl)
+        maven_visitor.map_maven_package(package_url)
+        package_count = packagedb.models.Package.objects.all().count()
+        self.assertEqual(1, package_count)
+        package = packagedb.models.Package.objects.all().first()
+        expected_purl_str = 'pkg:maven/classworlds/classworlds@1.1'
+        self.assertEqual(expected_purl_str, package.purl)
+
+    def test_process_request(self):
+        purl_str = 'pkg:maven/org.apache.twill/twill-core@0.12.0'
+        download_url = 'https://repo1.maven.org/maven2/org/apache/twill/twill-core/0.12.0/twill-core-0.12.0.jar'
+        purl_sources_str = f'{purl_str}?classifier=sources'
+        sources_download_url = 'https://repo1.maven.org/maven2/org/apache/twill/twill-core/0.12.0/twill-core-0.12.0-sources.jar'
+        package_count = packagedb.models.Package.objects.all().count()
+        self.assertEqual(0, package_count)
+        maven_visitor.process_request(purl_str)
+        package_count = packagedb.models.Package.objects.all().count()
+        self.assertEqual(2, package_count)
+        purls = [
+            (package.purl, package.download_url)
+            for package in packagedb.models.Package.objects.all()
+        ]
+        self.assertIn(
+            (purl_str, download_url), purls
+        )
+        self.assertIn(
+            (purl_sources_str, sources_download_url), purls
+        )

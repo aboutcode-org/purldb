@@ -102,7 +102,7 @@ class MavenSeed(seed.Seeder):
         # also has a npm mirrors: https://maven-eu.nuxeo.org/nexus/#view-repositories;npmjs~browsestorage
 
 
-def get_pom_contents(namespace, name, version, qualifiers):
+def get_pom_contents(namespace, name, version, qualifiers={}):
     """
     Return the contents of the POM file of the package described by the purl
     field arguments in a string.
@@ -119,7 +119,7 @@ def get_pom_contents(namespace, name, version, qualifiers):
     response = requests.get(pom_url)
     if not response:
         return
-    return str(response.content)
+    return response.text
 
 
 def get_package_sha1(package):
@@ -175,6 +175,20 @@ def map_maven_package(package_url):
         'Java',
         text=pom_contents
     )
+    urls = get_urls(
+        namespace=package_url.namespace,
+        name=package_url.name,
+        version=package_url.version,
+        qualifiers=package_url.qualifiers
+    )
+    # In the case of looking up a maven package with qualifiers of
+    # `classifiers=sources`, the purl of the package created from the pom does
+    # not have the qualifiers, so we need to set them. Additionally, the download
+    # url is not properly generated since it would be missing the sources bit
+    # from the filename.
+    package.qualifiers = package_url.qualifiers
+    package.download_url = urls['repository_download_url']
+    package.repository_download_url = urls['repository_download_url']
 
     # Create Parent Package, if available
     parent_package = None
@@ -230,7 +244,6 @@ def map_maven_package(package_url):
     sha1 = get_package_sha1(package)
     if sha1:
         package.sha1 = sha1
-        package.download_url = package.repository_download_url
         db_package, _, _, _ = merge_or_create_package(package, visit_level=0)
     else:
         msg = f'Failed to retrieve JAR: {package_url}'
