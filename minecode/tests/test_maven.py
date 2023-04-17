@@ -721,8 +721,8 @@ class MavenPriorityQueueTests(JsonBasedTesting, MavenPackageTester, DjangoTestCa
             text=self.expected_pom_contents,
         )
 
-    def test_get_pom_contents(self, regen=False):
-        pom_contents = maven_visitor.get_pom_contents(
+    def test_get_pom_text(self, regen=False):
+        pom_contents = maven_visitor.get_pom_text(
             namespace=self.scan_package.namespace,
             name=self.scan_package.name,
             version=self.scan_package.version
@@ -783,3 +783,72 @@ class MavenPriorityQueueTests(JsonBasedTesting, MavenPackageTester, DjangoTestCa
         with open(expected_loc) as f:
             expected_pom_text = f.read()
         self.assertEqual(expected_pom_text, parent_pom_text)
+
+    def test_get_ancestry(self):
+        pom_loc = self.get_test_loc('maven/pom/pulsar-client-1x-2.5.1.pom')
+        with open(pom_loc) as f:
+            pom_text = f.read()
+        ancestor_pom_texts = list(maven_visitor.get_ancestry(pom_text))
+        expected_ancestor_pom_texts = []
+        for expected_loc in [
+            self.get_test_loc('maven/pom/apache-18.pom'),
+            self.get_test_loc('maven/pom/pulsar-2.5.1.pom'),
+            self.get_test_loc('maven/pom/pulsar-client-1x-base-2.5.1.pom')
+        ]:
+            with open(expected_loc) as f:
+                expected_pom_text = f.read()
+            expected_ancestor_pom_texts.append(expected_pom_text)
+        self.assertEqual(expected_ancestor_pom_texts, ancestor_pom_texts)
+
+    def test_merge_parent(self, regen=False):
+        pom_loc = self.get_test_loc('maven/pom/ant-antlr-1.10.1.pom')
+        with open(pom_loc) as f:
+            pom_text = f.read()
+        package = _parse(
+            'maven_pom',
+            'maven',
+            'Java',
+            text=pom_text
+        )
+        expected_before_loc = self.get_test_loc('maven/pom/ant-antlr-1.10.1-package_before.json')
+        self.check_expected_package_results(package.to_dict(), expected_before_loc, regen=regen)
+
+        parent_pom_loc = self.get_test_loc('maven/pom/ant-parent-1.10.1.pom')
+        with open(parent_pom_loc) as f:
+            parent_pom_text = f.read()
+        parent_package = _parse(
+            'maven_pom',
+            'maven',
+            'Java',
+            text=parent_pom_text
+        )
+        package = maven_visitor.merge_parent(package, parent_package)
+        expected_after_loc = self.get_test_loc('maven/pom/ant-antlr-1.10.1-package_after.json')
+        self.check_expected_package_results(package.to_dict(), expected_after_loc, regen=regen)
+
+    def test_merge_ancestors(self, regen=True):
+        pom_loc = self.get_test_loc('maven/pom/pulsar-client-1x-2.5.1.pom')
+        with open(pom_loc) as f:
+            pom_text = f.read()
+        package = _parse(
+            'maven_pom',
+            'maven',
+            'Java',
+            text=pom_text
+        )
+        expected_before_loc = self.get_test_loc('maven/pom/pulsar-client-1x-2.5.1-package_before.json')
+        self.check_expected_package_results(package.to_dict(), expected_before_loc, regen=regen)
+
+        ancestor_pom_texts = []
+        for loc in [
+            self.get_test_loc('maven/pom/apache-18.pom'),
+            self.get_test_loc('maven/pom/pulsar-2.5.1.pom'),
+            self.get_test_loc('maven/pom/pulsar-client-1x-base-2.5.1.pom')
+        ]:
+            with open(loc) as f:
+                pom_text = f.read()
+            ancestor_pom_texts.append(pom_text)
+
+        maven_visitor.merge_ancestors(ancestor_pom_texts, package)
+        expected_after_loc = self.get_test_loc('maven/pom/pulsar-client-1x-2.5.1-package_after.json')
+        self.check_expected_package_results(package.to_dict(), expected_after_loc, regen=regen)

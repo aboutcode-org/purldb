@@ -205,11 +205,11 @@ def merge_parent(package, parent_package):
     return package
 
 
-def merge_ancestors(ancestor_pom_text, package):
+def merge_ancestors(ancestor_pom_texts, package):
     """
     Merge metadata from `ancestor_pom_text` into `package`
     """
-    for ancestor_pom_text in ancestor_pom_text:
+    for ancestor_pom_text in ancestor_pom_texts:
         ancestor_package = _parse(
             datasource_id='maven_pom',
             package_type='maven',
