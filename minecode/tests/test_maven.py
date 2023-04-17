@@ -768,3 +768,18 @@ class MavenPriorityQueueTests(JsonBasedTesting, MavenPackageTester, DjangoTestCa
         self.assertIn(
             (purl_sources_str, sources_download_url), purls
         )
+
+    def test_fetch_parent(self, regen=False):
+        pom_loc = self.get_test_loc('maven/pom/ant-antlr-1.10.1.pom')
+        with open(pom_loc) as f:
+            pom_text = f.read()
+        parent_pom_text = maven_visitor.fetch_parent(pom_text)
+        expected_loc = self.get_test_loc('maven/pom/ant-parent-1.10.1.pom')
+
+        if regen:
+            with open(expected_loc, 'w') as f:
+                f.write(parent_pom_text)
+
+        with open(expected_loc) as f:
+            expected_pom_text = f.read()
+        self.assertEqual(expected_pom_text, parent_pom_text)

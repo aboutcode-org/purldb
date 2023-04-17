@@ -102,7 +102,7 @@ class MavenSeed(seed.Seeder):
         # also has a npm mirrors: https://maven-eu.nuxeo.org/nexus/#view-repositories;npmjs~browsestorage
 
 
-def get_pom_contents(namespace, name, version, qualifiers={}):
+def get_pom_text(namespace, name, version, qualifiers={}):
     """
     Return the contents of the POM file of the package described by the purl
     field arguments in a string.
@@ -116,6 +116,7 @@ def get_pom_contents(namespace, name, version, qualifiers={}):
     )
     # Get and parse POM info
     pom_url = urls['api_data_url']
+    # TODO: manage different types of errors (404, etc.)
     response = requests.get(pom_url)
     if not response:
         return
@@ -146,6 +147,79 @@ def get_package_sha1(package):
         return sha1
 
 
+def fetch_parent(pom_text):
+    """
+    Return the parent pom text of `pom_text`, or None if `pom_text` has no parent.
+    """
+    pom = get_maven_pom(text=pom_text)
+    if (
+        pom.parent
+        and pom.parent.group_id
+        and pom.parent.artifact_id
+        and pom.parent.version.version
+    ):
+        parent_namespace = pom.parent.group_id
+        parent_name = pom.parent.artifact_id
+        parent_version = str(pom.parent.version.version)
+        parent_pom_text = get_pom_text(
+            namespace=parent_namespace,
+            name=parent_name,
+            version=parent_version,
+            qualifiers={}
+        )
+        return parent_pom_text
+
+
+def get_ancestry(pom_text):
+    """
+    Return a list of pom text of the ancestors of `pom`. The list is ordered
+    from oldest ancestor to newest. The list is empty is there is no parent pom.
+    """
+    ancestors = []
+    has_parent = True
+    while has_parent:
+        parent_pom_text = fetch_parent(pom_text)
+        if not parent_pom_text:
+            has_parent = False
+        else:
+            ancestors.append(parent_pom_text)
+            pom_text = parent_pom_text
+    return reversed(ancestors)
+
+
+def merge_parent(package, parent_package):
+    """
+    Merge `parent_package` data into `package` and return `package.
+    """
+    mergeable_fields = (
+        'license_expression',
+        'homepage_url',
+        'parties',
+    )
+    for field in mergeable_fields:
+        # If `field` is empty on the package we're looking at, populate
+        # those fields with values from the parent package.
+        if not getattr(package, field):
+            value = getattr(parent_package, field)
+            setattr(package, field, value)
+    return package
+
+
+def merge_ancestors(ancestor_pom_text, package):
+    """
+    Merge metadata from `ancestor_pom_text` into `package`
+    """
+    for ancestor_pom_text in ancestor_pom_text:
+        ancestor_package = _parse(
+            datasource_id='maven_pom',
+            package_type='maven',
+            primary_language='Java',
+            text=ancestor_pom_text
+        )
+        package = merge_parent(package, ancestor_package)
+    return package
+
+
 def map_maven_package(package_url):
     """
     Add a maven `package_url` to the PackageDB.
@@ -157,13 +231,13 @@ def map_maven_package(package_url):
 
     error = ''
 
-    pom_contents = get_pom_contents(
+    pom_text = get_pom_text(
         namespace=package_url.namespace,
         name=package_url.name,
         version=package_url.version,
         qualifiers=package_url.qualifiers
     )
-    if not pom_contents:
+    if not pom_text:
         msg = f'Package does not exist on maven: {package_url}'
         error += msg + '\n'
         logger.error(msg)
@@ -173,7 +247,12 @@ def map_maven_package(package_url):
         'maven_pom',
         'maven',
         'Java',
-        text=pom_contents
+        text=pom_text
+    )
+    ancestor_pom_text = get_ancestry(pom_text)
+    package = merge_ancestors(
+        ancestor_pom_text=ancestor_pom_text,
+        package=package
     )
     urls = get_urls(
         namespace=package_url.namespace,
@@ -189,52 +268,6 @@ def map_maven_package(package_url):
     package.qualifiers = package_url.qualifiers
     package.download_url = urls['repository_download_url']
     package.repository_download_url = urls['repository_download_url']
-
-    # Create Parent Package, if available
-    parent_package = None
-    pom = get_maven_pom(text=pom_contents)
-    if (
-        pom.parent
-        and pom.parent.group_id
-        and pom.parent.artifact_id
-        and pom.parent.version.version
-    ):
-        parent_namespace = pom.parent.group_id
-        parent_name = pom.parent.artifact_id
-        parent_version = str(pom.parent.version.version)
-        parent_pom_contents = get_pom_contents(
-            namespace=parent_namespace,
-            name=parent_name,
-            version=parent_version,
-            qualifiers={}
-        )
-        if not parent_pom_contents:
-            parent_purl = PackageURL(
-                namespace=parent_namespace,
-                name=parent_name,
-                version=parent_version,
-            )
-            logger.debug(f'\tParent POM does not exist on maven {parent_purl}')
-        else:
-            parent_package = _parse(
-                'maven_pom',
-                'maven',
-                'Java',
-                text=parent_pom_contents
-            )
-
-    if parent_package:
-        check_fields = (
-            'license_expression',
-            'homepage_url',
-            'parties',
-        )
-        for field in check_fields:
-            # If `field` is empty on the package we're looking at, populate
-            # those fields with values from the parent package.
-            if not getattr(package, field):
-                value = getattr(parent_package, field)
-                setattr(package, field, value)
 
     # If sha1 exists for a jar, we know we can create the package
     # Use pom info as base and create packages for binary and source package
