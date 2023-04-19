@@ -146,6 +146,29 @@ def determine_best_package_match(directory, package_info_by_package_links):
     return best_package_match_link, matched_codebase_paths_by_package_link[best_package_match_link]
 
 
+def process_sha1_match(project, package_data, resource):
+    purl = package_data.get('purl', '')
+    uuid = package_data.pop('uuid')
+    package_uid = f'{purl}?uuid={uuid}'
+    package_data['package_uid'] = package_uid
+    dependencies = package_data.pop('dependencies')
+    discovered_package = update_or_create_package(project, package_data, resource)
+    if dependencies:
+        for dependency in dependencies:
+            purl = dependency.get('purl', '')
+            dep = {
+                'purl': purl,
+                'extracted_requirement': dependency.get('requirement', ''),
+                'scope': dependency.get('scope', ''),
+                'dependency_uid': build_package_uid(purl),
+                'is_runtime': dependency.get('is_runtime', False),
+                'is_optional': dependency.get('is_optional', False),
+                'is_resolved': dependency.get('is_resolved', False),
+                'for_package_uid': package_uid,
+            }
+            discovered_dependency = update_or_create_dependency(project, dep)
+
+
 class Matching(Pipeline):
     @classmethod
     def steps(cls):
@@ -212,30 +235,26 @@ class Matching(Pipeline):
                 r.save()
 
         # Try sha1 matching against PackageDB
-        unmatched = self.project.codebaseresources.exclude(extra_data__contains={'matched': True}).exclude(sha1__isnull=True)
+        unmatched = self.project.codebaseresources.exclude(
+            extra_data__contains={'matched': True}
+        ).exclude(
+            sha1__isnull=True
+        ).exclude(
+            sha1=''
+        )
         for resource in unmatched:
-            sha1_lookup_url = f'{PURLDB_PACKAGE_ENDPOINT}/?sha1={resource.sha1}'
+            sha1_lookup_url = f'{PURLDB_PACKAGE_ENDPOINT}?sha1={resource.sha1}'
             response = requests.get(sha1_lookup_url)
             if response:
                 results = response.json().get('results', [])
-                for result in results:
-                    purl = result.get('purl', '')
-                    uuid = result.pop('uuid')
-                    package_uid = f'{purl}?uuid={uuid}'
-                    result['package_uid'] = package_uid
-                    dependencies = result.pop('dependencies')
-                    discovered_package = update_or_create_package(self.project, result, resource)
-                    if dependencies:
-                        for dependency in dependencies:
-                            purl = dependency.get('purl', '')
-                            dep = {
-                                'purl': purl,
-                                'extracted_requirement': dependency.get('requirement', ''),
-                                'scope': dependency.get('scope', ''),
-                                'dependency_uid': build_package_uid(purl),
-                                'is_runtime': dependency.get('is_runtime', False),
-                                'is_optional': dependency.get('is_optional', False),
-                                'is_resolved': dependency.get('is_resolved', False),
-                                'for_package_uid': package_uid,
-                            }
-                            discovered_dependency = update_or_create_dependency(self.project, dep)
+                package_data_by_filename = {
+                    result.get('filename'): result for result in results
+                }
+                if resource.name in package_data_by_filename:
+                    package_data = package_data_by_filename[resource.name]
+                    process_sha1_match(self.project, package_data, resource)
+                else:
+                    # Order package data results by purl, then choose first one
+                    if results:
+                        result = sorted(results, key=lambda d: d['purl'])[0]
+                        process_sha1_match(self.project, result, resource)
