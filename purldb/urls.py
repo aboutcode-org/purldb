@@ -10,16 +10,17 @@
 from django.conf.urls import include
 from django.urls import re_path
 from django.views.generic import RedirectView
-
-from clearcode.api import CDitemViewSet
-from packagedb.api import PackageViewSet
-from packagedb.api import ResourceViewSet
 from rest_framework import routers
 
+from clearcode.api import CDitemViewSet
+from packagedb.api import PackageRequestViewSet
+from packagedb.api import PackageViewSet
+from packagedb.api import ResourceViewSet
 from matchcode.api import ApproximateDirectoryContentIndexViewSet
 from matchcode.api import ApproximateDirectoryStructureIndexViewSet
 from matchcode.api import ExactFileIndexViewSet
 from matchcode.api import ExactPackageArchiveIndexViewSet
+from minecode.api import PriorityResourceURIViewSet
 
 
 api_router = routers.DefaultRouter()
@@ -30,6 +31,8 @@ api_router.register(r'approximate_directory_structure_index', ApproximateDirecto
 api_router.register(r'exact_file_index', ExactFileIndexViewSet)
 api_router.register(r'exact_package_archive_index', ExactPackageArchiveIndexViewSet)
 api_router.register(r'cditems', CDitemViewSet, 'cditems')
+api_router.register(r'on_demand_queue', PriorityResourceURIViewSet)
+api_router.register(r'package_requests', PackageRequestViewSet)
 
 urlpatterns = [
     re_path(r'^api/', include((api_router.urls, 'api'))),

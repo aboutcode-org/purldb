@@ -14,12 +14,18 @@ from django_filters.filters import Filter
 from django_filters.filters import OrderingFilter
 import django_filters
 
+from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from matchcode.api import MultipleCharFilter
+# UnusedImport here!
+# But importing the mappers and visitors module triggers routes registration
+from minecode import visitors  # NOQA
+from minecode import priority_router
+from minecode.models import PriorityResourceURI
 from packagedb.models import Package
 from packagedb.models import Resource
 from packagedb.serializers import PackageAPISerializer
@@ -199,3 +205,69 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
 
         serializer = ResourceAPISerializer(paginated_qs, many=True, context={'request': request})
         return Response(serializer.data)
+
+
+class MultiplePackageURLRequestFilter(Filter):
+    def filter(self, qs, value):
+        try:
+            request = self.parent.request
+        except AttributeError:
+            return None
+
+        values = request.GET.getlist(self.field_name)
+        if all(v == '' for v in values):
+            return qs
+
+        values = {item for item in values}
+
+        q = Q()
+        for val in values:
+            lookups = purl_to_lookups(val)
+            if not lookups:
+                continue
+
+            q.add(Q(**lookups), Q.OR)
+
+        if not q:
+            for val in values:
+                # validate purl
+                try:
+                    package_url = PackageURL.from_string(val)
+                except ValueError as e:
+                    continue
+
+                # check if routable
+                if not priority_router.is_routable(val):
+                    continue
+
+                # add to queue
+                PriorityResourceURI.objects.create(uri=val, package_url=val)
+            return qs.none()
+
+        return qs.filter(q)
+
+
+class PackageRequestFilter(FilterSet):
+    purl = MultiplePackageURLRequestFilter(label='Package URL')
+
+    class Meta:
+        model = Package
+        fields = (
+            'type',
+            'namespace',
+            'name',
+            'version',
+            'qualifiers',
+            'subpath',
+            'download_url',
+            'filename',
+            'sha1',
+            'sha256',
+            'md5',
+            'size',
+            'release_date',
+        )
+
+
+class PackageRequestViewSet(PackageViewSet):
+    filterset_class = PackageRequestFilter
