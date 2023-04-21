@@ -16,6 +16,7 @@ import django_filters
 
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
+from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -206,68 +207,29 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = ResourceAPISerializer(paginated_qs, many=True, context={'request': request})
         return Response(serializer.data)
 
+    @action(detail=False)
+    def get_package(self, request, *args, **kwargs):
+        purl = request.query_params.get('purl')
 
-class MultiplePackageURLRequestFilter(Filter):
-    def filter(self, qs, value):
+        # validate purl
         try:
-            request = self.parent.request
-        except AttributeError:
-            return None
+            package_url = PackageURL.from_string(purl)
+        except ValueError as e:
+            message = {
+                'status': f'purl validation error: {e}'
+            }
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-        values = request.GET.getlist(self.field_name)
-        if all(v == '' for v in values):
-            return qs
+        lookups = purl_to_lookups(purl)
+        try:
+            package = Package.objects.get(**lookups)
+        except Package.DoesNotExist:
+            package = {}
 
-        values = {item for item in values}
+        if not package:
+            # add to queue
+            asd = PriorityResourceURI.objects.insert(purl)
+            return Response(package)
 
-        q = Q()
-        for val in values:
-            lookups = purl_to_lookups(val)
-            if not lookups:
-                continue
-
-            q.add(Q(**lookups), Q.OR)
-
-        if not q:
-            for val in values:
-                # validate purl
-                try:
-                    package_url = PackageURL.from_string(val)
-                except ValueError as e:
-                    continue
-
-                # check if routable
-                if not priority_router.is_routable(val):
-                    continue
-
-                # add to queue
-                PriorityResourceURI.objects.create(uri=val, package_url=val)
-            return qs.none()
-
-        return qs.filter(q)
-
-
-class PackageRequestFilter(FilterSet):
-    purl = MultiplePackageURLRequestFilter(label='Package URL')
-
-    class Meta:
-        model = Package
-        fields = (
-            'type',
-            'namespace',
-            'name',
-            'version',
-            'qualifiers',
-            'subpath',
-            'download_url',
-            'filename',
-            'sha1',
-            'sha256',
-            'md5',
-            'size',
-            'release_date',
-        )
-
-
-class PackageRequestViewSet(PackageViewSet):
-    filterset_class = PackageRequestFilter
+        serializer = PackageAPISerializer(package, many=False, context={'request': request})
+        return Response(serializer.data)
