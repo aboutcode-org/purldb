@@ -759,6 +759,16 @@ class ScannableURI(BaseURI):
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
 class PriorityResourceURIManager(models.Manager):
+    def insert(self, uri, **extra_fields):
+        """
+        Create and return a new PriorityResourceURI after computing its canonical URI
+        representation.
+        Return None if the insertion failed when an identical canonical entry
+        already exist (as the canonical URI field is unique).
+        """
+        priority_resource_uri, created = self.get_or_create(uri=uri, package_url=uri, **extra_fields)
+        if created:
+            return priority_resource_uri
 
     def in_progress(self):
         """
