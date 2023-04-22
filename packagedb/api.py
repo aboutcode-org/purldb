@@ -27,6 +27,7 @@ from matchcode.api import MultipleCharFilter
 from minecode import visitors  # NOQA
 from minecode import priority_router
 from minecode.models import PriorityResourceURI
+from minecode.route import NoRouteAvailable
 from packagedb.models import Package
 from packagedb.models import Resource
 from packagedb.serializers import PackageAPISerializer
@@ -232,4 +233,47 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             return Response(package)
 
         serializer = PackageAPISerializer(package, many=False, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=False)
+    def get_or_fetch_package(self, request, *args, **kwargs):
+        """
+        Return Package data for the purl passed in the `purl` query parameter.
+
+        If the package does not exist, we will fetch the Package data and return
+        it in the same request.
+        """
+        purl = request.query_params.get('purl')
+
+        # validate purl
+        try:
+            package_url = PackageURL.from_string(purl)
+        except ValueError as e:
+            message = {
+                'status': f'purl validation error: {e}'
+            }
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+        lookups = purl_to_lookups(purl)
+        try:
+            packages = Package.objects.filter(**lookups)
+        except Package.DoesNotExist:
+            packages = {}
+
+        if not packages:
+            try:
+                errors = priority_router.process(purl)
+            except NoRouteAvailable:
+                message = {
+                    'status': f'cannot fetch Package data for {purl}: no available handler'
+                }
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+            lookups = purl_to_lookups(purl)
+            try:
+                packages = Package.objects.filter(**lookups)
+            except Package.DoesNotExist:
+                return Response({})
+
+        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)

@@ -226,8 +226,8 @@ def map_maven_package(package_url):
 
     Return an error string if errors have occured in the process.
     """
-    from minecode.management.commands.priority_queue import add_package_to_scan_queue
-    from minecode.management.commands.run_map import merge_or_create_package
+    from minecode.model_utils import add_package_to_scan_queue
+    from minecode.model_utils import merge_or_create_package
 
     error = ''
 
@@ -249,9 +249,9 @@ def map_maven_package(package_url):
         'Java',
         text=pom_text
     )
-    ancestor_pom_text = get_ancestry(pom_text)
+    ancestor_pom_texts = get_ancestry(pom_text)
     package = merge_ancestors(
-        ancestor_pom_text=ancestor_pom_text,
+        ancestor_pom_texts=ancestor_pom_texts,
         package=package
     )
     urls = get_urls(
