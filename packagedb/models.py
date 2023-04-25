@@ -444,6 +444,17 @@ class Package(
     # TODO: Think about ordering, unique together, indexes, etc.
     class Meta:
         ordering = ['id']
+        unique_together = [
+            (
+                'download_url',
+                'type',
+                'namespace',
+                'name',
+                'version',
+                'qualifiers',
+                'subpath'
+            )
+        ]
         indexes = [
             # GIN index for search performance increase
             GinIndex(fields=['search_vector']),
