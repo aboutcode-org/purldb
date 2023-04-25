@@ -8,6 +8,7 @@
 #
 
 import json
+import os
 
 from django.contrib.postgres.search import SearchVector
 from django.urls import reverse
@@ -15,6 +16,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
 from packagedb.models import Resource
 
@@ -361,7 +363,8 @@ class PackageApiTestCase(TestCase):
         self.assertIn(self.package3.purl, purls)
         self.assertNotIn(self.package.purl, purls)
 
-class PackageApiPurlFilterTestCase(TestCase):
+class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
+    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
 
     def setUp(self):
         self.package_data1 = {
@@ -507,3 +510,46 @@ class PackageApiPurlFilterTestCase(TestCase):
         response = self.client.get('/api/packages/?purl={}&purl={}'.format('', ''))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, response.data.get('count'))
+
+    def test_package_api_get_package(self):
+        from minecode.models import PriorityResourceURI
+
+        self.assertEqual(0, PriorityResourceURI.objects.all().count())
+        response = self.client.get(f'/api/packages/get_package/?purl={self.purl1}')
+        self.assertEqual(0, PriorityResourceURI.objects.all().count())
+        self.assertEqual(response.data.get('type'), self.package_data1.get('type'))
+        self.assertEqual(response.data.get('namespace'), self.package_data1.get('namespace'))
+        self.assertEqual(response.data.get('name'), self.package_data1.get('name'))
+        self.assertEqual(response.data.get('version'), self.package_data1.get('version'))
+        self.assertEqual(response.data.get('download_url'), self.package_data1.get('download_url'))
+        self.assertEqual(response.data.get('extra_data'), self.package_data1.get('extra_data'))
+
+    def test_package_api_get_package_does_not_exist_in_db(self):
+        from minecode.models import PriorityResourceURI
+        purl = 'pkg:maven/org.apache.twill/twill-core@0.12.0'
+        self.assertEqual(0, PriorityResourceURI.objects.all().count())
+        response = self.client.get(f'/api/packages/get_package/?purl={purl}')
+        self.assertEqual(1, PriorityResourceURI.objects.all().count())
+        self.assertEqual({}, response.data)
+
+    def test_package_api_get_or_fetch_package(self):
+        from minecode.models import PriorityResourceURI
+
+        purl_str = 'pkg:maven/org.apache.twill/twill-core@0.12.0'
+        download_url = 'https://repo1.maven.org/maven2/org/apache/twill/twill-core/0.12.0/twill-core-0.12.0.jar'
+        purl_sources_str = f'{purl_str}?classifier=sources'
+        sources_download_url = 'https://repo1.maven.org/maven2/org/apache/twill/twill-core/0.12.0/twill-core-0.12.0-sources.jar'
+
+        self.assertEqual(0, Package.objects.filter(download_url=download_url).count())
+        self.assertEqual(0, Package.objects.filter(download_url=sources_download_url).count())
+        response = self.client.get(f'/api/packages/get_or_fetch_package/?purl={purl_str}')
+        self.assertEqual(1, Package.objects.filter(download_url=download_url).count())
+        self.assertEqual(1, Package.objects.filter(download_url=sources_download_url).count())
+        expected = self.get_test_loc('api/twill-core-0.12.0.json')
+
+        # pop fields
+        response.data.pop('url')
+        response.data.pop('uuid')
+        response.data.pop('resources')
+
+        self.check_expected_results(response.data, expected, regen=False)
