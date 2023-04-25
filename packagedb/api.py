@@ -225,12 +225,9 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         try:
             package = Package.objects.get(**lookups)
         except Package.DoesNotExist:
-            package = {}
-
-        if not package:
             # add to queue
-            asd = PriorityResourceURI.objects.insert(purl)
-            return Response(package)
+            PriorityResourceURI.objects.insert(purl)
+            return Response({})
 
         serializer = PackageAPISerializer(package, many=False, context={'request': request})
         return Response(serializer.data)
@@ -254,13 +251,10 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             }
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-        lookups = purl_to_lookups(purl)
+        lookups = purl_to_lookups(purl, with_empty_values=True, empty="")
         try:
-            packages = Package.objects.filter(**lookups)
+            packages = Package.objects.get(**lookups)
         except Package.DoesNotExist:
-            packages = {}
-
-        if not packages:
             try:
                 errors = priority_router.process(purl)
             except NoRouteAvailable:
@@ -269,11 +263,16 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
                 }
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-            lookups = purl_to_lookups(purl)
+            lookups = purl_to_lookups(purl, with_empty_values=True, empty="")
             try:
-                packages = Package.objects.filter(**lookups)
+                packages = Package.objects.get(**lookups)
             except Package.DoesNotExist:
-                return Response({})
+                message = {}
+                if errors:
+                    message = {
+                        'status': f'error(s) occured when fetching metadata for {purl}: {errors}'
+                    }
+                return Response(message)
 
-        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
+        serializer = PackageAPISerializer(packages, many=False, context={'request': request})
         return Response(serializer.data)
