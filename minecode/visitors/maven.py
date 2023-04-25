@@ -229,6 +229,7 @@ def map_maven_package(package_url):
     from minecode.model_utils import add_package_to_scan_queue
     from minecode.model_utils import merge_or_create_package
 
+    db_package = None
     error = ''
 
     pom_text = get_pom_text(
@@ -241,7 +242,7 @@ def map_maven_package(package_url):
         msg = f'Package does not exist on maven: {package_url}'
         error += msg + '\n'
         logger.error(msg)
-        return error
+        return db_package, error
 
     package = _parse(
         'maven_pom',
@@ -273,7 +274,6 @@ def map_maven_package(package_url):
     # Use pom info as base and create packages for binary and source package
 
     # Check to see if binary is available
-    db_package = None
     sha1 = get_package_sha1(package)
     if sha1:
         package.sha1 = sha1
@@ -304,6 +304,60 @@ def validate_sha1(sha1):
     return sha1
 
 
+def map_maven_binary_and_source(package_url):
+    """
+    Get metadata for the binary and source release of the Maven package
+    `package_url` and save it to the PackageDB.
+    """
+    error = ''
+    package, emsg = map_maven_package(package_url)
+    if emsg:
+        error += emsg
+
+    source_package_url = package_url
+    source_package_url.qualifiers['classifier'] = 'sources'
+    source_package, emsg = map_maven_package(source_package_url)
+    if emsg:
+        error += emsg
+
+    if package and source_package:
+        make_relationship(
+            from_package=source_package,
+            to_package=package,
+            relationship=PackageRelation.Relationship.SOURCE_PACKAGE
+        )
+
+    return error
+
+
+def map_maven_packages(package_url):
+    """
+    Given a valid `package_url` with no version, get metadata for the binary and
+    source release for each version of the Maven package `package_url` and save
+    it to the PackageDB.
+    """
+    error = ''
+    namespace = package_url.namespace
+    name = package_url.name
+    # Find all versions of this package
+    query_params = f'g:{namespace}+AND+a:{name}'
+    url = f'https://search.maven.org/solrsearch/select?q={query_params}&core=gav'
+    response = requests.get(url)
+    if response:
+        package_listings = response.json().get('response', {}).get('docs', [])
+    for listing in package_listings:
+        purl = PackageURL(
+            type='maven',
+            namespace=listing.get('g'),
+            name=listing.get('a'),
+            version=listing.get('v')
+        )
+        emsg = map_maven_binary_and_source(purl)
+        if emsg:
+            error += emsg
+    return error
+
+
 @priority_router.route('pkg:maven/.*')
 def process_request(purl_str):
     """
@@ -316,31 +370,19 @@ def process_request(purl_str):
     accompanying source package and add it to the PackageDB and scan queue, if
     available.
     """
-
-    package_url = PackageURL.from_string(purl_str)
-    has_version = bool(package_url.version)
-    error = ''
-    if has_version:
-        package, emsg = map_maven_package(package_url)
-        if emsg:
-            error += emsg
-
-        source_package_url = package_url
-        source_package_url.qualifiers['classifier'] = 'sources'
-        source_package, emsg = map_maven_package(source_package_url)
-        if emsg:
-            error += emsg
-
-        if package and source_package:
-            make_relationship(
-                from_package=source_package,
-                to_package=package,
-                relationship=PackageRelation.Relationship.SOURCE_PACKAGE
-            )
-
+    try:
+        package_url = PackageURL.from_string(purl_str)
+    except ValueError as e:
+        error = f'error occured when parsing {purl_str}: {e}'
         return error
+
+    has_version = bool(package_url.version)
+    if has_version:
+        error = map_maven_binary_and_source(package_url)
     else:
-        pass
+        error = map_maven_packages(package_url)
+
+    return error
 
 
 @visit_router.route('http://repo1\.maven\.org/maven2/\.index/nexus-maven-repository-index.properties')
