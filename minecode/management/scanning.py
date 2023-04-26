@@ -25,7 +25,7 @@ logger.setLevel(logging.INFO)
 SLEEP_WHEN_EMPTY = 1
 
 # in seconds
-REQUEST_TIMEOUT = 10
+REQUEST_TIMEOUT = 3
 
 SCANCODEIO_URL = get_settings('SCANCODEIO_URL').rstrip('/')
 
@@ -351,6 +351,9 @@ class ScanningCommand(VerboseCommand):
             cls.process_scan(scannable_uri, **kwargs)
             uris_counter += 1
             sleeping = False
+
+            # Wait before sending next request
+            time.sleep(REQUEST_TIMEOUT)
 
         return uris_counter
 

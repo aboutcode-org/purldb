@@ -308,6 +308,8 @@ def map_maven_binary_and_source(package_url):
     """
     Get metadata for the binary and source release of the Maven package
     `package_url` and save it to the PackageDB.
+
+    Return an error string for errors that occur, or empty string if there is no error.
     """
     error = ''
     package, emsg = map_maven_package(package_url)
@@ -335,6 +337,8 @@ def map_maven_packages(package_url):
     Given a valid `package_url` with no version, get metadata for the binary and
     source release for each version of the Maven package `package_url` and save
     it to the PackageDB.
+
+    Return an error string for errors that occur, or empty string if there is no error.
     """
     error = ''
     namespace = package_url.namespace
@@ -369,6 +373,8 @@ def process_request(purl_str):
     scan queue afterwards. We also get the Package information for the
     accompanying source package and add it to the PackageDB and scan queue, if
     available.
+
+    Return an error string for errors that occur, or empty string if there is no error.
     """
     try:
         package_url = PackageURL.from_string(purl_str)
