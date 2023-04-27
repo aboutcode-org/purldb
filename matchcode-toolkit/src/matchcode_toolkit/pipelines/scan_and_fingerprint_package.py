@@ -20,12 +20,16 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/nexB/scancode.io for support and download.
 
+from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
+
 from scanpipe.pipelines.scan_package import ScanPackage
+from scanpipe.pipes.codebase import ProjectCodebase
 
 
 class ScanAndFingerprintPackage(ScanPackage):
     """
-    Scan a single package archive with ScanCode-toolkit.
+    Scan a single package archive with ScanCode-toolkit, then calculate the
+    directory fingerprints of the codebase.
 
     The output is a summary of the scan results in JSON format.
     """
@@ -38,6 +42,7 @@ class ScanAndFingerprintPackage(ScanPackage):
             cls.extract_archive_to_codebase_directory,
             cls.run_scancode,
             cls.load_inventory_from_toolkit_scan,
+            cls.fingerprint_codebase,
             cls.make_summary_from_scan_results,
         )
 
@@ -52,5 +57,11 @@ class ScanAndFingerprintPackage(ScanPackage):
         "--classify",
         "--is-license-text",
         "--summary",
-        "--fingerprint",
     ]
+
+    def fingerprint_codebase(self):
+        """
+        Compute directory fingerprints for matching purposes
+        """
+        project_codebase = ProjectCodebase(self.project)
+        compute_directory_fingerprints(project_codebase)
