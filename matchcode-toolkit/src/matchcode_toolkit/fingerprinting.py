@@ -79,8 +79,19 @@ def compute_directory_fingerprints(codebase):
         children = [r for r in resource.walk(codebase) if r.is_file]
         if len(children) == 1:
             continue
-        resource.extra_data['directory_content'] = create_content_fingerprint(children)
-        resource.extra_data['directory_structure'] = create_structure_fingerprint(resource, children)
+
+        directory_content_fingerprint = create_content_fingerprint(children)
+        if hasattr(resource, 'directory_content_fingerprint'):
+            resource.directory_content_fingerprint = directory_content_fingerprint
+        else:
+            resource.extra_data['directory_content'] = directory_content_fingerprint
+
+        directory_structure_fingerprint = create_structure_fingerprint(resource, children)
+        if hasattr(resource, 'directory_structure_fingerprint'):
+            resource.directory_structure_fingerprint = directory_structure_fingerprint
+        else:
+            resource.extra_data['directory_structure'] = create_structure_fingerprint(resource, children)
+
         resource.save(codebase)
     return codebase
 
