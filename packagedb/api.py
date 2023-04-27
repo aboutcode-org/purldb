@@ -222,14 +222,13 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
         lookups = purl_to_lookups(purl)
-        try:
-            package = Package.objects.get(**lookups)
-        except Package.DoesNotExist:
+        packages = Package.objects.filter(**lookups)
+        if packages.count() == 0:
             # add to queue
             PriorityResourceURI.objects.insert(purl)
             return Response({})
 
-        serializer = PackageAPISerializer(package, many=False, context={'request': request})
+        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
 
     @action(detail=False)
@@ -252,9 +251,8 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
         lookups = purl_to_lookups(purl, with_empty_values=True, empty="")
-        try:
-            packages = Package.objects.get(**lookups)
-        except Package.DoesNotExist:
+        packages = Package.objects.filter(**lookups)
+        if packages.count() == 0:
             try:
                 errors = priority_router.process(purl)
             except NoRouteAvailable:
@@ -264,9 +262,8 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
             lookups = purl_to_lookups(purl, with_empty_values=True, empty="")
-            try:
-                packages = Package.objects.get(**lookups)
-            except Package.DoesNotExist:
+            packages = Package.objects.filter(**lookups)
+            if packages.count() == 0:
                 message = {}
                 if errors:
                     message = {
@@ -274,5 +271,5 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
                     }
                 return Response(message)
 
-        serializer = PackageAPISerializer(packages, many=False, context={'request': request})
+        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)

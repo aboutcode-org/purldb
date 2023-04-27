@@ -517,12 +517,14 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         self.assertEqual(0, PriorityResourceURI.objects.all().count())
         response = self.client.get(f'/api/packages/get_package/?purl={self.purl1}')
         self.assertEqual(0, PriorityResourceURI.objects.all().count())
-        self.assertEqual(response.data.get('type'), self.package_data1.get('type'))
-        self.assertEqual(response.data.get('namespace'), self.package_data1.get('namespace'))
-        self.assertEqual(response.data.get('name'), self.package_data1.get('name'))
-        self.assertEqual(response.data.get('version'), self.package_data1.get('version'))
-        self.assertEqual(response.data.get('download_url'), self.package_data1.get('download_url'))
-        self.assertEqual(response.data.get('extra_data'), self.package_data1.get('extra_data'))
+        self.assertEqual(1, len(response.data))
+        result = response.data[0]
+        self.assertEqual(result.get('type'), self.package_data1.get('type'))
+        self.assertEqual(result.get('namespace'), self.package_data1.get('namespace'))
+        self.assertEqual(result.get('name'), self.package_data1.get('name'))
+        self.assertEqual(result.get('version'), self.package_data1.get('version'))
+        self.assertEqual(result.get('download_url'), self.package_data1.get('download_url'))
+        self.assertEqual(result.get('extra_data'), self.package_data1.get('extra_data'))
 
     def test_package_api_get_package_does_not_exist_in_db(self):
         from minecode.models import PriorityResourceURI
@@ -547,9 +549,11 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         self.assertEqual(1, Package.objects.filter(download_url=sources_download_url).count())
         expected = self.get_test_loc('api/twill-core-0.12.0.json')
 
+        self.assertEqual(1, len(response.data))
+        result = response.data[0]
         # pop fields
-        response.data.pop('url')
-        response.data.pop('uuid')
-        response.data.pop('resources')
+        result.pop('url')
+        result.pop('uuid')
+        result.pop('resources')
 
-        self.check_expected_results(response.data, expected, regen=False)
+        self.check_expected_results(result, expected, regen=False)
