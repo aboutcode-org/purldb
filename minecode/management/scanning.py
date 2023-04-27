@@ -171,7 +171,7 @@ def submit_scan(
     logger.debug('submit_scan: uri', uri, 'api_url:', api_url, 'api_auth_headers:', api_auth_headers)
     request_args = {
         'name': uri_fingerprint(uri),
-        'pipeline': 'scan_and_fingerprint_codebase',
+        'pipeline': 'scan_and_fingerprint_package',
         'input_urls': [
             uri
         ],
@@ -265,6 +265,24 @@ def get_scan_data(
     """
     # FIXME: we should return a temp location instead
     results = _call_scan_get_api(scan_uuid, endpoint='results', api_url=api_url, api_auth_headers=api_auth_headers)
+    if get_scan_data_save_loc:
+        with open(get_scan_data_save_loc, 'w') as f:
+            json.dump(results, f)
+    return results
+
+
+def get_scan_summary(
+    scan_uuid,
+    api_url=SCANCODEIO_API_URL_PROJECTS,
+    api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    get_scan_data_save_loc=''
+):
+    """
+    Return scan summary data as a mapping for a `scan_uuid` fetched from
+    ScanCode.io or None. Raise an exception on error.
+    """
+    # FIXME: we should return a temp location instead
+    results = _call_scan_get_api(scan_uuid, endpoint='summary', api_url=api_url, api_auth_headers=api_auth_headers)
     if get_scan_data_save_loc:
         with open(get_scan_data_save_loc, 'w') as f:
             json.dump(results, f)
