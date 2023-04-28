@@ -100,6 +100,19 @@ services:
       - db
       - web
 
+  priority_queue:
+    build: .
+    command: wait-for-it web:8000 -- python manage.py priority_queue
+    env_file:
+      - docker.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - priority_queue
+    depends_on:
+      - db
+      - web
+
   nginx:
     image: nginx
     ports:
