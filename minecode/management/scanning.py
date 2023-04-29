@@ -168,7 +168,7 @@ def submit_scan(
     Submit a scan request for `uri` to ScanCode.io and return a Scan object on
     success. Raise an exception on error.
     """
-    print('submit_scan: uri', uri, 'api_url:', api_url, 'api_auth_headers:', api_auth_headers)
+    logger.debug('submit_scan: uri', uri, 'api_url:', api_url, 'api_auth_headers:', api_auth_headers)
     request_args = {
         'name': uri_fingerprint(uri),
         'pipeline': 'scan_and_fingerprint_package',
@@ -179,8 +179,11 @@ def submit_scan(
     }
 
     response = requests.post(url=api_url, data=request_args, headers=api_auth_headers)
-    print(response.content)
-    response_json = response.json()
+    try:
+        response_json = response.json()
+    except json.decoder.JSONDecodeError as e:
+        msg = f'Error occured when decoding scan request response: {e}'
+        raise Exception(msg)
     if response_save_loc:
         with open(response_save_loc, 'w') as f:
             json.dump(response_json, f)
