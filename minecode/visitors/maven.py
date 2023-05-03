@@ -202,10 +202,14 @@ def merge_parent(package, parent_package):
         if not getattr(package, field):
             value = getattr(parent_package, field)
             setattr(package, field, value)
-            package.append_to_history(
-                f'Field `{field}` has been updated using values obtained from the parent POM {parent_package.purl}',
-                save=True
-            )
+
+            msg = f'Field `{field}` has been updated using values obtained from the parent POM {parent_package.purl}'
+            history = package.extra_data.get('history')
+            if history:
+                package.extra_data['history'].append(msg)
+            else:
+                package.extra_data['history'] = [msg]
+
     return package
 
 
