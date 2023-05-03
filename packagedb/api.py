@@ -250,7 +250,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             }
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-        lookups = purl_to_lookups(purl, with_empty_values=True, empty="")
+        lookups = purl_to_lookups(purl)
         packages = Package.objects.filter(**lookups)
         if packages.count() == 0:
             try:
@@ -261,7 +261,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
                 }
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-            lookups = purl_to_lookups(purl, with_empty_values=True, empty="")
+            lookups = purl_to_lookups(purl)
             packages = Package.objects.filter(**lookups)
             if packages.count() == 0:
                 message = {}

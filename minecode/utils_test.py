@@ -6,7 +6,7 @@
 # See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
-
+from collections import OrderedDict
 
 from itertools import chain
 from unittest import TestCase
@@ -18,7 +18,9 @@ import posixpath
 import shutil
 import stat
 import tarfile
+
 from django.test import TestCase as DjangoTestCase
+from rest_framework.utils.serializer_helpers import ReturnDict
 
 from commoncode.testcase import FileBasedTesting
 from scancode.cli_test_utils import purl_with_fake_uuid
@@ -202,10 +204,10 @@ class JsonBasedTesting(FileBasedTesting):
         if type(data) == list:
             return [self._normalize_package_uids(entry) for entry in data]
 
-        if type(data) == dict:
+        if type(data) in (dict, OrderedDict, ReturnDict):
             normalized_data = {}
             for key, value in data.items():
-                if type(value) in [list, dict]:
+                if type(value) in [list, dict, OrderedDict, ReturnDict]:
                     value = self._normalize_package_uids(value)
                 if (
                     key in ("package_uid", "dependency_uid", "for_package_uid")

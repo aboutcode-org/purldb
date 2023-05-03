@@ -17,6 +17,7 @@ import posixpath
 from django.test import TestCase as DjangoTestCase
 
 from commoncode.resource import VirtualCodebase
+from scancode.cli_test_utils import purl_with_fake_uuid
 
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 
@@ -62,7 +63,14 @@ class CodebaseTester(object):
         def serializer(r):
             rd = r.to_dict(with_info=True)
             if remove_file_date:
-                rd.pop('file_data', None)
+                rd.pop('file_date', None)
+
+            # Normalize package_uid
+            for package_data in rd.get('packages', []):
+                package_uid = package_data.get('package_uid')
+                if package_uid:
+                    package_data['package_uid'] = purl_with_fake_uuid(package_uid)
+
             return rd
 
         results = list(map(serializer, codebase.walk(topdown=True)))
