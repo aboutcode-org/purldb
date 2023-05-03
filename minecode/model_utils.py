@@ -173,8 +173,8 @@ def merge_or_create_package(scanned_package, visit_level):
         return package, created, merged, map_error
 
     package_uri = scanned_package.download_url
-
     logger.debug('Package URI: {}'.format(package_uri))
+    history = scanned_package.extra_data.get('history', [])
 
     stored_package = None
     # Check if we already have an existing PackageDB record to update
@@ -274,6 +274,10 @@ def merge_or_create_package(scanned_package, visit_level):
 
         created_package = Package.objects.create(**package_data)
         created_package.append_to_history('New Package created from ResourceURI: {} via map_uri().'.format(package_uri))
+
+        # This is used in the case of Maven packages created from the priority queue
+        for h in history:
+            created_package.append_to_history(h)
 
         for party in scanned_package.parties:
             Party.objects.create(
