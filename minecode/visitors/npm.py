@@ -124,7 +124,7 @@ def get_package_json(namespace, name, version):
         response.raise_for_status() 
         return response.json()
     except requests.exceptions.HTTPError as err:
-        print(f"HTTP error occurred: {err}")
+        logger.error(f"HTTP error occurred: {err}")
 
 
 def map_npm_package(package_url):
@@ -136,19 +136,19 @@ def map_npm_package(package_url):
     from minecode.management.commands.priority_queue import add_package_to_scan_queue
     from minecode.management.commands.run_map import merge_or_create_package
 
-    pacakge_json = get_package_json(
+    package_json = get_package_json(
         namespace = package_url.namespace,
         name=package_url.name,
         version=package_url.version,
         )
 
-    if not pacakge_json:
+    if not package_json:
         error = f'Package does not exist on npmjs: {package_url}'
         logger.error(error)
         return error
 
     package = NpmPackageJsonHandler._parse(
-        json_data=pacakge_json
+        json_data=package_json
     )
 
     db_package, _, _, _ = merge_or_create_package(package, visit_level=0)
