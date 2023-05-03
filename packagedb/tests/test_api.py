@@ -85,7 +85,7 @@ class ResourceAPITestCase(TestCase):
         self.assertEqual(response.data.get('sha512'), self.resource1.sha512)
         self.assertEqual(response.data.get('git_sha1'), self.resource1.git_sha1)
         self.assertEqual(response.data.get('extra_data'), self.resource1.extra_data)
-        self.assertTrue(response.data.get('is_file'))
+        self.assertEqual(response.data.get('type'), self.resource1.type)
 
     def test_api_resource_list_endpoint_returns_none_when_filtering_by_non_uuid_value(self):
         response = self.client.get('/api/resources/?package={}'.format('not-a-uuid'))
@@ -119,7 +119,7 @@ class ResourceAPITestCase(TestCase):
         self.assertEqual(test_resource.get('sha512'), self.resource1.sha512)
         self.assertEqual(test_resource.get('git_sha1'), self.resource1.git_sha1)
         self.assertEqual(test_resource.get('extra_data'), self.resource1.extra_data)
-        self.assertTrue(test_resource.get('is_file'))
+        self.assertEqual(test_resource.get('type'), self.resource1.type)
 
     def test_api_resource_list_endpoint_filters_by_package2_uuid(self):
         response = self.client.get('/api/resources/?package={}'.format(self.package2.uuid))
@@ -138,7 +138,7 @@ class ResourceAPITestCase(TestCase):
         self.assertEqual(test_resource.get('sha512'), self.resource2.sha512)
         self.assertEqual(test_resource.get('git_sha1'), self.resource2.git_sha1)
         self.assertEqual(test_resource.get('extra_data'), self.resource2.extra_data)
-        self.assertTrue(test_resource.get('is_file'))
+        self.assertEqual(test_resource.get('type'), self.resource2.type)
 
     def test_api_resource_list_endpoint_returns_none_when_filtering_by_wrong_purl(self):
         response = self.client.get('/api/resources/?purl={}'.format('pkg:npm/test@1.0.0'))
@@ -167,7 +167,7 @@ class ResourceAPITestCase(TestCase):
         self.assertEqual(test_resource.get('sha512'), self.resource1.sha512)
         self.assertEqual(test_resource.get('git_sha1'), self.resource1.git_sha1)
         self.assertEqual(test_resource.get('extra_data'), self.resource1.extra_data)
-        self.assertTrue(test_resource.get('is_file'))
+        self.assertEqual(test_resource.get('type'), self.resource1.type)
 
     def test_api_resource_list_endpoint_filters_by_package2_purl(self):
         response = self.client.get('/api/resources/?purl={}'.format(self.package2.package_url))
@@ -186,7 +186,7 @@ class ResourceAPITestCase(TestCase):
         self.assertEqual(test_resource.get('sha512'), self.resource2.sha512)
         self.assertEqual(test_resource.get('git_sha1'), self.resource2.git_sha1)
         self.assertEqual(test_resource.get('extra_data'), self.resource2.extra_data)
-        self.assertTrue(test_resource.get('is_file'))
+        self.assertEqual(test_resource.get('type'), self.resource2.type)
 
 
 class PackageApiTestCase(TestCase):
@@ -198,7 +198,7 @@ class PackageApiTestCase(TestCase):
             'namespace': 'generic',
             'name': 'Foo',
             'version': '12.34',
-            'qualifiers': 'test_quals',
+            'qualifiers': 'test_qual=qual',
             'subpath': 'test_subpath',
             'download_url': 'http://example.com',
             'filename': 'Foo.zip',
@@ -283,6 +283,7 @@ class PackageApiTestCase(TestCase):
 
         # Create a dummy package to verify search filter works.
         Package.objects.create(
+            type='generic',
             namespace='dummy-namespace',
             name='dummy-name',
             version='12.35',
@@ -320,9 +321,9 @@ class PackageApiTestCase(TestCase):
                 self.assertEqual(value, getattr(self.package, key))
 
     def test_api_package_latest_version_action(self):
-        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
-        p2 = Package.objects.create(download_url='http://b.b', name='name', version='2.0')
-        p3 = Package.objects.create(download_url='http://c.c', name='name', version='3.0')
+        p1 = Package.objects.create(download_url='http://a.a', type='generic', name='name', version='1.0')
+        p2 = Package.objects.create(download_url='http://b.b', type='generic', name='name', version='2.0')
+        p3 = Package.objects.create(download_url='http://c.c', type='generic', name='name', version='3.0')
 
         response = self.client.get(reverse('api:package-latest-version', args=[p1.uuid]))
         self.assertEqual('3.0', response.data['version'])
@@ -549,7 +550,7 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         self.assertEqual(1, Package.objects.filter(download_url=sources_download_url).count())
         expected = self.get_test_loc('api/twill-core-0.12.0.json')
 
-        self.assertEqual(1, len(response.data))
+        self.assertEqual(2, len(response.data))
         result = response.data[0]
         # pop fields
         result.pop('url')

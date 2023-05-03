@@ -19,9 +19,9 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
-
 
 TRACE = False
 
@@ -480,6 +480,12 @@ class Package(
     @property
     def purl(self):
         return self.package_url
+
+    @property
+    def package_uid(self):
+        purl = PackageURL.from_string(self.package_url)
+        purl.qualifiers['uuid'] = str(self.uuid)
+        return str(purl)
 
     def to_dict(self):
         from packagedb.serializers import PackageMetadataSerializer
