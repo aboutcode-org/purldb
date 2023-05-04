@@ -39,7 +39,7 @@
     "dependencies":[
       {
         "purl":"sprockets",
-        "requirement":null,
+        "extracted_requirement":null,
         "scope":"runtime",
         "is_runtime":true,
         "is_optional":false,
@@ -47,7 +47,7 @@
       },
       {
         "purl":"rake",
-        "requirement":null,
+        "extracted_requirement":null,
         "scope":"development",
         "is_runtime":true,
         "is_optional":false,
@@ -55,7 +55,7 @@
       },
       {
         "purl":"rspec",
-        "requirement":null,
+        "extracted_requirement":null,
         "scope":"development",
         "is_runtime":true,
         "is_optional":false,
@@ -63,7 +63,7 @@
       },
       {
         "purl":"mocha",
-        "requirement":null,
+        "extracted_requirement":null,
         "scope":"development",
         "is_runtime":true,
         "is_optional":false,
@@ -71,7 +71,7 @@
       },
       {
         "purl":"fakefs",
-        "requirement":null,
+        "extracted_requirement":null,
         "scope":"development",
         "is_runtime":true,
         "is_optional":false,

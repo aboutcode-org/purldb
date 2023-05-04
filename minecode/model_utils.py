@@ -128,7 +128,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
                     _dep, _created = DependentPackage.objects.get_or_create(
                         package=existing_package,
                         purl=dependency['purl'],
-                        requirement=dependency['extracted_requirement'],
+                        extracted_requirement=dependency['extracted_requirement'],
                         scope=dependency['scope'],
                         is_runtime=dependency['is_runtime'],
                         is_optional=dependency['is_optional'],
@@ -293,7 +293,7 @@ def merge_or_create_package(scanned_package, visit_level):
             DependentPackage.objects.create(
                 package=created_package,
                 purl=dependency.purl,
-                requirement=dependency.extracted_requirement,
+                extracted_requirement=dependency.extracted_requirement,
                 scope=dependency.scope,
                 is_runtime=dependency.is_runtime,
                 is_optional=dependency.is_optional,

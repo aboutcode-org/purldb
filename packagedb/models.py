@@ -593,7 +593,7 @@ class DependentPackage(models.Model):
         help_text=_('A compact purl package URL')
     )
 
-    requirement = models.CharField(
+    extracted_requirement = models.CharField(
         max_length=200,
         blank=True,
         null=True,

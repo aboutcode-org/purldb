@@ -75,7 +75,7 @@ class DependentPackageSerializer(ModelSerializer):
         model = DependentPackage
         fields = (
             'purl',
-            'requirement',
+            'extracted_requirement',
             'scope',
             'is_runtime',
             'is_optional',
