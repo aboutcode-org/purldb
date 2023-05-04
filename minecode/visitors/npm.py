@@ -107,6 +107,7 @@ class NpmRegistryVisitor(NonPersistentHttpVisitor):
                 # note: visited is True since there nothing more to visit
                 visited=True)
 
+
 def get_package_json(namespace, name, version):
     """
     Return the contents of the package.json file of the package described by the purl
@@ -121,7 +122,7 @@ def get_package_json(namespace, name, version):
 
     try:
         response = requests.get(url)
-        response.raise_for_status() 
+        response.raise_for_status()
         return response.json()
     except requests.exceptions.HTTPError as err:
         logger.error(f"HTTP error occurred: {err}")
@@ -133,8 +134,8 @@ def map_npm_package(package_url):
 
     Return an error string if any errors are encountered during the process
     """
-    from minecode.management.commands.priority_queue import add_package_to_scan_queue
-    from minecode.management.commands.run_map import merge_or_create_package
+    from minecode.model_utils import add_package_to_scan_queue
+    from minecode.model_utils import merge_or_create_package
 
     package_json = get_package_json(
         namespace = package_url.namespace,
@@ -175,4 +176,3 @@ def process_request(purl_str):
 
     if error_msg:
         return error_msg
-
