@@ -13,15 +13,18 @@ import json
 import os
 import re
 
+from django.test import TestCase as DjangoTestCase
 from mock import Mock
 from mock import patch
+from packagedcode.npm import NpmPackageJsonHandler
+from packageurl import PackageURL
 
-from minecode.utils_test import mocked_requests_get
-from minecode.utils_test import JsonBasedTesting
-
+import packagedb
 from minecode import mappers
 from minecode import route
 from minecode.models import ResourceURI
+from minecode.utils_test import JsonBasedTesting
+from minecode.utils_test import mocked_requests_get
 from minecode.visitors import npm
 
 
@@ -166,3 +169,40 @@ class TestNPMMapper(JsonBasedTesting):
         regex = re.compile(r'^https://registry.npmjs.org/[^\/]+$')
         result = re.match(regex, 'https://registry.npmjs.org/react-mobile-navigation-modal')
         self.assertTrue(result)
+
+class NpmPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
+    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+
+    def setUp(self):
+        super(NpmPriorityQueueTests, self).setUp()
+        expected_json_loc = self.get_test_loc('npm/lodash_package-expected.json')
+        with open(expected_json_loc) as f:
+            self.expected_json_contents = json.load(f)
+
+        self.scan_package = NpmPackageJsonHandler._parse(
+            json_data=self.expected_json_contents,
+        )
+
+    def test_get_package_json(self, regen=False):
+        json_contents = npm.get_package_json(
+            namespace=self.scan_package.namespace,
+            name=self.scan_package.name,
+            version=self.scan_package.version
+        )
+        if regen:
+            with open(self.expected_pom_loc, 'w') as f:
+                f.write(json_contents)
+        self.assertEqual(self.expected_json_contents, json_contents)
+
+    def test_map_npm_package(self):
+        package_count = packagedb.models.Package.objects.all().count()
+        self.assertEqual(0, package_count)
+        package_url = PackageURL.from_string(self.scan_package.purl)
+        npm.map_npm_package(package_url)
+        package_count = packagedb.models.Package.objects.all().count()
+        self.assertEqual(1, package_count)
+        package = packagedb.models.Package.objects.all().first()
+        expected_purl_str = 'pkg:npm/lodash@4.17.21'
+        expected_download_url = 'https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz'
+        self.assertEqual(expected_purl_str, package.purl)
+        self.assertEqual(expected_download_url, package.download_url)

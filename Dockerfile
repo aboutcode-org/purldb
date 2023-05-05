@@ -34,7 +34,6 @@ RUN apt-get update \
 COPY setup.cfg setup.py /app/
 RUN mkdir -p /app/matchcode-toolkit/src/
 COPY matchcode-toolkit/setup.cfg matchcode-toolkit/setup.py /app/matchcode-toolkit/
-RUN pip install https://github.com/nexB/commoncode/archive/refs/heads/main.zip
 RUN pip install https://github.com/nexB/scancode-toolkit/archive/refs/heads/maven-pom-parse-dep-backport.zip
 RUN pip install -e matchcode-toolkit
 RUN pip install -e .

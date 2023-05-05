@@ -7,7 +7,6 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-
 import os
 from io import StringIO
 
@@ -16,16 +15,14 @@ from django.utils import timezone
 
 from packagedcode.models import Package as ScannedPackage
 
-import packagedb
-
-from minecode.utils_test import MiningTestCase
-
 from minecode.management.commands.run_map import map_uri
 from minecode.management.commands.run_map import merge_packages
 from minecode.models import ResourceURI
-from minecode.route import Router
 from minecode.models import ScannableURI
+from minecode.route import Router
 from minecode.utils_test import JsonBasedTesting
+from minecode.utils_test import MiningTestCase
+import packagedb
 
 
 class RunMapTest(JsonBasedTesting, MiningTestCase):

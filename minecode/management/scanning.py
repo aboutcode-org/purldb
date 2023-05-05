@@ -25,7 +25,7 @@ logger.setLevel(logging.INFO)
 SLEEP_WHEN_EMPTY = 1
 
 # in seconds
-REQUEST_TIMEOUT = 10
+REQUEST_TIMEOUT = 3
 
 SCANCODEIO_URL = get_settings('SCANCODEIO_URL').rstrip('/')
 
@@ -171,7 +171,7 @@ def submit_scan(
     logger.debug('submit_scan: uri', uri, 'api_url:', api_url, 'api_auth_headers:', api_auth_headers)
     request_args = {
         'name': uri_fingerprint(uri),
-        'pipeline': 'scan_and_fingerprint_codebase',
+        'pipeline': 'scan_and_fingerprint_package',
         'input_urls': [
             uri
         ],
@@ -179,7 +179,11 @@ def submit_scan(
     }
 
     response = requests.post(url=api_url, data=request_args, headers=api_auth_headers)
-    response_json = response.json()
+    try:
+        response_json = response.json()
+    except json.decoder.JSONDecodeError as e:
+        msg = f'Error occured when decoding scan request response: {e}'
+        raise Exception(msg)
     if response_save_loc:
         with open(response_save_loc, 'w') as f:
             json.dump(response_json, f)
@@ -271,6 +275,24 @@ def get_scan_data(
     return results
 
 
+def get_scan_summary(
+    scan_uuid,
+    api_url=SCANCODEIO_API_URL_PROJECTS,
+    api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    get_scan_data_save_loc=''
+):
+    """
+    Return scan summary data as a mapping for a `scan_uuid` fetched from
+    ScanCode.io or None. Raise an exception on error.
+    """
+    # FIXME: we should return a temp location instead
+    results = _call_scan_get_api(scan_uuid, endpoint='summary', api_url=api_url, api_auth_headers=api_auth_headers)
+    if get_scan_data_save_loc:
+        with open(get_scan_data_save_loc, 'w') as f:
+            json.dump(results, f)
+    return results
+
+
 class ScanningCommand(VerboseCommand):
     """
     Base command class for processing ScannableURIs.
@@ -323,6 +345,9 @@ class ScanningCommand(VerboseCommand):
         sleeping = False
 
         while True:
+            # Wait before processing anything
+            time.sleep(REQUEST_TIMEOUT)
+
             if cls.MUST_STOP:
                 cls.logger.info('Graceful exit of the scan processing loop.')
                 break

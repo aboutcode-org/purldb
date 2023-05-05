@@ -122,6 +122,9 @@ clearindex:
 index_packages:
 	${MANAGE} index_packages
 
+priority_queue:
+	${MANAGE} priority_queue
+
 bump:
 	@echo "-> Bump the version"
 	bin/bumpver update --no-fetch --patch

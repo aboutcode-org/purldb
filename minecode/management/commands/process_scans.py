@@ -71,6 +71,8 @@ class Command(scanning.ScanningCommand):
                 get_scan_data_save_loc=get_scan_data_save_loc
             )
             scan_index_errors = index_package_files(package, scan_data)
+            # TODO: Update package data with package summary and license clarity
+            # scoring values
             # TODO: We should rerun the specific indexers that have failed
             if scan_index_errors:
                 scannable_uri.index_error = '\n'.join(scan_index_errors)
@@ -163,20 +165,8 @@ def index_package_files(package, scan_data):
             size = resource.get('size')
             md5 = resource.get('md5')
             is_file = resource.get('type') == 'file'
-
-            copyrights = []
-            for copyright_mapping in resource.get('copyrights', []):
-                copyright = copyright_mapping.get('copyright')
-                if not copyright:
-                    continue
-                copyrights.append(copyright)
-            copyrights = '\n'.join(copyrights)
-
-            combined_license_expression = combine_expressions(resource.get('license_expressions', []))
-            if combined_license_expression:
-                license_expression = str(Licensing().parse(combined_license_expression).simplify())
-            else:
-                license_expression = None
+            copyrights = resource.get('copyrights', [])
+            license_expressions = resource.get('license_expressions', [])
 
             # TODO: Determine what extra_data to keep
 
@@ -186,8 +176,8 @@ def index_package_files(package, scan_data):
                 size=size,
                 sha1=sha1,
                 md5=md5,
-                copyright=copyrights,
-                license_expression=license_expression,
+                copyrights=copyrights,
+                license_expressions=license_expressions,
                 is_file=is_file,
             )
 

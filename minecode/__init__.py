@@ -24,3 +24,4 @@ ON_LINUX = 'linux' in sys_platform
 # global instances of our routers
 visit_router = route.Router()
 map_router = route.Router()
+priority_router = route.Router()

@@ -19,9 +19,9 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
-
 
 TRACE = False
 
@@ -444,6 +444,17 @@ class Package(
     # TODO: Think about ordering, unique together, indexes, etc.
     class Meta:
         ordering = ['id']
+        unique_together = [
+            (
+                'download_url',
+                'type',
+                'namespace',
+                'name',
+                'version',
+                'qualifiers',
+                'subpath'
+            )
+        ]
         indexes = [
             # GIN index for search performance increase
             GinIndex(fields=['search_vector']),
@@ -469,6 +480,12 @@ class Package(
     @property
     def purl(self):
         return self.package_url
+
+    @property
+    def package_uid(self):
+        purl = PackageURL.from_string(self.package_url)
+        purl.qualifiers['uuid'] = str(self.uuid)
+        return str(purl)
 
     def to_dict(self):
         from packagedb.serializers import PackageMetadataSerializer
@@ -576,7 +593,7 @@ class DependentPackage(models.Model):
         help_text=_('A compact purl package URL')
     )
 
-    requirement = models.CharField(
+    extracted_requirement = models.CharField(
         max_length=200,
         blank=True,
         null=True,
@@ -619,17 +636,24 @@ class AbstractResource(models.Model):
         help_text=_('The full path value of a resource (file or directory) in the archive it is from.'),
     )
 
+    name = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text=_("File or directory name of this resource with its extension."),
+    )
+
+    extension = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text=_(
+            "File extension for this resource (directories do not have an extension)."
+        ),
+    )
+
     size = models.BigIntegerField(
         blank=True,
         null=True,
         help_text=_('Size in bytes.'),
-    )
-
-    sha1 = models.CharField(
-        max_length=40,
-        blank=True,
-        null=True,
-        help_text=_('SHA1 checksum hex-encoded, as in sha1sum.'),
     )
 
     md5 = models.CharField(
@@ -637,6 +661,13 @@ class AbstractResource(models.Model):
         blank=True,
         null=True,
         help_text=_('MD5 checksum hex-encoded, as in md5sum.'),
+    )
+
+    sha1 = models.CharField(
+        max_length=40,
+        blank=True,
+        null=True,
+        help_text=_('SHA1 checksum hex-encoded, as in sha1sum.'),
     )
 
     sha256 = models.CharField(
@@ -660,29 +691,36 @@ class AbstractResource(models.Model):
         help_text=_('git SHA1 checksum hex-encoded'),
     )
 
+    mime_type = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text=_(
+            "MIME type (aka. media type) for this resource. "
+            "See https://en.wikipedia.org/wiki/Media_type"
+        ),
+    )
+
+    file_type = models.CharField(
+        max_length=1024,
+        blank=True,
+        help_text=_("Descriptive file type for this resource."),
+    )
+
+    programming_language = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text=_("Programming language of this resource if this is a code file."),
+    )
+
+    is_binary = models.BooleanField(default=False)
+    is_text = models.BooleanField(default=False)
+    is_archive = models.BooleanField(default=False)
+    is_key_file = models.BooleanField(default=False)
+    is_media = models.BooleanField(default=False)
+
     is_file = models.BooleanField(
         default=False,
         help_text=_('True if this Resource is a file, False if it is a Directory')
-    )
-
-    copyright = models.TextField(
-        blank=True,
-        null=True,
-        help_text=_('Copyright statements detected in this Resource'),
-    )
-
-    license_expression = models.CharField(
-        max_length=8192,
-        blank=True,
-        null=True,
-        help_text=_('The combined and normalized license expression for this Resource as derived '
-                    'from its detected license expressions')
-    )
-
-    extra_data = models.JSONField(
-        blank=True,
-        default=dict,
-        help_text=_('An optional JSON-formatted field to identify additional resource attributes.'),
     )
 
     @property
@@ -703,18 +741,101 @@ class AbstractResource(models.Model):
         abstract = True
 
 
-class Resource(AbstractResource):
+class ScanFieldsModelMixin(models.Model):
+    """
+    Fields returned by the ScanCode-toolkit scans.
+
+    This model is from ScanCode.io
+    """
+
+    copyrights = models.JSONField(
+        blank=True,
+        default=list,
+        help_text=_(
+            "List of detected copyright statements (and related detection details)."
+        ),
+    )
+    holders = models.JSONField(
+        blank=True,
+        default=list,
+        help_text=_(
+            "List of detected copyright holders (and related detection details)."
+        ),
+    )
+    authors = models.JSONField(
+        blank=True,
+        default=list,
+        help_text=_("List of detected authors (and related detection details)."),
+    )
+    licenses = models.JSONField(
+        blank=True,
+        default=list,
+        help_text=_("List of license detection details."),
+    )
+    license_expressions = models.JSONField(
+        blank=True,
+        default=list,
+        help_text=_("List of detected license expressions."),
+    )
+    package_data = models.JSONField(
+        default=list,
+        blank=True,
+        help_text=_("List of Package data detected from this CodebaseResource"),
+    )
+    emails = models.JSONField(
+        blank=True,
+        default=list,
+        help_text=_("List of detected emails (and related detection details)."),
+    )
+    urls = models.JSONField(
+        blank=True,
+        default=list,
+        help_text=_("List of detected URLs (and related detection details)."),
+    )
+
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def scan_fields(cls):
+        return [field.name for field in ScanFieldsModelMixin._meta.get_fields()]
+
+    def set_scan_results(self, scan_results, save=False):
+        """
+        Set the values of the current instance's scan-related fields using
+        `scan_results`.
+        """
+        scan_fields = self.scan_fields()
+        for field_name, value in scan_results.items():
+            if value and field_name in scan_fields:
+                setattr(self, field_name, value)
+
+        if save:
+            self.save()
+
+    def copy_scan_results(self, from_instance, save=False):
+        """
+        Copy the scan-related fields values from `from_instance`to the current
+        instance.
+        """
+        for field_name in self.scan_fields():
+            value_from_instance = getattr(from_instance, field_name)
+            setattr(self, field_name, value_from_instance)
+
+        if save:
+            self.save()
+
+
+class Resource(
+    ExtraDataFieldMixin,
+    ScanFieldsModelMixin,
+    AbstractResource
+):
     package = models.ForeignKey(
         Package,
         related_name='resources',
         on_delete=models.CASCADE,
         help_text=_('The Package that this Resource is from')
-    )
-
-    extra_data = models.JSONField(
-        blank=True,
-        default=dict,
-        help_text=_('An optional JSON-formatted field to identify additional resource attributes.'),
     )
 
     class Meta:
@@ -724,41 +845,53 @@ class Resource(AbstractResource):
         ordering = ('package', 'path')
 
 
+class PackageRelation(models.Model):
+    """
+    A directed relationship between two packages.
 
-# FIXME: This is not clearly specified and needs to be reworked.
-# class PackageRelationship(models.Model):
-#     """
-#     A directed relationship between two packages.
+    This consists of three attributes:
+    - The "from" (or subject) package in the relationship,
+    - the "to" (or object) package in the relationship,
+    - and the "relationship" (or predicate) choice that specifies the relationship.
+    """
 
-#     This consists of three attributes:
-#     - The "from" (or subject) package "purl" in the relationship,
-#     - the "to" (or object) package "purl" in the relationship,
-#     - and the "relationship" (or predicate) string that specifies the relationship.
-#     """
-#     package = models.ForeignKey(
-#         Package,
-#         help_text='The Package that this package relationship is related to'
-#     )
+    class Relationship(models.TextChoices):
+        SOURCE_PACKAGE = "source_package"
 
-#     from_purl = models.CharField(
-#         max_length=2048,
-#         blank=True,
-#         null=True,
-#         help_text='A compact purl package URL.'
-#     )
+    from_package = models.ForeignKey(
+        Package,
+        related_name="related_to",
+        on_delete=models.CASCADE,
+        editable=False,
+    )
 
-#     relationship = models.CharField(
-#         max_length=2048,
-#         blank=True,
-#         null=True,
-#         help_text='Relationship between the from and to package '
-#                   'URLs such as "source_of" when a package is the source '
-#                   'code package for another package.'
-#     )
+    to_package = models.ForeignKey(
+        Package,
+        related_name="related_from",
+        on_delete=models.CASCADE,
+        editable=False,
+    )
 
-#     to_purl = models.CharField(
-#         max_length=2048,
-#         blank=True,
-#         null=True,
-#         help_text='A compact purl package URL.'
-#     )
+    relationship = models.CharField(
+        max_length=30,
+        choices=Relationship.choices,
+        help_text='Relationship between the from and to package '
+                  'URLs such as "source_package" when a package '
+                  'is the source code package for another package.'
+    )
+
+    def __str__(self):
+        return (
+            f"{self.from_package.purl} is the "
+            f"{self.relationship.upper()} to {self.to_package.purl}"
+        )
+
+
+def make_relationship(
+    from_package, to_package, relationship
+):
+    return PackageRelation.objects.create(
+        from_package=from_package,
+        to_package=to_package,
+        relationship=relationship,
+    )

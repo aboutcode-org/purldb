@@ -14,12 +14,20 @@ from django_filters.filters import Filter
 from django_filters.filters import OrderingFilter
 import django_filters
 
+from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
+from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from matchcode.api import MultipleCharFilter
+# UnusedImport here!
+# But importing the mappers and visitors module triggers routes registration
+from minecode import visitors  # NOQA
+from minecode import priority_router
+from minecode.models import PriorityResourceURI
+from minecode.route import NoRouteAvailable
 from packagedb.models import Package
 from packagedb.models import Resource
 from packagedb.serializers import PackageAPISerializer
@@ -198,4 +206,70 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         paginated_qs = self.paginate_queryset(qs)
 
         serializer = ResourceAPISerializer(paginated_qs, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=False)
+    def get_package(self, request, *args, **kwargs):
+        purl = request.query_params.get('purl')
+
+        # validate purl
+        try:
+            package_url = PackageURL.from_string(purl)
+        except ValueError as e:
+            message = {
+                'status': f'purl validation error: {e}'
+            }
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+        lookups = purl_to_lookups(purl)
+        packages = Package.objects.filter(**lookups)
+        if packages.count() == 0:
+            # add to queue
+            PriorityResourceURI.objects.insert(purl)
+            return Response({})
+
+        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=False)
+    def get_or_fetch_package(self, request, *args, **kwargs):
+        """
+        Return Package data for the purl passed in the `purl` query parameter.
+
+        If the package does not exist, we will fetch the Package data and return
+        it in the same request.
+        """
+        purl = request.query_params.get('purl')
+
+        # validate purl
+        try:
+            package_url = PackageURL.from_string(purl)
+        except ValueError as e:
+            message = {
+                'status': f'purl validation error: {e}'
+            }
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+        lookups = purl_to_lookups(purl)
+        packages = Package.objects.filter(**lookups)
+        if packages.count() == 0:
+            try:
+                errors = priority_router.process(purl)
+            except NoRouteAvailable:
+                message = {
+                    'status': f'cannot fetch Package data for {purl}: no available handler'
+                }
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+            lookups = purl_to_lookups(purl)
+            packages = Package.objects.filter(**lookups)
+            if packages.count() == 0:
+                message = {}
+                if errors:
+                    message = {
+                        'status': f'error(s) occured when fetching metadata for {purl}: {errors}'
+                    }
+                return Response(message)
+
+        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)

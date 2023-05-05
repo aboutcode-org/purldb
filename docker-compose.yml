@@ -77,6 +77,10 @@ services:
   request_scan:
     build: .
     command: wait-for-it web:8000 -- python manage.py request_scans
+    env_file:
+      - docker.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
     profiles:
       - scan_queue
     depends_on:
@@ -86,8 +90,25 @@ services:
   process_scan:
     build: .
     command: wait-for-it web:8000 -- python manage.py process_scans
+    env_file:
+      - docker.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
     profiles:
       - scan_queue
+    depends_on:
+      - db
+      - web
+
+  priority_queue:
+    build: .
+    command: wait-for-it web:8000 -- python manage.py priority_queue
+    env_file:
+      - docker.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - priority_queue
     depends_on:
       - db
       - web

@@ -32,20 +32,6 @@ from minecode.models import ResourceURI
 class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
 
-    def check_expected_package_results(self, results, expected_loc, regen=False):
-        """
-        Check that `results` is equal to the expected data JSON data stored at
-        location `expected_loc`.
-        """
-        if regen:
-            with codecs.open(expected_loc, mode='wb', encoding='utf-8') as expect:
-                json.dump(results, expect, indent=2, separators=(',', ': '))
-
-        with codecs.open(expected_loc, mode='rb', encoding='utf-8') as expect:
-            expected = json.load(expect)
-
-        assert results == expected
-
     def test_find_ambiguous_packages_declared_license(self):
         packagedb.models.Package.objects.create(
             download_url='http://example.com',
@@ -55,7 +41,7 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
         )
         packages = [p.to_dict() for p in find_ambiguous_packages()]
         expected_loc = self.get_test_loc('housekeeping/declared_license_search_expected.json')
-        self.check_expected_package_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=False)
 
     def test_find_ambiguous_packages_license_expression(self):
         packagedb.models.Package.objects.create(
@@ -67,7 +53,7 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
         packages = [p.to_dict() for p in find_ambiguous_packages()]
 
         expected_loc = self.get_test_loc('housekeeping/license_expression_search_expected.json')
-        self.check_expected_package_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=False)
 
     def test_find_ambiguous_packages_license_expression_ignore_uppercase(self):
         packagedb.models.Package.objects.create(
@@ -80,7 +66,7 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
 
         expected_loc = self.get_test_loc('housekeeping/ignore_upper_case_search_expected.json')
 
-        self.check_expected_package_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=False)
 
     def test_run_check_licenses_command(self):
         packagedb.models.Package.objects.create(
@@ -98,7 +84,7 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
 
         with open(results_loc) as results:
             res = json.load(results)
-        self.check_expected_package_results(res, expected_loc, regen=False)
+        self.check_expected_results(res, expected_loc, regen=False)
 
     def test_run_check_licenses_command_with_empty_package(self):
         output = StringIO()
@@ -119,4 +105,4 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
             map_uri(resource_uri)
         packages = [p.to_dict() for p in find_ambiguous_packages()]
         expected_loc = self.get_test_loc('housekeeping/bytejta-supports-0.5.0-ALPHA4.pom_search_expected.json')
-        self.check_expected_package_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=False)
