@@ -345,6 +345,9 @@ class ScanningCommand(VerboseCommand):
         sleeping = False
 
         while True:
+            # Wait before processing anything
+            time.sleep(REQUEST_TIMEOUT)
+
             if cls.MUST_STOP:
                 cls.logger.info('Graceful exit of the scan processing loop.')
                 break
@@ -373,9 +376,6 @@ class ScanningCommand(VerboseCommand):
             cls.process_scan(scannable_uri, **kwargs)
             uris_counter += 1
             sleeping = False
-
-            # Wait before sending next request
-            time.sleep(REQUEST_TIMEOUT)
 
         return uris_counter
 

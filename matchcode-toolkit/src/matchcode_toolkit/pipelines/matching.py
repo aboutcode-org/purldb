@@ -158,7 +158,7 @@ def process_sha1_match(project, package_data, resource):
             purl = dependency.get('purl', '')
             dep = {
                 'purl': purl,
-                'extracted_requirement': dependency.get('requirement', ''),
+                'extracted_requirement': dependency.get('extracted_requirement', ''),
                 'scope': dependency.get('scope', ''),
                 'dependency_uid': build_package_uid(purl),
                 'is_runtime': dependency.get('is_runtime', False),
