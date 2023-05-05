@@ -377,9 +377,6 @@ class Package(
     name = LowerCaseField(
         max_length=100,
     )
-    version = LowerCaseField(
-        max_length=100,
-    )
     qualifiers = LowerCaseField(
         max_length=1024,
     )
