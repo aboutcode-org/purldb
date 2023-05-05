@@ -71,8 +71,23 @@ class Command(scanning.ScanningCommand):
                 get_scan_data_save_loc=get_scan_data_save_loc
             )
             scan_index_errors = index_package_files(package, scan_data)
-            # TODO: Update package data with package summary and license clarity
-            # scoring values
+
+            summary = scanning.get_scan_summary(
+                scannable_uri.scan_uuid,
+                api_url=cls.api_url,
+                api_auth_headers=cls.api_auth_headers,
+                get_scan_data_save_loc=get_scan_data_save_loc
+            )
+
+            license_expression = summary.get('declared_license_expression')
+            if not package.license_expression and license_expression:
+                package.license_expression = license_expression
+
+            declared_holder = summary.get('declared_holder')
+            if not package.copyright:
+                if declared_holder:
+                    package.copyright = f'Copyright (c) {declared_holder}'
+
             # TODO: We should rerun the specific indexers that have failed
             if scan_index_errors:
                 scannable_uri.index_error = '\n'.join(scan_index_errors)

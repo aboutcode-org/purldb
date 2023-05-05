@@ -76,7 +76,12 @@ class ProcessScansTest(MiningTestCase):
         with open(scan_data_loc, 'rb') as f:
             mock_scan_data_response.json.return_value = json.loads(f.read())
 
-        mock_get.side_effect = [mock_scan_info_response, mock_scan_data_response]
+        mock_scan_summary_response = Mock()
+        scan_summary_loc = self.get_test_loc('scancodeio/scan_summary_response.json')
+        with open(scan_summary_loc, 'rb') as f:
+            mock_scan_summary_response.json.return_value = json.loads(f.read())
+
+        mock_get.side_effect = [mock_scan_info_response, mock_scan_data_response, mock_scan_summary_response]
 
         # Set up ScannableURI
         scan_uuid = '54dc4afe-70ea-4f1c-9ed3-989efd9a991f'
@@ -89,6 +94,10 @@ class ProcessScansTest(MiningTestCase):
 
         # Run test
         Command.process_scan(scannable_uri)
+
+        # Make sure that we get license_expression and copyright from the summary
+        self.assertEqual('apache-2.0', self.package1.license_expression)
+        self.assertEqual('Copyright (c) Apache Software Foundation', self.package1.copyright)
 
         result = Resource.objects.filter(package=self.package1)
         self.assertEqual(78, len(result))
