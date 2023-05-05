@@ -132,7 +132,7 @@ def process_request(priority_resource_uri, _priority_router=priority_router):
         return errors
 
     except NoRouteAvailable:
-        error = 'No route available.'
+        error = f'No route available for {purl_to_visit}'
         logger.error(error)
         # TODO: For now, when a route is not yet supported, we keep a value for
         # the wip_date value so the instance is not back in the queue. It will
