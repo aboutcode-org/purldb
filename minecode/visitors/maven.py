@@ -215,7 +215,12 @@ def merge_parent(package, parent_package):
 
 def merge_ancestors(ancestor_pom_texts, package):
     """
-    Merge metadata from `ancestor_pom_text` into `package`
+    Merge metadata from `ancestor_pom_text` into `package`. Skip merging
+    metadata from an ancestor if the ancestor's namespace is not contained in
+    the `package`'s namespace.
+
+    The order of POM content in `ancestor_pom_texts` is expected to be in the
+    order of oldest ancestor to newest.
     """
     for ancestor_pom_text in ancestor_pom_texts:
         ancestor_package = _parse(
@@ -224,6 +229,8 @@ def merge_ancestors(ancestor_pom_texts, package):
             primary_language='Java',
             text=ancestor_pom_text
         )
+        if ancestor_package.namespace not in package.namespace:
+            continue
         package = merge_parent(package, ancestor_package)
     return package
 
