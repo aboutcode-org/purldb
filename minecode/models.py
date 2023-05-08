@@ -770,7 +770,7 @@ class PriorityResourceURIManager(models.Manager):
         priority_resource_uri, created = self.get_or_create(
             uri=uri,
             package_url=uri,
-            processed_date__is_null=False,
+            processed_date__isnull=False,
             **extra_fields
         )
         if created:
