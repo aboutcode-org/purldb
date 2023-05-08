@@ -45,9 +45,8 @@ class PriorityResourceURIViewSet(viewsets.ModelViewSet):
     serializer_class = PriorityResourceURISerializer
     paginate_by = 10
 
-    @action(detail=True, methods=["post"])
+    @action(detail=False, methods=["post"])
     def add_to_queue(self, request, *args, **kwargs):
-        priority_resource_uri = self.get_object()
         purl = request.data.get('purl')
 
         # validate purl
@@ -62,7 +61,7 @@ class PriorityResourceURIViewSet(viewsets.ModelViewSet):
         # see if its routeable
         if not priority_router.is_routable(purl):
             message = {
-                'status': f'purl {purl} cannot be fetched'
+                'status': f'purl {purl} cannot be fetched: no route available for Package of type: {package_url.type}'
             }
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
