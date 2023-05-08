@@ -45,8 +45,13 @@ class PriorityResourceURIViewSet(viewsets.ModelViewSet):
     serializer_class = PriorityResourceURISerializer
     paginate_by = 10
 
+    # TODO: hide fact that this is a queue, do not show queue contents (hide from view)
+    # TODO: hide debug endpoints under `admin`
     @action(detail=False, methods=["post"])
-    def add_to_queue(self, request, *args, **kwargs):
+    def index_package(self, request, *args, **kwargs):
+        """
+        Request the indexing and scanning of Package, given a valid Package URL `purl`.
+        """
         purl = request.data.get('purl')
 
         # validate purl
@@ -61,14 +66,20 @@ class PriorityResourceURIViewSet(viewsets.ModelViewSet):
         # see if its routeable
         if not priority_router.is_routable(purl):
             message = {
-                'status': f'purl {purl} cannot be fetched: no route available for Package of type: {package_url.type}'
+                'status': f'Package type `{package_url.type}` is unsupported'
             }
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
         # add to queue
-        PriorityResourceURI.objects.create(uri=purl, package_url=purl)
+        priority_resource_uri = PriorityResourceURI.objects.insert(uri=purl)
 
-        message = {
-            'status': f'purl {purl} added to queue'
-        }
+        if priority_resource_uri:
+            message = {
+                'status': f'Package index request for {purl} has been successful.'
+            }
+        else:
+            message = {
+                'status': f'Package {purl} has already been requested for indexing.'
+            }
+        # TODO: revisiting a package should be handled on another level, dependent on data we store
         return Response(message)

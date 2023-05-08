@@ -292,7 +292,7 @@ def map_maven_package(package_url):
     sha1 = get_package_sha1(package)
     if sha1:
         package.sha1 = sha1
-        db_package, _, _, _ = merge_or_create_package(package, visit_level=0)
+        db_package, _, _, _ = merge_or_create_package(package, visit_level=50)
     else:
         msg = f'Failed to retrieve JAR: {package_url}'
         error += msg + '\n'
