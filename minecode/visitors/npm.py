@@ -152,10 +152,13 @@ def map_npm_package(package_url):
         json_data=package_json
     )
 
-    db_package, _, _, _ = merge_or_create_package(package, visit_level=0)
+    db_package, _, _, error = merge_or_create_package(package, visit_level=0)
+
     # Submit package for scanning
     if db_package:
         add_package_to_scan_queue(db_package)
+
+    return error
 
 
 @priority_router.route('pkg:npm/.*')
