@@ -558,3 +558,61 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         result.pop('resources')
 
         self.check_expected_results(result, expected, regen=False)
+
+
+class ResourceApiTestCase(TestCase):
+
+    def setUp(self):
+        self.package_data = {
+            'type': 'generic',
+            'namespace': 'generic',
+            'name': 'Foo',
+            'version': '12.34',
+            'qualifiers': 'test_qual=qual',
+            'subpath': 'test_subpath',
+            'download_url': 'http://example.com',
+            'filename': 'Foo.zip',
+            'sha1': 'testsha1',
+            'md5': 'testmd5',
+            'size': 101,
+        }
+        self.package = Package.objects.create(**self.package_data)
+        self.package.refresh_from_db()
+
+        self.resource1 = Resource.objects.create(
+            path='foo',
+            name='foo',
+            sha1='sha1-1',
+            md5='md5-1',
+            package=self.package
+        )
+        self.resource1.refresh_from_db()
+        self.resource2 = Resource.objects.create(
+            path='foo/bar',
+            name='bar',
+            sha1='sha1-2',
+            md5='md5-2',
+            package=self.package
+        )
+        self.resource2.refresh_from_db()
+
+    def test_api_resource_checksum_filter(self):
+        filters = f'?md5={self.resource1.md5}&md5={self.resource2.md5}'
+        response = self.client.get(f'/api/resources/{filters}')
+        self.assertEqual(2, response.data['count'])
+        names = sorted([result.get('name') for result in response.data['results']])
+        expected_names = sorted([
+            self.resource1.name,
+            self.resource2.name,
+        ])
+        self.assertEquals(expected_names, names)
+
+        filters = f'?sha1={self.resource1.sha1}&sha1={self.resource2.sha1}'
+        response = self.client.get(f'/api/resources/{filters}')
+        self.assertEqual(2, response.data["count"])
+        names = sorted([result.get('name') for result in response.data['results']])
+        expected_names = sorted([
+            self.resource1.name,
+            self.resource2.name,
+        ])
+        self.assertEquals(expected_names, names)

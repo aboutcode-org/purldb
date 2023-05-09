@@ -67,6 +67,12 @@ class PackageResourceUUIDFilter(Filter):
 class ResourceFilter(FilterSet):
     package = PackageResourceUUIDFilter(label='Package UUID')
     purl = PackageResourcePurlFilter(label='Package pURL')
+    md5 = MultipleCharFilter(
+        help_text="Exact MD5. Multi-value supported.",
+    )
+    sha1 = MultipleCharFilter(
+        help_text="Exact SHA1. Multi-value supported.",
+    )
 
 
 class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
