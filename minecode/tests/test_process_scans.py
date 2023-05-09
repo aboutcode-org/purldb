@@ -13,11 +13,10 @@ import os
 from mock import Mock
 from mock import patch
 
+from matchcode.models import ExactFileIndex
 from minecode.management.commands.process_scans import Command
 from minecode.management.commands.process_scans import get_scan_status
 from minecode.management.commands.process_scans import index_package_files
-from minecode.management.commands.process_scans import update_package_checksums
-from minecode.management.commands.process_scans import _update_package_checksums
 from minecode.management.scanning import Scan
 from minecode.models import ScannableURI
 from minecode.utils_test import MiningTestCase
@@ -100,4 +99,7 @@ class ProcessScansTest(MiningTestCase):
         self.assertEqual('Copyright (c) Apache Software Foundation', self.package1.copyright)
 
         result = Resource.objects.filter(package=self.package1)
-        self.assertEqual(78, len(result))
+        self.assertEqual(78, result.count())
+        result = ExactFileIndex.objects.filter(package=self.package1)
+        self.assertEqual(53, result.count())
+

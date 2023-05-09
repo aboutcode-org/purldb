@@ -13,6 +13,7 @@ from license_expression import Licensing
 
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
+from matchcode.models import ExactFileIndex
 from minecode.management import scanning
 from minecode.management.commands import get_error_message
 from minecode.models import ScannableURI
@@ -195,6 +196,12 @@ def index_package_files(package, scan_data):
                 license_expressions=license_expressions,
                 is_file=is_file,
             )
+
+            if sha1:
+                _, _ = ExactFileIndex.index(
+                    sha1=sha1,
+                    package=package
+                )
 
             resource_extra_data = resource.get('extra_data', {})
             directory_content_fingerprint = resource_extra_data.get('directory_content', '')
