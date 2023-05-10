@@ -58,7 +58,7 @@ pip==22.2.2
 pip-requirements-parser==32.0.1
 pkginfo2==30.0.0
 pluggy==1.0.0
-plugincode==31.0.0
+plugincode==32.0.0
 ply==3.11
 psycopg2==2.9.3
 psycopg2-binary==2.9.3
@@ -84,7 +84,7 @@ scancode-toolkit @ https://github.com/nexB/scancode-toolkit/archive/refs/heads/v
 setuptools==65.3.0
 six==1.16.0
 soupsieve==2.4
-spdx-tools==0.7.0rc0
+spdx-tools==0.7.0a3
 sqlparse==0.4.3
 text-unidecode==1.3
 toml==0.10.2
