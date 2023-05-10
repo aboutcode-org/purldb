@@ -148,7 +148,7 @@ def map_npm_package(package_url):
         logger.error(error)
         return error
 
-    package = NpmPackageJsonHandler._parse(
+    package = NpmPackageJsonHandler.parse(
         json_data=package_json
     )
 
