@@ -230,6 +230,12 @@ def merge_ancestors(ancestor_pom_texts, package):
             text=ancestor_pom_text
         )
         if ancestor_package.namespace not in package.namespace:
+            msg = f'merge_ancestors: {ancestor_package.purl} data not added to package: ancestor package namespace is not contained in {package.purl} namespace'
+            history = package.extra_data.get('history')
+            if history:
+                package.extra_data['history'].append(msg)
+            else:
+                package.extra_data['history'] = [msg]
             continue
         package = merge_parent(package, ancestor_package)
     return package
