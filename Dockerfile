@@ -34,8 +34,8 @@ RUN apt-get update \
 COPY setup.cfg setup.py /app/
 RUN mkdir -p /app/matchcode-toolkit/src/
 COPY matchcode-toolkit/setup.cfg matchcode-toolkit/setup.py /app/matchcode-toolkit/
+RUN pip install https://github.com/nexB/scancode-toolkit/archive/refs/heads/v31.2.6-backport.zip
 RUN pip install -e matchcode-toolkit
 RUN pip install -e .
-RUN pip install https://github.com/nexB/scancode-toolkit/archive/refs/heads/v31.2.6-backport.zip
 
 COPY . /app
