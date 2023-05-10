@@ -80,7 +80,7 @@ reppy2==0.3.6
 requests==2.28.2
 rubymarshal==1.0.3
 saneyaml==0.6.0
-scancode-toolkit @ https://github.com/nexB/scancode-toolkit/archive/refs/heads/maven-pom-parse-dep-backport.zip
+scancode-toolkit @ https://github.com/nexB/scancode-toolkit/archive/refs/heads/v31.2.6-backport.zip
 setuptools==65.3.0
 six==1.16.0
 soupsieve==2.4
