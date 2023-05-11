@@ -41,8 +41,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"NewBSD",
+    "holder":null,
+    "declared_license_expression":"bsd-new",
+    "declared_license_expression_spdx":"BSD-3-Clause",
+    "license_detections":[
+      {
+        "license_expression":"bsd-new",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-hash",
+            "license_expression":"bsd-new",
+            "rule_identifier":"bsd-new_1135.RULE",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/bsd-new_1135.RULE",
+            "matched_text":"NewBSD"
+          }
+        ],
+        "identifier":"bsd_new-24727710-20a7-6797-19e7-458dbc925334"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['NewBSD']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
