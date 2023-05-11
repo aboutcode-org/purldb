@@ -40,10 +40,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@375398289d22f66d018b243c7d58b25584f1657b",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -237,10 +261,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@ac8593da99223e0c269e976b0158b61d08a65fe8",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -444,10 +492,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@34a65b237ada762ca4a30d1e4d97ea435ec6a53b",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -561,10 +633,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@75120248cf96fabb2a6db37bb9da13a6720b4c23",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -688,10 +784,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@9787c4a53288454cda69d3d1ef5a861e565dd5f7",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -835,10 +955,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@d9936ff4dcb3d59a93ce9a24641246675640fb2a",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -952,10 +1096,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@13048350412c8d0860c8e86675708f1c806d2338",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -1069,10 +1237,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@bb2885441fd895c7ccbc85f15d7c004f9388cca8",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -1186,10 +1378,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@8a699f8b54ea7e555193b57f3e5f205cacab529b",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -1303,10 +1519,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@edb86ab1e7efa739742865a536e5706c0e09a18e",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -1420,10 +1660,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@a8b1c47c0881eee51a186a51628e1881a58ba03c",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -1607,10 +1871,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@9f50e8f82d33af6ee181d62a77a251a520b77489",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -1794,10 +2082,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@423db58805b707392dc35a33d9722c15134a9fdb",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -1991,10 +2303,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@0770c9252fe0ba8881abe67e3771ad53c757f3fc",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -2198,10 +2534,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@0dc76a2eeac1ffedd04ad05cc2b0fee456eb0eb5",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -2345,10 +2705,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@11a553123b75fe656ab8c091a95bef517d57bea8",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -2492,10 +2876,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@cbcb806b316330c5802f057e6ccdc78a8698c44c",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -2599,10 +3007,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@6051fd52055b2d1e6752381d040739b82b7c62ff",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -2706,10 +3138,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@f1114d68986b816e8ce1ededc077b8048e43dc4e",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -2813,10 +3269,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@4d8c5e954b9d1dea85cd9663398e3fcc25944bfa",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -2920,10 +3400,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@15b79c16dcc06d86ac9b8ec475994f581d86c30a",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -3017,10 +3521,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@04b059e0dce7bc5c35d38bb4fe1d21e5811eb79f",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -3124,10 +3652,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@49a58eef8423882c12dd39c59ad64941dfaa1865",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -3221,10 +3773,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@3fd3f4148c41d2257c225235e10bcdd8a4f0b567",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -3428,10 +4004,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@c7122f5e9965ca2d06145874c7a3b8cebcd8fa4b",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -3545,10 +4145,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://janpot@github.com/Janpot/microdata-node.git@da362653ade221873f2337dfbf4134c07ca8928b",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['MIT']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],

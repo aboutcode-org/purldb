@@ -29,7 +29,7 @@ from clearcode.models import CDitem
 from clearindex import harvest
 from minecode.management.commands import get_error_message
 from minecode.management.commands import VerboseCommand
-from minecode.management.commands.run_map import merge_packages
+from minecode.model_utils import merge_packages
 from minecode.utils import stringify_null_purl_fields
 from packagedb.models import Package
 

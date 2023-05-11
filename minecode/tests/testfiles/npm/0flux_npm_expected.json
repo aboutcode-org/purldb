@@ -37,10 +37,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/reissbaker/0flux.git@1c3b277743eb01c401582c754bda7bb1298df00d",
     "copyright":null,
-    "license_expression":"isc",
-    "declared_license":[
-      "ISC"
+    "holder":null,
+    "declared_license_expression":"isc",
+    "declared_license_expression_spdx":"ISC",
+    "license_detections":[
+      {
+        "license_expression":"isc",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"isc",
+            "rule_identifier":"spdx-license-identifier-isc-9931cb7ad33c2eb18f322c94660b670a84186baa",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"ISC"
+          }
+        ],
+        "identifier":"isc-6c4320cc-eb5b-3792-8c56-b8565fff1119"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['ISC']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -90,10 +114,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/reissbaker/0flux.git@bcea414e2128cb37d704858814e3ec7f0d151b0d",
     "copyright":null,
-    "license_expression":"isc",
-    "declared_license":[
-      "ISC"
+    "holder":null,
+    "declared_license_expression":"isc",
+    "declared_license_expression_spdx":"ISC",
+    "license_detections":[
+      {
+        "license_expression":"isc",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"isc",
+            "rule_identifier":"spdx-license-identifier-isc-9931cb7ad33c2eb18f322c94660b670a84186baa",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"ISC"
+          }
+        ],
+        "identifier":"isc-6c4320cc-eb5b-3792-8c56-b8565fff1119"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['ISC']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -143,10 +191,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/reissbaker/0flux.git@b4f31f6e62f1827c8cefba12389211b5866206aa",
     "copyright":null,
-    "license_expression":"isc",
-    "declared_license":[
-      "ISC"
+    "holder":null,
+    "declared_license_expression":"isc",
+    "declared_license_expression_spdx":"ISC",
+    "license_detections":[
+      {
+        "license_expression":"isc",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"isc",
+            "rule_identifier":"spdx-license-identifier-isc-9931cb7ad33c2eb18f322c94660b670a84186baa",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"ISC"
+          }
+        ],
+        "identifier":"isc-6c4320cc-eb5b-3792-8c56-b8565fff1119"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['ISC']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -196,10 +268,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/reissbaker/0flux.git@82663ce575af51bfee9b6a46d34c76b528759d3a",
     "copyright":null,
-    "license_expression":"isc",
-    "declared_license":[
-      "ISC"
+    "holder":null,
+    "declared_license_expression":"isc",
+    "declared_license_expression_spdx":"ISC",
+    "license_detections":[
+      {
+        "license_expression":"isc",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"isc",
+            "rule_identifier":"spdx-license-identifier-isc-9931cb7ad33c2eb18f322c94660b670a84186baa",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"ISC"
+          }
+        ],
+        "identifier":"isc-6c4320cc-eb5b-3792-8c56-b8565fff1119"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['ISC']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
