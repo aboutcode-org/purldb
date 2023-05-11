@@ -16,7 +16,7 @@ from django.utils import timezone
 from packagedcode.models import Package as ScannedPackage
 
 from minecode.management.commands.run_map import map_uri
-from minecode.management.commands.run_map import merge_packages
+from minecode.model_utils import merge_packages
 from minecode.models import ResourceURI
 from minecode.models import ScannableURI
 from minecode.route import Router

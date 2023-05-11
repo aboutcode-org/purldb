@@ -16,8 +16,6 @@ import time
 from django.db import transaction
 from django.utils import timezone
 
-from packageurl import normalize_qualifiers
-
 # UnusedImport here!
 # But importing the mappers and visitors module triggers routes registration
 from minecode import mappers  # NOQA
@@ -25,8 +23,6 @@ from minecode import visitors  # NOQA
 
 from minecode import map_router
 from minecode.models import ResourceURI
-from packagedb.models import DependentPackage
-from packagedb.models import Party
 from minecode.management.commands import get_error_message
 from minecode.management.commands import VerboseCommand
 from minecode.model_utils import merge_or_create_package
@@ -190,121 +186,3 @@ def map_uri(resource_uri, _map_router=map_router):
     else:
         resource_uri.map_error = None
     resource_uri.save()
-
-
-def merge_packages(existing_package, new_package_data, replace=False):
-    """
-    Merge the data from the `new_package_data` mapping into the
-    `existing_package` Package model object.
-
-    When an `existing_package` field has no value one side and and the
-    new_package field has a value, the existing_package field is always
-    set to this value.
-
-    If `replace` is True and a field has a value on both sides, then
-    existing_package field value will be replaced by the new_package
-    field value. Otherwise if `replace` is False, the existing_package
-    field value is left unchanged in this case.
-    """
-    existing_mapping = existing_package.to_dict()
-
-    # We remove `purl` from `existing_mapping` because we use the other purl
-    # fields (type, namespace, name, version, etc.) to generate the purl.
-    existing_mapping.pop('purl')
-
-    # FIXME REMOVE this workaround when a ScanCode bug fixed with
-    # https://github.com/nexB/scancode-toolkit/commit/9b687e6f9bbb695a10030a81be7b93c8b1d816c2
-    qualifiers = new_package_data.get('qualifiers')
-    if isinstance(qualifiers, dict):
-        # somehow we get an dict on the new value instead of a string
-        # this not likely the best place to fix this
-        new_package_data['qualifiers'] = normalize_qualifiers(qualifiers, encode=True)
-
-    new_mapping = new_package_data
-
-    fields_to_skip = ('package_uid',)
-
-    for existing_field, existing_value in existing_mapping.items():
-        new_value = new_mapping.get(existing_field)
-        if TRACE:
-            logger.debug(
-                '\n'.join([
-                    'existing_field:', repr(existing_field),
-                    '    existing_value:', repr(existing_value),
-                    '    new_value:', repr(new_value)])
-            )
-
-        # FIXME: handle Booleans??? though there are none for now
-
-        # If the checksum from `new_package` is different than the one
-        # existing checksum in `existing_package`, there is a big data
-        # inconsistency issue and an Exception is raised
-        if (existing_field in ('md5', 'sha1', 'sha256', 'sha512') and
-                existing_value and
-                new_value and
-                existing_value != new_value):
-            raise Exception(
-                '\n'.join([
-                    'Mismatched {} for {}:'.format(existing_field, existing_package.uri),
-                    '    existing_value: {}'.format(existing_value),
-                    '    new_value: {}'.format(new_value)
-                ])
-            )
-
-        if not new_value:
-            if TRACE:
-                logger.debug('  No new value: skipping')
-            continue
-
-        if not existing_value or replace:
-            if TRACE and not existing_value:
-                logger.debug(
-                    '  No existing value: set to new: {}'.format(new_value))
-
-            if TRACE and replace:
-                logger.debug(
-                    '  Existing value and replace: set to new: {}'.format(new_value))
-
-            if existing_field == 'parties':
-                # If `existing_field` is `parties`, then we update the `Party` table
-                parties = new_value
-                if replace:
-                    # Delete existing Party objects
-                    Party.objects.filter(package=existing_package).delete()
-                for party in parties:
-                    _party, _created = Party.objects.get_or_create(
-                        package=existing_package,
-                        type=party['type'],
-                        role=party['role'],
-                        name=party['name'],
-                        email=party['email'],
-                        url=party['url'],
-                    )
-            elif existing_field == 'dependencies':
-                # If `existing_field` is `dependencies`, then we update the `DependentPackage` table
-                dependencies = new_value
-                if replace:
-                    # Delete existing DependentPackage objects
-                    DependentPackage.objects.filter(package=existing_package).delete()
-                for dependency in dependencies:
-                    _dep, _created = DependentPackage.objects.get_or_create(
-                        package=existing_package,
-                        purl=dependency['purl'],
-                        requirement=dependency['extracted_requirement'],
-                        scope=dependency['scope'],
-                        is_runtime=dependency['is_runtime'],
-                        is_optional=dependency['is_optional'],
-                        is_resolved=dependency['is_resolved'],
-                    )
-            elif existing_field in fields_to_skip:
-                # Continue to next field
-                continue
-            else:
-                # If `existing_field` is not `parties` or `dependencies`, then the
-                # `existing_field` is a regular field on the Package model and can
-                # be updated normally.
-                setattr(existing_package, existing_field, new_value)
-                existing_package.save()
-
-        if TRACE:
-            logger.debug('  Nothing done')

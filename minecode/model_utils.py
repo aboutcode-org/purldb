@@ -62,6 +62,8 @@ def merge_packages(existing_package, new_package_data, replace=False):
 
     new_mapping = new_package_data
 
+    fields_to_skip = ('package_uid',)
+
     for existing_field, existing_value in existing_mapping.items():
         new_value = new_mapping.get(existing_field)
         if TRACE:
@@ -128,12 +130,15 @@ def merge_packages(existing_package, new_package_data, replace=False):
                     _dep, _created = DependentPackage.objects.get_or_create(
                         package=existing_package,
                         purl=dependency['purl'],
-                        extracted_requirement=dependency['extracted_requirement'],
+                        requirement=dependency['extracted_requirement'],
                         scope=dependency['scope'],
                         is_runtime=dependency['is_runtime'],
                         is_optional=dependency['is_optional'],
                         is_resolved=dependency['is_resolved'],
                     )
+            elif existing_field in fields_to_skip:
+                # Continue to next field
+                continue
             else:
                 # If `existing_field` is not `parties` or `dependencies`, then the
                 # `existing_field` is a regular field on the Package model and can
