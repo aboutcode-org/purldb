@@ -29,8 +29,14 @@
   "code_view_url":null,
   "vcs_url":null,
   "copyright":null,
-  "license_expression":"apache-2.0 AND unknown",
-  "declared_license":null,
+  "holder":null,
+  "declared_license_expression":"apache-2.0",
+  "declared_license_expression_spdx":null,
+  "license_detections":[],
+  "other_license_expression":null,
+  "other_license_expression_spdx":null,
+  "other_license_detections":[],
+  "extracted_license_statement":null,
   "notice_text":null,
   "source_packages":[
     "pkg:maven/org.apache.pulsar/pulsar-client-1x@2.5.1?classifier=sources"
@@ -38,7 +44,7 @@
   "file_references":[],
   "extra_data":{
     "history":[
-      "Field `license_expression` has been updated using values obtained from the parent POM pkg:maven/org.apache/apache@18",
+      "Field `declared_license_expression` has been updated using values obtained from the parent POM pkg:maven/org.apache/apache@18",
       "Field `homepage_url` has been updated using values obtained from the parent POM pkg:maven/org.apache/apache@18",
       "Field `parties` has been updated using values obtained from the parent POM pkg:maven/org.apache/apache@18"
     ]

@@ -1,96 +1,134 @@
 {
-  "type": "maven",
-  "namespace": "axis",
-  "name": "axis",
-  "version": "1.4",
-  "qualifiers": {},
-  "subpath": null,
-  "primary_language": "Java",
-  "description": "Axis Web Services\nAn implementation of the SOAP (\"Simple Object Access Protocol\") submission to W3C.",
-  "release_date": null,
-  "parties": [],
-  "keywords": [],
-  "homepage_url": "http://ws.apache.org/axis",
-  "download_url": null,
-  "size": null,
-  "sha1": null,
-  "md5": null,
-  "sha256": null,
-  "sha512": null,
-  "bug_tracking_url": null,
-  "code_view_url": "http://svn.apache.org/viewcvs/webservices/axis/trunk/java/",
-  "vcs_url": "http://svn.apache.org/viewcvs/webservices/axis/trunk/java/",
-  "copyright": null,
-  "license_expression": "apache-2.0 AND unknown",
-  "declared_license": [
+  "type":"maven",
+  "namespace":"axis",
+  "name":"axis",
+  "version":"1.4",
+  "qualifiers":{},
+  "subpath":null,
+  "primary_language":"Java",
+  "description":"Axis Web Services\nAn implementation of the SOAP (\"Simple Object Access Protocol\") submission to W3C.",
+  "release_date":null,
+  "parties":[],
+  "keywords":[],
+  "homepage_url":"http://ws.apache.org/axis",
+  "download_url":null,
+  "size":null,
+  "sha1":null,
+  "md5":null,
+  "sha256":null,
+  "sha512":null,
+  "bug_tracking_url":null,
+  "code_view_url":"http://svn.apache.org/viewcvs/webservices/axis/trunk/java/",
+  "vcs_url":"http://svn.apache.org/viewcvs/webservices/axis/trunk/java/",
+  "copyright":null,
+  "holder":null,
+  "declared_license_expression":"apache-2.0",
+  "declared_license_expression_spdx":"Apache-2.0",
+  "license_detections":[
     {
-      "name": "The Apache Software License, Version 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.txt",
-      "comments": null,
-      "distribution": "repo"
+      "license_expression":"apache-2.0",
+      "matches":[
+        {
+          "score":100.0,
+          "start_line":1,
+          "end_line":1,
+          "matched_length":7,
+          "match_coverage":100.0,
+          "matcher":"1-hash",
+          "license_expression":"apache-2.0",
+          "rule_identifier":"apache-2.0_5.RULE",
+          "rule_relevance":100,
+          "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_5.RULE",
+          "matched_text":"The Apache Software License, Version 2.0"
+        }
+      ],
+      "identifier":"apache_2_0-daaaee76-1395-c8c8-e06a-3f3f76e079b1"
+    },
+    {
+      "license_expression":"apache-2.0",
+      "matches":[
+        {
+          "score":80.0,
+          "start_line":1,
+          "end_line":1,
+          "matched_length":9,
+          "match_coverage":100.0,
+          "matcher":"1-hash",
+          "license_expression":"apache-2.0",
+          "rule_identifier":"apache-2.0_42.RULE",
+          "rule_relevance":80,
+          "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_42.RULE",
+          "matched_text":"http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ],
+      "identifier":"apache_2_0-e6b67d43-b657-21c0-8d8b-17f617aef8ce"
     }
   ],
-  "notice_text": null,
-  "source_packages": [
+  "other_license_expression":null,
+  "other_license_expression_spdx":null,
+  "other_license_detections":[],
+  "extracted_license_statement":"[{'name': 'The Apache Software License, Version 2.0', 'url': 'http://www.apache.org/licenses/LICENSE-2.0.txt', 'comments': None, 'distribution': 'repo'}]",
+  "notice_text":null,
+  "source_packages":[
     "pkg:maven/axis/axis@1.4?classifier=sources"
   ],
-  "file_references": [],
-  "extra_data": {},
-  "dependencies": [
+  "file_references":[],
+  "extra_data":{},
+  "dependencies":[
     {
-      "purl": "pkg:maven/axis/axis-jaxrpc@1.4",
-      "extracted_requirement": "1.4",
-      "scope": "compile",
-      "is_runtime": false,
-      "is_optional": true,
-      "is_resolved": true,
-      "resolved_package": {},
-      "extra_data": {}
+      "purl":"pkg:maven/axis/axis-jaxrpc@1.4",
+      "extracted_requirement":"1.4",
+      "scope":"compile",
+      "is_runtime":false,
+      "is_optional":true,
+      "is_resolved":true,
+      "resolved_package":{},
+      "extra_data":{}
     },
     {
-      "purl": "pkg:maven/axis/axis-saaj@1.4",
-      "extracted_requirement": "1.4",
-      "scope": "compile",
-      "is_runtime": false,
-      "is_optional": true,
-      "is_resolved": true,
-      "resolved_package": {},
-      "extra_data": {}
+      "purl":"pkg:maven/axis/axis-saaj@1.4",
+      "extracted_requirement":"1.4",
+      "scope":"compile",
+      "is_runtime":false,
+      "is_optional":true,
+      "is_resolved":true,
+      "resolved_package":{},
+      "extra_data":{}
     },
     {
-      "purl": "pkg:maven/axis/axis-wsdl4j@1.5.1",
-      "extracted_requirement": "1.5.1",
-      "scope": "runtime",
-      "is_runtime": true,
-      "is_optional": false,
-      "is_resolved": true,
-      "resolved_package": {},
-      "extra_data": {}
+      "purl":"pkg:maven/axis/axis-wsdl4j@1.5.1",
+      "extracted_requirement":"1.5.1",
+      "scope":"runtime",
+      "is_runtime":true,
+      "is_optional":false,
+      "is_resolved":true,
+      "resolved_package":{},
+      "extra_data":{}
     },
     {
-      "purl": "pkg:maven/commons-logging/commons-logging@1.0.4",
-      "extracted_requirement": "1.0.4",
-      "scope": "runtime",
-      "is_runtime": true,
-      "is_optional": false,
-      "is_resolved": true,
-      "resolved_package": {},
-      "extra_data": {}
+      "purl":"pkg:maven/commons-logging/commons-logging@1.0.4",
+      "extracted_requirement":"1.0.4",
+      "scope":"runtime",
+      "is_runtime":true,
+      "is_optional":false,
+      "is_resolved":true,
+      "resolved_package":{},
+      "extra_data":{}
     },
     {
-      "purl": "pkg:maven/commons-discovery/commons-discovery@0.2",
-      "extracted_requirement": "0.2",
-      "scope": "runtime",
-      "is_runtime": true,
-      "is_optional": false,
-      "is_resolved": true,
-      "resolved_package": {},
-      "extra_data": {}
+      "purl":"pkg:maven/commons-discovery/commons-discovery@0.2",
+      "extracted_requirement":"0.2",
+      "scope":"runtime",
+      "is_runtime":true,
+      "is_optional":false,
+      "is_resolved":true,
+      "resolved_package":{},
+      "extra_data":{}
     }
   ],
-  "repository_homepage_url": "https://repo1.maven.org/maven2/axis/axis/1.4/",
-  "repository_download_url": "https://repo1.maven.org/maven2/axis/axis/1.4/axis-1.4.jar",
-  "api_data_url": "https://repo1.maven.org/maven2/axis/axis/1.4/axis-1.4.pom",
-  "datasource_id": "maven_pom",
-  "purl": "pkg:maven/axis/axis@1.4"
+  "repository_homepage_url":"https://repo1.maven.org/maven2/axis/axis/1.4/",
+  "repository_download_url":"https://repo1.maven.org/maven2/axis/axis/1.4/axis-1.4.jar",
+  "api_data_url":"https://repo1.maven.org/maven2/axis/axis/1.4/axis-1.4.pom",
+  "datasource_id":"maven_pom",
+  "purl":"pkg:maven/axis/axis@1.4"
 }

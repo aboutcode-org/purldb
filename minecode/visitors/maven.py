@@ -192,7 +192,7 @@ def merge_parent(package, parent_package):
     Merge `parent_package` data into `package` and return `package.
     """
     mergeable_fields = (
-        'license_expression',
+        'declared_license_expression',
         'homepage_url',
         'parties',
     )
