@@ -63,7 +63,7 @@ def build_packages_with_json(metadata, purl=None):
             version=metadata['version'],
             homepage_url=metadata.get('projectUrl'),
             description=description,
-            declared_license=licenseUrl,
+            extracted_license_statement=licenseUrl,
             copyright=copyr,
             parties=authors,
             keywords=keywords,
@@ -165,7 +165,7 @@ def build_packages_from_html(metadata, uri, purl=None):
                         homepage_url=uri,
                         description=description,
                         download_url=download_url,
-                        declared_license=license_value,
+                        extracted_license_statement=license_value,
                         copyright=copyright_value
                     )
                     package.set_purl(purl)
