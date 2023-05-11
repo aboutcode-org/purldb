@@ -30,8 +30,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -74,8 +100,34 @@
     "code_view_url":null,
     "vcs_url":"git+git://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5\nhttp://dev.perl.org/licenses/",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5', 'http://dev.perl.org/licenses/']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -118,8 +170,34 @@
     "code_view_url":null,
     "vcs_url":"git+git://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5\nhttp://dev.perl.org/licenses/",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5', 'http://dev.perl.org/licenses/']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -162,8 +240,34 @@
     "code_view_url":null,
     "vcs_url":"git+git://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5\nhttp://dev.perl.org/licenses/",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5', 'http://dev.perl.org/licenses/']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -206,8 +310,34 @@
     "code_view_url":null,
     "vcs_url":"git+git://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5\nhttp://dev.perl.org/licenses/",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5', 'http://dev.perl.org/licenses/']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -250,8 +380,34 @@
     "code_view_url":null,
     "vcs_url":"git+git://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5\nhttp://dev.perl.org/licenses/",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5', 'http://dev.perl.org/licenses/']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -294,8 +450,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -338,8 +520,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -382,8 +590,34 @@
     "code_view_url":null,
     "vcs_url":"git+git://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5\nhttp://dev.perl.org/licenses/",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5', 'http://dev.perl.org/licenses/']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -426,8 +660,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -470,8 +730,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -514,8 +800,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -558,8 +870,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"unknown",
+    "holder":null,
+    "declared_license_expression":"unknown",
+    "declared_license_expression_spdx":"LicenseRef-scancode-unknown",
+    "license_detections":[
+      {
+        "license_expression":"unknown",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"5-undetected",
+            "license_expression":"unknown",
+            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "matched_text":"license ['unknown']"
+          }
+        ],
+        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['unknown']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -602,8 +940,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -646,8 +1010,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -690,8 +1080,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/miyagawa/Carmel.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -734,8 +1150,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/plack/Plack.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -778,8 +1220,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/miyagawa/Filesys-Notify-Simple.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -822,8 +1290,34 @@
     "code_view_url":null,
     "vcs_url":"git+git://github.com/miyagawa/carton.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5\nhttp://dev.perl.org/licenses/",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5', 'http://dev.perl.org/licenses/']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -866,8 +1360,34 @@
     "code_view_url":null,
     "vcs_url":"git+git://github.com/miyagawa/carton.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5\nhttp://dev.perl.org/licenses/",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5', 'http://dev.perl.org/licenses/']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -910,8 +1430,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/miyagawa/carton.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -954,8 +1500,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/miyagawa/carton.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -998,8 +1570,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/miyagawa/carton.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -1042,8 +1640,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/miyagawa/carton.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -1086,8 +1710,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/miyagawa/carton.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -1130,8 +1780,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"unknown",
+    "holder":null,
+    "declared_license_expression":"unknown",
+    "declared_license_expression_spdx":"LicenseRef-scancode-unknown",
+    "license_detections":[
+      {
+        "license_expression":"unknown",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"5-undetected",
+            "license_expression":"unknown",
+            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "matched_text":"license ['unknown']"
+          }
+        ],
+        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['unknown']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -1174,8 +1850,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"unknown",
+    "holder":null,
+    "declared_license_expression":"unknown",
+    "declared_license_expression_spdx":"LicenseRef-scancode-unknown",
+    "license_detections":[
+      {
+        "license_expression":"unknown",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"5-undetected",
+            "license_expression":"unknown",
+            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "matched_text":"license ['unknown']"
+          }
+        ],
+        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['unknown']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -1218,8 +1920,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"unknown",
+    "holder":null,
+    "declared_license_expression":"unknown",
+    "declared_license_expression_spdx":"LicenseRef-scancode-unknown",
+    "license_detections":[
+      {
+        "license_expression":"unknown",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"5-undetected",
+            "license_expression":"unknown",
+            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "matched_text":"license ['unknown']"
+          }
+        ],
+        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['unknown']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -1262,8 +1990,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"unknown",
+    "holder":null,
+    "declared_license_expression":"unknown",
+    "declared_license_expression_spdx":"LicenseRef-scancode-unknown",
+    "license_detections":[
+      {
+        "license_expression":"unknown",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"5-undetected",
+            "license_expression":"unknown",
+            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "matched_text":"license ['unknown']"
+          }
+        ],
+        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['unknown']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -1306,8 +2060,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"perl_5",
+    "holder":null,
+    "declared_license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+    "declared_license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "license_detections":[
+      {
+        "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
+            "matched_text":"license perl_5"
+          }
+        ],
+        "identifier":"artistic_perl_1_0_or_gpl_1_0_plus-b7d78126-e96a-22f3-84c1-f0a76641cd37"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['perl_5']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -1350,8 +2130,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"unknown",
+    "holder":null,
+    "declared_license_expression":"unknown",
+    "declared_license_expression_spdx":"LicenseRef-scancode-unknown",
+    "license_detections":[
+      {
+        "license_expression":"unknown",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"5-undetected",
+            "license_expression":"unknown",
+            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "matched_text":"license ['unknown']"
+          }
+        ],
+        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['unknown']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -1394,8 +2200,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"unknown",
+    "holder":null,
+    "declared_license_expression":"unknown",
+    "declared_license_expression_spdx":"LicenseRef-scancode-unknown",
+    "license_detections":[
+      {
+        "license_expression":"unknown",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"5-undetected",
+            "license_expression":"unknown",
+            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "matched_text":"license ['unknown']"
+          }
+        ],
+        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['unknown']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -1438,8 +2270,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"unknown",
+    "holder":null,
+    "declared_license_expression":"unknown",
+    "declared_license_expression_spdx":"LicenseRef-scancode-unknown",
+    "license_detections":[
+      {
+        "license_expression":"unknown",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"5-undetected",
+            "license_expression":"unknown",
+            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "matched_text":"license ['unknown']"
+          }
+        ],
+        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['unknown']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
@@ -1482,8 +2340,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"unknown",
+    "holder":null,
+    "declared_license_expression":"unknown",
+    "declared_license_expression_spdx":"LicenseRef-scancode-unknown",
+    "license_detections":[
+      {
+        "license_expression":"unknown",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":2,
+            "match_coverage":100.0,
+            "matcher":"5-undetected",
+            "license_expression":"unknown",
+            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "matched_text":"license ['unknown']"
+          }
+        ],
+        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['unknown']",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
