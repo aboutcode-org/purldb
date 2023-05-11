@@ -37,13 +37,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/devel/py-five.customerize",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":"unknown",
-    "declared_license":{
-      "licenses":[
-        "ZPL21"
-      ],
-      "licenselogic":"single"
-    },
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"{'licenses': ['ZPL21'], 'licenselogic': 'single'}",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -92,8 +93,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/www/p5-Fliggy",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":null,
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -143,13 +150,34 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/www/py-plone.intelligenttext",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":"gpl-2.0",
-    "declared_license":{
-      "licenses":[
-        "GPLv2"
-      ],
-      "licenselogic":"single"
-    },
+    "holder":null,
+    "declared_license_expression":"gpl-2.0",
+    "declared_license_expression_spdx":"GPL-2.0-only",
+    "license_detections":[
+      {
+        "license_expression":"gpl-2.0",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-hash",
+            "license_expression":"gpl-2.0",
+            "rule_identifier":"gpl-2.0_bare_single_word.RULE",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_bare_single_word.RULE",
+            "matched_text":"GPLv2"
+          }
+        ],
+        "identifier":"gpl_2_0-3aa0fcde-6d7f-a8e2-6494-7f9352e6aafb"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"{'licenses': ['GPLv2'], 'licenselogic': 'single'}",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -197,13 +225,34 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/devel/lfcbase",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":"gpl-3.0",
-    "declared_license":{
-      "licenses":[
-        "GPLv3"
-      ],
-      "licenselogic":"single"
-    },
+    "holder":null,
+    "declared_license_expression":"gpl-3.0",
+    "declared_license_expression_spdx":"GPL-3.0-only",
+    "license_detections":[
+      {
+        "license_expression":"gpl-3.0",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-hash",
+            "license_expression":"gpl-3.0",
+            "rule_identifier":"gpl-3.0_32.RULE",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-3.0_32.RULE",
+            "matched_text":"GPLv3"
+          }
+        ],
+        "identifier":"gpl_3_0-eaa289b6-5fdc-8ed7-ae71-bf02ce67e277"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"{'licenses': ['GPLv3'], 'licenselogic': 'single'}",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -252,13 +301,34 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/devel/py-xattr",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":{
-      "licenses":[
-        "MIT"
-      ],
-      "licenselogic":"single"
-    },
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"{'licenses': ['MIT'], 'licenselogic': 'single'}",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -306,8 +376,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/devel/libbonobo",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":null,
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -355,8 +431,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/net/libnetdude",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":null,
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -405,8 +487,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/www/p5-AnyEvent-ReverseHTTP",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":null,
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -455,8 +543,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/devel/p5-Tie-CPHash",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":null,
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -504,8 +598,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/lang/nqc",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":null,
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -553,8 +653,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/x11/xtermset",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":null,
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -602,8 +708,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/games/mt_dolphin_ia",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":null,
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -651,8 +763,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/x11-clocks/dclock",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":null,
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -700,8 +818,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/databases/php53-pdo_firebird",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":null,
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -749,8 +873,14 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/x11-fonts/isabella",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":null,
+    "holder":null,
+    "declared_license_expression":null,
+    "declared_license_expression_spdx":null,
+    "license_detections":[],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -800,14 +930,34 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/www/p5-ApacheBench",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":"unknown OR gpl-1.0",
-    "declared_license":{
-      "licenses":[
-        "ART10",
-        "GPLv1"
-      ],
-      "licenselogic":"or"
-    },
+    "holder":null,
+    "declared_license_expression":"gpl-1.0",
+    "declared_license_expression_spdx":"GPL-1.0-only",
+    "license_detections":[
+      {
+        "license_expression":"gpl-1.0",
+        "matches":[
+          {
+            "score":95.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-hash",
+            "license_expression":"gpl-1.0",
+            "rule_identifier":"gpl-1.0_13.RULE",
+            "rule_relevance":95,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-1.0_13.RULE",
+            "matched_text":"GPLv1"
+          }
+        ],
+        "identifier":"gpl_1_0-1e75d0fc-6998-95ba-6797-8f6b9b6d4a5c"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"{'licenses': ['ART10', 'GPLv1'], 'licenselogic': 'or'}",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -857,13 +1007,34 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/www/py-plone.app.uuid",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":"gpl-2.0",
-    "declared_license":{
-      "licenses":[
-        "GPLv2"
-      ],
-      "licenselogic":"single"
-    },
+    "holder":null,
+    "declared_license_expression":"gpl-2.0",
+    "declared_license_expression_spdx":"GPL-2.0-only",
+    "license_detections":[
+      {
+        "license_expression":"gpl-2.0",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-hash",
+            "license_expression":"gpl-2.0",
+            "rule_identifier":"gpl-2.0_bare_single_word.RULE",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_bare_single_word.RULE",
+            "matched_text":"GPLv2"
+          }
+        ],
+        "identifier":"gpl_2_0-3aa0fcde-6d7f-a8e2-6494-7f9352e6aafb"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"{'licenses': ['GPLv2'], 'licenselogic': 'single'}",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -911,13 +1082,34 @@
     "code_view_url":"https://svnweb.freebsd.org/ports/head/net/mrouted",
     "vcs_url":null,
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":{
-      "licenses":[
-        "MIT"
-      ],
-      "licenselogic":"single"
-    },
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"{'licenses': ['MIT'], 'licenselogic': 'single'}",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
