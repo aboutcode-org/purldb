@@ -302,20 +302,73 @@ class AbstractPackage(models.Model):
         null=True,
         help_text=_("Copyright statements for this package. Typically one per line."),
     )
-    license_expression = models.TextField(
+    holder = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_("Holders for this package. Typically one per line."),
+    )
+    declared_license_expression = models.TextField(
         blank=True,
         null=True,
         help_text=_(
-            "The normalized license expression for this package as derived "
-            "from its declared license."
+            "The license expression for this package typically derived "
+            "from its extracted_license_statement or from some other type-specific "
+            "routine or convention."
         ),
     )
-    declared_license = models.TextField(
+    declared_license_expression_spdx = models.TextField(
         blank=True,
         null=True,
         help_text=_(
-            "The declared license mention or tag or text as found in a "
-            "package manifest."
+            "The SPDX license expression for this package converted "
+            "from its declared_license_expression."
+        ),
+    )
+    license_detections = models.JSONField(
+        default=list,
+        blank=True,
+        null=True,
+        help_text=_(
+            "A list of LicenseDetection mappings typically derived "
+            "from its extracted_license_statement or from some other type-specific "
+            "routine or convention."
+        ),
+    )
+    other_license_expression = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "The license expression for this package which is different from the "
+            "declared_license_expression, (i.e. not the primary license) "
+            "routine or convention."
+        ),
+    )
+    other_license_expression_spdx = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "The other SPDX license expression for this package converted "
+            "from its other_license_expression."
+        ),
+    )
+    other_license_detections = models.JSONField(
+        default=list,
+        blank=True,
+        null=True,
+        help_text=_(
+            "A list of LicenseDetection mappings which is different from the "
+            "declared_license_expression, (i.e. not the primary license) "
+            "These are detections for the detection for the license expressions "
+            "in other_license_expression. "
+        ),
+    )
+    extracted_license_statement = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "The license statement mention, tag or text as found in a "
+            "package manifest and extracted. This can be a string, a list or dict of "
+            "strings possibly nested, as found originally in the manifest."
         ),
     )
     notice_text = models.TextField(
@@ -323,16 +376,6 @@ class AbstractPackage(models.Model):
         null=True,
         help_text=_("A notice text for this package."),
     )
-    manifest_path = models.CharField(
-        max_length=1024,
-        blank=True,
-        null=True,
-        help_text=_(
-            "A relative path to the manifest file if any, such as a "
-            "Maven .pom or a npm package.json."
-        ),
-    )
-    contains_source_code = models.BooleanField(null=True, blank=True)
     datasource_id = models.CharField(
         max_length=64,
         blank=True,
