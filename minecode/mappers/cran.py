@@ -72,7 +72,7 @@ def build_packages_from_html(metadata, uri, purl=None):
         type='cran',
         name=uri.rpartition('/')[0].rpartition('/')[-1]
     )
-    licenses = []
+    extracted_license_statement = []
     download_urls = []
 
     soup = BeautifulSoup(metadata, 'lxml')
@@ -109,7 +109,7 @@ def build_packages_from_html(metadata, uri, purl=None):
                         common_data['homepage_url'] = value
                 elif key == 'License:':
                     for license_url in value:
-                        licenses.append(license_url)
+                        extracted_license_statement.append(license_url)
                 elif key == 'Author:':
                     parties = common_data.get('parties')
                     if not parties:
@@ -135,8 +135,8 @@ def build_packages_from_html(metadata, uri, purl=None):
                     if len(col_values) == 3:
                         value = col_values[2]
                     common_data['dependencies'] = get_dependencies(value)
-    if licenses:
-        common_data['declared_license'] = '\n'.join(licenses)
+    if extracted_license_statement:
+        common_data['extracted_license_statement'] = extracted_license_statement
 
     if download_urls:  # for else statement will have else running always if there is no break statement
         for download_url in download_urls:
