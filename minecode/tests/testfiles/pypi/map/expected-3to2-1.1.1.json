@@ -30,8 +30,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"License :: OSI Approved :: Apache Software License",
+    "holder":null,
+    "declared_license_expression":"apache-2.0",
+    "declared_license_expression_spdx":"Apache-2.0",
+    "license_detections":[
+      {
+        "license_expression":"apache-2.0",
+        "matches":[
+          {
+            "score":95.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":6,
+            "match_coverage":100.0,
+            "matcher":"1-hash",
+            "license_expression":"apache-2.0",
+            "rule_identifier":"pypi_apache_no-version.RULE",
+            "rule_relevance":95,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/pypi_apache_no-version.RULE",
+            "matched_text":"License :: OSI Approved :: Apache Software License"
+          }
+        ],
+        "identifier":"apache_2_0-e267f9d9-ae62-e9c9-9cc2-8cd0a1e4928f"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"['License :: OSI Approved :: Apache Software License']",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -40,7 +66,7 @@
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
-    "datasource_id":null,
+    "datasource_id":"pypi_api_metadata",
     "purl":"pkg:pypi/3to2@1.1.1"
   }
 ]

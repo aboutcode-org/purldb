@@ -76,19 +76,18 @@ def build_packages(metadata, purl=None):
         common_data['parties'].append(scan_models.Party(
             type=scan_models.party_person, name=maintainer, role='maintainer', email=email))
 
-    declared_licenses = []
+    extracted_license_statement = []
     lic = info.get('license')
     if lic and lic != 'UNKNOWN':
-        declared_licenses.append(lic)
+        extracted_license_statement.append(lic)
 
     classifiers = info.get('classifiers')
-    if classifiers and not declared_licenses:
+    if classifiers and not extracted_license_statement:
         licenses = [lic for lic in classifiers if lic.lower().startswith('license')]
         for lic in licenses:
-            declared_licenses.append(lic)
+            extracted_license_statement.append(lic)
 
-    if declared_licenses:
-        common_data['declared_license'] = '\n'.join(declared_licenses)
+    common_data['extracted_license_statement'] = extracted_license_statement
 
     kw = info.get('keywords')
     if kw:
@@ -112,9 +111,12 @@ def build_packages(metadata, purl=None):
         download_data = dict(download_url=download_url)
         download_data.update(common_data)
         package = scan_models.PackageData(
+            datasource_id='pypi_sdist_pkginfo',
             type='pypi',
             **download_data
         )
+        # TODO: Consider creating a DatafileHandler for PyPI API metadata
+        package.datasource_id = 'pypi_api_metadata'
         package.set_purl(purl)
         yield package
 
@@ -133,8 +135,10 @@ def build_packages(metadata, purl=None):
         download_data['md5'] = download.get('md5_digest')
         download_data.update(common_data)
         package = scan_models.PackageData(
+            datasource_id='pypi_sdist_pkginfo',
             type='pypi',
             **download_data
         )
+        package.datasource_id = 'pypi_api_metadata'
         package.set_purl(purl)
         yield package
