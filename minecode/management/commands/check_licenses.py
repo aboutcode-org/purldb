@@ -82,9 +82,9 @@ def find_ambiguous_packages(types=('maven',), keywords=('unknown', 'proprietary'
     contain "unknown", "proprietary" and "commercial" words.
     """
     # filter to detect declared_license field
-    filter_expression = [Q(declared_license__icontains=word) for word in keywords]
+    filter_expression = [Q(declared_license_expression__icontains=word) for word in keywords]
     # filter to detect license_expression field, add or relationship between these two fields
-    filter_expression.extend([Q(license_expression__icontains=word) for word in keywords])
+    filter_expression.extend([Q(other_license_expression__icontains=word) for word in keywords])
     license_filter = reduce(operator.or_, filter_expression)
 
     for package in Package.objects.filter(type__in=types).filter(license_filter):
