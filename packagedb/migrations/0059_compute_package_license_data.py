@@ -13,7 +13,8 @@ def compute_package_declared_license_expression_spdx(apps, schema_editor):
 
     Package = apps.get_model('packagedb', 'Package')
     packages = Package.objects.filter(
-        ~Q(declared_license_expression="") & Q(declared_license_expression_spdx="")
+        ~Q(declared_license_expression="") & Q(declared_license_expression_spdx="") |
+        Q(declared_license_expression__isnull=False) & Q(declared_license_expression_spdx__isnull=True)
     )
 
     for package in packages:

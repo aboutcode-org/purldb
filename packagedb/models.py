@@ -788,6 +788,29 @@ class ScanFieldsModelMixin(models.Model):
     This model is from ScanCode.io
     """
 
+    detected_license_expression = models.TextField(
+        blank=True,
+        help_text=_("TODO"),
+    )
+    detected_license_expression_spdx = models.TextField(
+        blank=True,
+        help_text=_("TODO"),
+    )
+    license_detections = models.JSONField(
+        blank=True,
+        default=list,
+        help_text=_("List of license detection details."),
+    )
+    license_clues = models.JSONField(
+        blank=True,
+        default=list,
+        help_text=_("List of license clues."),
+    )
+    percentage_of_license_text = models.FloatField(
+        blank=True,
+        null=True,
+        help_text=_("TODO"),
+    )
     copyrights = models.JSONField(
         blank=True,
         default=list,
@@ -806,16 +829,6 @@ class ScanFieldsModelMixin(models.Model):
         blank=True,
         default=list,
         help_text=_("List of detected authors (and related detection details)."),
-    )
-    licenses = models.JSONField(
-        blank=True,
-        default=list,
-        help_text=_("List of license detection details."),
-    )
-    license_expressions = models.JSONField(
-        blank=True,
-        default=list,
-        help_text=_("List of detected license expressions."),
     )
     package_data = models.JSONField(
         default=list,
