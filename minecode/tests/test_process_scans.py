@@ -95,7 +95,7 @@ class ProcessScansTest(MiningTestCase):
         Command.process_scan(scannable_uri)
 
         # Make sure that we get license_expression and copyright from the summary
-        self.assertEqual('apache-2.0', self.package1.license_expression)
+        self.assertEqual('apache-2.0', self.package1.declared_license_expression)
         self.assertEqual('Copyright (c) Apache Software Foundation', self.package1.copyright)
 
         result = Resource.objects.filter(package=self.package1)

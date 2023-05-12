@@ -81,8 +81,8 @@ class Command(scanning.ScanningCommand):
             )
 
             license_expression = summary.get('declared_license_expression')
-            if not package.license_expression and license_expression:
-                package.license_expression = license_expression
+            if not package.declared_license_expression and license_expression:
+                package.declared_license_expression = license_expression
 
             declared_holder = summary.get('declared_holder')
             if not package.copyright:
