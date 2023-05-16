@@ -14,6 +14,7 @@ from django_filters.filters import Filter
 from django_filters.filters import OrderingFilter
 import django_filters
 
+from packagedcode.models import PackageData
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
 from rest_framework import status
@@ -279,3 +280,149 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
+
+
+def get_package_data(type, namespace, name, version, field):
+    """
+    Look up the value of a field of a Package
+    """
+    package = None
+    content_types = [
+        Package.PackageContentType.SOURCE,
+        Package.PackageContentType.BINARY,
+        Package.PackageContentType.DOC,
+        Package.PackageContentType.TEST,
+    ]
+    for content_type in content_types:
+        try:
+            package = Package.objects.get(
+                type=type,
+                namespace=namespace,
+                name=name,
+                version=version,
+                package_content=content_type
+            )
+        except Package.DoesNotExist:
+            continue
+    if not package:
+        return None
+    return getattr(package, field, None)
+
+
+def get_mixed_package(type, namespace, name, version):
+    """
+    return package data that has results mixed from different sources
+    """
+    packages = Package.objects.filter(
+        type=type,
+        namespace=namespace,
+        name=name,
+        version=version,
+    )
+
+    # See if we can get a specific version of the package with no qualifiers or subpath
+    # if there are multiple, we just choose the first one
+    based_package = packages.filter(
+        Q(qualifiers__isnull=True) & Q(subpath__isnull=True) |
+        Q(qualifiers='') & Q(subpath='') |
+        Q(qualifiers__isnull=True) & Q(subpath='') |
+        Q(qualifiers='') & Q(subpath__isnull=True)
+    ).first()
+
+    if based_package:
+        # Use this package metadata as our base
+        package_data = based_package.to_dict()
+    else:
+        # We have to create the metadata
+        package_data = PackageData(
+            type=type,
+            namespace=namespace,
+            name=name,
+            version=version,
+        ).to_dict()
+
+    update = [
+        'primary_language',
+        'copyright',
+        'declared_license_expression',
+        'declared_license_expression_spdx',
+        'api_data_url',
+        'bug_tracking_url',
+        'code_view_url',
+        'vcs_url',
+        'source_packages',
+        'api_data_url',
+        'datasource_id',
+        'repository_homepage_url',
+    ]
+
+    dont_update = [
+        'type',
+        'namespace',
+        'name',
+        'version',
+        'qualifiers',
+        'subpath',
+        'purl',
+    ]
+
+    clear_out = [
+        # These should be cleared out
+        'download_url',
+        'size',
+        'md5',
+        'sha1',
+        'sha256',
+        'sha512',
+        'package_uid',
+    ]
+
+    what_do = [
+        'license_detections',
+        'other_license_expression'
+        'other_license_expression_spdx',
+        'other_license_detections',
+        'extracted_license_statement',
+        'notice_text',
+        'extra_data',
+        'dependencies',
+        'repository_download_url',
+        'file_references',
+        'parties',
+    ]
+
+    for field, data in package_data.items():
+        if (
+            field in dont_update
+            or field in what_do
+        ):
+            # Skip these
+            continue
+        elif field in clear_out:
+            package_data[field] = None
+        elif field in update:
+            if not data:
+                # For now, we prioritize source results over others
+                better_data = get_package_data(
+                    type=type,
+                    namespace=namespace,
+                    name=name,
+                    version=version,
+                    field=field
+                )
+                if not better_data:
+                    continue
+                package_data[field] = better_data
+            else:
+                # Enhance field with data
+                # TODO: figure out which fields are safe to append to
+                pass
+
+    return package_data
+
+    # Start layering on fields
+    # TODO: Get package that the purl is exactly for, like if its a source package or test package, and use that package as the base
+    # then start filling in the data from other sources, based on precidence, source-binary-doc-test, etc)
+    # TODO: filter using package se
+    # TODO: how are the package_set id's computed? when is it set, etc.
+
