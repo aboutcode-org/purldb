@@ -477,6 +477,29 @@ class Package(
         blank=True,
         help_text='Indexing errors messages. When present this means the indexing has failed.',
     )
+    package_set = models.TextField(
+        null=True,
+        blank=True,
+        help_text='A UUID used to identify a group of related Packages'
+    )
+
+    class PackageContentType(models.TextChoices):
+        """List of Package content types."""
+
+        SOURCE = 'source'
+        BINARY = 'binary'
+        DOC = 'doc'
+        TEST = 'test'
+
+    package_content = models.CharField(
+        max_length=6,
+        null=True,
+        choices=PackageContentType.choices,
+        help_text=_(
+            'Content of this Package as one of: {}'.format(', '.join(PackageContentType.values))
+        ),
+    )
+
     search_vector = SearchVectorField(null=True)
 
     objects = PackageQuerySet.as_manager()
