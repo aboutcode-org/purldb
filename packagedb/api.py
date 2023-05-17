@@ -281,32 +281,14 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
 
-
-def get_package_data(type, namespace, name, version, field):
-    """
-    Look up the value of a field of a Package
-    """
-    package = None
-    content_types = [
-        Package.PackageContentType.SOURCE,
-        Package.PackageContentType.BINARY,
-        Package.PackageContentType.DOC,
-        Package.PackageContentType.TEST,
-    ]
-    for content_type in content_types:
-        try:
-            package = Package.objects.get(
-                type=type,
-                namespace=namespace,
-                name=name,
-                version=version,
-                package_content=content_type
-            )
-        except Package.DoesNotExist:
-            continue
-    if not package:
-        return None
-    return getattr(package, field, None)
+    @action(detail=True)
+    def get_enhanced_package_data(self, request, *args, **kwargs):
+        """
+        Return a mapping of enhanced Package data for a given Package
+        """
+        package = self.get_object()
+        package_data = get_enhanced_package(package)
+        return Response(package_data)
 
 
 UPDATEABLE_FIELDS = [
