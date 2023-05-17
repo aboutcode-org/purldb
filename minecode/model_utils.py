@@ -1,3 +1,4 @@
+from uuid import uuid4
 import logging
 import sys
 
@@ -242,6 +243,20 @@ def merge_or_create_package(scanned_package, visit_level):
         # Here a pre-existing packagedb record does not exist
         # We create a new one from scratch
 
+        # Check to see if we have a package with the same purl, so we can use
+        # that package_set value
+        # TODO: Consider adding this logic to the Package queryset manager
+        p = Package.objects.filter(
+            type=scanned_package.type,
+            namespace=scanned_package.namespace,
+            name=scanned_package.name,
+            version=scanned_package.version,
+        ).first()
+        if p and p.package_set:
+            package_set = p.package_set
+        else:
+            package_set = uuid4()
+
         package_data = dict(
             # FIXME: we should get the file_name in the
             # PackageData object instead.
@@ -278,7 +293,8 @@ def merge_or_create_package(scanned_package, visit_level):
             other_license_detections=scanned_package.other_license_detections,
             extracted_license_statement=scanned_package.extracted_license_statement,
             notice_text=scanned_package.notice_text,
-            source_packages=scanned_package.source_packages
+            source_packages=scanned_package.source_packages,
+            package_set=package_set,
         )
 
         stringify_null_purl_fields(package_data)
