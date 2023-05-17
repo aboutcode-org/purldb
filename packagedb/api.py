@@ -309,120 +309,93 @@ def get_package_data(type, namespace, name, version, field):
     return getattr(package, field, None)
 
 
-def get_mixed_package(type, namespace, name, version):
+UPDATEABLE_FIELDS = [
+    'primary_language',
+    'copyright',
+
+    'declared_license_expression',
+    'declared_license_expression_spdx',
+    'license_detections',
+    'other_license_expression',
+    'other_license_expression_spdx',
+    'other_license_detections',
+    # TODO: update extracted license statement and other fields together
+    # all license fields are based off of `extracted_license_statement` and should be treated as a unit
+    # hold off for now
+    'extracted_license_statement',
+
+    'notice_text',
+    'api_data_url',
+    'bug_tracking_url',
+    'code_view_url',
+    'vcs_url',
+    'source_packages',
+    'repository_homepage_url',
+    'dependencies',
+    'parties',
+]
+
+
+NONUPDATEABLE_FIELDS = [
+    'type',
+    'namespace',
+    'name',
+    'version',
+    'qualifiers',
+    'subpath',
+    'purl',
+    'datasource_id',
+    'download_url',
+    'size',
+    'md5',
+    'sha1',
+    'sha256',
+    'sha512',
+    'package_uid',
+    'repository_download_url',
+    'file_references',
+]
+
+
+def get_enhanced_package(package):
     """
-    return package data that has results mixed from different sources
+    Return package data from `package`, where the data has been enhanced by
+    other packages in the same package_set.
     """
     packages = Package.objects.filter(
-        type=type,
-        namespace=namespace,
-        name=name,
-        version=version,
-    )
+        package_set=package.package_set
+    ).order_by('package_content', 'purl')
+    return _get_enhanced_package(package, packages)
 
-    # See if we can get a specific version of the package with no qualifiers or subpath
-    # if there are multiple, we just choose the first one
-    based_package = packages.filter(
-        Q(qualifiers__isnull=True) & Q(subpath__isnull=True) |
-        Q(qualifiers='') & Q(subpath='') |
-        Q(qualifiers__isnull=True) & Q(subpath='') |
-        Q(qualifiers='') & Q(subpath__isnull=True)
-    ).first()
 
-    if based_package:
-        # Use this package metadata as our base
-        package_data = based_package.to_dict()
-    else:
-        # We have to create the metadata
-        package_data = PackageData(
-            type=type,
-            namespace=namespace,
-            name=name,
-            version=version,
-        ).to_dict()
-
-    update = [
-        'primary_language',
-        'copyright',
-        'declared_license_expression',
-        'declared_license_expression_spdx',
-        'api_data_url',
-        'bug_tracking_url',
-        'code_view_url',
-        'vcs_url',
-        'source_packages',
-        'api_data_url',
-        'datasource_id',
-        'repository_homepage_url',
-    ]
-
-    dont_update = [
-        'type',
-        'namespace',
-        'name',
-        'version',
-        'qualifiers',
-        'subpath',
-        'purl',
-    ]
-
-    clear_out = [
-        # These should be cleared out
-        'download_url',
-        'size',
-        'md5',
-        'sha1',
-        'sha256',
-        'sha512',
-        'package_uid',
-    ]
-
-    what_do = [
-        'license_detections',
-        'other_license_expression'
-        'other_license_expression_spdx',
-        'other_license_detections',
-        'extracted_license_statement',
-        'notice_text',
-        'extra_data',
-        'dependencies',
-        'repository_download_url',
-        'file_references',
-        'parties',
-    ]
-
-    for field, data in package_data.items():
-        if (
-            field in dont_update
-            or field in what_do
-        ):
-            # Skip these
+def _get_enhanced_package(package, packages):
+    """
+    Return a mapping of package data based on `package` and Packages in
+    `packages`.
+    """
+    mixing = False
+    package_data = {}
+    for peer in packages:
+        if peer == package:
+            mixing = True
+            package_data = package.to_dict()
             continue
-        elif field in clear_out:
-            package_data[field] = None
-        elif field in update:
-            if not data:
-                # For now, we prioritize source results over others
-                better_data = get_package_data(
-                    type=type,
-                    namespace=namespace,
-                    name=name,
-                    version=version,
-                    field=field
-                )
-                if not better_data:
-                    continue
-                package_data[field] = better_data
-            else:
-                # Enhance field with data
-                # TODO: figure out which fields are safe to append to
-                pass
-
+        if not mixing:
+            continue
+        if peer.package_content == package.package_content:
+            # We do not want to mix data with peers of the same package content
+            continue
+        enhanced = False
+        for field in UPDATEABLE_FIELDS:
+            package_value = package_data.get(field)
+            peer_value = getattr(peer, field)
+            if not package_value and peer_value:
+                package_data[field] = peer_value
+                enhanced = True
+        if enhanced:
+            extra_data = package_data.get('extra_data', {})
+            enhanced_by = extra_data.get('enhanced_by', [])
+            enhanced_by.append(peer.purl)
+            extra_data['enhanced_by'] = enhanced_by
+            package_data['extra_data'] = extra_data
     return package_data
-
-    # Start layering on fields
-    # TODO: Get package that the purl is exactly for, like if its a source package or test package, and use that package as the base
-    # then start filling in the data from other sources, based on precidence, source-binary-doc-test, etc)
-    # TODO: filter using package se
-    # TODO: how are the package_set id's computed? when is it set, etc.
-
