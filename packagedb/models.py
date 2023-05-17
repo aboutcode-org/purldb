@@ -477,26 +477,30 @@ class Package(
         blank=True,
         help_text='Indexing errors messages. When present this means the indexing has failed.',
     )
-    package_set = models.TextField(
+    package_set = models.UUIDField(
         null=True,
         blank=True,
         help_text='A UUID used to identify a group of related Packages'
     )
 
-    class PackageContentType(models.TextChoices):
+    class PackageContentType(models.IntegerChoices):
         """List of Package content types."""
 
-        SOURCE = 'source'
-        BINARY = 'binary'
-        DOC = 'doc'
-        TEST = 'test'
+        # TODO: curation is a special case, based on how the curation identity
+        # fields matches with the current package
+        CURATION = 1
+        PATCH = 2
+        SOURCE_REPO = 3
+        SOURCE_ARCHIVE = 4
+        BINARY = 5
+        TEST = 6
+        DOC = 7
 
-    package_content = models.CharField(
-        max_length=6,
+    package_content = models.IntegerField(
         null=True,
         choices=PackageContentType.choices,
         help_text=_(
-            'Content of this Package as one of: {}'.format(', '.join(PackageContentType.values))
+            'Content of this Package as one of: {}'.format(', '.join(PackageContentType.labels))
         ),
     )
 

@@ -22,7 +22,7 @@ def set_package_content_field(apps, schema_editor):
             )
             updated = []
         if 'source' in package.qualifiers:
-            package.package_content = Package.PackageContentType.SOURCE
+            package.package_content = Package.PackageContentType.SOURCE_ARCHIVE
             updated.append(package)
     if updated:
         Package.objects.bulk_update(
