@@ -364,7 +364,15 @@ def get_enhanced_package(package):
     """
     packages = Package.objects.filter(
         package_set=package.package_set
-    ).order_by('package_content', 'purl')
+    ).order_by(
+        'package_content',
+        'type',
+        'namespace',
+        'name',
+        'version',
+        'qualifiers',
+        'subpath'
+    )
     return _get_enhanced_package(package, packages)
 
 
