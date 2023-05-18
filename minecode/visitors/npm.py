@@ -23,6 +23,7 @@ from minecode import visit_router
 from minecode import priority_router
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
+from packagedb.models import Package
 
 
 """
@@ -151,6 +152,7 @@ def map_npm_package(package_url):
     package = NpmPackageJsonHandler._parse(
         json_data=package_json
     )
+    package.extra_data['package_content'] = Package.PackageContentType.SOURCE_ARCHIVE
 
     db_package, _, _, error = merge_or_create_package(package, visit_level=0)
 

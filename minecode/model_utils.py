@@ -121,6 +121,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
                         email=party['email'],
                         url=party['url'],
                     )
+                continue
             elif existing_field == 'dependencies':
                 # If `existing_field` is `dependencies`, then we update the `DependentPackage` table
                 dependencies = new_value
@@ -137,15 +138,21 @@ def merge_packages(existing_package, new_package_data, replace=False):
                         is_optional=dependency['is_optional'],
                         is_resolved=dependency['is_resolved'],
                     )
+                continue
+            elif existing_field == 'package_content':
+                # get new_value from extra_data
+                new_value = new_mapping.extra_data.get('package_content')
+                if not new_value:
+                    continue
             elif existing_field in fields_to_skip:
                 # Continue to next field
                 continue
-            else:
-                # If `existing_field` is not `parties` or `dependencies`, then the
-                # `existing_field` is a regular field on the Package model and can
-                # be updated normally.
-                setattr(existing_package, existing_field, new_value)
-                existing_package.save()
+
+            # If `existing_field` is not `parties` or `dependencies`, then the
+            # `existing_field` is a regular field on the Package model and can
+            # be updated normally.
+            setattr(existing_package, existing_field, new_value)
+            existing_package.save()
 
         if TRACE:
             logger.debug('  Nothing done')
@@ -257,6 +264,8 @@ def merge_or_create_package(scanned_package, visit_level):
         else:
             package_set = uuid4()
 
+        package_content = scanned_package.extra_data.get('package_content')
+
         package_data = dict(
             # FIXME: we should get the file_name in the
             # PackageData object instead.
@@ -295,6 +304,7 @@ def merge_or_create_package(scanned_package, visit_level):
             notice_text=scanned_package.notice_text,
             source_packages=scanned_package.source_packages,
             package_set=package_set,
+            package_content=package_content,
         )
 
         stringify_null_purl_fields(package_data)

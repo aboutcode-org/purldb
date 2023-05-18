@@ -38,6 +38,7 @@ from minecode.visitors import HttpVisitor
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
 from packagedb.models import make_relationship
+from packagedb.models import Package
 from packagedb.models import PackageRelation
 
 """
@@ -241,7 +242,7 @@ def merge_ancestors(ancestor_pom_texts, package):
     return package
 
 
-def map_maven_package(package_url):
+def map_maven_package(package_url, package_content):
     """
     Add a maven `package_url` to the PackageDB.
 
@@ -291,6 +292,9 @@ def map_maven_package(package_url):
     package.download_url = urls['repository_download_url']
     package.repository_download_url = urls['repository_download_url']
 
+    # Set package_content value
+    package.extra_data['package_content'] = package_content
+
     # If sha1 exists for a jar, we know we can create the package
     # Use pom info as base and create packages for binary and source package
 
@@ -333,13 +337,19 @@ def map_maven_binary_and_source(package_url):
     Return an error string for errors that occur, or empty string if there is no error.
     """
     error = ''
-    package, emsg = map_maven_package(package_url)
+    package, emsg = map_maven_package(
+        package_url,
+        Package.PackageContentType.BINARY
+    )
     if emsg:
         error += emsg
 
     source_package_url = package_url
     source_package_url.qualifiers['classifier'] = 'sources'
-    source_package, emsg = map_maven_package(source_package_url)
+    source_package, emsg = map_maven_package(
+        source_package_url,
+        Package.PackageContentType.SOURCE_ARCHIVE
+    )
     if emsg:
         error += emsg
 
