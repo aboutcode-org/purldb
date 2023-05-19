@@ -13,6 +13,7 @@ from rest_framework.serializers import HyperlinkedModelSerializer
 from rest_framework.serializers import HyperlinkedRelatedField
 from rest_framework.serializers import JSONField
 from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import SerializerMethodField
 
 from packagedb.models import DependentPackage
 from packagedb.models import Package
@@ -132,6 +133,7 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
     parties = PartySerializer(many=True)
     resources = HyperlinkedIdentityField(view_name='api:package-resources', lookup_field='uuid')
     url = HyperlinkedIdentityField(view_name='api:package-detail', lookup_field='uuid')
+    package_content = SerializerMethodField()
 
     class Meta:
         model = Package
@@ -139,6 +141,8 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
             'url',
             'uuid',
             'filename',
+            'package_set',
+            'package_content',
             'purl',
             'type',
             'namespace',
@@ -182,6 +186,9 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
             'dependencies',
             'resources',
         )
+
+    def get_package_content(self, obj):
+        return obj.get_package_content_display()
 
 
 class PackageMetadataSerializer(ModelSerializer):

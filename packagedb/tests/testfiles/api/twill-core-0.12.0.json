@@ -1,5 +1,7 @@
 {
   "filename":"twill-core-0.12.0.jar",
+  "package_set":"73eeb027-b52f-4a36-a9ca-b0d59bb3f9cc",
+  "package_content":"binary",
   "purl":"pkg:maven/org.apache.twill/twill-core@0.12.0",
   "type":"maven",
   "namespace":"org.apache.twill",
