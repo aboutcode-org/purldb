@@ -1,8 +1,8 @@
 {
-    "name": "https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar",
-    "url": "http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/",
-    "uuid": "54dc4afe-70ea-4f1c-9ed3-989efd9a991f",
-    "created_date": "2023-03-08T23:35:45.678414Z",
+    "name": "2a72b8e6a282ae3073eca9123468a37865dcd3b0",
+    "url": "http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/",
+    "uuid": "c3b8d1ab-4811-4ced-84af-080997ef1a1a",
+    "created_date": "2023-05-19T00:45:29.449151Z",
     "is_archived": false,
     "input_sources": [
         {
@@ -10,16 +10,16 @@
             "source": "https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar"
         }
     ],
-    "next_run": "scan_and_fingerprint_codebase",
+    "next_run": "scan_and_fingerprint_package",
     "runs": [
         {
-            "url": "http://127.0.0.1:8001/api/runs/4711ea01-d3b1-4ce4-972b-859ac9c1d391/",
-            "pipeline_name": "scan_and_fingerprint_codebase",
+            "url": "http://127.0.0.1:8001/api/runs/336e18e3-fd68-4375-9bf2-87090dc5c726/",
+            "pipeline_name": "scan_and_fingerprint_package",
             "status": "not_started",
-            "description": "A pipeline to scan a codebase with ScanCode-toolkit and compute directory\nfingerprints.\n\nInput files are copied to the project's codebase/ directory and are extracted\nin place before running the scan.\nAlternatively, the code can be manually copied to the project codebase/\ndirectory.",
-            "project": "http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/",
-            "uuid": "4711ea01-d3b1-4ce4-972b-859ac9c1d391",
-            "created_date": "2023-03-08T23:35:45.679962Z",
+            "description": "",
+            "project": "http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/",
+            "uuid": "336e18e3-fd68-4375-9bf2-87090dc5c726",
+            "created_date": "2023-05-19T00:45:29.451929Z",
             "scancodeio_version": "",
             "task_id": null,
             "task_start_date": null,

@@ -177,25 +177,44 @@ def index_package_files(package, scan_data):
     try:
         for resource in scan_data.get('files', []):
             path = resource.get('path')
-            sha1 = resource.get('sha1')
+            is_file = resource.get('type') == 'file'
+            name = resource.get('name')
+            extension = resource.get('extension')
             size = resource.get('size')
             md5 = resource.get('md5')
-            is_file = resource.get('type') == 'file'
-            copyrights = resource.get('copyrights', [])
-            license_expressions = resource.get('license_expressions', [])
+            sha1 = resource.get('sha1')
+            sha256 = resource.get('sha256')
+            mime_type = resource.get('mime_type')
+            file_type = resource.get('file_type')
+            programming_language = resource.get('programming_language')
+            is_binary = resource.get('is_binary')
+            is_text= resource.get('is_text')
+            is_archive = resource.get('is_archive')
+            is_media = resource.get('is_media')
+            is_key_file = resource.get('is_key_file')
 
             # TODO: Determine what extra_data to keep
 
-            r, _ = Resource.objects.get_or_create(
+            r = Resource(
                 package=package,
                 path=path,
+                name=name,
+                extension=extension,
                 size=size,
-                sha1=sha1,
                 md5=md5,
-                copyrights=copyrights,
-                license_expressions=license_expressions,
+                sha1=sha1,
+                sha256=sha256,
+                mime_type=mime_type,
+                file_type=file_type,
+                programming_language=programming_language,
+                is_binary=is_binary,
+                is_text=is_text,
+                is_archive=is_archive,
+                is_media=is_media,
+                is_key_file=is_key_file,
                 is_file=is_file,
             )
+            r.set_scan_results(resource, save=True)
 
             if sha1:
                 _, _ = ExactFileIndex.index(

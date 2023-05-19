@@ -11,6 +11,7 @@ from rest_framework.serializers import CharField
 from rest_framework.serializers import HyperlinkedIdentityField
 from rest_framework.serializers import HyperlinkedModelSerializer
 from rest_framework.serializers import HyperlinkedRelatedField
+from rest_framework.serializers import JSONField
 from rest_framework.serializers import ModelSerializer
 
 from packagedb.models import DependentPackage
@@ -55,6 +56,46 @@ class ResourceAPISerializer(HyperlinkedModelSerializer):
             'holders',
             'authors',
             'package_data',
+            'emails',
+            'urls',
+            'extra_data',
+        )
+
+
+class ResourceMetadataSerializer(HyperlinkedModelSerializer):
+    for_packages = JSONField()
+
+    class Meta:
+        model = Resource
+        fields = (
+            'path',
+            'type',
+            'name',
+            'extension',
+            'size',
+            'md5',
+            'sha1',
+            'sha256',
+            'sha512',
+            'git_sha1',
+            'mime_type',
+            'file_type',
+            'programming_language',
+            'is_binary',
+            'is_text',
+            'is_archive',
+            'is_media',
+            'is_key_file',
+            'detected_license_expression',
+            'detected_license_expression_spdx',
+            'license_detections',
+            'license_clues',
+            'percentage_of_license_text',
+            'copyrights',
+            'holders',
+            'authors',
+            'package_data',
+            'for_packages',
             'emails',
             'urls',
             'extra_data',

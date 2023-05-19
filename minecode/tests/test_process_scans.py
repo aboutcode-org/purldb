@@ -20,16 +20,18 @@ from minecode.management.commands.process_scans import index_package_files
 from minecode.management.scanning import Scan
 from minecode.models import ScannableURI
 from minecode.utils_test import MiningTestCase
+from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
 from packagedb.models import Resource
 
 
-class ProcessScansTest(MiningTestCase):
+class ProcessScansTest(MiningTestCase, JsonBasedTesting):
     BASE_DIR = os.path.join(os.path.dirname(__file__), 'testfiles')
 
     def setUp(self):
         self.package1 = Package.objects.create(
             download_url='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
+            type='maven',
             namespace='',
             name='wagon-api',
             version='20040705.181715'
@@ -60,7 +62,10 @@ class ProcessScansTest(MiningTestCase):
             scan_data = json.loads(f.read())
         self.assertEqual(0, len(index_package_files(self.package1, scan_data)))
         result = Resource.objects.filter(package=self.package1)
-        self.assertEqual(78, len(result))
+        self.assertEqual(64, len(result))
+        results = [r.to_dict() for r in result]
+        expected_resources_loc = self.get_test_loc('scancodeio/get_scan_data_expected_resources.json')
+        self.check_expected_results(results, expected_resources_loc, regen=False)
 
     @patch('requests.get')
     def test_ProcessScansTest_process_scan(self, mock_get):
@@ -99,7 +104,7 @@ class ProcessScansTest(MiningTestCase):
         self.assertEqual('Copyright (c) Apache Software Foundation', self.package1.copyright)
 
         result = Resource.objects.filter(package=self.package1)
-        self.assertEqual(78, result.count())
+        self.assertEqual(64, result.count())
         result = ExactFileIndex.objects.filter(package=self.package1)
-        self.assertEqual(53, result.count())
+        self.assertEqual(45, result.count())
 

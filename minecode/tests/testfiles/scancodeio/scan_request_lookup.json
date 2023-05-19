@@ -4,10 +4,10 @@
     "previous": null,
     "results": [
         {
-            "name": "https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar",
-            "url": "http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/",
-            "uuid": "54dc4afe-70ea-4f1c-9ed3-989efd9a991f",
-            "created_date": "2023-03-08T23:35:45.678414Z",
+            "name": "2a72b8e6a282ae3073eca9123468a37865dcd3b0",
+            "url": "http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/",
+            "uuid": "c3b8d1ab-4811-4ced-84af-080997ef1a1a",
+            "created_date": "2023-05-19T00:45:29.449151Z",
             "is_archived": false,
             "input_sources": [
                 {
@@ -18,21 +18,21 @@
             "next_run": null,
             "runs": [
                 {
-                    "url": "http://127.0.0.1:8001/api/runs/4711ea01-d3b1-4ce4-972b-859ac9c1d391/",
-                    "pipeline_name": "scan_and_fingerprint_codebase",
+                    "url": "http://127.0.0.1:8001/api/runs/336e18e3-fd68-4375-9bf2-87090dc5c726/",
+                    "pipeline_name": "scan_and_fingerprint_package",
                     "status": "success",
-                    "description": "A pipeline to scan a codebase with ScanCode-toolkit and compute directory\nfingerprints.\n\nInput files are copied to the project's codebase/ directory and are extracted\nin place before running the scan.\nAlternatively, the code can be manually copied to the project codebase/\ndirectory.",
-                    "project": "http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/",
-                    "uuid": "4711ea01-d3b1-4ce4-972b-859ac9c1d391",
-                    "created_date": "2023-03-08T23:35:45.679962Z",
-                    "scancodeio_version": "32.0.1",
-                    "task_id": "4711ea01-d3b1-4ce4-972b-859ac9c1d391",
-                    "task_start_date": "2023-03-08T23:35:45.687840Z",
-                    "task_end_date": "2023-03-08T23:35:56.780375Z",
+                    "description": "",
+                    "project": "http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/",
+                    "uuid": "336e18e3-fd68-4375-9bf2-87090dc5c726",
+                    "created_date": "2023-05-19T00:45:29.451929Z",
+                    "scancodeio_version": "33.0.0-dev",
+                    "task_id": "336e18e3-fd68-4375-9bf2-87090dc5c726",
+                    "task_start_date": "2023-05-19T00:45:29.461599Z",
+                    "task_end_date": "2023-05-19T00:45:39.251824Z",
                     "task_exitcode": 0,
                     "task_output": "",
-                    "log": "2023-03-08 23:35:45.68 Pipeline [scan_and_fingerprint_codebase] starting\n2023-03-08 23:35:45.69 Step [copy_inputs_to_codebase_directory] starting\n2023-03-08 23:35:45.69 Step [copy_inputs_to_codebase_directory] completed in 0.00 seconds\n2023-03-08 23:35:45.69 Step [extract_archives] starting\n2023-03-08 23:35:45.81 Step [extract_archives] completed in 0.12 seconds\n2023-03-08 23:35:45.81 Step [collect_and_create_codebase_resources] starting\n2023-03-08 23:35:46.43 Step [collect_and_create_codebase_resources] completed in 0.61 seconds\n2023-03-08 23:35:46.43 Step [fingerprint_codebase] starting\n2023-03-08 23:35:47.37 Step [fingerprint_codebase] completed in 0.94 seconds\n2023-03-08 23:35:47.38 Step [tag_empty_files] starting\n2023-03-08 23:35:47.38 Step [tag_empty_files] completed in 0.00 seconds\n2023-03-08 23:35:47.38 Step [scan_for_application_packages] starting\n2023-03-08 23:35:47.49 Step [scan_for_application_packages] completed in 0.11 seconds\n2023-03-08 23:35:47.49 Step [scan_for_files] starting\n2023-03-08 23:35:56.77 Step [scan_for_files] completed in 9.28 seconds\n2023-03-08 23:35:56.77 Pipeline completed\n",
-                    "execution_time": 11
+                    "log": "2023-05-19 00:45:29.46 Pipeline [scan_and_fingerprint_package] starting\n2023-05-19 00:45:29.46 Step [get_package_archive_input] starting\n2023-05-19 00:45:29.46 Step [get_package_archive_input] completed in 0 seconds\n2023-05-19 00:45:29.46 Step [collect_archive_information] starting\n2023-05-19 00:45:29.47 Step [collect_archive_information] completed in 0 seconds\n2023-05-19 00:45:29.47 Step [extract_archive_to_codebase_directory] starting\n2023-05-19 00:45:29.53 Step [extract_archive_to_codebase_directory] completed in 0 seconds\n2023-05-19 00:45:29.53 Step [run_scancode] starting\n2023-05-19 00:45:37.63 Step [run_scancode] completed in 8 seconds\n2023-05-19 00:45:37.63 Step [load_inventory_from_toolkit_scan] starting\n2023-05-19 00:45:37.94 Step [load_inventory_from_toolkit_scan] completed in 0 seconds\n2023-05-19 00:45:37.94 Step [fingerprint_codebase] starting\n2023-05-19 00:45:39.23 Step [fingerprint_codebase] completed in 1 seconds\n2023-05-19 00:45:39.23 Step [make_summary_from_scan_results] starting\n2023-05-19 00:45:39.24 Step [make_summary_from_scan_results] completed in 0 seconds\n2023-05-19 00:45:39.24 Pipeline completed\n",
+                    "execution_time": 9
                 }
             ]
         }

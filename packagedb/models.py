@@ -924,6 +924,18 @@ class Resource(
         )
         ordering = ('package', 'path')
 
+    @property
+    def for_packages(self):
+        """Return the list of all Packages associated to this resource."""
+        return [
+            self.package.package_uid or str(self.package)
+        ]
+
+    def to_dict(self):
+        from packagedb.serializers import ResourceMetadataSerializer
+        resource_metadata = ResourceMetadataSerializer(self).data
+        return resource_metadata
+
 
 class PackageRelation(models.Model):
     """
