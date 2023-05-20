@@ -80,14 +80,24 @@ class Command(scanning.ScanningCommand):
                 get_scan_data_save_loc=get_scan_data_save_loc
             )
 
+            package_updated = False
+            if summary:
+                package.summary = summary
+                package_updated = True
+
             license_expression = summary.get('declared_license_expression')
             if not package.declared_license_expression and license_expression:
                 package.declared_license_expression = license_expression
+                package_updated = True
 
             declared_holder = summary.get('declared_holder')
             if not package.copyright:
                 if declared_holder:
                     package.copyright = f'Copyright (c) {declared_holder}'
+                    package_updated = True
+
+            if package_updated:
+                package.save()
 
             # TODO: We should rerun the specific indexers that have failed
             if scan_index_errors:

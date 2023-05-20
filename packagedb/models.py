@@ -504,6 +504,15 @@ class Package(
         ),
     )
 
+    summary = models.JSONField(
+        default=dict,
+        blank=True,
+        null=True,
+        help_text=_(
+            'A mapping containing a summary and license clarity score for this Package'
+        ),
+    )
+
     search_vector = SearchVectorField(null=True)
 
     objects = PackageQuerySet.as_manager()
