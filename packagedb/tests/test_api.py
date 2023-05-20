@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from uuid import uuid4
 import json
 import os
 
@@ -386,8 +387,36 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
             'extra_data': json.dumps({'test2': 'data2'})
         }
 
+        package_set = uuid4()
+        self.package_data3 = {
+            'type': 'maven',
+            'namespace': '',
+            'name': 'test',
+            'version': '1.0.0',
+            'qualifiers':'',
+            'package_set': package_set,
+            'package_content': Package.PackageContentType.BINARY,
+            'download_url': 'https://example.com/test-1.0.0.jar',
+        }
+
+        self.package_data4 = {
+            'type': 'maven',
+            'namespace': '',
+            'name': 'test',
+            'version': '1.0.0',
+            'qualifiers':'classifier=sources',
+            'declared_license_expression': 'apache-2.0',
+            'copyright': 'Copyright (c) example corp.',
+            'holder': 'example corp.',
+            'package_set': package_set,
+            'package_content': Package.PackageContentType.SOURCE_ARCHIVE,
+            'download_url': 'https://example.com/test-1.0.0-sources.jar',
+        }
+
         self.package1 = Package.objects.create(**self.package_data1)
         self.package2 = Package.objects.create(**self.package_data2)
+        self.package3 = Package.objects.create(**self.package_data3)
+        self.package4 = Package.objects.create(**self.package_data4)
 
         self.purl1 = self.package1.package_url
         self.purl2 = self.package2.package_url
@@ -407,7 +436,7 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
     def test_package_api_purl_filter_by_query_param_no_value(self):
         response = self.client.get('/api/packages/?purl={}'.format(''))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(2, response.data.get('count'))
+        self.assertEqual(4, response.data.get('count'))
 
     def test_package_api_purl_filter_by_query_param_non_existant_purl(self):
         response = self.client.get('/api/packages/?purl={}'.format(self.missing_purl))
@@ -510,7 +539,7 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
     def test_package_api_purl_filter_by_multiple_blank_purl(self):
         response = self.client.get('/api/packages/?purl={}&purl={}'.format('', ''))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(2, response.data.get('count'))
+        self.assertEqual(4, response.data.get('count'))
 
     def test_package_api_get_package(self):
         from minecode.models import PriorityResourceURI
@@ -536,8 +565,6 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         self.assertEqual({}, response.data)
 
     def test_package_api_get_or_fetch_package(self):
-        from minecode.models import PriorityResourceURI
-
         purl_str = 'pkg:maven/org.apache.twill/twill-core@0.12.0'
         download_url = 'https://repo1.maven.org/maven2/org/apache/twill/twill-core/0.12.0/twill-core-0.12.0.jar'
         purl_sources_str = f'{purl_str}?classifier=sources'
@@ -556,7 +583,14 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         result.pop('url')
         result.pop('uuid')
         result.pop('resources')
+        result.pop('package_set')
 
+        self.check_expected_results(result, expected, regen=False)
+
+    def test_package_api_get_enhanced_package(self):
+        response = self.client.get(reverse('api:package-get-enhanced-package-data', args=[self.package3.uuid]))
+        result = response.data
+        expected = self.get_test_loc('api/enhanced_package.json')
         self.check_expected_results(result, expected, regen=False)
 
 

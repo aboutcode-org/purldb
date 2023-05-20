@@ -31,9 +31,10 @@ from minecode.models import PriorityResourceURI
 from minecode.route import NoRouteAvailable
 from packagedb.models import Package
 from packagedb.models import Resource
-from packagedb.serializers import PackageAPISerializer
+from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import ResourceAPISerializer
-
+from packagedb.serializers import PackageAPISerializer
+from packagedb.serializers import PartySerializer
 
 class PackageResourcePurlFilter(Filter):
     def filter(self, qs, value):
@@ -347,13 +348,13 @@ def get_enhanced_package(package):
     packages = Package.objects.filter(
         package_set=package.package_set
     ).order_by(
-        'package_content',
         'type',
         'namespace',
         'name',
         'version',
         'qualifiers',
-        'subpath'
+        'subpath',
+        'package_content',
     )
     return _get_enhanced_package(package, packages)
 
@@ -380,6 +381,10 @@ def _get_enhanced_package(package, packages):
             package_value = package_data.get(field)
             peer_value = getattr(peer, field)
             if not package_value and peer_value:
+                if field == 'parties':
+                    peer_value = PartySerializer(peer_value, many=True).data
+                if field == 'dependencies':
+                    peer_value = DependentPackageSerializer(peer_value, many=True).data
                 package_data[field] = peer_value
                 enhanced = True
         if enhanced:
