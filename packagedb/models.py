@@ -400,6 +400,20 @@ class AbstractPackage(models.Model):
         abstract = True
 
 
+class PackageContentType(models.IntegerChoices):
+    """List of Package content types."""
+
+    # TODO: curation is a special case, based on how the curation identity
+    # fields matches with the current package
+    CURATION = 1, 'curation'
+    PATCH = 2, 'patch'
+    SOURCE_REPO = 3, 'source_repo'
+    SOURCE_ARCHIVE = 4, 'source_archive'
+    BINARY = 5, 'binary'
+    TEST = 6, 'test'
+    DOC = 7, 'doc'
+
+
 # TODO: Figure out what ordering we want for the fields
 class Package(
     HistoryMixin,
@@ -482,19 +496,6 @@ class Package(
         blank=True,
         help_text='A UUID used to identify a group of related Packages'
     )
-
-    class PackageContentType(models.IntegerChoices):
-        """List of Package content types."""
-
-        # TODO: curation is a special case, based on how the curation identity
-        # fields matches with the current package
-        CURATION = 1, 'curation'
-        PATCH = 2, 'patch'
-        SOURCE_REPO = 3, 'source_repo'
-        SOURCE_ARCHIVE = 4, 'source_archive'
-        BINARY = 5, 'binary'
-        TEST = 6, 'test'
-        DOC = 7, 'doc'
 
     package_content = models.IntegerField(
         null=True,

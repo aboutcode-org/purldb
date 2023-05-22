@@ -38,7 +38,7 @@ from minecode.visitors import HttpVisitor
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
 from packagedb.models import make_relationship
-from packagedb.models import Package
+from packagedb.models import PackageContentType
 from packagedb.models import PackageRelation
 
 """
@@ -339,7 +339,7 @@ def map_maven_binary_and_source(package_url):
     error = ''
     package, emsg = map_maven_package(
         package_url,
-        Package.PackageContentType.BINARY
+        PackageContentType.BINARY
     )
     if emsg:
         error += emsg
@@ -348,7 +348,7 @@ def map_maven_binary_and_source(package_url):
     source_package_url.qualifiers['classifier'] = 'sources'
     source_package, emsg = map_maven_package(
         source_package_url,
-        Package.PackageContentType.SOURCE_ARCHIVE
+        PackageContentType.SOURCE_ARCHIVE
     )
     if emsg:
         error += emsg

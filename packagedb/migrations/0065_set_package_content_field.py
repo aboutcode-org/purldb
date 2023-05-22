@@ -4,6 +4,8 @@ from django.db import migrations
 
 
 def set_package_content_field(apps, schema_editor):
+    from packagedb.models import PackageContentType
+
     # TODO: have separate job that updates the package_content field
     Package = apps.get_model("packagedb", "Package")
     packages = Package.objects.filter(
@@ -22,7 +24,7 @@ def set_package_content_field(apps, schema_editor):
             )
             updated = []
         if 'source' in package.qualifiers:
-            package.package_content = Package.PackageContentType.SOURCE_ARCHIVE
+            package.package_content = PackageContentType.SOURCE_ARCHIVE
             updated.append(package)
     if updated:
         Package.objects.bulk_update(

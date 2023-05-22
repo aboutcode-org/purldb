@@ -718,7 +718,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(0, package_count)
         package_url = PackageURL.from_string(self.scan_package.purl)
-        maven_visitor.map_maven_package(package_url, packagedb.models.Package.PackageContentType.BINARY)
+        maven_visitor.map_maven_package(package_url, packagedb.models.PackageContentType.BINARY)
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(1, package_count)
         package = packagedb.models.Package.objects.all().first()
