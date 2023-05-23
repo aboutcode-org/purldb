@@ -43,9 +43,10 @@ def get_settings(var_name):
 
 
 PURLDB_URL = get_settings('PURLDB_URL').rstrip('/')
-MATCHCODE_ENDPOINT = f'{PURLDB_URL}/approximate_directory_content_index/match/' if PURLDB_URL else None
-PURLDB_PACKAGE_ENDPOINT = f'{PURLDB_URL}/packages/' if PURLDB_URL else None
-PURLDB_RESOURCE_ENDPOINT = f'{PURLDB_URL}/resources/' if PURLDB_URL else None
+PURLDB_API_URL = f'{PURLDB_URL}/api'
+MATCHCODE_ENDPOINT = f'{PURLDB_API_URL}/approximate_directory_content_index/match/' if PURLDB_API_URL else None
+PURLDB_PACKAGE_ENDPOINT = f'{PURLDB_API_URL}/packages/' if PURLDB_API_URL else None
+PURLDB_RESOURCE_ENDPOINT = f'{PURLDB_API_URL}/resources/' if PURLDB_API_URL else None
 
 PURLDB_API_KEY = get_settings('PURLDB_API_KEY')
 PURLDB_AUTH_HEADERS = {
@@ -152,7 +153,8 @@ def process_sha1_match(project, package_data, resource):
     package_uid = f'{purl}?uuid={uuid}'
     package_data['package_uid'] = package_uid
     dependencies = package_data.pop('dependencies')
-    discovered_package = update_or_create_package(project, package_data, resource)
+    resources = [resource]
+    discovered_package = update_or_create_package(project, package_data, resources)
     if dependencies:
         for dependency in dependencies:
             purl = dependency.get('purl', '')
