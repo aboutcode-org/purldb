@@ -110,7 +110,7 @@ def build_packages(html_text, purl=None):
             for a in div.find_all(name='a'):
                 if 'href' not in a.attrs:
                     continue
-                license_name = a.contents[0]
+                license_name = str(a.contents[0])
                 extracted_license_statement.append(license_name)
     if extracted_license_statement:
         common_data['extracted_license_statement'] = extracted_license_statement
