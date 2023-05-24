@@ -68,11 +68,11 @@ def build_packages_with_json(metadata, purl=None):
                     common['parties'] = []
                 common['parties'].append(scan_models.Party(name=author.get('name'), role='author', url=author.get('homepage'), email=author.get('email')))
 
-            declared_licenses = set([])
+            extracted_license_statement = set([])
             for lic in version_content.get('license'):
-                declared_licenses.add(lic)
-            if declared_licenses:
-                common['declared_license'] = '\n'.join(declared_licenses)
+                extracted_license_statement.add(lic)
+            if extracted_license_statement:
+                common['extracted_license_statement'] = list(extracted_license_statement)
 
             dependencies = []
             for name, version in version_content.get('require', {}).items():

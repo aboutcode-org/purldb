@@ -27,7 +27,7 @@ CLI_ARGS=$1
 # Defaults. Change these variables to customize this script
 ################################
 
-CUSTOM_PACKAGES="https://github.com/nexB/scancode-toolkit/archive/refs/heads/maven-pom-parse-dep-backport.zip"
+CUSTOM_PACKAGES=""
 
 # Requirement arguments passed to pip and used by default or with --dev.
 REQUIREMENTS="$CUSTOM_PACKAGES --editable matchcode-toolkit --editable . --constraint requirements.txt"
@@ -38,7 +38,7 @@ DOCS_REQUIREMENTS="$CUSTOM_PACKAGES --editable matchcode-toolkit --editable .[do
 VIRTUALENV_DIR=venv
 
 # Cleanable files and directories to delete with the --clean option
-CLEANABLE="build venv"
+CLEANABLE="build dist venv .cache .eggs"
 
 # extra  arguments passed to pip
 PIP_EXTRA_ARGS=" "

@@ -14,6 +14,7 @@ from django_filters.filters import Filter
 from django_filters.filters import OrderingFilter
 import django_filters
 
+from packagedcode.models import PackageData
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
 from rest_framework import status
@@ -30,9 +31,10 @@ from minecode.models import PriorityResourceURI
 from minecode.route import NoRouteAvailable
 from packagedb.models import Package
 from packagedb.models import Resource
-from packagedb.serializers import PackageAPISerializer
+from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import ResourceAPISerializer
-
+from packagedb.serializers import PackageAPISerializer
+from packagedb.serializers import PartySerializer
 
 class PackageResourcePurlFilter(Filter):
     def filter(self, qs, value):
@@ -67,6 +69,12 @@ class PackageResourceUUIDFilter(Filter):
 class ResourceFilter(FilterSet):
     package = PackageResourceUUIDFilter(label='Package UUID')
     purl = PackageResourcePurlFilter(label='Package pURL')
+    md5 = MultipleCharFilter(
+        help_text="Exact MD5. Multi-value supported.",
+    )
+    sha1 = MultipleCharFilter(
+        help_text="Exact SHA1. Multi-value supported.",
+    )
 
 
 class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
@@ -273,3 +281,116 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
+
+    @action(detail=True)
+    def get_enhanced_package_data(self, request, *args, **kwargs):
+        """
+        Return a mapping of enhanced Package data for a given Package
+        """
+        package = self.get_object()
+        package_data = get_enhanced_package(package)
+        return Response(package_data)
+
+
+UPDATEABLE_FIELDS = [
+    'primary_language',
+    'copyright',
+
+    'declared_license_expression',
+    'declared_license_expression_spdx',
+    'license_detections',
+    'other_license_expression',
+    'other_license_expression_spdx',
+    'other_license_detections',
+    # TODO: update extracted license statement and other fields together
+    # all license fields are based off of `extracted_license_statement` and should be treated as a unit
+    # hold off for now
+    'extracted_license_statement',
+
+    'notice_text',
+    'api_data_url',
+    'bug_tracking_url',
+    'code_view_url',
+    'vcs_url',
+    'source_packages',
+    'repository_homepage_url',
+    'dependencies',
+    'parties',
+]
+
+
+NONUPDATEABLE_FIELDS = [
+    'type',
+    'namespace',
+    'name',
+    'version',
+    'qualifiers',
+    'subpath',
+    'purl',
+    'datasource_id',
+    'download_url',
+    'size',
+    'md5',
+    'sha1',
+    'sha256',
+    'sha512',
+    'package_uid',
+    'repository_download_url',
+    'file_references',
+]
+
+
+def get_enhanced_package(package):
+    """
+    Return package data from `package`, where the data has been enhanced by
+    other packages in the same package_set.
+    """
+    packages = Package.objects.filter(
+        package_set=package.package_set
+    ).order_by(
+        'type',
+        'namespace',
+        'name',
+        'version',
+        'qualifiers',
+        'subpath',
+        'package_content',
+    )
+    return _get_enhanced_package(package, packages)
+
+
+def _get_enhanced_package(package, packages):
+    """
+    Return a mapping of package data based on `package` and Packages in
+    `packages`.
+    """
+    mixing = False
+    package_data = {}
+    for peer in packages:
+        if peer == package:
+            mixing = True
+            package_data = package.to_dict()
+            continue
+        if not mixing:
+            continue
+        if peer.package_content == package.package_content:
+            # We do not want to mix data with peers of the same package content
+            continue
+        enhanced = False
+        for field in UPDATEABLE_FIELDS:
+            package_value = package_data.get(field)
+            peer_value = getattr(peer, field)
+            if not package_value and peer_value:
+                if field == 'parties':
+                    peer_value = PartySerializer(peer_value, many=True).data
+                if field == 'dependencies':
+                    peer_value = DependentPackageSerializer(peer_value, many=True).data
+                package_data[field] = peer_value
+                enhanced = True
+        if enhanced:
+            extra_data = package_data.get('extra_data', {})
+            enhanced_by = extra_data.get('enhanced_by', [])
+            enhanced_by.append(peer.purl)
+            extra_data['enhanced_by'] = enhanced_by
+            package_data['extra_data'] = extra_data
+    return package_data

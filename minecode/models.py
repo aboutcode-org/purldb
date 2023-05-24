@@ -766,8 +766,22 @@ class PriorityResourceURIManager(models.Manager):
         Return None if the insertion failed when an identical canonical entry
         already exist (as the canonical URI field is unique).
         """
-        priority_resource_uri, created = self.get_or_create(uri=uri, package_url=uri, **extra_fields)
-        if created:
+        # TODO: be able to create a request for an existing purl if the previous request has been completed already
+
+        priority_resource_uris = self.filter(
+            uri=uri,
+            package_url=uri,
+            **extra_fields
+        )
+        if (
+            priority_resource_uris.count() == 0
+            or all(p.processed_date for p in priority_resource_uris)
+        ):
+            priority_resource_uri = self.create(
+                uri=uri,
+                package_url=uri,
+                **extra_fields
+            )
             return priority_resource_uri
 
     def in_progress(self):

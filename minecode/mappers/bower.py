@@ -39,13 +39,13 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
     content = json.loads(metadata)
 
     licenses_content = content.get('licenses')
-    declared_licenses = set([])
+    extracted_license_statement = set([])
     if licenses_content:
         if isinstance(licenses_content, list):
             for lic in licenses_content:
-                declared_licenses.add(lic)
+                extracted_license_statement.add(lic)
         else:
-            declared_licenses.add(licenses_content)
+            extracted_license_statement.add(licenses_content)
 
     keywords_content = content.get('keywords', [])
     name = content.get('name')
@@ -82,8 +82,8 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
             homepage_url=content.get('homepage'),
         )
 
-        if declared_licenses:
-            common_data['declared_license'] = '\n'.join(declared_licenses)
+        if extracted_license_statement:
+            common_data['extracted_license_statement'] = list(extracted_license_statement)
 
         author_content = content.get('author')
         if author_content:

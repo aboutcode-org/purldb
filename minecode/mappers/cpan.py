@@ -47,13 +47,15 @@ def build_packages_from_release_json(metadata, uri=None):
         if not name:
             continue
 
+        extracted_license_statement = [l for l in release.get('license', []) if l and l.strip()]
+
         common_data = dict(
             type='cpan',
             name=name,
             description=release.get('abstract'),
             version=release.get('version'),
             download_url=release.get('download_url'),
-            declared_license='\n'.join([l for l in release.get('license', []) if l and l.strip()]),
+            extracted_license_statement=extracted_license_statement,
             # the date format passing is like:
             # "2014-04-20T21:30:13"
             release_date=parse_date(release.get('date'))
@@ -80,9 +82,9 @@ def build_packages_from_release_json(metadata, uri=None):
         # like perl_5. The license here under resources section is the
         # url of license for example: http://dev.perl.org/licenses/ So
         # it's useful to collect both information...
-        license_url = '\n'.join([l for l in resources.get('license', []) if l and l.strip()])
+        license_url = [l for l in resources.get('license', []) if l and l.strip()]
         if license_url:
-            common_data['declared_license'] = '\n'.join([common_data['declared_license'], license_url])
+            common_data['extracted_license_statement'].extend(license_url)
 
         vcs_tool, vcs_repo = get_vcs_repo1(resources)
         if vcs_tool and vcs_repo:
@@ -151,16 +153,13 @@ def build_packages_from_metafile(metadata, uri=None, purl=None):
         content = saneyaml.load(metadata)
 
     licenses_content = content.get('license')
-    asserted_licenses = []
+    extracted_license_statement = []
     if licenses_content:
         if isinstance(licenses_content, (list,)):
             for lic in licenses_content:
-                asserted_licenses.append(lic)
+                extracted_license_statement.append(lic)
         else:
-            asserted_licenses.append(licenses_content)
-    declared_license = None
-    if asserted_licenses:
-        declared_license = '\n'.join(asserted_licenses)
+            extracted_license_statement.append(licenses_content)
 
     keywords_content = content.get('keywords', [])
 
@@ -179,7 +178,7 @@ def build_packages_from_metafile(metadata, uri=None, purl=None):
             description=content.get('abstract', name),
             version=content.get('version'),
             download_url=download_url,
-            declared_license=declared_license,
+            extracted_license_statement=extracted_license_statement,
             vcs_url=vcs_repo,
             keywords=keywords_content,
         )

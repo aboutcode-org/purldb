@@ -63,7 +63,7 @@ def build_packages_with_json(metadata, purl=None):
             common_data['bug_tracking_url'] = bug_tracking_urls[0].get('query_url')
 
         if project_metadata.get('licenses'):
-            common_data['declared_license'] = ('\n').join([l.get('name') for l in project_metadata.get('licenses')])
+            common_data['extracted_license_statement'] = [l.get('name') for l in project_metadata.get('licenses', [])]
 
         # FIXME: this is a download page and NOT a download URL!!!!!
         for download_url in project_metadata.get('download_url', []):
@@ -95,7 +95,7 @@ def build_packages(html_text, purl=None):
     page = BeautifulSoup(html_text, 'lxml')
     common_data = dict(type='eclipse')
 
-    declared_licenses = []
+    extracted_license_statement = []
     for meta in page.find_all(name='meta'):
         if 'name' in meta.attrs and 'dcterms.title' in meta.attrs.get('name'):
             common_data['name'] = meta.attrs.get('content')
@@ -110,10 +110,10 @@ def build_packages(html_text, purl=None):
             for a in div.find_all(name='a'):
                 if 'href' not in a.attrs:
                     continue
-                license_name = a.contents[0]
-                declared_licenses.append(license_name)
-    if declared_licenses:
-        common_data['declared_license'] = '\n'.join(declared_licenses)
+                license_name = str(a.contents[0])
+                extracted_license_statement.append(license_name)
+    if extracted_license_statement:
+        common_data['extracted_license_statement'] = extracted_license_statement
 
     for a in page.find_all(name='a'):
         if a.contents:

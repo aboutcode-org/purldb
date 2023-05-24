@@ -57,7 +57,7 @@ def build_packages(purl, data):
 
     # "license": "GPL-2.0-only",
     # this is supposed to be an SPDX expression
-    declared_license = metadata.get('license')
+    extracted_license_statement = metadata.get('license')
 
     # "sourceCode": "https://github.com/jdmonin/anstop",
     vcs_url = metadata.get('sourceCode')
@@ -92,12 +92,11 @@ def build_packages(purl, data):
 
     base_purl = PackageURL.from_string(purl)
     shared_data = dict(
-        datasource_id='fdroid-index',
         type=base_purl.type,
         name=base_purl.name,
         keywords=keywords,
         bug_tracking_url=bug_tracking_url,
-        declared_license=declared_license,
+        extracted_license_statement=extracted_license_statement,
         vcs_url=vcs_url,
         homepage_url=homepage_url,
         repository_homepage_url = f'https://f-droid.org/en/packages/{base_purl.name}',

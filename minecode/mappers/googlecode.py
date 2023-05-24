@@ -52,7 +52,7 @@ def build_packages_from_projectsjson_v2(metadata, purl=None):
 
     license_name = metadata.get('license')
     if license_name:
-        common_data['declared_license'] = license_name
+        common_data['extracted_license_statement'] = license_name
 
     keywords = []
     labels = metadata.get('labels')
@@ -94,7 +94,7 @@ def build_packages_from_projectsjson_v1(metadata, purl=None):
 
         license_name = metadata.get('license')
         if license_name:
-            common_data['declared_license'] = license_name
+            common_data['extracted_license_statement'] = license_name
 
         keywords = []
         labels = metadata.get('labels')

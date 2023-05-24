@@ -45,10 +45,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/stevepapa/angular2-autosize.git@f8ecfbb315d37c7354bb3fadbc50e29c42835226",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- MIT\n",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -138,10 +162,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/stevepapa/angular2-autosize.git@db14b051aaad401dd9f64ca8b6bbf6119ba23e46",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- MIT\n",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -211,10 +259,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/stevepapa/angular2-autosize.git@09665a3357562a15ac2800cdac7af8dee3ac1099",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- MIT\n",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -294,10 +366,34 @@
     "code_view_url":null,
     "vcs_url":"git+https://github.com/stevepapa/angular2-autosize.git@ea3ba91581f8313cc67573bca7c71bd077f2390c",
     "copyright":null,
-    "license_expression":"mit",
-    "declared_license":[
-      "MIT"
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
     ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- MIT\n",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],

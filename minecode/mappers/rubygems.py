@@ -79,13 +79,13 @@ def build_rubygem_packages_from_api_data(metadata, name, purl=None):
             party = scan_models.Party(name=author, role='author')
             package['parties'].append(party)
 
-        declared_licenses = []
+        extracted_license_statement = []
         licenses = version_details.get('licenses')
         if licenses:
             for lic in licenses:
-                declared_licenses.append(lic)
-        if declared_licenses:
-            package['declared_license'] = '\n'.join(declared_licenses)
+                extracted_license_statement.append(lic)
+        if extracted_license_statement:
+            package['extracted_license_statement'] = extracted_license_statement
         package = PackageData(**package)
         package.set_purl(purl)
         yield package
@@ -129,13 +129,13 @@ def build_rubygem_packages_from_metadata(metadata, download_url=None, purl=None)
     if download_url:
         package['download_url'] = download_url
 
-    declared_licenses = []
+    extracted_license_statement = []
     licenses = content.get('licenses')
     if licenses:
         for lic in licenses:
-            declared_licenses.append(lic)
-    if declared_licenses:
-        package['declared_license'] = '\n'.join(declared_licenses)
+            extracted_license_statement.append(lic)
+    if extracted_license_statement:
+        package['extracted_license_statement'] = extracted_license_statement
 
     authors = content.get('authors')
     for author in authors:

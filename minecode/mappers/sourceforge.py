@@ -71,17 +71,17 @@ def build_packages_from_metafile(metadata, purl=None):
         langs = ', '.join(langs)
         common_data['primary_language'] = langs or None
 
-        declared_licenses = []
+        extracted_license_statement = []
         licenses = categories.get('license') or []
         for l in licenses:
             license_name = l.get('fullname')
             # full name is first priority than shortname since shortname is like gpl, it doesn't show detailed gpl version etc.
             if license_name:
-                declared_licenses.append(l.get('shortname'))
+                extracted_license_statement.append(l.get('shortname'))
             if license_name:
-                declared_licenses.append(license_name)
-        if declared_licenses:
-            common_data['declared_license'] = '\n'.join(declared_licenses)
+                extracted_license_statement.append(license_name)
+        if extracted_license_statement:
+            common_data['extracted_license_statement'] = extracted_license_statement
 
         keywords = []
         topics = categories.get('topic', [])

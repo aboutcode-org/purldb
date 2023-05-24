@@ -55,7 +55,6 @@ class ScanAndFingerprintPackage(ScanPackage):
         "--package",
         "--url",
         "--classify",
-        "--is-license-text",
         "--summary",
     ]
 

@@ -35,16 +35,16 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
         result = scanning.Scan.from_response(**response)
 
         expected = scanning.Scan(
-            url='http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/',
-            uuid='54dc4afe-70ea-4f1c-9ed3-989efd9a991f',
-            run_uuid='4711ea01-d3b1-4ce4-972b-859ac9c1d391',
+            url='http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/',
+            uuid='c3b8d1ab-4811-4ced-84af-080997ef1a1a',
+            run_uuid='336e18e3-fd68-4375-9bf2-87090dc5c726',
             uri='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
-            created_date='2023-03-08T23:35:45.679962Z',
-            task_start_date='2023-03-08T23:35:45.687840Z',
-            task_end_date='2023-03-08T23:35:56.780375Z',
+            created_date='2023-05-19T00:45:29.451929Z',
+            task_start_date='2023-05-19T00:45:29.461599Z',
+            task_end_date='2023-05-19T00:45:39.251824Z',
             task_exitcode=0,
             status='success',
-            execution_time=11
+            execution_time=9
         )
         result = attr.asdict(result)
         expected = attr.asdict(expected)
@@ -61,11 +61,11 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
         uri = 'https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar'
         result = scanning.submit_scan(uri=uri, api_url=api_url, api_auth_headers=api_auth_headers)
         expected = scanning.Scan(
-            url='http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/',
-            uuid='54dc4afe-70ea-4f1c-9ed3-989efd9a991f',
-            run_uuid='4711ea01-d3b1-4ce4-972b-859ac9c1d391',
+            url='http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/',
+            uuid='c3b8d1ab-4811-4ced-84af-080997ef1a1a',
+            run_uuid='336e18e3-fd68-4375-9bf2-87090dc5c726',
             uri='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
-            created_date='2023-03-08T23:35:45.679962Z',
+            created_date='2023-05-19T00:45:29.451929Z',
             task_start_date=None,
             task_end_date=None,
             task_exitcode=None,
@@ -96,11 +96,11 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
         result = scanning.submit_scan(uri=uri, api_url=api_url, api_auth_headers=api_auth_headers)
 
         expected = scanning.Scan(
-            url='http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/',
-            uuid='54dc4afe-70ea-4f1c-9ed3-989efd9a991f',
-            run_uuid='4711ea01-d3b1-4ce4-972b-859ac9c1d391',
+            url='http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/',
+            uuid='c3b8d1ab-4811-4ced-84af-080997ef1a1a',
+            run_uuid='336e18e3-fd68-4375-9bf2-87090dc5c726',
             uri='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
-            created_date='2023-03-08T23:35:45.679962Z',
+            created_date='2023-05-19T00:45:29.451929Z',
             task_start_date=None,
             task_end_date=None,
             task_exitcode=None,
@@ -134,16 +134,16 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
         api_auth_headers = {}
         result = scanning.get_scan_info(scan_uuid=scan_uuid, api_url=api_url, api_auth_headers=api_auth_headers)
         expected = scanning.Scan(
-            url='http://127.0.0.1:8001/api/projects/54dc4afe-70ea-4f1c-9ed3-989efd9a991f/',
-            uuid='54dc4afe-70ea-4f1c-9ed3-989efd9a991f',
-            run_uuid='4711ea01-d3b1-4ce4-972b-859ac9c1d391',
+            url='http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/',
+            uuid='c3b8d1ab-4811-4ced-84af-080997ef1a1a',
+            run_uuid='336e18e3-fd68-4375-9bf2-87090dc5c726',
             uri='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
-            created_date='2023-03-08T23:35:45.679962Z',
-            task_start_date='2023-03-08T23:35:45.687840Z',
-            task_end_date='2023-03-08T23:35:56.780375Z',
+            created_date='2023-05-19T00:45:29.451929Z',
+            task_start_date='2023-05-19T00:45:29.461599Z',
+            task_end_date='2023-05-19T00:45:39.251824Z',
             task_exitcode=0,
             status='success',
-            execution_time=11,
+            execution_time=9,
         )
         expected = attr.asdict(expected)
         result = attr.asdict(result)

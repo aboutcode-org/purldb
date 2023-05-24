@@ -16,7 +16,7 @@ from django.utils import timezone
 from packagedb.models import Package
 from packagedb.models import Resource
 
-from minecode.management.commands.run_map import merge_packages
+from minecode.model_utils import merge_packages
 from minecode.utils import stringify_null_purl_fields
 
 

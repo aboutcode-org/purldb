@@ -14,8 +14,9 @@ import json
 import attr
 import requests
 
+from django.conf import settings
+
 from minecode.management.commands import VerboseCommand
-from minecode.management.commands import get_settings
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
@@ -27,14 +28,16 @@ SLEEP_WHEN_EMPTY = 1
 # in seconds
 REQUEST_TIMEOUT = 3
 
-SCANCODEIO_URL = get_settings('SCANCODEIO_URL').rstrip('/')
+# Only SCANCODEIO_URL can be provided through setting
+SCANCODEIO_URL = settings.SCANCODEIO_URL
+SCANCODEIO_API_URL = f'{SCANCODEIO_URL.rstrip("/")}/api/' if SCANCODEIO_URL else None
+SCANCODEIO_API_URL_PROJECTS = f'{SCANCODEIO_API_URL}/projects/' if SCANCODEIO_API_URL else None
 
-SCANCODEIO_API_KEY = get_settings('SCANCODEIO_API_KEY')
+# Authentication with single API key
+SCANCODEIO_API_KEY = settings.SCANCODEIO_API_KEY
 SCANCODEIO_AUTH_HEADERS = {
     'Authorization': f'Token {SCANCODEIO_API_KEY}'
 } if SCANCODEIO_API_KEY else {}
-
-SCANCODEIO_API_URL_PROJECTS = f'{SCANCODEIO_URL}/projects/' if SCANCODEIO_URL else None
 
 
 @attr.attrs(slots=True)

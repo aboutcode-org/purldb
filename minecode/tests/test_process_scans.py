@@ -13,24 +13,25 @@ import os
 from mock import Mock
 from mock import patch
 
+from matchcode.models import ExactFileIndex
 from minecode.management.commands.process_scans import Command
 from minecode.management.commands.process_scans import get_scan_status
 from minecode.management.commands.process_scans import index_package_files
-from minecode.management.commands.process_scans import update_package_checksums
-from minecode.management.commands.process_scans import _update_package_checksums
 from minecode.management.scanning import Scan
 from minecode.models import ScannableURI
 from minecode.utils_test import MiningTestCase
+from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
 from packagedb.models import Resource
 
 
-class ProcessScansTest(MiningTestCase):
+class ProcessScansTest(MiningTestCase, JsonBasedTesting):
     BASE_DIR = os.path.join(os.path.dirname(__file__), 'testfiles')
 
     def setUp(self):
         self.package1 = Package.objects.create(
             download_url='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
+            type='maven',
             namespace='',
             name='wagon-api',
             version='20040705.181715'
@@ -61,7 +62,10 @@ class ProcessScansTest(MiningTestCase):
             scan_data = json.loads(f.read())
         self.assertEqual(0, len(index_package_files(self.package1, scan_data)))
         result = Resource.objects.filter(package=self.package1)
-        self.assertEqual(78, len(result))
+        self.assertEqual(64, len(result))
+        results = [r.to_dict() for r in result]
+        expected_resources_loc = self.get_test_loc('scancodeio/get_scan_data_expected_resources.json')
+        self.check_expected_results(results, expected_resources_loc, regen=False)
 
     @patch('requests.get')
     def test_ProcessScansTest_process_scan(self, mock_get):
@@ -76,7 +80,12 @@ class ProcessScansTest(MiningTestCase):
         with open(scan_data_loc, 'rb') as f:
             mock_scan_data_response.json.return_value = json.loads(f.read())
 
-        mock_get.side_effect = [mock_scan_info_response, mock_scan_data_response]
+        mock_scan_summary_response = Mock()
+        scan_summary_loc = self.get_test_loc('scancodeio/scan_summary_response.json')
+        with open(scan_summary_loc, 'rb') as f:
+            mock_scan_summary_response.json.return_value = json.loads(f.read())
+
+        mock_get.side_effect = [mock_scan_info_response, mock_scan_data_response, mock_scan_summary_response]
 
         # Set up ScannableURI
         scan_uuid = '54dc4afe-70ea-4f1c-9ed3-989efd9a991f'
@@ -90,5 +99,12 @@ class ProcessScansTest(MiningTestCase):
         # Run test
         Command.process_scan(scannable_uri)
 
+        # Make sure that we get license_expression and copyright from the summary
+        self.assertEqual('apache-2.0', self.package1.declared_license_expression)
+        self.assertEqual('Copyright (c) Apache Software Foundation', self.package1.copyright)
+
         result = Resource.objects.filter(package=self.package1)
-        self.assertEqual(78, len(result))
+        self.assertEqual(64, result.count())
+        result = ExactFileIndex.objects.filter(package=self.package1)
+        self.assertEqual(45, result.count())
+

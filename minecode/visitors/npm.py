@@ -23,6 +23,7 @@ from minecode import visit_router
 from minecode import priority_router
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
+from packagedb.models import PackageContentType
 
 
 """
@@ -151,11 +152,15 @@ def map_npm_package(package_url):
     package = NpmPackageJsonHandler._parse(
         json_data=package_json
     )
+    package.extra_data['package_content'] = PackageContentType.SOURCE_ARCHIVE
 
-    db_package, _, _, _ = merge_or_create_package(package, visit_level=0)
+    db_package, _, _, error = merge_or_create_package(package, visit_level=0)
+
     # Submit package for scanning
     if db_package:
         add_package_to_scan_queue(db_package)
+
+    return error
 
 
 @priority_router.route('pkg:npm/.*')

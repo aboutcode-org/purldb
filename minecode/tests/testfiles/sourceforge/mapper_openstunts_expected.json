@@ -32,8 +32,66 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"gpl\nGNU General Public License version 2.0 (GPLv2)",
+    "holder":null,
+    "declared_license_expression":"gpl-1.0-plus AND gpl-2.0",
+    "declared_license_expression_spdx":"GPL-1.0-or-later AND GPL-2.0-only",
+    "license_detections":[
+      {
+        "license_expression":"gpl-1.0-plus",
+        "matches":[
+          {
+            "score":50.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-hash",
+            "license_expression":"gpl-1.0-plus",
+            "rule_identifier":"gpl_bare_word_only.RULE",
+            "rule_relevance":50,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl_bare_word_only.RULE",
+            "matched_text":"gpl"
+          }
+        ],
+        "identifier":"gpl_1_0_plus-473308ff-72ce-7e72-b3a9-5b1cc6680abb"
+      },
+      {
+        "license_expression":"gpl-2.0",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":6,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"gpl-2.0",
+            "rule_identifier":"gpl-2.0_39.RULE",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_39.RULE",
+            "matched_text":"GNU General Public License version 2.0 (GPLv2)"
+          },
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"2-aho",
+            "license_expression":"gpl-2.0",
+            "rule_identifier":"gpl-2.0_bare_single_word.RULE",
+            "rule_relevance":100,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_bare_single_word.RULE",
+            "matched_text":"GNU General Public License version 2.0 (GPLv2)"
+          }
+        ],
+        "identifier":"gpl_2_0-c577222f-9147-72be-dd68-bd319655699a"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- gpl\n- GNU General Public License version 2.0 (GPLv2)\n",
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},

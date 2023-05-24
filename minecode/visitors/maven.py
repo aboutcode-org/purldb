@@ -38,6 +38,7 @@ from minecode.visitors import HttpVisitor
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
 from packagedb.models import make_relationship
+from packagedb.models import PackageContentType
 from packagedb.models import PackageRelation
 
 """
@@ -192,7 +193,7 @@ def merge_parent(package, parent_package):
     Merge `parent_package` data into `package` and return `package.
     """
     mergeable_fields = (
-        'license_expression',
+        'declared_license_expression',
         'homepage_url',
         'parties',
     )
@@ -215,7 +216,12 @@ def merge_parent(package, parent_package):
 
 def merge_ancestors(ancestor_pom_texts, package):
     """
-    Merge metadata from `ancestor_pom_text` into `package`
+    Merge metadata from `ancestor_pom_text` into `package`. Skip merging
+    metadata from an ancestor if the ancestor's namespace is not contained in
+    the `package`'s namespace.
+
+    The order of POM content in `ancestor_pom_texts` is expected to be in the
+    order of oldest ancestor to newest.
     """
     for ancestor_pom_text in ancestor_pom_texts:
         ancestor_package = _parse(
@@ -224,11 +230,19 @@ def merge_ancestors(ancestor_pom_texts, package):
             primary_language='Java',
             text=ancestor_pom_text
         )
+        if ancestor_package.namespace not in package.namespace:
+            msg = f'merge_ancestors: {ancestor_package.purl} data not added to package: ancestor package namespace is not contained in {package.purl} namespace'
+            history = package.extra_data.get('history')
+            if history:
+                package.extra_data['history'].append(msg)
+            else:
+                package.extra_data['history'] = [msg]
+            continue
         package = merge_parent(package, ancestor_package)
     return package
 
 
-def map_maven_package(package_url):
+def map_maven_package(package_url, package_content):
     """
     Add a maven `package_url` to the PackageDB.
 
@@ -278,6 +292,9 @@ def map_maven_package(package_url):
     package.download_url = urls['repository_download_url']
     package.repository_download_url = urls['repository_download_url']
 
+    # Set package_content value
+    package.extra_data['package_content'] = package_content
+
     # If sha1 exists for a jar, we know we can create the package
     # Use pom info as base and create packages for binary and source package
 
@@ -285,7 +302,7 @@ def map_maven_package(package_url):
     sha1 = get_package_sha1(package)
     if sha1:
         package.sha1 = sha1
-        db_package, _, _, _ = merge_or_create_package(package, visit_level=0)
+        db_package, _, _, _ = merge_or_create_package(package, visit_level=50)
     else:
         msg = f'Failed to retrieve JAR: {package_url}'
         error += msg + '\n'
@@ -320,13 +337,19 @@ def map_maven_binary_and_source(package_url):
     Return an error string for errors that occur, or empty string if there is no error.
     """
     error = ''
-    package, emsg = map_maven_package(package_url)
+    package, emsg = map_maven_package(
+        package_url,
+        PackageContentType.BINARY
+    )
     if emsg:
         error += emsg
 
     source_package_url = package_url
     source_package_url.qualifiers['classifier'] = 'sources'
-    source_package, emsg = map_maven_package(source_package_url)
+    source_package, emsg = map_maven_package(
+        source_package_url,
+        PackageContentType.SOURCE_ARCHIVE
+    )
     if emsg:
         error += emsg
 

@@ -3,8 +3,8 @@
 
 # virtualenv and other misc bits
 *.egg-info
-/dist
-/build
+dist
+build
 /bin
 /lib
 /scripts
@@ -21,7 +21,7 @@
 /local/
 /share/
 /tcl/
-/.eggs/
+.eggs/
 
 # Installer logs
 pip-log.txt

@@ -33,8 +33,34 @@
     "code_view_url":null,
     "vcs_url":"git+git://github.com/Abigail/Regexp--Common.git",
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"mit",
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "matches":[
+          {
+            "score":100.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "matcher":"1-spdx-id",
+            "license_expression":"mit",
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
+            "rule_relevance":100,
+            "rule_url":null,
+            "matched_text":"mit"
+          }
+        ],
+        "identifier":"mit-704ced38-ea60-e53b-6c20-390fe781b1c3"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],

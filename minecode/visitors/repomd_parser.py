@@ -62,15 +62,12 @@ def generate_rpm_objects(package_infos, base_url):
             name=infos.get('name'),
             version=EVR(epoch=infos.get('epoch'), version=infos.get(
                 'ver'), release=infos.get('rel')).to_string(),
-
             description=infos.get('description'),
-
             homepage_url=infos.get('url'),
             download_url=repodata.build_rpm_download_url(
                 base_url, infos.get('href')),
+            extracted_license_statement = infos.get('license', '')
         )
-        if infos.get('license'):
-            package.declared_license = infos.get('license')
         if infos.get('source_rpm'):
             src_rpm = PackageData(name=infos.get('source_rpm'))
             package.related_packages = [src_rpm]

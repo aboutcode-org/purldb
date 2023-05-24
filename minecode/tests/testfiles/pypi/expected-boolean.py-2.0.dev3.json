@@ -35,8 +35,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"revised BSD license",
+    "holder":null,
+    "declared_license_expression":"bsd-new",
+    "declared_license_expression_spdx":"BSD-3-Clause",
+    "license_detections":[
+      {
+        "license_expression":"bsd-new",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":3,
+            "match_coverage":100.0,
+            "matcher":"1-hash",
+            "license_expression":"bsd-new",
+            "rule_identifier":"bsd-new_708.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/bsd-new_708.RULE",
+            "matched_text":"revised BSD license"
+          }
+        ],
+        "identifier":"bsd_new-9d4149ba-60ed-9e49-34a8-20576feb3295"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- revised BSD license\n",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -45,7 +71,7 @@
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
-    "datasource_id":null,
+    "datasource_id":"pypi_api_metadata",
     "purl":"pkg:pypi/boolean.py@2.0.dev3"
   },
   {
@@ -84,8 +110,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"revised BSD license",
+    "holder":null,
+    "declared_license_expression":"bsd-new",
+    "declared_license_expression_spdx":"BSD-3-Clause",
+    "license_detections":[
+      {
+        "license_expression":"bsd-new",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":3,
+            "match_coverage":100.0,
+            "matcher":"1-hash",
+            "license_expression":"bsd-new",
+            "rule_identifier":"bsd-new_708.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/bsd-new_708.RULE",
+            "matched_text":"revised BSD license"
+          }
+        ],
+        "identifier":"bsd_new-9d4149ba-60ed-9e49-34a8-20576feb3295"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- revised BSD license\n",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -94,7 +146,7 @@
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
-    "datasource_id":null,
+    "datasource_id":"pypi_api_metadata",
     "purl":"pkg:pypi/boolean.py@2.0.dev3"
   },
   {
@@ -133,8 +185,34 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":null,
-    "license_expression":null,
-    "declared_license":"revised BSD license",
+    "holder":null,
+    "declared_license_expression":"bsd-new",
+    "declared_license_expression_spdx":"BSD-3-Clause",
+    "license_detections":[
+      {
+        "license_expression":"bsd-new",
+        "matches":[
+          {
+            "score":90.0,
+            "start_line":1,
+            "end_line":1,
+            "matched_length":3,
+            "match_coverage":100.0,
+            "matcher":"1-hash",
+            "license_expression":"bsd-new",
+            "rule_identifier":"bsd-new_708.RULE",
+            "rule_relevance":90,
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/bsd-new_708.RULE",
+            "matched_text":"revised BSD license"
+          }
+        ],
+        "identifier":"bsd_new-9d4149ba-60ed-9e49-34a8-20576feb3295"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- revised BSD license\n",
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
@@ -143,7 +221,7 @@
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
-    "datasource_id":null,
+    "datasource_id":"pypi_api_metadata",
     "purl":"pkg:pypi/boolean.py@2.0.dev3"
   }
 ]

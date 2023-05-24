@@ -101,10 +101,11 @@ def build_packages_from_projects(metadata):
         # license is just a URL in the json file, for example:
         # http://usefulinc.com/doap/licenses/asl20
         license_url = project_meta.get('license')
-        common_data['declared_license'] = license_url
+        common_data['extracted_license_statement'] = license_url
 
         if license_url in APACHE_LICENSE_URL:
-            common_data['license_expression'] = 'apache-2.0'
+            common_data['declared_license_expression'] = 'apache-2.0'
+            common_data['declared_license_expression_spdx'] = 'Apache-2.0'
 
         keywords = []
         category = project_meta.get('category', '')

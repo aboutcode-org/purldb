@@ -302,20 +302,73 @@ class AbstractPackage(models.Model):
         null=True,
         help_text=_("Copyright statements for this package. Typically one per line."),
     )
-    license_expression = models.TextField(
+    holder = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_("Holders for this package. Typically one per line."),
+    )
+    declared_license_expression = models.TextField(
         blank=True,
         null=True,
         help_text=_(
-            "The normalized license expression for this package as derived "
-            "from its declared license."
+            "The license expression for this package typically derived "
+            "from its extracted_license_statement or from some other type-specific "
+            "routine or convention."
         ),
     )
-    declared_license = models.TextField(
+    declared_license_expression_spdx = models.TextField(
         blank=True,
         null=True,
         help_text=_(
-            "The declared license mention or tag or text as found in a "
-            "package manifest."
+            "The SPDX license expression for this package converted "
+            "from its declared_license_expression."
+        ),
+    )
+    license_detections = models.JSONField(
+        default=list,
+        blank=True,
+        null=True,
+        help_text=_(
+            "A list of LicenseDetection mappings typically derived "
+            "from its extracted_license_statement or from some other type-specific "
+            "routine or convention."
+        ),
+    )
+    other_license_expression = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "The license expression for this package which is different from the "
+            "declared_license_expression, (i.e. not the primary license) "
+            "routine or convention."
+        ),
+    )
+    other_license_expression_spdx = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "The other SPDX license expression for this package converted "
+            "from its other_license_expression."
+        ),
+    )
+    other_license_detections = models.JSONField(
+        default=list,
+        blank=True,
+        null=True,
+        help_text=_(
+            "A list of LicenseDetection mappings which is different from the "
+            "declared_license_expression, (i.e. not the primary license) "
+            "These are detections for the detection for the license expressions "
+            "in other_license_expression. "
+        ),
+    )
+    extracted_license_statement = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "The license statement mention, tag or text as found in a "
+            "package manifest and extracted. This can be a string, a list or dict of "
+            "strings possibly nested, as found originally in the manifest."
         ),
     )
     notice_text = models.TextField(
@@ -323,16 +376,6 @@ class AbstractPackage(models.Model):
         null=True,
         help_text=_("A notice text for this package."),
     )
-    manifest_path = models.CharField(
-        max_length=1024,
-        blank=True,
-        null=True,
-        help_text=_(
-            "A relative path to the manifest file if any, such as a "
-            "Maven .pom or a npm package.json."
-        ),
-    )
-    contains_source_code = models.BooleanField(null=True, blank=True)
     datasource_id = models.CharField(
         max_length=64,
         blank=True,
@@ -357,6 +400,20 @@ class AbstractPackage(models.Model):
         abstract = True
 
 
+class PackageContentType(models.IntegerChoices):
+    """List of Package content types."""
+
+    # TODO: curation is a special case, based on how the curation identity
+    # fields matches with the current package
+    CURATION = 1, 'curation'
+    PATCH = 2, 'patch'
+    SOURCE_REPO = 3, 'source_repo'
+    SOURCE_ARCHIVE = 4, 'source_archive'
+    BINARY = 5, 'binary'
+    TEST = 6, 'test'
+    DOC = 7, 'doc'
+
+
 # TODO: Figure out what ordering we want for the fields
 class Package(
     HistoryMixin,
@@ -375,9 +432,6 @@ class Package(
         max_length=255,
     )
     name = LowerCaseField(
-        max_length=100,
-    )
-    version = LowerCaseField(
         max_length=100,
     )
     qualifiers = LowerCaseField(
@@ -437,6 +491,29 @@ class Package(
         blank=True,
         help_text='Indexing errors messages. When present this means the indexing has failed.',
     )
+    package_set = models.UUIDField(
+        null=True,
+        blank=True,
+        help_text='A UUID used to identify a group of related Packages'
+    )
+
+    package_content = models.IntegerField(
+        null=True,
+        choices=PackageContentType.choices,
+        help_text=_(
+            'Content of this Package as one of: {}'.format(', '.join(PackageContentType.labels))
+        ),
+    )
+
+    summary = models.JSONField(
+        default=dict,
+        blank=True,
+        null=True,
+        help_text=_(
+            'A mapping containing a summary and license clarity score for this Package'
+        ),
+    )
+
     search_vector = SearchVectorField(null=True)
 
     objects = PackageQuerySet.as_manager()
@@ -748,6 +825,29 @@ class ScanFieldsModelMixin(models.Model):
     This model is from ScanCode.io
     """
 
+    detected_license_expression = models.TextField(
+        blank=True,
+        help_text=_("TODO"),
+    )
+    detected_license_expression_spdx = models.TextField(
+        blank=True,
+        help_text=_("TODO"),
+    )
+    license_detections = models.JSONField(
+        blank=True,
+        default=list,
+        help_text=_("List of license detection details."),
+    )
+    license_clues = models.JSONField(
+        blank=True,
+        default=list,
+        help_text=_("List of license clues."),
+    )
+    percentage_of_license_text = models.FloatField(
+        blank=True,
+        null=True,
+        help_text=_("TODO"),
+    )
     copyrights = models.JSONField(
         blank=True,
         default=list,
@@ -766,16 +866,6 @@ class ScanFieldsModelMixin(models.Model):
         blank=True,
         default=list,
         help_text=_("List of detected authors (and related detection details)."),
-    )
-    licenses = models.JSONField(
-        blank=True,
-        default=list,
-        help_text=_("List of license detection details."),
-    )
-    license_expressions = models.JSONField(
-        blank=True,
-        default=list,
-        help_text=_("List of detected license expressions."),
     )
     package_data = models.JSONField(
         default=list,
@@ -843,6 +933,18 @@ class Resource(
             ('package', 'path'),
         )
         ordering = ('package', 'path')
+
+    @property
+    def for_packages(self):
+        """Return the list of all Packages associated to this resource."""
+        return [
+            self.package.package_uid or str(self.package)
+        ]
+
+    def to_dict(self):
+        from packagedb.serializers import ResourceMetadataSerializer
+        resource_metadata = ResourceMetadataSerializer(self).data
+        return resource_metadata
 
 
 class PackageRelation(models.Model):

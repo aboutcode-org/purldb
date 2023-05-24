@@ -11,7 +11,9 @@ from rest_framework.serializers import CharField
 from rest_framework.serializers import HyperlinkedIdentityField
 from rest_framework.serializers import HyperlinkedModelSerializer
 from rest_framework.serializers import HyperlinkedRelatedField
+from rest_framework.serializers import JSONField
 from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import SerializerMethodField
 
 from packagedb.models import DependentPackage
 from packagedb.models import Package
@@ -46,12 +48,55 @@ class ResourceAPISerializer(HyperlinkedModelSerializer):
             'is_archive',
             'is_media',
             'is_key_file',
-            'licenses',
-            'license_expressions',
+            'detected_license_expression',
+            'detected_license_expression_spdx',
+            'license_detections',
+            'license_clues',
+            'percentage_of_license_text',
             'copyrights',
             'holders',
             'authors',
             'package_data',
+            'emails',
+            'urls',
+            'extra_data',
+        )
+
+
+class ResourceMetadataSerializer(HyperlinkedModelSerializer):
+    for_packages = JSONField()
+
+    class Meta:
+        model = Resource
+        fields = (
+            'path',
+            'type',
+            'name',
+            'extension',
+            'size',
+            'md5',
+            'sha1',
+            'sha256',
+            'sha512',
+            'git_sha1',
+            'mime_type',
+            'file_type',
+            'programming_language',
+            'is_binary',
+            'is_text',
+            'is_archive',
+            'is_media',
+            'is_key_file',
+            'detected_license_expression',
+            'detected_license_expression_spdx',
+            'license_detections',
+            'license_clues',
+            'percentage_of_license_text',
+            'copyrights',
+            'holders',
+            'authors',
+            'package_data',
+            'for_packages',
             'emails',
             'urls',
             'extra_data',
@@ -88,6 +133,7 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
     parties = PartySerializer(many=True)
     resources = HyperlinkedIdentityField(view_name='api:package-resources', lookup_field='uuid')
     url = HyperlinkedIdentityField(view_name='api:package-detail', lookup_field='uuid')
+    package_content = SerializerMethodField()
 
     class Meta:
         model = Package
@@ -95,6 +141,8 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
             'url',
             'uuid',
             'filename',
+            'package_set',
+            'package_content',
             'purl',
             'type',
             'namespace',
@@ -121,19 +169,26 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
             'sha256',
             'sha512',
             'copyright',
-            'license_expression',
-            'declared_license',
+            'holder',
+            'declared_license_expression',
+            'declared_license_expression_spdx',
+            'license_detections',
+            'other_license_expression',
+            'other_license_expression_spdx',
+            'other_license_detections',
+            'extracted_license_statement',
             'notice_text',
             'source_packages',
             'extra_data',
             'package_uid',
-            'manifest_path',
-            'contains_source_code',
             'datasource_id',
             'file_references',
             'dependencies',
             'resources',
         )
+
+    def get_package_content(self, obj):
+        return obj.get_package_content_display()
 
 
 class PackageMetadataSerializer(ModelSerializer):
@@ -172,10 +227,15 @@ class PackageMetadataSerializer(ModelSerializer):
             'code_view_url',
             'vcs_url',
             'copyright',
-            'license_expression',
-            'declared_license',
+            'holder',
+            'declared_license_expression',
+            'declared_license_expression_spdx',
+            'license_detections',
+            'other_license_expression',
+            'other_license_expression_spdx',
+            'other_license_detections',
+            'extracted_license_statement',
             'notice_text',
-            'contains_source_code',
             'source_packages',
             'extra_data',
             'dependencies',
@@ -185,6 +245,5 @@ class PackageMetadataSerializer(ModelSerializer):
             'repository_homepage_url',
             'repository_download_url',
             'api_data_url',
-            'manifest_path',
             'file_references',
         )
