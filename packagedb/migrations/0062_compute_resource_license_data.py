@@ -2,6 +2,7 @@
 
 from django.db import migrations
 from django.db.models import Q
+from django.conf import settings
 
 
 def compute_resource_detected_license_expression(apps, schema_editor):
@@ -14,15 +15,48 @@ def compute_resource_detected_license_expression(apps, schema_editor):
     from license_expression import combine_expressions
     from licensedcode.cache import build_spdx_license_expression
 
-    Resource = apps.get_model("packagedb", "Resource")
-    resources = Resource.objects.filter(~Q(license_expressions=[]) | Q(license_expressions__isnull=False))
+    if settings.IS_TESTS:
+        return
 
-    for resource in resources:
-        license_expression = str(combine_expressions(resource.license_expressions))
-        license_expression_spdx = build_spdx_license_expression(license_expression)
-        resource.declared_license_expression = license_expression
-        resource.declared_license_expression_spdx = license_expression_spdx
-        resource.save()
+    Resource = apps.get_model("packagedb", "Resource")
+    resources = Resource.objects.filter(~Q(license_expressions=[]) | Q(license_expressions__isnull=False)).only('license_expressions')
+
+    object_count = resources.count()
+    print(f"\nCompute detected_license_expression for {object_count:,} resources.")
+
+    chunk_size = 2000
+    iterator = resources.iterator(chunk_size=chunk_size)
+
+    unsaved_objects = []
+    for index, resource in enumerate(iterator, start=1):
+        combined_expression = str(combine_expressions(resource.license_expressions))
+        # gpl-2.0 OR broadcom-linking-unmodified OR proprietary-license
+        # build_spdx_license_expression("broadcom-linking-unmodified")
+        # AttributeError: 'LicenseSymbol' object has no attribute 'wrapped'
+        try:
+            license_expression_spdx = build_spdx_license_expression(combined_expression)
+        except AttributeError as error:
+            errors = resource.extra_data.get('errors', [])
+            errors.append(str(error))
+            resource.extra_data['errors'] = errors
+            continue
+
+        resource.detected_license_expression = combined_expression
+        resource.detected_license_expression_spdx = license_expression_spdx
+        unsaved_objects.append(resource)
+
+        if not (index % chunk_size) and unsaved_objects:
+            print(f"  {index:,} / {object_count:,} computed")
+
+    print("Updating DB objects...")
+    Resource.objects.bulk_update(
+        objs=unsaved_objects,
+        fields=[
+            "detected_license_expression",
+            "detected_license_expression_spdx",
+        ],
+        batch_size=1000,
+    )
 
 
 def _convert_matches_to_detections(license_matches):
@@ -88,11 +122,31 @@ def compute_resource_license_detections(apps, schema_editor):
     From scancode.io
     """
     Resource = apps.get_model("packagedb", "Resource")
-    resources = Resource.objects.filter(~Q(licenses=[]) | Q(licenses__isnull=False))
-    for resource in resources:
+    resources = Resource.objects.filter(~Q(licenses=[]) | Q(licenses__isnull=False)).only('licenses')
+
+    object_count = resources.count()
+    print(f"\nCompute license_detections for {object_count:,} resources.")
+
+    chunk_size = 2000
+    iterator = resources.iterator(chunk_size=chunk_size)
+
+    unsaved_objects = []
+    for index, resource in enumerate(iterator, start=1):
         detections = _convert_matches_to_detections(resource.licenses)
         resource.license_detections = detections
-        resource.save()
+        unsaved_objects.append(resource)
+
+        if not (index % chunk_size):
+            print(f"  {index:,} / {object_count:,} computed")
+
+    print("Updating DB objects...")
+    # Keeping the batch_size small as the `license_detections` content is often large,
+    # and it may raise `django.db.utils.OperationalError: out of memory`
+    Resource.objects.bulk_update(
+        objs=unsaved_objects,
+        fields=["license_detections"],
+        batch_size=50,
+    )
 
 
 class Migration(migrations.Migration):
