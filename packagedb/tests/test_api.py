@@ -19,6 +19,7 @@ from rest_framework.test import APIClient
 
 from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
+from packagedb.models import PackageContentType
 from packagedb.models import Resource
 
 
@@ -395,7 +396,7 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
             'version': '1.0.0',
             'qualifiers':'',
             'package_set': package_set,
-            'package_content': Package.PackageContentType.BINARY,
+            'package_content': PackageContentType.BINARY,
             'download_url': 'https://example.com/test-1.0.0.jar',
         }
 
@@ -409,7 +410,7 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
             'copyright': 'Copyright (c) example corp.',
             'holder': 'example corp.',
             'package_set': package_set,
-            'package_content': Package.PackageContentType.SOURCE_ARCHIVE,
+            'package_content': PackageContentType.SOURCE_ARCHIVE,
             'download_url': 'https://example.com/test-1.0.0-sources.jar',
         }
 

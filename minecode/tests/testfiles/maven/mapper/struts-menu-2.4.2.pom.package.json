@@ -11,14 +11,14 @@
   "parties":[
     {
       "type":"person",
-      "role":"developper",
+      "role":"developer",
       "name":"Scott Sayles",
       "email":"ssayles AT users.sourceforge.net",
       "url":null
     },
     {
       "type":"person",
-      "role":"developper",
+      "role":"developer",
       "name":"Matt Raible",
       "email":"mraible AT users.sourceforge.net",
       "url":null
