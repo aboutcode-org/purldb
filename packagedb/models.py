@@ -548,7 +548,11 @@ class Package(
             models.Index(fields=['download_url']),
             models.Index(fields=['filename']),
             models.Index(fields=['size']),
-            models.Index(fields=['release_date'])
+            models.Index(fields=['release_date']),
+            models.Index(fields=['md5']),
+            models.Index(fields=['sha1']),
+            models.Index(fields=['sha256']),
+            models.Index(fields=['sha512']),
         ]
 
     def __str__(self):
@@ -733,41 +737,6 @@ class AbstractResource(models.Model):
         help_text=_('Size in bytes.'),
     )
 
-    md5 = models.CharField(
-        max_length=32,
-        blank=True,
-        null=True,
-        help_text=_('MD5 checksum hex-encoded, as in md5sum.'),
-    )
-
-    sha1 = models.CharField(
-        max_length=40,
-        blank=True,
-        null=True,
-        help_text=_('SHA1 checksum hex-encoded, as in sha1sum.'),
-    )
-
-    sha256 = models.CharField(
-        max_length=64,
-        blank=True,
-        null=True,
-        help_text=_('SHA256 checksum hex-encoded, as in sha256sum.'),
-    )
-
-    sha512 = models.CharField(
-        max_length=128,
-        blank=True,
-        null=True,
-        help_text=_('SHA512 checksum hex-encoded, as in sha512sum.'),
-    )
-
-    git_sha1 = models.CharField(
-        max_length=40,
-        blank=True,
-        null=True,
-        help_text=_('git SHA1 checksum hex-encoded'),
-    )
-
     mime_type = models.CharField(
         max_length=100,
         blank=True,
@@ -918,6 +887,7 @@ class ScanFieldsModelMixin(models.Model):
 
 class Resource(
     ExtraDataFieldMixin,
+    HashFieldsMixin,
     ScanFieldsModelMixin,
     AbstractResource
 ):
@@ -928,11 +898,25 @@ class Resource(
         help_text=_('The Package that this Resource is from')
     )
 
+    git_sha1 = models.CharField(
+        max_length=40,
+        blank=True,
+        null=True,
+        help_text=_('git SHA1 checksum hex-encoded'),
+    )
+
     class Meta:
         unique_together = (
             ('package', 'path'),
         )
         ordering = ('package', 'path')
+        indexes = [
+            models.Index(fields=['md5']),
+            models.Index(fields=['sha1']),
+            models.Index(fields=['sha256']),
+            models.Index(fields=['sha512']),
+            models.Index(fields=['git_sha1']),
+        ]
 
     @property
     def for_packages(self):
