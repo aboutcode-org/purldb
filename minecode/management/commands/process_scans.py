@@ -73,6 +73,12 @@ class Command(scanning.ScanningCommand):
             )
             scan_index_errors = index_package_files(package, scan_data)
 
+            scan_info = scanning._get_scan_info(
+                scannable_uri.scan_uuid,
+                api_url=cls.api_url,
+                api_auth_headers=cls.api_auth_headers,
+                get_scan_data_save_loc=get_scan_data_save_loc
+            )
             summary = scanning.get_scan_summary(
                 scannable_uri.scan_uuid,
                 api_url=cls.api_url,
@@ -81,6 +87,12 @@ class Command(scanning.ScanningCommand):
             )
 
             package_updated = False
+
+            sha1 = scan_info.get('extra_data', {}).get('sha1')
+            if not package.sha1 and sha1:
+                package.sha1 = sha1
+                package_updated = True
+
             if summary:
                 package.summary = summary
                 package_updated = True

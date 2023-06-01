@@ -243,6 +243,23 @@ def _call_scan_get_api(scan_uuid, endpoint='',
     return response.json()
 
 
+def _get_scan_info(
+    scan_uuid,
+    api_url=SCANCODEIO_API_URL_PROJECTS,
+    api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    get_scan_info_save_loc=''
+):
+    """
+    Return a mapping of project info for `scan_uuid` fetched from ScanCode.io or None.
+    Raise an exception on error.
+    """
+    results = _call_scan_get_api(scan_uuid, endpoint='', api_url=api_url, api_auth_headers=api_auth_headers)
+    if get_scan_info_save_loc:
+        with open(get_scan_info_save_loc, 'w') as f:
+            json.dump(results, f)
+    return results
+
+
 def get_scan_info(
     scan_uuid,
     api_url=SCANCODEIO_API_URL_PROJECTS,
@@ -253,10 +270,12 @@ def get_scan_info(
     Return a Scan object for `scan_uuid` fetched from ScanCode.io or None.
     Raise an exception on error.
     """
-    results = _call_scan_get_api(scan_uuid, endpoint='', api_url=api_url, api_auth_headers=api_auth_headers)
-    if get_scan_info_save_loc:
-        with open(get_scan_info_save_loc, 'w') as f:
-            json.dump(results, f)
+    results = _get_scan_info(
+        scan_uuid=scan_uuid,
+        api_url=api_url,
+        api_auth_headers=api_auth_headers,
+        get_scan_info_save_loc=get_scan_info_save_loc,
+    )
     return Scan.from_response(**results)
 
 
