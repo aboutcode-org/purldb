@@ -73,12 +73,6 @@ class Command(scanning.ScanningCommand):
             )
             scan_index_errors = index_package_files(package, scan_data)
 
-            scan_info = scanning._get_scan_info(
-                scannable_uri.scan_uuid,
-                api_url=cls.api_url,
-                api_auth_headers=cls.api_auth_headers,
-                get_scan_data_save_loc=get_scan_data_save_loc
-            )
             summary = scanning.get_scan_summary(
                 scannable_uri.scan_uuid,
                 api_url=cls.api_url,
@@ -86,26 +80,24 @@ class Command(scanning.ScanningCommand):
                 get_scan_data_save_loc=get_scan_data_save_loc
             )
 
-            package_updated = False
-
-            sha1 = scan_info.get('extra_data', {}).get('sha1')
-            if not package.sha1 and sha1:
-                package.sha1 = sha1
-                package_updated = True
-
-            if summary:
-                package.summary = summary
-                package_updated = True
-
-            license_expression = summary.get('declared_license_expression')
-            if not package.declared_license_expression and license_expression:
-                package.declared_license_expression = license_expression
-                package_updated = True
-
+            copyright = ''
             declared_holder = summary.get('declared_holder')
-            if not package.copyright:
-                if declared_holder:
-                    package.copyright = f'Copyright (c) {declared_holder}'
+            if declared_holder:
+                copyright = f'Copyright (c) {declared_holder}'
+
+            values_by_updateable_fields = {
+                'sha1': scan_info.sha1,
+                'sha256': scan_info.sha256,
+                'sha512': scan_info.sha512,
+                'summary': summary,
+                'declared_license_expression': summary.get('declared_license_expression'),
+                'copyright': copyright,
+            }
+
+            for field, value in values_by_updateable_fields.items():
+                p_val = getattr(package, field)
+                if not p_val and value:
+                    setattr(package, field, value)
                     package_updated = True
 
             if package_updated:

@@ -74,9 +74,15 @@ class Scan(object):
     status = attr.ib(default=None)
     # as a time stamp
     execution_time = attr.ib(default=None)
+    md5 = attr.ib(default=None)
+    sha1 = attr.ib(default=None)
+    sha256 = attr.ib(default=None)
+    sha512 = attr.ib(default=None)
+    sha1_git = attr.ib(default=None)
+    filename = attr.ib(default=None)
 
     @classmethod
-    def from_response(cls, url, uuid, runs, input_sources, **kwargs):
+    def from_response(cls, url, uuid, runs, input_sources, extra_data={}, **kwargs):
         """
         Return a Scan object built from an API response data arguments.
         """
@@ -95,11 +101,20 @@ class Scan(object):
         if len(input_sources) > 0:
             uri = input_sources[0]["source"]
 
+        md5 = extra_data.get('md5')
+        sha1 = extra_data.get('sha1')
+        sha256 = extra_data.get('sha256')
+        sha512 = extra_data.get('sha512')
+        sha1_git = extra_data.get('sha1_git')
+        filename = extra_data.get('filename')
+
         return Scan(
             url=url, uuid=uuid, run_uuid=run_uuid, uri=uri,
             created_date=created_date, task_start_date=task_start_date,
             task_end_date=task_end_date, task_exitcode=task_exitcode,
-            status=status, execution_time=execution_time
+            status=status, execution_time=execution_time,
+            md5=md5, sha1=sha1, sha256=sha256, sha512=sha512,
+            sha1_git=sha1_git, filename=filename
         )
 
     @property
