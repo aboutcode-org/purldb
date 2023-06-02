@@ -316,6 +316,8 @@ UPDATEABLE_FIELDS = [
     'repository_homepage_url',
     'dependencies',
     'parties',
+    'homepage_url',
+    'description',
 ]
 
 
