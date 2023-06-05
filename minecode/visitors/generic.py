@@ -71,7 +71,7 @@ def process_request(purl_str):
     download_url = package_url.qualifiers.get('download_url')
     if not download_url:
         error = f'package_url {purl_str} does not contain a download_url qualifier'
-        return
+        return error
 
     error_msg = map_generic_package(package_url)
 

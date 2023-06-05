@@ -6,6 +6,7 @@
     "version":"1.21",
     "qualifiers":"",
     "subpath":"",
+    "package_content":null,
     "primary_language":null,
     "description":"Common classes to make creating REST services more consistent.",
     "release_date":"2009-05-21",

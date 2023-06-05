@@ -27,7 +27,7 @@ class GenericPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         purl = 'pkg:generic/test@1.0.0?download_url=http://example.com/test.tar.gz'
         error_msg = generic.process_request(purl)
 
-        self.assertEqual('', error_msg)
+        self.assertEqual(None, error_msg)
         package_count = Package.objects.all().count()
         self.assertEqual(1, package_count)
 

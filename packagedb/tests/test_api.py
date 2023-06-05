@@ -580,19 +580,22 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
 
         self.assertEqual(2, len(response.data))
         result = response.data[0]
-        # pop fields
-        result.pop('url')
-        result.pop('uuid')
-        result.pop('resources')
-        result.pop('package_set')
 
-        self.check_expected_results(result, expected, regen=False)
+        # remove fields
+        result.pop('url')
+        fields_to_remove = [
+            'uuid',
+            'resources',
+            'package_set',
+        ]
+
+        self.check_expected_results(result, expected, fields_to_remove=fields_to_remove, regen=False)
 
     def test_package_api_get_enhanced_package(self):
         response = self.client.get(reverse('api:package-get-enhanced-package-data', args=[self.package3.uuid]))
         result = response.data
         expected = self.get_test_loc('api/enhanced_package.json')
-        self.check_expected_results(result, expected, regen=False)
+        self.check_expected_results(result, expected, fields_to_remove=['package_set'], regen=False)
 
 
 class ResourceApiTestCase(TestCase):
