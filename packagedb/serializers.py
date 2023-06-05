@@ -201,6 +201,7 @@ class PackageMetadataSerializer(ModelSerializer):
     """
     dependencies = DependentPackageSerializer(many=True)
     parties = PartySerializer(many=True)
+    package_content = SerializerMethodField()
 
     class Meta:
         model = Package
@@ -211,6 +212,8 @@ class PackageMetadataSerializer(ModelSerializer):
             'version',
             'qualifiers',
             'subpath',
+            'package_set',
+            'package_content',
             'primary_language',
             'description',
             'release_date',
@@ -247,3 +250,6 @@ class PackageMetadataSerializer(ModelSerializer):
             'api_data_url',
             'file_references',
         )
+
+    def get_package_content(self, obj):
+        return obj.get_package_content_display()

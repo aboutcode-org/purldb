@@ -196,19 +196,20 @@ def response_403(url, request):
 
 
 class JsonBasedTesting(FileBasedTesting):
-    def _normalize_package_uids(self, data):
+    def _normalize_results(self, data, fields_to_remove=[]):
         """
         Returns the `data`, where any `package_uid` value has been normalized
-        with `purl_with_fake_uuid()`
+        with `purl_with_fake_uuid()` and fields from `fields_to_remove` have
+        been removed from `data`.
         """
         if type(data) == list:
-            return [self._normalize_package_uids(entry) for entry in data]
+            return [self._normalize_results(entry, fields_to_remove) for entry in data]
 
         if type(data) in (dict, OrderedDict, ReturnDict):
             normalized_data = {}
             for key, value in data.items():
                 if type(value) in [list, dict, OrderedDict, ReturnDict]:
-                    value = self._normalize_package_uids(value)
+                    value = self._normalize_results(value, fields_to_remove)
                 if (
                     key in ("package_uid", "dependency_uid", "for_package_uid")
                     and value
@@ -216,12 +217,26 @@ class JsonBasedTesting(FileBasedTesting):
                     value = purl_with_fake_uuid(value)
                 if key == "for_packages":
                     value = [purl_with_fake_uuid(package_uid) for package_uid in value]
+                if key in fields_to_remove:
+                    continue
                 normalized_data[key] = value
             return normalized_data
 
         return data
 
-    def check_expected_results(self, results, expected_loc, regen=False):
+    def _remove_fields_from_results(self, data, fields_to_remove):
+        if type(data) == list:
+            return [self._remove_fields_from_results(entry, fields_to_remove) for entry in data]
+
+        if type(data) in (dict, OrderedDict, ReturnDict):
+            normalized_data = {}
+            # Remove fields from results and normalize Package UIDs
+            for field in fields_to_remove:
+                if not field in data:
+                    continue
+                data.pop(field)
+
+    def check_expected_results(self, results, expected_loc, fields_to_remove=[], regen=False):
         """
         Check `results` are  equal to expected data stored in a JSON
         file at `expected_loc`.
@@ -232,7 +247,7 @@ class JsonBasedTesting(FileBasedTesting):
         if isinstance(results, str):
             results = json.loads(results)
 
-        results = self._normalize_package_uids(results)
+        results = self._normalize_results(results, fields_to_remove)
 
         if regen:
             with codecs.open(expected_loc, mode='wb', encoding='utf-8') as expect:

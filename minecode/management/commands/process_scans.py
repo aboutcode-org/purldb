@@ -2,14 +2,13 @@
 # Copyright (c) 2018 by nexB, Inc. http://www.nexb.com/ - All rights reserved.
 #
 
-from collections import OrderedDict
 import logging
 import signal
 import sys
 
 from django.db import transaction
 
-from license_expression import Licensing
+from packagedcode.utils import combine_expressions
 
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
@@ -80,20 +79,29 @@ class Command(scanning.ScanningCommand):
                 get_scan_data_save_loc=get_scan_data_save_loc
             )
 
-            package_updated = False
-            if summary:
-                package.summary = summary
-                package_updated = True
+            other_license_expressions = summary.get('other_license_expressions', [])
+            other_license_expressions = [l['value'] for l in other_license_expressions]
+            other_license_expression = combine_expressions(other_license_expressions)
 
-            license_expression = summary.get('declared_license_expression')
-            if not package.declared_license_expression and license_expression:
-                package.declared_license_expression = license_expression
-                package_updated = True
-
+            copyright = ''
             declared_holder = summary.get('declared_holder')
-            if not package.copyright:
-                if declared_holder:
-                    package.copyright = f'Copyright (c) {declared_holder}'
+            if declared_holder:
+                copyright = f'Copyright (c) {declared_holder}'
+
+            values_by_updateable_fields = {
+                'sha1': scan_info.sha1,
+                'sha256': scan_info.sha256,
+                'sha512': scan_info.sha512,
+                'summary': summary,
+                'declared_license_expression': summary.get('declared_license_expression'),
+                'other_license_expression': other_license_expression,
+                'copyright': copyright,
+            }
+
+            for field, value in values_by_updateable_fields.items():
+                p_val = getattr(package, field)
+                if not p_val and value:
+                    setattr(package, field, value)
                     package_updated = True
 
             if package_updated:
@@ -255,43 +263,3 @@ def index_package_files(package, scan_data):
         logger.error(msg)
 
     return scan_index_errors
-
-
-# TODO: Remove this when scancode-toolkit is upgraded. The current version of
-# scancode-toolkit in Minecode does not have this function
-# TODO: from packagedcode.utils import combine_expressions
-def combine_expressions(expressions, relation='AND', licensing=Licensing()):
-    """
-    Return a combined license expression string with relation, given a list of
-    license expressions strings.
-
-    For example:
-    >>> a = 'mit'
-    >>> b = 'gpl'
-    >>> combine_expressions([a, b])
-    'mit AND gpl'
-    >>> assert 'mit' == combine_expressions([a])
-    >>> combine_expressions([])
-    >>> combine_expressions(None)
-    >>> combine_expressions(('gpl', 'mit', 'apache',))
-    'gpl AND mit AND apache'
-    """
-    if not expressions:
-        return
-
-    if not isinstance(expressions, (list, tuple)):
-        raise TypeError(
-            'expressions should be a list or tuple and not: {}'.format(
-                type(expressions)))
-
-    # Remove duplicate element in the expressions list
-    expressions = list(OrderedDict((x, True) for x in expressions).keys())
-
-    if len(expressions) == 1:
-        return expressions[0]
-
-    expressions = [licensing.parse(le, simple=True) for le in expressions]
-    if relation == 'OR':
-        return str(licensing.OR(*expressions))
-    else:
-        return str(licensing.AND(*expressions))

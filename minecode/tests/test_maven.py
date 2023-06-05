@@ -312,7 +312,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
         package_results = list(pac.to_dict() for pac in newly_mapped)
         expected_loc = self.get_test_loc('maven/end2end/expected_mapped_packages.json')
-        self.check_expected_results(package_results, expected_loc, regen=False)
+        self.check_expected_results(package_results, expected_loc, fields_to_remove=['package_set'], regen=False)
 
         # check that the map status has been updated correctly
         visited_then_mapped = ResourceURI.objects.filter(uri__contains='maven-index://')
@@ -372,7 +372,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
         package_results = sorted((pac.to_dict() for pac in mapped), key=lambda d: list(d.keys()))
         expected_loc = self.get_test_loc('maven/end2end_multisteps/expected_mapped_commons-jaxrs-1.21-from-index.json')
-        self.check_expected_results(package_results, expected_loc, regen=False)
+        self.check_expected_results(package_results, expected_loc, fields_to_remove=['package_set'], regen=False)
 
         # Step 2: map a POM
 
@@ -389,7 +389,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
         package_results = sorted((pac.to_dict() for pac in mapped), key=lambda d: list(d.keys()))
         expected_loc = self.get_test_loc('maven/end2end_multisteps/expected_mapped_commons-jaxrs-1.21-from-pom.json')
-        self.check_expected_results(package_results, expected_loc, regen=False)
+        self.check_expected_results(package_results, expected_loc, fields_to_remove=['package_set'], regen=False)
 
     def test_visit_and_map_with_index(self):
         uri = 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties'
