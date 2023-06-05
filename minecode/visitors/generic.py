@@ -14,7 +14,6 @@ from packageurl import PackageURL
 from packagedcode.models import PackageData
 
 from minecode import priority_router
-from packagedb.models import PackageContentType
 
 
 """
