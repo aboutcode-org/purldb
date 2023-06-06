@@ -38,7 +38,7 @@ DOCS_REQUIREMENTS="$CUSTOM_PACKAGES --editable matchcode-toolkit --editable .[do
 VIRTUALENV_DIR=venv
 
 # Cleanable files and directories to delete with the --clean option
-CLEANABLE="build dist venv .cache .eggs"
+CLEANABLE="build dist venv .cache .eggs matchcode-toolkit/build matchcode-toolkit/dist matchcode-toolkit/.eggs"
 
 # extra  arguments passed to pip
 PIP_EXTRA_ARGS=" "
