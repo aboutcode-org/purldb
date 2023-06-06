@@ -13,8 +13,7 @@ from bitarray import bitarray
 from bitarray.util import count_xor
 
 from commoncode import codec
-
-from matchcode_toolkit import hash as commoncode_hash
+from commoncode import hash as commoncode_hash
 
 """
 Halo is a family of hash functions that have the un-common property that mostly
