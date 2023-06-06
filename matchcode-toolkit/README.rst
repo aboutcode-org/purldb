@@ -1,31 +1,72 @@
-matchcode-toolkit
+MatchCode toolkit
 =================
-This contains a scancode-toolkit post-scan plugin that fingerprints the
-directories of a scan and queries those fingerprints against the matchcode API
-to find package matches.
+MatchCode toolkit is a Python library that provides the directory fingerprinting
+functionality for `ScanCode toolkit <https://github.com/nexB/scancode-toolkit>`_
+and `ScanCode.io <https://github.com/nexB/scancode.io>`_ by implementing the
+HaloHash algorithm and using it in ScanCode toolkit and ScanCode.io plugins and
+pipelines.
+
+
+Installation
+------------
+
+MatchCode toolkit must be installed in the same environment as ScanCode toolkit
+or ScanCode.io.
+
+From PyPI:
+::
+
+  pip install matchcode-toolkit
+
+A checkout of this repo can also be installed into an environment using pip's
+``--editable`` option,
+::
+
+  # Activate the virtual environment you want to install MatchCode-toolkit into,
+  # change directories to the ``matchcode-toolkit`` directory
+  pip install --editable .
+
+or built into a wheel and then installed:
+::
+
+  python setup.py bdist_wheel # The built wheel will be in the dist/ directory
+  pip install matchcode_toolkit-*-py3-none-any.whl
 
 
 Usage
 -----
 
-Ensure that the PurlDB server is up. Set the following environment variables:
-  * ``MATCHCODE_DIRECTORY_CONTENT_MATCHING_ENDPOINT``
+MatchCode toolkit provides the ``--fingerprint`` option for ScanCode toolkit.
+This is a post-scan plugin that adds the fields
+``directory_content_fingerprint`` and ``directory_structure_fingerprint`` to
+Resources and computes those values for directories.
+::
 
-    * ``export MATCHCODE_DIRECTORY_CONTENT_MATCHING_ENDPOINT="http://127.0.0.1:8001/api/approximate_directory_content_index/match/"``
+  scancode --info --fingerprint <scan target location> --json-pp <output location>
 
-  * ``MATCHCODE_DIRECTORY_STRUCTURE_MATCHING_ENDPOINT``
 
-    * ``export MATCHCODE_DIRECTORY_STRUCTURE_MATCHING_ENDPOINT="http://127.0.0.1:8001/api/approximate_directory_structure_index/match/"``
+MatchCode toolkit provides the ``scan_and_fingerprint_package`` pipeline for
+ScanCode.io. This is the same as the ``scan_package`` pipeline, but has the
+added step of computing fingerprints for directories.
 
-Install the matchcode-toolkit plugin into scancode-toolkit:
-  * Open a shell and enable the virtual environment of the scancode-toolkit instance you want to use
-  * Navigate to the matchcode-toolkit directory and run ``pip install -e .``
 
-Run scancode with matching enabled:
-  * The ``--info`` option has to be enabled on the scan you are running:
+License
+-------
 
-    * ``scancode --info --match <scan target directory> --json-pp -``
+SPDX-License-Identifier: Apache-2.0
 
-    or on the scan you are importing:
+The ScanCode.io software is licensed under the Apache License version 2.0.
+Data generated with ScanCode.io is provided as-is without warranties.
+ScanCode is a trademark of nexB Inc.
 
-    * ``scancode --from-scan <path to scan JSON with --info> --match --json-pp -``
+You may not use this software except in compliance with the License.
+You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+
+Data Generated with ScanCode.io is provided on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied. No content created from
+ScanCode.io should be considered or used as legal advice. Consult an Attorney
+for any legal advice.
