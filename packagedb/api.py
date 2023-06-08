@@ -78,7 +78,7 @@ class ResourceFilter(FilterSet):
 
 
 class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Resource.objects.all()
+    queryset = Resource.objects.prefetch_related('package')
     serializer_class = ResourceAPISerializer
     filterset_class = ResourceFilter
     lookup_field = 'sha1'
