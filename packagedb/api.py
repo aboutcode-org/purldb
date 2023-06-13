@@ -78,7 +78,50 @@ class ResourceFilter(FilterSet):
 
 
 class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Resource.objects.prefetch_related('package')
+    queryset = Resource.objects.select_related('package').defer(
+        'package__history',
+        'package__md5',
+        'package__sha1',
+        'package__sha256',
+        'package__sha512',
+        'package__extra_data',
+        'package__filename',
+        'package__primary_language',
+        'package__description',
+        'package__release_date',
+        'package__homepage_url',
+        'package__download_url',
+        'package__size',
+        'package__bug_tracking_url',
+        'package__code_view_url',
+        'package__vcs_url',
+        'package__repository_homepage_url',
+        'package__repository_download_url',
+        'package__api_data_url',
+        'package__copyright',
+        'package__holder',
+        'package__declared_license_expression',
+        'package__declared_license_expression_spdx',
+        'package__license_detections',
+        'package__other_license_expression',
+        'package__other_license_expression_spdx',
+        'package__other_license_detections',
+        'package__extracted_license_statement',
+        'package__notice_text',
+        'package__datasource_id',
+        'package__file_references',
+        'package__last_modified_date',
+        'package__mining_level',
+        'package__keywords',
+        'package__root_path',
+        'package__source_packages',
+        'package__last_indexed_date',
+        'package__index_error',
+        'package__package_set',
+        'package__package_content',
+        'package__summary',
+        'package__search_vector',
+    )
     serializer_class = ResourceAPISerializer
     filterset_class = ResourceFilter
     lookup_field = 'sha1'
@@ -182,7 +225,7 @@ class PackageFilter(FilterSet):
 
 
 class PackageViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Package.objects.all()
+    queryset = Package.objects.prefetch_related('dependencies', 'parties')
     serializer_class = PackageAPISerializer
     lookup_field = 'uuid'
     filterset_class = PackageFilter

@@ -909,7 +909,6 @@ class Resource(
         unique_together = (
             ('package', 'path'),
         )
-        ordering = ('package', 'path')
         indexes = [
             models.Index(fields=['md5']),
             models.Index(fields=['sha1']),
