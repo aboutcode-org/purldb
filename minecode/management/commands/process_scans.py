@@ -80,7 +80,7 @@ class Command(scanning.ScanningCommand):
             )
 
             other_license_expressions = summary.get('other_license_expressions', [])
-            other_license_expressions = [l['value'] for l in other_license_expressions]
+            other_license_expressions = [l['value'] for l in other_license_expressions if l['value']]
             other_license_expression = combine_expressions(other_license_expressions)
 
             copyright = ''
