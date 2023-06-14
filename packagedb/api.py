@@ -14,7 +14,6 @@ from django_filters.filters import Filter
 from django_filters.filters import OrderingFilter
 import django_filters
 
-from packagedcode.models import PackageData
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
 from rest_framework import status
@@ -23,6 +22,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from matchcode.api import MultipleCharFilter
+from matchcode.api import MultipleCharInFilter
 # UnusedImport here!
 # But importing the mappers and visitors module triggers routes registration
 from minecode import visitors  # NOQA
@@ -69,10 +69,10 @@ class PackageResourceUUIDFilter(Filter):
 class ResourceFilter(FilterSet):
     package = PackageResourceUUIDFilter(label='Package UUID')
     purl = PackageResourcePurlFilter(label='Package pURL')
-    md5 = MultipleCharFilter(
+    md5 = MultipleCharInFilter(
         help_text="Exact MD5. Multi-value supported.",
     )
-    sha1 = MultipleCharFilter(
+    sha1 = MultipleCharInFilter(
         help_text="Exact SHA1. Multi-value supported.",
     )
 
@@ -183,10 +183,10 @@ class PackageFilter(FilterSet):
     version = MultipleCharFilter(
         help_text="Exact version. Multi-value supported.",
     )
-    md5 = MultipleCharFilter(
+    md5 = MultipleCharInFilter(
         help_text="Exact MD5. Multi-value supported.",
     )
-    sha1 = MultipleCharFilter(
+    sha1 = MultipleCharInFilter(
         help_text="Exact SHA1. Multi-value supported.",
     )
     purl = MultiplePackageURLFilter(label='Package URL')

@@ -129,6 +129,28 @@ class MultipleCharFilter(MultipleChoiceFilter):
     field_class = MultipleCharField
 
 
+# TODO: Think of a better name for this filter
+class MultipleCharInFilter(MultipleCharFilter):
+    def filter(self, qs, value):
+        if not value:
+            # Even though not a noop, no point filtering if empty.
+            return qs
+
+        if self.is_noop(qs, value):
+            return qs
+
+        predicate = self.get_filter_predicate(value)
+        old_field_name = next(iter(predicate))
+        new_field_name = f'{old_field_name}__in'
+        predicate[new_field_name] = predicate[old_field_name]
+        predicate.pop(old_field_name)
+
+        q = Q(**predicate)
+        qs = self.get_method(qs)(q)
+
+        return qs.distinct() if self.distinct else qs
+
+
 class MultipleSHA1Filter(MultipleCharFilter):
     """
     Overrides `MultipleCharFilter.filter()` to convert the SHA1
