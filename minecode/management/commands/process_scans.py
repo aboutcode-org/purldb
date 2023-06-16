@@ -61,58 +61,61 @@ class Command(scanning.ScanningCommand):
         if scannable_uri.scan_status in (ScannableURI.SCAN_SUBMITTED, ScannableURI.SCAN_IN_PROGRESS):
             scannable_uri.scan_status = get_scan_status(scan_info)
         elif scannable_uri.scan_status in (ScannableURI.SCAN_COMPLETED,):
-            logger.info('Indexing scanned files for URI: {}'.format(scannable_uri))
+            try:
+                logger.info('Indexing scanned files for URI: {}'.format(scannable_uri))
 
-            package = scannable_uri.package
-            scan_data = scanning.get_scan_data(
-                scannable_uri.scan_uuid,
-                api_url=cls.api_url,
-                api_auth_headers=cls.api_auth_headers,
-                get_scan_data_save_loc=get_scan_data_save_loc
-            )
-            scan_index_errors = index_package_files(package, scan_data)
+                package = scannable_uri.package
+                scan_data = scanning.get_scan_data(
+                    scannable_uri.scan_uuid,
+                    api_url=cls.api_url,
+                    api_auth_headers=cls.api_auth_headers,
+                    get_scan_data_save_loc=get_scan_data_save_loc
+                )
+                scan_index_errors = index_package_files(package, scan_data)
 
-            summary = scanning.get_scan_summary(
-                scannable_uri.scan_uuid,
-                api_url=cls.api_url,
-                api_auth_headers=cls.api_auth_headers,
-                get_scan_data_save_loc=get_scan_data_save_loc
-            )
+                summary = scanning.get_scan_summary(
+                    scannable_uri.scan_uuid,
+                    api_url=cls.api_url,
+                    api_auth_headers=cls.api_auth_headers,
+                    get_scan_data_save_loc=get_scan_data_save_loc
+                )
 
-            other_license_expressions = summary.get('other_license_expressions', [])
-            other_license_expressions = [l['value'] for l in other_license_expressions if l['value']]
-            other_license_expression = combine_expressions(other_license_expressions)
+                other_license_expressions = summary.get('other_license_expressions', [])
+                other_license_expressions = [l['value'] for l in other_license_expressions if l['value']]
+                other_license_expression = combine_expressions(other_license_expressions)
 
-            copyright = ''
-            declared_holder = summary.get('declared_holder')
-            if declared_holder:
-                copyright = f'Copyright (c) {declared_holder}'
+                copyright = ''
+                declared_holder = summary.get('declared_holder')
+                if declared_holder:
+                    copyright = f'Copyright (c) {declared_holder}'
 
-            values_by_updateable_fields = {
-                'sha1': scan_info.sha1,
-                'sha256': scan_info.sha256,
-                'sha512': scan_info.sha512,
-                'summary': summary,
-                'declared_license_expression': summary.get('declared_license_expression'),
-                'other_license_expression': other_license_expression,
-                'copyright': copyright,
-            }
+                values_by_updateable_fields = {
+                    'sha1': scan_info.sha1,
+                    'sha256': scan_info.sha256,
+                    'sha512': scan_info.sha512,
+                    'summary': summary,
+                    'declared_license_expression': summary.get('declared_license_expression'),
+                    'other_license_expression': other_license_expression,
+                    'copyright': copyright,
+                }
 
-            for field, value in values_by_updateable_fields.items():
-                p_val = getattr(package, field)
-                if not p_val and value:
-                    setattr(package, field, value)
-                    package_updated = True
+                for field, value in values_by_updateable_fields.items():
+                    p_val = getattr(package, field)
+                    if not p_val and value:
+                        setattr(package, field, value)
+                        package_updated = True
 
-            if package_updated:
-                package.save()
+                if package_updated:
+                    package.save()
 
-            # TODO: We should rerun the specific indexers that have failed
-            if scan_index_errors:
-                scannable_uri.index_error = '\n'.join(scan_index_errors)
-                scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
-            else:
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
+            except Exception as e:
+                error_message = str(e) + '\n'
+                # TODO: We should rerun the specific indexers that have failed
+                if scan_index_errors:
+                    error_message += '\n'.join(scan_index_errors)
+                scannable_uri.index_error
+                scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
 
         scannable_uri.wip_date = None
         scannable_uri.save()
