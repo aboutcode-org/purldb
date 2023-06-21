@@ -26,7 +26,7 @@ logger.setLevel(logging.INFO)
 SLEEP_WHEN_EMPTY = 1
 
 # in seconds
-REQUEST_TIMEOUT = 3
+REQUEST_TIMEOUT = 15
 
 # Only SCANCODEIO_URL can be provided through setting
 SCANCODEIO_URL = settings.SCANCODEIO_URL
@@ -383,7 +383,7 @@ class ScanningCommand(VerboseCommand):
 
         while True:
             # Wait before processing anything
-            time.sleep(REQUEST_TIMEOUT)
+            time.sleep(3)
 
             if cls.MUST_STOP:
                 cls.logger.info('Graceful exit of the scan processing loop.')
