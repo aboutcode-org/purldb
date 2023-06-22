@@ -11,7 +11,7 @@ import attr
 
 from commoncode.cliutils import PluggableCommandLineOption
 from commoncode.cliutils import POST_SCAN_GROUP
-from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
+from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 from plugincode.post_scan import post_scan_impl
 from plugincode.post_scan import PostScanPlugin
 
@@ -41,4 +41,4 @@ class Fingerprint(PostScanPlugin):
         return fingerprint
 
     def process_codebase(self, codebase, **kwargs):
-        codebase = compute_directory_fingerprints(codebase)
+        codebase = compute_codebase_directory_fingerprints(codebase)

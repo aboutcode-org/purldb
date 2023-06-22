@@ -13,7 +13,7 @@ import attr
 from commoncode.resource import VirtualCodebase
 from packagedb.models import Package
 
-from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
+from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 from matchcode.management.commands.index_packages import index_package_directories
 from matchcode.match import EXACT_PACKAGE_ARCHIVE_MATCH
 from matchcode.match import APPROXIMATE_DIRECTORY_STRUCTURE_MATCH
@@ -37,7 +37,7 @@ def run_do_match_from_scan(scan_file_location, match_type):
             matched_to=attr.ib(default=attr.Factory(list))
         )
     )
-    vc = compute_directory_fingerprints(vc)
+    vc = compute_codebase_directory_fingerprints(vc)
     do_match(vc, match_type)
     return vc
 

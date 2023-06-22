@@ -13,7 +13,7 @@ from commoncode.resource import VirtualCodebase
 from packagedb.models import Package
 import attr
 
-from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
+from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode.management.commands.index_packages import index_package_directories
 from matchcode.models import ApproximateDirectoryContentIndex
@@ -169,7 +169,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             location=scan_location,
             resource_attributes=dict(packages=attr.ib(default=attr.Factory(list)))
         )
-        codebase = compute_directory_fingerprints(vc)
+        codebase = compute_codebase_directory_fingerprints(vc)
 
         # populate codebase with match results
         for resource in codebase.walk(topdown=True):
@@ -192,7 +192,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             location=scan_location,
             resource_attributes=dict(packages=attr.ib(default=attr.Factory(list)))
         )
-        codebase = compute_directory_fingerprints(vc)
+        codebase = compute_codebase_directory_fingerprints(vc)
 
         # populate codebase with match results
         for resource in codebase.walk(topdown=True):

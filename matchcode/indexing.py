@@ -13,7 +13,7 @@ import sys
 
 from commoncode.resource import VirtualCodebase
 
-from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
+from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ExactPackageArchiveIndex
@@ -150,5 +150,5 @@ def index_package_directories(package):
     if not vc:
         return 0, 0
 
-    vc = compute_directory_fingerprints(vc)
+    vc = compute_codebase_directory_fingerprints(vc)
     return index_directory_fingerprints(vc, package)
