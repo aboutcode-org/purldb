@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.1.0
+------
+
+*2023-06-22* -- Rename ``compute_directory_fingerprints`` to ``compute_codebase_directory_fingerprints`` and create a new version of ``compute_directory_fingerprints`` that works on Resource objects instead of codebases.
+
 v1.0.0
 ------
 

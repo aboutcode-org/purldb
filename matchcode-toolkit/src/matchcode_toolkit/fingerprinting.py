@@ -69,7 +69,7 @@ def create_structure_fingerprint(directory, children):
     return _create_directory_fingerprint(features)
 
 
-def compute_directory_fingerprints(directory, codebase):
+def _compute_directory_fingerprints(directory, codebase):
     """
     Compute fingerprints for `directory` from `codebase`
     """
@@ -87,9 +87,20 @@ def compute_directory_fingerprints(directory, codebase):
     if hasattr(directory, 'directory_structure_fingerprint'):
         directory.directory_structure_fingerprint = directory_structure_fingerprint
     else:
-        directory.extra_data['directory_structure'] = create_structure_fingerprint(directory, children)
+        directory.extra_data['directory_structure'] = directory_structure_fingerprint
 
     directory.save(codebase)
+    return directory
+
+
+def compute_directory_fingerprints(directory, codebase):
+    """
+    Recursivly compute fingerprints for `directory` from `codebase`
+    """
+    for resource in directory.walk(codebase, topdown=False):
+        if resource.is_file:
+            continue
+        _ = _compute_directory_fingerprints(resource, codebase)
     return directory
 
 
@@ -100,7 +111,7 @@ def compute_codebase_directory_fingerprints(codebase):
     for resource in codebase.walk(topdown=False):
         if resource.is_file or not resource.path:
             continue
-        _ = compute_directory_fingerprints(resource, codebase)
+        _ = _compute_directory_fingerprints(resource, codebase)
     return codebase
 
 
