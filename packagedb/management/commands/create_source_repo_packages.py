@@ -81,32 +81,37 @@ class Command(VerboseCommand):
 
             # Get the binary package
             # We use .get(qualifiers="") because the binary maven JAR has no qualifiers
-            binary_package = packages.get(qualifiers='')
+            binary_package = packages.get_or_none(qualifiers='')
 
-            package_set = binary_package.package_set
-            if not binary_package.package_set:
+            package_set = binary_package.package_set if binary_package else None
+            if binary_package and not binary_package.package_set:
                 # Create a new UUID and set it as this set of packages package_set value
                 package_set = uuid4()
                 print(f'Set package_set for {binary_package.purl} to {package_set}')
+                binary_package.package_set = package_set
+                binary_package.save()
 
             # Set package_content value for binary_package, if needed
-            if not binary_package.package_content:
+            if binary_package and not binary_package.package_content:
                 binary_package.package_content = PackageContentType.BINARY
                 print(f'Set package_content for {binary_package.purl} to BINARY')
+                binary_package.save()
 
             # Get the source package
             # We use .get(qualifiers__contains='classifier=sources') as source JARs have the qualifiers set
-            source_package = packages.get(qualifiers__contains='classifier=sources')
+            source_package = packages.get_or_none(qualifiers__contains='classifier=sources')
 
             # Set the package_set value to be the same as the one used for binary_package, if needed
-            if not source_package.package_set:
-                source_package.package_set = package_set
+            if source_package and not source_package.package_set:
+                source_package.package_set = package_set if package_set else uuid4()
                 print(f'Set package_set for {source_package.purl} to {package_set}')
+                source_package.save()
 
             # Set source_package value for binary_package, if needed
-            if not source_package.package_content:
+            if source_package and not source_package.package_content:
                 source_package.package_content = PackageContentType.SOURCE_REPO
                 print(f'Set package_content for {source_package.purl} to SOURCE_REPO')
+                source_package.save()
 
             # Create new Package from the source_ fields
             package = Package.objects.create(
