@@ -82,35 +82,53 @@ class Command(VerboseCommand):
             # Get the binary package
             # We use .get(qualifiers="") because the binary maven JAR has no qualifiers
             binary_package = packages.get_or_none(qualifiers='')
+            binary_package_updated = False
+
+            if not binary_package:
+                print(f'\t{purl} does not exist in this database. Continuing.')
+                continue
 
             package_set = binary_package.package_set if binary_package else None
             if binary_package and not binary_package.package_set:
                 # Create a new UUID and set it as this set of packages package_set value
                 package_set = uuid4()
-                print(f'Set package_set for {binary_package.purl} to {package_set}')
+                print(f'\tSet package_set for {binary_package.purl} to {package_set}')
                 binary_package.package_set = package_set
-                binary_package.save()
+                binary_package_updated = True
 
             # Set package_content value for binary_package, if needed
             if binary_package and not binary_package.package_content:
                 binary_package.package_content = PackageContentType.BINARY
-                print(f'Set package_content for {binary_package.purl} to BINARY')
+                print(f'\tSet package_content for {binary_package.purl} to BINARY')
+                binary_package_updated = True
+
+            if binary_package_updated:
                 binary_package.save()
 
             # Get the source package
             # We use .get(qualifiers__contains='classifier=sources') as source JARs have the qualifiers set
             source_package = packages.get_or_none(qualifiers__contains='classifier=sources')
+            source_package_updated = False
 
-            # Set the package_set value to be the same as the one used for binary_package, if needed
-            if source_package and not source_package.package_set:
-                source_package.package_set = package_set if package_set else uuid4()
-                print(f'Set package_set for {source_package.purl} to {package_set}')
-                source_package.save()
+            # Package_set value HAS TO BE the same as the one used for binary_package
+            if (
+                source_package
+                and (
+                    not source_package.package_set
+                    or source_package.package_set != binary_package.package_set
+                )
+            ):
+                source_package.package_set = package_set
+                print(f'\tSet package_set for {source_package.purl} to {package_set}')
+                source_package_updated = True
 
             # Set source_package value for binary_package, if needed
             if source_package and not source_package.package_content:
-                source_package.package_content = PackageContentType.SOURCE_REPO
-                print(f'Set package_content for {source_package.purl} to SOURCE_REPO')
+                source_package.package_content = PackageContentType.SOURCE_ARCHIVE
+                print(f'\tSet package_content for {source_package.purl} to SOURCE_ARCHIVE')
+                source_package_updated = True
+
+            if source_package_updated:
                 source_package.save()
 
             # Create new Package from the source_ fields
@@ -121,9 +139,8 @@ class Command(VerboseCommand):
                 version=row['source_version'],
                 download_url=row['source_download_url'],
                 package_set=package_set,
-                # TODO: Should package_content be SOURCE_ARCHIVE or SOURCE_REPO?
                 package_content=PackageContentType.SOURCE_REPO,
             )
             if package:
                 add_package_to_scan_queue(package)
-                print(f'Created source repo package {source_purl} for {purl}')
+                print(f'\tCreated source repo package {source_purl} for {purl}')
