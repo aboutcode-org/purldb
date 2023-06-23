@@ -41,6 +41,7 @@ def get_rows(workbook, sheet_name):
         source_namespace = row[inventory_column_indices['source_namespace']].value
         source_name = row[inventory_column_indices['source_name']].value
         source_version = row[inventory_column_indices['source_version']].value
+        source_purl = row[inventory_column_indices['source_purl']].value
         reportable = {
             'purl': purl,
             'source_download_url': source_download_url,
@@ -48,6 +49,7 @@ def get_rows(workbook, sheet_name):
             'source_namespace': source_namespace,
             'source_name': source_name,
             'source_version': source_version,
+            'source_purl': source_purl,
         }
         rows.append(reportable)
     return rows
@@ -71,6 +73,9 @@ class Command(VerboseCommand):
         for row in rows:
             # Look up the package the row is for by using the purl to query the db.
             purl = row['purl']
+            source_purl = row['source_purl']
+            print(f'Processing packages for: {purl}')
+
             lookups = purl_to_lookups(purl)
             packages = Package.objects.filter(**lookups)
 
@@ -79,13 +84,15 @@ class Command(VerboseCommand):
             binary_package = packages.get(qualifiers='')
 
             package_set = binary_package.package_set
-            if not package_set.package_set:
+            if not binary_package.package_set:
                 # Create a new UUID and set it as this set of packages package_set value
                 package_set = uuid4()
+                print(f'Set package_set for {binary_package.purl} to {package_set}')
 
             # Set package_content value for binary_package, if needed
             if not binary_package.package_content:
                 binary_package.package_content = PackageContentType.BINARY
+                print(f'Set package_content for {binary_package.purl} to BINARY')
 
             # Get the source package
             # We use .get(qualifiers__contains='classifier=sources') as source JARs have the qualifiers set
@@ -94,10 +101,12 @@ class Command(VerboseCommand):
             # Set the package_set value to be the same as the one used for binary_package, if needed
             if not source_package.package_set:
                 source_package.package_set = package_set
+                print(f'Set package_set for {source_package.purl} to {package_set}')
 
             # Set source_package value for binary_package, if needed
             if not source_package.package_content:
                 source_package.package_content = PackageContentType.SOURCE_REPO
+                print(f'Set package_content for {source_package.purl} to SOURCE_REPO')
 
             # Create new Package from the source_ fields
             package = Package.objects.create(
@@ -112,3 +121,4 @@ class Command(VerboseCommand):
             )
             if package:
                 add_package_to_scan_queue(package)
+                print(f'Created source repo package {source_purl} for {purl}')
