@@ -97,7 +97,7 @@ class Command(VerboseCommand):
 
             # Set source_package value for binary_package, if needed
             if not source_package.package_content:
-                source_package.package_content = PackageContentType.SOURCE_ARCHIVE
+                source_package.package_content = PackageContentType.SOURCE_REPO
 
             # Create new Package from the source_ fields
             package = Package.objects.create(
@@ -108,7 +108,7 @@ class Command(VerboseCommand):
                 download_url=row['source_download_url'],
                 package_set=package_set,
                 # TODO: Should package_content be SOURCE_ARCHIVE or SOURCE_REPO?
-                package_content=PackageContentType.SOURCE_ARCHIVE,
+                package_content=PackageContentType.SOURCE_REPO,
             )
             if package:
                 add_package_to_scan_queue(package)
