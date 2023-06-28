@@ -26,7 +26,7 @@ logger.setLevel(logging.INFO)
 SLEEP_WHEN_EMPTY = 1
 
 # in seconds
-REQUEST_TIMEOUT = 15
+REQUEST_TIMEOUT = 120
 
 # Only SCANCODEIO_URL can be provided through setting
 SCANCODEIO_URL = settings.SCANCODEIO_URL
@@ -80,6 +80,7 @@ class Scan(object):
     sha512 = attr.ib(default=None)
     sha1_git = attr.ib(default=None)
     filename = attr.ib(default=None)
+    size = attr.ib(default=None)
 
     @classmethod
     def from_response(cls, url, uuid, runs, input_sources, extra_data={}, **kwargs):
@@ -107,6 +108,7 @@ class Scan(object):
         sha512 = extra_data.get('sha512')
         sha1_git = extra_data.get('sha1_git')
         filename = extra_data.get('filename')
+        size = extra_data.get('size')
 
         return Scan(
             url=url, uuid=uuid, run_uuid=run_uuid, uri=uri,
@@ -114,7 +116,7 @@ class Scan(object):
             task_end_date=task_end_date, task_exitcode=task_exitcode,
             status=status, execution_time=execution_time,
             md5=md5, sha1=sha1, sha256=sha256, sha512=sha512,
-            sha1_git=sha1_git, filename=filename
+            sha1_git=sha1_git, filename=filename, size=size
         )
 
     @property
@@ -243,8 +245,13 @@ def get_scan_url(scan_uuid, api_url=SCANCODEIO_API_URL_PROJECTS, suffix=''):
     return url
 
 
-def _call_scan_get_api(scan_uuid, endpoint='',
-                       api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANCODEIO_AUTH_HEADERS):
+def _call_scan_get_api(
+        scan_uuid,
+        endpoint='',
+        api_url=SCANCODEIO_API_URL_PROJECTS,
+        api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+        timeout=REQUEST_TIMEOUT,
+):
     """
     Send a get request to the scan API for `scan_uuid` and return response
     mapping from a JSON response. Call either the plain scan enpoint or the data
@@ -252,7 +259,7 @@ def _call_scan_get_api(scan_uuid, endpoint='',
     exception on error.
     """
     scan_url = get_scan_url(scan_uuid, api_url=api_url, suffix=endpoint)
-    response = requests.get(url=scan_url, timeout=REQUEST_TIMEOUT, headers=api_auth_headers)
+    response = requests.get(url=scan_url, timeout=timeout, headers=api_auth_headers)
     if not response.ok:
         response.raise_for_status()
     return response.json()
@@ -262,13 +269,20 @@ def _get_scan_info(
     scan_uuid,
     api_url=SCANCODEIO_API_URL_PROJECTS,
     api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    timeout=REQUEST_TIMEOUT,
     get_scan_info_save_loc=''
 ):
     """
     Return a mapping of project info for `scan_uuid` fetched from ScanCode.io or None.
     Raise an exception on error.
     """
-    results = _call_scan_get_api(scan_uuid, endpoint='', api_url=api_url, api_auth_headers=api_auth_headers)
+    results = _call_scan_get_api(
+        scan_uuid,
+        endpoint='',
+        api_url=api_url,
+        api_auth_headers=api_auth_headers,
+        timeout=timeout
+    )
     if get_scan_info_save_loc:
         with open(get_scan_info_save_loc, 'w') as f:
             json.dump(results, f)
@@ -279,6 +293,7 @@ def get_scan_info(
     scan_uuid,
     api_url=SCANCODEIO_API_URL_PROJECTS,
     api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    timeout=REQUEST_TIMEOUT,
     get_scan_info_save_loc=''
 ):
     """
@@ -289,6 +304,7 @@ def get_scan_info(
         scan_uuid=scan_uuid,
         api_url=api_url,
         api_auth_headers=api_auth_headers,
+        timeout=timeout,
         get_scan_info_save_loc=get_scan_info_save_loc,
     )
     return Scan.from_response(**results)
@@ -298,6 +314,7 @@ def get_scan_data(
     scan_uuid,
     api_url=SCANCODEIO_API_URL_PROJECTS,
     api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    timeout=REQUEST_TIMEOUT,
     get_scan_data_save_loc=''
 ):
     """
@@ -305,7 +322,13 @@ def get_scan_data(
     ScanCode.io or None. Raise an exception on error.
     """
     # FIXME: we should return a temp location instead
-    results = _call_scan_get_api(scan_uuid, endpoint='results', api_url=api_url, api_auth_headers=api_auth_headers)
+    results = _call_scan_get_api(
+        scan_uuid,
+        endpoint='results',
+        api_url=api_url,
+        api_auth_headers=api_auth_headers,
+        timeout=timeout
+    )
     if get_scan_data_save_loc:
         with open(get_scan_data_save_loc, 'w') as f:
             json.dump(results, f)
@@ -316,6 +339,7 @@ def get_scan_summary(
     scan_uuid,
     api_url=SCANCODEIO_API_URL_PROJECTS,
     api_auth_headers=SCANCODEIO_AUTH_HEADERS,
+    timeout=REQUEST_TIMEOUT,
     get_scan_data_save_loc=''
 ):
     """
@@ -323,7 +347,13 @@ def get_scan_summary(
     ScanCode.io or None. Raise an exception on error.
     """
     # FIXME: we should return a temp location instead
-    results = _call_scan_get_api(scan_uuid, endpoint='summary', api_url=api_url, api_auth_headers=api_auth_headers)
+    results = _call_scan_get_api(
+        scan_uuid,
+        endpoint='summary',
+        api_url=api_url,
+        api_auth_headers=api_auth_headers,
+        timeout=timeout
+    )
     if get_scan_data_save_loc:
         with open(get_scan_data_save_loc, 'w') as f:
             json.dump(results, f)

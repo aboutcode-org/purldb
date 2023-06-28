@@ -66,10 +66,17 @@ class Command(scanning.ScanningCommand):
                 logger.info('Indexing scanned files for URI: {}'.format(scannable_uri))
 
                 package = scannable_uri.package
+                input_size = scan_info.size
+                if input_size:
+                    computed_timeout = ((input_size / 1000000) / 2) * 60
+                    timeout = max(computed_timeout, scanning.REQUEST_TIMEOUT)
+                else:
+                    timeout = scanning.REQUEST_TIMEOUT
                 scan_data = scanning.get_scan_data(
                     scannable_uri.scan_uuid,
                     api_url=cls.api_url,
                     api_auth_headers=cls.api_auth_headers,
+                    timeout=timeout,
                     get_scan_data_save_loc=get_scan_data_save_loc
                 )
                 scan_index_errors.extend(index_package_files(package, scan_data))
