@@ -61,6 +61,7 @@ class Command(scanning.ScanningCommand):
         if scannable_uri.scan_status in (ScannableURI.SCAN_SUBMITTED, ScannableURI.SCAN_IN_PROGRESS):
             scannable_uri.scan_status = get_scan_status(scan_info)
         elif scannable_uri.scan_status in (ScannableURI.SCAN_COMPLETED,):
+            scan_index_errors = []
             try:
                 logger.info('Indexing scanned files for URI: {}'.format(scannable_uri))
 
@@ -71,7 +72,7 @@ class Command(scanning.ScanningCommand):
                     api_auth_headers=cls.api_auth_headers,
                     get_scan_data_save_loc=get_scan_data_save_loc
                 )
-                scan_index_errors = index_package_files(package, scan_data)
+                scan_index_errors.extend(index_package_files(package, scan_data))
 
                 summary = scanning.get_scan_summary(
                     scannable_uri.scan_uuid,
