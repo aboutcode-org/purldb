@@ -150,6 +150,7 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
             sha512='4431f237bcdfee5d2b86b1b3f01c8abaa160d5b7007c63e6281845a3f920d89fdb2e4044f97694ddef91e174d9dd30e5016bbad46eec2d68af200a47e9cedd85',
             sha1_git='ad18d88bdae8449e7c170f8e7db1bfe336dbb4e0',
             filename='wagon-api-20040705.181715.jar',
+            size=47069,
         )
         expected = attr.asdict(expected)
         result = attr.asdict(result)

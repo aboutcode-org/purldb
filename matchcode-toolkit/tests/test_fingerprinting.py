@@ -14,7 +14,7 @@ from commoncode.testcase import FileBasedTesting
 
 from matchcode_toolkit.fingerprinting import _create_directory_fingerprint
 from matchcode_toolkit.fingerprinting import _get_resource_subpath
-from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
+from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 from matchcode_toolkit.fingerprinting import create_content_fingerprint
 from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import create_structure_fingerprint
@@ -95,10 +95,10 @@ class TestFingerprintingFunctions(FileBasedTesting):
         self.assertEqual(chunk3, expected_chunk3)
         self.assertEqual(chunk4, expected_chunk4)
 
-    def test_compute_directory_fingerprints(self):
+    def test_compute_codebase_directory_fingerprints(self):
         scan_loc = self.get_test_loc('abbrev-1.0.3-i.json')
         vc = VirtualCodebase(location=scan_loc)
-        vc = compute_directory_fingerprints(vc)
+        vc = compute_codebase_directory_fingerprints(vc)
         directory_content = vc.root.extra_data['directory_content']
         directory_structure = vc.root.extra_data['directory_structure']
         expected_directory_content = '0000000346ce04751a3c98f00086f16a91d9790b'

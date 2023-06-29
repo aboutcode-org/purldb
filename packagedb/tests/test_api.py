@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from unittest.case import expectedFailure
 from uuid import uuid4
 import json
 import os

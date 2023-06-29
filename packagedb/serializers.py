@@ -61,6 +61,7 @@ class ResourceAPISerializer(HyperlinkedModelSerializer):
             'urls',
             'extra_data',
         )
+        read_only_fields = fields
 
 
 class ResourceMetadataSerializer(HyperlinkedModelSerializer):
@@ -186,6 +187,7 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
             'dependencies',
             'resources',
         )
+        read_only_fields = fields
 
     def get_package_content(self, obj):
         return obj.get_package_content_display()

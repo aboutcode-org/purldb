@@ -14,7 +14,6 @@ from django_filters.filters import Filter
 from django_filters.filters import OrderingFilter
 import django_filters
 
-from packagedcode.models import PackageData
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
 from rest_framework import status
@@ -23,6 +22,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from matchcode.api import MultipleCharFilter
+from matchcode.api import MultipleCharInFilter
 # UnusedImport here!
 # But importing the mappers and visitors module triggers routes registration
 from minecode import visitors  # NOQA
@@ -69,16 +69,59 @@ class PackageResourceUUIDFilter(Filter):
 class ResourceFilter(FilterSet):
     package = PackageResourceUUIDFilter(label='Package UUID')
     purl = PackageResourcePurlFilter(label='Package pURL')
-    md5 = MultipleCharFilter(
+    md5 = MultipleCharInFilter(
         help_text="Exact MD5. Multi-value supported.",
     )
-    sha1 = MultipleCharFilter(
+    sha1 = MultipleCharInFilter(
         help_text="Exact SHA1. Multi-value supported.",
     )
 
 
 class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Resource.objects.prefetch_related('package')
+    queryset = Resource.objects.select_related('package').defer(
+        'package__history',
+        'package__md5',
+        'package__sha1',
+        'package__sha256',
+        'package__sha512',
+        'package__extra_data',
+        'package__filename',
+        'package__primary_language',
+        'package__description',
+        'package__release_date',
+        'package__homepage_url',
+        'package__download_url',
+        'package__size',
+        'package__bug_tracking_url',
+        'package__code_view_url',
+        'package__vcs_url',
+        'package__repository_homepage_url',
+        'package__repository_download_url',
+        'package__api_data_url',
+        'package__copyright',
+        'package__holder',
+        'package__declared_license_expression',
+        'package__declared_license_expression_spdx',
+        'package__license_detections',
+        'package__other_license_expression',
+        'package__other_license_expression_spdx',
+        'package__other_license_detections',
+        'package__extracted_license_statement',
+        'package__notice_text',
+        'package__datasource_id',
+        'package__file_references',
+        'package__last_modified_date',
+        'package__mining_level',
+        'package__keywords',
+        'package__root_path',
+        'package__source_packages',
+        'package__last_indexed_date',
+        'package__index_error',
+        'package__package_set',
+        'package__package_content',
+        'package__summary',
+        'package__search_vector',
+    )
     serializer_class = ResourceAPISerializer
     filterset_class = ResourceFilter
     lookup_field = 'sha1'
@@ -140,10 +183,10 @@ class PackageFilter(FilterSet):
     version = MultipleCharFilter(
         help_text="Exact version. Multi-value supported.",
     )
-    md5 = MultipleCharFilter(
+    md5 = MultipleCharInFilter(
         help_text="Exact MD5. Multi-value supported.",
     )
-    sha1 = MultipleCharFilter(
+    sha1 = MultipleCharInFilter(
         help_text="Exact SHA1. Multi-value supported.",
     )
     purl = MultiplePackageURLFilter(label='Package URL')
@@ -182,7 +225,7 @@ class PackageFilter(FilterSet):
 
 
 class PackageViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Package.objects.all()
+    queryset = Package.objects.prefetch_related('dependencies', 'parties')
     serializer_class = PackageAPISerializer
     lookup_field = 'uuid'
     filterset_class = PackageFilter

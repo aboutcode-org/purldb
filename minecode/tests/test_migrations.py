@@ -90,16 +90,9 @@ class TestPopulateHasErrorFields(TestMigrations):
                 "map_error",
                 "has_visit_error",
                 "visit_error",
-            ).all()
+            ).order_by('uri')
         )
         expected = [
-            {
-                'has_map_error': False,
-                'has_visit_error': False,
-                'map_error': None,
-                'uri': 'http://example.com/4',
-                'visit_error': None
-            },
             {
                 'has_map_error': True,
                 'has_visit_error': True,
@@ -120,7 +113,14 @@ class TestPopulateHasErrorFields(TestMigrations):
                 'map_error': 'error',
                 'uri': 'http://example.com/3',
                 'visit_error': None
-            }
+            },
+            {
+                'has_map_error': False,
+                'has_visit_error': False,
+                'map_error': None,
+                'uri': 'http://example.com/4',
+                'visit_error': None
+            },
         ]
         self.assertEquals(results, expected)
 

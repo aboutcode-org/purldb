@@ -11,7 +11,7 @@ import os
 
 from commoncode.resource import VirtualCodebase
 
-from matchcode_toolkit.fingerprinting import compute_directory_fingerprints
+from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode.indexing import _create_virtual_codebase_from_package_resources
 from matchcode.indexing import index_directory_fingerprints
@@ -155,7 +155,7 @@ class IndexPackagesTestCase(MatchcodeTestCase):
 
     def test_index_directory_fingerprints(self):
         vc = _create_virtual_codebase_from_package_resources(self.test_package1)
-        vc = compute_directory_fingerprints(vc)
+        vc = compute_codebase_directory_fingerprints(vc)
 
         # Ensure tables are empty prior to indexing
         self.assertFalse(ApproximateDirectoryContentIndex.objects.all())

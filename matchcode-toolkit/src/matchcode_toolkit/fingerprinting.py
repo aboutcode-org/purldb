@@ -69,30 +69,50 @@ def create_structure_fingerprint(directory, children):
     return _create_directory_fingerprint(features)
 
 
-def compute_directory_fingerprints(codebase):
+def _compute_directory_fingerprints(directory, codebase):
     """
-    Compute fingerprints for a directory from `codebase`
+    Compute fingerprints for `directory` from `codebase`
+    """
+    # We do not want to add empty files to our fingerprint
+    children = [r for r in directory.walk(codebase) if r.is_file and r.size]
+    if len(children) == 1:
+        return
+
+    directory_content_fingerprint = create_content_fingerprint(children)
+    if hasattr(directory, 'directory_content_fingerprint'):
+        directory.directory_content_fingerprint = directory_content_fingerprint
+    else:
+        directory.extra_data['directory_content'] = directory_content_fingerprint
+
+    directory_structure_fingerprint = create_structure_fingerprint(directory, children)
+    if hasattr(directory, 'directory_structure_fingerprint'):
+        directory.directory_structure_fingerprint = directory_structure_fingerprint
+    else:
+        directory.extra_data['directory_structure'] = directory_structure_fingerprint
+
+    directory.save(codebase)
+    return directory
+
+
+def compute_directory_fingerprints(directory, codebase):
+    """
+    Recursivly compute fingerprints for `directory` from `codebase`
+    """
+    for resource in directory.walk(codebase, topdown=False):
+        if resource.is_file:
+            continue
+        _ = _compute_directory_fingerprints(resource, codebase)
+    return directory
+
+
+def compute_codebase_directory_fingerprints(codebase):
+    """
+    Compute fingerprints for directories from `codebase`
     """
     for resource in codebase.walk(topdown=False):
         if resource.is_file or not resource.path:
             continue
-        children = [r for r in resource.walk(codebase) if r.is_file]
-        if len(children) == 1:
-            continue
-
-        directory_content_fingerprint = create_content_fingerprint(children)
-        if hasattr(resource, 'directory_content_fingerprint'):
-            resource.directory_content_fingerprint = directory_content_fingerprint
-        else:
-            resource.extra_data['directory_content'] = directory_content_fingerprint
-
-        directory_structure_fingerprint = create_structure_fingerprint(resource, children)
-        if hasattr(resource, 'directory_structure_fingerprint'):
-            resource.directory_structure_fingerprint = directory_structure_fingerprint
-        else:
-            resource.extra_data['directory_structure'] = create_structure_fingerprint(resource, children)
-
-        resource.save(codebase)
+        _ = _compute_directory_fingerprints(resource, codebase)
     return codebase
 
 
