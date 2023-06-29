@@ -337,9 +337,6 @@ class PackageApiTestCase(TestCase):
         response = self.client.get(reverse('api:package-latest-version', args=[p3.uuid]))
         self.assertEqual('3.0', response.data['version'])
 
-    # We removed the constraint on (package, path) ordering for possible
-    # performance increase, but may add it back in
-    @expectedFailure
     def test_api_package_resources_action(self):
         # create 10 resources
         for i in range(0, 10):
