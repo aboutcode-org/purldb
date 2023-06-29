@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.1.1
+------
+
+*2023-06-29* -- Do not include empty files when computing directory fingerprints.
+
 v1.1.0
 ------
 

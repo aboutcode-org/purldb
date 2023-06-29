@@ -73,7 +73,8 @@ def _compute_directory_fingerprints(directory, codebase):
     """
     Compute fingerprints for `directory` from `codebase`
     """
-    children = [r for r in directory.walk(codebase) if r.is_file]
+    # We do not want to add empty files to our fingerprint
+    children = [r for r in directory.walk(codebase) if r.is_file and r.size]
     if len(children) == 1:
         return
 
