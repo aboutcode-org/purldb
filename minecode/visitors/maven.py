@@ -13,6 +13,7 @@ import hashlib
 import io
 import json
 import logging
+from typing import Dict
 
 import arrow
 import requests
@@ -109,6 +110,8 @@ def get_pom_text(namespace, name, version, qualifiers={}):
     field arguments in a string.
     """
     # Create URLs using purl fields
+    if qualifiers and not isinstance(qualifiers, Dict):
+        return
     urls = get_urls(
         namespace=namespace,
         name=name,
@@ -152,6 +155,8 @@ def fetch_parent(pom_text):
     """
     Return the parent pom text of `pom_text`, or None if `pom_text` has no parent.
     """
+    if not pom_text:
+        return
     pom = get_maven_pom(text=pom_text)
     if (
         pom.parent
@@ -186,6 +191,26 @@ def get_ancestry(pom_text):
             ancestors.append(parent_pom_text)
             pom_text = parent_pom_text
     return reversed(ancestors)
+
+
+def get_merged_ancestor_package_from_maven_package(package):
+    """
+    Merge package details of a package with its ancestor pom
+    and return the merged package.
+    """
+    if not package:
+        return
+    pom_text = get_pom_text(
+        name=package.name,
+        namespace=package.namespace,
+        version=package.version,
+        qualifiers=package.qualifiers,
+    )
+    merged_package = merge_ancestors(
+        ancestor_pom_texts=get_ancestry(pom_text),
+        package=package,
+    )
+    return merged_package
 
 
 def merge_parent(package, parent_package):
