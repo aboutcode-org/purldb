@@ -17,6 +17,7 @@ from rest_framework.serializers import SerializerMethodField
 
 from packagedb.models import DependentPackage
 from packagedb.models import Package
+from packagedb.models import PackageSet
 from packagedb.models import Party
 from packagedb.models import Resource
 
@@ -129,11 +130,20 @@ class DependentPackageSerializer(ModelSerializer):
         )
 
 
+class PackageSetSerializer(ModelSerializer):
+    class Meta:
+        model = PackageSet
+        fields = (
+            'uuid',
+        )
+
+
 class PackageAPISerializer(HyperlinkedModelSerializer):
     dependencies = DependentPackageSerializer(many=True)
     parties = PartySerializer(many=True)
     resources = HyperlinkedIdentityField(view_name='api:package-resources', lookup_field='uuid')
     url = HyperlinkedIdentityField(view_name='api:package-detail', lookup_field='uuid')
+    package_sets = PackageSetSerializer(many=True)
     package_content = SerializerMethodField()
 
     class Meta:
@@ -142,7 +152,7 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
             'url',
             'uuid',
             'filename',
-            'package_set',
+            'package_sets',
             'package_content',
             'purl',
             'type',
@@ -203,6 +213,7 @@ class PackageMetadataSerializer(ModelSerializer):
     """
     dependencies = DependentPackageSerializer(many=True)
     parties = PartySerializer(many=True)
+    package_sets = PackageSetSerializer(many=True)
     package_content = SerializerMethodField()
 
     class Meta:
@@ -214,7 +225,7 @@ class PackageMetadataSerializer(ModelSerializer):
             'version',
             'qualifiers',
             'subpath',
-            'package_set',
+            'package_sets',
             'package_content',
             'primary_language',
             'description',
