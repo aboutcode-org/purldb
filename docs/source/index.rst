@@ -1,4 +1,4 @@
-Welcome to PURLdb documentation!
+Welcome to PurlDB documentation!
 =========================================
 
 .. include:: ../../README.rst
