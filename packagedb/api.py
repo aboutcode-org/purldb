@@ -30,6 +30,8 @@ from minecode import priority_router
 from minecode.models import PriorityResourceURI
 from minecode.route import NoRouteAvailable
 from packagedb.models import Package
+from packagedb.models import PackageContentType
+from packagedb.models import PackageSet
 from packagedb.models import Resource
 from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import ResourceAPISerializer
@@ -390,18 +392,18 @@ def get_enhanced_package(package):
     Return package data from `package`, where the data has been enhanced by
     other packages in the same package_set.
     """
-    packages = Package.objects.filter(
-        package_set=package.package_set
-    ).order_by(
-        'type',
-        'namespace',
-        'name',
-        'version',
-        'qualifiers',
-        'subpath',
-        'package_content',
-    )
-    return _get_enhanced_package(package, packages)
+    if package.package_content == PackageContentType.SOURCE_REPO:
+        # Source repo packages can't really be enhanced much further, datawise
+        return package.to_dict()
+    if package.package_content == PackageContentType.BINARY:
+        # Binary packages can only be part of one set
+        package_set = package.package_sets.first()
+        if package_set:
+            package_set_members = package_set.get_package_set_members()
+            return _get_enhanced_package(package, package_set_members)
+        else:
+            # TODO: consider putting in the history field that we enhanced the data
+            return package.to_dict()
 
 
 def _get_enhanced_package(package, packages):
