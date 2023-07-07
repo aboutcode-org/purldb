@@ -4,8 +4,6 @@ from django.db import migrations
 
 
 def create_package_sets_from_existing(apps, schema_editor):
-    from packagedb.models import PackageContentType
-    from uuid import uuid4
     Package = apps.get_model("packagedb", "Package")
     PackageSet = apps.get_model("packagedb", "PackageSet")
 
@@ -62,27 +60,24 @@ def create_maven_package_sets(apps, schema_editor):
     # Then we create PackageSets for maven packages
     maven_packages_without_package_set = Package.objects.filter(
         package_set__isnull=True,
-        type='maven'
+        type="maven"
     ).order_by(
-        'type',
-        'namespace',
-        'name',
-        'version',
-        'qualifiers',
-        'subpath'
+        "type",
+        "namespace",
+        "name",
+        "version",
+        "qualifiers",
+        "subpath",
     ).iterator(
         chunk_size=5000
     )
 
-    prev_type = None
-    prev_namespace = None
     prev_name = None
     prev_version = None
     prev_package_set = None
     unupdated_packages = []
-    first_package = True
     for package in maven_packages_without_package_set:
-        if 'source' in package.qualifiers:
+        if "source" in package.qualifiers:
             package_content = PackageContentType.SOURCE_ARCHIVE
         else:
             package_content = PackageContentType.BINARY
@@ -92,11 +87,9 @@ def create_maven_package_sets(apps, schema_editor):
         # We first start iterating through the set or we encounter a package
         # that is not part of the same group as the package before this
         if (
-            first_package
+            package.name != prev_name
             or (
-                package.type != prev_type
-                and package.namespace != prev_namespace
-                and package.name != prev_name
+                package.name == prev_name
                 and package.version != prev_version
             )
         ):
@@ -104,19 +97,13 @@ def create_maven_package_sets(apps, schema_editor):
             package_set.save()
             package_set.packages.add(package)
 
-            prev_type = package.type
-            prev_namespace = package.namespace
             prev_name = package.name
             prev_version = package.version
             prev_package_set = package_set
-            if first_package:
-                first_package = False
 
         # We are iterating past the first package and we find a related package
         elif (
-            package.type == prev_type
-            and package.namespace == prev_namespace
-            and package.name == prev_name
+            package.name == prev_name
             and package.version == prev_version
         ):
             prev_package_set.packages.add(package)
@@ -125,7 +112,7 @@ def create_maven_package_sets(apps, schema_editor):
         Package.objects.bulk_update(
             objs=unupdated_packages,
             fields=[
-                'package_content',
+                "package_content",
             ]
         )
 
