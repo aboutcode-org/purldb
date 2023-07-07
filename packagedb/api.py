@@ -392,17 +392,24 @@ def get_enhanced_package(package):
     Return package data from `package`, where the data has been enhanced by
     other packages in the same package_set.
     """
-    if package.package_content == PackageContentType.SOURCE_REPO:
+    package_content = package.package_content
+    if package_content == PackageContentType.SOURCE_REPO:
         # Source repo packages can't really be enhanced much further, datawise
         return package.to_dict()
-    if package.package_content == PackageContentType.BINARY:
+    if package_content in [PackageContentType.BINARY, PackageContentType.SOURCE_ARCHIVE]:
         # Binary packages can only be part of one set
+        # TODO: Can source_archive packages be part of multiple sets?
         package_set = package.package_sets.first()
         if package_set:
             package_set_members = package_set.get_package_set_members()
+            if package_content == PackageContentType.SOURCE_ARCHIVE:
+                # Mix data from SOURCE_REPO packages for SOURCE_ARCHIVE packages
+                package_set_members = package_set_members.filter(
+                    package_content=PackageContentType.SOURCE_REPO
+                )
+            # TODO: consider putting in the history field that we enhanced the data
             return _get_enhanced_package(package, package_set_members)
         else:
-            # TODO: consider putting in the history field that we enhanced the data
             return package.to_dict()
 
 
