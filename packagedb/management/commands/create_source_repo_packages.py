@@ -43,7 +43,6 @@ def get_rows(workbook, sheet_name):
         source_name = row[inventory_column_indices['source_name']].value
         source_version = row[inventory_column_indices['source_version']].value
         source_purl = row[inventory_column_indices['source_purl']].value
-        source_subpath = row[inventory_column_indices['source_subpath']].value
         reportable = {
             'purl': purl,
             'source_download_url': source_download_url,
@@ -52,7 +51,6 @@ def get_rows(workbook, sheet_name):
             'source_name': source_name,
             'source_version': source_version,
             'source_purl': source_purl,
-            'source_subpath': source_subpath,
         }
         rows.append(reportable)
     return rows
@@ -81,16 +79,27 @@ class Command(VerboseCommand):
 
             lookups = purl_to_lookups(purl)
             packages = Package.objects.filter(**lookups)
+            packages_count = packages.count()
 
-            # Get the binary package
-            # We use .get(qualifiers="") because the binary maven JAR has no qualifiers
-            binary_package = packages.get_or_none(qualifiers='')
-            if not binary_package:
+            if packages_count > 1:
+                # Get the binary package
+                # We use .get(qualifiers="") because the binary maven JAR has no qualifiers
+                package = packages.get_or_none(qualifiers='')
+                if not package:
+                    print(f'\t{purl} does not exist in this database. Continuing.')
+                    continue
+            elif packages_count == 1:
+                package = packages.first()
+            else:
                 print(f'\t{purl} does not exist in this database. Continuing.')
                 continue
 
             # binary packages can only be part of one package set
-            package_set = binary_package.package_sets.first()
+            package_set = package.package_sets.first()
+            if not package_set:
+                # Create a Package set if we don't have one
+                package_set = PackageSet.objects.create()
+                package_set.add_to_package_set(package)
 
             # Create new Package from the source_ fields
             source_repo_package, created = Package.objects.get_or_create(
@@ -98,7 +107,6 @@ class Command(VerboseCommand):
                 namespace=row['source_namespace'],
                 name=row['source_name'],
                 version=row['source_version'],
-                subpath=row['source_subpath'],
                 download_url=row['source_download_url'],
                 package_content=PackageContentType.SOURCE_REPO,
             )
