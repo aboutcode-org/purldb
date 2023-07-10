@@ -1,12 +1,7 @@
-Welcome to nexb-skeleton's documentation!
+Welcome to PurlDB documentation!
 =========================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   skeleton-usage
-   contribute/contrib_doc
+.. include:: ../../README.rst
 
 Indices and tables
 ==================
