@@ -885,13 +885,13 @@
             "match_coverage":100.0,
             "matcher":"5-undetected",
             "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "rule_relevance":100,
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
-            "matched_text":"license ['unknown']"
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
+            "matched_text":"license - unknown"
           }
         ],
-        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
       }
     ],
     "other_license_expression":null,
@@ -1795,13 +1795,13 @@
             "match_coverage":100.0,
             "matcher":"5-undetected",
             "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "rule_relevance":100,
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
-            "matched_text":"license ['unknown']"
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
+            "matched_text":"license - unknown"
           }
         ],
-        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
       }
     ],
     "other_license_expression":null,
@@ -1865,13 +1865,13 @@
             "match_coverage":100.0,
             "matcher":"5-undetected",
             "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "rule_relevance":100,
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
-            "matched_text":"license ['unknown']"
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
+            "matched_text":"license - unknown"
           }
         ],
-        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
       }
     ],
     "other_license_expression":null,
@@ -1935,13 +1935,13 @@
             "match_coverage":100.0,
             "matcher":"5-undetected",
             "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "rule_relevance":100,
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
-            "matched_text":"license ['unknown']"
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
+            "matched_text":"license - unknown"
           }
         ],
-        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
       }
     ],
     "other_license_expression":null,
@@ -2005,13 +2005,13 @@
             "match_coverage":100.0,
             "matcher":"5-undetected",
             "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "rule_relevance":100,
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
-            "matched_text":"license ['unknown']"
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
+            "matched_text":"license - unknown"
           }
         ],
-        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
       }
     ],
     "other_license_expression":null,
@@ -2145,13 +2145,13 @@
             "match_coverage":100.0,
             "matcher":"5-undetected",
             "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "rule_relevance":100,
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
-            "matched_text":"license ['unknown']"
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
+            "matched_text":"license - unknown"
           }
         ],
-        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
       }
     ],
     "other_license_expression":null,
@@ -2215,13 +2215,13 @@
             "match_coverage":100.0,
             "matcher":"5-undetected",
             "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "rule_relevance":100,
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
-            "matched_text":"license ['unknown']"
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
+            "matched_text":"license - unknown"
           }
         ],
-        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
       }
     ],
     "other_license_expression":null,
@@ -2285,13 +2285,13 @@
             "match_coverage":100.0,
             "matcher":"5-undetected",
             "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "rule_relevance":100,
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
-            "matched_text":"license ['unknown']"
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
+            "matched_text":"license - unknown"
           }
         ],
-        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
       }
     ],
     "other_license_expression":null,
@@ -2355,13 +2355,13 @@
             "match_coverage":100.0,
             "matcher":"5-undetected",
             "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
+            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "rule_relevance":100,
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-e24d5c1263c85e5f0b13888491e2d647fab9c05a",
-            "matched_text":"license ['unknown']"
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
+            "matched_text":"license - unknown"
           }
         ],
-        "identifier":"unknown-0f1c7520-0a5e-131e-1fef-fe7e47e9d1b9"
+        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
       }
     ],
     "other_license_expression":null,
