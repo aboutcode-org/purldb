@@ -18,6 +18,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from minecode.models import PriorityResourceURI
 from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
 from packagedb.models import PackageContentType
@@ -367,6 +368,25 @@ class PackageApiTestCase(TestCase):
         self.assertIn(self.package2.purl, purls)
         self.assertIn(self.package3.purl, purls)
         self.assertNotIn(self.package.purl, purls)
+
+    def test_package_api_index_packages_endpoint(self):
+        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
+        self.assertEqual(0, priority_resource_uris_count)
+        purls = [
+            'pkg:maven/ch.qos.reload4j/reload4j@1.2.24',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.24.0',
+        ]
+        data = {
+            'package_urls': purls
+        }
+        response = self.client.post('/api/packages/index_packages/', data=data)
+        self.assertEqual(2, response.data['indexed_packages_count'])
+        self.assertEqual(purls, response.data['indexed_packages'])
+        self.assertEqual(0, response.data['unindexed_packages_count'])
+        self.assertEqual([], response.data['unindexed_packages'])
+        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
+        self.assertEqual(2, priority_resource_uris_count)
+
 
 class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')

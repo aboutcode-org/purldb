@@ -294,6 +294,34 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         package_data = get_enhanced_package(package)
         return Response(package_data)
 
+    @action(detail=False, methods=['post'])
+    def index_packages(self, request, *args, **kwargs):
+        """
+        Take a list of `package_urls` and add them to the package indexing
+        queue. Then return a mapping containing:
+        - The number of indexed package urls (indexed_packages_count)
+        - A list of package urls that were indexed (indexed_packages)
+        - The number of indexed package urls (indexed_packages_count)
+        - A list of package urls that were indexed (indexed_packages)
+        """
+        purls = request.data.getlist('package_urls')
+        indexed_packages = []
+        unindexed_packages = []
+        for purl in purls:
+            # add to queue
+            priority_resource_uri = PriorityResourceURI.objects.insert(purl)
+            if priority_resource_uri:
+                indexed_packages.append(purl)
+            else:
+                unindexed_packages.append(purl)
+        response_data = {
+            'indexed_packages_count': len(indexed_packages),
+            'indexed_packages': indexed_packages,
+            'unindexed_packages_count': len(unindexed_packages),
+            'unindexed_packages': unindexed_packages,
+        }
+        return Response(response_data)
+
 
 UPDATEABLE_FIELDS = [
     'primary_language',
