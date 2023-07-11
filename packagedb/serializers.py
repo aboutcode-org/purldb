@@ -266,3 +266,14 @@ class PackageMetadataSerializer(ModelSerializer):
 
     def get_package_content(self, obj):
         return obj.get_package_content_display()
+
+
+class PackageSetSerializer(ModelSerializer):
+    packages = PackageAPISerializer(many=True)
+
+    class Meta:
+        model = PackageSet
+        fields = [
+            'uuid',
+            'packages',
+        ]

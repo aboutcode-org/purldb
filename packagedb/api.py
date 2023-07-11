@@ -36,6 +36,7 @@ from packagedb.models import Resource
 from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import ResourceAPISerializer
 from packagedb.serializers import PackageAPISerializer
+from packagedb.serializers import PackageSetSerializer
 from packagedb.serializers import PartySerializer
 
 class PackageResourcePurlFilter(Filter):
@@ -80,50 +81,7 @@ class ResourceFilter(FilterSet):
 
 
 class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Resource.objects.select_related('package').defer(
-        'package__history',
-        'package__md5',
-        'package__sha1',
-        'package__sha256',
-        'package__sha512',
-        'package__extra_data',
-        'package__filename',
-        'package__primary_language',
-        'package__description',
-        'package__release_date',
-        'package__homepage_url',
-        'package__download_url',
-        'package__size',
-        'package__bug_tracking_url',
-        'package__code_view_url',
-        'package__vcs_url',
-        'package__repository_homepage_url',
-        'package__repository_download_url',
-        'package__api_data_url',
-        'package__copyright',
-        'package__holder',
-        'package__declared_license_expression',
-        'package__declared_license_expression_spdx',
-        'package__license_detections',
-        'package__other_license_expression',
-        'package__other_license_expression_spdx',
-        'package__other_license_detections',
-        'package__extracted_license_statement',
-        'package__notice_text',
-        'package__datasource_id',
-        'package__file_references',
-        'package__last_modified_date',
-        'package__mining_level',
-        'package__keywords',
-        'package__root_path',
-        'package__source_packages',
-        'package__last_indexed_date',
-        'package__index_error',
-        'package__package_set',
-        'package__package_content',
-        'package__summary',
-        'package__search_vector',
-    )
+    queryset = Resource.objects.select_related('package')
     serializer_class = ResourceAPISerializer
     filterset_class = ResourceFilter
     lookup_field = 'sha1'
@@ -384,6 +342,9 @@ NONUPDATEABLE_FIELDS = [
     'package_uid',
     'repository_download_url',
     'file_references',
+    'history',
+    # TODO: add in history fields, last modified date, etc.
+    #
 ]
 
 
@@ -448,3 +409,7 @@ def _get_enhanced_package(package, packages):
             extra_data['enhanced_by'] = enhanced_by
             package_data['extra_data'] = extra_data
     return package_data
+
+class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = PackageSet.objects.all()
+    serializer_class = PackageSetSerializer
