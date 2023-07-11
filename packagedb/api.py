@@ -410,6 +410,7 @@ def _get_enhanced_package(package, packages):
             package_data['extra_data'] = extra_data
     return package_data
 
+
 class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = PackageSet.objects.all()
+    queryset = PackageSet.objects.prefetch_related('packages')
     serializer_class = PackageSetSerializer
