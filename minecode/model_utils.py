@@ -315,7 +315,7 @@ def merge_or_create_package(scanned_package, visit_level):
             existing_related_package
             and existing_related_package.package_sets
         ):
-            for package_set in existing_related_package.package_sets:
+            for package_set in existing_related_package.package_sets.all():
                 package_set.add_to_package_set(created_package)
         else:
             # Create new package set

@@ -6,7 +6,7 @@
     "version":"",
     "qualifiers":"",
     "subpath":"",
-    "package_set":null,
+    "package_sets":[],
     "package_content":null,
     "primary_language":null,
     "description":null,

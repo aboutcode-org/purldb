@@ -65,8 +65,8 @@ class CodebaseTester(object):
             if remove_file_date:
                 rd.pop('file_date', None)
 
-            # Normalize package_uid
             for package_data in rd.get('packages', []):
+                # Normalize package_uid
                 package_uid = package_data.get('package_uid')
                 if package_uid:
                     package_data['package_uid'] = purl_with_fake_uuid(package_uid)
