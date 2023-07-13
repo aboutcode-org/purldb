@@ -37,7 +37,7 @@ def sf_net(input_file, output):
 
     with open(output, 'w') as fo:
         writer = csv.writer(fo, quoting=csv.QUOTE_ALL)
-        with open(input_file, 'rU') as fi:
+        with open(input_file, 'r') as fi:
             reader = csv.reader(fi)
             for i, l in enumerate(reader):
                 if i == 0:
