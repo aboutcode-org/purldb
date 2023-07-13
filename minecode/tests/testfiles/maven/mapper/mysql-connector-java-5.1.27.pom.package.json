@@ -34,7 +34,7 @@
   "declared_license_expression_spdx":"GPL-2.0-only AND GPL-2.0-only WITH LicenseRef-scancode-mysql-linking-exception-2018",
   "license_detections":[
     {
-      "license_expression":"gpl-2.0",
+      "license_expression":"gpl-2.0 AND gpl-2.0 WITH mysql-linking-exception-2018",
       "matches":[
         {
           "score":100.0,
@@ -42,59 +42,47 @@
           "end_line":1,
           "matched_length":7,
           "match_coverage":100.0,
-          "matcher":"1-hash",
+          "matcher":"2-aho",
           "license_expression":"gpl-2.0",
           "rule_identifier":"gpl-2.0_660.RULE",
           "rule_relevance":100,
           "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_660.RULE",
-          "matched_text":"The GNU General Public License, Version 2"
-        }
-      ],
-      "identifier":"gpl_2_0-e4d948a1-2b6e-11d4-b4dd-3231d54498a5"
-    },
-    {
-      "license_expression":"gpl-2.0",
-      "matches":[
+          "matched_text":"- name: The GNU General Public License, Version 2"
+        },
         {
           "score":100.0,
-          "start_line":1,
-          "end_line":1,
+          "start_line":2,
+          "end_line":2,
           "matched_length":11,
           "match_coverage":100.0,
-          "matcher":"1-hash",
+          "matcher":"2-aho",
           "license_expression":"gpl-2.0",
           "rule_identifier":"gpl-2.0_78.RULE",
           "rule_relevance":100,
           "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_78.RULE",
-          "matched_text":"http://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
-        }
-      ],
-      "identifier":"gpl_2_0-935c1671-307f-e0fe-aa30-0b2457880ee6"
-    },
-    {
-      "license_expression":"gpl-2.0 WITH mysql-linking-exception-2018",
-      "matches":[
+          "matched_text":"  url: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
+        },
         {
           "score":100.0,
-          "start_line":1,
-          "end_line":3,
+          "start_line":4,
+          "end_line":6,
           "matched_length":32,
           "match_coverage":100.0,
-          "matcher":"1-hash",
+          "matcher":"2-aho",
           "license_expression":"gpl-2.0 WITH mysql-linking-exception-2018",
           "rule_identifier":"gpl-2.0_with_mysql-linking-exception-2018_4.RULE",
           "rule_relevance":100,
           "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_with_mysql-linking-exception-2018_4.RULE",
-          "matched_text":"MySQL Connector/J contains exceptions to GPL requirements when linking with other components\nthat are licensed under OSI-approved open source licenses, see EXCEPTIONS-CONNECTOR-J\nin this distribution for more details."
+          "matched_text":"    MySQL Connector/J contains exceptions to GPL requirements when linking with other components\n    that are licensed under OSI-approved open source licenses, see EXCEPTIONS-CONNECTOR-J\n    in this distribution for more details."
         }
       ],
-      "identifier":"gpl_2_0_with_mysql_linking_exception_2018-f0b93e99-a8d2-bae8-47b2-7adfca08d745"
+      "identifier":"gpl_2_0_and_gpl_2_0_with_mysql_linking_exception_2018-0cd7a411-f08b-91fd-75be-37baafbb81a9"
     }
   ],
   "other_license_expression":null,
   "other_license_expression_spdx":null,
   "other_license_detections":[],
-  "extracted_license_statement":"- name: The GNU General Public License, Version 2\n  url: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html\n  comments: |\n    MySQL Connector/J contains exceptions to GPL requirements when linking with other components\n    that are licensed under OSI-approved open source licenses, see EXCEPTIONS-CONNECTOR-J\n    in this distribution for more details.\n  distribution: repo\n",
+  "extracted_license_statement":"- name: The GNU General Public License, Version 2\n  url: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html\n  comments: |\n    MySQL Connector/J contains exceptions to GPL requirements when linking with other components\n    that are licensed under OSI-approved open source licenses, see EXCEPTIONS-CONNECTOR-J\n    in this distribution for more details.\n",
   "notice_text":null,
   "source_packages":[
     "pkg:maven/mysql/mysql-connector-java@5.1.27?classifier=sources"
