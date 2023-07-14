@@ -87,6 +87,18 @@ class HistoryMixin(models.Model):
             'History for this object a text where each line has the form: '
             '"<timestamp><one space><message>". Append-only and not editable.'),
     )
+    created_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_('Timestamp set when a Package is created'),
+    )
+    last_modified_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_('Timestamp set when a Package is created or modified'),
+    )
 
     class Meta:
         abstract = True
@@ -95,12 +107,14 @@ class HistoryMixin(models.Model):
         """
         Append the ``message`` string to the history of this object.
         """
-        timestamp = timezone.now().strftime("%Y-%m-%d-%H:%M:%S")
+        time = timezone.now()
+        timestamp = time.strftime("%Y-%m-%d-%H:%M:%S")
         message = message.strip()
         if any(lf in message for lf in ('\n' , '\r')):
             raise ValueError('message cannot contain line returns (either CR or LF).')
         entry = f"{timestamp} {message}\n"
         self.history = self.history + entry
+        self.last_modified_date = time
 
         if save:
             self.save()
@@ -448,12 +462,6 @@ class Package(
     )
     subpath = LowerCaseField(
         max_length=200,
-    )
-    last_modified_date = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True,
-        help_text=_('Timestamp set when a Package is created or modified'),
     )
     mining_level = models.PositiveIntegerField(
         default=0,

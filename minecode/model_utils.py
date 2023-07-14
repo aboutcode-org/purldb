@@ -154,6 +154,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
             # `existing_field` is a regular field on the Package model and can
             # be updated normally.
             setattr(existing_package, existing_field, new_value)
+            existing_package.last_modified_date = timezone.now()
             existing_package.save()
 
         if TRACE:
@@ -354,7 +355,9 @@ def merge_or_create_package(scanned_package, visit_level):
                 is_resolved=dependency.is_resolved,
             )
 
-        created_package.last_modified_date = timezone.now()
+        time = timezone.now()
+        created_package.created_date = time
+        created_package.last_modified_date = time
         created_package.save()
         package = created_package
         created = True
