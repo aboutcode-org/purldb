@@ -1,21 +1,22 @@
 about_resource: utils_test.py
+name: utils_test.py
+version: 1.11.16
+
 notes: |
  The function model_to_dict() was copied from Django 1.11.16
  django.forms.models.model_to_dict
  and modified to return an ordered mapping instead of a plain dict
 
 attribute: true
-
 copyright: Copyright (c) Django Software Foundation and individual contributors.
 
 download_url: https://files.pythonhosted.org/packages/44/e7/872bbf76aa16b7a061698d75325dac023285db33db4bda8ba8fe5d3bb356/Django-1.11.16-py2.py3-none-any.whl
 homepage_url: https://www.djangoproject.com/
 
 license_expression: bsd-new
+attribute: yes
 licenses:
--   file: bsd-new.LICENSE
-    key: bsd-new
-    name: BSD-3-Clause
-name: utils_test.py
-version: 1.11.16
+  - key: bsd-new
+    file: utils_test.py.LICENSE
+
 notice_file: utils_test.py.NOTICE
