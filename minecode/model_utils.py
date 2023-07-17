@@ -6,11 +6,12 @@ from minecode.models import ScannableURI
 from commoncode import fileutils
 from packageurl import normalize_qualifiers
 
+from packagedb.models import DependentPackage
 from packagedb.models import Package
 from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
 from packagedb.models import Party
-from packagedb.models import DependentPackage
+from packagedb.models import Resource
 from packagedcode.models import PackageData
 from minecode.utils import stringify_null_purl_fields
 from django.utils import timezone
@@ -364,3 +365,45 @@ def merge_or_create_package(scanned_package, visit_level):
         logger.debug(' + Inserted package\t: {}'.format(package_uri))
 
     return package, created, merged, map_error
+
+
+def merge_or_create_resource(package, scanned_resource):
+    """
+    Using Resource data from `scanned_resource`, create or update the
+    corresponding purldb Resource from `package`.
+
+    Return a 3-tuple of the corresponding purldb Resource of `scanned_resource`,
+    `resource`, as well as booleans representing whether the Resource was
+    created or if the Resources scan field data was updated.
+    """
+    merged = False
+    created = False
+    resource = None
+    try:
+        resource = Resource.objects.get(package=package, path=resource.path)
+    except Resource.DoesNotExist:
+        resource = Resource(
+            package=package,
+            path=resource.get('path'),
+            is_file=resource.get('type') == 'file',
+            name=resource.get('name'),
+            extension=resource.get('extension'),
+            size=resource.get('size'),
+            md5=resource.get('md5'),
+            sha1=resource.get('sha1'),
+            sha256=resource.get('sha256'),
+            mime_type=resource.get('mime_type'),
+            file_type=resource.get('file_type'),
+            programming_language=resource.get('programming_language'),
+            is_binary=resource.get('is_binary'),
+            is_text=resource.get('is_text'),
+            is_archive=resource.get('is_archive'),
+            is_media=resource.get('is_media'),
+            is_key_file=resource.get('is_key_file'),
+            created_date=timezone.now(),
+        )
+        created = True
+    updated_fields = resource.set_scan_results(resource, save=True)
+    if updated_fields:
+        merged = True
+    return resource, created, merged
