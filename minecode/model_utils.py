@@ -367,43 +367,46 @@ def merge_or_create_package(scanned_package, visit_level):
     return package, created, merged, map_error
 
 
-def merge_or_create_resource(package, scanned_resource):
+def merge_or_create_resource(package, resource_data):
     """
-    Using Resource data from `scanned_resource`, create or update the
+    Using Resource data from `resource_data`, create or update the
     corresponding purldb Resource from `package`.
 
-    Return a 3-tuple of the corresponding purldb Resource of `scanned_resource`,
+    Return a 3-tuple of the corresponding purldb Resource of `resource_data`,
     `resource`, as well as booleans representing whether the Resource was
     created or if the Resources scan field data was updated.
     """
     merged = False
     created = False
     resource = None
+    path = resource_data.get('path')
     try:
-        resource = Resource.objects.get(package=package, path=resource.path)
+        resource = Resource.objects.get(package=package, path=path)
     except Resource.DoesNotExist:
         resource = Resource(
             package=package,
-            path=resource.get('path'),
-            is_file=resource.get('type') == 'file',
-            name=resource.get('name'),
-            extension=resource.get('extension'),
-            size=resource.get('size'),
-            md5=resource.get('md5'),
-            sha1=resource.get('sha1'),
-            sha256=resource.get('sha256'),
-            mime_type=resource.get('mime_type'),
-            file_type=resource.get('file_type'),
-            programming_language=resource.get('programming_language'),
-            is_binary=resource.get('is_binary'),
-            is_text=resource.get('is_text'),
-            is_archive=resource.get('is_archive'),
-            is_media=resource.get('is_media'),
-            is_key_file=resource.get('is_key_file'),
+            path=path,
+            is_file=resource_data.get('type') == 'file',
+            name=resource_data.get('name'),
+            extension=resource_data.get('extension'),
+            size=resource_data.get('size'),
+            md5=resource_data.get('md5'),
+            sha1=resource_data.get('sha1'),
+            sha256=resource_data.get('sha256'),
+            mime_type=resource_data.get('mime_type'),
+            file_type=resource_data.get('file_type'),
+            programming_language=resource_data.get('programming_language'),
+            is_binary=resource_data.get('is_binary'),
+            is_text=resource_data.get('is_text'),
+            is_archive=resource_data.get('is_archive'),
+            is_media=resource_data.get('is_media'),
+            is_key_file=resource_data.get('is_key_file'),
             created_date=timezone.now(),
         )
         created = True
-    updated_fields = resource.set_scan_results(resource, save=True)
+    updated_fields = resource.set_scan_results(resource_data, save=True)
     if updated_fields:
+        updated_fields_str = ', '.join(updated_fields)
+        resource.append_to_history(f'Updated values of fields: {updated_fields_str}')
         merged = True
     return resource, created, merged

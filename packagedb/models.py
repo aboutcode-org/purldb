@@ -887,13 +887,9 @@ class ScanFieldsModelMixin(models.Model):
                 setattr(self, field_name, value)
                 updated_fields.append(field_name)
 
-        if updated_fields:
-            updated_fields_str = ', '.join(updated_fields)
-            self.append_to_history(f'Updated values of fields: {updated_fields_str}')
-
         if save:
             self.save()
-            
+
         return updated_fields
 
     def copy_scan_results(self, from_instance, save=False):
@@ -910,6 +906,7 @@ class ScanFieldsModelMixin(models.Model):
 
 
 class Resource(
+    HistoryMixin,
     ExtraDataFieldMixin,
     HashFieldsMixin,
     ScanFieldsModelMixin,

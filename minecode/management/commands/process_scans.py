@@ -16,7 +16,8 @@ from matchcode.models import ExactFileIndex
 from minecode.management import scanning
 from minecode.management.commands import get_error_message
 from minecode.models import ScannableURI
-from packagedb.models import Resource
+from minecode.model_utils import merge_or_create_resource
+
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
@@ -107,13 +108,16 @@ class Command(scanning.ScanningCommand):
                     'copyright': copyright,
                 }
 
+                updated_fields = []
                 for field, value in values_by_updateable_fields.items():
                     p_val = getattr(package, field)
                     if not p_val and value:
                         setattr(package, field, value)
-                        package_updated = True
+                        updated_fields.append(field)
 
-                if package_updated:
+                if updated_fields:
+                    updated_fields_str = ', '.join(updated_fields)
+                    package.append_to_history(f'Updated values of fields: {updated_fields_str}')
                     package.save()
 
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
@@ -205,46 +209,9 @@ def index_package_files(package, scan_data):
     scan_index_errors = []
     try:
         for resource in scan_data.get('files', []):
-            path = resource.get('path')
-            is_file = resource.get('type') == 'file'
-            name = resource.get('name')
-            extension = resource.get('extension')
-            size = resource.get('size')
-            md5 = resource.get('md5')
-            sha1 = resource.get('sha1')
-            sha256 = resource.get('sha256')
-            mime_type = resource.get('mime_type')
-            file_type = resource.get('file_type')
-            programming_language = resource.get('programming_language')
-            is_binary = resource.get('is_binary')
-            is_text= resource.get('is_text')
-            is_archive = resource.get('is_archive')
-            is_media = resource.get('is_media')
-            is_key_file = resource.get('is_key_file')
-
-            # TODO: Determine what extra_data to keep
-
-            r = Resource(
-                package=package,
-                path=path,
-                name=name,
-                extension=extension,
-                size=size,
-                md5=md5,
-                sha1=sha1,
-                sha256=sha256,
-                mime_type=mime_type,
-                file_type=file_type,
-                programming_language=programming_language,
-                is_binary=is_binary,
-                is_text=is_text,
-                is_archive=is_archive,
-                is_media=is_media,
-                is_key_file=is_key_file,
-                is_file=is_file,
-            )
-            r.set_scan_results(resource, save=True)
-
+            r, _, _ = merge_or_create_resource(package, resource)
+            path = r.path
+            sha1 = r.sha1
             if sha1:
                 _, _ = ExactFileIndex.index(
                     sha1=sha1,
