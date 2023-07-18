@@ -36,7 +36,7 @@ from packagedb.models import Resource
 from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import ResourceAPISerializer
 from packagedb.serializers import PackageAPISerializer
-from packagedb.serializers import PackageSetSerializer
+from packagedb.serializers import PackageSetAPISerializer
 from packagedb.serializers import PartySerializer
 
 class PackageResourcePurlFilter(Filter):
@@ -413,4 +413,4 @@ def _get_enhanced_package(package, packages):
 
 class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PackageSet.objects.prefetch_related('packages')
-    serializer_class = PackageSetSerializer
+    serializer_class = PackageSetAPISerializer

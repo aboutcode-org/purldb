@@ -7,6 +7,9 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from django.http import HttpRequest
+from django.urls import reverse_lazy
+
 from rest_framework.serializers import CharField
 from rest_framework.serializers import HyperlinkedIdentityField
 from rest_framework.serializers import HyperlinkedModelSerializer
@@ -130,11 +133,30 @@ class DependentPackageSerializer(ModelSerializer):
         )
 
 
-class PackageSetSerializer(ModelSerializer):
+class PackageInPackageSetAPISerializer(ModelSerializer):
+    """
+    This serializes Package instances within a PackageSet that is within a
+    Package in the PackageAPISerializer
+    """
+    class Meta:
+        model = Package
+        fields = (
+            'uuid',
+        )
+
+    def to_representation(self, instance):
+        reverse_uri = reverse_lazy('api:package-detail', kwargs={'uuid': instance.uuid})
+        request = self.context['request']
+        return request.build_absolute_uri(reverse_uri)
+
+
+class PackageSetAPISerializer(ModelSerializer):
+    packages = PackageInPackageSetAPISerializer(many=True)
     class Meta:
         model = PackageSet
         fields = (
             'uuid',
+            'packages',
         )
 
 
@@ -143,7 +165,7 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
     parties = PartySerializer(many=True)
     resources = HyperlinkedIdentityField(view_name='api:package-resources', lookup_field='uuid')
     url = HyperlinkedIdentityField(view_name='api:package-detail', lookup_field='uuid')
-    package_sets = PackageSetSerializer(many=True)
+    package_sets = PackageSetAPISerializer(many=True)
     package_content = SerializerMethodField()
 
     class Meta:
@@ -203,6 +225,31 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
         return obj.get_package_content_display()
 
 
+class PackageInPackageSetMetadataSerializer(ModelSerializer):
+    """
+    This serializes Package instances within a PackageSet that is within a
+    Package in the PackageMetadataSerializer
+    """
+    class Meta:
+        model = Package
+        fields = (
+            'uuid',
+        )
+
+    def to_representation(self, instance):
+        return instance.package_uid
+
+
+class PackageSetMetadataSerializer(ModelSerializer):
+    packages = PackageInPackageSetMetadataSerializer(many=True)
+    class Meta:
+        model = PackageSet
+        fields = (
+            'uuid',
+            'packages',
+        )
+
+
 class PackageMetadataSerializer(ModelSerializer):
     """
     Serializes the metadata of a Package from the fields of the Package model
@@ -213,7 +260,7 @@ class PackageMetadataSerializer(ModelSerializer):
     """
     dependencies = DependentPackageSerializer(many=True)
     parties = PartySerializer(many=True)
-    package_sets = PackageSetSerializer(many=True)
+    package_sets = PackageSetMetadataSerializer(many=True)
     package_content = SerializerMethodField()
 
     class Meta:
@@ -268,7 +315,7 @@ class PackageMetadataSerializer(ModelSerializer):
         return obj.get_package_content_display()
 
 
-class PackageSetSerializer(ModelSerializer):
+class PackageSetAPISerializer(ModelSerializer):
     packages = PackageAPISerializer(many=True)
 
     class Meta:
