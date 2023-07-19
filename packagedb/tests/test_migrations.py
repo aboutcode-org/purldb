@@ -14,7 +14,7 @@ from django.apps import apps
 from minecode.utils_test import TestMigrations
 
 
-class TestPopulateHasErrorFields(TestMigrations):
+class TestPackageSetCreation(TestMigrations):
     app_name = "packagedb"
     migrate_from = "0069_packageset_package_package_sets"
     migrate_to = "0070_auto_20230706_0045"
