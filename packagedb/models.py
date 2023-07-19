@@ -46,7 +46,7 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         package, created = self.get_or_create(download_url=download_url, defaults=extra_fields)
         if created:
             return package
-    
+
     def get_or_none(self, *args, **kwargs):
         """
         Return the object matching the given lookup parameters, or None if no match exists.

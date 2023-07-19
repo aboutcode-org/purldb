@@ -343,8 +343,7 @@ NONUPDATEABLE_FIELDS = [
     'repository_download_url',
     'file_references',
     'history',
-    # TODO: add in history fields, last modified date, etc.
-    #
+    'last_modified_date',
 ]
 
 
