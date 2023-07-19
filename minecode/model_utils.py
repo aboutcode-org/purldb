@@ -7,6 +7,7 @@ from commoncode import fileutils
 from packageurl import normalize_qualifiers
 
 from packagedb.models import Package
+from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
 from packagedb.models import Party
 from packagedb.models import DependentPackage
@@ -313,15 +314,26 @@ def merge_or_create_package(scanned_package, visit_level):
 
         if existing_related_package:
             related_package_sets_count = existing_related_package.package_sets.count()
-            if related_package_sets_count > 0:
-                for package_set in existing_related_package.package_sets.all():
+            if (
+                (
+                    existing_related_package.package_content != PackageContentType.BINARY
+                    and created_package.package_content == PackageContentType.BINARY
+                )
+                or related_package_sets_count == 0
+            ):
+                    # Binary packages can only be part of one set
+                    package_set = PackageSet.objects.create()
+                    package_set.add_to_package_set(existing_related_package)
                     package_set.add_to_package_set(created_package)
-            elif related_package_sets_count == 0:
-                # Create new package set for these packages
-                package_set = PackageSet()
-                package_set.save()
-                package_set.add_to_package_set(existing_related_package)
-                package_set.add_to_package_set(created_package)
+            elif related_package_sets_count > 0:
+                if created_package.package_content != PackageContentType.BINARY:
+                    for package_set in existing_related_package.package_sets.all():
+                        package_set.add_to_package_set(created_package)
+                else:
+                    # Binary packages can only be part of one set
+                    package_set = PackageSet.objects.create()
+                    package_set.add_to_package_set(existing_related_package)
+                    package_set.add_to_package_set(created_package)
 
         for party in scanned_package.parties:
             Party.objects.create(
