@@ -7,6 +7,8 @@ from commoncode import fileutils
 from packageurl import normalize_qualifiers
 
 from packagedb.models import Package
+from packagedb.models import PackageContentType
+from packagedb.models import PackageSet
 from packagedb.models import Party
 from packagedb.models import DependentPackage
 from packagedcode.models import PackageData
@@ -253,17 +255,13 @@ def merge_or_create_package(scanned_package, visit_level):
         # Check to see if we have a package with the same purl, so we can use
         # that package_set value
         # TODO: Consider adding this logic to the Package queryset manager
-        p = Package.objects.filter(
+        existing_related_packages = Package.objects.filter(
             type=scanned_package.type,
             namespace=scanned_package.namespace,
             name=scanned_package.name,
             version=scanned_package.version,
-        ).first()
-        if p and p.package_set:
-            package_set = p.package_set
-        else:
-            package_set = uuid4()
-
+        )
+        existing_related_package = existing_related_packages.first()
         package_content = scanned_package.extra_data.get('package_content')
 
         package_data = dict(
@@ -303,7 +301,6 @@ def merge_or_create_package(scanned_package, visit_level):
             extracted_license_statement=scanned_package.extracted_license_statement,
             notice_text=scanned_package.notice_text,
             source_packages=scanned_package.source_packages,
-            package_set=package_set,
             package_content=package_content,
         )
 
@@ -315,6 +312,26 @@ def merge_or_create_package(scanned_package, visit_level):
         # This is used in the case of Maven packages created from the priority queue
         for h in history:
             created_package.append_to_history(h)
+
+        if existing_related_package:
+            related_package_sets_count = existing_related_package.package_sets.count()
+            if (
+                related_package_sets_count == 0
+                or (
+                    related_package_sets_count > 0
+                    and created_package.package_content == PackageContentType.BINARY
+                )
+            ):
+                # Binary packages can only be part of one set
+                package_set = PackageSet.objects.create()
+                package_set.add_to_package_set(existing_related_package)
+                package_set.add_to_package_set(created_package)
+            elif (
+                related_package_sets_count > 0
+                and created_package.package_content != PackageContentType.BINARY
+            ):
+                for package_set in existing_related_package.package_sets.all():
+                    package_set.add_to_package_set(created_package)
 
         for party in scanned_package.parties:
             Party.objects.create(

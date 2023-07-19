@@ -30,10 +30,13 @@ from minecode import priority_router
 from minecode.models import PriorityResourceURI
 from minecode.route import NoRouteAvailable
 from packagedb.models import Package
+from packagedb.models import PackageContentType
+from packagedb.models import PackageSet
 from packagedb.models import Resource
 from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import ResourceAPISerializer
 from packagedb.serializers import PackageAPISerializer
+from packagedb.serializers import PackageSetAPISerializer
 from packagedb.serializers import PartySerializer
 
 class PackageResourcePurlFilter(Filter):
@@ -78,50 +81,7 @@ class ResourceFilter(FilterSet):
 
 
 class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Resource.objects.select_related('package').defer(
-        'package__history',
-        'package__md5',
-        'package__sha1',
-        'package__sha256',
-        'package__sha512',
-        'package__extra_data',
-        'package__filename',
-        'package__primary_language',
-        'package__description',
-        'package__release_date',
-        'package__homepage_url',
-        'package__download_url',
-        'package__size',
-        'package__bug_tracking_url',
-        'package__code_view_url',
-        'package__vcs_url',
-        'package__repository_homepage_url',
-        'package__repository_download_url',
-        'package__api_data_url',
-        'package__copyright',
-        'package__holder',
-        'package__declared_license_expression',
-        'package__declared_license_expression_spdx',
-        'package__license_detections',
-        'package__other_license_expression',
-        'package__other_license_expression_spdx',
-        'package__other_license_detections',
-        'package__extracted_license_statement',
-        'package__notice_text',
-        'package__datasource_id',
-        'package__file_references',
-        'package__last_modified_date',
-        'package__mining_level',
-        'package__keywords',
-        'package__root_path',
-        'package__source_packages',
-        'package__last_indexed_date',
-        'package__index_error',
-        'package__package_set',
-        'package__package_content',
-        'package__summary',
-        'package__search_vector',
-    )
+    queryset = Resource.objects.select_related('package')
     serializer_class = ResourceAPISerializer
     filterset_class = ResourceFilter
     lookup_field = 'sha1'
@@ -382,6 +342,8 @@ NONUPDATEABLE_FIELDS = [
     'package_uid',
     'repository_download_url',
     'file_references',
+    'history',
+    'last_modified_date',
 ]
 
 
@@ -390,18 +352,25 @@ def get_enhanced_package(package):
     Return package data from `package`, where the data has been enhanced by
     other packages in the same package_set.
     """
-    packages = Package.objects.filter(
-        package_set=package.package_set
-    ).order_by(
-        'type',
-        'namespace',
-        'name',
-        'version',
-        'qualifiers',
-        'subpath',
-        'package_content',
-    )
-    return _get_enhanced_package(package, packages)
+    package_content = package.package_content
+    if package_content == PackageContentType.SOURCE_REPO:
+        # Source repo packages can't really be enhanced much further, datawise
+        return package.to_dict()
+    if package_content in [PackageContentType.BINARY, PackageContentType.SOURCE_ARCHIVE]:
+        # Binary packages can only be part of one set
+        # TODO: Can source_archive packages be part of multiple sets?
+        package_set = package.package_sets.first()
+        if package_set:
+            package_set_members = package_set.get_package_set_members()
+            if package_content == PackageContentType.SOURCE_ARCHIVE:
+                # Mix data from SOURCE_REPO packages for SOURCE_ARCHIVE packages
+                package_set_members = package_set_members.filter(
+                    package_content=PackageContentType.SOURCE_REPO
+                )
+            # TODO: consider putting in the history field that we enhanced the data
+            return _get_enhanced_package(package, package_set_members)
+        else:
+            return package.to_dict()
 
 
 def _get_enhanced_package(package, packages):
@@ -439,3 +408,8 @@ def _get_enhanced_package(package, packages):
             extra_data['enhanced_by'] = enhanced_by
             package_data['extra_data'] = extra_data
     return package_data
+
+
+class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = PackageSet.objects.prefetch_related('packages')
+    serializer_class = PackageSetAPISerializer

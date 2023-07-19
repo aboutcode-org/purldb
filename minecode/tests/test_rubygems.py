@@ -299,4 +299,4 @@ class RubyEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
         package_results = [pac.to_dict() for pac in mapped]
         expected_loc = self.get_test_loc('rubygems/sprockets-vendor_gems-0.1.3.gem.mapped.json')
-        self.check_expected_results(package_results, expected_loc, fields_to_remove=['package_set'], regen=False)
+        self.check_expected_results(package_results, expected_loc, fields_to_remove=['package_sets'], regen=False)

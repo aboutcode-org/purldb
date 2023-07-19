@@ -21,6 +21,7 @@ from rest_framework.test import APIClient
 from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
 from packagedb.models import PackageContentType
+from packagedb.models import PackageSet
 from packagedb.models import Resource
 
 
@@ -389,14 +390,12 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
             'extra_data': json.dumps({'test2': 'data2'})
         }
 
-        package_set = uuid4()
         self.package_data3 = {
             'type': 'maven',
             'namespace': '',
             'name': 'test',
             'version': '1.0.0',
             'qualifiers':'',
-            'package_set': package_set,
             'package_content': PackageContentType.BINARY,
             'download_url': 'https://example.com/test-1.0.0.jar',
         }
@@ -410,7 +409,6 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
             'declared_license_expression': 'apache-2.0',
             'copyright': 'Copyright (c) example corp.',
             'holder': 'example corp.',
-            'package_set': package_set,
             'package_content': PackageContentType.SOURCE_ARCHIVE,
             'download_url': 'https://example.com/test-1.0.0-sources.jar',
         }
@@ -424,6 +422,14 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         self.purl2 = self.package2.package_url
 
         self.missing_purl = 'pkg:PYPI/Django_package@1.11.1.dev1'
+
+        self.package_set1 = PackageSet.objects.create()
+        self.package_set1.add_to_package_set(self.package1)
+        self.package_set1.add_to_package_set(self.package2)
+
+        self.package_set2 = PackageSet.objects.create()
+        self.package_set2.add_to_package_set(self.package3)
+        self.package_set2.add_to_package_set(self.package4)
 
         self.client = APIClient()
 
@@ -587,7 +593,7 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         fields_to_remove = [
             'uuid',
             'resources',
-            'package_set',
+            'package_sets',
         ]
 
         self.check_expected_results(result, expected, fields_to_remove=fields_to_remove, regen=False)
@@ -596,7 +602,7 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         response = self.client.get(reverse('api:package-get-enhanced-package-data', args=[self.package3.uuid]))
         result = response.data
         expected = self.get_test_loc('api/enhanced_package.json')
-        self.check_expected_results(result, expected, fields_to_remove=['package_set'], regen=False)
+        self.check_expected_results(result, expected, fields_to_remove=['package_sets'], regen=False)
 
 
 class ResourceApiTestCase(TestCase):

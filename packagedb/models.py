@@ -47,6 +47,15 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         if created:
             return package
 
+    def get_or_none(self, *args, **kwargs):
+        """
+        Return the object matching the given lookup parameters, or None if no match exists.
+        """
+        try:
+            return self.get(*args, **kwargs)
+        except self.DoesNotExist:
+            return
+
 
 VCS_CHOICES = [
     ('git', 'git'),
@@ -491,12 +500,11 @@ class Package(
         blank=True,
         help_text='Indexing errors messages. When present this means the indexing has failed.',
     )
-    package_set = models.UUIDField(
-        null=True,
-        blank=True,
-        help_text='A UUID used to identify a group of related Packages'
+    package_sets = models.ManyToManyField(
+        'PackageSet',
+        related_name='packages',
+        help_text=_('A set representing the Package sets this Package is a member of.'),
     )
-
     package_content = models.IntegerField(
         null=True,
         choices=PackageContentType.choices,
@@ -504,7 +512,6 @@ class Package(
             'Content of this Package as one of: {}'.format(', '.join(PackageContentType.labels))
         ),
     )
-
     summary = models.JSONField(
         default=dict,
         blank=True,
@@ -981,3 +988,32 @@ def make_relationship(
         to_package=to_package,
         relationship=relationship,
     )
+
+
+class PackageSet(models.Model):
+    """
+    A group of related Packages
+    """
+    uuid = models.UUIDField(
+        verbose_name=_("UUID"),
+        default=uuid.uuid4,
+        unique=True,
+        help_text=_(
+            'The identifier of the Package set'
+        )
+    )
+
+    def add_to_package_set(self, package):
+        self.packages.add(package)
+
+    def get_package_set_members(self):
+        """Return related Packages"""
+        return self.packages.order_by(
+            'type',
+            'namespace',
+            'name',
+            'version',
+            'qualifiers',
+            'subpath',
+            'package_content',
+        )
