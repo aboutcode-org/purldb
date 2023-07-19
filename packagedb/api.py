@@ -317,10 +317,12 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
               package indexing queue can only handle npm and maven purls.
         """
         purls = request.data.getlist('package_urls')
+        unique_purls = set(purls)
         queued_packages = []
         unqueued_packages = []
         unsupported_packages = []
-        for purl in purls:
+
+        for purl in unique_purls:
             is_routable_purl = priority_router.is_routable(purl)
             if not is_routable_purl:
                 unsupported_packages.append(purl)
