@@ -311,17 +311,17 @@ def merge_or_create_package(scanned_package, visit_level):
         for h in history:
             created_package.append_to_history(h)
 
-        if (
-            existing_related_package
-            and existing_related_package.package_sets.count() > 0
-        ):
-            for package_set in existing_related_package.package_sets.all():
+        if existing_related_package:
+            related_package_sets_count = existing_related_package.package_sets.count()
+            if related_package_sets_count > 0:
+                for package_set in existing_related_package.package_sets.all():
+                    package_set.add_to_package_set(created_package)
+            elif related_package_sets_count == 0:
+                # Create new package set for these packages
+                package_set = PackageSet()
+                package_set.save()
+                package_set.add_to_package_set(existing_related_package)
                 package_set.add_to_package_set(created_package)
-        else:
-            # Create new package set
-            package_set = PackageSet()
-            package_set.save()
-            package_set.add_to_package_set(created_package)
 
         for party in scanned_package.parties:
             Party.objects.create(
