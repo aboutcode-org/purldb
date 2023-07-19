@@ -255,12 +255,13 @@ def merge_or_create_package(scanned_package, visit_level):
         # Check to see if we have a package with the same purl, so we can use
         # that package_set value
         # TODO: Consider adding this logic to the Package queryset manager
-        existing_related_package = Package.objects.filter(
+        existing_related_packages = Package.objects.filter(
             type=scanned_package.type,
             namespace=scanned_package.namespace,
             name=scanned_package.name,
             version=scanned_package.version,
-        ).first()
+        )
+        existing_related_package = existing_related_packages.first()
         package_content = scanned_package.extra_data.get('package_content')
 
         package_data = dict(
@@ -315,24 +316,21 @@ def merge_or_create_package(scanned_package, visit_level):
         if existing_related_package:
             related_package_sets_count = existing_related_package.package_sets.count()
             if (
-                (
-                    existing_related_package.package_content != PackageContentType.BINARY
+                related_package_sets_count == 0
+                or (
+                    related_package_sets_count > 0
                     and created_package.package_content == PackageContentType.BINARY
                 )
-                or related_package_sets_count == 0
             ):
-                    # Binary packages can only be part of one set
-                    package_set = PackageSet.objects.create()
-                    package_set.add_to_package_set(existing_related_package)
-                    package_set.add_to_package_set(created_package)
-            elif related_package_sets_count > 0:
-                if created_package.package_content != PackageContentType.BINARY:
-                    for package_set in existing_related_package.package_sets.all():
-                        package_set.add_to_package_set(created_package)
-                else:
-                    # Binary packages can only be part of one set
-                    package_set = PackageSet.objects.create()
-                    package_set.add_to_package_set(existing_related_package)
+                # Binary packages can only be part of one set
+                package_set = PackageSet.objects.create()
+                package_set.add_to_package_set(existing_related_package)
+                package_set.add_to_package_set(created_package)
+            elif (
+                related_package_sets_count > 0
+                and created_package.package_content != PackageContentType.BINARY
+            ):
+                for package_set in existing_related_package.package_sets.all():
                     package_set.add_to_package_set(created_package)
 
         for party in scanned_package.parties:
