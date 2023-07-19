@@ -294,6 +294,55 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         package_data = get_enhanced_package(package)
         return Response(package_data)
 
+    @action(detail=False, methods=['post'])
+    def index_packages(self, request, *args, **kwargs):
+        """
+        Take a list of `package_urls` and add them to the package indexing
+        queue. Then return a mapping containing:
+
+        - queued_packages_count
+            - The number of package urls placed on the queue.
+        - queued_packages
+            - A list of package urls that were placed on the queue.
+        - unqueued_packages_count
+            - The number of package urls not placed on the queue. This is
+              because the package url already exists on the queue and has not
+              yet been processed.
+        - unqueued_packages
+            - A list of package urls that were not placed on the queue.
+        - unsupported_packages_count
+            - The number of package urls that are not processable by the queue.
+        - unsupported_packages
+            - A list of package urls that are not processable by the queue. The
+              package indexing queue can only handle npm and maven purls.
+        """
+        purls = request.data.getlist('package_urls')
+        unique_purls = set(purls)
+        queued_packages = []
+        unqueued_packages = []
+        unsupported_packages = []
+
+        for purl in unique_purls:
+            is_routable_purl = priority_router.is_routable(purl)
+            if not is_routable_purl:
+                unsupported_packages.append(purl)
+            else:
+                # add to queue
+                priority_resource_uri = PriorityResourceURI.objects.insert(purl)
+                if priority_resource_uri:
+                    queued_packages.append(purl)
+                else:
+                    unqueued_packages.append(purl)
+        response_data = {
+            'queued_packages_count': len(queued_packages),
+            'queued_packages': queued_packages,
+            'unqueued_packages_count': len(unqueued_packages),
+            'unqueued_packages': unqueued_packages,
+            'unsupported_packages_count': len(unsupported_packages),
+            'unsupported_packages': unsupported_packages,
+        }
+        return Response(response_data)
+
 
 UPDATEABLE_FIELDS = [
     'primary_language',
