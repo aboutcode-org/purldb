@@ -80,8 +80,14 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
             fields_to_remove=['package_sets'],
             regen=False,
         )
-        self.assertIn(
-            'Existing Package values replaced due to ResourceURI mining level via map_uri()',
-            package.history
+        history = package.get_history()
+        self.assertEqual(1, len(history))
+        entry = history[0]
+        timestamp = entry['timestamp']
+        message = entry['message']
+        self.assertEqual(
+            'Existing Package values replaced due to ResourceURI mining level via map_uri().',
+            message,
         )
-        self.assertTrue(package.last_modified_date)
+        last_modified_date_formatted = package.last_modified_date.strftime("%Y-%m-%d-%H:%M:%S")
+        self.assertEqual(timestamp, last_modified_date_formatted)
