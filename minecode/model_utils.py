@@ -1,3 +1,4 @@
+from collections import namedtuple
 from uuid import uuid4
 import logging
 import sys
@@ -12,6 +13,8 @@ from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
 from packagedb.models import Party
 from packagedb.models import Resource
+from packagedb.serializers import DependentPackageSerializer
+from packagedb.serializers import PartySerializer
 from packagedcode.models import PackageData
 from minecode.utils import stringify_null_purl_fields
 from django.utils import timezone
@@ -34,6 +37,9 @@ def add_package_to_scan_queue(package):
     )
     if scannable_uri_created:
         logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
+
+
+UpdateEntry = namedtuple('UpdateEntry', ['field', 'old_value', 'new_value'])
 
 
 def merge_packages(existing_package, new_package_data, replace=False):
@@ -67,6 +73,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
     new_mapping = new_package_data
 
     fields_to_skip = ('package_uid',)
+    updated_fields = []
 
     for existing_field, existing_value in existing_mapping.items():
         new_value = new_mapping.get(existing_field)
@@ -112,9 +119,11 @@ def merge_packages(existing_package, new_package_data, replace=False):
             if existing_field == 'parties':
                 # If `existing_field` is `parties`, then we update the `Party` table
                 parties = new_value
+                existing_parties = Party.objects.filter(package=existing_package)
+                serialized_existing_parties = PartySerializer(existing_parties, many=True).data
                 if replace:
                     # Delete existing Party objects
-                    Party.objects.filter(package=existing_package).delete()
+                    existing_parties.delete()
                 for party in parties:
                     _party, _created = Party.objects.get_or_create(
                         package=existing_package,
@@ -124,13 +133,21 @@ def merge_packages(existing_package, new_package_data, replace=False):
                         email=party['email'],
                         url=party['url'],
                     )
+                entry = UpdateEntry(
+                    field=existing_field,
+                    old_value=serialized_existing_parties,
+                    new_value=parties,
+                )
+                updated_fields.append(entry)
                 continue
             elif existing_field == 'dependencies':
                 # If `existing_field` is `dependencies`, then we update the `DependentPackage` table
                 dependencies = new_value
+                existing_dependencies = DependentPackage.objects.filter(package=existing_package)
+                serialized_existing_dependencies = DependentPackageSerializer(existing_dependencies, many=True).data
                 if replace:
                     # Delete existing DependentPackage objects
-                    DependentPackage.objects.filter(package=existing_package).delete()
+                    existing_dependencies.delete()
                 for dependency in dependencies:
                     _dep, _created = DependentPackage.objects.get_or_create(
                         package=existing_package,
@@ -141,6 +158,12 @@ def merge_packages(existing_package, new_package_data, replace=False):
                         is_optional=dependency['is_optional'],
                         is_resolved=dependency['is_resolved'],
                     )
+                entry = UpdateEntry(
+                    field=existing_field,
+                    old_value=serialized_existing_dependencies,
+                    new_value=dependencies,
+                )
+                updated_fields.append(entry)
                 continue
             elif existing_field == 'package_content':
                 # get new_value from extra_data
@@ -154,12 +177,20 @@ def merge_packages(existing_package, new_package_data, replace=False):
             # If `existing_field` is not `parties` or `dependencies`, then the
             # `existing_field` is a regular field on the Package model and can
             # be updated normally.
+            entry = UpdateEntry(
+                field=existing_field,
+                old_value=existing_value,
+                new_value=new_value
+            )
+            updated_fields.append(entry)
             setattr(existing_package, existing_field, new_value)
             existing_package.last_modified_date = timezone.now()
             existing_package.save()
 
         if TRACE:
             logger.debug('  Nothing done')
+
+    return updated_fields
 
 
 def merge_or_create_package(scanned_package, visit_level):
@@ -216,7 +247,7 @@ def merge_or_create_package(scanned_package, visit_level):
             # wins and is more important. Its attributes can only be
             # updated if there was a null values and there is a non-
             # null values in the new package data from the visit.
-            merge_packages(
+            updated_fields = merge_packages(
                 existing_package=stored_package,
                 new_package_data=scanned_package.to_dict(),
                 replace=False)
@@ -231,7 +262,7 @@ def merge_or_create_package(scanned_package, visit_level):
             # data from the visit is more important and wins and its
             # non-null values replace the values of the existing
             # package which is updated in the DB.
-            merge_packages(
+            updated_fields = merge_packages(
                 existing_package=stored_package,
                 new_package_data=scanned_package.to_dict(),
                 replace=True)
@@ -243,6 +274,8 @@ def merge_or_create_package(scanned_package, visit_level):
             # deleted first and then the new package's parties added.
 
             stored_package.mining_level = visit_level
+
+        # TODO: append updated_fields information to the package's history
 
         stored_package.last_modified_date = timezone.now()
         stored_package.save()
@@ -309,7 +342,7 @@ def merge_or_create_package(scanned_package, visit_level):
         stringify_null_purl_fields(package_data)
 
         created_package = Package.objects.create(**package_data)
-        created_package.append_to_history('New Package created from ResourceURI: {} via map_uri().'.format(package_uri))
+        created_package.append_to_history('New Package created from URI: {}'.format(package_uri))
 
         # This is used in the case of Maven packages created from the priority queue
         for h in history:
