@@ -1,5 +1,3 @@
-from collections import namedtuple
-from uuid import uuid4
 import logging
 import sys
 
@@ -37,9 +35,6 @@ def add_package_to_scan_queue(package):
     )
     if scannable_uri_created:
         logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
-
-
-UpdateEntry = namedtuple('UpdateEntry', ['field', 'old_value', 'new_value'])
 
 
 def merge_packages(existing_package, new_package_data, replace=False):
@@ -133,7 +128,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
                         email=party['email'],
                         url=party['url'],
                     )
-                entry = UpdateEntry(
+                entry = dict(
                     field=existing_field,
                     old_value=serialized_existing_parties,
                     new_value=parties,
@@ -158,7 +153,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
                         is_optional=dependency['is_optional'],
                         is_resolved=dependency['is_resolved'],
                     )
-                entry = UpdateEntry(
+                entry = dict(
                     field=existing_field,
                     old_value=serialized_existing_dependencies,
                     new_value=dependencies,
@@ -177,7 +172,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
             # If `existing_field` is not `parties` or `dependencies`, then the
             # `existing_field` is a regular field on the Package model and can
             # be updated normally.
-            entry = UpdateEntry(
+            entry = dict(
                 field=existing_field,
                 old_value=existing_value,
                 new_value=new_value
@@ -251,7 +246,6 @@ def merge_or_create_package(scanned_package, visit_level):
                 existing_package=stored_package,
                 new_package_data=scanned_package.to_dict(),
                 replace=False)
-            stored_package.append_to_history('Existing Package values retained due to ResourceURI mining level via map_uri().')
             # for a foreign key, such as dependencies and parties, we will adopt the
             # same logic. In this case, parties or dependencies coming from a scanned
             # package are only added if there is no parties or dependencies in the
@@ -266,7 +260,6 @@ def merge_or_create_package(scanned_package, visit_level):
                 existing_package=stored_package,
                 new_package_data=scanned_package.to_dict(),
                 replace=True)
-            stored_package.append_to_history('Existing Package values replaced due to ResourceURI mining level via map_uri().')
             # for a foreign key, such as dependencies and parties, we will adopt the
             # same logic. In this case, parties or dependencies coming from a scanned
             # package will override existing values. If there are parties in the scanned
@@ -274,6 +267,12 @@ def merge_or_create_package(scanned_package, visit_level):
             # deleted first and then the new package's parties added.
 
             stored_package.mining_level = visit_level
+
+        if updated_fields:
+            data = {
+                'updated_fields': updated_fields,
+            }
+            stored_package.append_to_history('Package field values have been updated.', data=data)
 
         # TODO: append updated_fields information to the package's history
 

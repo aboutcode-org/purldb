@@ -113,12 +113,22 @@ class Command(scanning.ScanningCommand):
                     p_val = getattr(package, field)
                     if not p_val and value:
                         setattr(package, field, value)
-                        updated_fields.append(field)
+                        entry = dict(
+                            field=field,
+                            old_value=p_val,
+                            new_value=value,
+                        )
+                        updated_fields.append(entry)
 
                 if updated_fields:
-                    updated_fields_str = ', '.join(updated_fields)
-                    package.append_to_history(f'Updated values of fields: {updated_fields_str}')
-                    package.save()
+                    data = {
+                        'updated_fields': updated_fields,
+                    }
+                    package.append_to_history(
+                        'Package field values have been updated.',
+                        data=data,
+                        save=True,
+                    )
 
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
             except Exception as e:

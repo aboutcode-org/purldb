@@ -106,7 +106,7 @@ class HistoryMixin(models.Model):
     class Meta:
         abstract = True
 
-    def append_to_history(self, message, save=False):
+    def append_to_history(self, message, data={}, save=False):
         """
         Append the ``message`` string to the history of this object.
         """
@@ -115,6 +115,7 @@ class HistoryMixin(models.Model):
         entry = {
             "timestamp": timestamp,
             "message": message,
+            "data": data,
         }
         self.history.append(entry)
         self.last_modified_date = time
