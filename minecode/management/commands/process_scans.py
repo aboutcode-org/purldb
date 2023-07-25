@@ -58,6 +58,7 @@ class Command(scanning.ScanningCommand):
             api_auth_headers=cls.api_auth_headers,
             get_scan_info_save_loc=get_scan_info_save_loc
         )
+        rescan = scannable_uri.rescan
 
         if scannable_uri.scan_status in (ScannableURI.SCAN_SUBMITTED, ScannableURI.SCAN_IN_PROGRESS):
             scannable_uri.scan_status = get_scan_status(scan_info)
@@ -80,7 +81,8 @@ class Command(scanning.ScanningCommand):
                     timeout=timeout,
                     get_scan_data_save_loc=get_scan_data_save_loc
                 )
-                scan_index_errors.extend(index_package_files(package, scan_data))
+                indexing_errors = index_package_files(package, scan_data, rescan=rescan)
+                scan_index_errors.extend(indexing_errors)
 
                 summary = scanning.get_scan_summary(
                     scannable_uri.scan_uuid,
@@ -111,7 +113,10 @@ class Command(scanning.ScanningCommand):
                 updated_fields = []
                 for field, value in values_by_updateable_fields.items():
                     p_val = getattr(package, field)
-                    if not p_val and value:
+                    if (
+                        (not p_val and value)
+                        or rescan
+                    ):
                         setattr(package, field, value)
                         entry = dict(
                             field=field,
@@ -131,6 +136,9 @@ class Command(scanning.ScanningCommand):
                     )
 
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
+                if rescan:
+                    scannable_uri.rescan = False
+
             except Exception as e:
                 error_message = str(e) + '\n'
                 # TODO: We should rerun the specific indexers that have failed
@@ -210,12 +218,21 @@ def _update_package_checksums(package, scan_object):
     return updated
 
 
-def index_package_files(package, scan_data):
+def index_package_files(package, scan_data, reindex=False):
     """
     Index scan data for `package` Package.
 
     Return a list of scan index errors messages
+
+    If `reindex` is True, then all fingerprints related to `package` will be
+    deleted and recreated from `scan_data`.
     """
+    if reindex:
+        package.approximatedirectorycontentindex_set.delete()
+        package.approxiamtedirectorystructureindex_set.delete()
+        package.exactfileindex_set.delete()
+        package.resources.delete()
+
     scan_index_errors = []
     try:
         for resource in scan_data.get('files', []):

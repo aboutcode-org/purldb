@@ -684,6 +684,7 @@ class ScannableURI(BaseURI):
     SCAN_FAILED = 5
     SCAN_TIMEOUT = 6
     SCAN_INDEX_FAILED = 7
+    SCAN_RESCAN = 8
 
     SCAN_STATUS_CHOICES = [
         (SCAN_NEW, 'new'),
@@ -693,7 +694,8 @@ class ScannableURI(BaseURI):
         (SCAN_INDEXED, 'indexed'),
         (SCAN_FAILED, 'failed'),
         (SCAN_TIMEOUT, 'timeout'),
-        (SCAN_INDEX_FAILED, 'scan index failed')
+        (SCAN_INDEX_FAILED, 'scan index failed'),
+        (SCAN_RESCAN, 'rescan'),
     ]
 
     SCAN_STATUSES_BY_CODE = dict(SCAN_STATUS_CHOICES)
@@ -703,6 +705,12 @@ class ScannableURI(BaseURI):
         choices=SCAN_STATUS_CHOICES,
         db_index=True,
         help_text='Status of the scan for this URI.',
+    )
+
+    rescan = models.BooleanField(
+        default=False,
+        db_index=True,
+        help_text='Flag indicating whether or not this URI should be rescanned and reindexed.',
     )
 
     scan_uuid = models.CharField(
@@ -755,6 +763,18 @@ class ScannableURI(BaseURI):
             self.canonical = get_canonical(self.uri)
         self.normalize_fields()
         super(ScannableURI, self).save(*args, **kwargs)
+
+    def rescan(self):
+        """
+        Reset fields such that a ScannableURI can be sent off for scanning again
+        """
+        self.rescan = True
+        self.scan_status = ScannableURI.SCAN_RESCAN
+        self.scan_error = None
+        self.index_error = None
+        self.scan_uuid = None
+        self.scan_request_date = None
+        self.save()
 
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
