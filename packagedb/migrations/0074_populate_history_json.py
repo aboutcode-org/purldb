@@ -46,7 +46,7 @@ def convert_history(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("packagedb", "0074_package_history_json"),
+        ("packagedb", "0073_package_history_json"),
     ]
 
     operations = [

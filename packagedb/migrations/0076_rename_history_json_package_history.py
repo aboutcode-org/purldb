@@ -5,16 +5,13 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("packagedb", "0076_resource_history_json"),
+        ("packagedb", "0075_remove_package_history"),
     ]
 
     operations = [
-        migrations.RemoveField(
+        migrations.RenameField(
             model_name="package",
-            name="history",
-        ),
-        migrations.RemoveField(
-            model_name="resource",
-            name="history",
+            old_name="history_json",
+            new_name="history",
         ),
     ]

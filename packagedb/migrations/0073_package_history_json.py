@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("packagedb", "0073_resource_created_date_resource_history_and_more"),
+        ("packagedb", "0072_package_created_date"),
     ]
 
     operations = [

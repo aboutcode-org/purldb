@@ -929,7 +929,6 @@ class ScanFieldsModelMixin(models.Model):
 
 
 class Resource(
-    HistoryMixin,
     ExtraDataFieldMixin,
     HashFieldsMixin,
     ScanFieldsModelMixin,
