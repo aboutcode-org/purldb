@@ -18,24 +18,4 @@ class Migration(migrations.Migration):
                 help_text="Flag indicating whether or not this URI should be rescanned and reindexed.",
             ),
         ),
-        migrations.AlterField(
-            model_name="scannableuri",
-            name="scan_status",
-            field=models.IntegerField(
-                choices=[
-                    (0, "new"),
-                    (1, "submitted"),
-                    (2, "in progress"),
-                    (3, "scanned"),
-                    (4, "indexed"),
-                    (5, "failed"),
-                    (6, "timeout"),
-                    (7, "scan index failed"),
-                    (8, "rescan"),
-                ],
-                db_index=True,
-                default=0,
-                help_text="Status of the scan for this URI.",
-            ),
-        ),
     ]
