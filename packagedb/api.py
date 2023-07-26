@@ -28,6 +28,7 @@ from matchcode.api import MultipleCharInFilter
 from minecode import visitors  # NOQA
 from minecode import priority_router
 from minecode.models import PriorityResourceURI
+from minecode.models import ScannableURI
 from minecode.route import NoRouteAvailable
 from packagedb.models import Package
 from packagedb.models import PackageContentType
@@ -340,6 +341,71 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             'unqueued_packages': unqueued_packages,
             'unsupported_packages_count': len(unsupported_packages),
             'unsupported_packages': unsupported_packages,
+        }
+        return Response(response_data)
+
+    @action(detail=True)
+    def reindex_package(self, request, *args, **kwargs):
+        """
+        Reindex this package instance
+        """
+        package = self.get_object()
+        package.rescan()
+        data = {
+            'status': f'{package.package_url} has been queued for reindexing'
+        }
+        return Response(data)
+
+    @action(detail=False, methods=['post'])
+    def reindex_packages(self, request, *args, **kwargs):
+        """
+        Take a list of `package_urls` and for each Package URL, reindex the
+        corresponding package.
+        If the field `reindex_set` is True, then the Packages in the same
+        package set as the packages from `package_urls` will be reindexed.
+
+        Then return a mapping containing:
+        - requeued_packages_count
+            - The number of package urls placed on the queue.
+        - requeued_packages
+            - A list of package urls that were placed on the queue.
+        - nonexistent_packages_count
+            - The number of package urls that do not correspond to a package in
+              the database.
+        - nonexistent_packages
+            - A list of package urls that do not correspond to a package in the
+              database.
+        """
+        def _reindex_package(package, reindexed_packages):
+            if package in reindexed_packages:
+                return
+            package.rescan()
+            reindexed_packages.append(package)
+
+        purls = request.data.getlist('package_urls')
+        reindex_set = request.data.get('reindex_set') or False
+
+        nonexistent_packages = []
+        reindexed_packages = []
+        for purl in purls:
+            lookups = purl_to_lookups(purl)
+            packages = Package.objects.filter(**lookups)
+            if packages.count() > 0:
+                for package in packages:
+                    _reindex_package(package, reindexed_packages)
+                    if reindex_set:
+                        for package_set in package.package_sets.all():
+                            for p in package_set.packages.all():
+                                _reindex_package(p, reindexed_packages)
+            else:
+                nonexistent_packages.append(purl)
+
+        requeued_packages = [p.package_url for p in reindexed_packages]
+        response_data = {
+            'requeued_packages_count': len(requeued_packages),
+            'requeued_packages': requeued_packages,
+            'nonexistent_packages_count': len(nonexistent_packages),
+            'nonexistent_packages': nonexistent_packages,
         }
         return Response(response_data)
 
