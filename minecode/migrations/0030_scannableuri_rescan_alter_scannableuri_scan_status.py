@@ -11,10 +11,11 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name="scannableuri",
-            name="rescan",
+            name="rescan_uri",
             field=models.BooleanField(
-                db_index=True,
                 default=False,
+                null=True,
+                blank=True,
                 help_text="Flag indicating whether or not this URI should be rescanned and reindexed.",
             ),
         ),

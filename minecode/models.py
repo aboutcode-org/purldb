@@ -705,9 +705,10 @@ class ScannableURI(BaseURI):
         help_text='Status of the scan for this URI.',
     )
 
-    rescan = models.BooleanField(
+    rescan_uri = models.BooleanField(
         default=False,
-        db_index=True,
+        null=True,
+        blank=True,
         help_text='Flag indicating whether or not this URI should be rescanned and reindexed.',
     )
 
@@ -766,7 +767,7 @@ class ScannableURI(BaseURI):
         """
         Reset fields such that a ScannableURI can be sent off for scanning again
         """
-        self.rescan = True
+        self.rescan_uri = True
         self.scan_status = ScannableURI.SCAN_NEW
         self.scan_error = None
         self.index_error = None

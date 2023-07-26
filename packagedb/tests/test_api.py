@@ -7,18 +7,19 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from unittest.case import expectedFailure
 from uuid import uuid4
 import json
 import os
 
 from django.contrib.postgres.search import SearchVector
-from django.urls import reverse
 from django.test import TestCase
+from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
 
 from minecode.models import PriorityResourceURI
+from minecode.models import ScannableURI
 from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
 from packagedb.models import PackageContentType
@@ -427,6 +428,124 @@ class PackageApiTestCase(TestCase):
             'pkg:bitbucket/example/example@1.0.0'
         ]
         self.assertEqual(expected_unsupported_packages, response.data['unsupported_packages'])
+
+
+class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
+    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+
+    def setUp(self):
+        package_download_url = 'http://anotherexample.com'
+        self.package_data = {
+            'type': 'maven',
+            'namespace': 'sample',
+            'name': 'Baz',
+            'version': '90.12',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': package_download_url,
+            'filename': 'Baz.zip',
+            'sha1': 'testsha1-3',
+            'md5': 'testmd5-3',
+            'size': 100,
+        }
+        self.package = Package.objects.create(**self.package_data)
+        self.package.refresh_from_db()
+        self.scannableuri = ScannableURI.objects.create(
+            package=self.package,
+            uri=package_download_url,
+        )
+        self.scannableuri.scan_status = ScannableURI.SCAN_INDEXED
+        self.scan_uuid = uuid4()
+        self.scannableuri.scan_uuid = self.scan_uuid
+        self.scannableuri.scan_error = 'error'
+        self.scannableuri.index_error = 'error'
+        self.scan_request_date = timezone.now()
+        self.scannableuri.scan_request_date = self.scan_request_date
+
+        package_download_url2 = 'http://somethingelse.org'
+        self.package_data2 = {
+            'type': 'npm',
+            'namespace': 'example',
+            'name': 'bar',
+            'version': '56.78',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': package_download_url2,
+            'filename': 'Bar.zip',
+            'sha1': 'testsha1-2',
+            'md5': 'testmd5-2',
+            'size': 100,
+        }
+        self.package2 = Package.objects.create(**self.package_data2)
+        self.package2.refresh_from_db()
+        self.scannableuri2 = ScannableURI.objects.create(
+            package=self.package2,
+            uri=package_download_url2,
+        )
+        self.scannableuri2.scan_status = ScannableURI.SCAN_INDEXED
+        self.scan_uuid2 = uuid4()
+        self.scannableuri2.scan_uuid = self.scan_uuid2
+        self.scannableuri2.scan_error = 'error'
+        self.scannableuri2.index_error = 'error'
+        self.scan_request_date2 = timezone.now()
+        self.scannableuri2.scan_request_date = self.scan_request_date2
+
+    def test_reindex_package(self):
+        self.assertEqual(False, self.scannableuri.rescan_uri)
+        self.assertEqual(self.scan_uuid, self.scannableuri.scan_uuid)
+        self.assertEqual('error', self.scannableuri.scan_error)
+        self.assertEqual('error', self.scannableuri.index_error)
+        self.assertEqual(self.scan_request_date, self.scannableuri.scan_request_date)
+        response = self.client.get(f'/api/packages/{self.package.uuid}/reindex_package/')
+        self.assertEqual('pkg:maven/sample/baz@90.12 has been queued for reindexing', response.data['status'])
+        self.scannableuri.refresh_from_db()
+        self.assertEqual(True, self.scannableuri.rescan_uri)
+        self.assertEqual(None, self.scannableuri.scan_uuid)
+        self.assertEqual(None, self.scannableuri.scan_error)
+        self.assertEqual(None, self.scannableuri.index_error)
+        self.assertEqual(None, self.scannableuri.scan_request_date)
+
+    def test_reindex_packages_basic(self):
+        self.assertEqual(False, self.scannableuri.rescan_uri)
+        self.assertEqual(self.scan_uuid, self.scannableuri.scan_uuid)
+        self.assertEqual('error', self.scannableuri.scan_error)
+        self.assertEqual('error', self.scannableuri.index_error)
+        self.assertEqual(self.scan_request_date, self.scannableuri.scan_request_date)
+
+        self.assertEqual(False, self.scannableuri2.rescan_uri)
+        self.assertEqual(self.scan_uuid2, self.scannableuri2.scan_uuid)
+        self.assertEqual('error', self.scannableuri2.scan_error)
+        self.assertEqual('error', self.scannableuri2.index_error)
+        self.assertEqual(self.scan_request_date2, self.scannableuri2.scan_request_date)
+        existing_purls = [
+            'pkg:maven/sample/baz@90.12',
+            'pkg:npm/example/bar@56.78',
+        ]
+        nonexistent_purls = [
+            'pkg:pypi/does/not-exist@1',
+        ]
+        data = {
+            'package_urls': existing_purls + nonexistent_purls,
+        }
+        response = self.client.post(f'/api/packages/reindex_packages/', data=data)
+        self.assertEqual(2, response.data['requeued_packages_count'])
+        self.assertEqual(existing_purls, response.data['requeued_packages'])
+        self.assertEqual(1, response.data['nonexistent_packages_count'])
+        self.assertEqual(nonexistent_purls, response.data['nonexistent_packages'])
+
+        self.scannableuri.refresh_from_db()
+        self.assertEqual(True, self.scannableuri.rescan_uri)
+        self.assertEqual(None, self.scannableuri.scan_uuid)
+        self.assertEqual(None, self.scannableuri.scan_error)
+        self.assertEqual(None, self.scannableuri.index_error)
+        self.assertEqual(None, self.scannableuri.scan_request_date)
+
+        self.scannableuri2.refresh_from_db()
+        self.assertEqual(True, self.scannableuri2.rescan_uri)
+        self.assertEqual(None, self.scannableuri2.scan_uuid)
+        self.assertEqual(None, self.scannableuri2.scan_error)
+        self.assertEqual(None, self.scannableuri2.index_error)
+        self.assertEqual(None, self.scannableuri2.scan_request_date)
 
 
 class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
