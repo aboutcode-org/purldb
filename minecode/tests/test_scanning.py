@@ -14,12 +14,24 @@ import os
 import attr
 import mock
 
+from django.test import TestCase as DjangoTestCase
+
 from minecode.management import scanning
 from minecode.utils_test import JsonBasedTesting
+from packagedb.models import Package
 
 
-class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
+class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting, DjangoTestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+
+    def setUp(self):
+        self.package1 = Package.objects.create(
+            type='maven',
+            namespace='maven',
+            name='wagon-api',
+            version='20040705.181715',
+            download_url='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
+        )
 
     @mock.patch('requests.get')
     def testscanning_query_scans(self, mock_get):
@@ -59,7 +71,12 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
         api_url = 'http://127.0.0.1:8001/api/'
         api_auth_headers = {}
         uri = 'https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar'
-        result = scanning.submit_scan(uri=uri, api_url=api_url, api_auth_headers=api_auth_headers)
+        result = scanning.submit_scan(
+            uri=uri,
+            package=self.package1,
+            api_url=api_url,
+            api_auth_headers=api_auth_headers
+        )
         expected = scanning.Scan(
             url='http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/',
             uuid='c3b8d1ab-4811-4ced-84af-080997ef1a1a',
@@ -93,7 +110,12 @@ class ScanCodeIOAPIHelperFunctionTest(JsonBasedTesting):
         api_url = 'http://127.0.0.1:8001/api/'
         api_auth_headers = {}
         uri = 'https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar'
-        result = scanning.submit_scan(uri=uri, api_url=api_url, api_auth_headers=api_auth_headers)
+        result = scanning.submit_scan(
+            uri=uri,
+            package=self.package1,
+            api_url=api_url,
+            api_auth_headers=api_auth_headers
+        )
 
         expected = scanning.Scan(
             url='http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/',

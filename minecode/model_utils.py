@@ -433,7 +433,6 @@ def merge_or_create_resource(package, resource_data):
             is_archive=resource_data.get('is_archive'),
             is_media=resource_data.get('is_media'),
             is_key_file=resource_data.get('is_key_file'),
-            created_date=timezone.now(),
         )
         created = True
     updated_fields = resource.set_scan_results(resource_data, save=True)

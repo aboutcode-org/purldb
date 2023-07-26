@@ -86,8 +86,12 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
         timestamp = entry['timestamp']
         message = entry['message']
         self.assertEqual(
-            'Existing Package values replaced due to ResourceURI mining level via map_uri().',
+            'Package field values have been updated.',
             message,
         )
         last_modified_date_formatted = package.last_modified_date.strftime("%Y-%m-%d-%H:%M:%S")
         self.assertEqual(timestamp, last_modified_date_formatted)
+        data = entry['data']
+        updated_fields = data['updated_fields']
+        expected_updated_fields_loc = self.get_test_loc('model_utils/expected_updated_fields.json')
+        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=False)

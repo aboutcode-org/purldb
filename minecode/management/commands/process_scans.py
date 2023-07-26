@@ -58,7 +58,7 @@ class Command(scanning.ScanningCommand):
             api_auth_headers=cls.api_auth_headers,
             get_scan_info_save_loc=get_scan_info_save_loc
         )
-        rescan = scannable_uri.rescan
+        rescan = scannable_uri.rescan_uri
 
         if scannable_uri.scan_status in (ScannableURI.SCAN_SUBMITTED, ScannableURI.SCAN_IN_PROGRESS):
             scannable_uri.scan_status = get_scan_status(scan_info)
@@ -81,7 +81,7 @@ class Command(scanning.ScanningCommand):
                     timeout=timeout,
                     get_scan_data_save_loc=get_scan_data_save_loc
                 )
-                indexing_errors = index_package_files(package, scan_data, rescan=rescan)
+                indexing_errors = index_package_files(package, scan_data, reindex=rescan)
                 scan_index_errors.extend(indexing_errors)
 
                 summary = scanning.get_scan_summary(
