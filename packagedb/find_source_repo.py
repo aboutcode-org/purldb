@@ -76,7 +76,9 @@ def get_data_from_url(
     timeout=None,
 ):
     """
-    Return the text from URL
+    Take a ``url`` as input and return the data from the URL
+    depending on the ``data_type`` return URL or text if ``data_type`` is
+    ``URLDataReturnType.url`` or ``URLDataReturnType.text`` respectively.
     """
     try:
         if not url:
@@ -309,7 +311,6 @@ def get_urls_from_package_resources(package):
     """
     Return the URL of the source repository of a package
     """
-    urls = []
     for resource in package.resources.filter(is_key_file=True):
         urls = [url["url"] for url in resource.urls]
         yield from get_git_repo_urls(urls=urls)
