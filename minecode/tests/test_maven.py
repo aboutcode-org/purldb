@@ -13,6 +13,7 @@ import os
 import re
 
 from mock import patch
+from unittest import mock
 
 from django.test import TestCase as DjangoTestCase
 
@@ -829,3 +830,28 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         maven_visitor.merge_ancestors(ancestor_pom_texts, package)
         expected_after_loc = self.get_test_loc('maven/pom/pulsar-client-1x-2.5.1-package_after.json')
         self.check_expected_results(package.to_dict(), expected_after_loc, regen=regen)
+    
+    @mock.patch("minecode.visitors.maven.get_pom_text")
+    def test_get_merged_ancestor_package_from_maven_package(self, get_pom_text_mock, regen=False):
+        get_pom_text_mock.return_value = ""
+        ancestor_pom_texts = []
+        with patch("minecode.visitors.maven.get_ancestry") as mock_get_ancestry:
+            for loc in [
+                self.get_test_loc('maven/pom/apache-18.pom'),
+                self.get_test_loc('maven/pom/pulsar-2.5.1.pom'),
+                self.get_test_loc('maven/pom/pulsar-client-1x-base-2.5.1.pom')
+            ]:
+                with open(loc) as f:
+                    pom_text = f.read()
+                ancestor_pom_texts.append(pom_text)
+            mock_get_ancestry.return_value = ancestor_pom_texts
+            db_package = packagedb.models.Package.objects.create(
+                name="pulsar-client",
+                namespace="org.apache.pulsar",
+                version="2.5.1",
+                type="maven",
+                download_url="https://repo1.maven.org/maven2/org/apache/pulsar/pulsar-client/2.5.1/pulsar-client-2.5.1.jar",
+            )
+            merged_package = maven_visitor.get_merged_ancestor_package_from_maven_package(package=db_package)
+            expected_loc = self.get_test_loc('maven/pom/pulsar-client-merged-ancestor-package.json')
+            self.check_expected_results(merged_package.to_dict(), expected_loc, regen=regen)

@@ -7,19 +7,16 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from uuid import uuid4
 import logging
 import sys
+from uuid import uuid4
 
-from packageurl.contrib.django.utils import purl_to_lookups
 import openpyxl
+from packageurl.contrib.django.utils import purl_to_lookups
 
-from minecode.model_utils import add_package_to_scan_queue
 from minecode.management.commands import VerboseCommand
+from packagedb.find_source_repo import add_source_repo_to_package_set
 from packagedb.models import Package
-from packagedb.models import PackageContentType
-from packagedb.models import PackageSet
-
 
 TRACE = False
 
@@ -95,24 +92,12 @@ class Command(VerboseCommand):
                 continue
 
             # binary packages can only be part of one package set
-            package_set = package.package_sets.first()
-            if not package_set:
-                # Create a Package set if we don't have one
-                package_set = PackageSet.objects.create()
-                package_set.add_to_package_set(package)
-
-            # Create new Package from the source_ fields
-            source_repo_package, created = Package.objects.get_or_create(
-                type=row['source_type'],
-                namespace=row['source_namespace'],
-                name=row['source_name'],
-                version=row['source_version'],
-                download_url=row['source_download_url'],
-                package_content=PackageContentType.SOURCE_REPO,
+            add_source_repo_to_package_set(source_repo_type = row['source_type'],
+                source_repo_name = row['source_name'],
+                source_repo_namespace = row['source_namespace'], 
+                source_repo_version = row['source_version'],
+                download_url = row['source_download_url'],
+                purl=purl, 
+                source_purl=source_purl, 
+                package=package,
             )
-            package_set.add_to_package_set(source_repo_package)
-            if created:
-                add_package_to_scan_queue(source_repo_package)
-                print(f'\tCreated source repo package {source_purl} for {purl}')
-            else:
-                print(f'\tAssigned source repo package {source_purl} to Package set {package_set.uuid}')
