@@ -151,7 +151,7 @@ class Command(scanning.ScanningCommand):
                 # TODO: We should rerun the specific indexers that have failed
                 if scan_index_errors:
                     error_message += '\n'.join(scan_index_errors)
-                scannable_uri.index_error
+                scannable_uri.index_error = error_message
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
 
         scannable_uri.wip_date = None
