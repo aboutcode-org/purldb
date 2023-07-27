@@ -8,6 +8,7 @@ import sys
 
 from django.db import transaction
 
+from licensedcode.cache import build_spdx_license_expression
 from packagedcode.utils import combine_expressions
 
 from matchcode.models import ApproximateDirectoryContentIndex
@@ -91,6 +92,11 @@ class Command(scanning.ScanningCommand):
                     get_scan_data_save_loc=get_scan_data_save_loc
                 )
 
+                declared_license_expression = summary.get('declared_license_expression')
+                declared_license_expression_spdx = None
+                if declared_license_expression:
+                    declared_license_expression_spdx = build_spdx_license_expression(declared_license_expression)
+
                 other_license_expressions = summary.get('other_license_expressions', [])
                 other_license_expressions = [l['value'] for l in other_license_expressions if l['value']]
                 other_license_expression = combine_expressions(other_license_expressions)
@@ -105,7 +111,8 @@ class Command(scanning.ScanningCommand):
                     'sha256': scan_info.sha256,
                     'sha512': scan_info.sha512,
                     'summary': summary,
-                    'declared_license_expression': summary.get('declared_license_expression'),
+                    'declared_license_expression': declared_license_expression,
+                    'declared_license_expression_spdx': declared_license_expression_spdx,
                     'other_license_expression': other_license_expression,
                     'copyright': copyright,
                 }
