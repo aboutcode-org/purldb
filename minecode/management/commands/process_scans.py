@@ -66,7 +66,7 @@ class Command(scanning.ScanningCommand):
         elif scannable_uri.scan_status in (ScannableURI.SCAN_COMPLETED,):
             scan_index_errors = []
             try:
-                logger.info('Indexing scanned files for URI: {}'.format(scannable_uri))
+                logger.info('Processing scan for URI: {}'.format(scannable_uri))
 
                 package = scannable_uri.package
                 input_size = scan_info.size
@@ -235,13 +235,15 @@ def index_package_files(package, scan_data, reindex=False):
     deleted and recreated from `scan_data`.
     """
     if reindex:
-        package.approximatedirectorycontentindex_set.delete()
-        package.approxiamtedirectorystructureindex_set.delete()
-        package.exactfileindex_set.delete()
-        package.resources.delete()
+        logger.info(f'Deleting fingerprints and Resources related to {package.package_url}')
+        package.approximatedirectorycontentindex_set.all().delete()
+        package.approximatedirectorystructureindex_set.all().delete()
+        package.exactfileindex_set.all().delete()
+        package.resources.all().delete()
 
     scan_index_errors = []
     try:
+        logger.info(f'Indexing Resources and fingerprints related to {package.package_url} from scan data')
         for resource in scan_data.get('files', []):
             r, _, _ = merge_or_create_resource(package, resource)
             path = r.path
