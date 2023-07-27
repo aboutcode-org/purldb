@@ -7,10 +7,11 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import copy
 import logging
+import natsort
 import sys
 import uuid
-import natsort
 
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
@@ -76,31 +77,48 @@ class LowerCaseField(models.CharField):
 
 class HistoryMixin(models.Model):
     """
-    A mixin with a simple text-based append-only history field.
-    Each line in that text field is an history entry in the format:
-    <timestamp><one space><message> string on a single line.
+    A mixin with a JSONField-based append-only history field. The history field
+    is a list containing mappings representing the history for this object. Each
+    mapping contains the field "timestamp" and "message".
     """
-    history = models.TextField(
+    history = models.JSONField(
+        default=list,
         blank=True,
         editable=False,
         help_text=_(
-            'History for this object a text where each line has the form: '
-            '"<timestamp><one space><message>". Append-only and not editable.'),
+            'A list of mappings representing the history for this object. '
+            'Each mapping contains the fields "timestamp" and "message".'
+        ),
+    )
+    created_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_('Timestamp set when a Package is created'),
+    )
+    last_modified_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_('Timestamp set when a Package is created or modified'),
     )
 
     class Meta:
         abstract = True
 
-    def append_to_history(self, message, save=False):
+    def append_to_history(self, message, data={}, save=False):
         """
         Append the ``message`` string to the history of this object.
         """
-        timestamp = timezone.now().strftime("%Y-%m-%d-%H:%M:%S")
-        message = message.strip()
-        if any(lf in message for lf in ('\n' , '\r')):
-            raise ValueError('message cannot contain line returns (either CR or LF).')
-        entry = f"{timestamp} {message}\n"
-        self.history = self.history + entry
+        time = timezone.now()
+        timestamp = time.strftime("%Y-%m-%d-%H:%M:%S")
+        entry = {
+            "timestamp": timestamp,
+            "message": message,
+            "data": data,
+        }
+        self.history.append(entry)
+        self.last_modified_date = time
 
         if save:
             self.save()
@@ -110,8 +128,8 @@ class HistoryMixin(models.Model):
         Return a list of mappings of all history entries from oldest to newest as:
             {"timestamp": "<YYYY-MM-DD-HH:MM:SS>", "message": "message"}
         """
-        entries = (entry.partition(' ') for entry in self.history.strip().splitlines(False))
-        return [{"timestamp": ts, "message": message} for ts, _, message in entries]
+        history_copy = copy.deepcopy(self.history)
+        return history_copy
 
 
 class HashFieldsMixin(models.Model):
@@ -449,12 +467,6 @@ class Package(
     subpath = LowerCaseField(
         max_length=200,
     )
-    last_modified_date = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True,
-        help_text=_('Timestamp set when a Package is created or modified'),
-    )
     mining_level = models.PositiveIntegerField(
         default=0,
         help_text=_('A numeric indication of the highest depth and breadth '
@@ -599,6 +611,25 @@ class Package(
         sorted_versions = sort_version(self.get_all_versions())
         if sorted_versions:
             return sorted_versions[-1]
+
+    # TODO: Should this be called `reindex` in this context?
+    def rescan(self):
+        """
+        Trigger another scan of this Package, where the URI at `download_url` is
+        sent to scancode.io for a scan. The fingerprints and Resources associated with this
+        Package are deleted and recreated from the updated scan data.
+        """
+        from minecode.models import ScannableURI
+
+        # TODO: Consider sending a new scan request instead of reusing the
+        # existing one
+        try:
+            scannable_uri = ScannableURI.objects.get(package=self)
+        except ScannableURI.DoesNotExist:
+            scannable_uri = None
+
+        if scannable_uri:
+            scannable_uri.rescan()
 
 
 party_person = 'person'
@@ -869,15 +900,20 @@ class ScanFieldsModelMixin(models.Model):
     def set_scan_results(self, scan_results, save=False):
         """
         Set the values of the current instance's scan-related fields using
-        `scan_results`.
+        `scan_results`. Return a list containing the names of the fields
+        updated.
         """
+        updated_fields = []
         scan_fields = self.scan_fields()
         for field_name, value in scan_results.items():
             if value and field_name in scan_fields:
                 setattr(self, field_name, value)
+                updated_fields.append(field_name)
 
         if save:
             self.save()
+
+        return updated_fields
 
     def copy_scan_results(self, from_instance, save=False):
         """

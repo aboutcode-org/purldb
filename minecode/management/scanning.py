@@ -1,10 +1,7 @@
 #
 # Copyright (c) 2018 by nexB, Inc. http://www.nexb.com/ - All rights reserved.
 #
-
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
+from uuid import uuid4
 import hashlib
 import logging
 import sys
@@ -180,6 +177,7 @@ def query_scans(uri, api_url=SCANCODEIO_API_URL_PROJECTS, api_auth_headers=SCANC
 
 def submit_scan(
     uri,
+    package,
     api_url=SCANCODEIO_API_URL_PROJECTS,
     api_auth_headers=SCANCODEIO_AUTH_HEADERS,
     response_save_loc=''
@@ -189,8 +187,20 @@ def submit_scan(
     success. Raise an exception on error.
     """
     logger.debug('submit_scan: uri', uri, 'api_url:', api_url, 'api_auth_headers:', api_auth_headers)
+    package_name = package.name
+    package_version = package.version
+    uuid = uuid4()
+    uuid_str = str(uuid)
+    uuid_segments = uuid_str.split('-')
+    uuid_segment = uuid_segments[-1]
+
+    if package_version:
+        project_name = f'{package_name}-{package_version}-{uuid_segment}'
+    else:
+        project_name = f'{package.name}-{uuid_segment}'
+
     request_args = {
-        'name': uri_fingerprint(uri),
+        'name': project_name,
         'pipeline': 'scan_and_fingerprint_package',
         'input_urls': [
             uri

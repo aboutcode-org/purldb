@@ -1,4 +1,3 @@
-from uuid import uuid4
 import logging
 import sys
 
@@ -6,11 +5,14 @@ from minecode.models import ScannableURI
 from commoncode import fileutils
 from packageurl import normalize_qualifiers
 
+from packagedb.models import DependentPackage
 from packagedb.models import Package
 from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
 from packagedb.models import Party
-from packagedb.models import DependentPackage
+from packagedb.models import Resource
+from packagedb.serializers import DependentPackageSerializer
+from packagedb.serializers import PartySerializer
 from packagedcode.models import PackageData
 from minecode.utils import stringify_null_purl_fields
 from django.utils import timezone
@@ -66,6 +68,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
     new_mapping = new_package_data
 
     fields_to_skip = ('package_uid',)
+    updated_fields = []
 
     for existing_field, existing_value in existing_mapping.items():
         new_value = new_mapping.get(existing_field)
@@ -111,9 +114,11 @@ def merge_packages(existing_package, new_package_data, replace=False):
             if existing_field == 'parties':
                 # If `existing_field` is `parties`, then we update the `Party` table
                 parties = new_value
+                existing_parties = Party.objects.filter(package=existing_package)
+                serialized_existing_parties = PartySerializer(existing_parties, many=True).data
                 if replace:
                     # Delete existing Party objects
-                    Party.objects.filter(package=existing_package).delete()
+                    existing_parties.delete()
                 for party in parties:
                     _party, _created = Party.objects.get_or_create(
                         package=existing_package,
@@ -123,13 +128,21 @@ def merge_packages(existing_package, new_package_data, replace=False):
                         email=party['email'],
                         url=party['url'],
                     )
+                entry = dict(
+                    field=existing_field,
+                    old_value=serialized_existing_parties,
+                    new_value=parties,
+                )
+                updated_fields.append(entry)
                 continue
             elif existing_field == 'dependencies':
                 # If `existing_field` is `dependencies`, then we update the `DependentPackage` table
                 dependencies = new_value
+                existing_dependencies = DependentPackage.objects.filter(package=existing_package)
+                serialized_existing_dependencies = DependentPackageSerializer(existing_dependencies, many=True).data
                 if replace:
                     # Delete existing DependentPackage objects
-                    DependentPackage.objects.filter(package=existing_package).delete()
+                    existing_dependencies.delete()
                 for dependency in dependencies:
                     _dep, _created = DependentPackage.objects.get_or_create(
                         package=existing_package,
@@ -140,6 +153,12 @@ def merge_packages(existing_package, new_package_data, replace=False):
                         is_optional=dependency['is_optional'],
                         is_resolved=dependency['is_resolved'],
                     )
+                entry = dict(
+                    field=existing_field,
+                    old_value=serialized_existing_dependencies,
+                    new_value=dependencies,
+                )
+                updated_fields.append(entry)
                 continue
             elif existing_field == 'package_content':
                 # get new_value from extra_data
@@ -153,11 +172,20 @@ def merge_packages(existing_package, new_package_data, replace=False):
             # If `existing_field` is not `parties` or `dependencies`, then the
             # `existing_field` is a regular field on the Package model and can
             # be updated normally.
+            entry = dict(
+                field=existing_field,
+                old_value=existing_value,
+                new_value=new_value
+            )
+            updated_fields.append(entry)
             setattr(existing_package, existing_field, new_value)
+            existing_package.last_modified_date = timezone.now()
             existing_package.save()
 
         if TRACE:
             logger.debug('  Nothing done')
+
+    return updated_fields
 
 
 def merge_or_create_package(scanned_package, visit_level):
@@ -214,11 +242,10 @@ def merge_or_create_package(scanned_package, visit_level):
             # wins and is more important. Its attributes can only be
             # updated if there was a null values and there is a non-
             # null values in the new package data from the visit.
-            merge_packages(
+            updated_fields = merge_packages(
                 existing_package=stored_package,
                 new_package_data=scanned_package.to_dict(),
                 replace=False)
-            stored_package.append_to_history('Existing Package values retained due to ResourceURI mining level via map_uri().')
             # for a foreign key, such as dependencies and parties, we will adopt the
             # same logic. In this case, parties or dependencies coming from a scanned
             # package are only added if there is no parties or dependencies in the
@@ -229,11 +256,10 @@ def merge_or_create_package(scanned_package, visit_level):
             # data from the visit is more important and wins and its
             # non-null values replace the values of the existing
             # package which is updated in the DB.
-            merge_packages(
+            updated_fields = merge_packages(
                 existing_package=stored_package,
                 new_package_data=scanned_package.to_dict(),
                 replace=True)
-            stored_package.append_to_history('Existing Package values replaced due to ResourceURI mining level via map_uri().')
             # for a foreign key, such as dependencies and parties, we will adopt the
             # same logic. In this case, parties or dependencies coming from a scanned
             # package will override existing values. If there are parties in the scanned
@@ -241,6 +267,14 @@ def merge_or_create_package(scanned_package, visit_level):
             # deleted first and then the new package's parties added.
 
             stored_package.mining_level = visit_level
+
+        if updated_fields:
+            data = {
+                'updated_fields': updated_fields,
+            }
+            stored_package.append_to_history('Package field values have been updated.', data=data)
+
+        # TODO: append updated_fields information to the package's history
 
         stored_package.last_modified_date = timezone.now()
         stored_package.save()
@@ -307,7 +341,7 @@ def merge_or_create_package(scanned_package, visit_level):
         stringify_null_purl_fields(package_data)
 
         created_package = Package.objects.create(**package_data)
-        created_package.append_to_history('New Package created from ResourceURI: {} via map_uri().'.format(package_uri))
+        created_package.append_to_history('New Package created from URI: {}'.format(package_uri))
 
         # This is used in the case of Maven packages created from the priority queue
         for h in history:
@@ -354,10 +388,56 @@ def merge_or_create_package(scanned_package, visit_level):
                 is_resolved=dependency.is_resolved,
             )
 
-        created_package.last_modified_date = timezone.now()
+        time = timezone.now()
+        created_package.created_date = time
+        created_package.last_modified_date = time
         created_package.save()
         package = created_package
         created = True
         logger.debug(' + Inserted package\t: {}'.format(package_uri))
 
     return package, created, merged, map_error
+
+
+def merge_or_create_resource(package, resource_data):
+    """
+    Using Resource data from `resource_data`, create or update the
+    corresponding purldb Resource from `package`.
+
+    Return a 3-tuple of the corresponding purldb Resource of `resource_data`,
+    `resource`, as well as booleans representing whether the Resource was
+    created or if the Resources scan field data was updated.
+    """
+    merged = False
+    created = False
+    resource = None
+    path = resource_data.get('path')
+    try:
+        resource = Resource.objects.get(package=package, path=path)
+    except Resource.DoesNotExist:
+        resource = Resource(
+            package=package,
+            path=path,
+            is_file=resource_data.get('type') == 'file',
+            name=resource_data.get('name'),
+            extension=resource_data.get('extension'),
+            size=resource_data.get('size'),
+            md5=resource_data.get('md5'),
+            sha1=resource_data.get('sha1'),
+            sha256=resource_data.get('sha256'),
+            mime_type=resource_data.get('mime_type'),
+            file_type=resource_data.get('file_type'),
+            programming_language=resource_data.get('programming_language'),
+            is_binary=resource_data.get('is_binary'),
+            is_text=resource_data.get('is_text'),
+            is_archive=resource_data.get('is_archive'),
+            is_media=resource_data.get('is_media'),
+            is_key_file=resource_data.get('is_key_file'),
+        )
+        created = True
+    updated_fields = resource.set_scan_results(resource_data, save=True)
+    if updated_fields:
+        updated_fields_str = ', '.join(updated_fields)
+        resource.append_to_history(f'Updated values of fields: {updated_fields_str}')
+        merged = True
+    return resource, created, merged

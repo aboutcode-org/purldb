@@ -8,6 +8,7 @@ import sys
 
 from django.db import transaction
 
+from licensedcode.cache import build_spdx_license_expression
 from packagedcode.utils import combine_expressions
 
 from matchcode.models import ApproximateDirectoryContentIndex
@@ -16,7 +17,8 @@ from matchcode.models import ExactFileIndex
 from minecode.management import scanning
 from minecode.management.commands import get_error_message
 from minecode.models import ScannableURI
-from packagedb.models import Resource
+from minecode.model_utils import merge_or_create_resource
+
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
@@ -57,13 +59,14 @@ class Command(scanning.ScanningCommand):
             api_auth_headers=cls.api_auth_headers,
             get_scan_info_save_loc=get_scan_info_save_loc
         )
+        rescan = scannable_uri.rescan_uri
 
         if scannable_uri.scan_status in (ScannableURI.SCAN_SUBMITTED, ScannableURI.SCAN_IN_PROGRESS):
             scannable_uri.scan_status = get_scan_status(scan_info)
         elif scannable_uri.scan_status in (ScannableURI.SCAN_COMPLETED,):
             scan_index_errors = []
             try:
-                logger.info('Indexing scanned files for URI: {}'.format(scannable_uri))
+                logger.info('Processing scan for URI: {}'.format(scannable_uri))
 
                 package = scannable_uri.package
                 input_size = scan_info.size
@@ -79,7 +82,8 @@ class Command(scanning.ScanningCommand):
                     timeout=timeout,
                     get_scan_data_save_loc=get_scan_data_save_loc
                 )
-                scan_index_errors.extend(index_package_files(package, scan_data))
+                indexing_errors = index_package_files(package, scan_data, reindex=rescan)
+                scan_index_errors.extend(indexing_errors)
 
                 summary = scanning.get_scan_summary(
                     scannable_uri.scan_uuid,
@@ -87,6 +91,11 @@ class Command(scanning.ScanningCommand):
                     api_auth_headers=cls.api_auth_headers,
                     get_scan_data_save_loc=get_scan_data_save_loc
                 )
+
+                declared_license_expression = summary.get('declared_license_expression')
+                declared_license_expression_spdx = None
+                if declared_license_expression:
+                    declared_license_expression_spdx = build_spdx_license_expression(declared_license_expression)
 
                 other_license_expressions = summary.get('other_license_expressions', [])
                 other_license_expressions = [l['value'] for l in other_license_expressions if l['value']]
@@ -102,27 +111,47 @@ class Command(scanning.ScanningCommand):
                     'sha256': scan_info.sha256,
                     'sha512': scan_info.sha512,
                     'summary': summary,
-                    'declared_license_expression': summary.get('declared_license_expression'),
+                    'declared_license_expression': declared_license_expression,
+                    'declared_license_expression_spdx': declared_license_expression_spdx,
                     'other_license_expression': other_license_expression,
                     'copyright': copyright,
                 }
 
+                updated_fields = []
                 for field, value in values_by_updateable_fields.items():
                     p_val = getattr(package, field)
-                    if not p_val and value:
+                    if (
+                        (not p_val and value)
+                        or rescan
+                    ):
                         setattr(package, field, value)
-                        package_updated = True
+                        entry = dict(
+                            field=field,
+                            old_value=p_val,
+                            new_value=value,
+                        )
+                        updated_fields.append(entry)
 
-                if package_updated:
-                    package.save()
+                if updated_fields:
+                    data = {
+                        'updated_fields': updated_fields,
+                    }
+                    package.append_to_history(
+                        'Package field values have been updated.',
+                        data=data,
+                        save=True,
+                    )
 
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
+                if rescan:
+                    scannable_uri.rescan = False
+
             except Exception as e:
                 error_message = str(e) + '\n'
                 # TODO: We should rerun the specific indexers that have failed
                 if scan_index_errors:
                     error_message += '\n'.join(scan_index_errors)
-                scannable_uri.index_error
+                scannable_uri.index_error = error_message
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
 
         scannable_uri.wip_date = None
@@ -196,55 +225,29 @@ def _update_package_checksums(package, scan_object):
     return updated
 
 
-def index_package_files(package, scan_data):
+def index_package_files(package, scan_data, reindex=False):
     """
     Index scan data for `package` Package.
 
     Return a list of scan index errors messages
+
+    If `reindex` is True, then all fingerprints related to `package` will be
+    deleted and recreated from `scan_data`.
     """
+    if reindex:
+        logger.info(f'Deleting fingerprints and Resources related to {package.package_url}')
+        package.approximatedirectorycontentindex_set.all().delete()
+        package.approximatedirectorystructureindex_set.all().delete()
+        package.exactfileindex_set.all().delete()
+        package.resources.all().delete()
+
     scan_index_errors = []
     try:
+        logger.info(f'Indexing Resources and fingerprints related to {package.package_url} from scan data')
         for resource in scan_data.get('files', []):
-            path = resource.get('path')
-            is_file = resource.get('type') == 'file'
-            name = resource.get('name')
-            extension = resource.get('extension')
-            size = resource.get('size')
-            md5 = resource.get('md5')
-            sha1 = resource.get('sha1')
-            sha256 = resource.get('sha256')
-            mime_type = resource.get('mime_type')
-            file_type = resource.get('file_type')
-            programming_language = resource.get('programming_language')
-            is_binary = resource.get('is_binary')
-            is_text= resource.get('is_text')
-            is_archive = resource.get('is_archive')
-            is_media = resource.get('is_media')
-            is_key_file = resource.get('is_key_file')
-
-            # TODO: Determine what extra_data to keep
-
-            r = Resource(
-                package=package,
-                path=path,
-                name=name,
-                extension=extension,
-                size=size,
-                md5=md5,
-                sha1=sha1,
-                sha256=sha256,
-                mime_type=mime_type,
-                file_type=file_type,
-                programming_language=programming_language,
-                is_binary=is_binary,
-                is_text=is_text,
-                is_archive=is_archive,
-                is_media=is_media,
-                is_key_file=is_key_file,
-                is_file=is_file,
-            )
-            r.set_scan_results(resource, save=True)
-
+            r, _, _ = merge_or_create_resource(package, resource)
+            path = r.path
+            sha1 = r.sha1
             if sha1:
                 _, _ = ExactFileIndex.index(
                     sha1=sha1,

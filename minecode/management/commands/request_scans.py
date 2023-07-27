@@ -70,6 +70,7 @@ class Command(scanning.ScanningCommand):
             cls.logger.info('Requesting scan from ScanCode.io for URI: "{uri}"'.format(**locals()))
             scan = scanning.submit_scan(
                 uri,
+                scannable_uri.package,
                 api_url=cls.api_url,
                 api_auth_headers=cls.api_auth_headers,
                 response_save_loc=response_save_loc

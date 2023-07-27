@@ -198,6 +198,10 @@ class BaseDirectoryIndex(models.Model):
     def index(cls, directory_fingerprint, resource_path, package):
         """
         Index the string `directory_fingerprint` into the BaseDirectoryIndex model
+
+        Return a 2-tuple of the corresponding BaseDirectoryIndex created from
+        `directory_fingerprint` and a boolean, which represents whether the
+        fingerprint was created or not.
         """
         try:
             indexed_elements_count, fp = split_fingerprint(directory_fingerprint)

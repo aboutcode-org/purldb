@@ -70,12 +70,16 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         mapped = packagedb.models.Package.objects.filter(
             download_url='http://testdomap.com')
         self.assertEqual(1, mapped.count())
-        self.assertEqual('pkg:maven/org.apache.spark/spark-streaming_2.10@1.2.0?extension=pom', mapped[0].package_url)
+        mapped_package = mapped.first()
+        self.assertEqual('pkg:maven/org.apache.spark/spark-streaming_2.10@1.2.0?extension=pom', mapped_package.package_url)
 
         # test history
-        history = mapped[0].get_history()
+        history = mapped_package.get_history()
         self.assertIsNotNone(history)
-        self.assertEqual('New Package created from ResourceURI: {} via map_uri().'.format(uri), history[0].get('message'))
+        self.assertEqual(1, len(history))
+        entry = history[0]
+        message = entry.get('message')
+        self.assertEqual('New Package created from URI: {}'.format(uri), message)
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
@@ -351,11 +355,21 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
 
         mapped = packagedb.models.Package.objects.filter(download_url=download_url)
         self.assertEqual(1, mapped.count())
+        mapped_package = mapped.first()
 
         # test history
-        history = mapped[0].get_history()
+        history = mapped_package.get_history()
         self.assertIsNotNone(history)
-        self.assertEqual('Existing Package values replaced due to ResourceURI mining level via map_uri().'.format(uri), history[0].get('message'))
+        self.assertEqual(1, len(history))
+        entry = history[0]
+        message = entry.get('message')
+        self.assertEqual('Package field values have been updated.', message)
+        data = entry.get('data')
+        updated_fields = data.get('updated_fields')
+        expected_updated_fields_loc = self.get_test_loc(
+            'run_map/test_map_uri_does_update_with_same_mining_level_expected_updated_fields.json'
+        )
+        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=False)
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
@@ -364,7 +378,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
 
         # check that the Package has been updated correctly
         expected_loc = self.get_test_loc('run_map/test_map_uri_does_update_with_same_mining_level-expected.json')
-        result = mapped[0].to_dict()
+        result = mapped_package.to_dict()
         self.check_expected_results(result, expected_loc, regen=False)
 
         # Since we manually insert a Package without using `map_uri`, a
@@ -423,11 +437,30 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         map_uri(resource_uri, _map_router=router)
         mapped = packagedb.models.Package.objects.filter(download_url=download_url)
         self.assertEqual(1, mapped.count())
+        mapped_package = mapped.first()
 
         # test history
-        history = mapped[0].get_history()
+        history = mapped_package.get_history()
         self.assertIsNotNone(history)
-        self.assertEqual('Existing Package values retained due to ResourceURI mining level via map_uri().'.format(uri), history[0].get('message'))
+        self.assertEqual(1, len(history))
+        entry = history[0]
+        message = entry.get('message')
+        self.assertEqual('Package field values have been updated.', message)
+        data = entry.get('data')
+        updated_fields = data.get('updated_fields')
+        expected_updated_fields = [
+            {
+                'field': 'description',
+                'new_value': 'Description Updated',
+                'old_value': ''
+            },
+            {
+                'field': 'sha1',
+                'new_value': 'feed',
+                'old_value': ''
+            }
+        ]
+        self.assertEqual(expected_updated_fields, updated_fields)
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
@@ -494,11 +527,22 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         map_uri(resource_uri, _map_router=router)
         mapped = packagedb.models.Package.objects.filter(download_url=download_url)
         self.assertEqual(1, mapped.count())
+        mapped_package = mapped.first()
 
         # test history
-        history = mapped[0].get_history()
+        history = mapped_package.get_history()
         self.assertIsNotNone(history)
-        self.assertEqual('Existing Package values replaced due to ResourceURI mining level via map_uri().'.format(uri), history[0].get('message'))
+        self.assertEqual(1, len(history))
+        entry = history[0]
+        message = entry.get('message')
+        self.assertEqual('Package field values have been updated.', message)
+        data = entry.get('data')
+        updated_fields = data.get('updated_fields')
+        expected_updated_fields_loc = self.get_test_loc(
+            'run_map/test_map_uri_replace_with_new_with_higher_new_mining_level_expected_updated_fields.json'
+        )
+        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=False)
+
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
