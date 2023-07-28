@@ -435,9 +435,5 @@ def merge_or_create_resource(package, resource_data):
             is_key_file=resource_data.get('is_key_file'),
         )
         created = True
-    updated_fields = resource.set_scan_results(resource_data, save=True)
-    if updated_fields:
-        updated_fields_str = ', '.join(updated_fields)
-        resource.append_to_history(f'Updated values of fields: {updated_fields_str}')
-        merged = True
+    _ = resource.set_scan_results(resource_data, save=True)
     return resource, created, merged
