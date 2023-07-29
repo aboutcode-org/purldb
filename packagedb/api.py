@@ -218,7 +218,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         paginated_qs = self.paginate_queryset(qs)
 
         serializer = ResourceAPISerializer(paginated_qs, many=True, context={'request': request})
-        return Response(serializer.data)
+        return self.get_paginated_response(serializer.data)
 
     @action(detail=False)
     def get_package(self, request, *args, **kwargs):
@@ -241,7 +241,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             return Response({})
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
-        return Response(serializer.data)
+        return self.get_paginated_response(serializer.data)
 
     @action(detail=False)
     def get_or_fetch_package(self, request, *args, **kwargs):
@@ -284,7 +284,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
                 return Response(message)
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
-        return Response(serializer.data)
+        return self.get_paginated_response(serializer.data)
 
     @action(detail=True)
     def get_enhanced_package_data(self, request, *args, **kwargs):
@@ -408,6 +408,30 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             'nonexistent_packages': nonexistent_packages,
         }
         return Response(response_data)
+
+    @action(detail=False, methods=['post'])
+    def filter_by_checksums(self, request, *args, **kwargs):
+        unsupported_fields = []
+        for field, value in request.data.items():
+            if field not in ('md5', 'sha1', 'sha256', 'sha512'):
+                unsupported_fields.append(field)
+
+        if unsupported_fields:
+            unsupported_fields_str = ', '.join(unsupported_fields)
+            response_data = {
+                'status': f'Unsupported field(s) given: {unsupported_fields_str}'
+            }
+            return Response(response_data)
+
+        q = Q()
+        for field, value in request.data.items():
+            d = {f'{field}__in': value}
+            q |= Q(**d)
+
+        qs = Package.objects.filter(q)
+        paginated_qs = self.paginate_queryset(qs)
+        serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
+        return self.get_paginated_response(serializer.data)
 
 
 UPDATEABLE_FIELDS = [
