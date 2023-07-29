@@ -38,7 +38,8 @@ class URLDataReturnType(enum.Enum):
     text = "text" # This is the text of the response
 
 
-non_reachable_urls = []
+non_reachable_urls = [
+]
 CACHE = {
     #    url: data
 }
@@ -73,7 +74,7 @@ def get_data_from_response(response, data_type=URLDataReturnType.text):
 def get_data_from_url(
     url,
     data_type=URLDataReturnType.text,
-    timeout=None,
+    timeout=10,
 ):
     """
     Take a ``url`` as input and return the data from the URL
@@ -372,11 +373,11 @@ def get_git_repo_urls(urls):
         if url and any(url_hint in url for url_hint in url_hints):
             yield url
         else:
-            if url.startswith("git+"):
+            if url and url.startswith("git+"):
                 _, _, url = url.partition("git+")
             try:
                 url = get_data_from_url(
-                    url=url, data_type=URLDataReturnType.url, timeout=(10, None)
+                    url=url, data_type=URLDataReturnType.url
                 )
                 if not url:
                     continue
