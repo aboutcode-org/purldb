@@ -87,6 +87,46 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = ResourceFilter
     lookup_field = 'sha1'
 
+    @action(detail=False, methods=['post'])
+    def filter_by_checksums(self, request, *args, **kwargs):
+        """
+        Take a mapping, where the keys are the names of the checksum algorthm
+        and the values is a list of checksum values and query those values
+        against the packagedb.
+
+        Example:
+        {
+            "sha1": [
+                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                "27afff2610b5a94274a2311f8b15e514446b0e76
+            ]
+        }
+        """
+        data = dict(request.data)
+        unsupported_fields = []
+        for field, value in data.items():
+            if field not in ('md5', 'sha1'):
+                unsupported_fields.append(field)
+
+        if unsupported_fields:
+            unsupported_fields_str = ', '.join(unsupported_fields)
+            response_data = {
+                'status': f'Unsupported field(s) given: {unsupported_fields_str}'
+            }
+            return Response(response_data)
+
+        q = Q()
+        for field, value in data.items():
+            # We create this intermediate dictionary so we can modify the field
+            # name to have __in at the end
+            d = {f'{field}__in': value}
+            q |= Q(**d)
+
+        qs = Resource.objects.filter(q)
+        paginated_qs = self.paginate_queryset(qs)
+        serializer = ResourceAPISerializer(paginated_qs, many=True, context={'request': request})
+        return self.get_paginated_response(serializer.data)
+
 
 class MultiplePackageURLFilter(Filter):
     def filter(self, qs, value):
@@ -241,7 +281,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             return Response({})
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
-        return self.get_paginated_response(serializer.data)
+        return Response(serializer.data)
 
     @action(detail=False)
     def get_or_fetch_package(self, request, *args, **kwargs):
@@ -284,7 +324,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
                 return Response(message)
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
-        return self.get_paginated_response(serializer.data)
+        return Response(serializer.data)
 
     @action(detail=True)
     def get_enhanced_package_data(self, request, *args, **kwargs):
@@ -411,8 +451,22 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, methods=['post'])
     def filter_by_checksums(self, request, *args, **kwargs):
+        """
+        Take a mapping, where the keys are the names of the checksum algorthm
+        and the values is a list of checksum values and query those values
+        against the packagedb.
+
+        Example:
+        {
+            "sha1": [
+                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                "27afff2610b5a94274a2311f8b15e514446b0e76
+            ]
+        }
+        """
+        data = dict(request.data)
         unsupported_fields = []
-        for field, value in request.data.items():
+        for field, value in data.items():
             if field not in ('md5', 'sha1', 'sha256', 'sha512'):
                 unsupported_fields.append(field)
 
@@ -424,7 +478,9 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             return Response(response_data)
 
         q = Q()
-        for field, value in request.data.items():
+        for field, value in data.items():
+            # We create this intermediate dictionary so we can modify the field
+            # name to have __in at the end
             d = {f'{field}__in': value}
             q |= Q(**d)
 

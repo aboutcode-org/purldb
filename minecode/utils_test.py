@@ -25,6 +25,7 @@ from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
 from django.test import TestCase as DjangoTestCase
 from rest_framework.utils.serializer_helpers import ReturnDict
+from rest_framework.utils.serializer_helpers import ReturnList
 
 from commoncode.testcase import FileBasedTesting
 from scancode.cli_test_utils import purl_with_fake_uuid
@@ -206,13 +207,13 @@ class JsonBasedTesting(FileBasedTesting):
         with `purl_with_fake_uuid()` and fields from `fields_to_remove` have
         been removed from `data`.
         """
-        if type(data) == list:
+        if type(data) in (list, ReturnList):
             return [self._normalize_results(entry, fields_to_remove) for entry in data]
 
         if type(data) in (dict, OrderedDict, ReturnDict):
             normalized_data = {}
             for key, value in data.items():
-                if type(value) in [list, dict, OrderedDict, ReturnDict]:
+                if type(value) in (list, ReturnList, dict, OrderedDict, ReturnDict):
                     value = self._normalize_results(value, fields_to_remove)
                 if (
                     key in ("package_uid", "dependency_uid", "for_package_uid")
@@ -229,7 +230,7 @@ class JsonBasedTesting(FileBasedTesting):
         return data
 
     def _remove_fields_from_results(self, data, fields_to_remove):
-        if type(data) == list:
+        if type(data) in (list, ReturnList):
             return [self._remove_fields_from_results(entry, fields_to_remove) for entry in data]
 
         if type(data) in (dict, OrderedDict, ReturnDict):
