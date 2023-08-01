@@ -84,6 +84,23 @@ def get_data_from_url(
     try:
         if not url:
             return
+        if url.startswith("https://github.com/assets"):
+            return
+        not_supported_extensions = [
+            ".pdf",
+            ".zip",
+            ".woff2",
+            ".jar",
+            ".js",
+            ".png",
+            ".css",
+            ".svg",
+            ".jpg",
+            ".tgz",
+        ]
+        for extension in not_supported_extensions:
+            if url.endswith(extension):
+                return
         if url in non_reachable_urls:
             return
         if url in CACHE:
