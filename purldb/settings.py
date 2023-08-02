@@ -89,6 +89,10 @@ ROOT_URLCONF = 'purldb.urls'
 
 WSGI_APPLICATION = "purldb.wsgi.application"
 
+SECURE_PROXY_SSL_HEADER = env.tuple(
+    "SECURE_PROXY_SSL_HEADER", default=("HTTP_X_FORWARDED_PROTO", "https")
+)
+
 # Database
 
 DATABASES = {
