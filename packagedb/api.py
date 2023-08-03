@@ -94,6 +94,10 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
         and the values is a list of checksum values and query those values
         against the packagedb.
 
+        Supported checksum fields are:
+        - md5
+        - sha1
+
         Example:
         {
             "sha1": [
@@ -455,6 +459,12 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         Take a mapping, where the keys are the names of the checksum algorthm
         and the values is a list of checksum values and query those values
         against the packagedb.
+
+        Supported checksum fields are:
+        - md5
+        - sha1
+        - sha256
+        - sha512
 
         Example:
         {
