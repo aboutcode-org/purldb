@@ -89,6 +89,10 @@ ROOT_URLCONF = 'purldb.urls'
 
 WSGI_APPLICATION = "purldb.wsgi.application"
 
+SECURE_PROXY_SSL_HEADER = env.tuple(
+    "SECURE_PROXY_SSL_HEADER", default=("HTTP_X_FORWARDED_PROTO", "https")
+)
+
 # Database
 
 DATABASES = {
@@ -238,7 +242,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'packagedb.api_custom.PageSizePagination',
     # Limit the load on the Database returning a small number of records by default. https://github.com/nexB/vulnerablecode/issues/819
-    "PAGE_SIZE": 10,
+    "PAGE_SIZE": 100,
 }
 
 if not PURLDB_REQUIRE_AUTHENTICATION:

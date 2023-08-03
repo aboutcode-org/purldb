@@ -27,7 +27,8 @@ from packagedb.models import PackageSet
 from packagedb.models import Resource
 
 
-class ResourceAPITestCase(TestCase):
+class ResourceAPITestCase(JsonBasedTesting, TestCase):
+    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
 
     def setUp(self):
         self.package1 = Package.objects.create(
@@ -194,8 +195,21 @@ class ResourceAPITestCase(TestCase):
         self.assertEqual(test_resource.get('extra_data'), self.resource2.extra_data)
         self.assertEqual(test_resource.get('type'), self.resource2.type)
 
+    def test_api_resource_filter_by_checksums(self):
+        sha1s = [
+            'testsha11',
+            'testsha12',
+        ]
+        data = {
+            'sha1': sha1s
+        }
+        response = self.client.post('/api/resources/filter_by_checksums/', data=data)
+        self.assertEqual(2, response.data['count'])
+        expected = self.get_test_loc('api/resource-filter_by_checksums-expected.json')
+        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "package"], regen=False)
 
-class PackageApiTestCase(TestCase):
+class PackageApiTestCase(JsonBasedTesting, TestCase):
+    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
 
     def setUp(self):
 
@@ -348,9 +362,9 @@ class PackageApiTestCase(TestCase):
         response = self.client.get(reverse('api:package-resources', args=[self.package.uuid]))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(10, len(response.data))
+        self.assertEqual(10, response.data['count'])
 
-        for result, i in zip(response.data, range(0, 10)):
+        for result, i in zip(response.data['results'], range(0, 10)):
             self.assertEqual(result.get('path'), 'path{}/'.format(i))
 
     def test_api_package_list_endpoint_multiple_char_filters(self):
@@ -428,6 +442,20 @@ class PackageApiTestCase(TestCase):
             'pkg:bitbucket/example/example@1.0.0'
         ]
         self.assertEqual(expected_unsupported_packages, response.data['unsupported_packages'])
+
+    def test_package_api_filter_by_checksums(self):
+        sha1s = [
+            'testsha1',
+            'testsha1-2',
+            'testsha1-3',
+        ]
+        data = {
+            'sha1': sha1s
+        }
+        response = self.client.post('/api/packages/filter_by_checksums/', data=data)
+        self.assertEqual(3, response.data['count'])
+        expected = self.get_test_loc('api/package-filter_by_checksums-expected.json')
+        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources"], regen=False)
 
 
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):

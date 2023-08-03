@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.1.2
+------
+
+*2023-08-02* -- Update ``scan_and_fingerprint_package`` pipeline to use new directory fingerprinting functions from scancode.io.
+
 v1.1.1
 ------
 

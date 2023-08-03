@@ -87,6 +87,63 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = ResourceFilter
     lookup_field = 'sha1'
 
+    @action(detail=False, methods=['post'])
+    def filter_by_checksums(self, request, *args, **kwargs):
+        """
+        Take a mapping, where the keys are the names of the checksum algorthm
+        and the values is a list of checksum values and query those values
+        against the packagedb.
+
+        Supported checksum fields are:
+        - md5
+        - sha1
+
+        Example:
+        {
+            "sha1": [
+                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                "27afff2610b5a94274a2311f8b15e514446b0e76
+            ]
+        }
+
+        Multiple checksums algorithms can be passed together:
+        {
+            "sha1": [
+                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                "27afff2610b5a94274a2311f8b15e514446b0e76
+            ],
+            "md5": [
+                "e927df60b093456d4e611ae235c1aa5b"
+            ]
+        }
+
+        This will return Resources whose sha1 or md5 matches those values.
+        """
+        data = dict(request.data)
+        unsupported_fields = []
+        for field, value in data.items():
+            if field not in ('md5', 'sha1'):
+                unsupported_fields.append(field)
+
+        if unsupported_fields:
+            unsupported_fields_str = ', '.join(unsupported_fields)
+            response_data = {
+                'status': f'Unsupported field(s) given: {unsupported_fields_str}'
+            }
+            return Response(response_data)
+
+        q = Q()
+        for field, value in data.items():
+            # We create this intermediate dictionary so we can modify the field
+            # name to have __in at the end
+            d = {f'{field}__in': value}
+            q |= Q(**d)
+
+        qs = Resource.objects.filter(q)
+        paginated_qs = self.paginate_queryset(qs)
+        serializer = ResourceAPISerializer(paginated_qs, many=True, context={'request': request})
+        return self.get_paginated_response(serializer.data)
+
 
 class MultiplePackageURLFilter(Filter):
     def filter(self, qs, value):
@@ -218,7 +275,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         paginated_qs = self.paginate_queryset(qs)
 
         serializer = ResourceAPISerializer(paginated_qs, many=True, context={'request': request})
-        return Response(serializer.data)
+        return self.get_paginated_response(serializer.data)
 
     @action(detail=False)
     def get_package(self, request, *args, **kwargs):
@@ -408,6 +465,65 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             'nonexistent_packages': nonexistent_packages,
         }
         return Response(response_data)
+
+    @action(detail=False, methods=['post'])
+    def filter_by_checksums(self, request, *args, **kwargs):
+        """
+        Take a mapping, where the keys are the names of the checksum algorthm
+        and the values is a list of checksum values and query those values
+        against the packagedb.
+
+        Supported checksum fields are:
+        - md5
+        - sha1
+        - sha256
+        - sha512
+
+        Example:
+        {
+            "sha1": [
+                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                "27afff2610b5a94274a2311f8b15e514446b0e76
+            ]
+        }
+
+        Multiple checksums algorithms can be passed together:
+        {
+            "sha1": [
+                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                "27afff2610b5a94274a2311f8b15e514446b0e76
+            ],
+            "md5": [
+                "e927df60b093456d4e611ae235c1aa5b"
+            ]
+        }
+
+        This will return Packages whose sha1 or md5 matches those values.
+        """
+        data = dict(request.data)
+        unsupported_fields = []
+        for field, value in data.items():
+            if field not in ('md5', 'sha1', 'sha256', 'sha512'):
+                unsupported_fields.append(field)
+
+        if unsupported_fields:
+            unsupported_fields_str = ', '.join(unsupported_fields)
+            response_data = {
+                'status': f'Unsupported field(s) given: {unsupported_fields_str}'
+            }
+            return Response(response_data)
+
+        q = Q()
+        for field, value in data.items():
+            # We create this intermediate dictionary so we can modify the field
+            # name to have __in at the end
+            d = {f'{field}__in': value}
+            q |= Q(**d)
+
+        qs = Package.objects.filter(q)
+        paginated_qs = self.paginate_queryset(qs)
+        serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
+        return self.get_paginated_response(serializer.data)
 
 
 UPDATEABLE_FIELDS = [
