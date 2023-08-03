@@ -105,6 +105,19 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
                 "27afff2610b5a94274a2311f8b15e514446b0e76
             ]
         }
+
+        Multiple checksums algorithms can be passed together:
+        {
+            "sha1": [
+                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                "27afff2610b5a94274a2311f8b15e514446b0e76
+            ],
+            "md5": [
+                "e927df60b093456d4e611ae235c1aa5b"
+            ]
+        }
+
+        This will return Resources whose sha1 or md5 matches those values.
         """
         data = dict(request.data)
         unsupported_fields = []
@@ -473,6 +486,19 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
                 "27afff2610b5a94274a2311f8b15e514446b0e76
             ]
         }
+
+        Multiple checksums algorithms can be passed together:
+        {
+            "sha1": [
+                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                "27afff2610b5a94274a2311f8b15e514446b0e76
+            ],
+            "md5": [
+                "e927df60b093456d4e611ae235c1aa5b"
+            ]
+        }
+
+        This will return Packages whose sha1 or md5 matches those values.
         """
         data = dict(request.data)
         unsupported_fields = []

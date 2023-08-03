@@ -206,7 +206,7 @@ class ResourceAPITestCase(JsonBasedTesting, TestCase):
         response = self.client.post('/api/resources/filter_by_checksums/', data=data)
         self.assertEqual(2, response.data['count'])
         expected = self.get_test_loc('api/resource-filter_by_checksums-expected.json')
-        self.check_expected_results(response.data['results'], expected, regen=True)
+        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "package"], regen=False)
 
 class PackageApiTestCase(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
@@ -455,7 +455,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         response = self.client.post('/api/packages/filter_by_checksums/', data=data)
         self.assertEqual(3, response.data['count'])
         expected = self.get_test_loc('api/package-filter_by_checksums-expected.json')
-        self.check_expected_results(response.data['results'], expected, regen=True)
+        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources"], regen=False)
 
 
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):

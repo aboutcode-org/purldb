@@ -1,6 +1,5 @@
 [
   {
-    "package":"http://testserver/api/packages/7c2697c2-30a0-4838-b2f2-07c5ad9f3d72/",
     "purl":"pkg:type1/name1",
     "path":"package1/contents1.txt",
     "type":"file",
@@ -34,7 +33,6 @@
     "extra_data":"{\"test1\": \"data1\"}"
   },
   {
-    "package":"http://testserver/api/packages/505f6476-108c-41e2-850f-9720e33c07cb/",
     "purl":"pkg:type2/name2",
     "path":"package2/contents2.txt",
     "type":"file",

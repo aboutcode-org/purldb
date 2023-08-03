@@ -1,7 +1,5 @@
 [
   {
-    "url":"http://testserver/api/packages/c47b9874-a870-4bfb-9578-e65e79cc4ac9/",
-    "uuid":"c47b9874-a870-4bfb-9578-e65e79cc4ac9",
     "filename":"Foo.zip",
     "package_sets":[],
     "package_content":null,
@@ -45,12 +43,9 @@
     "package_uid":"pkg:generic/generic/foo@12.34?test_qual=qual&uuid=fixed-uid-done-for-testing-5642512d1758#test_subpath",
     "datasource_id":null,
     "file_references":[],
-    "dependencies":[],
-    "resources":"http://testserver/api/packages/c47b9874-a870-4bfb-9578-e65e79cc4ac9/resources/"
+    "dependencies":[]
   },
   {
-    "url":"http://testserver/api/packages/63897eec-1475-471c-b46d-aa7066eed476/",
-    "uuid":"63897eec-1475-471c-b46d-aa7066eed476",
     "filename":"Bar.zip",
     "package_sets":[],
     "package_content":null,
@@ -94,12 +89,9 @@
     "package_uid":"pkg:npm/example/bar@56.78?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datasource_id":null,
     "file_references":[],
-    "dependencies":[],
-    "resources":"http://testserver/api/packages/63897eec-1475-471c-b46d-aa7066eed476/resources/"
+    "dependencies":[]
   },
   {
-    "url":"http://testserver/api/packages/f327655d-bdd5-4fb7-bf06-e0b4bc596120/",
-    "uuid":"f327655d-bdd5-4fb7-bf06-e0b4bc596120",
     "filename":"Baz.zip",
     "package_sets":[],
     "package_content":null,
@@ -143,7 +135,6 @@
     "package_uid":"pkg:jar/sample/baz@90.12?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datasource_id":null,
     "file_references":[],
-    "dependencies":[],
-    "resources":"http://testserver/api/packages/f327655d-bdd5-4fb7-bf06-e0b4bc596120/resources/"
+    "dependencies":[]
   }
 ]
