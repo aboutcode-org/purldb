@@ -773,6 +773,7 @@ class ScannableURI(BaseURI):
         self.index_error = None
         self.scan_uuid = None
         self.scan_request_date = None
+        self.priority = 100
         self.save()
 
 
