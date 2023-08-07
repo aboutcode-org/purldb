@@ -475,7 +475,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         response = self.client.post('/api/packages/filter_by_checksums/', data=data)
         self.assertEqual(4, response.data['count'])
         expected = self.get_test_loc('api/package-filter_by_checksums-expected.json')
-        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources"], regen=True)
+        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources"], regen=False)
 
 
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
