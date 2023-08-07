@@ -265,6 +265,23 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         self.package3 = Package.objects.create(**self.package_data3)
         self.package3.refresh_from_db()
 
+        self.package_data4= {
+            'type': 'jar',
+            'namespace': 'sample',
+            'name': 'Baz',
+            'version': '90.123',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': 'http://anothersample.com',
+            'filename': 'Baz.zip',
+            'sha1': 'testsha1-4',
+            'md5': 'testmd5-3',
+            'size': 100,
+            'package_content': 5,
+        }
+        self.package4 = Package.objects.create(**self.package_data4)
+        self.package4.refresh_from_db()
+
         self.test_url = 'http://testserver/api/packages/{}/'
 
         self.client = APIClient()
@@ -272,7 +289,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
     def test_package_api_list_endpoint(self):
         response = self.client.get('/api/packages/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(3, response.data.get('count'))
+        self.assertEqual(4, response.data.get('count'))
 
     def test_package_api_list_endpoint_filter(self):
         for key, value in self.package_data.items():
@@ -448,14 +465,17 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
             'testsha1',
             'testsha1-2',
             'testsha1-3',
+            'testsha1-4',
         ]
         data = {
             'sha1': sha1s
         }
+        enhanced_response = self.client.post('/api/packages/filter_by_checksums/?get_enhanced_package_data=true', data=data)
+        self.assertEqual(1, len(enhanced_response.data['results']))
         response = self.client.post('/api/packages/filter_by_checksums/', data=data)
-        self.assertEqual(3, response.data['count'])
+        self.assertEqual(4, response.data['count'])
         expected = self.get_test_loc('api/package-filter_by_checksums-expected.json')
-        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources"], regen=False)
+        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources"], regen=True)
 
 
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):

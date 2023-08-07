@@ -161,15 +161,6 @@ class PackageSetAPISerializer(ModelSerializer):
 
 
 class PackageAPISerializer(HyperlinkedModelSerializer):
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        request = self.context["request"]
-        if hasattr(request, "query_params") and request.query_params.get("enhanced", False):
-            from packagedb.api import get_enhanced_package
-            data["enhanced_package"] = get_enhanced_package(instance)
-        return data
-
     dependencies = DependentPackageSerializer(many=True)
     parties = PartySerializer(many=True)
     resources = HyperlinkedIdentityField(view_name='api:package-resources', lookup_field='uuid')

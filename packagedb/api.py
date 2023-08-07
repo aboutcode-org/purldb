@@ -522,6 +522,12 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
 
         qs = Package.objects.filter(q)
         paginated_qs = self.paginate_queryset(qs)
+        get_enhanced_package_data = request.query_params.get('get_enhanced_package_data', False)
+        if get_enhanced_package_data:
+            enhanced_package_data = [get_enhanced_package(package=package) for package in qs]
+            enhanced_package_data = [package for package in enhanced_package_data if package]
+            paginated_response = self.get_paginated_response(enhanced_package_data)
+            return paginated_response
         serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
         return self.get_paginated_response(serializer.data)
 
