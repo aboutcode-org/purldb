@@ -5,6 +5,7 @@
 import logging
 import signal
 import sys
+import traceback
 
 from django.db import transaction
 
@@ -148,7 +149,8 @@ class Command(scanning.ScanningCommand):
                     scannable_uri.priority = 0
 
             except Exception as e:
-                error_message = str(e) + '\n'
+                traceback_message = traceback.format_exc()
+                error_message = traceback_message + '\n'
                 # TODO: We should rerun the specific indexers that have failed
                 if scan_index_errors:
                     error_message += '\n'.join(scan_index_errors)
