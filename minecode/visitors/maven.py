@@ -61,6 +61,9 @@ if TRACE:
     logger.setLevel(logging.DEBUG)
 
 
+MAVEN_BASE_URL = 'https://repo1.maven.org/maven2'
+
+
 class GzipFileWithTrailing(gzip.GzipFile):
     """
     A subclass of gzip.GzipFile supporting files with trailing garbage. Ignore
@@ -104,7 +107,7 @@ class MavenSeed(seed.Seeder):
         # also has a npm mirrors: https://maven-eu.nuxeo.org/nexus/#view-repositories;npmjs~browsestorage
 
 
-def get_pom_text(namespace, name, version, qualifiers={}):
+def get_pom_text(namespace, name, version, qualifiers={}, base_url=MAVEN_BASE_URL):
     """
     Return the contents of the POM file of the package described by the purl
     field arguments in a string.
@@ -116,7 +119,8 @@ def get_pom_text(namespace, name, version, qualifiers={}):
         namespace=namespace,
         name=name,
         version=version,
-        qualifiers=qualifiers
+        qualifiers=qualifiers,
+        base_url=base_url,
     )
     # Get and parse POM info
     pom_url = urls['api_data_url']
@@ -151,7 +155,7 @@ def get_package_sha1(package):
         return sha1
 
 
-def fetch_parent(pom_text):
+def fetch_parent(pom_text, base_url=MAVEN_BASE_URL):
     """
     Return the parent pom text of `pom_text`, or None if `pom_text` has no parent.
     """
@@ -171,12 +175,13 @@ def fetch_parent(pom_text):
             namespace=parent_namespace,
             name=parent_name,
             version=parent_version,
-            qualifiers={}
+            qualifiers={},
+            base_url=base_url,
         )
         return parent_pom_text
 
 
-def get_ancestry(pom_text):
+def get_ancestry(pom_text, base_url=MAVEN_BASE_URL):
     """
     Return a list of pom text of the ancestors of `pom`. The list is ordered
     from oldest ancestor to newest. The list is empty is there is no parent pom.
@@ -184,7 +189,7 @@ def get_ancestry(pom_text):
     ancestors = []
     has_parent = True
     while has_parent:
-        parent_pom_text = fetch_parent(pom_text)
+        parent_pom_text = fetch_parent(pom_text=pom_text, base_url=base_url)
         if not parent_pom_text:
             has_parent = False
         else:
@@ -193,7 +198,7 @@ def get_ancestry(pom_text):
     return reversed(ancestors)
 
 
-def get_merged_ancestor_package_from_maven_package(package):
+def get_merged_ancestor_package_from_maven_package(package, base_url=MAVEN_BASE_URL):
     """
     Merge package details of a package with its ancestor pom
     and return the merged package.
@@ -205,6 +210,7 @@ def get_merged_ancestor_package_from_maven_package(package):
         namespace=package.namespace,
         version=package.version,
         qualifiers=package.qualifiers,
+        base_url=base_url,
     )
     merged_package = merge_ancestors(
         ancestor_pom_texts=get_ancestry(pom_text),
@@ -279,11 +285,17 @@ def map_maven_package(package_url, package_content):
     db_package = None
     error = ''
 
+    if "repository_url" in package_url.qualifiers:
+        base_url = package_url.qualifiers["repository_url"]
+    else:
+        base_url = MAVEN_BASE_URL
+
     pom_text = get_pom_text(
         namespace=package_url.namespace,
         name=package_url.name,
         version=package_url.version,
-        qualifiers=package_url.qualifiers
+        qualifiers=package_url.qualifiers,
+        base_url=base_url,
     )
     if not pom_text:
         msg = f'Package does not exist on maven: {package_url}'
@@ -295,18 +307,22 @@ def map_maven_package(package_url, package_content):
         'maven_pom',
         'maven',
         'Java',
-        text=pom_text
+        text=pom_text,
+        base_url=base_url,
     )
-    ancestor_pom_texts = get_ancestry(pom_text)
+    ancestor_pom_texts = get_ancestry(pom_text=pom_text, base_url=base_url)
     package = merge_ancestors(
         ancestor_pom_texts=ancestor_pom_texts,
         package=package
     )
+    
+
     urls = get_urls(
         namespace=package_url.namespace,
         name=package_url.name,
         version=package_url.version,
-        qualifiers=package_url.qualifiers
+        qualifiers=package_url.qualifiers,
+        base_url=base_url,
     )
     # In the case of looking up a maven package with qualifiers of
     # `classifiers=sources`, the purl of the package created from the pom does
