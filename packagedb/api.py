@@ -522,11 +522,16 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
 
         qs = Package.objects.filter(q)
         paginated_qs = self.paginate_queryset(qs)
-        get_enhanced_package_data = request.query_params.get('get_enhanced_package_data', False)
-        if get_enhanced_package_data:
-            enhanced_package_data = [get_enhanced_package(package=package) for package in qs]
-            enhanced_package_data = [package for package in enhanced_package_data if package]
-            paginated_response = self.get_paginated_response(enhanced_package_data)
+        enhance_package_data = request.query_params.get('enhance_package_data', False)
+        if enhance_package_data:
+            package_data = []
+            for package in qs:
+                enhanced_package = get_enhanced_package(package=package)
+                if enhanced_package:
+                    package_data.append(enhanced_package)
+                else:
+                    package_data.append(package.to_dict())
+            paginated_response = self.get_paginated_response(package_data)
             return paginated_response
         serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
         return self.get_paginated_response(serializer.data)
@@ -615,16 +620,9 @@ def _get_enhanced_package(package, packages):
     Return a mapping of package data based on `package` and Packages in
     `packages`.
     """
-    mixing = False
-    package_data = {}
+    package_data = package.to_dict()
     for peer in packages:
-        if peer == package:
-            mixing = True
-            package_data = package.to_dict()
-            continue
-        if not mixing:
-            continue
-        if peer.package_content == package.package_content:
+        if peer.package_content >= package.package_content:
             # We do not want to mix data with peers of the same package content
             continue
         enhanced = False
