@@ -726,6 +726,19 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         expected_purl_str = 'pkg:maven/classworlds/classworlds@1.1'
         self.assertEqual(expected_purl_str, package.purl)
 
+    def test_map_maven_package_custom_repo_url(self):
+        package_count = packagedb.models.Package.objects.all().count()
+        self.assertEqual(0, package_count)
+        custom_repo_purl = "pkg:maven/org.eclipse.core/runtime@20070801?repository_url=https://packages.atlassian.com/mvn/maven-atlassian-external/"
+        package_url = PackageURL.from_string(custom_repo_purl)
+        maven_visitor.map_maven_package(package_url, packagedb.models.PackageContentType.BINARY)
+        package_count = packagedb.models.Package.objects.all().count()
+        self.assertEqual(1, package_count)
+        package = packagedb.models.Package.objects.all().first()
+        expected_repo_url = 'https://packages.atlassian.com/mvn/maven-atlassian-external//org/eclipse/core/runtime/20070801/runtime-20070801.jar'
+        self.assertEqual(expected_repo_url, package.download_url)
+
+
     def test_process_request(self):
         purl_str = 'pkg:maven/org.apache.twill/twill-core@0.12.0'
         download_url = 'https://repo1.maven.org/maven2/org/apache/twill/twill-core/0.12.0/twill-core-0.12.0.jar'
