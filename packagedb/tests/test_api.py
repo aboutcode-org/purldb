@@ -520,6 +520,7 @@ class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
 
     def test_reindex_package(self):
         self.assertEqual(False, self.scannableuri.rescan_uri)
+        self.assertEqual(0, self.scannableuri.priority)
         self.assertEqual(self.scan_uuid, self.scannableuri.scan_uuid)
         self.assertEqual('error', self.scannableuri.scan_error)
         self.assertEqual('error', self.scannableuri.index_error)
@@ -528,6 +529,7 @@ class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
         self.assertEqual('pkg:maven/sample/baz@90.12 has been queued for reindexing', response.data['status'])
         self.scannableuri.refresh_from_db()
         self.assertEqual(True, self.scannableuri.rescan_uri)
+        self.assertEqual(100, self.scannableuri.priority)
         self.assertEqual(None, self.scannableuri.scan_uuid)
         self.assertEqual(None, self.scannableuri.scan_error)
         self.assertEqual(None, self.scannableuri.index_error)
@@ -535,12 +537,14 @@ class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
 
     def test_reindex_packages_basic(self):
         self.assertEqual(False, self.scannableuri.rescan_uri)
+        self.assertEqual(0, self.scannableuri.priority)
         self.assertEqual(self.scan_uuid, self.scannableuri.scan_uuid)
         self.assertEqual('error', self.scannableuri.scan_error)
         self.assertEqual('error', self.scannableuri.index_error)
         self.assertEqual(self.scan_request_date, self.scannableuri.scan_request_date)
 
         self.assertEqual(False, self.scannableuri2.rescan_uri)
+        self.assertEqual(0, self.scannableuri2.priority)
         self.assertEqual(self.scan_uuid2, self.scannableuri2.scan_uuid)
         self.assertEqual('error', self.scannableuri2.scan_error)
         self.assertEqual('error', self.scannableuri2.index_error)
@@ -563,6 +567,7 @@ class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
 
         self.scannableuri.refresh_from_db()
         self.assertEqual(True, self.scannableuri.rescan_uri)
+        self.assertEqual(100, self.scannableuri.priority)
         self.assertEqual(None, self.scannableuri.scan_uuid)
         self.assertEqual(None, self.scannableuri.scan_error)
         self.assertEqual(None, self.scannableuri.index_error)
@@ -570,6 +575,7 @@ class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
 
         self.scannableuri2.refresh_from_db()
         self.assertEqual(True, self.scannableuri2.rescan_uri)
+        self.assertEqual(100, self.scannableuri.priority)
         self.assertEqual(None, self.scannableuri2.scan_uuid)
         self.assertEqual(None, self.scannableuri2.scan_error)
         self.assertEqual(None, self.scannableuri2.index_error)

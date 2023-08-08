@@ -145,6 +145,7 @@ class Command(scanning.ScanningCommand):
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
                 if rescan:
                     scannable_uri.rescan = False
+                    scannable_uri.priority = 0
 
             except Exception as e:
                 error_message = str(e) + '\n'
