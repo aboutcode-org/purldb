@@ -503,7 +503,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         data = dict(request.data)
         unsupported_fields = []
         for field, value in data.items():
-            if field not in ('md5', 'sha1', 'sha256', 'sha512'):
+            if field not in ('md5', 'sha1', 'sha256', 'sha512', 'enhance_package_data'):
                 unsupported_fields.append(field)
 
         if unsupported_fields:
@@ -513,6 +513,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             }
             return Response(response_data)
 
+        enhance_package_data = data.pop('enhance_package_data', False)
         q = Q()
         for field, value in data.items():
             # We create this intermediate dictionary so we can modify the field
@@ -522,8 +523,12 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
 
         qs = Package.objects.filter(q)
         paginated_qs = self.paginate_queryset(qs)
-        serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
-        return self.get_paginated_response(serializer.data)
+        if enhance_package_data:
+            serialized_package_data = [get_enhanced_package(package=package) for package in paginated_qs]
+        else:
+            serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
+            serialized_package_data = serializer.data
+        return self.get_paginated_response(serialized_package_data)
 
 
 UPDATEABLE_FIELDS = [
@@ -584,8 +589,16 @@ def get_enhanced_package(package):
     other packages in the same package_set.
     """
     package_content = package.package_content
-    if package_content == PackageContentType.SOURCE_REPO:
+    in_package_sets = package.package_sets.count() > 0
+    if (
+        not in_package_sets
+        or not package_content
+        or package_content == PackageContentType.SOURCE_REPO
+    ):
+        # Return unenhanced package data for packages that are not in a package
+        # set or are source repo packages.
         # Source repo packages can't really be enhanced much further, datawise
+        # and we can't enhance a package that is not in a package set.
         return package.to_dict()
     if package_content in [PackageContentType.BINARY, PackageContentType.SOURCE_ARCHIVE]:
         # Binary packages can only be part of one set
@@ -609,16 +622,9 @@ def _get_enhanced_package(package, packages):
     Return a mapping of package data based on `package` and Packages in
     `packages`.
     """
-    mixing = False
-    package_data = {}
+    package_data = package.to_dict()
     for peer in packages:
-        if peer == package:
-            mixing = True
-            package_data = package.to_dict()
-            continue
-        if not mixing:
-            continue
-        if peer.package_content == package.package_content:
+        if peer.package_content >= package.package_content:
             # We do not want to mix data with peers of the same package content
             continue
         enhanced = False

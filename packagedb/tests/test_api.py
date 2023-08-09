@@ -265,6 +265,84 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         self.package3 = Package.objects.create(**self.package_data3)
         self.package3.refresh_from_db()
 
+        self.package_data4= {
+            'type': 'jar',
+            'namespace': 'sample',
+            'name': 'Baz',
+            'version': '90.123',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': 'http://anothersample.com',
+            'filename': 'Baz.zip',
+            'sha1': 'testsha1-4',
+            'md5': 'testmd5-3',
+            'size': 100,
+            'package_content': PackageContentType.BINARY,
+        }
+        self.package4 = Package.objects.create(**self.package_data4)
+        self.package4.refresh_from_db()
+
+        self.package_data5= {
+            'type': 'maven',
+            'namespace': 'foot',
+            'name': 'baz',
+            'version': '90.123',
+            'qualifiers': 'classifier=source',
+            'subpath': '',
+            'download_url': 'http://test-maven.com',
+            'filename': 'Baz.zip',
+            'sha1': 'testsha1-5',
+            'md5': 'testmd5-11',
+            'size': 100,
+            'package_content': PackageContentType.SOURCE_ARCHIVE,
+            'declared_license_expression': 'MIT',
+        }
+
+        self.package5 = Package.objects.create(**self.package_data5)
+        self.package5.refresh_from_db()
+
+        self.package_data6= {
+            'type': 'maven',
+            'namespace': 'fooo',
+            'name': 'baz',
+            'version': '90.123',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': 'http://test-maven-11.com',
+            'filename': 'Baz.zip',
+            'sha1': 'testsha1-6',
+            'md5': 'testmd5-11',
+            'size': 100,
+            'package_content': PackageContentType.BINARY,
+        }
+
+        self.package6 = Package.objects.create(**self.package_data6)
+        self.package6.refresh_from_db()
+
+        self.package_data7= {
+            'type': 'github',
+            'namespace': 'glue',
+            'name': 'cat',
+            'version': '90.123',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': 'http://test-maven-111.com',
+            'filename': 'Baz.zip',
+            'sha1': 'testsha1-7',
+            'md5': 'testmd5-11',
+            'size': 100,
+            'copyright': 'BACC',
+            'package_content': PackageContentType.SOURCE_REPO,
+        }
+
+        self.package7 = Package.objects.create(**self.package_data7)
+        self.package7.refresh_from_db()
+
+        self.packageset_1 = PackageSet.objects.create()
+        self.packageset_1.packages.add(self.package6)
+        self.packageset_1.packages.add(self.package5)
+        self.packageset_1.packages.add(self.package7)
+
         self.test_url = 'http://testserver/api/packages/{}/'
 
         self.client = APIClient()
@@ -272,7 +350,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
     def test_package_api_list_endpoint(self):
         response = self.client.get('/api/packages/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(3, response.data.get('count'))
+        self.assertEqual(7, response.data.get('count'))
 
     def test_package_api_list_endpoint_filter(self):
         for key, value in self.package_data.items():
@@ -448,14 +526,21 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
             'testsha1',
             'testsha1-2',
             'testsha1-3',
+            'testsha1-4',
+            'testsha1-6',
         ]
         data = {
-            'sha1': sha1s
+            'sha1': sha1s,
         }
         response = self.client.post('/api/packages/filter_by_checksums/', data=data)
-        self.assertEqual(3, response.data['count'])
+        self.assertEqual(5, response.data['count'])
         expected = self.get_test_loc('api/package-filter_by_checksums-expected.json')
-        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources"], regen=False)
+        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=False)
+        data["enhance_package_data"] = True
+        enhanced_response = self.client.post('/api/packages/filter_by_checksums/', data=data)
+        self.assertEqual(5, len(enhanced_response.data['results']))
+        expected = self.get_test_loc('api/package-filter_by_checksums-enhanced-package-data-expected.json')
+        self.check_expected_results(enhanced_response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=False)
 
 
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
