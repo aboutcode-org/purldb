@@ -269,9 +269,14 @@ def _call_scan_get_api(
     exception on error.
     """
     scan_url = get_scan_url(scan_uuid, api_url=api_url, suffix=endpoint)
-    response = requests.get(url=scan_url, timeout=timeout, headers=api_auth_headers)
-    if not response.ok:
-        response.raise_for_status()
+    try:
+        response = requests.get(url=scan_url, timeout=timeout, headers=api_auth_headers)
+        if not response.ok:
+            response.raise_for_status()
+    except Exception:
+        # Ensure that exceptions are passed up the call stack, so they can be
+        # caught when _call_scan_get_api is called by another function.
+        raise
     return response.json()
 
 
