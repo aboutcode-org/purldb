@@ -513,30 +513,22 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             }
             return Response(response_data)
 
+        enhance_package_data = data.pop('enhance_package_data', False)
         q = Q()
         for field, value in data.items():
             # We create this intermediate dictionary so we can modify the field
             # name to have __in at the end
-            if field in ["enhance_package_data"]:
-                continue
             d = {f'{field}__in': value}
             q |= Q(**d)
 
         qs = Package.objects.filter(q)
         paginated_qs = self.paginate_queryset(qs)
-        enhance_package_data = data.get("enhance_package_data", False)
         if enhance_package_data:
-            package_data = []
-            for package in qs:
-                enhanced_package = get_enhanced_package(package=package)
-                if enhanced_package:
-                    package_data.append(enhanced_package)
-                else:
-                    package_data.append(package.to_dict())
-            paginated_response = self.get_paginated_response(package_data)
-            return paginated_response
-        serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
-        return self.get_paginated_response(serializer.data)
+            serialized_package_data = [get_enhanced_package(package=package) for package in paginated_qs]
+        else:
+            serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
+            serialized_package_data = serializer.data
+        return self.get_paginated_response(serialized_package_data)
 
 
 UPDATEABLE_FIELDS = [
@@ -597,8 +589,16 @@ def get_enhanced_package(package):
     other packages in the same package_set.
     """
     package_content = package.package_content
-    if package_content == PackageContentType.SOURCE_REPO:
+    in_package_sets = package.package_sets.count() > 0
+    if (
+        not in_package_sets
+        or not package_content
+        or package_content == PackageContentType.SOURCE_REPO
+    ):
+        # Return unenhanced package data for packages that are not in a package
+        # set or are source repo packages.
         # Source repo packages can't really be enhanced much further, datawise
+        # and we can't enhance a package that is not in a package set.
         return package.to_dict()
     if package_content in [PackageContentType.BINARY, PackageContentType.SOURCE_ARCHIVE]:
         # Binary packages can only be part of one set
