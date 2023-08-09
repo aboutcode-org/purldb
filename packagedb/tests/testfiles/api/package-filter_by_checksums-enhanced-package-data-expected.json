@@ -201,7 +201,7 @@
     "copyright":"BACC",
     "holder":null,
     "declared_license_expression":"MIT",
-    "declared_license_expression_spdx":null,
+    "declared_license_expression_spdx":"MIT",
     "license_detections":[],
     "other_license_expression":null,
     "other_license_expression_spdx":null,
