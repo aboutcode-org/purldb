@@ -26,7 +26,7 @@
     "copyright":null,
     "holder":null,
     "declared_license_expression":"Unknown",
-    "declared_license_expression_spdx":null,
+    "declared_license_expression_spdx":"LicenseRef-scancode-unknown",
     "license_detections":[],
     "other_license_expression":null,
     "other_license_expression_spdx":null,

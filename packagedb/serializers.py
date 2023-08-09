@@ -167,6 +167,8 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
     url = HyperlinkedIdentityField(view_name='api:package-detail', lookup_field='uuid')
     package_sets = PackageSetAPISerializer(many=True)
     package_content = SerializerMethodField()
+    declared_license_expression_spdx = CharField()
+    other_license_expression_spdx = CharField()
 
     class Meta:
         model = Package
@@ -262,6 +264,8 @@ class PackageMetadataSerializer(ModelSerializer):
     parties = PartySerializer(many=True)
     package_sets = PackageSetMetadataSerializer(many=True)
     package_content = SerializerMethodField()
+    declared_license_expression_spdx = CharField()
+    other_license_expression_spdx = CharField()
 
     class Meta:
         model = Package

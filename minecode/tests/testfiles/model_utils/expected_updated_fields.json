@@ -80,11 +80,6 @@
     "new_value":"apache-2.0"
   },
   {
-    "field":"declared_license_expression_spdx",
-    "old_value":null,
-    "new_value":"Apache-2.0"
-  },
-  {
     "field":"license_detections",
     "old_value":[],
     "new_value":[
