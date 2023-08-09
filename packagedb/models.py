@@ -1061,11 +1061,5 @@ class PackageSet(models.Model):
     def get_package_set_members(self):
         """Return related Packages"""
         return self.packages.order_by(
-            'type',
-            'namespace',
-            'name',
-            'version',
-            'qualifiers',
-            'subpath',
             'package_content',
         )

@@ -503,7 +503,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         data = dict(request.data)
         unsupported_fields = []
         for field, value in data.items():
-            if field not in ('md5', 'sha1', 'sha256', 'sha512'):
+            if field not in ('md5', 'sha1', 'sha256', 'sha512', 'enhance_package_data'):
                 unsupported_fields.append(field)
 
         if unsupported_fields:
@@ -517,12 +517,14 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         for field, value in data.items():
             # We create this intermediate dictionary so we can modify the field
             # name to have __in at the end
+            if field in ["enhance_package_data"]:
+                continue
             d = {f'{field}__in': value}
             q |= Q(**d)
 
         qs = Package.objects.filter(q)
         paginated_qs = self.paginate_queryset(qs)
-        enhance_package_data = request.query_params.get('enhance_package_data', False)
+        enhance_package_data = data.get("enhance_package_data", False)
         if enhance_package_data:
             package_data = []
             for package in qs:

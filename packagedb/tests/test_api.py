@@ -530,16 +530,17 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
             'testsha1-6',
         ]
         data = {
-            'sha1': sha1s
+            'sha1': sha1s,
         }
-        enhanced_response = self.client.post('/api/packages/filter_by_checksums/?enhance_package_data=true', data=data)
-        self.assertEqual(5, len(enhanced_response.data['results']))
-        expected = self.get_test_loc('api/package-filter_by_checksums-enhanced-package-data-expected.json')
-        self.check_expected_results(enhanced_response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=True)
         response = self.client.post('/api/packages/filter_by_checksums/', data=data)
         self.assertEqual(5, response.data['count'])
         expected = self.get_test_loc('api/package-filter_by_checksums-expected.json')
-        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=True)
+        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=False)
+        data["enhance_package_data"] = True
+        enhanced_response = self.client.post('/api/packages/filter_by_checksums/', data=data)
+        self.assertEqual(5, len(enhanced_response.data['results']))
+        expected = self.get_test_loc('api/package-filter_by_checksums-enhanced-package-data-expected.json')
+        self.check_expected_results(enhanced_response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=False)
 
 
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
