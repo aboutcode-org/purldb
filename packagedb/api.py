@@ -661,30 +661,30 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PackageSetAPISerializer
 
 def get_resolved_purls(purls):
-    unique_resolved_purls = []
-    unsupported_purls = []
-    unsupported_vers =[]
+    unique_resolved_purls = set()
+    unsupported_purls = set()
+    unsupported_vers = set()
 
-    for items in purls:
+    for items in purls or []:
         purl = items.get('purl')
         vers = items.get('vers')
         
         try:
             parsed_purl = PackageURL.from_string(purl)
         except ValueError:
-            unsupported_purls.append(purl)
+            unsupported_purls.add(purl)
             continue
 
         if parsed_purl.version:
-            unique_resolved_purls.append(purl)
+            unique_resolved_purls.add(purl)
             continue
 
         if resolved:= resolve_verse(parsed_purl, vers):
-            unique_resolved_purls.extend(resolved)
+            unique_resolved_purls.update(resolved)
         else:
-            unsupported_vers.append(vers)
+            unsupported_vers.add(vers)
 
-    return set(unique_resolved_purls), set(unsupported_purls), set(unsupported_vers)
+    return list(unique_resolved_purls), list(unsupported_purls), list(unsupported_vers)
 
 
 
