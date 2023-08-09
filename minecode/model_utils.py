@@ -67,7 +67,11 @@ def merge_packages(existing_package, new_package_data, replace=False):
 
     new_mapping = new_package_data
 
-    fields_to_skip = ('package_uid',)
+    fields_to_skip = (
+        'package_uid',
+        'declared_license_expression_spdx',
+        'other_license_expression_spdx',
+    )
     updated_fields = []
 
     for existing_field, existing_value in existing_mapping.items():
@@ -327,10 +331,8 @@ def merge_or_create_package(scanned_package, visit_level):
             copyright=scanned_package.copyright,
             holder=scanned_package.holder,
             declared_license_expression=scanned_package.declared_license_expression,
-            declared_license_expression_spdx=scanned_package.declared_license_expression_spdx,
             license_detections=scanned_package.license_detections,
             other_license_expression=scanned_package.other_license_expression,
-            other_license_expression_spdx=scanned_package.other_license_expression_spdx,
             other_license_detections=scanned_package.other_license_detections,
             extracted_license_statement=scanned_package.extracted_license_statement,
             notice_text=scanned_package.notice_text,

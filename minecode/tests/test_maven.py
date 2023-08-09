@@ -843,7 +843,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         maven_visitor.merge_ancestors(ancestor_pom_texts, package)
         expected_after_loc = self.get_test_loc('maven/pom/pulsar-client-1x-2.5.1-package_after.json')
         self.check_expected_results(package.to_dict(), expected_after_loc, regen=regen)
-    
+
     @mock.patch("minecode.visitors.maven.get_pom_text")
     def test_get_merged_ancestor_package_from_maven_package(self, get_pom_text_mock, regen=False):
         get_pom_text_mock.return_value = ""

@@ -21,6 +21,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from licensedcode.cache import build_spdx_license_expression
 from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
@@ -57,7 +58,7 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
             return self.get(*args, **kwargs)
         except self.DoesNotExist:
             return
-    
+
     def paginated(self, per_page=5000):
         """
         Iterate over a (large) QuerySet by chunks of ``per_page`` items.
@@ -359,14 +360,6 @@ class AbstractPackage(models.Model):
             "routine or convention."
         ),
     )
-    declared_license_expression_spdx = models.TextField(
-        blank=True,
-        null=True,
-        help_text=_(
-            "The SPDX license expression for this package converted "
-            "from its declared_license_expression."
-        ),
-    )
     license_detections = models.JSONField(
         default=list,
         blank=True,
@@ -384,14 +377,6 @@ class AbstractPackage(models.Model):
             "The license expression for this package which is different from the "
             "declared_license_expression, (i.e. not the primary license) "
             "routine or convention."
-        ),
-    )
-    other_license_expression_spdx = models.TextField(
-        blank=True,
-        null=True,
-        help_text=_(
-            "The other SPDX license expression for this package converted "
-            "from its other_license_expression."
         ),
     )
     other_license_detections = models.JSONField(
@@ -441,6 +426,18 @@ class AbstractPackage(models.Model):
 
     class Meta:
         abstract = True
+
+    @property
+    def declared_license_expression_spdx(self):
+        declared_license_expression = self.declared_license_expression
+        if declared_license_expression:
+            return build_spdx_license_expression(declared_license_expression)
+
+    @property
+    def other_license_expression_spdx(self):
+        other_license_expression = self.other_license_expression
+        if other_license_expression:
+            return build_spdx_license_expression(other_license_expression)
 
 
 class PackageContentType(models.IntegerChoices):

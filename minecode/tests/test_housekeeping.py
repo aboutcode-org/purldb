@@ -36,7 +36,7 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
         packagedb.models.Package.objects.create(
             download_url='http://example.com',
             name='Foo',
-            declared_license_expression='apache and unknown',
+            declared_license_expression='apache-2.0 and unknown',
             type='maven'
         )
         packages = [p.to_dict() for p in find_ambiguous_packages()]
@@ -47,7 +47,7 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
         packagedb.models.Package.objects.create(
             download_url='http://example.com',
             name='Foo',
-            declared_license_expression='apache and unknown',
+            declared_license_expression='apache-2.0 and unknown',
             type='maven'
         )
         packages = [p.to_dict() for p in find_ambiguous_packages()]
@@ -72,7 +72,7 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
         packagedb.models.Package.objects.create(
             download_url='http://example.com',
             name='Foo',
-            declared_license_expression='apache and unknown',
+            declared_license_expression='apache-2.0 and unknown',
             type='maven'
         )
         results_loc = self.get_temp_file()
