@@ -26,6 +26,8 @@ from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
 from packagedb.models import Resource
 
+from unittest import mock
+from univers.versions import MavenVersion
 
 class ResourceAPITestCase(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
@@ -442,6 +444,59 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
             'pkg:bitbucket/example/example@1.0.0'
         ]
         self.assertEqual(expected_unsupported_packages, response.data['unsupported_packages'])
+
+    @mock.patch("packagedb.api.get_all_versions")
+    def test_package_api_index_packages_endpoint_with_vers(self, mock_get_all_versions):
+        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
+        self.assertEqual(0, priority_resource_uris_count)
+        packages = [
+            {
+                "purl": "pkg:maven/ch.qos.reload4j/reload4j",
+                "vers": "vers:maven/>=1.2.18.2|<=1.2.23",
+            },
+        ]
+        data = {"packages": packages}
+
+        mock_get_all_versions.return_value = [
+            MavenVersion("1.2.18.0"),
+            MavenVersion("1.2.18.1"),
+            MavenVersion("1.2.18.2"),
+            MavenVersion("1.2.18.3"),
+            MavenVersion("1.2.18.4"),
+            MavenVersion("1.2.18.5"),
+            MavenVersion("1.2.19"),
+            MavenVersion("1.2.20"),
+            MavenVersion("1.2.21"),
+            MavenVersion("1.2.22"),
+            MavenVersion("1.2.23"),
+            MavenVersion("1.2.24"),
+            MavenVersion("1.2.25"),
+        ]
+
+        response = self.client.post(
+            "/api/packages/index_packages/", data=data, format="json"
+        )
+        self.assertEqual(9, response.data["queued_packages_count"])
+
+        expected_queued_packages = [
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.2",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.3",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.4",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.5",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.19",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.20",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.21",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.22",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.23",
+        ]
+        self.assertEqual(
+            sorted(expected_queued_packages), sorted(response.data["queued_packages"])
+        )
+        self.assertEqual(0, response.data["unqueued_packages_count"])
+        self.assertEqual([], response.data["unqueued_packages"])
+        self.assertEqual(0, response.data["unsupported_packages_count"])
+        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
+        self.assertEqual(9, priority_resource_uris_count)
 
     def test_package_api_filter_by_checksums(self):
         sha1s = [

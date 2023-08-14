@@ -39,6 +39,8 @@ from packagedb.serializers import ResourceAPISerializer
 from packagedb.serializers import PackageAPISerializer
 from packagedb.serializers import PackageSetAPISerializer
 from packagedb.serializers import PartySerializer
+from packagedb.package_managers import get_api_package_name
+from packagedb.package_managers import get_version_fetcher
 from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
 
 from univers import versions
@@ -361,8 +363,20 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=['post'])
     def index_packages(self, request, *args, **kwargs):
         """
-        Take a list of `package_urls` and add them to the package indexing
-        queue. Then return a mapping containing:
+        Take a list of dictionary where each dictionary has either resolved PURL i.e. PURL with
+        version or version-less PURL along with vers range. Then return a mapping containing
+
+        Input example:
+            [
+                {
+                    "purl": "pkg:npm/foobar@12.3.1",
+                },
+                {
+                    "purl": "pkg:npm/foobar",
+                    "vers": "vers:npm/>=1.0.0|<=4.1.0"
+                }
+                ...
+            ]
 
         - queued_packages_count
             - The number of package urls placed on the queue.
@@ -703,7 +717,7 @@ def resolve_verse(parsed_purl, vers):
         str(
             PackageURL(
                 type=parsed_purl.type,
-                namespace=parsed_purl.type,
+                namespace=parsed_purl.namespace,
                 name=parsed_purl.name,
                 version=version.string,
             )
@@ -719,20 +733,13 @@ def get_all_versions(purl: PackageURL):
     ):
         return
 
-    versionAPI = None
-    package_name = None
+    package_name = get_api_package_name(purl)
+    versionAPI = get_version_fetcher(purl)
+    
+    if not package_name or not versionAPI:
+        return    
 
-    if purl.type == "maven":
-        package_name = f"{purl.namespace}:{purl.name}"
-    if purl.type in ("composer", "golang", "npm"):
-        package_name = f"{purl.namespace}/{purl.name}"
-    if purl.type in ("nuget", "pypi", "gem", "hex", "deb", "cargo"):
-        package_name = purl.name
-
-    versionAPI = VERSION_API_CLASSES_BY_PACKAGE_TYPE.get(purl.type)()
-
-    all_versions = versionAPI.fetch(package_name)
-
+    all_versions = versionAPI().fetch(package_name)
     versionClass = VERSION_CLASS_BY_PACKAGE_TYPE.get(purl.type)
 
     return [versionClass(package_version.value) for package_version in all_versions]
