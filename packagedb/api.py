@@ -39,6 +39,15 @@ from packagedb.serializers import ResourceAPISerializer
 from packagedb.serializers import PackageAPISerializer
 from packagedb.serializers import PackageSetAPISerializer
 from packagedb.serializers import PartySerializer
+from packagedb.package_managers import get_api_package_name
+from packagedb.package_managers import get_version_fetcher
+from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
+
+from univers import versions
+from univers.version_range import RANGE_CLASS_BY_SCHEMES
+from univers.version_range import InvalidVersionRange
+from univers.version_range import VersionRange
+
 
 class PackageResourcePurlFilter(Filter):
     def filter(self, qs, value):
@@ -355,8 +364,20 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=['post'])
     def index_packages(self, request, *args, **kwargs):
         """
-        Take a list of `package_urls` and add them to the package indexing
-        queue. Then return a mapping containing:
+        Take a list of dictionary where each dictionary has either resolved PURL i.e. PURL with
+        version or version-less PURL along with vers range. Then return a mapping containing
+
+        Input example:
+            [
+                {
+                    "purl": "pkg:npm/foobar@12.3.1",
+                },
+                {
+                    "purl": "pkg:npm/foobar",
+                    "vers": "vers:npm/>=1.0.0|<=4.1.0"
+                }
+                ...
+            ]
 
         - queued_packages_count
             - The number of package urls placed on the queue.
@@ -373,12 +394,19 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         - unsupported_packages
             - A list of package urls that are not processable by the queue. The
               package indexing queue can only handle npm and maven purls.
+        - unqueued_packages
+            - A list of package urls that were not placed on the queue.
+        - unsupported_vers_count
+            - The number of vers range that are not supported by the univers or package_manager.
+        - unsupported_vers
+            - A list of vers range that are not supported by the univers or package_manager.
         """
-        purls = request.data.getlist('package_urls')
-        unique_purls = set(purls)
+
+        packages = request.data.get('packages') or []
         queued_packages = []
         unqueued_packages = []
-        unsupported_packages = []
+
+        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages)
 
         for purl in unique_purls:
             is_routable_purl = priority_router.is_routable(purl)
@@ -398,6 +426,8 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             'unqueued_packages': unqueued_packages,
             'unsupported_packages_count': len(unsupported_packages),
             'unsupported_packages': unsupported_packages,
+            'unsupported_vers_count': len(unsupported_vers),
+            'unsupported_vers': unsupported_vers,
         }
         return Response(response_data)
 
@@ -650,3 +680,89 @@ def _get_enhanced_package(package, packages):
 class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PackageSet.objects.prefetch_related('packages')
     serializer_class = PackageSetAPISerializer
+
+
+def get_resolved_purls(packages):
+    """
+    Take a list of dict containing purl or version-less purl along with vers
+    and return a list of resolved purls, a list of unsupported purls, and a 
+    list of unsupported vers.
+    """
+    unique_resolved_purls = set()
+    unsupported_purls = set()
+    unsupported_vers = set()
+
+    for items in packages or []:
+        purl = items.get('purl')
+        vers = items.get('vers')
+        
+        try:
+            parsed_purl = PackageURL.from_string(purl)
+        except ValueError:
+            unsupported_purls.add(purl)
+            continue
+
+        if parsed_purl.version:
+            unique_resolved_purls.add(purl)
+            continue
+
+        if resolved:= resolve_versions(parsed_purl, vers):
+            unique_resolved_purls.update(resolved)
+        else:
+            unsupported_vers.add(vers)
+
+    return list(unique_resolved_purls), list(unsupported_purls), list(unsupported_vers)
+
+
+
+def resolve_versions(parsed_purl, vers):
+    """
+    Take version-less purl along with vers range and return
+    list of all the purls satisfying the vers range.
+    """
+    try:
+        version_range = VersionRange.from_string(vers)
+    except ValueError:
+        return
+
+    if not version_range.constraints:
+        return
+
+    all_versions = get_all_versions(parsed_purl) or []
+
+    return [
+        str(
+            PackageURL(
+                type=parsed_purl.type,
+                namespace=parsed_purl.namespace,
+                name=parsed_purl.name,
+                version=version.string,
+            )
+        )
+        for version in all_versions
+        if version in version_range
+    ]
+
+def get_all_versions(purl: PackageURL):
+    """
+    Return all the versions available for the given purls.
+    """
+    if (
+        purl.type not in VERSION_API_CLASSES_BY_PACKAGE_TYPE
+        or purl.type not in VERSION_CLASS_BY_PACKAGE_TYPE
+    ):
+        return
+
+    package_name = get_api_package_name(purl)
+    versionAPI = get_version_fetcher(purl)
+    
+    if not package_name or not versionAPI:
+        return    
+
+    all_versions = versionAPI().fetch(package_name)
+    versionClass = VERSION_CLASS_BY_PACKAGE_TYPE.get(purl.type)
+
+    return [versionClass(package_version.value) for package_version in all_versions]
+
+
+VERSION_CLASS_BY_PACKAGE_TYPE = {pkg_type: range_class.version_class for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()}
