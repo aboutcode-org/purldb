@@ -75,6 +75,7 @@ def get_response(url, content_type="json", headers=None):
     elif content_type == "json":
         return resp.json()
 
+
 def get_item(dictionary: dict, *attributes):
     """
     Return `item` by going through all the `attributes` present in the `dictionary`
@@ -97,6 +98,7 @@ def get_item(dictionary: dict, *attributes):
             return
         dictionary = dictionary[attribute]
     return dictionary
+
 
 class VersionAPI:
     """
@@ -200,12 +202,13 @@ class PypiVersionAPI(VersionAPI):
             release_date = self.get_latest_date(download_items)
             yield PackageVersion(
                 value=version,
+                # 
                 release_date=release_date,
             )
 
     def get_latest_date(self, downloads):
         """
-        Return the latest date from a list of mapping of PyPI ``downloadss`` or  None.
+        Return the latest date from a list of mapping of PyPI ``downloads`` or  None.
 
         The data has this shape:
         [
@@ -595,6 +598,7 @@ VERSION_API_CLASSES = {
     DebianVersionAPI,
     ConanVersionAPI,
 }
+
 
 VERSION_API_CLASSES_BY_PACKAGE_TYPE = {cls.package_type: cls for cls in VERSION_API_CLASSES}
 

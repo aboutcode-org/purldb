@@ -48,6 +48,7 @@ from univers.version_range import RANGE_CLASS_BY_SCHEMES
 from univers.version_range import InvalidVersionRange
 from univers.version_range import VersionRange
 
+
 class PackageResourcePurlFilter(Filter):
     def filter(self, qs, value):
         if not value:
@@ -401,11 +402,11 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             - A list of vers range that are not supported by the univers or package_manager.
         """
 
-        purls = request.data.get('packages')
+        packages = request.data.get('packages') or []
         queued_packages = []
         unqueued_packages = []
 
-        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(purls)
+        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages)
 
         for purl in unique_purls:
             is_routable_purl = priority_router.is_routable(purl)
@@ -674,12 +675,18 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PackageSet.objects.prefetch_related('packages')
     serializer_class = PackageSetAPISerializer
 
-def get_resolved_purls(purls):
+
+def get_resolved_purls(packages):
+    """
+    Take a list of dict containing purl or version-less purl along with vers
+    and return a list of resolved purls, a list of unsupported purls, and a 
+    list of unsupported vers.
+    """
     unique_resolved_purls = set()
     unsupported_purls = set()
     unsupported_vers = set()
 
-    for items in purls or []:
+    for items in packages or []:
         purl = items.get('purl')
         vers = items.get('vers')
         
@@ -693,7 +700,7 @@ def get_resolved_purls(purls):
             unique_resolved_purls.add(purl)
             continue
 
-        if resolved:= resolve_verse(parsed_purl, vers):
+        if resolved:= resolve_versions(parsed_purl, vers):
             unique_resolved_purls.update(resolved)
         else:
             unsupported_vers.add(vers)
@@ -702,7 +709,11 @@ def get_resolved_purls(purls):
 
 
 
-def resolve_verse(parsed_purl, vers):
+def resolve_versions(parsed_purl, vers):
+    """
+    Take version-less purl along with vers range and return
+    list of all the purls satisfying the vers range.
+    """
     try:
         version_range = VersionRange.from_string(vers)
     except ValueError:
@@ -727,6 +738,9 @@ def resolve_verse(parsed_purl, vers):
     ]
 
 def get_all_versions(purl: PackageURL):
+    """
+    Return all the versions available for the given purls.
+    """
     if (
         purl.type not in VERSION_API_CLASSES_BY_PACKAGE_TYPE
         or purl.type not in VERSION_CLASS_BY_PACKAGE_TYPE
@@ -745,15 +759,4 @@ def get_all_versions(purl: PackageURL):
     return [versionClass(package_version.value) for package_version in all_versions]
 
 
-VERSION_CLASS_BY_PACKAGE_TYPE = {
-    "cargo": versions.SemverVersion,
-    "composer": versions.ComposerVersion,
-    "deb": versions.DebianVersion,
-    "gem": versions.RubygemsVersion,
-    "golang": versions.GolangVersion,
-    "hex": versions.SemverVersion,
-    "maven": versions.MavenVersion,
-    "npm": versions.SemverVersion,
-    "nuget": versions.NugetVersion,
-    "pypi": versions.PypiVersion,
-}
+VERSION_CLASS_BY_PACKAGE_TYPE = {pkg_type: range_class.version_class for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()}
