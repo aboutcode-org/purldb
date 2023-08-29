@@ -696,10 +696,13 @@ def get_resolved_purls(packages):
         purl = items.get('purl')
         vers = items.get('vers')
 
+        if not purl:
+            continue
+
         try:
             parsed_purl = PackageURL.from_string(purl)
         except ValueError:
-            unsupported_purls.add(purl) if purl else None
+            unsupported_purls.add(purl)
             continue
 
         if parsed_purl.version:
