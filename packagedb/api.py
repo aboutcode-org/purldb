@@ -695,15 +695,19 @@ def get_resolved_purls(packages):
     for items in packages or []:
         purl = items.get('purl')
         vers = items.get('vers')
-        
+
         try:
             parsed_purl = PackageURL.from_string(purl)
         except ValueError:
-            unsupported_purls.add(purl)
+            unsupported_purls.add(purl) if purl else None
             continue
 
         if parsed_purl.version:
             unique_resolved_purls.add(purl)
+            continue
+
+        if not vers:
+            unsupported_purls.add(purl)
             continue
 
         if resolved:= resolve_versions(parsed_purl, vers):
@@ -720,6 +724,9 @@ def resolve_versions(parsed_purl, vers):
     Take version-less purl along with vers range and return
     list of all the purls satisfying the vers range.
     """
+    if not parsed_purl or not vers:
+        return
+
     try:
         version_range = VersionRange.from_string(vers)
     except ValueError:
