@@ -12,6 +12,14 @@ import binascii
 from matchcode_toolkit.halohash import BitAverageHaloHash
 
 
+# A collection of directory fingerprints that we want to avoid
+IGNORED_DIRECTORY_FINGERPRINTS = [
+    # This is both the directory content and directory structure fingerprint for
+    # an empty directory.
+    '0000000000000000000000000000000000000000',
+]
+
+
 def _create_directory_fingerprint(inputs):
     """
     Return a 128-bit BitAverageHaloHash fingerprint in hex from `inputs`

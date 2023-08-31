@@ -5,6 +5,7 @@ v1.1.3
 ------
 
 *2023-08-31* -- Do not fingerprint empty directories.
+*2023-08-31* -- Track fingerprints to ignore in ``matchcode_toolkit.fingerprinting.IGNORED_DIRECTORY_FINGERPRINTS``.
 
 v1.1.2
 ------
