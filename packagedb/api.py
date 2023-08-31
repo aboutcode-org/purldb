@@ -531,9 +531,11 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         This will return Packages whose sha1 or md5 matches those values.
         """
         data = dict(request.data)
+
         unsupported_fields = []
+        supported_fields = ['md5', 'sha1', 'sha256', 'sha512', 'enhance_package_data']
         for field, value in data.items():
-            if field not in ('md5', 'sha1', 'sha256', 'sha512', 'enhance_package_data'):
+            if field not in supported_fields:
                 unsupported_fields.append(field)
 
         if unsupported_fields:
@@ -544,21 +546,21 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             return Response(response_data)
 
         enhance_package_data = data.pop('enhance_package_data', False)
-        lookups = []
+        if not data:
+            response_data = {
+                'status': 'No values provided'
+            }
+            return Response(response_data)
+
+        lookups = Q()
         for field, value in data.items():
+            value = value or []
             # We create this intermediate dictionary so we can modify the field
             # name to have __in at the end
             d = {f'{field}__in': value}
-            lookups.append(Q(**d))
+            lookups |= Q(**d)
 
-        if not lookups:
-            return self.get_paginated_response({})
-        else:
-            q = Q()
-            for lookup in lookups:
-                q |= lookup
-
-        qs = Package.objects.filter(q)
+        qs = Package.objects.filter(lookups)
         paginated_qs = self.paginate_queryset(qs)
         if enhance_package_data:
             serialized_package_data = [get_enhanced_package(package=package) for package in paginated_qs]
