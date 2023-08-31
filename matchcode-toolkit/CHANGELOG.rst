@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.1.3
+------
+
+*2023-08-31* -- Do not fingerprint empty directories.
+
 v1.1.2
 ------
 
