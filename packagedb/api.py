@@ -531,9 +531,11 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         This will return Packages whose sha1 or md5 matches those values.
         """
         data = dict(request.data)
+
         unsupported_fields = []
+        supported_fields = ['md5', 'sha1', 'sha256', 'sha512', 'enhance_package_data']
         for field, value in data.items():
-            if field not in ('md5', 'sha1', 'sha256', 'sha512', 'enhance_package_data'):
+            if field not in supported_fields:
                 unsupported_fields.append(field)
 
         if unsupported_fields:
@@ -544,14 +546,21 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             return Response(response_data)
 
         enhance_package_data = data.pop('enhance_package_data', False)
-        q = Q()
+        if not data:
+            response_data = {
+                'status': 'No values provided'
+            }
+            return Response(response_data)
+
+        lookups = Q()
         for field, value in data.items():
+            value = value or []
             # We create this intermediate dictionary so we can modify the field
             # name to have __in at the end
             d = {f'{field}__in': value}
-            q |= Q(**d)
+            lookups |= Q(**d)
 
-        qs = Package.objects.filter(q)
+        qs = Package.objects.filter(lookups)
         paginated_qs = self.paginate_queryset(qs)
         if enhance_package_data:
             serialized_package_data = [get_enhanced_package(package=package) for package in paginated_qs]
@@ -685,7 +694,7 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
 def get_resolved_purls(packages):
     """
     Take a list of dict containing purl or version-less purl along with vers
-    and return a list of resolved purls, a list of unsupported purls, and a 
+    and return a list of resolved purls, a list of unsupported purls, and a
     list of unsupported vers.
     """
     unique_resolved_purls = set()
@@ -765,9 +774,9 @@ def get_all_versions(purl: PackageURL):
 
     package_name = get_api_package_name(purl)
     versionAPI = get_version_fetcher(purl)
-    
+
     if not package_name or not versionAPI:
-        return    
+        return
 
     all_versions = versionAPI().fetch(package_name)
     versionClass = VERSION_CLASS_BY_PACKAGE_TYPE.get(purl.type)

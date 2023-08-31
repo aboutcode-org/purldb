@@ -105,3 +105,22 @@ class TestFingerprintingFunctions(FileBasedTesting):
         expected_directory_structure = '000000034f9bf110673bdf06197cd514a799a66c'
         self.assertEqual(expected_directory_content, directory_content)
         self.assertEqual(expected_directory_structure, directory_structure)
+
+    def test_do_not_compute_fingerprint_for_empty_dirs(self):
+        scan_loc = self.get_test_loc('test.json')
+        vc = VirtualCodebase(location=scan_loc)
+        vc = compute_codebase_directory_fingerprints(vc)
+        directory_content = vc.root.extra_data['directory_content']
+        directory_structure = vc.root.extra_data['directory_structure']
+        expected_directory_content = '000000032a5fa8d01922536b53e8fc6e3d43766f'
+        expected_directory_structure = '000000030a399ce2b947a6f611821965a4fcc577'
+        self.assertEqual(expected_directory_content, directory_content)
+        self.assertEqual(expected_directory_structure, directory_structure)
+        # These directories should not have fingerprints generated or stored in
+        # extra_data
+        empty_dir_1 = vc.get_resource('test/test')
+        empty_dir_2 = vc.get_resource('test/test/test2')
+        self.assertEqual({}, empty_dir_1.extra_data)
+        self.assertEqual({}, empty_dir_1.extra_data)
+        self.assertEqual({}, empty_dir_2.extra_data)
+        self.assertEqual({}, empty_dir_2.extra_data)
