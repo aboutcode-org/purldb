@@ -141,14 +141,21 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
             }
             return Response(response_data)
 
-        q = Q()
+        if not data:
+            response_data = {
+                'status': 'No values provided'
+            }
+            return Response(response_data)
+
+        lookups = Q()
         for field, value in data.items():
+            value = value or []
             # We create this intermediate dictionary so we can modify the field
             # name to have __in at the end
             d = {f'{field}__in': value}
-            q |= Q(**d)
+            lookups |= Q(**d)
 
-        qs = Resource.objects.filter(q)
+        qs = Resource.objects.filter(lookups)
         paginated_qs = self.paginate_queryset(qs)
         serializer = ResourceAPISerializer(paginated_qs, many=True, context={'request': request})
         return self.get_paginated_response(serializer.data)
