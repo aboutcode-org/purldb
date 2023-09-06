@@ -13,7 +13,9 @@ import hashlib
 import io
 import json
 import logging
+import re
 from typing import Dict
+from urllib.parse import urlparse
 
 import arrow
 import requests
@@ -305,7 +307,7 @@ def map_maven_package(package_url, package_content):
         ancestor_pom_texts=ancestor_pom_texts,
         package=package
     )
-    
+
 
     urls = get_urls(
         namespace=package_url.namespace,
@@ -451,6 +453,157 @@ def process_request(purl_str):
         error = map_maven_packages(package_url)
 
     return error
+
+
+collect_links = re.compile('href="([^"]+)"').findall
+
+
+def check_if_file_name_is_linked_on_page(file_name, links, **kwargs):
+    """
+    Return True if `file_name` is in `links`
+    """
+    return any(l.endswith(file_name) for l in links)
+
+
+def check_if_page_has_pom_files(links, **kwargs):
+    """
+    Return True of any entry in `links` ends with .pom.
+    """
+    return any(l.endswith('.pom') for l in links)
+
+
+def check_if_page_has_directories(links, **kwargs):
+    """
+    Return True if any entry, excluding "../", ends with /.
+    """
+    return any(l.endswith('/') for l in links if l != '../')
+
+
+def check_if_package_version_page(links, **kwargs):
+    """
+    Return True if `links` contains pom files and has no directories
+    """
+    return (
+        check_if_page_has_pom_files(links=links)
+        and not check_if_page_has_directories(links=links)
+    )
+
+
+def check_if_package_page(links, **kwargs):
+    return (
+        check_if_file_name_is_linked_on_page(file_name='maven-metadata.xml', links=links)
+        and not check_if_page_has_pom_files(links=links)
+    )
+
+
+def check_if_maven_root(links, **kwargs):
+    """
+    Return True if "archetype-catalog.xml" is in `links`, as the root of a Maven
+    repo contains "archetype-catalog.xml".
+    """
+    return check_if_file_name_is_linked_on_page(file_name='archetype-catalog.xml', links=links)
+
+
+def check_on_page(url, checker):
+    """
+    Return True if there is a link on `url` that is the same as `file_name`,
+    False otherwise.
+    """
+    response = requests.get(url)
+    if response:
+        links = collect_links(response.text)
+        return checker(links=links)
+    return False
+
+
+def is_maven_root(url):
+    """
+    Return True if `url` is the root of a Maven repo, False otherwise.
+    """
+    return check_on_page(url, check_if_maven_root)
+
+
+def is_package_page(url):
+    """
+    Return True if `url` is a package page on a Maven repo, False otherwise.
+    """
+    return check_on_page(url, check_if_package_page)
+
+
+def is_package_version_page(url):
+    """
+    Return True if `url` is a package version page on a Maven repo, False otherwise.
+    """
+    return check_on_page(url, check_if_package_version_page)
+
+
+def url_parts(url):
+    parsed_url = urlparse(url)
+    scheme = parsed_url.scheme
+    netloc = parsed_url.netloc
+    path_segments = [p for p in parsed_url.path.split('/') if p]
+    return scheme, netloc, path_segments
+
+
+def create_url(scheme, netloc, path_segments):
+    url_template = f'{scheme}://{netloc}'
+    path = '/'.join(path_segments)
+    return f'{url_template}/{path}'
+
+
+def get_maven_root(url):
+    """
+    Given `url`, that is a URL to namespace, package, or artifact in a Maven
+    repo, return the URL to the root of that repo. If a Maven root cannot be
+    determined, return None.
+
+    >>> get_maven_root('https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/')
+    'https://repo1.maven.org/maven2'
+    """
+    scheme, netloc, path_segments = url_parts(url)
+    for i in range(len(path_segments)):
+        segments = path_segments[:i+1]
+        url_segment = create_url(scheme, netloc, segments)
+        if is_maven_root(url_segment):
+            return url_segment
+    return None
+
+
+def determine_namespace_name_version_from_url(url):
+    """
+    Return a 3-tuple containing strings of a Package namespace, name, and
+    version, determined from `url`, where `url` points to namespace, package,
+    specific package version, or artifact on a Maven repo.
+
+    Return None if a Maven root cannot be determined from `url`.
+
+    >>> determine_namespace_name_version_from_url('https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/')
+    ('net.shibboleth', 'parent', '7.11.0')
+    """
+    root_url = get_maven_root(url)
+    if not root_url:
+        raise Exception(f'Error: not a Maven repository: {url}')
+
+    _, remaining_path_segments = url.split(root_url)
+    remaining_path_segments = remaining_path_segments.split('/')
+    remaining_path_segments = [p for p in remaining_path_segments if p]
+
+    namespace_segments = []
+    package_name = ''
+    package_version = ''
+    for i in range(len(remaining_path_segments)):
+        segment = remaining_path_segments[i]
+        segments = remaining_path_segments[:i+1]
+        path = '/'.join(segments)
+        url_segment = f'{root_url}/{path}'
+        if is_package_page(url_segment):
+            package_name = segment
+        elif is_package_version_page(url_segment):
+            package_version = segment
+        else:
+            namespace_segments.append(segment)
+    namespace = '.'.join(namespace_segments)
+    return namespace, package_name, package_version
 
 
 @visit_router.route('http://repo1\.maven\.org/maven2/\.index/nexus-maven-repository-index.properties')
