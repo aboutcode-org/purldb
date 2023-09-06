@@ -45,7 +45,7 @@ from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
 
 from univers import versions
 from univers.version_range import RANGE_CLASS_BY_SCHEMES
-from univers.version_range import InvalidVersionRange
+from univers.versions import InvalidVersion
 from univers.version_range import VersionRange
 
 
@@ -750,7 +750,6 @@ def resolve_versions(parsed_purl, vers):
     all_versions = get_all_versions(parsed_purl) or []
 
     result = []
-
     for version in all_versions:
         try:
             if version in version_range:
@@ -783,10 +782,17 @@ def get_all_versions(purl: PackageURL):
     if not package_name or not versionAPI:
         return
 
-    all_versions = versionAPI().fetch(package_name)
+    all_versions = versionAPI().fetch(package_name) or []
     versionClass = VERSION_CLASS_BY_PACKAGE_TYPE.get(purl.type)
 
-    return [versionClass(package_version.value) for package_version in all_versions]
+    result = []
+    for package_version in all_versions:
+        try:
+            result.append(versionClass(package_version.value))
+        except InvalidVersion:
+            pass
+    
+    return result
 
 
 VERSION_CLASS_BY_PACKAGE_TYPE = {pkg_type: range_class.version_class for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()}
