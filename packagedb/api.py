@@ -749,18 +749,23 @@ def resolve_versions(parsed_purl, vers):
 
     all_versions = get_all_versions(parsed_purl) or []
 
-    return [
-        str(
-            PackageURL(
-                type=parsed_purl.type,
-                namespace=parsed_purl.namespace,
-                name=parsed_purl.name,
-                version=version.string,
-            )
-        )
-        for version in all_versions
-        if version in version_range
-    ]
+    result = []
+
+    for version in all_versions:
+        try:
+            if version in version_range:
+                package_url = PackageURL(
+                    type=parsed_purl.type,
+                    namespace=parsed_purl.namespace,
+                    name=parsed_purl.name,
+                    version=version.string,
+                )
+                result.append(str(package_url))
+        except Exception:
+            # Skip the ``Invalid constraints sequence`` Exception
+            pass
+
+    return result
 
 def get_all_versions(purl: PackageURL):
     """
