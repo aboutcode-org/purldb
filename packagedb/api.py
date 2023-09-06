@@ -405,8 +405,9 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         packages = request.data.get('packages') or []
         queued_packages = []
         unqueued_packages = []
+        supported_ecosystem = ["maven","npm"]
 
-        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages)
+        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages, supported_ecosystem)
 
         for purl in unique_purls:
             is_routable_purl = priority_router.is_routable(purl)
@@ -691,7 +692,7 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PackageSetAPISerializer
 
 
-def get_resolved_purls(packages):
+def get_resolved_purls(packages, supported_ecosystem):
     """
     Take a list of dict containing purl or version-less purl along with vers
     and return a list of resolved purls, a list of unsupported purls, and a
@@ -718,7 +719,7 @@ def get_resolved_purls(packages):
             unique_resolved_purls.add(purl)
             continue
 
-        if not vers:
+        if not vers or parsed_purl.type not in supported_ecosystem:
             unsupported_purls.add(purl)
             continue
 
