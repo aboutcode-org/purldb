@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import logging
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django_filters.rest_framework import FilterSet
@@ -48,6 +49,7 @@ from univers.version_range import RANGE_CLASS_BY_SCHEMES
 from univers.versions import InvalidVersion
 from univers.version_range import VersionRange
 
+logger = logging.getLogger(__name__)
 
 class PackageResourcePurlFilter(Filter):
     def filter(self, qs, value):
@@ -405,9 +407,9 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         packages = request.data.get('packages') or []
         queued_packages = []
         unqueued_packages = []
-        supported_ecosystem = ["maven","npm"]
+        supported_ecosystems = ["maven", "npm"]
 
-        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages, supported_ecosystem)
+        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages, supported_ecosystems)
 
         for purl in unique_purls:
             is_routable_purl = priority_router.is_routable(purl)
@@ -692,7 +694,7 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PackageSetAPISerializer
 
 
-def get_resolved_purls(packages, supported_ecosystem):
+def get_resolved_purls(packages, supported_ecosystems):
     """
     Take a list of dict containing purl or version-less purl along with vers
     and return a list of resolved purls, a list of unsupported purls, and a
@@ -719,7 +721,7 @@ def get_resolved_purls(packages, supported_ecosystem):
             unique_resolved_purls.add(purl)
             continue
 
-        if not vers or parsed_purl.type not in supported_ecosystem:
+        if not vers or parsed_purl.type not in supported_ecosystems:
             unsupported_purls.add(purl)
             continue
 
@@ -763,7 +765,8 @@ def resolve_versions(parsed_purl, vers):
                 result.append(str(package_url))
         except Exception:
             # Skip the ``Invalid constraints sequence`` Exception
-            pass
+            logger.warning(f"Invalid constraints sequence in '{vers}' for '{parsed_purl}'")
+            return
 
     return result
 
@@ -791,6 +794,7 @@ def get_all_versions(purl: PackageURL):
         try:
             result.append(versionClass(package_version.value))
         except InvalidVersion:
+            logger.warning(f"Invalid version '{package_version.value}' for '{purl}'")
             pass
     
     return result
