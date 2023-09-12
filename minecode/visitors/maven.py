@@ -569,7 +569,7 @@ def get_maven_root(url):
     return None
 
 
-def determine_namespace_name_version_from_url(url):
+def determine_namespace_name_version_from_url(url, root_url):
     """
     Return a 3-tuple containing strings of a Package namespace, name, and
     version, determined from `url`, where `url` points to namespace, package,
@@ -604,6 +604,164 @@ def determine_namespace_name_version_from_url(url):
             namespace_segments.append(segment)
     namespace = '.'.join(namespace_segments)
     return namespace, package_name, package_version
+
+
+def add_to_import_queue(url):
+    """
+    Create ImportableURI for the Maven repo package page at `url`.
+    """
+    from minecode.models import ImportableURI
+    data = None
+    response = requests.get(url)
+    if response:
+        data = response.text
+    importable_uri = ImportableURI.objects.insert(url, data)
+    if importable_uri:
+        logger.info(f'Inserted {url} into ImportableURI queue')
+
+
+def filter_only_directories(links):
+    return [l for l in links if l != '../' and l.endswith('/')]
+
+
+valid_artifact_extensions = [
+    'ejb3',
+    'ear',
+    'aar',
+    'apk',
+    'gem',
+    'jar',
+    'nar',
+    # 'pom',
+    'so',
+    'swc',
+    'tar',
+    'tar.gz',
+    'war',
+    'xar',
+    'zip',
+]
+
+
+def filter_for_artifacts(links):
+    artifacts = []
+    for l in links:
+        for ext in valid_artifact_extensions:
+            if l.endswith(ext):
+                artifacts.append(l)
+    return artifacts
+
+
+def collect_links_from_text(text, filter):
+    """
+    Return a list of link locations, given HTML `text` content, that is filtered
+    using `filter`.
+    """
+    links = collect_links(text)
+    links = filter(links=links)
+    return links
+
+
+def create_absolute_urls_for_links(text, url, filter):
+    """
+    Given the `text` contents from `url`, return a list of absolute URLs to
+    links from `url` that are filtered by `checker`.
+    """
+    absolute_links = []
+    url = url.rstrip('/')
+    for link in collect_links_from_text(text, filter):
+        if not link.startswith(url):
+            link = f'{url}/{link}'
+        absolute_links.append(link)
+    return absolute_links
+
+
+def get_directory_links(url):
+    """
+    Return a list of absolute directory URLs of the hyperlinks from `url`
+    """
+    directory_links = []
+    response = requests.get(url)
+    if response:
+        directory_links = create_absolute_urls_for_links(
+            response.text,
+            url=url,
+            filter=filter_only_directories
+        )
+    return directory_links
+
+
+def get_artifact_links(url):
+    """
+    Return a list of absolute directory URLs of the hyperlinks from `url`
+    """
+    directory_links = []
+    response = requests.get(url)
+    if response:
+        directory_links = create_absolute_urls_for_links(
+            response.text,
+            url=url,
+            filter=filter_for_artifacts
+        )
+    return directory_links
+
+
+def crawl_to_package(url):
+    """
+    Given a maven repo `url`,
+    """
+    if is_package_page(url):
+        add_to_import_queue(url)
+        return
+
+    for link in get_directory_links(url):
+        crawl_to_package(link)
+
+
+def crawl_maven_repo_from_root(root_url):
+    """
+    Given the `url` to a maven root, traverse the repo depth-first and add
+    packages to the import queue.
+    """
+    crawl_to_package(root_url)
+
+
+def get_artifact_sha1(artifact_url):
+    """
+    Return the SHA1 value of the Maven artifact located at `artifact_url`.
+    """
+    sha1 = None
+    artifact_sha1_url = f'{artifact_url}.sha1'
+    response = requests.get(artifact_sha1_url)
+    if response:
+        sha1_contents = response.text.strip().split()
+        sha1 = sha1_contents[0]
+        sha1 = validate_sha1(sha1)
+    return sha1
+
+
+def get_classifier_from_artifact_url(artifact_url, package_version_page_url, package_name, package_version):
+    """
+    Return the classifier from a Maven artifact URL `artifact_url`, otherwise
+    return None if a classifier cannot be determined from `artifact_url`
+    """
+    classifier = None
+    # https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0
+    package_version_page_url = package_version_page_url.rstrip('/')
+    # https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0
+    leading_url_portion = f'{package_version_page_url}/{package_name}-{package_version}'
+    # artifact_url = 'https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0-onejar.jar'
+    # ['', '-onejar.jar']
+    _, remaining_url_portion = artifact_url.split(leading_url_portion)
+    # ['-onejar', 'jar']
+    remaining_url_portions = remaining_url_portion.split('.')
+    if remaining_url_portions:
+        # '-onejar'
+        classifier = remaining_url_portion[0]
+        if classifier.startswith('-'):
+            # 'onejar'
+            classifier = classifier[1:]
+    return classifier
 
 
 @visit_router.route('http://repo1\.maven\.org/maven2/\.index/nexus-maven-repository-index.properties')
