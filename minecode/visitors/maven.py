@@ -569,7 +569,7 @@ def get_maven_root(url):
     return None
 
 
-def determine_namespace_name_version_from_url(url, root_url):
+def determine_namespace_name_version_from_url(url):
     """
     Return a 3-tuple containing strings of a Package namespace, name, and
     version, determined from `url`, where `url` points to namespace, package,
@@ -755,7 +755,7 @@ def get_classifier_from_artifact_url(artifact_url, package_version_page_url, pac
     _, remaining_url_portion = artifact_url.split(leading_url_portion)
     # ['-onejar', 'jar']
     remaining_url_portions = remaining_url_portion.split('.')
-    if remaining_url_portions:
+    if remaining_url_portions and remaining_url_portions[0]:
         # '-onejar'
         classifier = remaining_url_portion[0]
         if classifier.startswith('-'):

@@ -26,7 +26,10 @@ from minecode.visitors.maven import get_classifier_from_artifact_url
 from minecode.visitors.maven import collect_links_from_text
 from minecode.visitors.maven import filter_only_directories
 from minecode.visitors.maven import get_artifact_sha1
+from minecode.model_utils import merge_or_create_package
+from packagedcode.models import PackageData
 from packagedb.models import Package
+from minecode.visitors.maven import determine_namespace_name_version_from_url
 
 
 logger = logging.getLogger(__name__)
@@ -118,9 +121,8 @@ def process_request(importable_uri):
         if response:
             data = requests.text
 
-    package_url = PackageURL.from_string(importable_uri.package_url)
-    namespace = package_url.namespace
-    name = package_url.name
+    # TODO: determine namespace from initial traversal
+    namespace, name, _ = determine_namespace_name_version_from_url(uri)
 
     # Go into each version directory
     for link in collect_links_from_text(data, filter_only_directories):
@@ -128,11 +130,11 @@ def process_request(importable_uri):
         version_page_url = f'{uri}/{version}'
         for artifact_link in get_artifact_links(version_page_url):
             sha1 = get_artifact_sha1(artifact_link)
-            classifier = get_classifier_from_artifact_url(artifact_link)
+            classifier = get_classifier_from_artifact_url(artifact_link, version_page_url, name, version)
             qualifiers = None
             if classifier:
                 qualifiers = f'classifier={classifier}'
-            package = Package.objects.create(
+            package_data = PackageData(
                 type='maven',
                 namespace=namespace,
                 name=name,
@@ -141,5 +143,15 @@ def process_request(importable_uri):
                 download_url=artifact_link,
                 sha1=sha1,
             )
-            if package:
-                logger.info('Created package {package}')
+            package, created, merged, map_error = merge_or_create_package(
+                scanned_package=package_data,
+                visit_level=50
+            )
+            if created:
+                logger.info(f'Created package {package}')
+            if merged:
+                logger.info(f'Updated package {package}')
+            if map_error:
+                logger.error(f'Error encountered: {map_error}')
+                importable_uri.processing_error = map_error
+                importable_uri.save()
