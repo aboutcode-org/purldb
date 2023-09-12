@@ -248,7 +248,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'packagedb.api_custom.PageSizePagination',
     # Limit the load on the Database returning a small number of records by default. https://github.com/nexB/vulnerablecode/issues/819
-    "PAGE_SIZE": 100,
+    "PAGE_SIZE": 20,
 }
 
 if not PURLDB_REQUIRE_AUTHENTICATION:
