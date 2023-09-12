@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import logging
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django_filters.rest_framework import FilterSet
@@ -45,9 +46,11 @@ from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
 
 from univers import versions
 from univers.version_range import RANGE_CLASS_BY_SCHEMES
-from univers.version_range import InvalidVersionRange
+from univers.versions import InvalidVersion
 from univers.version_range import VersionRange
+from univers.version_constraint import InvalidConstraintsError
 
+logger = logging.getLogger(__name__)
 
 class PackageResourcePurlFilter(Filter):
     def filter(self, qs, value):
@@ -405,8 +408,9 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         packages = request.data.get('packages') or []
         queued_packages = []
         unqueued_packages = []
+        supported_ecosystems = ["maven", "npm"]
 
-        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages)
+        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages, supported_ecosystems)
 
         for purl in unique_purls:
             is_routable_purl = priority_router.is_routable(purl)
@@ -691,7 +695,7 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PackageSetAPISerializer
 
 
-def get_resolved_purls(packages):
+def get_resolved_purls(packages, supported_ecosystems):
     """
     Take a list of dict containing purl or version-less purl along with vers
     and return a list of resolved purls, a list of unsupported purls, and a
@@ -718,7 +722,7 @@ def get_resolved_purls(packages):
             unique_resolved_purls.add(purl)
             continue
 
-        if not vers:
+        if not vers or parsed_purl.type not in supported_ecosystems:
             unsupported_purls.add(purl)
             continue
 
@@ -749,18 +753,22 @@ def resolve_versions(parsed_purl, vers):
 
     all_versions = get_all_versions(parsed_purl) or []
 
-    return [
-        str(
-            PackageURL(
-                type=parsed_purl.type,
-                namespace=parsed_purl.namespace,
-                name=parsed_purl.name,
-                version=version.string,
-            )
-        )
-        for version in all_versions
-        if version in version_range
-    ]
+    result = []
+    for version in all_versions:
+        try:
+            if version in version_range:
+                package_url = PackageURL(
+                    type=parsed_purl.type,
+                    namespace=parsed_purl.namespace,
+                    name=parsed_purl.name,
+                    version=version.string,
+                )
+                result.append(str(package_url))
+        except InvalidConstraintsError:
+            logger.warning(f"Invalid constraints sequence in '{vers}' for '{parsed_purl}'")
+            return
+
+    return result
 
 def get_all_versions(purl: PackageURL):
     """
@@ -778,10 +786,18 @@ def get_all_versions(purl: PackageURL):
     if not package_name or not versionAPI:
         return
 
-    all_versions = versionAPI().fetch(package_name)
+    all_versions = versionAPI().fetch(package_name) or []
     versionClass = VERSION_CLASS_BY_PACKAGE_TYPE.get(purl.type)
 
-    return [versionClass(package_version.value) for package_version in all_versions]
+    result = []
+    for package_version in all_versions:
+        try:
+            result.append(versionClass(package_version.value))
+        except InvalidVersion:
+            logger.warning(f"Invalid version '{package_version.value}' for '{purl}'")
+            pass
+    
+    return result
 
 
 VERSION_CLASS_BY_PACKAGE_TYPE = {pkg_type: range_class.version_class for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()}
