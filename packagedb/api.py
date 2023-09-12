@@ -48,6 +48,7 @@ from univers import versions
 from univers.version_range import RANGE_CLASS_BY_SCHEMES
 from univers.versions import InvalidVersion
 from univers.version_range import VersionRange
+from univers.version_constraint import InvalidConstraintsError
 
 logger = logging.getLogger(__name__)
 
@@ -763,8 +764,7 @@ def resolve_versions(parsed_purl, vers):
                     version=version.string,
                 )
                 result.append(str(package_url))
-        except Exception:
-            # Skip the ``Invalid constraints sequence`` Exception
+        except InvalidConstraintsError:
             logger.warning(f"Invalid constraints sequence in '{vers}' for '{parsed_purl}'")
             return
 
