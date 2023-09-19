@@ -569,7 +569,7 @@ def get_maven_root(url):
     return None
 
 
-def determine_namespace_name_version_from_url(url):
+def determine_namespace_name_version_from_url(url, root_url=None):
     """
     Return a 3-tuple containing strings of a Package namespace, name, and
     version, determined from `url`, where `url` points to namespace, package,
@@ -580,9 +580,10 @@ def determine_namespace_name_version_from_url(url):
     >>> determine_namespace_name_version_from_url('https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/')
     ('net.shibboleth', 'parent', '7.11.0')
     """
-    root_url = get_maven_root(url)
     if not root_url:
-        raise Exception(f'Error: not a Maven repository: {url}')
+        root_url = get_maven_root(url)
+        if not root_url:
+            raise Exception(f'Error: not a Maven repository: {url}')
 
     _, remaining_path_segments = url.split(root_url)
     remaining_path_segments = remaining_path_segments.split('/')
@@ -606,7 +607,7 @@ def determine_namespace_name_version_from_url(url):
     return namespace, package_name, package_version
 
 
-def add_to_import_queue(url):
+def add_to_import_queue(url, root_url):
     """
     Create ImportableURI for the Maven repo package page at `url`.
     """
@@ -615,7 +616,13 @@ def add_to_import_queue(url):
     response = requests.get(url)
     if response:
         data = response.text
-    importable_uri = ImportableURI.objects.insert(url, data)
+    namespace, name, _ = determine_namespace_name_version_from_url(url, root_url)
+    purl = PackageURL(
+        type='maven',
+        namespace=namespace,
+        name=name,
+    )
+    importable_uri = ImportableURI.objects.insert(url, data, purl)
     if importable_uri:
         logger.info(f'Inserted {url} into ImportableURI queue')
 
@@ -706,16 +713,16 @@ def get_artifact_links(url):
     return directory_links
 
 
-def crawl_to_package(url):
+def crawl_to_package(url, root_url):
     """
     Given a maven repo `url`,
     """
     if is_package_page(url):
-        add_to_import_queue(url)
+        add_to_import_queue(url, root_url)
         return
 
     for link in get_directory_links(url):
-        crawl_to_package(link)
+        crawl_to_package(link, root_url)
 
 
 def crawl_maven_repo_from_root(root_url):
@@ -723,7 +730,7 @@ def crawl_maven_repo_from_root(root_url):
     Given the `url` to a maven root, traverse the repo depth-first and add
     packages to the import queue.
     """
-    crawl_to_package(root_url)
+    crawl_to_package(root_url, root_url)
 
 
 def get_artifact_sha1(artifact_url):

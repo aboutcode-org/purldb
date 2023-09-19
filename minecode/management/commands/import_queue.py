@@ -121,8 +121,13 @@ def process_request(importable_uri):
         if response:
             data = requests.text
 
-    # TODO: determine namespace from initial traversal
-    namespace, name, _ = determine_namespace_name_version_from_url(uri)
+    purl = importable_uri.package_url
+    if purl:
+        package_url = PackageURL(purl)
+        namespace = package_url.namespace
+        name = package_url.name
+    else:
+        namespace, name, _ = determine_namespace_name_version_from_url(uri)
 
     # Go into each version directory
     for link in collect_links_from_text(data, filter_only_directories):

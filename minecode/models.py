@@ -936,7 +936,7 @@ class PriorityResourceURI(BaseURI):
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
 class ImportableURIManager(models.Manager):
-    def insert(self, uri, data, **extra_fields):
+    def insert(self, uri, data, package_url, **extra_fields):
         """
         Create and return a new ImportableURI
         Return None if the insertion failed when the same URI exists with the same versions to be collected
@@ -954,6 +954,7 @@ class ImportableURIManager(models.Manager):
             importable_uri = self.create(
                 uri=uri,
                 data=data,
+                package_url=package_url,
                 **extra_fields
             )
             return importable_uri
