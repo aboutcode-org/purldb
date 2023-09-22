@@ -123,7 +123,7 @@ def process_request(importable_uri):
 
     purl = importable_uri.package_url
     if purl:
-        package_url = PackageURL(purl)
+        package_url = PackageURL.from_string(purl)
         namespace = package_url.namespace
         name = package_url.name
     else:
