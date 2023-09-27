@@ -16,12 +16,13 @@ import requests
 
 from django.db import transaction
 from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from packageurl import PackageURL
 
 from minecode.management.commands import get_error_message
 from minecode.management.commands import VerboseCommand
 from minecode.models import ImportableURI
-from minecode.visitors.maven import get_artifact_links
+from minecode.visitors.maven import get_artifact_links2
 from minecode.visitors.maven import get_classifier_from_artifact_url
 from minecode.visitors.maven import collect_links_from_text
 from minecode.visitors.maven import filter_only_directories
@@ -133,12 +134,14 @@ def process_request(importable_uri):
     for link in collect_links_from_text(data, filter_only_directories):
         version = link.rstrip('/')
         version_page_url = f'{uri}/{version}'
-        for artifact_link in get_artifact_links(version_page_url):
+        timestamps_by_artifact_links = get_artifact_links2(version_page_url)
+        for artifact_link, timestamp in timestamps_by_artifact_links.items():
             sha1 = get_artifact_sha1(artifact_link)
             classifier = get_classifier_from_artifact_url(artifact_link, version_page_url, name, version)
             qualifiers = None
             if classifier:
                 qualifiers = f'classifier={classifier}'
+            release_date = parse_datetime(timestamp)
             package_data = PackageData(
                 type='maven',
                 namespace=namespace,
@@ -147,6 +150,7 @@ def process_request(importable_uri):
                 qualifiers=qualifiers,
                 download_url=artifact_link,
                 sha1=sha1,
+                release_date=release_date,
             )
             package, created, merged, map_error = merge_or_create_package(
                 scanned_package=package_data,

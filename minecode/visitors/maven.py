@@ -455,7 +455,8 @@ def process_request(purl_str):
     return error
 
 
-collect_links = re.compile('href="([^"]+)"').findall
+collect_links = re.compile(r'href="([^"]+)"').findall
+collect_artifact_timestamps = re.compile(r'\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}').findall
 
 
 def check_if_file_name_is_linked_on_page(file_name, links, **kwargs):
@@ -631,6 +632,14 @@ def filter_only_directories(links):
     return [l for l in links if l != '../' and l.endswith('/')]
 
 
+def filter_only_directories2(timestamps_by_links):
+    timestamps_by_links_filtered = {}
+    for link, timestamp in timestamps_by_links.items():
+        if link != '../' and link.endswith('/'):
+            timestamps_by_links_filtered[link] = timestamp
+    return timestamps_by_links_filtered
+
+
 valid_artifact_extensions = [
     'ejb3',
     'ear',
@@ -659,6 +668,15 @@ def filter_for_artifacts(links):
     return artifacts
 
 
+def filter_for_artifacts2(timestamps_by_links):
+    timestamps_by_links_filtered = {}
+    for link, timestamp in timestamps_by_links.items():
+        for ext in valid_artifact_extensions:
+            if link.endswith(ext):
+                timestamps_by_links_filtered[link] = timestamp
+    return timestamps_by_links_filtered
+
+
 def collect_links_from_text(text, filter):
     """
     Return a list of link locations, given HTML `text` content, that is filtered
@@ -667,6 +685,25 @@ def collect_links_from_text(text, filter):
     links = collect_links(text)
     links = filter(links=links)
     return links
+
+
+def collect_links_from_text2(text, filter):
+    """
+    Return a list of link locations, given HTML `text` content, that is filtered
+    using `filter`.
+    """
+    links = collect_links(text)
+    timestamps = collect_artifact_timestamps(text)
+    timestamps_by_links = {}
+    for i, link in enumerate(links):
+        if link == '../':
+            timestamp = ''
+        else:
+            timestamp = timestamps[i-1]
+        timestamps_by_links[link] = timestamp
+
+    timestamps_by_links = filter(timestamps_by_links=timestamps_by_links)
+    return timestamps_by_links
 
 
 def create_absolute_urls_for_links(text, url, filter):
@@ -681,6 +718,21 @@ def create_absolute_urls_for_links(text, url, filter):
             link = f'{url}/{link}'
         absolute_links.append(link)
     return absolute_links
+
+
+def create_absolute_urls_for_links2(text, url, filter):
+    """
+    Given the `text` contents from `url`, return a list of absolute URLs to
+    links from `url` that are filtered by `checker`.
+    """
+    timestamps_by_absolute_links = {}
+    url = url.rstrip('/')
+    timestamps_by_links = collect_links_from_text2(text, filter)
+    for link, timestamp in timestamps_by_links.items():
+        if not link.startswith(url):
+            link = f'{url}/{link}'
+        timestamps_by_absolute_links[link] = timestamp
+    return timestamps_by_absolute_links
 
 
 def get_directory_links(url):
@@ -698,6 +750,21 @@ def get_directory_links(url):
     return directory_links
 
 
+def get_directory_links2(url):
+    """
+    Return a list of absolute directory URLs of the hyperlinks from `url`
+    """
+    timestamps_by_directory_links = {}
+    response = requests.get(url)
+    if response:
+        timestamps_by_directory_links = create_absolute_urls_for_links2(
+            response.text,
+            url=url,
+            filter=filter_only_directories2
+        )
+    return timestamps_by_directory_links
+
+
 def get_artifact_links(url):
     """
     Return a list of absolute directory URLs of the hyperlinks from `url`
@@ -711,6 +778,21 @@ def get_artifact_links(url):
             filter=filter_for_artifacts
         )
     return directory_links
+
+
+def get_artifact_links2(url):
+    """
+    Return a list of absolute directory URLs of the hyperlinks from `url`
+    """
+    timestamps_by_artifact_links = []
+    response = requests.get(url)
+    if response:
+        timestamps_by_artifact_links = create_absolute_urls_for_links2(
+            response.text,
+            url=url,
+            filter=filter_for_artifacts2
+        )
+    return timestamps_by_artifact_links
 
 
 def crawl_to_package(url, root_url):
@@ -764,7 +846,7 @@ def get_classifier_from_artifact_url(artifact_url, package_version_page_url, pac
     remaining_url_portions = remaining_url_portion.split('.')
     if remaining_url_portions and remaining_url_portions[0]:
         # '-onejar'
-        classifier = remaining_url_portion[0]
+        classifier = remaining_url_portions[0]
         if classifier.startswith('-'):
             # 'onejar'
             classifier = classifier[1:]
