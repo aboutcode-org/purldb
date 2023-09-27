@@ -22,7 +22,7 @@ from packageurl import PackageURL
 from minecode.management.commands import get_error_message
 from minecode.management.commands import VerboseCommand
 from minecode.models import ImportableURI
-from minecode.visitors.maven import get_artifact_links2
+from minecode.visitors.maven import get_artifact_links
 from minecode.visitors.maven import get_classifier_from_artifact_url
 from minecode.visitors.maven import collect_links_from_text
 from minecode.visitors.maven import filter_only_directories
@@ -130,11 +130,12 @@ def process_request(importable_uri):
     else:
         namespace, name, _ = determine_namespace_name_version_from_url(uri)
 
+    timestamps_by_directory_links = collect_links_from_text(data, filter_only_directories)
     # Go into each version directory
-    for link in collect_links_from_text(data, filter_only_directories):
-        version = link.rstrip('/')
+    for directory_link in timestamps_by_directory_links.keys():
+        version = directory_link.rstrip('/')
         version_page_url = f'{uri}/{version}'
-        timestamps_by_artifact_links = get_artifact_links2(version_page_url)
+        timestamps_by_artifact_links = get_artifact_links(version_page_url)
         for artifact_link, timestamp in timestamps_by_artifact_links.items():
             sha1 = get_artifact_sha1(artifact_link)
             classifier = get_classifier_from_artifact_url(artifact_link, version_page_url, name, version)

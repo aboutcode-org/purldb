@@ -456,7 +456,7 @@ def process_request(purl_str):
 
 
 collect_links = re.compile(r'href="([^"]+)"').findall
-collect_artifact_timestamps = re.compile(r'\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}').findall
+collect_artifact_timestamps = re.compile(r'(-|\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})').findall
 
 
 def check_if_file_name_is_linked_on_page(file_name, links, **kwargs):
@@ -628,11 +628,7 @@ def add_to_import_queue(url, root_url):
         logger.info(f'Inserted {url} into ImportableURI queue')
 
 
-def filter_only_directories(links):
-    return [l for l in links if l != '../' and l.endswith('/')]
-
-
-def filter_only_directories2(timestamps_by_links):
+def filter_only_directories(timestamps_by_links):
     timestamps_by_links_filtered = {}
     for link, timestamp in timestamps_by_links.items():
         if link != '../' and link.endswith('/'):
@@ -659,16 +655,7 @@ valid_artifact_extensions = [
 ]
 
 
-def filter_for_artifacts(links):
-    artifacts = []
-    for l in links:
-        for ext in valid_artifact_extensions:
-            if l.endswith(ext):
-                artifacts.append(l)
-    return artifacts
-
-
-def filter_for_artifacts2(timestamps_by_links):
+def filter_for_artifacts(timestamps_by_links):
     timestamps_by_links_filtered = {}
     for link, timestamp in timestamps_by_links.items():
         for ext in valid_artifact_extensions:
@@ -683,20 +670,10 @@ def collect_links_from_text(text, filter):
     using `filter`.
     """
     links = collect_links(text)
-    links = filter(links=links)
-    return links
-
-
-def collect_links_from_text2(text, filter):
-    """
-    Return a list of link locations, given HTML `text` content, that is filtered
-    using `filter`.
-    """
-    links = collect_links(text)
     timestamps = collect_artifact_timestamps(text)
     timestamps_by_links = {}
     for i, link in enumerate(links):
-        if link == '../':
+        if link.endswith('/') or not timestamps:
             timestamp = ''
         else:
             timestamp = timestamps[i-1]
@@ -711,23 +688,9 @@ def create_absolute_urls_for_links(text, url, filter):
     Given the `text` contents from `url`, return a list of absolute URLs to
     links from `url` that are filtered by `checker`.
     """
-    absolute_links = []
-    url = url.rstrip('/')
-    for link in collect_links_from_text(text, filter):
-        if not link.startswith(url):
-            link = f'{url}/{link}'
-        absolute_links.append(link)
-    return absolute_links
-
-
-def create_absolute_urls_for_links2(text, url, filter):
-    """
-    Given the `text` contents from `url`, return a list of absolute URLs to
-    links from `url` that are filtered by `checker`.
-    """
     timestamps_by_absolute_links = {}
     url = url.rstrip('/')
-    timestamps_by_links = collect_links_from_text2(text, filter)
+    timestamps_by_links = collect_links_from_text(text, filter)
     for link, timestamp in timestamps_by_links.items():
         if not link.startswith(url):
             link = f'{url}/{link}'
@@ -739,28 +702,13 @@ def get_directory_links(url):
     """
     Return a list of absolute directory URLs of the hyperlinks from `url`
     """
-    directory_links = []
-    response = requests.get(url)
-    if response:
-        directory_links = create_absolute_urls_for_links(
-            response.text,
-            url=url,
-            filter=filter_only_directories
-        )
-    return directory_links
-
-
-def get_directory_links2(url):
-    """
-    Return a list of absolute directory URLs of the hyperlinks from `url`
-    """
     timestamps_by_directory_links = {}
     response = requests.get(url)
     if response:
-        timestamps_by_directory_links = create_absolute_urls_for_links2(
+        timestamps_by_directory_links = create_absolute_urls_for_links(
             response.text,
             url=url,
-            filter=filter_only_directories2
+            filter=filter_only_directories
         )
     return timestamps_by_directory_links
 
@@ -769,28 +717,13 @@ def get_artifact_links(url):
     """
     Return a list of absolute directory URLs of the hyperlinks from `url`
     """
-    directory_links = []
-    response = requests.get(url)
-    if response:
-        directory_links = create_absolute_urls_for_links(
-            response.text,
-            url=url,
-            filter=filter_for_artifacts
-        )
-    return directory_links
-
-
-def get_artifact_links2(url):
-    """
-    Return a list of absolute directory URLs of the hyperlinks from `url`
-    """
     timestamps_by_artifact_links = []
     response = requests.get(url)
     if response:
-        timestamps_by_artifact_links = create_absolute_urls_for_links2(
+        timestamps_by_artifact_links = create_absolute_urls_for_links(
             response.text,
             url=url,
-            filter=filter_for_artifacts2
+            filter=filter_for_artifacts
         )
     return timestamps_by_artifact_links
 
