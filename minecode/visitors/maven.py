@@ -456,7 +456,9 @@ def process_request(purl_str):
 
 
 collect_links = re.compile(r'href="([^"]+)"').findall
-collect_artifact_timestamps = re.compile(r'(-|\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})').findall
+collect_links_and_artifact_timestamps = re.compile(
+    r'<a href="([^"]+)" title="[^"]+">[^"]+</a>\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}|-)'
+).findall
 
 
 def check_if_file_name_is_linked_on_page(file_name, links, **kwargs):
@@ -669,14 +671,11 @@ def collect_links_from_text(text, filter):
     Return a list of link locations, given HTML `text` content, that is filtered
     using `filter`.
     """
-    links = collect_links(text)
-    timestamps = collect_artifact_timestamps(text)
+    links_and_timestamps = collect_links_and_artifact_timestamps(text)
     timestamps_by_links = {}
-    for i, link in enumerate(links):
-        if link.endswith('/') or not timestamps:
+    for link, timestamp in links_and_timestamps:
+        if timestamp == '-':
             timestamp = ''
-        else:
-            timestamp = timestamps[i-1]
         timestamps_by_links[link] = timestamp
 
     timestamps_by_links = filter(timestamps_by_links=timestamps_by_links)

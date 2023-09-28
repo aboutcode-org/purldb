@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from dateutil.parser import parse as dateutil_parse
 import logging
 import signal
 import sys
@@ -16,7 +17,6 @@ import requests
 
 from django.db import transaction
 from django.utils import timezone
-from django.utils.dateparse import parse_datetime
 from packageurl import PackageURL
 
 from minecode.management.commands import get_error_message
@@ -142,7 +142,7 @@ def process_request(importable_uri):
             qualifiers = None
             if classifier:
                 qualifiers = f'classifier={classifier}'
-            release_date = parse_datetime(timestamp)
+            release_date = dateutil_parse(timestamp)
             package_data = PackageData(
                 type='maven',
                 namespace=namespace,
