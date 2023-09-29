@@ -868,3 +868,315 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             merged_package = maven_visitor.get_merged_ancestor_package_from_maven_package(package=db_package)
             expected_loc = self.get_test_loc('maven/pom/pulsar-client-merged-ancestor-package.json')
             self.check_expected_results(merged_package.to_dict(), expected_loc, regen=regen)
+
+
+class MavenCrawlerFunctionsTest(JsonBasedTesting, DjangoTestCase):
+    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+
+    def test_check_if_file_name_is_linked_on_page(self):
+        links = ['foo/', 'bar/', 'baz/']
+        self.assertTrue(
+            maven_visitor.check_if_file_name_is_linked_on_page('foo/', links)
+        )
+        self.assertFalse(
+            maven_visitor.check_if_file_name_is_linked_on_page('qux/', links)
+        )
+
+    def test_check_if_page_has_pom_files(self):
+        links1 = ['foo/', 'bar.jar', 'bar.pom']
+        links2 = ['foo/', 'bar.jar']
+        self.assertTrue(maven_visitor.check_if_page_has_pom_files(links1))
+        self.assertFalse(maven_visitor.check_if_page_has_pom_files(links2))
+
+    def test_check_if_page_has_directories(self):
+        links1 = ['foo/', 'bar/', 'baz/']
+        links2 = ['../', 'bar.pom', 'bar.jar']
+        self.assertTrue(maven_visitor.check_if_page_has_directories(links1))
+        self.assertFalse(maven_visitor.check_if_page_has_directories(links2))
+
+    def test_check_if_package_version_page(self):
+        links1 = ['../', 'bar.pom', 'bar.jar']
+        links2 = ['../', 'foo/', 'bar/', 'baz/']
+        self.assertTrue(maven_visitor.check_if_package_version_page(links1))
+        self.assertFalse(maven_visitor.check_if_package_version_page(links2))
+
+    def test_check_if_package_page(self):
+        links1 = ['../', 'maven-metadata.xml']
+        links2 = ['../', 'bar.pom', 'bar.jar']
+        self.assertTrue(maven_visitor.check_if_package_page(links1))
+        self.assertFalse(maven_visitor.check_if_package_page(links2))
+
+    def test_check_if_maven_root(self):
+        links1 = ['../', 'archetype-catalog.xml']
+        links2 = ['../', 'bar.pom', 'bar.jar']
+        self.assertTrue(maven_visitor.check_if_maven_root(links1))
+        self.assertFalse(maven_visitor.check_if_maven_root(links2))
+
+    @mock.patch('requests.get')
+    def test_check_on_page(self, mock_request_get):
+        checker = maven_visitor.check_if_page_has_pom_files
+        mock_request_get.return_value.ok = True
+        mock_request_get.return_value.text = '<a href="parent-7.11.0.pom" title="parent-7.11.0.pom">parent-7.11.0.pom</a>'
+        self.assertTrue(maven_visitor.check_on_page('https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/', checker))
+
+    @mock.patch('requests.get')
+    def test_is_maven_root(self, mock_request_get):
+        mock_request_get.return_value.ok = True
+        mock_request_get.return_value.text = '<a href="archetype-catalog.xml" title="archetype-catalog.xml">archetype-catalog.xml</a>'
+        self.assertTrue(maven_visitor.is_maven_root('https://repo1.maven.org/maven2/'))
+
+    @mock.patch('requests.get')
+    def test_is_package_page(self, mock_request_get):
+        mock_request_get.return_value.ok = True
+        mock_request_get.return_value.text = '<a href="maven-metadata.xml" title="maven-metadata.xml">maven-metadata.xml</a>'
+        self.assertTrue(maven_visitor.is_package_page('https://repo1.maven.org/maven2/xml-apis/xml-apis/'))
+
+    @mock.patch('requests.get')
+    def test_is_package_version_page(self, mock_request_get):
+        mock_request_get.return_value.ok = True
+        mock_request_get.return_value.text = '''
+        <a href="../" title="../">../</a>
+        <a href="parent-7.11.0.pom" title="parent-7.11.0.pom">parent-7.11.0.pom</a>
+        '''
+        self.assertTrue(maven_visitor.is_package_version_page('https://repo1.maven.org/maven2/xml-apis/xml-apis/1.0.b2/'))
+
+    def test_url_parts(self):
+        url = 'https://example.com/foo/bar/baz.jar'
+        scheme, netloc, path_segments = maven_visitor.url_parts(url)
+        self.assertEqual('https', scheme)
+        self.assertEqual('example.com', netloc)
+        self.assertEquals(['foo', 'bar', 'baz.jar'], path_segments)
+
+    def test_create_url(self):
+        scheme = 'https'
+        netloc = 'example.com'
+        path_segments = ['foo', 'bar', 'baz.jar']
+        url = 'https://example.com/foo/bar/baz.jar'
+        self.assertEqual(
+            url,
+            maven_visitor.create_url(scheme, netloc, path_segments)
+        )
+
+    @mock.patch('requests.get')
+    def test_get_maven_root(self, mock_request_get):
+        mock_request_get.return_value.ok = True
+        mock_request_get.return_value.text = '<a href="archetype-catalog.xml" title="archetype-catalog.xml">archetype-catalog.xml</a>'
+        self.assertEqual(
+            'https://repo1.maven.org/maven2',
+            maven_visitor.get_maven_root('https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/')
+        )
+
+    @mock.patch('requests.get')
+    def test_determine_namespace_name_version_from_url(self, mock_request_get):
+        url = 'https://repo1.maven.org/maven2/xml-apis/xml-apis/1.0.b2'
+        root_url = 'https://repo1.maven.org/maven2'
+
+        package_page_text = '''
+        <a href="1.0.b2/" title="1.0.b2/">1.0.b2/</a>
+                                           2005-09-20 05:53         -
+        <a href="maven-metadata.xml" title="maven-metadata.xml">maven-metadata.xml</a>
+                                2012-06-26 17:01       567
+        '''
+        package_page = mock.Mock(ok=True, text=package_page_text)
+
+        package_version_page_text = '''
+        <a href="../">../</a> -
+        <a href="xml-apis-1.0.b2.pom" title="xml-apis-1.0.b2.pom">xml-apis-1.0.b2.pom</a>
+                               2005-09-20 05:53      2249
+        '''
+        package_version_page = mock.Mock(ok=True, text=package_version_page_text)
+        mock_request_get.side_effect = [
+            mock.Mock(ok=True, text=''),
+            mock.Mock(ok=True, text=''),
+            package_page,
+            mock.Mock(ok=True, text=''),
+            package_version_page
+        ]
+
+        namespace, package_name, package_version = maven_visitor.determine_namespace_name_version_from_url(url, root_url)
+        self.assertEqual('xml-apis', namespace)
+        self.assertEqual('xml-apis', package_name)
+        self.assertEqual('1.0.b2', package_version)
+
+    @mock.patch('requests.get')
+    def test_add_to_import_queue(self, mock_request_get):
+        from minecode.models import ImportableURI
+
+        url = 'https://repo1.maven.org/maven2/xml-apis/xml-apis/'
+        root_url = 'https://repo1.maven.org/maven2'
+
+        package_page_text = '''
+        <a href="1.0.b2/" title="1.0.b2/">1.0.b2/</a>
+                                           2005-09-20 05:53         -
+        <a href="maven-metadata.xml" title="maven-metadata.xml">maven-metadata.xml</a>
+                                2012-06-26 17:01       567
+        '''
+        package_page = mock.Mock(ok=True, text=package_page_text)
+
+        package_version_page_text = '''
+        <a href="../">../</a> -
+        <a href="xml-apis-1.0.b2.pom" title="xml-apis-1.0.b2.pom">xml-apis-1.0.b2.pom</a>
+                               2005-09-20 05:53      2249
+        '''
+        package_version_page = mock.Mock(ok=True, text=package_version_page_text)
+        mock_request_get.side_effect = [
+            package_page,
+            mock.Mock(ok=True, text=''),
+            mock.Mock(ok=True, text=''),
+            package_page,
+            mock.Mock(ok=True, text=''),
+            package_version_page
+        ]
+
+        self.assertEqual(0, ImportableURI.objects.all().count())
+        maven_visitor.add_to_import_queue(url, root_url )
+        self.assertEqual(1, ImportableURI.objects.all().count())
+        importable_uri = ImportableURI.objects.get(uri=url)
+        self.assertEqual('pkg:maven/xml-apis/xml-apis', importable_uri.package_url)
+
+    def test_filter_only_directories(self):
+        timestamps_by_links = {
+            '../': '-',
+            'foo/': '-',
+            'foo.pom': '2023-09-28',
+        }
+        expected = {
+            'foo/': '-',
+        }
+        self.assertEqual(
+            expected,
+            maven_visitor.filter_only_directories(timestamps_by_links)
+        )
+
+    def test_filter_for_artifacts(self):
+        timestamps_by_links = {
+            '../': '2023-09-28',
+            'foo.pom': '2023-09-28',
+            'foo.ejb3': '2023-09-28',
+            'foo.ear': '2023-09-28',
+            'foo.aar': '2023-09-28',
+            'foo.apk': '2023-09-28',
+            'foo.gem': '2023-09-28',
+            'foo.jar': '2023-09-28',
+            'foo.nar': '2023-09-28',
+            'foo.so': '2023-09-28',
+            'foo.swc': '2023-09-28',
+            'foo.tar': '2023-09-28',
+            'foo.tar.gz': '2023-09-28',
+            'foo.war': '2023-09-28',
+            'foo.xar': '2023-09-28',
+            'foo.zip': '2023-09-28',
+        }
+        expected = {
+            'foo.ejb3': '2023-09-28',
+            'foo.ear': '2023-09-28',
+            'foo.aar': '2023-09-28',
+            'foo.apk': '2023-09-28',
+            'foo.gem': '2023-09-28',
+            'foo.jar': '2023-09-28',
+            'foo.nar': '2023-09-28',
+            'foo.so': '2023-09-28',
+            'foo.swc': '2023-09-28',
+            'foo.tar': '2023-09-28',
+            'foo.tar.gz': '2023-09-28',
+            'foo.war': '2023-09-28',
+            'foo.xar': '2023-09-28',
+            'foo.zip': '2023-09-28',
+        }
+        self.assertEqual(expected, maven_visitor.filter_for_artifacts(timestamps_by_links))
+
+    def test_collect_links_from_text(self):
+        filter = maven_visitor.filter_only_directories
+        text = '''
+        <a href="../">../</a>
+        <a href="1.0.b2/" title="1.0.b2/">1.0.b2/</a>
+                                                   2005-09-20 05:53         -
+        <a href="1.2.01/" title="1.2.01/">1.2.01/</a>
+                                                   2010-02-03 21:05         -
+        '''
+        expected = {
+            '1.0.b2/': '2005-09-20 05:53',
+            '1.2.01/': '2010-02-03 21:05'
+        }
+        self.assertEqual(
+            expected,
+            maven_visitor.collect_links_from_text(text, filter=filter)
+        )
+
+    def test_create_absolute_urls_for_links(self):
+        filter = maven_visitor.filter_only_directories
+        text = '''
+        <a href="../">../</a>
+        <a href="1.0.b2/" title="1.0.b2/">1.0.b2/</a>
+                                                   2005-09-20 05:53         -
+        <a href="1.2.01/" title="1.2.01/">1.2.01/</a>
+                                                   2010-02-03 21:05         -
+        '''
+        url = 'https://repo1.maven.org/maven2/xml-apis/xml-apis/'
+        expected = {
+            'https://repo1.maven.org/maven2/xml-apis/xml-apis/1.0.b2/': '2005-09-20 05:53',
+            'https://repo1.maven.org/maven2/xml-apis/xml-apis/1.2.01/': '2010-02-03 21:05'
+        }
+        self.assertEqual(
+            expected,
+            maven_visitor.create_absolute_urls_for_links(text, url, filter=filter)
+        )
+
+    @mock.patch('requests.get')
+    def test_get_directory_links(self, mock_request_get):
+        mock_request_get.return_value.ok = True
+        mock_request_get.return_value.text = '''
+        <a href="../">../</a>
+        <a href="1.0.b2/" title="1.0.b2/">1.0.b2/</a>
+                                                   2005-09-20 05:53         -
+        <a href="1.2.01/" title="1.2.01/">1.2.01/</a>
+                                                   2010-02-03 21:05         -
+        '''
+        url = 'https://repo1.maven.org/maven2/xml-apis/xml-apis/'
+        expected = {
+            'https://repo1.maven.org/maven2/xml-apis/xml-apis/1.0.b2/': '2005-09-20 05:53',
+            'https://repo1.maven.org/maven2/xml-apis/xml-apis/1.2.01/': '2010-02-03 21:05'
+        }
+        self.assertEqual(expected, maven_visitor.get_directory_links(url))
+
+    @mock.patch('requests.get')
+    def test_get_artifact_links(self, mock_request_get):
+        mock_request_get.return_value.ok = True
+        mock_request_get.return_value.text = '''
+        <a href="../">../</a>
+        <a href="xml-apis-1.0.b2.jar" title="xml-apis-1.0.b2.jar">xml-apis-1.0.b2.jar</a>
+                               2005-09-20 05:53    109318
+        <a href="xml-apis-1.0.b2.pom" title="xml-apis-1.0.b2.pom">xml-apis-1.0.b2.pom</a>
+                               2005-09-20 05:53      2249
+        '''
+        url = 'https://repo1.maven.org/maven2/xml-apis/xml-apis/1.0.b2/'
+        expected = {
+            'https://repo1.maven.org/maven2/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar': '2005-09-20 05:53',
+        }
+        self.assertEqual(expected, maven_visitor.get_artifact_links(url))
+
+    def test_crawl_to_package(self):
+        pass
+
+    def test_crawl_maven_repo_from_root(self):
+        pass
+
+    @mock.patch('requests.get')
+    def test_get_artifact_sha1(self, mock_request_get):
+        sha1 = '3136ca936f64c9d68529f048c2618bd356bf85c9'
+        mock_request_get.return_value.ok = True
+        mock_request_get.return_value.text = sha1
+        self.assertEqual(sha1, maven_visitor.get_artifact_sha1('https://repo1.maven.org/maven2/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar.sha1'))
+
+    def test_get_classifier_from_artifact_url(self):
+        artifact_url = 'https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0-onejar.jar'
+        package_version_page_url = 'https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/'
+        package_name = 'livereload-jvm'
+        package_version = '0.2.0'
+        classifier = maven_visitor.get_classifier_from_artifact_url(
+            artifact_url,
+            package_version_page_url,
+            package_name,
+            package_version
+        )
+        self.assertEqual('onejar', classifier)

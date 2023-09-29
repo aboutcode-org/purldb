@@ -631,6 +631,9 @@ def add_to_import_queue(url, root_url):
 
 
 def filter_only_directories(timestamps_by_links):
+    """
+    Given a mapping of `timestamps_by_links`, where the links are directory names (which end with `/`),
+    """
     timestamps_by_links_filtered = {}
     for link, timestamp in timestamps_by_links.items():
         if link != '../' and link.endswith('/'):
@@ -658,6 +661,11 @@ valid_artifact_extensions = [
 
 
 def filter_for_artifacts(timestamps_by_links):
+    """
+    Given a mapping of `timestamps_by_links`, where the links are the filenames
+    of Maven artifacts, return a mapping of filenames whose extension is in
+    `valid_artifact_extensions` and their timestamps.
+    """
     timestamps_by_links_filtered = {}
     for link, timestamp in timestamps_by_links.items():
         for ext in valid_artifact_extensions:
@@ -668,8 +676,8 @@ def filter_for_artifacts(timestamps_by_links):
 
 def collect_links_from_text(text, filter):
     """
-    Return a list of link locations, given HTML `text` content, that is filtered
-    using `filter`.
+    Return a mapping of link locations and their timestamps, given HTML `text`
+    content, that is filtered using `filter`.
     """
     links_and_timestamps = collect_links_and_artifact_timestamps(text)
     timestamps_by_links = {}
@@ -684,8 +692,8 @@ def collect_links_from_text(text, filter):
 
 def create_absolute_urls_for_links(text, url, filter):
     """
-    Given the `text` contents from `url`, return a list of absolute URLs to
-    links from `url` that are filtered by `checker`.
+    Given the `text` contents from `url`, return a mapping of absolute URLs to
+    links from `url` and their timestamps, that is then filtered by `filter`.
     """
     timestamps_by_absolute_links = {}
     url = url.rstrip('/')
