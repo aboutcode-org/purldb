@@ -457,7 +457,7 @@ def process_request(purl_str):
 
 collect_links = re.compile(r'href="([^"]+)"').findall
 collect_links_and_artifact_timestamps = re.compile(
-    r'<a href="([^"]+)" title="[^"]+">[^"]+</a>\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}|-)'
+    r'<a href="([^"]+)".*</a>\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}|-)'
 ).findall
 
 

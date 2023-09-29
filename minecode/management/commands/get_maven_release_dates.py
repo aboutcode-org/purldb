@@ -33,11 +33,17 @@ class Command(VerboseCommand):
     help = 'Get and set release_date for Maven Packages'
 
     def handle(self, *args, **options):
-        queryset = Package.objects.filter(type='maven', release_date=None)
+        queryset = Package.objects.filter(
+            type='maven',
+            release_date=None,
+            download_url__startswith='https://repo1.maven.org/maven2'
+        )
         object_count = queryset.count()
         chunk_size = 2000
         iterator = queryset.iterator(chunk_size=chunk_size)
         unsaved_objects = []
+
+        logger.info(f'Updating release_date for {object_count} packages')
         for index, package in enumerate(iterator, start=1):
             download_url = package.download_url
             package_url = package.package_url
