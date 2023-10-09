@@ -13,13 +13,13 @@ def compute_resource_detected_license_expression(apps, schema_editor):
     From scancode.io
     """
     from license_expression import combine_expressions
-    from licensedcode.cache import build_spdx_license_expression
+    from licensedcode.cache import build_spdx_license_expression, InvalidLicenseKeyError
 
     if settings.IS_TESTS:
         return
 
     Resource = apps.get_model("packagedb", "Resource")
-    resources = Resource.objects.filter(~Q(license_expressions=[]) | Q(license_expressions__isnull=False)).only('license_expressions')
+    resources = Resource.objects.filter(~Q(license_expressions=[])).filter(license_expressions__is_null=False)
 
     object_count = resources.count()
     print(f"\nCompute detected_license_expression for {object_count:,} resources.")
@@ -29,7 +29,11 @@ def compute_resource_detected_license_expression(apps, schema_editor):
 
     unsaved_objects = []
     for index, resource in enumerate(iterator, start=1):
-        combined_expression = str(combine_expressions(resource.license_expressions))
+        combined_expression = combine_expressions(resource.license_expressions)
+        if not combined_expression:
+            print(f'    invalid license expression for {resource.path}: {combined_expression}')
+            continue
+        combined_expression = str(combined_expression)
         # gpl-2.0 OR broadcom-linking-unmodified OR proprietary-license
         # build_spdx_license_expression("broadcom-linking-unmodified")
         # AttributeError: 'LicenseSymbol' object has no attribute 'wrapped'
@@ -122,7 +126,7 @@ def compute_resource_license_detections(apps, schema_editor):
     From scancode.io
     """
     Resource = apps.get_model("packagedb", "Resource")
-    resources = Resource.objects.filter(~Q(licenses=[]) | Q(licenses__isnull=False)).only('licenses')
+    resources = Resource.objects.filter(~Q(licenses=[])).filter(licenses__is_null=False)
 
     object_count = resources.count()
     print(f"\nCompute license_detections for {object_count:,} resources.")
