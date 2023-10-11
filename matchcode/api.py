@@ -24,6 +24,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode_toolkit.fingerprinting import split_fingerprint
+from matchcode_toolkit.halohash import byte_hamming_distance
 from matchcode.models import ExactFileIndex
 from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ApproximateDirectoryContentIndex
@@ -91,6 +92,7 @@ class BaseDirectoryIndexMatchSerializer(Serializer):
         lookup_field='uuid',
         read_only=True
     )
+    similarity_score = CharField()
 
 
 class CharMultipleWidget(widgets.TextInput):
@@ -271,11 +273,18 @@ class BaseDirectoryIndexViewSet(ReadOnlyModelViewSet):
         for fingerprint in unique_fingerprints:
             matches = model_class.match(fingerprint)
             for match in matches:
+                _, bah128 = split_fingerprint(fingerprint)
+                # Get fingerprint from the match
+                fp = match.fingerprint()
+                _, match_bah128 = split_fingerprint(fp)
+                hd = byte_hamming_distance(bah128, match_bah128)
+                similarity_score = (128 - hd) / 128
                 results.append(
                     {
                         'fingerprint': fingerprint,
-                        'matched_fingerprint': match.fingerprint(),
+                        'matched_fingerprint': fp,
                         'package': match.package,
+                        'similarity_score': similarity_score,
                     }
                 )
 

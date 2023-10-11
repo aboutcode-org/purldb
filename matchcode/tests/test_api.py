@@ -117,6 +117,7 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
         self.assertEqual(expected_matched_fingerprint, result['matched_fingerprint'])
         expected_package = 'http://testserver' + reverse('api:package-detail', args=[self.test_package1.uuid])
         self.assertEqual(expected_package, result['package'])
+        self.assertEqual('0.9453125', result['similarity_score'])
 
     def test_api_approximate_directory_structure_index_match_close_match(self):
         # This test fingerprint has a hamming distance of 7 from the expected fingerprint
@@ -133,6 +134,7 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
         self.assertEqual(expected_matched_fingerprint, result['matched_fingerprint'])
         expected_package = 'http://testserver' + reverse('api:package-detail', args=[self.test_package2.uuid])
         self.assertEqual(expected_package, result['package'])
+        self.assertEqual('0.9453125', result['similarity_score'])
 
     def test_api_approximate_directory_content_index_match(self):
         test_fingerprint = '00000007af7d63765c78fa516b5353f5ffa7df45'
@@ -147,6 +149,7 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
         self.assertEqual(test_fingerprint, result['matched_fingerprint'])
         expected_package = 'http://testserver' + reverse('api:package-detail', args=[self.test_package1.uuid])
         self.assertEqual(expected_package, result['package'])
+        self.assertEqual('1.0', result['similarity_score'])
 
     def test_api_approximate_directory_structure_index_match(self):
         test_fingerprint = '00000004d10982208810240820080a6a3e852486'
@@ -161,3 +164,4 @@ class ApproximateDirectoryStructureIndexAPITestCase(MatchcodeTestCase):
         self.assertEqual(test_fingerprint, result['matched_fingerprint'])
         expected_package = 'http://testserver' + reverse('api:package-detail', args=[self.test_package2.uuid])
         self.assertEqual(expected_package, result['package'])
+        self.assertEqual('1.0', result['similarity_score'])
