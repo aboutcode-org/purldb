@@ -80,7 +80,7 @@ reppy2==0.3.6
 requests==2.31.0
 rubymarshal==1.0.3
 saneyaml==0.6.0
-scancode-toolkit==32.0.7
+scancode-toolkit==32.0.8
 setuptools==65.3.0
 six==1.16.0
 soupsieve==2.4.1
