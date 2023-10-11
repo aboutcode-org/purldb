@@ -15,6 +15,7 @@ from django_filters.rest_framework import FilterSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.serializers import CharField
+from rest_framework.serializers import FloatField
 from rest_framework.serializers import HyperlinkedRelatedField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import ReadOnlyField
@@ -92,7 +93,7 @@ class BaseDirectoryIndexMatchSerializer(Serializer):
         lookup_field='uuid',
         read_only=True
     )
-    similarity_score = CharField()
+    similarity_score = FloatField()
 
 
 class CharMultipleWidget(widgets.TextInput):
