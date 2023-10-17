@@ -110,7 +110,16 @@ DATABASES = {
         'PASSWORD': env.str('PACKAGEDB_DB_PASSWORD', 'packagedb'),
         'PORT': env.str('PACKAGEDB_DB_PORT', '5432'),
         'ATOMIC_REQUESTS': True,
-    }
+    },
+    'minecode': {
+        'ENGINE': env.str('PACKAGEDB_DB_ENGINE', 'django.db.backends.postgresql'),
+        'HOST': env.str('PACKAGEDB_DB_HOST', 'localhost'),
+        'NAME': 'minecode',
+        'USER': 'minecode',
+        'PASSWORD': 'minecode',
+        'PORT': env.str('PACKAGEDB_DB_PORT', '5432'),
+        'ATOMIC_REQUESTS': True,
+    },
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
