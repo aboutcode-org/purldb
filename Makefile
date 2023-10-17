@@ -85,7 +85,14 @@ postgres:
 	${SUDO_POSTGRES} dropdb packagedb || true
 	@echo "-> Create 'packagedb' database"
 	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=packagedb packagedb
-	@$(MAKE) migrate
+	@echo "-> Create database user 'minecode'"
+	${SUDO_POSTGRES} createuser --no-createrole --no-superuser --login --inherit --createdb minecode || true
+	${SUDO_POSTGRES} psql -c "alter user minecode with encrypted password 'minecode';" || true
+	@echo "-> Drop 'minecode' database"
+	${SUDO_POSTGRES} dropdb minecode || true
+	@echo "-> Create 'minecode' database"
+	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=minecode minecode
+	#@$(MAKE) migrate
 
 run:
 	${MANAGE} runserver 8001 --insecure
