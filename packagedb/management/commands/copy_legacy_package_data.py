@@ -87,13 +87,13 @@ class Command(VerboseCommand):
                     datasource_id=package.datasource_id,
                     file_references=package.file_references,
                 )
-                unsaved_packages.append(package)
+                unsaved_packages.append(new_package)
 
                 for dependency in package.dependencies.all():
                     new_dependency = DependentPackage(
                         package=new_package,
                         purl=dependency.purl,
-                        extracted_requirements=dependency.extracted_requirement,
+                        extracted_requirement=dependency.extracted_requirement,
                         scope=dependency.scope,
                         is_runtime=dependency.is_runtime,
                         is_optional=dependency.is_optional,
