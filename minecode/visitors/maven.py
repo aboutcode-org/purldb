@@ -13,7 +13,9 @@ import hashlib
 import io
 import json
 import logging
+import re
 from typing import Dict
+from urllib.parse import urlparse
 
 import arrow
 import requests
@@ -305,7 +307,7 @@ def map_maven_package(package_url, package_content):
         ancestor_pom_texts=ancestor_pom_texts,
         package=package
     )
-    
+
 
     urls = get_urls(
         namespace=package_url.namespace,
@@ -451,6 +453,344 @@ def process_request(purl_str):
         error = map_maven_packages(package_url)
 
     return error
+
+
+collect_links = re.compile(r'href="([^"]+)"').findall
+collect_links_and_artifact_timestamps = re.compile(
+    r'<a href="([^"]+)".*</a>\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}|-)'
+).findall
+
+
+def check_if_file_name_is_linked_on_page(file_name, links, **kwargs):
+    """
+    Return True if `file_name` is in `links`
+    """
+    return any(l.endswith(file_name) for l in links)
+
+
+def check_if_page_has_pom_files(links, **kwargs):
+    """
+    Return True of any entry in `links` ends with .pom.
+    """
+    return any(l.endswith('.pom') for l in links)
+
+
+def check_if_page_has_directories(links, **kwargs):
+    """
+    Return True if any entry, excluding "../", ends with /.
+    """
+    return any(l.endswith('/') for l in links if l != '../')
+
+
+def check_if_package_version_page(links, **kwargs):
+    """
+    Return True if `links` contains pom files and has no directories
+    """
+    return (
+        check_if_page_has_pom_files(links=links)
+        and not check_if_page_has_directories(links=links)
+    )
+
+
+def check_if_package_page(links, **kwargs):
+    return (
+        check_if_file_name_is_linked_on_page(file_name='maven-metadata.xml', links=links)
+        and not check_if_page_has_pom_files(links=links)
+    )
+
+
+def check_if_maven_root(links, **kwargs):
+    """
+    Return True if "archetype-catalog.xml" is in `links`, as the root of a Maven
+    repo contains "archetype-catalog.xml".
+    """
+    return check_if_file_name_is_linked_on_page(file_name='archetype-catalog.xml', links=links)
+
+
+def check_on_page(url, checker):
+    """
+    Return True if there is a link on `url` that is the same as `file_name`,
+    False otherwise.
+    """
+    response = requests.get(url)
+    if response:
+        links = collect_links(response.text)
+        return checker(links=links)
+    return False
+
+
+def is_maven_root(url):
+    """
+    Return True if `url` is the root of a Maven repo, False otherwise.
+    """
+    return check_on_page(url, check_if_maven_root)
+
+
+def is_package_page(url):
+    """
+    Return True if `url` is a package page on a Maven repo, False otherwise.
+    """
+    return check_on_page(url, check_if_package_page)
+
+
+def is_package_version_page(url):
+    """
+    Return True if `url` is a package version page on a Maven repo, False otherwise.
+    """
+    return check_on_page(url, check_if_package_version_page)
+
+
+def url_parts(url):
+    parsed_url = urlparse(url)
+    scheme = parsed_url.scheme
+    netloc = parsed_url.netloc
+    path_segments = [p for p in parsed_url.path.split('/') if p]
+    return scheme, netloc, path_segments
+
+
+def create_url(scheme, netloc, path_segments):
+    url_template = f'{scheme}://{netloc}'
+    path = '/'.join(path_segments)
+    return f'{url_template}/{path}'
+
+
+def get_maven_root(url):
+    """
+    Given `url`, that is a URL to namespace, package, or artifact in a Maven
+    repo, return the URL to the root of that repo. If a Maven root cannot be
+    determined, return None.
+
+    >>> get_maven_root('https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/')
+    'https://repo1.maven.org/maven2'
+    """
+    scheme, netloc, path_segments = url_parts(url)
+    for i in range(len(path_segments)):
+        segments = path_segments[:i+1]
+        url_segment = create_url(scheme, netloc, segments)
+        if is_maven_root(url_segment):
+            return url_segment
+    return None
+
+
+def determine_namespace_name_version_from_url(url, root_url=None):
+    """
+    Return a 3-tuple containing strings of a Package namespace, name, and
+    version, determined from `url`, where `url` points to namespace, package,
+    specific package version, or artifact on a Maven repo.
+
+    Return None if a Maven root cannot be determined from `url`.
+
+    >>> determine_namespace_name_version_from_url('https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/')
+    ('net.shibboleth', 'parent', '7.11.0')
+    """
+    if not root_url:
+        root_url = get_maven_root(url)
+        if not root_url:
+            raise Exception(f'Error: not a Maven repository: {url}')
+
+    _, remaining_path_segments = url.split(root_url)
+    remaining_path_segments = remaining_path_segments.split('/')
+    remaining_path_segments = [p for p in remaining_path_segments if p]
+
+    namespace_segments = []
+    package_name = ''
+    package_version = ''
+    for i in range(len(remaining_path_segments)):
+        segment = remaining_path_segments[i]
+        segments = remaining_path_segments[:i+1]
+        path = '/'.join(segments)
+        url_segment = f'{root_url}/{path}'
+        if is_package_page(url_segment):
+            package_name = segment
+        elif is_package_version_page(url_segment):
+            package_version = segment
+        else:
+            namespace_segments.append(segment)
+    namespace = '.'.join(namespace_segments)
+    return namespace, package_name, package_version
+
+
+def add_to_import_queue(url, root_url):
+    """
+    Create ImportableURI for the Maven repo package page at `url`.
+    """
+    from minecode.models import ImportableURI
+    data = None
+    response = requests.get(url)
+    if response:
+        data = response.text
+    namespace, name, _ = determine_namespace_name_version_from_url(url, root_url)
+    purl = PackageURL(
+        type='maven',
+        namespace=namespace,
+        name=name,
+    )
+    importable_uri = ImportableURI.objects.insert(url, data, purl)
+    if importable_uri:
+        logger.info(f'Inserted {url} into ImportableURI queue')
+
+
+def filter_only_directories(timestamps_by_links):
+    """
+    Given a mapping of `timestamps_by_links`, where the links are directory names (which end with `/`),
+    """
+    timestamps_by_links_filtered = {}
+    for link, timestamp in timestamps_by_links.items():
+        if link != '../' and link.endswith('/'):
+            timestamps_by_links_filtered[link] = timestamp
+    return timestamps_by_links_filtered
+
+
+valid_artifact_extensions = [
+    'ejb3',
+    'ear',
+    'aar',
+    'apk',
+    'gem',
+    'jar',
+    'nar',
+    # 'pom',
+    'so',
+    'swc',
+    'tar',
+    'tar.gz',
+    'war',
+    'xar',
+    'zip',
+]
+
+
+def filter_for_artifacts(timestamps_by_links):
+    """
+    Given a mapping of `timestamps_by_links`, where the links are the filenames
+    of Maven artifacts, return a mapping of filenames whose extension is in
+    `valid_artifact_extensions` and their timestamps.
+    """
+    timestamps_by_links_filtered = {}
+    for link, timestamp in timestamps_by_links.items():
+        for ext in valid_artifact_extensions:
+            if link.endswith(ext):
+                timestamps_by_links_filtered[link] = timestamp
+    return timestamps_by_links_filtered
+
+
+def collect_links_from_text(text, filter):
+    """
+    Return a mapping of link locations and their timestamps, given HTML `text`
+    content, that is filtered using `filter`.
+    """
+    links_and_timestamps = collect_links_and_artifact_timestamps(text)
+    timestamps_by_links = {}
+    for link, timestamp in links_and_timestamps:
+        if timestamp == '-':
+            timestamp = ''
+        timestamps_by_links[link] = timestamp
+
+    timestamps_by_links = filter(timestamps_by_links=timestamps_by_links)
+    return timestamps_by_links
+
+
+def create_absolute_urls_for_links(text, url, filter):
+    """
+    Given the `text` contents from `url`, return a mapping of absolute URLs to
+    links from `url` and their timestamps, that is then filtered by `filter`.
+    """
+    timestamps_by_absolute_links = {}
+    url = url.rstrip('/')
+    timestamps_by_links = collect_links_from_text(text, filter)
+    for link, timestamp in timestamps_by_links.items():
+        if not link.startswith(url):
+            link = f'{url}/{link}'
+        timestamps_by_absolute_links[link] = timestamp
+    return timestamps_by_absolute_links
+
+
+def get_directory_links(url):
+    """
+    Return a list of absolute directory URLs of the hyperlinks from `url`
+    """
+    timestamps_by_directory_links = {}
+    response = requests.get(url)
+    if response:
+        timestamps_by_directory_links = create_absolute_urls_for_links(
+            response.text,
+            url=url,
+            filter=filter_only_directories
+        )
+    return timestamps_by_directory_links
+
+
+def get_artifact_links(url):
+    """
+    Return a list of absolute directory URLs of the hyperlinks from `url`
+    """
+    timestamps_by_artifact_links = []
+    response = requests.get(url)
+    if response:
+        timestamps_by_artifact_links = create_absolute_urls_for_links(
+            response.text,
+            url=url,
+            filter=filter_for_artifacts
+        )
+    return timestamps_by_artifact_links
+
+
+def crawl_to_package(url, root_url):
+    """
+    Given a maven repo `url`,
+    """
+    if is_package_page(url):
+        add_to_import_queue(url, root_url)
+        return
+
+    for link in get_directory_links(url):
+        crawl_to_package(link, root_url)
+
+
+def crawl_maven_repo_from_root(root_url):
+    """
+    Given the `url` to a maven root, traverse the repo depth-first and add
+    packages to the import queue.
+    """
+    crawl_to_package(root_url, root_url)
+
+
+def get_artifact_sha1(artifact_url):
+    """
+    Return the SHA1 value of the Maven artifact located at `artifact_url`.
+    """
+    sha1 = None
+    artifact_sha1_url = f'{artifact_url}.sha1'
+    response = requests.get(artifact_sha1_url)
+    if response:
+        sha1_contents = response.text.strip().split()
+        sha1 = sha1_contents[0]
+        sha1 = validate_sha1(sha1)
+    return sha1
+
+
+def get_classifier_from_artifact_url(artifact_url, package_version_page_url, package_name, package_version):
+    """
+    Return the classifier from a Maven artifact URL `artifact_url`, otherwise
+    return None if a classifier cannot be determined from `artifact_url`
+    """
+    classifier = None
+    # https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0
+    package_version_page_url = package_version_page_url.rstrip('/')
+    # https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0
+    leading_url_portion = f'{package_version_page_url}/{package_name}-{package_version}'
+    # artifact_url = 'https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0-onejar.jar'
+    # ['', '-onejar.jar']
+    _, remaining_url_portion = artifact_url.split(leading_url_portion)
+    # ['-onejar', 'jar']
+    remaining_url_portions = remaining_url_portion.split('.')
+    if remaining_url_portions and remaining_url_portions[0]:
+        # '-onejar'
+        classifier = remaining_url_portions[0]
+        if classifier.startswith('-'):
+            # 'onejar'
+            classifier = classifier[1:]
+    return classifier
 
 
 @visit_router.route('http://repo1\.maven\.org/maven2/\.index/nexus-maven-repository-index.properties')

@@ -9,18 +9,51 @@ def compute_package_declared_license_expression_spdx(apps, schema_editor):
     Compute Package `declared_license_expression_spdx`, when missing,
     from `declared_license_expression`, when available.
     """
-    from licensedcode.cache import build_spdx_license_expression
+    from licensedcode.cache import build_spdx_license_expression, InvalidLicenseKeyError
+    from packageurl import PackageURL
 
     Package = apps.get_model('packagedb', 'Package')
     packages = Package.objects.filter(
         ~Q(declared_license_expression="") & Q(declared_license_expression_spdx="") |
         Q(declared_license_expression__isnull=False) & Q(declared_license_expression_spdx__isnull=True)
     )
+    package_count = packages.count()
+    chunk_size = 2000
+    iterator = packages.iterator(chunk_size=chunk_size)
+    updated = []
+    for i, package in enumerate(iterator):
+        if (not i % chunk_size) and updated:
+            Package.objects.bulk_update(
+                objs=updated,
+                fields=[
+                    'declared_license_expression_spdx',
+                ]
+            )
+            updated = []
+            print(f"  {i:,} / {package_count:,} computed and updated")
+        try:
+            if spdx := build_spdx_license_expression(package.declared_license_expression):
+                package.declared_license_expression_spdx = spdx
+                updated.append(package)
+        except InvalidLicenseKeyError as e:
+            package_url = PackageURL(
+                type=package.type,
+                namespace=package.namespace,
+                name=package.name,
+                version=package.version,
+                qualifiers=package.qualifiers,
+                subpath=package.subpath
+            )
+            print(f"    Error processing {package_url}: {e}")
 
-    for package in packages:
-        if spdx := build_spdx_license_expression(package.declared_license_expression):
-            package.declared_license_expression_spdx = spdx
-            package.save()
+    if updated:
+        print("Updating remaining Packages...")
+        Package.objects.bulk_update(
+            objs=updated,
+            fields=[
+                'declared_license_expression_spdx',
+            ]
+        )
 
 
 class Migration(migrations.Migration):

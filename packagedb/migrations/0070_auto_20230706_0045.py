@@ -66,8 +66,11 @@ def create_maven_package_sets(apps, schema_editor):
         "version",
         "qualifiers",
         "subpath",
-    ).iterator(
-        chunk_size=5000
+    )
+    package_count = maven_packages_without_package_set.count()
+    chunk_size = 2000
+    iterator = maven_packages_without_package_set.iterator(
+        chunk_size=chunk_size
     )
 
     prev_namespace = None
@@ -75,7 +78,17 @@ def create_maven_package_sets(apps, schema_editor):
     prev_version = None
     prev_package = None
     unupdated_packages = []
-    for package in maven_packages_without_package_set:
+    for i, package in enumerate(iterator):
+        if not (i % chunk_size) and unupdated_packages:
+            Package.objects.bulk_update(
+                objs=unupdated_packages,
+                fields=[
+                    "package_content",
+                ]
+            )
+            unupdated_packages = []
+            print(f"  {i:,} / {package_count:,} updated")
+
         if "source" in package.qualifiers:
             package_content = PackageContentType.SOURCE_ARCHIVE
         else:

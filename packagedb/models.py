@@ -254,12 +254,12 @@ class AbstractPackage(models.Model):
             "By convention the first line should be a summary when available."
         ),
     )
-    release_date = models.DateField(
+    release_date = models.DateTimeField(
         blank=True,
         null=True,
         db_index=True,
         help_text=_(
-            "The date that the package file was created, or when "
+            "The date and time that the package file was created, or when "
             "it was posted to its original download source."
         ),
     )

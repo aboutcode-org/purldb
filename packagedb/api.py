@@ -9,7 +9,9 @@
 
 import logging
 from django.core.exceptions import ValidationError
+from django.db.models import OuterRef
 from django.db.models import Q
+from django.db.models import Subquery
 from django_filters.rest_framework import FilterSet
 from django_filters.filters import Filter
 from django_filters.filters import OrderingFilter
@@ -565,12 +567,20 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
 
         lookups = Q()
         for field, value in data.items():
-            value = value or []
-            # We create this intermediate dictionary so we can modify the field
-            # name to have __in at the end
-            d = {f'{field}__in': value}
-            lookups |= Q(**d)
+            # Subquery to get the ids of the Packages with the earliest release_date for each `field`
+            earliest_release_dates = Package.objects.filter(
+                **{field: OuterRef(field)}
+            ).order_by('release_date').values('id')[:1]
 
+            value = value or []
+            lookups |= Q(
+                **{
+                    f'{field}__in': value,
+                    'id__in': Subquery(earliest_release_dates),
+                }
+            )
+
+        # Query to get the full Package objects with the earliest release_date for each sha1
         qs = Package.objects.filter(lookups)
         paginated_qs = self.paginate_queryset(qs)
         if enhance_package_data:
@@ -803,7 +813,7 @@ def get_all_versions(purl: PackageURL):
         except InvalidVersion:
             logger.warning(f"Invalid version '{package_version.value}' for '{purl}'")
             pass
-    
+
     return result
 
 
