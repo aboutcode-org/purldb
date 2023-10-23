@@ -12,7 +12,8 @@ import logging
 import sys
 
 from minecode.management.commands import VerboseCommand
-from packagedb.models import Package, DependentPackage, Party
+from packagedb.models import Package, DependentPackage, Party, Resource
+from matchcode.models import ApproximateDirectoryContentIndex, ApproximateDirectoryStructureIndex
 
 TRACE = False
 
@@ -53,6 +54,9 @@ class Command(VerboseCommand):
         unsaved_packages = []
         unsaved_dependencies = []
         unsaved_parties = []
+        unsaved_directory_content_fingerprints = []
+        unsaved_directory_structure_fingerprints = []
+        unsaved_resources = []
 
         print(f"Copying {package_count:,} Packages from the 'minecode' database to the 'default' database")
         i = 0
@@ -71,9 +75,21 @@ class Command(VerboseCommand):
                 Party.objects.bulk_create(
                     unsaved_parties
                 )
+                ApproximateDirectoryContentIndex.objects.bulk_create(
+                    unsaved_directory_content_fingerprints
+                )
+                ApproximateDirectoryStructureIndex.objects.bulk_create(
+                    unsaved_directory_structure_fingerprints
+                )
+                Resource.objects.bulk_create(
+                    unsaved_resources
+                )
                 unsaved_packages = []
                 unsaved_dependencies = []
                 unsaved_parties = []
+                unsaved_directory_content_fingerprints = []
+                unsaved_directory_structure_fingerprints = []
+                unsaved_resources = []
                 print(f"  {i:,} / {package_count:,} saved")
             else:
                 new_package = Package(
@@ -139,6 +155,66 @@ class Command(VerboseCommand):
                     )
                     unsaved_parties.append(new_party)
 
+                for directory_content_fingerprint in package.approximatedirectorycontentindex_set.all():
+                    new_directory_content_fingerprint = ApproximateDirectoryContentIndex(
+                        indexed_elements_count=directory_content_fingerprint.indexed_elements_count,
+                        chunk1=directory_content_fingerprint.chunk1,
+                        chunk2=directory_content_fingerprint.chunk2,
+                        chunk3=directory_content_fingerprint.chunk3,
+                        chunk4=directory_content_fingerprint.chunk4,
+                        package=package,
+                        path=directory_content_fingerprint.path,
+                    )
+                    unsaved_directory_content_fingerprints(new_directory_content_fingerprint)
+
+                for directory_structure_fingerprint in package.p.approximatedirectorystructureindex_set.all():
+                    new_directory_structure_fingerprint = ApproximateDirectoryStructureIndex(
+                        indexed_elements_count=directory_structure_fingerprint.indexed_elements_count,
+                        chunk1=directory_structure_fingerprint.chunk1,
+                        chunk2=directory_structure_fingerprint.chunk2,
+                        chunk3=directory_structure_fingerprint.chunk3,
+                        chunk4=directory_structure_fingerprint.chunk4,
+                        package=package,
+                        path=directory_structure_fingerprint.path,
+                    )
+                    unsaved_directory_structure_fingerprints(new_directory_structure_fingerprint)
+
+                for resource in package.resources.all():
+                    new_resource = Resource(
+                        package=package,
+                        path=resource.path,
+                        name=resource.name,
+                        extension=resource.extension,
+                        size=resource.size,
+                        mime_type=resource.mime_type,
+                        file_type=resource.file_type,
+                        programming_language=resource.programming_language,
+                        is_binary=resource.is_binary,
+                        is_text=resource.is_text,
+                        is_archive=resource.is_archive,
+                        is_key_file=resource.is_key_file,
+                        is_media=resource.is_media,
+                        is_file=resource.is_file,
+                        md5=resource.md5,
+                        sha1=resource.sha1,
+                        sha256=resource.sha256,
+                        sha512=resource.sha512,
+                        git_sha1=resource.git_sha1,
+                        detected_license_expression=resource.detected_license_expression,
+                        detected_license_expression_spdx=resource.detected_license_expression_spdx,
+                        license_detections=resource.license_detections,
+                        license_clues=resource.license_clues,
+                        percentage_of_license_text=resource.percentage_of_license_text,
+                        copyrights=resource.copyrights,
+                        holders=resource.holders,
+                        authors=resource.authors,
+                        package_data=resource.package_data,
+                        emails=resource.emails,
+                        urls=resource.urls,
+                        extra_data=resource.extra_data,
+                    )
+                    unsaved_resources.append(new_resource)
+
                 i += 1
 
         if unsaved_packages:
@@ -151,9 +227,21 @@ class Command(VerboseCommand):
             Party.objects.bulk_create(
                 unsaved_parties
             )
+            ApproximateDirectoryContentIndex.objects.bulk_create(
+                unsaved_directory_content_fingerprints
+            )
+            ApproximateDirectoryStructureIndex.objects.bulk_create(
+                unsaved_directory_structure_fingerprints
+            )
+            Resource.objects.bulk_create(
+                unsaved_resources
+            )
             unsaved_packages = []
             unsaved_dependencies = []
             unsaved_parties = []
+            unsaved_directory_content_fingerprints = []
+            unsaved_directory_structure_fingerprints = []
+            unsaved_resources = []
             print(f"  {i:,} / {package_count:,} saved")
 
         print(f"{i:,} Packages saved, {skipped_packages_count:,} Packages skipped")
