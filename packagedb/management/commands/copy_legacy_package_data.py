@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import copy
 import logging
 import sys
 
@@ -20,19 +21,45 @@ logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
 
 
+# This is from https://stackoverflow.com/questions/4856882/limiting-memory-use-in-a-large-django-queryset/5188179#5188179
+class MemorySavingQuerysetIterator(object):
+
+    def __init__(self,queryset,max_obj_num=1000):
+        self._base_queryset = queryset
+        self._generator = self._setup()
+        self.max_obj_num = max_obj_num
+
+    def _setup(self):
+        for i in range(0,self._base_queryset.count(),self.max_obj_num):
+            # By making a copy of of the queryset and using that to actually access
+            # the objects we ensure that there are only `max_obj_num` objects in
+            # memory at any given time
+            smaller_queryset = copy.deepcopy(self._base_queryset)[i:i+self.max_obj_num]
+            logger.debug('Grabbing next %s objects from DB' % self.max_obj_num)
+            for obj in smaller_queryset.iterator():
+                yield obj
+
+    def __iter__(self):
+        return self._generator
+
+    def next(self):
+        return self._generator.next()
+
+
 class Command(VerboseCommand):
     def handle(self, *args, **options):
         packages = Package.objects.using('minecode').all()
         package_count = packages.count()
-        iterator = packages.iterator(chunk_size=2000)
         unsaved_packages = []
         unsaved_dependencies = []
         unsaved_parties = []
 
         print(f"Copying {package_count:,} Packages from the 'minecode' database to the 'default' database")
         i = 0
-        for package in iterator:
+        skipped_packages_count = 0
+        for package in MemorySavingQuerysetIterator(packages):
             if Package.objects.filter(download_url=package.download_url).exists():
+                skipped_packages_count += 1
                 continue
             if not (i % 100) and unsaved_packages:
                 Package.objects.bulk_create(
@@ -128,3 +155,5 @@ class Command(VerboseCommand):
             unsaved_dependencies = []
             unsaved_parties = []
             print(f"  {i:,} / {package_count:,} saved")
+
+        print(f"{i:,} Packages saved, {skipped_packages_count:,} Packages skipped")
