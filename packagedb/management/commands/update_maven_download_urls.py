@@ -16,6 +16,7 @@ import requests
 from minecode.management.commands import VerboseCommand
 from packagedb.models import Package
 from packagedcode.maven import get_urls
+from packageurl import PackageURL
 
 TIMEOUT = 30
 
@@ -79,11 +80,17 @@ class Command(VerboseCommand):
                 logger.info(f'Updated {processed_packages_count:,} Maven Packages')
             # If the package's download URL is not valid, then we update it
             if not check_download_url(package.download_url):
-                urls = get_urls(
+                package_url = PackageURL(
                     namespace=package.namespace,
                     name=package.name,
                     version=package.version,
                     qualifiers=package.qualifiers,
+                )
+                urls = get_urls(
+                    namespace=package_url.namespace,
+                    name=package_url.name,
+                    version=package_url.version,
+                    qualifiers=package_url.qualifiers,
                 )
                 generated_download_url = urls['repository_download_url']
                 if Package.objects.filter(download_url=generated_download_url).exists():
