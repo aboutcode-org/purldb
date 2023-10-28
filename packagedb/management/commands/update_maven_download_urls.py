@@ -11,6 +11,8 @@ import copy
 import logging
 import sys
 
+from django.db import transaction
+
 import requests
 
 from minecode.management.commands import VerboseCommand
@@ -68,19 +70,23 @@ class Command(VerboseCommand):
         unsaved_packages = []
         processed_packages_count = 0
         for i, package in enumerate(MemorySavingQuerysetIterator(maven_packages)):
-            if i % 2000 and unsaved_packages:
-                Package.objects.bulk_update(
-                    objs=unsaved_packages,
-                    fields=[
-                        'download_url',
-                    ]
-                )
+            if not i % 1000:
+                logger.info(f'Checked {i:,} / {maven_packages_count:,} Maven Package download URLs')
+            if not i % 2000 and unsaved_packages:
+                with transaction.atomic():
+                    Package.objects.bulk_update(
+                        objs=unsaved_packages,
+                        fields=[
+                            'download_url',
+                        ]
+                    )
                 processed_packages_count += unsaved_packages.count()
                 unsaved_packages = []
                 logger.info(f'Updated {processed_packages_count:,} Maven Packages')
             # If the package's download URL is not valid, then we update it
             if not check_download_url(package.download_url):
                 package_url = PackageURL(
+                    type=package.type,
                     namespace=package.namespace,
                     name=package.name,
                     version=package.version,
@@ -104,17 +110,19 @@ class Command(VerboseCommand):
                     logger.info(f'Error: cannot generate a valid download_url for package {package.package_uid}')
 
         if unsaved_packages:
-            Package.objects.bulk_update(
-                objs=unsaved_packages,
-                fields=[
-                    'download_url',
-                ]
-            )
+            with transaction.atomic():
+                Package.objects.bulk_update(
+                    objs=unsaved_packages,
+                    fields=[
+                        'download_url',
+                    ]
+                )
             processed_packages_count += unsaved_packages.count()
             unsaved_packages = []
             logger.info(f'Updated {processed_packages_count:,} Maven Packages')
 
         if packages_to_delete:
             pks = [p.pk for p in packages_to_delete]
-            Package.objects.filter(pk__in=pks).delete()
+            with transaction.atomic():
+                Package.objects.filter(pk__in=pks).delete()
             logger.info(f'Deleted {pks.count():,} Maven Package duplicates')
