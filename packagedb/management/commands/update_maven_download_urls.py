@@ -13,6 +13,9 @@ import sys
 
 from django.db import transaction
 
+from urllib3.util import Retry
+from requests import Session
+from requests.adapters import HTTPAdapter
 import requests
 
 from minecode.management.commands import VerboseCommand
@@ -20,13 +23,16 @@ from packagedb.models import Package
 from packagedcode.maven import get_urls
 from packageurl import PackageURL
 
-TIMEOUT = 30
+DEFAULT_TIMEOUT = 30
 
 TRACE = False
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
+
+session = Session()
+session.mount('https://', HTTPAdapter(max_retries=Retry(10)))
 
 
 # This is from https://stackoverflow.com/questions/4856882/limiting-memory-use-in-a-large-django-queryset/5188179#5188179
@@ -53,17 +59,17 @@ class MemorySavingQuerysetIterator(object):
         return self._generator.next()
 
 
-def check_download_url(download_url):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
-    }
-    response = requests.get(
-        download_url,
-        headers=headers,
-        timeout=TIMEOUT,
-        retries=requests.adapters.Retry(10)
-    )
-    return response.ok
+def check_download_url(url, timeout=DEFAULT_TIMEOUT):
+    """Return True if `url` is resolvable and accessable"""
+    if not url:
+        return
+    try:
+        response = session.get(url, timeout=timeout)
+        response.raise_for_status()
+        return response.ok
+    except (requests.RequestException, ValueError, TypeError) as exception:
+        logger.debug(f"[Exception] {exception}")
+        return False
 
 
 class Command(VerboseCommand):
