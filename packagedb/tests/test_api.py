@@ -11,7 +11,6 @@ from uuid import uuid4
 import json
 import os
 
-from django.contrib.postgres.search import SearchVector
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -373,31 +372,6 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
             response = self.client.get('/api/packages/?{}={}'.format(key, value.upper()))
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(1, response.data.get('count'))
-
-    def test_package_api_list_endpoint_search(self):
-        # Populate the search vector field. This is done via Django signals
-        # outside of the tests.
-        Package.objects.filter(uuid=self.package.uuid).update(
-            search_vector=SearchVector('namespace', 'name', 'version', 'download_url')
-        )
-
-        # Create a dummy package to verify search filter works.
-        Package.objects.create(
-            type='generic',
-            namespace='dummy-namespace',
-            name='dummy-name',
-            version='12.35',
-            download_url='https://dummy.com/dummy'
-        )
-
-        for key, value in self.package_data.items():
-            # Skip since we only search on one field
-            if key not in ['namespace', 'name', 'version', 'download_url']:
-                continue
-
-            response = self.client.get('/api/packages/?search={}'.format(value))
-            assert response.status_code == status.HTTP_200_OK
-            assert response.data.get('count') == 1
 
     def test_package_api_retrieve_endpoint(self):
         response = self.client.get('/api/packages/{}/'.format(self.package.uuid))

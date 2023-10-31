@@ -193,19 +193,6 @@ class MultiplePackageURLFilter(Filter):
         return qs.filter(q)
 
 
-class PackageSearchFilter(Filter):
-    def filter(self, qs, value):
-        try:
-            request = self.parent.request
-        except AttributeError:
-            return None
-
-        if not value:
-            return qs
-
-        return Package.objects.filter(search_vector=value)
-
-
 class PackageFilter(FilterSet):
     type = django_filters.CharFilter(
         lookup_expr="iexact",
@@ -229,7 +216,6 @@ class PackageFilter(FilterSet):
         help_text="Exact SHA1. Multi-value supported.",
     )
     purl = MultiplePackageURLFilter(label='Package URL')
-    search = PackageSearchFilter(label='Search')
 
     sort = OrderingFilter(fields=[
             'type',

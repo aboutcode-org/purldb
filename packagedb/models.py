@@ -14,8 +14,6 @@ import sys
 import uuid
 
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchVectorField
 from django.core.paginator import Paginator
 from django.db import models
 from django.utils import timezone
@@ -465,21 +463,6 @@ class Package(
     uuid = models.UUIDField(
         verbose_name=_("UUID"), default=uuid.uuid4, unique=True, editable=False
     )
-    type = LowerCaseField(
-        max_length=16,
-    )
-    namespace = LowerCaseField(
-        max_length=255,
-    )
-    name = LowerCaseField(
-        max_length=100,
-    )
-    qualifiers = LowerCaseField(
-        max_length=1024,
-    )
-    subpath = LowerCaseField(
-        max_length=200,
-    )
     mining_level = models.PositiveIntegerField(
         default=0,
         help_text=_('A numeric indication of the highest depth and breadth '
@@ -546,8 +529,6 @@ class Package(
         ),
     )
 
-    search_vector = SearchVectorField(null=True)
-
     objects = PackageQuerySet.as_manager()
 
     # TODO: Think about ordering, unique together, indexes, etc.
@@ -565,8 +546,6 @@ class Package(
             )
         ]
         indexes = [
-            # GIN index for search performance increase
-            GinIndex(fields=['search_vector']),
             # multicolumn index for search on a whole `purl`
             models.Index(fields=[
                 'type', 'namespace', 'name', 'version', 'qualifiers', 'subpath'
