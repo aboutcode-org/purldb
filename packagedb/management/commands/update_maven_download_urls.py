@@ -242,7 +242,7 @@ class Command(VerboseCommand):
                     qualifiers=package_url.qualifiers,
                 )
                 generated_download_url = urls['repository_download_url']
-                if Package.objects.filter(download_url=generated_download_url).exists():
+                if Package.objects.filter(download_url=generated_download_url).exclude(pk=package.pk).exists():
                     # This download url already exists in the database, we should just remove this record.
                     packages_to_delete.append(package)
                     logger.info(f'Deleting {package.package_uid} - already exists in database')
@@ -263,7 +263,7 @@ class Command(VerboseCommand):
                             and package.name.lower() == artifact.name.lower()
                             and package.version.lower() == artifact.version.lower()
                         ):
-                            if Package.objects.filter(download_url=artifact.download_url).exists():
+                            if Package.objects.filter(download_url=artifact.download_url).exclude(pk=package.pk).exists():
                                 packages_to_delete.append(package)
                                 logger.info(f'Deleting {package.package_uid} - already exists in database')
                             else:
