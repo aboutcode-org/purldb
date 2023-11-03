@@ -465,21 +465,6 @@ class Package(
     uuid = models.UUIDField(
         verbose_name=_("UUID"), default=uuid.uuid4, unique=True, editable=False
     )
-    type = LowerCaseField(
-        max_length=16,
-    )
-    namespace = LowerCaseField(
-        max_length=255,
-    )
-    name = LowerCaseField(
-        max_length=100,
-    )
-    qualifiers = LowerCaseField(
-        max_length=1024,
-    )
-    subpath = LowerCaseField(
-        max_length=200,
-    )
     mining_level = models.PositiveIntegerField(
         default=0,
         help_text=_('A numeric indication of the highest depth and breadth '
