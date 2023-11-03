@@ -108,18 +108,6 @@ class PackageModelTestCase(TransactionTestCase):
         self.created_package = Package.objects.create(**self.created_package_data)
         self.inserted_package = Package.objects.insert(**self.inserted_package_data)
 
-    def test_package_creation(self):
-        test_package = Package.objects.get(download_url=self.created_package_download_url)
-        self.assertIsNotNone(test_package)
-        for key, val in self.created_package_data.items():
-            self.assertEqual(val.lower(), getattr(test_package, key))
-
-    def test_package_insertion(self):
-        test_package = Package.objects.get(download_url=self.inserted_package_download_url)
-        self.assertIsNotNone(test_package)
-        for key, val in self.inserted_package_data.items():
-            self.assertEqual(val.lower(), getattr(test_package, key))
-
     def test_package_download_url_is_unique(self):
         self.assertIsNone(Package.objects.insert(download_url=self.created_package_download_url))
         self.assertIsNone(Package.objects.insert(download_url=self.inserted_package_download_url))

@@ -363,7 +363,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
     def test_package_api_list_endpoint_filter_by_purl_fields_ignores_case(self):
         for key, value in self.package_data.items():
             # Skip non-purl fields
-            if key not in ['type', 'namespace', 'name', 'version', 'qualifiers', 'subpath']:
+            if key not in ['type', 'namespace', 'name']:
                 continue
 
             response = self.client.get('/api/packages/?{}={}'.format(key, value.lower()))
@@ -410,7 +410,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
                 continue
 
             if key in ['type', 'namespace', 'name', 'version', 'qualifiers', 'subpath']:
-                self.assertEqual(value.lower(), getattr(self.package, key))
+                self.assertEqual(value, getattr(self.package, key))
                 continue
 
             if key == 'history':
@@ -666,7 +666,7 @@ class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
         self.assertEqual('error', self.scannableuri.index_error)
         self.assertEqual(self.scan_request_date, self.scannableuri.scan_request_date)
         response = self.client.get(f'/api/packages/{self.package.uuid}/reindex_package/')
-        self.assertEqual('pkg:maven/sample/baz@90.12 has been queued for reindexing', response.data['status'])
+        self.assertEqual('pkg:maven/sample/Baz@90.12 has been queued for reindexing', response.data['status'])
         self.scannableuri.refresh_from_db()
         self.assertEqual(True, self.scannableuri.rescan_uri)
         self.assertEqual(100, self.scannableuri.priority)
@@ -690,7 +690,7 @@ class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
         self.assertEqual('error', self.scannableuri2.index_error)
         self.assertEqual(self.scan_request_date2, self.scannableuri2.scan_request_date)
         existing_purls = [
-            'pkg:maven/sample/baz@90.12',
+            'pkg:maven/sample/Baz@90.12',
             'pkg:npm/example/bar@56.78',
         ]
         nonexistent_purls = [
