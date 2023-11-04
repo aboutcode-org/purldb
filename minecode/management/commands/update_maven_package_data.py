@@ -145,7 +145,9 @@ class Command(VerboseCommand):
                         Package.objects.bulk_create(unsaved_new_packages)
                     created_packages_count += len(unsaved_new_packages)
                     unsaved_new_packages = []
-                    logger.info(f'Created {created_packages_count} Maven Packages')
+                    logger.info(f'Created {created_packages_count:,} Maven Packages')
+
+                logger.info(f'Deleted {deleted_packages_count:,} Duplicate Maven Packages')
 
             normalized_qualifiers = normalize_qualifiers(maven_package.qualifiers, encode=True)
             existing_packages = Package.objects.filter(
@@ -182,6 +184,9 @@ class Command(VerboseCommand):
                     if field == 'release_date':
                         value = dateutil_parse(value)
                     setattr(existing_package, field, value)
+                    if field == 'release_date':
+                        p_val = str(p_val)
+                        value = str(value)
                     entry = dict(
                         field=field,
                         old_value=p_val,
@@ -243,6 +248,9 @@ class Command(VerboseCommand):
                     if field == 'release_date':
                         value = dateutil_parse(value)
                     setattr(existing_package_lowercased, field, value)
+                    if field == 'release_date':
+                        p_val = str(p_val)
+                        value = str(value)
                     entry = dict(
                         field=field,
                         old_value=p_val,
@@ -331,4 +339,4 @@ class Command(VerboseCommand):
 
         logger.info(f'Updated {updated_packages_count:,} Maven Packages')
         logger.info(f'Created {created_packages_count:,} Maven Packages')
-        logger.info(f'Deleted {deleted_packages_count:,} Maven Packages')
+        logger.info(f'Deleted {deleted_packages_count:,} Duplicate Maven Packages')
