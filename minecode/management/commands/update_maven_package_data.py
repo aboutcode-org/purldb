@@ -86,6 +86,7 @@ class Command(VerboseCommand):
     def handle(self, *args, **options):
         updated_packages_count = 0
         created_packages_count = 0
+        deleted_packages_count = 0
         logger.info('Updating or Adding new Packages from Maven Index')
         collector = MavenNexusCollector()
         unsaved_new_packages = []
@@ -147,12 +148,25 @@ class Command(VerboseCommand):
                     logger.info(f'Created {created_packages_count} Maven Packages')
 
             normalized_qualifiers = normalize_qualifiers(maven_package.qualifiers, encode=True)
+            existing_packages = Package.objects.filter(
+                type='maven',
+                namespace=maven_package.namespace,
+                name=maven_package.name,
+                version=maven_package.version,
+                qualifiers=normalized_qualifiers or ''
+            )
+            for existing_package in existing_packages:
+                if existing_package.download_url != maven_package.download_url:
+                    logger.debug(f'Deleted duplicate Package with incorrect download URL {existing_package.package_uid}')
+                    deleted_packages_count += 1
+                    existing_package.delete()
+
             existing_package = Package.objects.get_or_none(
                 type='maven',
                 namespace=maven_package.namespace,
                 name=maven_package.name,
-                version=maven_package.name,
-                qualifiers=normalized_qualifiers
+                version=maven_package.version,
+                qualifiers=normalized_qualifiers or ''
             )
             if existing_package:
                 updated_fields = []
@@ -188,12 +202,28 @@ class Command(VerboseCommand):
 
                 continue
 
+            if normalized_qualifiers:
+                normalized_qualifiers = normalized_qualifiers.lower()
+
+            existing_packages_lowercased = Package.objects.filter(
+                type='maven',
+                namespace=maven_package.namespace.lower(),
+                name=maven_package.name.lower(),
+                version=maven_package.version.lower(),
+                qualifiers=normalized_qualifiers or ''
+            )
+            for existing_package_lowercased in existing_packages_lowercased:
+                if existing_package_lowercased.download_url != maven_package.download_url:
+                    logger.debug(f'Deleted duplicate Package with incorrect download URL {existing_package_lowercased.package_uid}')
+                    deleted_packages_count += 1
+                    existing_package_lowercased.delete()
+
             existing_package_lowercased = Package.objects.get_or_none(
                 type='maven',
                 namespace=maven_package.namespace.lower(),
                 name=maven_package.name.lower(),
-                version=maven_package.name.lower(),
-                qualifiers=normalized_qualifiers.lower()
+                version=maven_package.version.lower(),
+                qualifiers=normalized_qualifiers or ''
             )
             if existing_package_lowercased:
                 updated_fields = []
@@ -233,12 +263,16 @@ class Command(VerboseCommand):
 
                 continue
 
+            if Package.objects.filter(download_url=maven_package.download_url).exists():
+                logger.debug(f'Skipping creation of {maven_package.purl} - already exists')
+                continue
+
             new_package = Package(
                 type=maven_package.type,
                 namespace=maven_package.namespace,
                 name=maven_package.name,
                 version=maven_package.version,
-                qualifiers=normalized_qualifiers,
+                qualifiers=normalized_qualifiers or '',
                 download_url=maven_package.download_url,
                 size=maven_package.size,
                 sha1=maven_package.sha1,
@@ -296,4 +330,5 @@ class Command(VerboseCommand):
             unsaved_new_packages = []
 
         logger.info(f'Updated {updated_packages_count:,} Maven Packages')
-        logger.info(f'Created {created_packages_count} Maven Packages')
+        logger.info(f'Created {created_packages_count:,} Maven Packages')
+        logger.info(f'Deleted {deleted_packages_count:,} Maven Packages')
