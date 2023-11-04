@@ -1,0 +1,299 @@
+#
+# Copyright (c) nexB Inc. and others. All rights reserved.
+# purldb is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/purldb for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
+#
+from dateutil.parser import parse as dateutil_parse
+import copy
+import logging
+import sys
+
+from django.db import transaction
+from django.utils import timezone
+
+from urllib3.util import Retry
+from requests import Session
+from requests.adapters import HTTPAdapter
+import requests
+
+from minecode.visitors.maven import collect_links_from_text
+from minecode.visitors.maven import filter_for_artifacts
+from packagedcode.maven import get_urls, build_filename
+from minecode.management.commands import VerboseCommand
+from packagedb.models import Package
+from packagedcode.maven import get_urls
+from packageurl import normalize_qualifiers
+from minecode.collectors.maven import MavenNexusCollector
+
+DEFAULT_TIMEOUT = 30
+
+TRACE = False
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(stream=sys.stdout)
+logger.setLevel(logging.INFO)
+
+session = Session()
+session.headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
+}
+session.mount('https://', HTTPAdapter(max_retries=Retry(10)))
+
+
+# This is from https://stackoverflow.com/questions/4856882/limiting-memory-use-in-a-large-django-queryset/5188179#5188179
+class MemorySavingQuerysetIterator(object):
+    def __init__(self,queryset,max_obj_num=1000):
+        self._base_queryset = queryset
+        self._generator = self._setup()
+        self.max_obj_num = max_obj_num
+
+    def _setup(self):
+        for i in range(0,self._base_queryset.count(),self.max_obj_num):
+            # By making a copy of of the queryset and using that to actually access
+            # the objects we ensure that there are only `max_obj_num` objects in
+            # memory at any given time
+            smaller_queryset = copy.deepcopy(self._base_queryset)[i:i+self.max_obj_num]
+            logger.debug('Grabbing next %s objects from DB' % self.max_obj_num)
+            for obj in smaller_queryset.iterator():
+                yield obj
+
+    def __iter__(self):
+        return self._generator
+
+    def next(self):
+        return self._generator.next()
+
+
+def check_download_url(url, timeout=DEFAULT_TIMEOUT):
+    """Return True if `url` is resolvable and accessable"""
+    if not url:
+        return
+    try:
+        response = session.get(url, timeout=timeout)
+        response.raise_for_status()
+        return response.ok
+    except (requests.RequestException, ValueError, TypeError) as exception:
+        logger.debug(f"[Exception] {exception}")
+        return False
+
+
+class Command(VerboseCommand):
+    help = 'Update maven Package values'
+
+    def handle(self, *args, **options):
+        updated_packages_count = 0
+        created_packages_count = 0
+        logger.info('Updating or Adding new Packages from Maven Index')
+        collector = MavenNexusCollector()
+        unsaved_new_packages = []
+        unsaved_existing_packages = []
+        unsaved_existing_packages_lowercased = []
+        for i, maven_package in enumerate(collector.get_packages()):
+            if not i % 1000:
+                logger.info(f'Processed {i:,} Maven Artifacts')
+            if not i % 2000:
+                updated = False
+                if unsaved_existing_packages:
+                    with transaction.atomic():
+                        Package.objects.bulk_update(
+                            objs=unsaved_existing_packages,
+                            fields=[
+                                'download_url',
+                                'repository_homepage_url',
+                                'repository_download_url',
+                                'api_data_url',
+                                'release_date',
+                                'last_modified_date',
+                                'history',
+                            ]
+                        )
+                    updated_packages_count += len(unsaved_existing_packages)
+                    unsaved_existing_packages = []
+                    updated = True
+
+                if unsaved_existing_packages_lowercased:
+                    with transaction.atomic():
+                        Package.objects.bulk_update(
+                            objs=unsaved_existing_packages_lowercased,
+                            fields=[
+                                'namespace',
+                                'name',
+                                'version',
+                                'qualifier',
+                                'download_url',
+                                'repository_homepage_url',
+                                'repository_download_url',
+                                'api_data_url',
+                                'release_date',
+                                'last_modified_date',
+                                'history',
+                            ]
+                        )
+                    updated_packages_count += len(unsaved_existing_packages_lowercased)
+                    unsaved_existing_packages_lowercased = []
+                    updated = True
+
+                if updated:
+                    logger.info(f'Updated {updated_packages_count:,} Maven Packages')
+
+                if unsaved_new_packages:
+                    with transaction.atomic():
+                        Package.objects.bulk_create(unsaved_new_packages)
+                    created_packages_count += len(unsaved_new_packages)
+                    unsaved_new_packages = []
+                    logger.info(f'Created {created_packages_count} Maven Packages')
+
+            normalized_qualifiers = normalize_qualifiers(maven_package.qualifiers, encode=True)
+            existing_package = Package.objects.get_or_none(
+                type='maven',
+                namespace=maven_package.namespace,
+                name=maven_package.name,
+                version=maven_package.name,
+                qualifiers=normalized_qualifiers
+            )
+            if existing_package:
+                updated_fields = []
+                for field in [
+                    'download_url',
+                    'repository_homepage_url',
+                    'repository_download_url',
+                    'api_data_url',
+                    'release_date',
+                ]:
+                    p_val = getattr(existing_package, field)
+                    value = getattr(maven_package, field)
+                    if field == 'release_date':
+                        value = dateutil_parse(value)
+                    setattr(existing_package, field, value)
+                    entry = dict(
+                        field=field,
+                        old_value=p_val,
+                        new_value=value,
+                    )
+                    updated_fields.append(entry)
+
+                if updated_fields:
+                    data = {
+                        'updated_fields': updated_fields,
+                    }
+                    existing_package.append_to_history(
+                        'Package field values have been updated.',
+                        data=data,
+                    )
+                    unsaved_existing_packages.append(existing_package)
+                    logger.debug(f'Updated existing Package {existing_package.package_uid}')
+
+                continue
+
+            existing_package_lowercased = Package.objects.get_or_none(
+                type='maven',
+                namespace=maven_package.namespace.lower(),
+                name=maven_package.name.lower(),
+                version=maven_package.name.lower(),
+                qualifiers=normalized_qualifiers.lower()
+            )
+            if existing_package_lowercased:
+                updated_fields = []
+                for field in [
+                    'namespace',
+                    'name',
+                    'version',
+                    'qualifier',
+                    'download_url',
+                    'repository_homepage_url',
+                    'repository_download_url',
+                    'api_data_url',
+                    'release_date',
+                ]:
+                    p_val = getattr(existing_package_lowercased, field)
+                    value = getattr(maven_package, field)
+                    if field == 'release_date':
+                        value = dateutil_parse(value)
+                    setattr(existing_package_lowercased, field, value)
+                    entry = dict(
+                        field=field,
+                        old_value=p_val,
+                        new_value=value,
+                    )
+                    updated_fields.append(entry)
+
+                if updated_fields:
+                    data = {
+                        'updated_fields': updated_fields,
+                    }
+                    existing_package_lowercased.append_to_history(
+                        'Package field values have been updated.',
+                        data=data,
+                    )
+                    unsaved_existing_packages_lowercased.append(existing_package_lowercased)
+                    logger.debug(f'Updated existing Package {existing_package_lowercased.package_uid}')
+
+                continue
+
+            new_package = Package(
+                type=maven_package.type,
+                namespace=maven_package.namespace,
+                name=maven_package.name,
+                version=maven_package.version,
+                qualifiers=normalized_qualifiers,
+                download_url=maven_package.download_url,
+                size=maven_package.size,
+                sha1=maven_package.sha1,
+                release_date=dateutil_parse(maven_package.release_date),
+                repository_homepage_url=maven_package.repository_homepage_url,
+                repository_download_url=maven_package.repository_download_url,
+                api_data_url=maven_package.api_data_url,
+            )
+            new_package.created_date = timezone.now()
+            unsaved_new_packages.append(new_package)
+            logger.debug(f'Created Package {maven_package.purl}')
+
+        if unsaved_existing_packages:
+            with transaction.atomic():
+                Package.objects.bulk_update(
+                    objs=unsaved_existing_packages,
+                    fields=[
+                        'download_url',
+                        'repository_homepage_url',
+                        'repository_download_url',
+                        'api_data_url',
+                        'release_date',
+                        'last_modified_date',
+                        'history',
+                    ]
+                )
+            updated_packages_count += len(unsaved_existing_packages)
+            unsaved_existing_packages = []
+
+        if unsaved_existing_packages_lowercased:
+            with transaction.atomic():
+                Package.objects.bulk_update(
+                    objs=unsaved_existing_packages_lowercased,
+                    fields=[
+                        'namespace',
+                        'name',
+                        'version',
+                        'qualifier',
+                        'download_url',
+                        'repository_homepage_url',
+                        'repository_download_url',
+                        'api_data_url',
+                        'release_date',
+                        'last_modified_date',
+                        'history',
+                    ]
+                )
+            updated_packages_count += len(unsaved_existing_packages_lowercased)
+            unsaved_existing_packages_lowercased = []
+
+        if unsaved_new_packages:
+            with transaction.atomic():
+                Package.objects.bulk_create(unsaved_new_packages)
+            created_packages_count += len(unsaved_new_packages)
+            unsaved_new_packages = []
+
+        logger.info(f'Updated {updated_packages_count:,} Maven Packages')
+        logger.info(f'Created {created_packages_count} Maven Packages')
