@@ -96,7 +96,7 @@ postgres:
 	${SUDO_POSTGRES} dropdb packagedb || true
 	@echo "-> Create 'packagedb' database"
 	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=packagedb packagedb
-	@$(MAKE) migrate
+	# @$(MAKE) migrate
 
 postgres_matchcodeio:
 	@echo "-> Configure PostgreSQL database"

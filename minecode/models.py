@@ -1089,3 +1089,28 @@ class ImportableURI(BaseURI):
         """
         self.normalize_fields()
         super(ImportableURI, self).save(*args, **kwargs)
+
+
+class ProcessingError(BaseURI):
+    service = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        help_text='The name of the service running where the error occured.'
+    )
+
+    date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text='Timestamp set to the date of when this error occured.',
+    )
+
+    error_message = models.TextField(
+        null=True,
+        blank=True,
+        help_text='The message associated with this error'
+    )
+
+    class Meta:
+        verbose_name = 'Processing Error'
