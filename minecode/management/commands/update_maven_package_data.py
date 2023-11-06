@@ -238,6 +238,7 @@ class Command(VerboseCommand):
             for existing_package in existing_packages:
                 if existing_package.download_url != maven_package.download_url:
                     logger.debug(f'Deleted duplicate Package with incorrect download URL {existing_package.package_uid}')
+                    packages_to_delete.append(existing_package)
                     duplicate_packages.append(existing_package)
 
             duplicate_packages_pks = [p.pk for p in duplicate_packages]
@@ -303,6 +304,7 @@ class Command(VerboseCommand):
             for existing_package_lowercased in existing_packages_lowercased:
                 if existing_package_lowercased.download_url != maven_package.download_url:
                     logger.debug(f'Deleted duplicate Package with incorrect download URL {existing_package_lowercased.package_uid}')
+                    packages_to_delete.append(existing_package_lowercased)
                     duplicate_packages_lowercased.append(existing_package_lowercased)
 
             duplicate_packages_lowercased_pks = [p.pk for p in duplicate_packages_lowercased]
