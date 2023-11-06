@@ -263,16 +263,17 @@ class Command(VerboseCommand):
                     value = getattr(maven_package, field)
                     if field == 'release_date':
                         value = dateutil_parse(value)
-                    setattr(existing_package, field, value)
-                    if field == 'release_date':
-                        p_val = str(p_val)
-                        value = str(value)
-                    entry = dict(
-                        field=field,
-                        old_value=p_val,
-                        new_value=value,
-                    )
-                    updated_fields.append(entry)
+                    if p_val != value:
+                        setattr(existing_package, field, value)
+                        if field == 'release_date':
+                            p_val = str(p_val)
+                            value = str(value)
+                        entry = dict(
+                            field=field,
+                            old_value=p_val,
+                            new_value=value,
+                        )
+                        updated_fields.append(entry)
 
                 if updated_fields:
                     data = {
@@ -331,16 +332,17 @@ class Command(VerboseCommand):
                     value = getattr(maven_package, field)
                     if field == 'release_date':
                         value = dateutil_parse(value)
-                    setattr(existing_package_lowercased, field, value)
-                    if field == 'release_date':
-                        p_val = str(p_val)
-                        value = str(value)
-                    entry = dict(
-                        field=field,
-                        old_value=p_val,
-                        new_value=value,
-                    )
-                    updated_fields.append(entry)
+                    if p_val != value:
+                        setattr(existing_package_lowercased, field, value)
+                        if field == 'release_date':
+                            p_val = str(p_val)
+                            value = str(value)
+                        entry = dict(
+                            field=field,
+                            old_value=p_val,
+                            new_value=value,
+                        )
+                        updated_fields.append(entry)
 
                 if updated_fields:
                     data = {
