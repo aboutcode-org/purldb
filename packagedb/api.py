@@ -46,6 +46,7 @@ from packagedb.serializers import PartySerializer
 from packagedb.package_managers import get_api_package_name
 from packagedb.package_managers import get_version_fetcher
 from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
+from packagedb.filters import PackageSearchFilter
 
 from univers import versions
 from univers.version_range import RANGE_CLASS_BY_SCHEMES
@@ -89,10 +90,10 @@ class ResourceFilter(FilterSet):
     package = PackageResourceUUIDFilter(label='Package UUID')
     purl = PackageResourcePurlFilter(label='Package pURL')
     md5 = MultipleCharInFilter(
-        help_text="Exact MD5. Multi-value supported.",
+        help_text='Exact MD5. Multi-value supported.',
     )
     sha1 = MultipleCharInFilter(
-        help_text="Exact SHA1. Multi-value supported.",
+        help_text='Exact SHA1. Multi-value supported.',
     )
 
 
@@ -197,53 +198,34 @@ class MultiplePackageURLFilter(Filter):
         return qs.filter(q)
 
 
-class PackageSearchFilter(Filter):
-    def filter(self, qs, value):
-        try:
-            request = self.parent.request
-        except AttributeError:
-            return None
-
-        if not value:
-            return qs
-
-        return Package.objects.annotate(
-            search_vector=SearchVector(
-                'type',
-                'namespace',
-                'name',
-                'version',
-                'qualifiers',
-                'subpath',
-                'download_url',
-            )
-        ).filter(search_vector=value)
-
-
 class PackageFilter(FilterSet):
     type = django_filters.CharFilter(
-        lookup_expr="iexact",
-        help_text="Exact type. (case-insensitive)",
+        lookup_expr='iexact',
+        help_text='Exact type. (case-insensitive)',
     )
     namespace = django_filters.CharFilter(
-        lookup_expr="iexact",
-        help_text="Exact namespace. (case-insensitive)",
+        lookup_expr='iexact',
+        help_text='Exact namespace. (case-insensitive)',
     )
     name = MultipleCharFilter(
-        lookup_expr="iexact",
-        help_text="Exact name. Multi-value supported. (case-insensitive)",
+        lookup_expr='iexact',
+        help_text='Exact name. Multi-value supported. (case-insensitive)',
     )
     version = MultipleCharFilter(
-        help_text="Exact version. Multi-value supported.",
+        help_text='Exact version. Multi-value supported.',
     )
     md5 = MultipleCharInFilter(
-        help_text="Exact MD5. Multi-value supported.",
+        help_text='Exact MD5. Multi-value supported.',
     )
     sha1 = MultipleCharInFilter(
-        help_text="Exact SHA1. Multi-value supported.",
+        help_text='Exact SHA1. Multi-value supported.',
     )
     purl = MultiplePackageURLFilter(label='Package URL')
-    search = PackageSearchFilter(label='Search')
+    search = PackageSearchFilter(
+        label='Search',
+        field_name='name',
+        lookup_expr='icontains',
+    )
 
     sort = OrderingFilter(fields=[
             'type',
@@ -440,7 +422,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         packages = request.data.get('packages') or []
         queued_packages = []
         unqueued_packages = []
-        supported_ecosystems = ["maven", "npm"]
+        supported_ecosystems = ['maven', 'npm']
 
         unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages, supported_ecosystems)
 
