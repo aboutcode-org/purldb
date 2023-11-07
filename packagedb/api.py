@@ -413,7 +413,6 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         - unsupported_vers
             - A list of vers range that are not supported by the univers or package_manager.
         """
-
         packages = request.data.get('packages') or []
         queued_packages = []
         unqueued_packages = []
@@ -735,12 +734,18 @@ def get_resolved_purls(packages, supported_ecosystems):
             unsupported_purls.add(purl)
             continue
 
+        if parsed_purl.type not in supported_ecosystems:
+            unsupported_purls.add(purl)
+            continue
+
         if parsed_purl.version:
             unique_resolved_purls.add(purl)
             continue
 
-        if not vers or parsed_purl.type not in supported_ecosystems:
-            unsupported_purls.add(purl)
+        # Versionless PURL without any vers-range should give all versions.
+        if not vers and not parsed_purl.version:
+            if resolved:= resolve_all_versions(parsed_purl):
+                unique_resolved_purls.update(resolved)
             continue
 
         if resolved:= resolve_versions(parsed_purl, vers):
@@ -750,7 +755,23 @@ def get_resolved_purls(packages, supported_ecosystems):
 
     return list(unique_resolved_purls), list(unsupported_purls), list(unsupported_vers)
 
+def resolve_all_versions(parsed_purl):
+    """
+    Take versionless and return a list of PURLs for all the released versions.
+    """
+    all_versions = get_all_versions(parsed_purl) or []
 
+    return [
+        str(
+            PackageURL(
+                type=parsed_purl.type,
+                namespace=parsed_purl.namespace,
+                name=parsed_purl.name,
+                version=version.string,
+            )
+        )
+        for version in all_versions
+    ]
 
 def resolve_versions(parsed_purl, vers):
     """
