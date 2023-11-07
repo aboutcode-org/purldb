@@ -8,6 +8,7 @@
 #
 
 import logging
+from django.contrib.postgres.search import SearchVector
 from django.core.exceptions import ValidationError
 from django.db.models import OuterRef
 from django.db.models import Q
@@ -206,7 +207,17 @@ class PackageSearchFilter(Filter):
         if not value:
             return qs
 
-        return Package.objects.filter(search_vector=value)
+        return Package.objects.annotate(
+            search_vector=SearchVector(
+                'type',
+                'namespace',
+                'name',
+                'version',
+                'qualifiers',
+                'subpath',
+                'download_url',
+            )
+        ).filter(search_vector=value)
 
 
 class PackageFilter(FilterSet):

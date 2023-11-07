@@ -375,12 +375,6 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
             self.assertEqual(1, response.data.get('count'))
 
     def test_package_api_list_endpoint_search(self):
-        # Populate the search vector field. This is done via Django signals
-        # outside of the tests.
-        Package.objects.filter(uuid=self.package.uuid).update(
-            search_vector=SearchVector('namespace', 'name', 'version', 'download_url')
-        )
-
         # Create a dummy package to verify search filter works.
         Package.objects.create(
             type='generic',
@@ -390,14 +384,16 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
             download_url='https://dummy.com/dummy'
         )
 
-        for key, value in self.package_data.items():
-            # Skip since we only search on one field
-            if key not in ['namespace', 'name', 'version', 'download_url']:
-                continue
-
-            response = self.client.get('/api/packages/?search={}'.format(value))
-            assert response.status_code == status.HTTP_200_OK
-            assert response.data.get('count') == 1
+        response = self.client.get('/api/packages/?search={}'.format('generic'))
+        assert response.data.get('count') == 2
+        response = self.client.get('/api/packages/?search={}'.format('dummy'))
+        assert response.data.get('count') == 1
+        response = self.client.get('/api/packages/?search={}'.format('DUMMY'))
+        assert response.data.get('count') == 1
+        response = self.client.get('/api/packages/?search={}'.format('12.35'))
+        assert response.data.get('count') == 1
+        response = self.client.get('/api/packages/?search={}'.format('https://dummy.com/dummy'))
+        assert response.data.get('count') == 1
 
     def test_package_api_retrieve_endpoint(self):
         response = self.client.get('/api/packages/{}/'.format(self.package.uuid))

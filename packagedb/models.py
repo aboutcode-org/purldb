@@ -531,8 +531,6 @@ class Package(
         ),
     )
 
-    search_vector = SearchVectorField(null=True)
-
     objects = PackageQuerySet.as_manager()
 
     # TODO: Think about ordering, unique together, indexes, etc.
@@ -550,8 +548,6 @@ class Package(
             )
         ]
         indexes = [
-            # GIN index for search performance increase
-            GinIndex(fields=['search_vector']),
             # multicolumn index for search on a whole `purl`
             models.Index(fields=[
                 'type', 'namespace', 'name', 'version', 'qualifiers', 'subpath'
