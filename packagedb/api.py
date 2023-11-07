@@ -376,20 +376,30 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=['post'])
     def index_packages(self, request, *args, **kwargs):
         """
-        Take a list of dictionary where each dictionary has either resolved PURL i.e. PURL with
-        version or version-less PURL along with vers range. Then return a mapping containing
+        Take a list of `packages` where each item is a dictionary containing either PURL
+        or versionless PURL along with vers range.  
+        **Note:** When a versionless PURL is supplied without a vers range, then all the versions
+        of that package will be indexed.
 
-        Input example:
-            [
+        **Input example:**
+
                 {
-                    "purl": "pkg:npm/foobar@12.3.1",
-                },
-                {
-                    "purl": "pkg:npm/foobar",
-                    "vers": "vers:npm/>=1.0.0|<=4.1.0"
+                    "packages": [
+                        {
+                            "purl": "pkg:npm/foobar@12.3.1",
+                        },
+                        {
+                            "purl": "pkg:npm/foobar",
+                            "vers": "vers:npm/>=1.0.0|<=4.1.0"
+                        },
+                        {
+                            "purl": "pkg:npm/foobar2",
+                        }
+                        ...
+                    ]
                 }
-                ...
-            ]
+        
+        Then return a mapping containing:
 
         - queued_packages_count
             - The number of package urls placed on the queue.
