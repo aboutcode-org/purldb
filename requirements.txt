@@ -83,7 +83,6 @@ saneyaml==0.6.0
 setuptools==65.3.0
 six==1.16.0
 soupsieve==2.4.1
-spdx-tools==0.7.0rc0
 sqlparse==0.4.4
 text-unidecode==1.3
 toml==0.10.2
