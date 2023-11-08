@@ -166,6 +166,9 @@ class MultiplePackageURLFilter(MultipleCharFilter):
         if self.is_noop(qs, value):
             return qs
 
+        if all(v == '' for v in value):
+            return qs
+
         q = Q()
         for val in value:
             lookups = purl_to_lookups(val)
@@ -173,7 +176,10 @@ class MultiplePackageURLFilter(MultipleCharFilter):
                 continue
             q.add(Q(**lookups), Q.OR)
 
-        qs = self.get_method(qs)(q)
+        if q:
+            qs = self.get_method(qs)(q)
+        else:
+            qs = qs.none()
 
         return qs.distinct() if self.distinct else qs
 
