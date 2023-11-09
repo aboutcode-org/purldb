@@ -109,27 +109,30 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
         against the packagedb.
 
         Supported checksum fields are:
+
         - md5
         - sha1
 
         Example:
-        {
-            "sha1": [
-                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
-                "27afff2610b5a94274a2311f8b15e514446b0e76
-            ]
-        }
+        
+            {
+                "sha1": [
+                    "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                    "27afff2610b5a94274a2311f8b15e514446b0e76
+                ]
+            }
 
         Multiple checksums algorithms can be passed together:
-        {
-            "sha1": [
-                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
-                "27afff2610b5a94274a2311f8b15e514446b0e76
-            ],
-            "md5": [
-                "e927df60b093456d4e611ae235c1aa5b"
-            ]
-        }
+
+            {
+                "sha1": [
+                    "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                    "27afff2610b5a94274a2311f8b15e514446b0e76
+                ],
+                "md5": [
+                    "e927df60b093456d4e611ae235c1aa5b"
+                ]
+            }
 
         This will return Resources whose sha1 or md5 matches those values.
         """
@@ -376,20 +379,30 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=['post'])
     def index_packages(self, request, *args, **kwargs):
         """
-        Take a list of dictionary where each dictionary has either resolved PURL i.e. PURL with
-        version or version-less PURL along with vers range. Then return a mapping containing
+        Take a list of `packages` where each item is a dictionary containing either PURL
+        or versionless PURL along with vers range.  
+        **Note:** When a versionless PURL is supplied without a vers range, then all the versions
+        of that package will be indexed.
 
-        Input example:
-            [
+        **Input example:**
+
                 {
-                    "purl": "pkg:npm/foobar@12.3.1",
-                },
-                {
-                    "purl": "pkg:npm/foobar",
-                    "vers": "vers:npm/>=1.0.0|<=4.1.0"
+                    "packages": [
+                        {
+                            "purl": "pkg:npm/foobar@12.3.1",
+                        },
+                        {
+                            "purl": "pkg:npm/foobar",
+                            "vers": "vers:npm/>=1.0.0|<=4.1.0"
+                        },
+                        {
+                            "purl": "pkg:npm/foobar2",
+                        }
+                        ...
+                    ]
                 }
-                ...
-            ]
+        
+        Then return a mapping containing:
 
         - queued_packages_count
             - The number of package urls placed on the queue.
@@ -413,7 +426,6 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         - unsupported_vers
             - A list of vers range that are not supported by the univers or package_manager.
         """
-
         packages = request.data.get('packages') or []
         queued_packages = []
         unqueued_packages = []
@@ -465,6 +477,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         package set as the packages from `package_urls` will be reindexed.
 
         Then return a mapping containing:
+
         - requeued_packages_count
             - The number of package urls placed on the queue.
         - requeued_packages
@@ -517,29 +530,32 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         against the packagedb.
 
         Supported checksum fields are:
+
         - md5
         - sha1
         - sha256
         - sha512
 
         Example:
-        {
-            "sha1": [
-                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
-                "27afff2610b5a94274a2311f8b15e514446b0e76
-            ]
-        }
+
+            {
+                "sha1": [
+                    "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                    "27afff2610b5a94274a2311f8b15e514446b0e76
+                ]
+            }
 
         Multiple checksums algorithms can be passed together:
-        {
-            "sha1": [
-                "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
-                "27afff2610b5a94274a2311f8b15e514446b0e76
-            ],
-            "md5": [
-                "e927df60b093456d4e611ae235c1aa5b"
-            ]
-        }
+        
+            {
+                "sha1": [
+                    "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
+                    "27afff2610b5a94274a2311f8b15e514446b0e76
+                ],
+                "md5": [
+                    "e927df60b093456d4e611ae235c1aa5b"
+                ]
+            }
 
         This will return Packages whose sha1 or md5 matches those values.
         """
@@ -735,12 +751,18 @@ def get_resolved_purls(packages, supported_ecosystems):
             unsupported_purls.add(purl)
             continue
 
+        if parsed_purl.type not in supported_ecosystems:
+            unsupported_purls.add(purl)
+            continue
+
         if parsed_purl.version:
             unique_resolved_purls.add(purl)
             continue
 
-        if not vers or parsed_purl.type not in supported_ecosystems:
-            unsupported_purls.add(purl)
+        # Versionless PURL without any vers-range should give all versions.
+        if not vers and not parsed_purl.version:
+            if resolved:= resolve_all_versions(parsed_purl):
+                unique_resolved_purls.update(resolved)
             continue
 
         if resolved:= resolve_versions(parsed_purl, vers):
@@ -750,7 +772,23 @@ def get_resolved_purls(packages, supported_ecosystems):
 
     return list(unique_resolved_purls), list(unsupported_purls), list(unsupported_vers)
 
+def resolve_all_versions(parsed_purl):
+    """
+    Take versionless and return a list of PURLs for all the released versions.
+    """
+    all_versions = get_all_versions(parsed_purl) or []
 
+    return [
+        str(
+            PackageURL(
+                type=parsed_purl.type,
+                namespace=parsed_purl.namespace,
+                name=parsed_purl.name,
+                version=version.string,
+            )
+        )
+        for version in all_versions
+    ]
 
 def resolve_versions(parsed_purl, vers):
     """
