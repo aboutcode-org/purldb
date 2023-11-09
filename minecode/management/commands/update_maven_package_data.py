@@ -332,6 +332,8 @@ class Command(VerboseCommand):
                 ]:
                     p_val = getattr(existing_package_lowercased, field)
                     value = getattr(maven_package, field)
+                    if field == 'qualifiers':
+                        value = normalize_qualifiers(value, encode=True)
                     if field == 'release_date':
                         value = dateutil_parse(value)
                     if p_val != value:
