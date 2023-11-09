@@ -81,10 +81,10 @@ class PackageSearchFilter(QuerySearchFilter):
         if value.startswith("pkg:"):
             return qs.for_package_url(value)
 
-        if ":" in value:
+        if "://" not in value and ":" in value:
             return super().filter(qs, value)
 
-        search_fields = ["type", "namespace", "name", "version"]
+        search_fields = ["type", "namespace", "name", "version", "download_url"]
         lookups = Q()
         for field_names in search_fields:
             lookups |= Q(**{f"{field_names}__{self.lookup_expr}": value})

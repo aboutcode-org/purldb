@@ -392,6 +392,8 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         assert response.data.get('count') == 1
         response = self.client.get('/api/packages/?search={}'.format('12.35'))
         assert response.data.get('count') == 1
+        response = self.client.get('/api/packages/?search={}'.format('https://dummy.com/dummy'))
+        assert response.data.get('count') == 1
 
     def test_package_api_retrieve_endpoint(self):
         response = self.client.get('/api/packages/{}/'.format(self.package.uuid))
