@@ -84,10 +84,187 @@ def check_download_url(url, timeout=DEFAULT_TIMEOUT):
         return False
 
 
+def process_packages(
+    unsaved_existing_packages,
+    unsaved_existing_packages_lowercased,
+    unsaved_new_packages,
+    packages_to_delete,
+    updated_packages_count,
+    created_packages_count,
+    deleted_packages_count,
+):
+    updated = False
+    if unsaved_existing_packages:
+        try:
+            with transaction.atomic():
+                Package.objects.bulk_update(
+                    objs=unsaved_existing_packages,
+                    fields=[
+                        'download_url',
+                        'repository_homepage_url',
+                        'repository_download_url',
+                        'api_data_url',
+                        'release_date',
+                        'last_modified_date',
+                        'history',
+                    ]
+                )
+            saved_packages_count = len(unsaved_existing_packages)
+        except DataError:
+            saved_packages_count = 0
+            with transaction.atomic():
+                # Update each record individually and then try to catch the package causing problems
+                for unsaved_package in unsaved_existing_packages:
+                    try:
+                        unsaved_package.save()
+                        saved_packages_count += 1
+                    except DataError:
+                        service = basename(__file__)
+                        traceback_message = traceback.format_exc()
+                        message = f'Error updating Package {unsaved_package.package_uid}:\n\n{traceback_message}'
+                        ProcessingError.objects.create(
+                            service=service,
+                            date=timezone.now(),
+                            error_message=message,
+                        )
+                        logger.error(message)
+        finally:
+            updated_packages_count += saved_packages_count
+            unsaved_existing_packages = []
+            if saved_packages_count > 0:
+                updated = True
+
+    if unsaved_existing_packages_lowercased:
+        try:
+            with transaction.atomic():
+                Package.objects.bulk_update(
+                    objs=unsaved_existing_packages_lowercased,
+                    fields=[
+                        'namespace',
+                        'name',
+                        'version',
+                        'qualifiers',
+                        'download_url',
+                        'repository_homepage_url',
+                        'repository_download_url',
+                        'api_data_url',
+                        'release_date',
+                        'last_modified_date',
+                        'history',
+                    ]
+                )
+            saved_packages_count = len(unsaved_existing_packages_lowercased)
+        except DataError:
+            saved_packages_count = 0
+            with transaction.atomic():
+                # Update each record individually and then try to catch the package causing problems
+                for unsaved_package in unsaved_existing_packages_lowercased:
+                    try:
+                        unsaved_package.save()
+                        saved_packages_count += 1
+                    except DataError:
+                        service = basename(__file__)
+                        traceback_message = traceback.format_exc()
+                        message = f'Error updating Package {unsaved_package.package_uid}:\n\n{traceback_message}'
+                        ProcessingError.objects.create(
+                            service=service,
+                            date=timezone.now(),
+                            error_message=message,
+                        )
+                        logger.error(message)
+        finally:
+            updated_packages_count += saved_packages_count
+            unsaved_existing_packages_lowercased = []
+            if saved_packages_count > 0:
+                updated = True
+
+    if updated:
+        logger.info(f'Updated {updated_packages_count:,} Maven Packages')
+
+    if unsaved_new_packages:
+        try:
+            with transaction.atomic():
+                Package.objects.bulk_create(unsaved_new_packages)
+            pc = len(unsaved_new_packages)
+        except DataError:
+            pc = 0
+            for unsaved_package in unsaved_new_packages:
+                try:
+                    unsaved_package.save()
+                    pc += 1
+                except DataError:
+                    service = basename(__file__)
+                    traceback_message = traceback.format_exc()
+                    message = f'Error creating Package {unsaved_package.purl}:\n\n{traceback_message}'
+                    ProcessingError.objects.create(
+                        service=service,
+                        date=timezone.now(),
+                        error_message=message,
+                    )
+                    logger.error(message)
+        finally:
+            created_packages_count += pc
+            unsaved_new_packages = []
+            if pc > 0:
+                logger.info(f'Created {created_packages_count:,} Maven Packages')
+
+    if packages_to_delete:
+        package_pks_to_delete = [p.pk for p in packages_to_delete]
+        Package.objects.filter(pk__in=package_pks_to_delete).delete()
+        dpc = len(packages_to_delete)
+        packages_to_delete = []
+        deleted_packages_count += dpc
+        if dpc > 0:
+            logger.info(f'Deleted {deleted_packages_count:,} Duplicate Maven Packages')
+
+    return unsaved_existing_packages, unsaved_existing_packages_lowercased, unsaved_new_packages, packages_to_delete
+
+
+def update_package_fields(package, maven_package, field_names):
+    updated_fields = []
+    for field in field_names:
+        p_val = getattr(package, field)
+        value = getattr(maven_package, field)
+        if field == 'qualifiers':
+            value = normalize_qualifiers(value, encode=True)
+        if field == 'release_date':
+            value = dateutil_parse(value)
+        if p_val != value:
+            setattr(package, field, value)
+            if field == 'release_date':
+                p_val = str(p_val)
+                value = str(value)
+            entry = dict(
+                field=field,
+                old_value=p_val,
+                new_value=value,
+            )
+            updated_fields.append(entry)
+
+    if updated_fields:
+        data = {
+            'updated_fields': updated_fields,
+        }
+        package.append_to_history(
+            'Package field values have been updated.',
+            data=data,
+        )
+        logger.debug(f'Updated existing Package {package.package_uid}')
+        return package
+
+
 class Command(VerboseCommand):
     help = 'Update maven Package values'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--create_package',
+            type=bool,
+            help='Create new Maven Packages if it does not exist in our database'
+        )
+
     def handle(self, *args, **options):
+        create_package = options.get('create_package', False)
         updated_packages_count = 0
         created_packages_count = 0
         deleted_packages_count = 0
@@ -101,129 +278,23 @@ class Command(VerboseCommand):
             if not i % 1000:
                 logger.info(f'Processed {i:,} Maven Artifacts')
             if not i % 2000:
-                updated = False
-                if unsaved_existing_packages:
-                    try:
-                        with transaction.atomic():
-                            Package.objects.bulk_update(
-                                objs=unsaved_existing_packages,
-                                fields=[
-                                    'download_url',
-                                    'repository_homepage_url',
-                                    'repository_download_url',
-                                    'api_data_url',
-                                    'release_date',
-                                    'last_modified_date',
-                                    'history',
-                                ]
-                            )
-                        saved_packages_count = len(unsaved_existing_packages)
-                    except DataError:
-                        saved_packages_count = 0
-                        with transaction.atomic():
-                            # Update each record individually and then try to catch the package causing problems
-                            for unsaved_package in unsaved_existing_packages:
-                                try:
-                                    unsaved_package.save()
-                                    saved_packages_count += 1
-                                except DataError:
-                                    service = basename(__file__)
-                                    traceback_message = traceback.format_exc()
-                                    message = f'Error updating Package {unsaved_package.package_uid}:\n\n{traceback_message}'
-                                    ProcessingError.objects.create(
-                                        service=service,
-                                        date=timezone.now(),
-                                        error_message=message,
-                                    )
-                                    logger.error(message)
-                    finally:
-                        updated_packages_count += saved_packages_count
-                        unsaved_existing_packages = []
-                        if saved_packages_count > 0:
-                            updated = True
-
-                if unsaved_existing_packages_lowercased:
-                    try:
-                        with transaction.atomic():
-                            Package.objects.bulk_update(
-                                objs=unsaved_existing_packages_lowercased,
-                                fields=[
-                                    'namespace',
-                                    'name',
-                                    'version',
-                                    'qualifiers',
-                                    'download_url',
-                                    'repository_homepage_url',
-                                    'repository_download_url',
-                                    'api_data_url',
-                                    'release_date',
-                                    'last_modified_date',
-                                    'history',
-                                ]
-                            )
-                        saved_packages_count = len(unsaved_existing_packages_lowercased)
-                    except DataError:
-                        saved_packages_count = 0
-                        with transaction.atomic():
-                            # Update each record individually and then try to catch the package causing problems
-                            for unsaved_package in unsaved_existing_packages_lowercased:
-                                try:
-                                    unsaved_package.save()
-                                    saved_packages_count += 1
-                                except DataError:
-                                    service = basename(__file__)
-                                    traceback_message = traceback.format_exc()
-                                    message = f'Error updating Package {unsaved_package.package_uid}:\n\n{traceback_message}'
-                                    ProcessingError.objects.create(
-                                        service=service,
-                                        date=timezone.now(),
-                                        error_message=message,
-                                    )
-                                    logger.error(message)
-                    finally:
-                        updated_packages_count += saved_packages_count
-                        unsaved_existing_packages_lowercased = []
-                        if saved_packages_count > 0:
-                            updated = True
-
-                if updated:
-                    logger.info(f'Updated {updated_packages_count:,} Maven Packages')
-
-                if unsaved_new_packages:
-                    try:
-                        with transaction.atomic():
-                            Package.objects.bulk_create(unsaved_new_packages)
-                        pc = len(unsaved_new_packages)
-                    except DataError:
-                        pc = 0
-                        for unsaved_package in unsaved_new_packages:
-                            try:
-                                unsaved_package.save()
-                                pc += 1
-                            except DataError:
-                                service = basename(__file__)
-                                traceback_message = traceback.format_exc()
-                                message = f'Error creating Package {unsaved_package.purl}:\n\n{traceback_message}'
-                                ProcessingError.objects.create(
-                                    service=service,
-                                    date=timezone.now(),
-                                    error_message=message,
-                                )
-                                logger.error(message)
-                    finally:
-                        created_packages_count += pc
-                        unsaved_new_packages = []
-                        if pc > 0:
-                            logger.info(f'Created {created_packages_count:,} Maven Packages')
-
-                if packages_to_delete:
-                    package_pks_to_delete = [p.pk for p in packages_to_delete]
-                    Package.objects.filter(pk__in=package_pks_to_delete).delete()
-                    dpc = len(packages_to_delete)
-                    packages_to_delete = []
-                    deleted_packages_count += dpc
-                    if dpc > 0:
-                        logger.info(f'Deleted {deleted_packages_count:,} Duplicate Maven Packages')
+                (
+                    unsaved_existing_packages,
+                    unsaved_existing_packages_lowercased,
+                    unsaved_new_packages,
+                    packages_to_delete,
+                    updated_packages_count,
+                    created_packages_count,
+                    deleted_packages_count,
+                ) = process_packages(
+                    unsaved_existing_packages=unsaved_existing_packages,
+                    unsaved_existing_packages_lowercased=unsaved_existing_packages_lowercased,
+                    unsaved_new_packages=unsaved_new_packages,
+                    packages_to_delete=packages_to_delete,
+                    updated_packages_count=updated_packages_count,
+                    created_packages_count=created_packages_count,
+                    deleted_packages_count=deleted_packages_count,
+                )
 
             normalized_qualifiers = normalize_qualifiers(maven_package.qualifiers, encode=True)
             existing_packages = Package.objects.filter(
@@ -252,41 +323,19 @@ class Command(VerboseCommand):
                 qualifiers=normalized_qualifiers or ''
             )
             if existing_package:
-                updated_fields = []
-                for field in [
+                fields_to_update = [
                     'download_url',
                     'repository_homepage_url',
                     'repository_download_url',
                     'api_data_url',
                     'release_date',
-                ]:
-                    p_val = getattr(existing_package, field)
-                    value = getattr(maven_package, field)
-                    if field == 'release_date':
-                        value = dateutil_parse(value)
-                    if p_val != value:
-                        setattr(existing_package, field, value)
-                        if field == 'release_date':
-                            p_val = str(p_val)
-                            value = str(value)
-                        entry = dict(
-                            field=field,
-                            old_value=p_val,
-                            new_value=value,
-                        )
-                        updated_fields.append(entry)
-
-                if updated_fields:
-                    data = {
-                        'updated_fields': updated_fields,
-                    }
-                    existing_package.append_to_history(
-                        'Package field values have been updated.',
-                        data=data,
-                    )
-                    unsaved_existing_packages.append(existing_package)
-                    logger.debug(f'Updated existing Package {existing_package.package_uid}')
-
+                ]
+                existing_package = update_package_fields(
+                    existing_package,
+                    maven_package,
+                    fields_to_update
+                )
+                unsaved_existing_packages.append(existing_package)
                 continue
 
             if normalized_qualifiers:
@@ -318,8 +367,7 @@ class Command(VerboseCommand):
                 qualifiers=normalized_qualifiers or ''
             )
             if existing_package_lowercased:
-                updated_fields = []
-                for field in [
+                fields_to_update = [
                     'namespace',
                     'name',
                     'version',
@@ -329,172 +377,52 @@ class Command(VerboseCommand):
                     'repository_download_url',
                     'api_data_url',
                     'release_date',
-                ]:
-                    p_val = getattr(existing_package_lowercased, field)
-                    value = getattr(maven_package, field)
-                    if field == 'qualifiers':
-                        value = normalize_qualifiers(value, encode=True)
-                    if field == 'release_date':
-                        value = dateutil_parse(value)
-                    if p_val != value:
-                        setattr(existing_package_lowercased, field, value)
-                        if field == 'release_date':
-                            p_val = str(p_val)
-                            value = str(value)
-                        entry = dict(
-                            field=field,
-                            old_value=p_val,
-                            new_value=value,
-                        )
-                        updated_fields.append(entry)
-
-                if updated_fields:
-                    data = {
-                        'updated_fields': updated_fields,
-                    }
-                    existing_package_lowercased.append_to_history(
-                        'Package field values have been updated.',
-                        data=data,
-                    )
-                    unsaved_existing_packages_lowercased.append(existing_package_lowercased)
-                    logger.debug(f'Updated existing Package {existing_package_lowercased.package_uid}')
-
+                ]
+                existing_package_lowercased = update_package_fields(
+                    existing_package_lowercased,
+                    maven_package,
+                    fields_to_update
+                )
+                unsaved_existing_packages_lowercased.append(existing_package_lowercased)
                 continue
 
             if Package.objects.filter(download_url=maven_package.download_url).exists():
                 logger.debug(f'Skipping creation of {maven_package.purl} - already exists')
                 continue
 
-            new_package = Package(
-                type=maven_package.type,
-                namespace=maven_package.namespace,
-                name=maven_package.name,
-                version=maven_package.version,
-                qualifiers=normalized_qualifiers or '',
-                download_url=maven_package.download_url,
-                size=maven_package.size,
-                sha1=maven_package.sha1,
-                release_date=dateutil_parse(maven_package.release_date),
-                repository_homepage_url=maven_package.repository_homepage_url,
-                repository_download_url=maven_package.repository_download_url,
-                api_data_url=maven_package.api_data_url,
-            )
-            new_package.created_date = timezone.now()
-            unsaved_new_packages.append(new_package)
-            logger.debug(f'Created Package {maven_package.purl}')
+            if create_package:
+                new_package = Package(
+                    type=maven_package.type,
+                    namespace=maven_package.namespace,
+                    name=maven_package.name,
+                    version=maven_package.version,
+                    qualifiers=normalized_qualifiers or '',
+                    download_url=maven_package.download_url,
+                    size=maven_package.size,
+                    sha1=maven_package.sha1,
+                    release_date=dateutil_parse(maven_package.release_date),
+                    repository_homepage_url=maven_package.repository_homepage_url,
+                    repository_download_url=maven_package.repository_download_url,
+                    api_data_url=maven_package.api_data_url,
+                )
+                new_package.created_date = timezone.now()
+                unsaved_new_packages.append(new_package)
+                logger.debug(f'Created Package {maven_package.purl}')
 
-        if unsaved_existing_packages:
-            try:
-                with transaction.atomic():
-                    Package.objects.bulk_update(
-                        objs=unsaved_existing_packages,
-                        fields=[
-                            'download_url',
-                            'repository_homepage_url',
-                            'repository_download_url',
-                            'api_data_url',
-                            'release_date',
-                            'last_modified_date',
-                            'history',
-                        ]
-                    )
-                saved_packages_count = len(unsaved_existing_packages)
-            except DataError:
-                saved_packages_count = 0
-                with transaction.atomic():
-                    # Update each record individually and then try to catch the package causing problems
-                    for unsaved_package in unsaved_existing_packages:
-                        try:
-                            unsaved_package.save()
-                            saved_packages_count += 1
-                        except DataError:
-                            service = basename(__file__)
-                            traceback_message = traceback.format_exc()
-                            message = f'Error updating Package {unsaved_package.package_uid}:\n\n{traceback_message}'
-                            ProcessingError.objects.create(
-                                service=service,
-                                date=timezone.now(),
-                                error_message=message,
-                            )
-                            logger.error(message)
-            finally:
-                updated_packages_count += saved_packages_count
-                unsaved_existing_packages = []
-
-            if unsaved_existing_packages_lowercased:
-                try:
-                    with transaction.atomic():
-                        Package.objects.bulk_update(
-                            objs=unsaved_existing_packages_lowercased,
-                            fields=[
-                                'namespace',
-                                'name',
-                                'version',
-                                'qualifiers',
-                                'download_url',
-                                'repository_homepage_url',
-                                'repository_download_url',
-                                'api_data_url',
-                                'release_date',
-                                'last_modified_date',
-                                'history',
-                            ]
-                        )
-                    saved_packages_count = len(unsaved_existing_packages_lowercased)
-                except DataError:
-                    saved_packages_count = 0
-                    with transaction.atomic():
-                        # Update each record individually and then try to catch the package causing problems
-                        for unsaved_package in unsaved_existing_packages_lowercased:
-                            try:
-                                unsaved_package.save()
-                                saved_packages_count += 1
-                            except DataError:
-                                service = basename(__file__)
-                                traceback_message = traceback.format_exc()
-                                message = f'Error updating Package {unsaved_package.package_uid}:\n\n{traceback_message}'
-                                ProcessingError.objects.create(
-                                    service=service,
-                                    date=timezone.now(),
-                                    error_message=message,
-                                )
-                                logger.error(message)
-                finally:
-                    updated_packages_count += saved_packages_count
-                    unsaved_existing_packages_lowercased = []
-
-            if unsaved_new_packages:
-                try:
-                    with transaction.atomic():
-                        Package.objects.bulk_create(unsaved_new_packages)
-                    pc = len(unsaved_new_packages)
-                except DataError:
-                    pc = 0
-                    for unsaved_package in unsaved_new_packages:
-                        try:
-                            unsaved_package.save()
-                            pc += 1
-                        except DataError:
-                            service = basename(__file__)
-                            traceback_message = traceback.format_exc()
-                            message = f'Error creating Package {unsaved_package.purl}:\n\n{traceback_message}'
-                            ProcessingError.objects.create(
-                                service=service,
-                                date=timezone.now(),
-                                error_message=message,
-                            )
-                            logger.error(message)
-                finally:
-                    created_packages_count += pc
-                    unsaved_new_packages = []
-
-        if packages_to_delete:
-            package_pks_to_delete = [p.pk for p in packages_to_delete]
-            Package.objects.filter(pk__in=package_pks_to_delete).delete()
-            dpc = len(packages_to_delete)
-            packages_to_delete = []
-            deleted_packages_count += dpc
-
-        logger.info(f'Updated {updated_packages_count:,} Maven Packages')
-        logger.info(f'Created {created_packages_count:,} Maven Packages')
-        logger.info(f'Deleted {deleted_packages_count:,} Duplicate Maven Packages')
+        (
+            unsaved_existing_packages,
+            unsaved_existing_packages_lowercased,
+            unsaved_new_packages,
+            packages_to_delete,
+            updated_packages_count,
+            created_packages_count,
+            deleted_packages_count,
+        ) = process_packages(
+            unsaved_existing_packages=unsaved_existing_packages,
+            unsaved_existing_packages_lowercased=unsaved_existing_packages_lowercased,
+            unsaved_new_packages=unsaved_new_packages,
+            packages_to_delete=packages_to_delete,
+            updated_packages_count=updated_packages_count,
+            created_packages_count=created_packages_count,
+            deleted_packages_count=deleted_packages_count,
+        )
