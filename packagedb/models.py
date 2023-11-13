@@ -26,6 +26,8 @@ from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
 
+from packagedcode.models import normalize_qualifiers
+from dateutil.parser import parse as dateutil_parse
 TRACE = False
 
 logger = logging.getLogger(__name__)
@@ -624,6 +626,98 @@ class Package(
 
         if scannable_uri:
             scannable_uri.rescan()
+
+    def update_field(self, field, value, save=False):
+        # Ensure the incoming value is of the correct type
+        if field == 'qualifiers' and isinstance(value, dict):
+            value = normalize_qualifiers(value, encode=True)
+
+        date_fields = [
+            'created_date',
+            'last_indexed_date',
+            'last_modified_date',
+            'release_date',
+        ]
+        if field in date_fields and isinstance(value, str):
+            value = dateutil_parse(value)
+
+        # Update field value if it differs from the existing value
+        updated_field = None
+        history_entries = []
+        package_value = getattr(self, field)
+        if package_value != value:
+            setattr(self, field, value)
+            # Update history
+            if field in date_fields:
+                p_val = str(p_val)
+                value = str(value)
+            entry = dict(
+                field=field,
+                old_value=p_val,
+                new_value=value,
+            )
+            updated_field = field
+            history_entries.append(entry)
+
+        if updated_field:
+            data = {
+                'updated_fields': history_entries,
+            }
+            self.append_to_history(
+                'Package field values have been updated.',
+                data=data,
+            )
+
+        if save:
+            self.save()
+
+        return self, updated_field
+
+    def update_fields(self, save=False, **values_by_fields):
+        updated_fields = []
+        history_entries = []
+        for field, value in values_by_fields.items():
+            # Ensure the incoming value is of the correct type
+            if field == 'qualifiers' and isinstance(value, dict):
+                value = normalize_qualifiers(value, encode=True)
+
+            date_fields = [
+                'created_date',
+                'last_indexed_date',
+                'last_modified_date',
+                'release_date',
+            ]
+            if field in date_fields and isinstance(value, str):
+                value = dateutil_parse(value)
+
+            package_value = getattr(self, field)
+            if package_value != value:
+                setattr(self, field, value)
+                # Update history
+                if field in date_fields:
+                    p_val = str(p_val)
+                    value = str(value)
+                entry = dict(
+                    field=field,
+                    old_value=p_val,
+                    new_value=value,
+                )
+                updated_fields.append(field)
+                history_entries.append(entry)
+
+        if updated_fields:
+            data = {
+                'updated_fields': history_entries,
+            }
+            self.append_to_history(
+                'Package field values have been updated.',
+                data=data,
+            )
+
+        if save:
+            self.save()
+
+        return self, updated_fields
 
 
 party_person = 'person'
