@@ -141,3 +141,85 @@ class PackageModelTestCase(TransactionTestCase):
         self.assertEqual(p3, p2.get_latest_version())
         self.assertEqual(p3, p3.get_latest_version())
         self.assertEqual(p4, p4.get_latest_version())
+
+    def test_packagedb_package_model_update_field(self):
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
+        self.assertFalse(p1.history)
+        self.assertEquals('', p1.namespace)
+        package, updated_field = p1.update_field(field='namespace', value='test')
+        self.assertEqual(updated_field, 'namespace')
+        self.assertEqual('test', p1.namespace)
+        self.assertEqual(1, len(p1.history))
+        expected_history_entry = {
+            'message': 'Package field values have been updated.',
+            'data': {
+                'updated_fields':
+                [
+                    {
+                        'field': 'namespace',
+                        'old_value': '',
+                        'new_value': 'test'
+                    }
+                ]
+            }
+        }
+        history_entry = p1.history[0]
+        history_entry.pop('timestamp')
+        self.assertEqual(expected_history_entry, history_entry)
+
+    def test_packagedb_package_model_update_field(self):
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
+        self.assertFalse(p1.history)
+        self.assertEquals('', p1.namespace)
+        package, updated_field = p1.update_field(field='namespace', value='test')
+        self.assertEqual(updated_field, 'namespace')
+        self.assertEqual('test', p1.namespace)
+        self.assertEqual(1, len(p1.history))
+        expected_history_entry = {
+            'message': 'Package field values have been updated.',
+            'data': {
+                'updated_fields':
+                [
+                    {
+                        'field': 'namespace',
+                        'old_value': '',
+                        'new_value': 'test'
+                    }
+                ]
+            }
+        }
+        history_entry = p1.history[0]
+        history_entry.pop('timestamp')
+        self.assertEqual(expected_history_entry, history_entry)
+
+    def test_packagedb_package_model_update_fields(self):
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
+        self.assertFalse(p1.history)
+        self.assertEquals('', p1.namespace)
+        self.assertEquals(None, p1.homepage_url)
+        package, updated_fields = p1.update_fields(namespace='test', homepage_url='https://example.com')
+        self.assertEqual(updated_fields, ['namespace', 'homepage_url'])
+        self.assertEqual('test', p1.namespace)
+        self.assertEqual('https://example.com', p1.homepage_url)
+        self.assertEqual(1, len(p1.history))
+        expected_history_entry = {
+            'message': 'Package field values have been updated.',
+            'data': {
+                'updated_fields':
+                [
+                    {
+                        'field': 'namespace',
+                        'old_value': '',
+                        'new_value': 'test'
+                    },
+                    {
+                        'field': 'homepage_url',
+                        'old_value': None,
+                        'new_value': 'https://example.com'
+                    }
+                ]
+            }
+        }
+        history_entry = p1.history[0]
+        history_entry.pop('timestamp')
+        self.assertEqual(expected_history_entry, history_entry)

@@ -76,7 +76,6 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
                 yield object
 
 
-
 VCS_CHOICES = [
     ('git', 'git'),
     ('svn', 'subversion'),
@@ -649,11 +648,11 @@ class Package(
             setattr(self, field, value)
             # Update history
             if field in date_fields:
-                p_val = str(p_val)
+                package_value = str(package_value)
                 value = str(value)
             entry = dict(
                 field=field,
-                old_value=p_val,
+                old_value=package_value,
                 new_value=value,
             )
             updated_field = field
@@ -695,11 +694,11 @@ class Package(
                 setattr(self, field, value)
                 # Update history
                 if field in date_fields:
-                    p_val = str(p_val)
+                    package_value = str(package_value)
                     value = str(value)
                 entry = dict(
                     field=field,
-                    old_value=p_val,
+                    old_value=package_value,
                     new_value=value,
                 )
                 updated_fields.append(field)
