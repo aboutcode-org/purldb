@@ -8,49 +8,37 @@
 #
 
 import logging
-from django.core.exceptions import ValidationError
-from django.db.models import OuterRef
-from django.db.models import Q
-from django.db.models import Subquery
-from django_filters.rest_framework import FilterSet
-from django_filters.filters import Filter
-from django_filters.filters import OrderingFilter
-import django_filters
 
+import django_filters
+from django.core.exceptions import ValidationError
+from django.db.models import OuterRef, Q, Subquery
+from django_filters.filters import Filter, OrderingFilter
+from django_filters.rest_framework import FilterSet
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
-from rest_framework import status
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from univers.version_constraint import InvalidConstraintsError
+from univers.version_range import RANGE_CLASS_BY_SCHEMES, VersionRange
+from univers.versions import InvalidVersion
 
-from matchcode.api import MultipleCharFilter
-from matchcode.api import MultipleCharInFilter
+from matchcode.api import MultipleCharFilter, MultipleCharInFilter
 # UnusedImport here!
 # But importing the mappers and visitors module triggers routes registration
 from minecode import visitors  # NOQA
 from minecode import priority_router
-from minecode.models import PriorityResourceURI
-from minecode.models import ScannableURI
+from minecode.models import PriorityResourceURI, ScannableURI
 from minecode.route import NoRouteAvailable
-from packagedb.models import Package
-from packagedb.models import PackageContentType
-from packagedb.models import PackageSet
-from packagedb.models import Resource
-from packagedb.serializers import DependentPackageSerializer
-from packagedb.serializers import ResourceAPISerializer
-from packagedb.serializers import PackageAPISerializer
-from packagedb.serializers import PackageSetAPISerializer
-from packagedb.serializers import PartySerializer
-from packagedb.package_managers import get_api_package_name
-from packagedb.package_managers import get_version_fetcher
-from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
-
-from univers import versions
-from univers.version_range import RANGE_CLASS_BY_SCHEMES
-from univers.versions import InvalidVersion
-from univers.version_range import VersionRange
-from univers.version_constraint import InvalidConstraintsError
+from packagedb.filters import PackageSearchFilter
+from packagedb.models import Package, PackageContentType, PackageSet, Resource
+from packagedb.package_managers import (VERSION_API_CLASSES_BY_PACKAGE_TYPE,
+                                        get_api_package_name,
+                                        get_version_fetcher)
+from packagedb.serializers import (DependentPackageSerializer,
+                                   PackageAPISerializer,
+                                   PackageSetAPISerializer, PartySerializer,
+                                   ResourceAPISerializer)
 
 logger = logging.getLogger(__name__)
 
@@ -84,21 +72,21 @@ class PackageResourceUUIDFilter(Filter):
         return qs.filter(package=package)
 
 
-class ResourceFilter(FilterSet):
+class ResourceFilterSet(FilterSet):
     package = PackageResourceUUIDFilter(label='Package UUID')
     purl = PackageResourcePurlFilter(label='Package pURL')
     md5 = MultipleCharInFilter(
-        help_text="Exact MD5. Multi-value supported.",
+        help_text='Exact MD5. Multi-value supported.',
     )
     sha1 = MultipleCharInFilter(
-        help_text="Exact SHA1. Multi-value supported.",
+        help_text='Exact SHA1. Multi-value supported.',
     )
 
 
 class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Resource.objects.select_related('package')
     serializer_class = ResourceAPISerializer
-    filterset_class = ResourceFilter
+    filterset_class = ResourceFilterSet
     lookup_field = 'sha1'
 
     @action(detail=False, methods=['post'])
@@ -169,70 +157,63 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
         return self.get_paginated_response(serializer.data)
 
 
-class MultiplePackageURLFilter(Filter):
+class MultiplePackageURLFilter(MultipleCharFilter):
     def filter(self, qs, value):
-        try:
-            request = self.parent.request
-        except AttributeError:
-            return None
-
-        values = request.GET.getlist(self.field_name)
-        if all(v == '' for v in values):
+        if not value:
+            # Even though not a noop, no point filtering if empty.
             return qs
 
-        values = {item for item in values}
+        if self.is_noop(qs, value):
+            return qs
+
+        if all(v == '' for v in value):
+            return qs
 
         q = Q()
-        for val in values:
+        for val in value:
             lookups = purl_to_lookups(val)
             if not lookups:
                 continue
-
             q.add(Q(**lookups), Q.OR)
 
-        if not q:
-            return qs.none()
+        if q:
+            qs = self.get_method(qs)(q)
+        else:
+            qs = qs.none()
 
-        return qs.filter(q)
-
-
-class PackageSearchFilter(Filter):
-    def filter(self, qs, value):
-        try:
-            request = self.parent.request
-        except AttributeError:
-            return None
-
-        if not value:
-            return qs
-
-        return Package.objects.filter(search_vector=value)
+        return qs.distinct() if self.distinct else qs
 
 
-class PackageFilter(FilterSet):
+class PackageFilterSet(FilterSet):
     type = django_filters.CharFilter(
-        lookup_expr="iexact",
-        help_text="Exact type. (case-insensitive)",
+        lookup_expr='iexact',
+        help_text='Exact type. (case-insensitive)',
     )
     namespace = django_filters.CharFilter(
-        lookup_expr="iexact",
-        help_text="Exact namespace. (case-insensitive)",
+        lookup_expr='iexact',
+        help_text='Exact namespace. (case-insensitive)',
     )
     name = MultipleCharFilter(
-        lookup_expr="iexact",
-        help_text="Exact name. Multi-value supported. (case-insensitive)",
+        lookup_expr='iexact',
+        help_text='Exact name. Multi-value supported. (case-insensitive)',
     )
     version = MultipleCharFilter(
-        help_text="Exact version. Multi-value supported.",
+        help_text='Exact version. Multi-value supported.',
     )
     md5 = MultipleCharInFilter(
-        help_text="Exact MD5. Multi-value supported.",
+        help_text='Exact MD5. Multi-value supported.',
     )
     sha1 = MultipleCharInFilter(
-        help_text="Exact SHA1. Multi-value supported.",
+        help_text='Exact SHA1. Multi-value supported.',
     )
-    purl = MultiplePackageURLFilter(label='Package URL')
-    search = PackageSearchFilter(label='Search')
+    purl = MultiplePackageURLFilter(
+        label='Package URL',
+    )
+    search = PackageSearchFilter(
+        label='Search',
+        field_name='name',
+        lookup_expr='icontains',
+    )
 
     sort = OrderingFilter(fields=[
             'type',
@@ -250,6 +231,7 @@ class PackageFilter(FilterSet):
     class Meta:
         model = Package
         fields = (
+            'search',
             'type',
             'namespace',
             'name',
@@ -270,7 +252,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Package.objects.prefetch_related('dependencies', 'parties')
     serializer_class = PackageAPISerializer
     lookup_field = 'uuid'
-    filterset_class = PackageFilter
+    filterset_class = PackageFilterSet
 
     @action(detail=True, methods=['get'])
     def latest_version(self, request, *args, **kwargs):
@@ -429,7 +411,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         packages = request.data.get('packages') or []
         queued_packages = []
         unqueued_packages = []
-        supported_ecosystems = ["maven", "npm"]
+        supported_ecosystems = ['maven', 'npm']
 
         unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages, supported_ecosystems)
 
