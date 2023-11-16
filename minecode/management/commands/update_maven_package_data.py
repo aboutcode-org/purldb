@@ -17,11 +17,6 @@ from django.db import transaction
 from django.db.utils import DataError
 from django.utils import timezone
 
-from urllib3.util import Retry
-from requests import Session
-from requests.adapters import HTTPAdapter
-import requests
-
 from minecode.models import ProcessingError
 from minecode.management.commands import VerboseCommand
 from packagedb.models import Package
@@ -35,12 +30,6 @@ TRACE = False
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
-
-session = Session()
-session.headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
-}
-session.mount('https://', HTTPAdapter(max_retries=Retry(10)))
 
 
 # This is from https://stackoverflow.com/questions/4856882/limiting-memory-use-in-a-large-django-queryset/5188179#5188179
@@ -65,19 +54,6 @@ class MemorySavingQuerysetIterator(object):
 
     def next(self):
         return self._generator.next()
-
-
-def check_download_url(url, timeout=DEFAULT_TIMEOUT):
-    """Return True if `url` is resolvable and accessable"""
-    if not url:
-        return
-    try:
-        response = session.get(url, timeout=timeout)
-        response.raise_for_status()
-        return response.ok
-    except (requests.RequestException, ValueError, TypeError) as exception:
-        logger.debug(f"[Exception] {exception}")
-        return False
 
 
 def update_packages(packages, fields_to_update):
@@ -241,6 +217,53 @@ def update_package_fields(package, maven_package, field_names):
         return package
 
 
+def update_maven_packages(maven_package, fields_to_update, lowercased_purl_fields=False):
+    namespace = maven_package.namespace
+    name = maven_package.name
+    version = maven_package.version
+    normalized_qualifiers = normalize_qualifiers(maven_package.qualifiers, encode=True)
+
+    if lowercased_purl_fields:
+        namespace = namespace.lower()
+        name = name.lower()
+        version = version.lower()
+        normalize_qualifiers = normalize_qualifiers.lower()
+
+    existing_packages = Package.objects.filter(
+        type='maven',
+        namespace=namespace,
+        name=name,
+        version=version,
+        qualifiers=normalized_qualifiers or ''
+    )
+    if existing_package.exists():
+        duplicate_packages = []
+        for existing_package in existing_packages:
+            if existing_package.download_url != maven_package.download_url:
+                logger.debug(f'Deleted duplicate Package with incorrect download URL {existing_package.package_uid}')
+                duplicate_packages.append(existing_package)
+
+        duplicate_packages_pks = [p.pk for p in duplicate_packages]
+        existing_package = Package.objects.exclude(
+            pk__in=duplicate_packages_pks
+        ).get_or_none(
+            type='maven',
+            namespace=namespace,
+            name=name,
+            version=version,
+            qualifiers=normalized_qualifiers or ''
+        )
+        if existing_package:
+            existing_package = update_package_fields(
+                existing_package,
+                maven_package,
+                fields_to_update
+            )
+            return existing_package, duplicate_packages
+    else:
+        return None, []
+
+
 class Command(VerboseCommand):
     help = 'Update maven Package values'
 
@@ -256,12 +279,13 @@ class Command(VerboseCommand):
         updated_packages_count = 0
         created_packages_count = 0
         deleted_packages_count = 0
-        logger.info('Updating or Adding new Packages from Maven Index')
-        collector = MavenNexusCollector()
         unsaved_new_packages = []
         unsaved_existing_packages = []
         unsaved_existing_packages_lowercased = []
         packages_to_delete = []
+
+        logger.info('Updating or Adding new Packages from Maven Index')
+        collector = MavenNexusCollector()
         for i, maven_package in enumerate(collector.get_packages()):
             if not i % 1000:
                 logger.info(f'Processed {i:,} Maven Artifacts')
@@ -284,94 +308,41 @@ class Command(VerboseCommand):
                     deleted_packages_count=deleted_packages_count,
                 )
 
-            normalized_qualifiers = normalize_qualifiers(maven_package.qualifiers, encode=True)
-            existing_packages = Package.objects.filter(
-                type='maven',
-                namespace=maven_package.namespace,
-                name=maven_package.name,
-                version=maven_package.version,
-                qualifiers=normalized_qualifiers or ''
-            )
-
-            duplicate_packages = []
-            for existing_package in existing_packages:
-                if existing_package.download_url != maven_package.download_url:
-                    logger.debug(f'Deleted duplicate Package with incorrect download URL {existing_package.package_uid}')
-                    packages_to_delete.append(existing_package)
-                    duplicate_packages.append(existing_package)
-
-            duplicate_packages_pks = [p.pk for p in duplicate_packages]
-            existing_package = Package.objects.exclude(
-                pk__in=duplicate_packages_pks
-            ).get_or_none(
-                type='maven',
-                namespace=maven_package.namespace,
-                name=maven_package.name,
-                version=maven_package.version,
-                qualifiers=normalized_qualifiers or ''
+            fields_to_update = [
+                'download_url',
+                'repository_homepage_url',
+                'repository_download_url',
+                'api_data_url',
+                'release_date',
+            ]
+            existing_package, duplicate_packages = update_maven_packages(
+                maven_package,
+                fields_to_update
             )
             if existing_package:
-                fields_to_update = [
-                    'download_url',
-                    'repository_homepage_url',
-                    'repository_download_url',
-                    'api_data_url',
-                    'release_date',
-                ]
-                existing_package = update_package_fields(
-                    existing_package,
-                    maven_package,
-                    fields_to_update
-                )
                 unsaved_existing_packages.append(existing_package)
+                packages_to_delete.extend(duplicate_packages)
                 continue
 
-            if normalized_qualifiers:
-                normalized_qualifiers = normalized_qualifiers.lower()
-
-            existing_packages_lowercased = Package.objects.filter(
-                type='maven',
-                namespace=maven_package.namespace.lower(),
-                name=maven_package.name.lower(),
-                version=maven_package.version.lower(),
-                qualifiers=normalized_qualifiers or ''
-            )
-
-            duplicate_packages_lowercased = []
-            for existing_package_lowercased in existing_packages_lowercased:
-                if existing_package_lowercased.download_url != maven_package.download_url:
-                    logger.debug(f'Deleted duplicate Package with incorrect download URL {existing_package_lowercased.package_uid}')
-                    packages_to_delete.append(existing_package_lowercased)
-                    duplicate_packages_lowercased.append(existing_package_lowercased)
-
-            duplicate_packages_lowercased_pks = [p.pk for p in duplicate_packages_lowercased]
-            existing_package_lowercased = Package.objects.exclude(
-                pk__in=duplicate_packages_lowercased_pks
-            ).get_or_none(
-                type='maven',
-                namespace=maven_package.namespace.lower(),
-                name=maven_package.name.lower(),
-                version=maven_package.version.lower(),
-                qualifiers=normalized_qualifiers or ''
+            fields_to_update = [
+                'namespace',
+                'name',
+                'version',
+                'qualifiers',
+                'download_url',
+                'repository_homepage_url',
+                'repository_download_url',
+                'api_data_url',
+                'release_date',
+            ]
+            existing_package_lowercased, duplicate_packages = update_maven_packages(
+                maven_package,
+                fields_to_update,
+                lowercased_purl_fields=True
             )
             if existing_package_lowercased:
-                fields_to_update = [
-                    'namespace',
-                    'name',
-                    'version',
-                    'qualifiers',
-                    'download_url',
-                    'repository_homepage_url',
-                    'repository_download_url',
-                    'api_data_url',
-                    'release_date',
-                ]
-                existing_package_lowercased = update_package_fields(
-                    existing_package_lowercased,
-                    maven_package,
-                    fields_to_update
-                )
                 unsaved_existing_packages_lowercased.append(existing_package_lowercased)
+                packages_to_delete.extend(duplicate_packages)
                 continue
 
             if Package.objects.filter(download_url=maven_package.download_url).exists():
@@ -379,6 +350,10 @@ class Command(VerboseCommand):
                 continue
 
             if create_package:
+                normalized_qualifiers = normalize_qualifiers(
+                    maven_package.qualifiers,
+                    encode=True
+                )
                 new_package = Package(
                     type=maven_package.type,
                     namespace=maven_package.namespace,
