@@ -626,7 +626,12 @@ class Package(
         if scannable_uri:
             scannable_uri.rescan()
 
-    def update_field(self, field, value, save=False):
+    def _update_field(self, field, value):
+        """
+        Update `field` of this Package with a value of `value` and return a
+        3-tuple containing this Package, a list of fields that were updated, and
+        a list of history entries.
+        """
         # Ensure the incoming value is of the correct type
         if field == 'qualifiers' and isinstance(value, dict):
             value = normalize_qualifiers(value, encode=True)
@@ -640,69 +645,30 @@ class Package(
         if field in date_fields and isinstance(value, str):
             value = dateutil_parse(value)
 
-        # Update field value if it differs from the existing value
-        updated_field = None
         history_entries = []
+        # Update Package value
         package_value = getattr(self, field)
-        if package_value != value:
-            setattr(self, field, value)
-            # Update history
-            if field in date_fields:
-                package_value = str(package_value)
-                value = str(value)
-            entry = dict(
-                field=field,
-                old_value=package_value,
-                new_value=value,
-            )
-            updated_field = field
-            history_entries.append(entry)
+        setattr(self, field, value)
 
-        if updated_field:
-            data = {
-                'updated_fields': history_entries,
-            }
-            self.append_to_history(
-                'Package field values have been updated.',
-                data=data,
-            )
+        # Update history
+        if field in date_fields:
+            package_value = str(package_value)
+            value = str(value)
+        entry = dict(
+            field=field,
+            old_value=package_value,
+            new_value=value,
+        )
+        updated_fields = [field, 'history']
+        history_entries.append(entry)
+        return self, updated_fields, history_entries
 
-        if save:
-            self.save()
-
-        return self, updated_field
-
-    def update_fields(self, save=False, **values_by_fields):
-        updated_fields = []
-        history_entries = []
-        for field, value in values_by_fields.items():
-            # Ensure the incoming value is of the correct type
-            if field == 'qualifiers' and isinstance(value, dict):
-                value = normalize_qualifiers(value, encode=True)
-
-            date_fields = [
-                'created_date',
-                'last_indexed_date',
-                'last_modified_date',
-                'release_date',
-            ]
-            if field in date_fields and isinstance(value, str):
-                value = dateutil_parse(value)
-
-            package_value = getattr(self, field)
-            if package_value != value:
-                setattr(self, field, value)
-                # Update history
-                if field in date_fields:
-                    package_value = str(package_value)
-                    value = str(value)
-                entry = dict(
-                    field=field,
-                    old_value=package_value,
-                    new_value=value,
-                )
-                updated_fields.append(field)
-                history_entries.append(entry)
+    def update_field(self, field, value, save=False):
+        """
+        Update `field` of this Package with a value of `value` and return a
+        2-tuple containing this Package and a list of fields that were updated.
+        """
+        package, updated_fields, history_entries = self._update_field(field=field, value=value)
 
         if updated_fields:
             data = {
@@ -714,9 +680,46 @@ class Package(
             )
 
         if save:
-            self.save()
+            package.save()
 
-        return self, updated_fields
+        return package, updated_fields
+
+    def update_fields(self, save=False, **values_by_fields):
+        """
+        Given keyword arguments from `values_by_fields`, where the argument
+        names passed into the method are the fields of this Package to be
+        updated and the values are the new values to be set (e.g.
+        path="/new/path", sha1="newsha1"), update all the fields and return a
+        2-tuple containing this Package and a list containing the fields that
+        were updated.
+        """
+        updated_fields = []
+        history_entries = []
+        for field, value in values_by_fields.items():
+            (
+                package,
+                uf,
+                he
+            ) = self._update_field(field=field, value=value)
+            updated_fields.extend(uf)
+            history_entries.extend(he)
+
+        # Deduplicate field names
+        updated_fields = list(set(updated_fields))
+
+        if updated_fields:
+            data = {
+                'updated_fields': history_entries,
+            }
+            self.append_to_history(
+                'Package field values have been updated.',
+                data=data,
+            )
+
+        if save:
+            package.save()
+
+        return package, updated_fields
 
 
 party_person = 'person'

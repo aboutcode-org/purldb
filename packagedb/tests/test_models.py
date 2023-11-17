@@ -172,7 +172,7 @@ class PackageModelTestCase(TransactionTestCase):
         self.assertFalse(p1.history)
         self.assertEquals('', p1.namespace)
         package, updated_field = p1.update_field(field='namespace', value='test')
-        self.assertEqual(updated_field, 'namespace')
+        self.assertEqual(updated_field, ['namespace', 'history'])
         self.assertEqual('test', p1.namespace)
         self.assertEqual(1, len(p1.history))
         expected_history_entry = {
@@ -198,7 +198,10 @@ class PackageModelTestCase(TransactionTestCase):
         self.assertEquals('', p1.namespace)
         self.assertEquals(None, p1.homepage_url)
         package, updated_fields = p1.update_fields(namespace='test', homepage_url='https://example.com')
-        self.assertEqual(updated_fields, ['namespace', 'homepage_url'])
+        self.assertEqual(
+            sorted(updated_fields),
+            sorted(['homepage_url', 'history', 'namespace'])
+        )
         self.assertEqual('test', p1.namespace)
         self.assertEqual('https://example.com', p1.homepage_url)
         self.assertEqual(1, len(p1.history))
