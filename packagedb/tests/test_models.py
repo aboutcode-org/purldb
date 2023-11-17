@@ -7,6 +7,8 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from dateutil.parser import parse as dateutil_parse
+
 from django.db import IntegrityError
 from django.test import TransactionTestCase
 from django.utils import timezone
@@ -226,3 +228,106 @@ class PackageModelTestCase(TransactionTestCase):
         history_entry = p1.history[0]
         history_entry.pop('timestamp')
         self.assertEqual(expected_history_entry, history_entry)
+
+    def test_packagedb_package_model_update_fields_special_cases(self):
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
+        # Test dates
+        date_fields = [
+            'created_date',
+            'last_indexed_date',
+            'release_date',
+        ]
+        for field in date_fields:
+            value = getattr(p1, field)
+            self.assertEqual(None, value)
+        timestamp_str = '2017-03-25T14:39:00+00:00'
+        package, updated_fields = p1.update_fields(
+            **{field: timestamp_str for field in date_fields}
+        )
+        timestamp = dateutil_parse(timestamp_str)
+        for field in date_fields:
+            value = getattr(package, field)
+            self.assertEqual(timestamp, value)
+        self.assertEqual(
+            sorted(updated_fields),
+            sorted(date_fields + ['history'])
+        )
+
+        # Test qualifiers
+        self.assertEqual('', p1.qualifiers)
+        dict_qualifiers1 = {
+            'classifier': 'sources',
+            'type': 'war',
+        }
+        string_qualifiers1='classifier=sources&type=war'
+        package, updated_fields = p1.update_field('qualifiers', dict_qualifiers1)
+        self.assertEqual(
+            sorted(['qualifiers', 'history']),
+            sorted(updated_fields),
+        )
+        self.assertEqual(
+            string_qualifiers1,
+            p1.qualifiers
+        )
+        string_qualifiers2='classifier=somethingelse'
+        package, updated_fields = p1.update_field('qualifiers', string_qualifiers2)
+        self.assertEqual(
+            sorted(['qualifiers', 'history']),
+            sorted(updated_fields),
+        )
+        self.assertEqual(
+            string_qualifiers2,
+            p1.qualifiers,
+        )
+        expected_history = [
+            {
+                'message': 'Package field values have been updated.',
+                'data': {
+                    'updated_fields': [
+                        {
+                            'field': 'created_date',
+                            'old_value': 'None',
+                            'new_value': '2017-03-25 14:39:00+00:00'
+                        }, {
+                            'field': 'last_indexed_date',
+                            'old_value': 'None',
+                            'new_value': '2017-03-25 14:39:00+00:00'
+                        }, {
+                            'field': 'release_date',
+                            'old_value': 'None',
+                            'new_value': '2017-03-25 14:39:00+00:00'
+                        }
+                    ]
+                }
+            },
+            {
+                'message': 'Package field values have been updated.',
+                'data': {
+                    'updated_fields': [
+                        {
+                            'field': 'qualifiers',
+                            'old_value': '',
+                            'new_value': 'classifier=sources&type=war'
+                        }
+                    ]
+                }
+            },
+            {
+                'message': 'Package field values have been updated.',
+                'data': {
+                    'updated_fields': [
+                        {
+                            'field': 'qualifiers',
+                            'old_value': 'classifier=sources&type=war',
+                            'new_value': 'classifier=somethingelse'
+                        }
+                    ]
+                }
+            }
+        ]
+        # remove timestamp before comparison
+        history = []
+        for entry in p1.history:
+            entry.pop('timestamp')
+            history.append(entry)
+        self.assertEquals(expected_history, history)
