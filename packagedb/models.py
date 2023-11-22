@@ -755,7 +755,7 @@ class Package(
 
                     msg = f"Replaced {model_count} existing entries of field '{field}' with {created_models_count} new entries."
                     self.append_to_history(msg)
-                    replaced_fields.append(field)
+                    replaced_fields.extend([field, 'history'])
             else:
                 # Ensure the incoming value is of the correct type
                 if field == 'qualifiers' and isinstance(value, dict):
@@ -788,10 +788,7 @@ class Package(
                 history_entries.append(entry)
                 updated_fields.append(field)
 
-        if updated_fields:
-            updated_fields.append('history')
-            # Deduplicate field names
-            updated_fields = list(set(updated_fields))
+        if updated_fields and history_entries:
             data = {
                 'updated_fields': history_entries,
             }
@@ -799,9 +796,14 @@ class Package(
                 'Package field values have been updated.',
                 data=data,
             )
+            updated_fields.append('history')
 
         if replaced_fields:
             updated_fields.extend(replaced_fields)
+
+        if updated_fields:
+            # Deduplicate field names
+            updated_fields = list(set(updated_fields))
 
         if save:
             self.save()

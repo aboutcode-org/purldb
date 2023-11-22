@@ -288,7 +288,11 @@ class PackageModelTestCase(TransactionTestCase):
         p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
         path = 'asdf'
         resources = [Resource(package=p1, path=path)]
-        p1.update_fields(resources=resources)
+        _, updated_fields = p1.update_fields(resources=resources)
+        self.assertEquals(
+            sorted(['resources', 'history']),
+            sorted(updated_fields)
+        )
         expected_message = "Replaced 0 existing entries of field 'resources' with 1 new entries."
         self.assertEqual(1, len(p1.history))
         history_message = p1.history[0]['message']
@@ -334,7 +338,11 @@ class PackageModelTestCase(TransactionTestCase):
                 "extra_data": {}
             }
         ]
-        p2.update_fields(resources=resources)
+        _, updated_fields = p2.update_fields(resources=resources)
+        self.assertEquals(
+            sorted(['resources', 'history']),
+            sorted(updated_fields)
+        )
         expected_message = "Replaced 0 existing entries of field 'resources' with 1 new entries."
         self.assertEqual(1, len(p2.history))
         history_message = p2.history[0]['message']
@@ -350,7 +358,11 @@ class PackageModelTestCase(TransactionTestCase):
                 url='foo.com',
              )
         ]
-        p3.update_fields(parties=parties)
+        _, updated_fields = p3.update_fields(parties=parties)
+        self.assertEquals(
+            sorted(['parties', 'history']),
+            sorted(updated_fields)
+        )
         expected_message = "Replaced 0 existing entries of field 'parties' with 1 new entries."
         self.assertEqual(1, len(p3.history))
         history_message = p3.history[0]['message']
@@ -367,7 +379,11 @@ class PackageModelTestCase(TransactionTestCase):
                 url='foo.com',
              )
         ]
-        p4.update_fields(parties=parties)
+        _, updated_fields = p4.update_fields(parties=parties)
+        self.assertEquals(
+            sorted(['parties', 'history']),
+            sorted(updated_fields)
+        )
         expected_message = "Replaced 0 existing entries of field 'parties' with 1 new entries."
         self.assertEqual(1, len(p4.history))
         history_message = p4.history[0]['message']
@@ -384,7 +400,11 @@ class PackageModelTestCase(TransactionTestCase):
                 is_resolved=True,
             )
         ]
-        p5.update_fields(dependencies=dependencies)
+        _, updated_fields = p5.update_fields(dependencies=dependencies)
+        self.assertEquals(
+            sorted(['dependencies', 'history']),
+            sorted(updated_fields)
+        )
         expected_message = "Replaced 0 existing entries of field 'dependencies' with 1 new entries."
         self.assertEqual(1, len(p5.history))
         history_message = p5.history[0]['message']
@@ -402,7 +422,11 @@ class PackageModelTestCase(TransactionTestCase):
                 is_resolved=True,
             )
         ]
-        p6.update_fields(dependencies=dependencies)
+        _, updated_fields = p6.update_fields(dependencies=dependencies)
+        self.assertEquals(
+            sorted(['dependencies', 'history']),
+            sorted(updated_fields)
+        )
         expected_message = "Replaced 0 existing entries of field 'dependencies' with 1 new entries."
         self.assertEqual(1, len(p6.history))
         history_message = p6.history[0]['message']
