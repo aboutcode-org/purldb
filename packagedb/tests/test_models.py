@@ -7,11 +7,15 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from dateutil.parser import parse as dateutil_parse
+
 from django.db import IntegrityError
 from django.test import TransactionTestCase
 from django.utils import timezone
 
+from packagedb.models import DependentPackage
 from packagedb.models import Package
+from packagedb.models import Party
 from packagedb.models import Resource
 
 
@@ -141,3 +145,303 @@ class PackageModelTestCase(TransactionTestCase):
         self.assertEqual(p3, p2.get_latest_version())
         self.assertEqual(p3, p3.get_latest_version())
         self.assertEqual(p4, p4.get_latest_version())
+
+    def test_packagedb_package_model_update_fields(self):
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
+        self.assertFalse(p1.history)
+        self.assertEquals('', p1.namespace)
+        self.assertEquals(None, p1.homepage_url)
+        package, updated_fields = p1.update_fields(namespace='test', homepage_url='https://example.com')
+        self.assertEqual(
+            sorted(updated_fields),
+            sorted(['homepage_url', 'history', 'namespace'])
+        )
+        self.assertEqual('test', p1.namespace)
+        self.assertEqual('https://example.com', p1.homepage_url)
+        self.assertEqual(1, len(p1.history))
+        expected_history_entry = {
+            'message': 'Package field values have been updated.',
+            'data': {
+                'updated_fields':
+                [
+                    {
+                        'field': 'namespace',
+                        'old_value': '',
+                        'new_value': 'test'
+                    },
+                    {
+                        'field': 'homepage_url',
+                        'old_value': None,
+                        'new_value': 'https://example.com'
+                    }
+                ]
+            }
+        }
+        history_entry = p1.history[0]
+        history_entry.pop('timestamp')
+        self.assertEqual(expected_history_entry, history_entry)
+
+    def test_packagedb_package_model_update_fields_special_cases(self):
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
+        # Test dates
+        date_fields = [
+            'created_date',
+            'last_indexed_date',
+            'release_date',
+        ]
+        for field in date_fields:
+            value = getattr(p1, field)
+            self.assertEqual(None, value)
+        timestamp_str = '2017-03-25T14:39:00+00:00'
+        package, updated_fields = p1.update_fields(
+            **{field: timestamp_str for field in date_fields}
+        )
+        timestamp = dateutil_parse(timestamp_str)
+        for field in date_fields:
+            value = getattr(package, field)
+            self.assertEqual(timestamp, value)
+        self.assertEqual(
+            sorted(updated_fields),
+            sorted(date_fields + ['history'])
+        )
+
+        # Test qualifiers
+        self.assertEqual('', p1.qualifiers)
+        dict_qualifiers1 = {
+            'classifier': 'sources',
+            'type': 'war',
+        }
+        string_qualifiers1='classifier=sources&type=war'
+        package, updated_fields = p1.update_fields(qualifiers=dict_qualifiers1)
+        self.assertEqual(
+            sorted(['qualifiers', 'history']),
+            sorted(updated_fields),
+        )
+        self.assertEqual(
+            string_qualifiers1,
+            p1.qualifiers
+        )
+        string_qualifiers2='classifier=somethingelse'
+        package, updated_fields = p1.update_fields(qualifiers=string_qualifiers2)
+        self.assertEqual(
+            sorted(['qualifiers', 'history']),
+            sorted(updated_fields),
+        )
+        self.assertEqual(
+            string_qualifiers2,
+            p1.qualifiers,
+        )
+        expected_history = [
+            {
+                'message': 'Package field values have been updated.',
+                'data': {
+                    'updated_fields': [
+                        {
+                            'field': 'created_date',
+                            'old_value': 'None',
+                            'new_value': '2017-03-25 14:39:00+00:00'
+                        }, {
+                            'field': 'last_indexed_date',
+                            'old_value': 'None',
+                            'new_value': '2017-03-25 14:39:00+00:00'
+                        }, {
+                            'field': 'release_date',
+                            'old_value': 'None',
+                            'new_value': '2017-03-25 14:39:00+00:00'
+                        }
+                    ]
+                }
+            },
+            {
+                'message': 'Package field values have been updated.',
+                'data': {
+                    'updated_fields': [
+                        {
+                            'field': 'qualifiers',
+                            'old_value': '',
+                            'new_value': 'classifier=sources&type=war'
+                        }
+                    ]
+                }
+            },
+            {
+                'message': 'Package field values have been updated.',
+                'data': {
+                    'updated_fields': [
+                        {
+                            'field': 'qualifiers',
+                            'old_value': 'classifier=sources&type=war',
+                            'new_value': 'classifier=somethingelse'
+                        }
+                    ]
+                }
+            }
+        ]
+        # remove timestamp before comparison
+        history = []
+        for entry in p1.history:
+            entry.pop('timestamp')
+            history.append(entry)
+        self.assertEquals(expected_history, history)
+
+    def test_packagedb_package_model_update_fields_related_models(self):
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
+        path = 'asdf'
+        resources = [Resource(package=p1, path=path)]
+        _, updated_fields = p1.update_fields(resources=resources)
+        self.assertEquals(
+            sorted(['resources', 'history']),
+            sorted(updated_fields)
+        )
+        expected_message = "Replaced 0 existing entries of field 'resources' with 1 new entries."
+        self.assertEqual(1, len(p1.history))
+        history_message = p1.history[0]['message']
+        self.assertEqual(expected_message, history_message)
+
+        p2 = Package.objects.create(download_url='http://b.b', name='example', version='1.0')
+        resources = [
+            {
+                "path": "example.jar",
+                "type": "file",
+                "name": "example.jar",
+                "status": "",
+                "tag": "",
+                "extension": ".jar",
+                "size": 20621,
+                "md5": "9307296944793049edbef60784afb12d",
+                "sha1": "6f776af78d7eded5a1eb2870f9d81abbf690f8b8",
+                "sha256": "bb83934ba50c26c093d4bea5f3faead15a3e8c176dc5ec93837d6beeaa1f27e8",
+                "sha512": "",
+                "mime_type": "application/java-archive",
+                "file_type": "Java archive data (JAR)",
+                "programming_language": "",
+                "is_binary": True,
+                "is_text": False,
+                "is_archive": True,
+                "is_media": False,
+                "is_key_file": True,
+                "detected_license_expression": "",
+                "detected_license_expression_spdx": "",
+                "license_detections": [],
+                "license_clues": [],
+                "percentage_of_license_text": 0.0,
+                "compliance_alert": "",
+                "copyrights": [],
+                "holders": [],
+                "authors": [],
+                "package_data": [],
+                "for_packages": [
+
+                ],
+                "emails": [],
+                "urls": [],
+                "extra_data": {}
+            }
+        ]
+        _, updated_fields = p2.update_fields(resources=resources)
+        self.assertEquals(
+            sorted(['resources', 'history']),
+            sorted(updated_fields)
+        )
+        expected_message = "Replaced 0 existing entries of field 'resources' with 1 new entries."
+        self.assertEqual(1, len(p2.history))
+        history_message = p2.history[0]['message']
+        self.assertEqual(expected_message, history_message)
+
+        p3 = Package.objects.create(download_url='http://foo', name='foo', version='1.0')
+        parties = [
+             dict(
+                type='admin',
+                role='admin',
+                name='foo',
+                email='foo@foo.com',
+                url='foo.com',
+             )
+        ]
+        _, updated_fields = p3.update_fields(parties=parties)
+        self.assertEquals(
+            sorted(['parties', 'history']),
+            sorted(updated_fields)
+        )
+        expected_message = "Replaced 0 existing entries of field 'parties' with 1 new entries."
+        self.assertEqual(1, len(p3.history))
+        history_message = p3.history[0]['message']
+        self.assertEqual(expected_message, history_message)
+
+        p4 = Package.objects.create(download_url='http://bar', name='bar', version='1.0')
+        parties = [
+             Party(
+                package=p4,
+                type='admin',
+                role='admin',
+                name='bar',
+                email='bar@bar.com',
+                url='foo.com',
+             )
+        ]
+        _, updated_fields = p4.update_fields(parties=parties)
+        self.assertEquals(
+            sorted(['parties', 'history']),
+            sorted(updated_fields)
+        )
+        expected_message = "Replaced 0 existing entries of field 'parties' with 1 new entries."
+        self.assertEqual(1, len(p4.history))
+        history_message = p4.history[0]['message']
+        self.assertEqual(expected_message, history_message)
+
+        p5 = Package.objects.create(download_url='http://baz', name='baz', version='1.0')
+        dependencies = [
+            dict(
+                purl='pkg:baz_dep@1.0',
+                extracted_requirement='>1',
+                scope='runtime',
+                is_runtime=True,
+                is_optional=False,
+                is_resolved=True,
+            )
+        ]
+        _, updated_fields = p5.update_fields(dependencies=dependencies)
+        self.assertEquals(
+            sorted(['dependencies', 'history']),
+            sorted(updated_fields)
+        )
+        expected_message = "Replaced 0 existing entries of field 'dependencies' with 1 new entries."
+        self.assertEqual(1, len(p5.history))
+        history_message = p5.history[0]['message']
+        self.assertEqual(expected_message, history_message)
+
+        p6 = Package.objects.create(download_url='http://qux', name='qux', version='1.0')
+        dependencies = [
+            DependentPackage(
+                package=p6,
+                purl='pkg:qux_dep@1.0',
+                extracted_requirement='>1',
+                scope='runtime',
+                is_runtime=True,
+                is_optional=False,
+                is_resolved=True,
+            )
+        ]
+        _, updated_fields = p6.update_fields(dependencies=dependencies)
+        self.assertEquals(
+            sorted(['dependencies', 'history']),
+            sorted(updated_fields)
+        )
+        expected_message = "Replaced 0 existing entries of field 'dependencies' with 1 new entries."
+        self.assertEqual(1, len(p6.history))
+        history_message = p6.history[0]['message']
+        self.assertEqual(expected_message, history_message)
+
+    def test_packagedb_package_model_update_fields_exceptions(self):
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
+        with self.assertRaises(AttributeError):
+            p1.update_fields(asdf=123)
+
+        with self.assertRaises(ValueError):
+            p1.update_fields(resources=[1])
+
+        with self.assertRaises(ValueError):
+            p1.update_fields(dependencies=[1])
+
+        with self.assertRaises(ValueError):
+            p1.update_fields(parties=[1])

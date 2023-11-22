@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from collections import OrderedDict
 import copy
 import logging
 import natsort
@@ -14,14 +15,15 @@ import sys
 import uuid
 
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchVectorField
 from django.core.paginator import Paginator
 from django.db import models
+from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
+from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
@@ -72,7 +74,6 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
             page = paginator.page(page_number)
             for object in page.object_list:
                 yield object
-
 
 
 VCS_CHOICES = [
@@ -454,6 +455,11 @@ class PackageContentType(models.IntegerChoices):
     DOC = 7, 'doc'
 
 
+def get_class_name(obj):
+    """Return a string containing the class name of `obj`"""
+    return type(obj).__name__
+
+
 # TODO: Figure out what ordering we want for the fields
 class Package(
     HistoryMixin,
@@ -625,6 +631,185 @@ class Package(
         if scannable_uri:
             scannable_uri.rescan()
 
+    def update_fields(self, save=False, **values_by_fields):
+        """
+        Given keyword arguments from `values_by_fields`, where the argument
+        names passed into the method are the fields of this Package to be
+        updated and the values are the new values to be set (e.g.
+        path="/new/path", sha1="newsha1"), update all the fields and return a
+        2-tuple containing this Package and a list containing the fields that
+        were updated.
+
+        In the instance where the field to be updated is `dependencies`,
+        `parties`, or `resources`, then we will delete all existing related
+        models for that field and then create the new models from the argument
+        values.
+        """
+        class_name = get_class_name(self)
+        replaced_fields = []
+        updated_fields = []
+        history_entries = []
+        for field, value in values_by_fields.items():
+            if not hasattr(self, field):
+                # Raise exception when we we are given a keyword argument that
+                # doesn't correspond to a Package field
+                raise AttributeError(f"'{class_name}' has no attribute '{field}'")
+
+            related_model_fields = [
+                'dependencies',
+                'parties',
+                'resources',
+            ]
+            if field in related_model_fields:
+                unsaved_models = []
+                if field == 'dependencies':
+                    for dep_data in value:
+                        if isinstance(dep_data, (dict, OrderedDict)):
+                            dep = DependentPackage(
+                                package=self,
+                                purl=dep_data.get('purl'),
+                                extracted_requirement=dep_data.get('extracted_requirement'),
+                                scope=dep_data.get('scope'),
+                                is_runtime=dep_data.get('is_runtime'),
+                                is_optional=dep_data.get('is_optional'),
+                                is_resolved=dep_data.get('is_resolved'),
+                            )
+                        elif isinstance(dep_data, DependentPackage):
+                            dep = dep_data
+                        else:
+                            raise ValueError(
+                                f"Cannot save object of type '{get_class_name(dep_data)}' to field '{field}' of type 'DependentPackage'"
+                            )
+                        unsaved_models.append(dep)
+
+                if field == 'parties':
+                    for party_data in value:
+                        if isinstance(party_data, (dict, OrderedDict)):
+                            party = Party(
+                                package=self,
+                                type=party_data.get('type'),
+                                role=party_data.get('role'),
+                                name=party_data.get('name'),
+                                email=party_data.get('email'),
+                                url=party_data.get('url'),
+                            )
+                        elif isinstance(party_data, Party):
+                            party = party_data
+                        else:
+                            raise ValueError(
+                                f"Cannot save object of type '{get_class_name(party_data)}' to field '{field}' of type 'Party'"
+                            )
+                        unsaved_models.append(party)
+
+                if field == 'resources':
+                    for resource_data in value:
+                        if isinstance(resource_data, (dict, OrderedDict)):
+                            resource = Resource(
+                                package=self,
+                                path=resource_data.get('path'),
+                                is_file=resource_data.get('type') == 'file',
+                                name=resource_data.get('name'),
+                                extension=resource_data.get('extension'),
+                                size=resource_data.get('size'),
+                                md5=resource_data.get('md5'),
+                                sha1=resource_data.get('sha1'),
+                                sha256=resource_data.get('sha256'),
+                                mime_type=resource_data.get('mime_type'),
+                                file_type=resource_data.get('file_type'),
+                                programming_language=resource_data.get('programming_language'),
+                                is_binary=resource_data.get('is_binary'),
+                                is_text=resource_data.get('is_text'),
+                                is_archive=resource_data.get('is_archive'),
+                                is_media=resource_data.get('is_media'),
+                                is_key_file=resource_data.get('is_key_file'),
+                            )
+                            resource.set_scan_results(resource_data)
+                        elif isinstance(resource_data, Resource):
+                            resource = resource_data
+                        else:
+                            raise ValueError(
+                                f"Cannot save object of type '{get_class_name(resource_data)}' to field '{field}' of type 'Resource'"
+                            )
+                        unsaved_models.append(resource)
+
+                if unsaved_models:
+                    created_models_count = len(unsaved_models)
+                    model_count = 0
+                    if field == 'dependencies':
+                        model_count = self.dependencies.all().count()
+                        with transaction.atomic():
+                            self.dependencies.all().delete()
+                            DependentPackage.objects.bulk_create(unsaved_models)
+
+                    if field == 'parties':
+                        model_count = self.parties.all().count()
+                        with transaction.atomic():
+                            self.parties.all().delete()
+                            Party.objects.bulk_create(unsaved_models)
+
+                    if field == 'resources':
+                        model_count = self.resources.all().count()
+                        with transaction.atomic():
+                            self.resources.all().delete()
+                            Resource.objects.bulk_create(unsaved_models)
+
+                    msg = f"Replaced {model_count} existing entries of field '{field}' with {created_models_count} new entries."
+                    self.append_to_history(msg)
+                    replaced_fields.extend([field, 'history'])
+            else:
+                # Ensure the incoming value is of the correct type
+                if field == 'qualifiers' and isinstance(value, dict):
+                    value = normalize_qualifiers(value, encode=True)
+
+                date_fields = [
+                    'created_date',
+                    'last_indexed_date',
+                    'last_modified_date',
+                    'release_date',
+                ]
+                if field in date_fields and isinstance(value, str):
+                    value = dateutil_parse(value)
+
+                # Update field value
+                package_value = getattr(self, field)
+                setattr(self, field, value)
+
+                # Cast datetime value to a string for history
+                if field in date_fields:
+                    package_value = str(package_value)
+                    value = str(value)
+
+                # Create entry for history
+                entry = dict(
+                    field=field,
+                    old_value=package_value,
+                    new_value=value,
+                )
+                history_entries.append(entry)
+                updated_fields.append(field)
+
+        if updated_fields and history_entries:
+            data = {
+                'updated_fields': history_entries,
+            }
+            self.append_to_history(
+                'Package field values have been updated.',
+                data=data,
+            )
+            updated_fields.append('history')
+
+        if replaced_fields:
+            updated_fields.extend(replaced_fields)
+
+        if updated_fields:
+            # Deduplicate field names
+            updated_fields = list(set(updated_fields))
+
+        if save:
+            self.save()
+
+        return self, updated_fields
+
 
 party_person = 'person'
 # often loosely defined
@@ -687,6 +872,11 @@ class Party(models.Model):
         help_text=_('URL to a primary web page for this party.')
     )
 
+    def to_dict(self):
+        from packagedb.serializers import PartySerializer
+        party_data = PartySerializer(self).data
+        return party_data
+
 
 class DependentPackage(models.Model):
     """
@@ -737,6 +927,11 @@ class DependentPackage(models.Model):
                     'been resolved and this dependency url points to an '
                     'exact version.')
     )
+
+    def to_dict(self):
+        from packagedb.serializers import DependentPackageSerializer
+        depedent_package_data = DependentPackageSerializer(self).data
+        return depedent_package_data
 
 
 class AbstractResource(models.Model):
