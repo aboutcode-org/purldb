@@ -1,4 +1,9 @@
-graft src
+graft clearcode
+graft clearindex
+graft matchcode
+graft minecode
+graft packagedb
+graft purldb
 
 include *.LICENSE
 include NOTICE
