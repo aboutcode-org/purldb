@@ -431,3 +431,17 @@ class PackageModelTestCase(TransactionTestCase):
         self.assertEqual(1, len(p6.history))
         history_message = p6.history[0]['message']
         self.assertEqual(expected_message, history_message)
+
+    def test_packagedb_package_model_update_fields_exceptions(self):
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
+        with self.assertRaises(AttributeError):
+            p1.update_fields(asdf=123)
+
+        with self.assertRaises(ValueError):
+            p1.update_fields(resources=[1])
+
+        with self.assertRaises(ValueError):
+            p1.update_fields(dependencies=[1])
+
+        with self.assertRaises(ValueError):
+            p1.update_fields(parties=[1])
