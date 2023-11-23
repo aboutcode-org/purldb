@@ -15,7 +15,6 @@ INSTALLED_APPS += [
     "matchcode",
 ]
 
-
 # Database
 
 DATABASES.update(
