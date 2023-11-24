@@ -460,173 +460,6 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         self.assertIn(self.package3.purl, purls)
         self.assertNotIn(self.package.purl, purls)
 
-    def test_package_api_index_packages_endpoint(self):
-        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
-        self.assertEqual(0, priority_resource_uris_count)
-        packages = [
-            {'purl':'pkg:maven/ch.qos.reload4j/reload4j@1.2.24'},
-            {'purl':'pkg:maven/com.esotericsoftware.kryo/kryo@2.24.0'},
-            {'purl':'pkg:bitbucket/example/example@1.0.0'},
-        ]
-        data = {
-            'packages': packages
-        }
-        response = self.client.post('/api/packages/index_packages/', data=data, format='json')
-        self.assertEqual(2, response.data['queued_packages_count'])
-        expected_queued_packages = [
-            'pkg:maven/ch.qos.reload4j/reload4j@1.2.24',
-            'pkg:maven/com.esotericsoftware.kryo/kryo@2.24.0',
-        ]
-        self.assertEqual(
-            sorted(expected_queued_packages),
-            sorted(response.data['queued_packages'])
-        )
-        self.assertEqual(0, response.data['unqueued_packages_count'])
-        self.assertEqual([], response.data['unqueued_packages'])
-        self.assertEqual(1, response.data['unsupported_packages_count'])
-        expected_unsupported_packages = [
-            'pkg:bitbucket/example/example@1.0.0'
-        ]
-        self.assertEqual(expected_unsupported_packages, response.data['unsupported_packages'])
-        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
-        self.assertEqual(2, priority_resource_uris_count)
-
-        # Ensure that we don't add the same packages to the queue if they have
-        # not yet been processed
-        purls = [
-            {'purl':'pkg:maven/ch.qos.reload4j/reload4j@1.2.24'},
-            {'purl':'pkg:maven/com.esotericsoftware.kryo/kryo@2.24.0'},
-            {'purl':'pkg:bitbucket/example/example@1.0.0'},
-        ]
-        data = {
-            'packages': purls
-        }
-        response = self.client.post('/api/packages/index_packages/', data=data, format='json')
-        self.assertEqual(0, response.data['queued_packages_count'])
-        self.assertEqual([], response.data['queued_packages'])
-        self.assertEqual(2, response.data['unqueued_packages_count'])
-        expected_unqueued_packages = [
-            'pkg:maven/ch.qos.reload4j/reload4j@1.2.24',
-            'pkg:maven/com.esotericsoftware.kryo/kryo@2.24.0',
-        ]
-        self.assertEqual(
-            sorted(expected_unqueued_packages),
-            sorted(response.data['unqueued_packages'])
-        )
-        self.assertEqual(1, response.data['unsupported_packages_count'])
-        expected_unsupported_packages = [
-            'pkg:bitbucket/example/example@1.0.0'
-        ]
-        self.assertEqual(expected_unsupported_packages, response.data['unsupported_packages'])
-
-    @mock.patch("packagedb.api.get_all_versions")
-    def test_package_api_index_packages_endpoint_with_vers(self, mock_get_all_versions):
-        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
-        self.assertEqual(0, priority_resource_uris_count)
-        packages = [
-            {
-                "purl": "pkg:maven/ch.qos.reload4j/reload4j",
-                "vers": "vers:maven/>=1.2.18.2|<=1.2.23",
-            },
-        ]
-        data = {"packages": packages}
-
-        mock_get_all_versions.return_value = [
-            MavenVersion("1.2.18.0"),
-            MavenVersion("1.2.18.1"),
-            MavenVersion("1.2.18.2"),
-            MavenVersion("1.2.18.3"),
-            MavenVersion("1.2.18.4"),
-            MavenVersion("1.2.18.5"),
-            MavenVersion("1.2.19"),
-            MavenVersion("1.2.20"),
-            MavenVersion("1.2.21"),
-            MavenVersion("1.2.22"),
-            MavenVersion("1.2.23"),
-            MavenVersion("1.2.24"),
-            MavenVersion("1.2.25"),
-        ]
-
-        response = self.client.post(
-            "/api/packages/index_packages/", data=data, format="json"
-        )
-        self.assertEqual(9, response.data["queued_packages_count"])
-
-        expected_queued_packages = [
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.2",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.3",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.4",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.5",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.19",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.20",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.21",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.22",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.23",
-        ]
-        self.assertEqual(
-            sorted(expected_queued_packages), sorted(response.data["queued_packages"])
-        )
-        self.assertEqual(0, response.data["unqueued_packages_count"])
-        self.assertEqual([], response.data["unqueued_packages"])
-        self.assertEqual(0, response.data["unsupported_packages_count"])
-        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
-        self.assertEqual(9, priority_resource_uris_count)
-
-    @mock.patch("packagedb.api.get_all_versions")
-    def test_package_api_index_packages_endpoint_all_version_index(self, mock_get_all_versions):
-        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
-        self.assertEqual(0, priority_resource_uris_count)
-        packages = [
-            {
-                "purl": "pkg:maven/ch.qos.reload4j/reload4j",
-            },
-        ]
-        data = {"packages": packages}
-
-        mock_get_all_versions.return_value = [
-            MavenVersion("1.2.18.0"),
-            MavenVersion("1.2.18.1"),
-            MavenVersion("1.2.18.2"),
-            MavenVersion("1.2.18.3"),
-            MavenVersion("1.2.18.4"),
-            MavenVersion("1.2.18.5"),
-            MavenVersion("1.2.19"),
-            MavenVersion("1.2.20"),
-            MavenVersion("1.2.21"),
-            MavenVersion("1.2.22"),
-            MavenVersion("1.2.23"),
-            MavenVersion("1.2.24"),
-            MavenVersion("1.2.25"),
-        ]
-
-        response = self.client.post(
-            "/api/packages/index_packages/", data=data, format="json"
-        )
-        self.assertEqual(13, response.data["queued_packages_count"])
-
-        expected_queued_packages = [
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.0",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.1",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.2",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.3",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.4",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.5",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.19",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.20",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.21",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.22",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.23",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.24",
-            "pkg:maven/ch.qos.reload4j/reload4j@1.2.25",
-        ]
-        self.assertEqual(
-            sorted(expected_queued_packages), sorted(response.data["queued_packages"])
-        )
-        self.assertEqual(0, response.data["unqueued_packages_count"])
-        self.assertEqual([], response.data["unqueued_packages"])
-        self.assertEqual(0, response.data["unsupported_packages_count"])
-        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
-        self.assertEqual(13, priority_resource_uris_count)
 
     def test_package_api_filter_by_checksums(self):
         sha1s = [
@@ -682,34 +515,6 @@ class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
         self.scan_request_date = timezone.now()
         self.scannableuri.scan_request_date = self.scan_request_date
 
-        package_download_url2 = 'http://somethingelse.org'
-        self.package_data2 = {
-            'type': 'npm',
-            'namespace': 'example',
-            'name': 'bar',
-            'version': '56.78',
-            'qualifiers': '',
-            'subpath': '',
-            'download_url': package_download_url2,
-            'filename': 'Bar.zip',
-            'sha1': 'testsha1-2',
-            'md5': 'testmd5-2',
-            'size': 100,
-        }
-        self.package2 = Package.objects.create(**self.package_data2)
-        self.package2.refresh_from_db()
-        self.scannableuri2 = ScannableURI.objects.create(
-            package=self.package2,
-            uri=package_download_url2,
-        )
-        self.scannableuri2.scan_status = ScannableURI.SCAN_INDEXED
-        self.scan_uuid2 = uuid4()
-        self.scannableuri2.scan_uuid = self.scan_uuid2
-        self.scannableuri2.scan_error = 'error'
-        self.scannableuri2.index_error = 'error'
-        self.scan_request_date2 = timezone.now()
-        self.scannableuri2.scan_request_date = self.scan_request_date2
-
     def test_reindex_package(self):
         self.assertEqual(False, self.scannableuri.rescan_uri)
         self.assertEqual(0, self.scannableuri.priority)
@@ -726,52 +531,6 @@ class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
         self.assertEqual(None, self.scannableuri.scan_error)
         self.assertEqual(None, self.scannableuri.index_error)
         self.assertEqual(None, self.scannableuri.scan_request_date)
-
-    def test_reindex_packages_basic(self):
-        self.assertEqual(False, self.scannableuri.rescan_uri)
-        self.assertEqual(0, self.scannableuri.priority)
-        self.assertEqual(self.scan_uuid, self.scannableuri.scan_uuid)
-        self.assertEqual('error', self.scannableuri.scan_error)
-        self.assertEqual('error', self.scannableuri.index_error)
-        self.assertEqual(self.scan_request_date, self.scannableuri.scan_request_date)
-
-        self.assertEqual(False, self.scannableuri2.rescan_uri)
-        self.assertEqual(0, self.scannableuri2.priority)
-        self.assertEqual(self.scan_uuid2, self.scannableuri2.scan_uuid)
-        self.assertEqual('error', self.scannableuri2.scan_error)
-        self.assertEqual('error', self.scannableuri2.index_error)
-        self.assertEqual(self.scan_request_date2, self.scannableuri2.scan_request_date)
-        existing_purls = [
-            'pkg:maven/sample/Baz@90.12',
-            'pkg:npm/example/bar@56.78',
-        ]
-        nonexistent_purls = [
-            'pkg:pypi/does/not-exist@1',
-        ]
-        data = {
-            'package_urls': existing_purls + nonexistent_purls,
-        }
-        response = self.client.post(f'/api/packages/reindex_packages/', data=data)
-        self.assertEqual(2, response.data['requeued_packages_count'])
-        self.assertEqual(existing_purls, response.data['requeued_packages'])
-        self.assertEqual(1, response.data['nonexistent_packages_count'])
-        self.assertEqual(nonexistent_purls, response.data['nonexistent_packages'])
-
-        self.scannableuri.refresh_from_db()
-        self.assertEqual(True, self.scannableuri.rescan_uri)
-        self.assertEqual(100, self.scannableuri.priority)
-        self.assertEqual(None, self.scannableuri.scan_uuid)
-        self.assertEqual(None, self.scannableuri.scan_error)
-        self.assertEqual(None, self.scannableuri.index_error)
-        self.assertEqual(None, self.scannableuri.scan_request_date)
-
-        self.scannableuri2.refresh_from_db()
-        self.assertEqual(True, self.scannableuri2.rescan_uri)
-        self.assertEqual(100, self.scannableuri.priority)
-        self.assertEqual(None, self.scannableuri2.scan_uuid)
-        self.assertEqual(None, self.scannableuri2.scan_error)
-        self.assertEqual(None, self.scannableuri2.index_error)
-        self.assertEqual(None, self.scannableuri2.scan_request_date)
 
 
 class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
@@ -955,30 +714,73 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(4, response.data.get('count'))
 
-    def test_package_api_get_package(self):
-        from minecode.models import PriorityResourceURI
+    def test_package_api_get_enhanced_package(self):
+        response = self.client.get(reverse('api:package-get-enhanced-package-data', args=[self.package3.uuid]))
+        result = response.data
+        expected = self.get_test_loc('api/enhanced_package.json')
+        self.check_expected_results(result, expected, fields_to_remove=['package_sets'], regen=False)
 
-        self.assertEqual(0, PriorityResourceURI.objects.all().count())
-        response = self.client.get(f'/api/packages/get_package/?purl={self.purl1}')
-        self.assertEqual(0, PriorityResourceURI.objects.all().count())
-        self.assertEqual(1, len(response.data))
-        result = response.data[0]
-        self.assertEqual(result.get('type'), self.package_data1.get('type'))
-        self.assertEqual(result.get('namespace'), self.package_data1.get('namespace'))
-        self.assertEqual(result.get('name'), self.package_data1.get('name'))
-        self.assertEqual(result.get('version'), self.package_data1.get('version'))
-        self.assertEqual(result.get('download_url'), self.package_data1.get('download_url'))
-        self.assertEqual(result.get('extra_data'), self.package_data1.get('extra_data'))
+class CollectApiTestCase(JsonBasedTesting, TestCase):
+    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
 
-    def test_package_api_get_package_does_not_exist_in_db(self):
-        from minecode.models import PriorityResourceURI
-        purl = 'pkg:maven/org.apache.twill/twill-core@0.12.0'
-        self.assertEqual(0, PriorityResourceURI.objects.all().count())
-        response = self.client.get(f'/api/packages/get_package/?purl={purl}')
-        self.assertEqual(1, PriorityResourceURI.objects.all().count())
-        self.assertEqual({}, response.data)
+    def setUp(self):
+        package_download_url = 'http://anotherexample.com'
+        self.package_data = {
+            'type': 'maven',
+            'namespace': 'sample',
+            'name': 'Baz',
+            'version': '90.12',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': package_download_url,
+            'filename': 'Baz.zip',
+            'sha1': 'testsha1-3',
+            'md5': 'testmd5-3',
+            'size': 100,
+        }
+        self.package = Package.objects.create(**self.package_data)
+        self.package.refresh_from_db()
+        self.scannableuri = ScannableURI.objects.create(
+            package=self.package,
+            uri=package_download_url,
+        )
+        self.scannableuri.scan_status = ScannableURI.SCAN_INDEXED
+        self.scan_uuid = uuid4()
+        self.scannableuri.scan_uuid = self.scan_uuid
+        self.scannableuri.scan_error = 'error'
+        self.scannableuri.index_error = 'error'
+        self.scan_request_date = timezone.now()
+        self.scannableuri.scan_request_date = self.scan_request_date
 
-    def test_package_api_get_or_fetch_package(self):
+        package_download_url2 = 'http://somethingelse.org'
+        self.package_data2 = {
+            'type': 'npm',
+            'namespace': 'example',
+            'name': 'bar',
+            'version': '56.78',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': package_download_url2,
+            'filename': 'Bar.zip',
+            'sha1': 'testsha1-2',
+            'md5': 'testmd5-2',
+            'size': 100,
+        }
+        self.package2 = Package.objects.create(**self.package_data2)
+        self.package2.refresh_from_db()
+        self.scannableuri2 = ScannableURI.objects.create(
+            package=self.package2,
+            uri=package_download_url2,
+        )
+        self.scannableuri2.scan_status = ScannableURI.SCAN_INDEXED
+        self.scan_uuid2 = uuid4()
+        self.scannableuri2.scan_uuid = self.scan_uuid2
+        self.scannableuri2.scan_error = 'error'
+        self.scannableuri2.index_error = 'error'
+        self.scan_request_date2 = timezone.now()
+        self.scannableuri2.scan_request_date = self.scan_request_date2
+    
+    def test_package_live(self):
         purl_str = 'pkg:maven/org.apache.twill/twill-core@0.12.0'
         download_url = 'https://repo1.maven.org/maven2/org/apache/twill/twill-core/0.12.0/twill-core-0.12.0.jar'
         purl_sources_str = f'{purl_str}?classifier=sources'
@@ -986,7 +788,7 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
 
         self.assertEqual(0, Package.objects.filter(download_url=download_url).count())
         self.assertEqual(0, Package.objects.filter(download_url=sources_download_url).count())
-        response = self.client.get(f'/api/packages/get_or_fetch_package/?purl={purl_str}')
+        response = self.client.get(f'/api/collect/?purl={purl_str}')
         self.assertEqual(1, Package.objects.filter(download_url=download_url).count())
         self.assertEqual(1, Package.objects.filter(download_url=sources_download_url).count())
         expected = self.get_test_loc('api/twill-core-0.12.0.json')
@@ -1003,13 +805,221 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         ]
 
         self.check_expected_results(result, expected, fields_to_remove=fields_to_remove, regen=False)
+    
+    def test_package_api_index_packages_endpoint(self):
+        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
+        self.assertEqual(0, priority_resource_uris_count)
+        packages = [
+            {'purl':'pkg:maven/ch.qos.reload4j/reload4j@1.2.24'},
+            {'purl':'pkg:maven/com.esotericsoftware.kryo/kryo@2.24.0'},
+            {'purl':'pkg:bitbucket/example/example@1.0.0'},
+        ]
+        data = {
+            'packages': packages
+        }
+        response = self.client.post('/api/collect/index_packages/', data=data, content_type="application/json")
+        self.assertEqual(2, response.data['queued_packages_count'])
+        expected_queued_packages = [
+            'pkg:maven/ch.qos.reload4j/reload4j@1.2.24',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.24.0',
+        ]
+        self.assertEqual(
+            sorted(expected_queued_packages),
+            sorted(response.data['queued_packages'])
+        )
+        self.assertEqual(0, response.data['unqueued_packages_count'])
+        self.assertEqual([], response.data['unqueued_packages'])
+        self.assertEqual(1, response.data['unsupported_packages_count'])
+        expected_unsupported_packages = [
+            'pkg:bitbucket/example/example@1.0.0'
+        ]
+        self.assertEqual(expected_unsupported_packages, response.data['unsupported_packages'])
+        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
+        self.assertEqual(2, priority_resource_uris_count)
 
-    def test_package_api_get_enhanced_package(self):
-        response = self.client.get(reverse('api:package-get-enhanced-package-data', args=[self.package3.uuid]))
-        result = response.data
-        expected = self.get_test_loc('api/enhanced_package.json')
-        self.check_expected_results(result, expected, fields_to_remove=['package_sets'], regen=False)
+        # Ensure that we don't add the same packages to the queue if they have
+        # not yet been processed
+        purls = [
+            {'purl':'pkg:maven/ch.qos.reload4j/reload4j@1.2.24'},
+            {'purl':'pkg:maven/com.esotericsoftware.kryo/kryo@2.24.0'},
+            {'purl':'pkg:bitbucket/example/example@1.0.0'},
+        ]
+        data = {
+            'packages': purls
+        }
+        response = self.client.post('/api/collect/index_packages/', data=data, content_type="application/json")
+        self.assertEqual(0, response.data['queued_packages_count'])
+        self.assertEqual([], response.data['queued_packages'])
+        self.assertEqual(2, response.data['unqueued_packages_count'])
+        expected_unqueued_packages = [
+            'pkg:maven/ch.qos.reload4j/reload4j@1.2.24',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.24.0',
+        ]
+        self.assertEqual(
+            sorted(expected_unqueued_packages),
+            sorted(response.data['unqueued_packages'])
+        )
+        self.assertEqual(1, response.data['unsupported_packages_count'])
+        expected_unsupported_packages = [
+            'pkg:bitbucket/example/example@1.0.0'
+        ]
+        self.assertEqual(expected_unsupported_packages, response.data['unsupported_packages'])
 
+    @mock.patch("packagedb.api.get_all_versions")
+    def test_package_api_index_packages_endpoint_with_vers(self, mock_get_all_versions):
+        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
+        self.assertEqual(0, priority_resource_uris_count)
+        packages = [
+            {
+                "purl": "pkg:maven/ch.qos.reload4j/reload4j",
+                "vers": "vers:maven/>=1.2.18.2|<=1.2.23",
+            },
+        ]
+        data = {"packages": packages}
+
+        mock_get_all_versions.return_value = [
+            MavenVersion("1.2.18.0"),
+            MavenVersion("1.2.18.1"),
+            MavenVersion("1.2.18.2"),
+            MavenVersion("1.2.18.3"),
+            MavenVersion("1.2.18.4"),
+            MavenVersion("1.2.18.5"),
+            MavenVersion("1.2.19"),
+            MavenVersion("1.2.20"),
+            MavenVersion("1.2.21"),
+            MavenVersion("1.2.22"),
+            MavenVersion("1.2.23"),
+            MavenVersion("1.2.24"),
+            MavenVersion("1.2.25"),
+        ]
+
+        response = self.client.post(
+            "/api/collect/index_packages/", data=data, content_type="application/json"
+        )
+        self.assertEqual(9, response.data["queued_packages_count"])
+
+        expected_queued_packages = [
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.2",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.3",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.4",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.5",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.19",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.20",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.21",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.22",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.23",
+        ]
+        self.assertEqual(
+            sorted(expected_queued_packages), sorted(response.data["queued_packages"])
+        )
+        self.assertEqual(0, response.data["unqueued_packages_count"])
+        self.assertEqual([], response.data["unqueued_packages"])
+        self.assertEqual(0, response.data["unsupported_packages_count"])
+        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
+        self.assertEqual(9, priority_resource_uris_count)
+
+    @mock.patch("packagedb.api.get_all_versions")
+    def test_package_api_index_packages_endpoint_all_version_index(self, mock_get_all_versions):
+        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
+        self.assertEqual(0, priority_resource_uris_count)
+        packages = [
+            {
+                "purl": "pkg:maven/ch.qos.reload4j/reload4j",
+            },
+        ]
+        data = {"packages": packages}
+
+        mock_get_all_versions.return_value = [
+            MavenVersion("1.2.18.0"),
+            MavenVersion("1.2.18.1"),
+            MavenVersion("1.2.18.2"),
+            MavenVersion("1.2.18.3"),
+            MavenVersion("1.2.18.4"),
+            MavenVersion("1.2.18.5"),
+            MavenVersion("1.2.19"),
+            MavenVersion("1.2.20"),
+            MavenVersion("1.2.21"),
+            MavenVersion("1.2.22"),
+            MavenVersion("1.2.23"),
+            MavenVersion("1.2.24"),
+            MavenVersion("1.2.25"),
+        ]
+
+        response = self.client.post(
+            "/api/collect/index_packages/", data=data, content_type="application/json"
+        )
+        self.assertEqual(13, response.data["queued_packages_count"])
+
+        expected_queued_packages = [
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.0",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.1",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.2",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.3",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.4",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.18.5",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.19",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.20",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.21",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.22",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.23",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.24",
+            "pkg:maven/ch.qos.reload4j/reload4j@1.2.25",
+        ]
+        self.assertEqual(
+            sorted(expected_queued_packages), sorted(response.data["queued_packages"])
+        )
+        self.assertEqual(0, response.data["unqueued_packages_count"])
+        self.assertEqual([], response.data["unqueued_packages"])
+        self.assertEqual(0, response.data["unsupported_packages_count"])
+        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
+        self.assertEqual(13, priority_resource_uris_count)
+    
+    def test_reindex_packages_bulk(self):
+        self.assertEqual(False, self.scannableuri.rescan_uri)
+        self.assertEqual(0, self.scannableuri.priority)
+        self.assertEqual(self.scan_uuid, self.scannableuri.scan_uuid)
+        self.assertEqual('error', self.scannableuri.scan_error)
+        self.assertEqual('error', self.scannableuri.index_error)
+        self.assertEqual(self.scan_request_date, self.scannableuri.scan_request_date)
+
+        self.assertEqual(False, self.scannableuri2.rescan_uri)
+        self.assertEqual(0, self.scannableuri2.priority)
+        self.assertEqual(self.scan_uuid2, self.scannableuri2.scan_uuid)
+        self.assertEqual('error', self.scannableuri2.scan_error)
+        self.assertEqual('error', self.scannableuri2.index_error)
+        self.assertEqual(self.scan_request_date2, self.scannableuri2.scan_request_date)
+        existing_purls = [
+            'pkg:maven/sample/Baz@90.12',
+            'pkg:npm/example/bar@56.78',
+        ]
+        nonexistent_purls = [
+            'pkg:pypi/does/not-exist@1',
+        ]
+        data = {
+            'package_urls': existing_purls + nonexistent_purls,
+        }
+        response = self.client.post(f'/api/collect/reindex_packages/', data=data, content_type="application/json")
+        self.assertEqual(2, response.data['requeued_packages_count'])
+        self.assertEqual(existing_purls, response.data['requeued_packages'])
+        self.assertEqual(1, response.data['nonexistent_packages_count'])
+        self.assertEqual(nonexistent_purls, response.data['nonexistent_packages'])
+
+        self.scannableuri.refresh_from_db()
+        self.assertEqual(True, self.scannableuri.rescan_uri)
+        self.assertEqual(100, self.scannableuri.priority)
+        self.assertEqual(None, self.scannableuri.scan_uuid)
+        self.assertEqual(None, self.scannableuri.scan_error)
+        self.assertEqual(None, self.scannableuri.index_error)
+        self.assertEqual(None, self.scannableuri.scan_request_date)
+
+        self.scannableuri2.refresh_from_db()
+        self.assertEqual(True, self.scannableuri2.rescan_uri)
+        self.assertEqual(100, self.scannableuri.priority)
+        self.assertEqual(None, self.scannableuri2.scan_uuid)
+        self.assertEqual(None, self.scannableuri2.scan_error)
+        self.assertEqual(None, self.scannableuri2.index_error)
+        self.assertEqual(None, self.scannableuri2.scan_request_date)
+    
 
 class ResourceApiTestCase(TestCase):
 
