@@ -713,7 +713,7 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
 class PurlValidateViewSet(viewsets.ViewSet):
     """
     Take a `purl` and check whether it's valid PackageURL or not.  
-    Optionally set `check_existence` to true to check whether the package exists in real life. 
+    Optionally set `check_existence` to true to check whether the package exists in real world. 
     
     **Note:** As of now `check_existence` only supports `apache`, `composer`, `deb`, `gem`, 
     `github`, `golang`, `maven`, `npm`, `nuget`and `pypi` ecosystems.
@@ -741,7 +741,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
 
         message_valid = "The provided PackageURL is valid."
         message_not_valid = "The provided PackageURL is not valid."
-        message_valid_exists = (
+        message_valid_and_exists = (
             "The provided Package URL is valid, and the package exists in the real world."
         )
         message_valid_but_dont_exist = (
@@ -793,7 +793,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
                     # True, if requested purl has no version and any version of package exists upsteream.
                     # True, if requested purl.version exists upstream.
                     exists = True
-            message = message_valid_exists if exists else message_valid_but_dont_exist
+            message = message_valid_and_exists if exists else message_valid_but_dont_exist
 
         return Response(
             {
