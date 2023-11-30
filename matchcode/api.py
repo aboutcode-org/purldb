@@ -16,6 +16,7 @@ from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import serializers
 from rest_framework.serializers import CharField
 from rest_framework.serializers import FloatField
 from rest_framework.serializers import HyperlinkedRelatedField
@@ -36,7 +37,7 @@ from matchcode.models import ApproximateDirectoryStructureIndex
 from scanpipe.api.serializers import ProjectSerializer
 from scanpipe.api.views import ProjectFilterSet
 from scanpipe.models import Project
-
+from scanpipe.pipes.fetch import fetch_urls
 
 class BaseFileIndexSerializer(ModelSerializer):
     sha1 = CharField(source='fingerprint')
@@ -315,6 +316,36 @@ class ApproximateDirectoryStructureIndexViewSet(BaseDirectoryIndexViewSet):
     filterset_class = ApproximateDirectoryStructureFilterSet
 
 
+class MatchingSerializer(ProjectSerializer):
+    def create(self, validated_data, matching_pipeline_name='matching2'):
+        """
+        Create a new `project` with `upload_file`, using the `matching2` pipeline
+        """
+        execute_now = True
+        upload_file = validated_data.pop("upload_file", None)
+        input_urls = validated_data.pop("input_urls", [])
+        webhook_url = validated_data.pop("webhook_url", None)
+
+        downloads, errors = fetch_urls(input_urls)
+        if errors:
+            raise serializers.ValidationError("Could not fetch: " + "\n".join(errors))
+
+        project = super().create(validated_data)
+
+        if upload_file:
+            project.add_uploads([upload_file])
+
+        if downloads:
+            project.add_downloads(downloads)
+
+        if webhook_url:
+            project.add_webhook_subscription(webhook_url)
+
+        project.add_pipeline(matching_pipeline_name, execute_now)
+
+        return project
+
+
 class MatchingViewSet(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
@@ -323,5 +354,5 @@ class MatchingViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
+    serializer_class = MatchingSerializer
     filterset_class = ProjectFilterSet
