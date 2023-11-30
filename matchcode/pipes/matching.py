@@ -238,10 +238,10 @@ def match_purldb_resources(
 
 
 def _match_purldb_resources(
-    project, to_resources, matcher_func, chunk_size=1000, logger=None
+    project, resources, matcher_func, chunk_size=1000, logger=None
 ):
-    resource_count = to_resources.count()
-    resource_iterator = to_resources.iterator(chunk_size=chunk_size)
+    resource_count = resources.count()
+    resource_iterator = resources.iterator(chunk_size=chunk_size)
     progress = LoopProgress(resource_count, logger)
     total_matched_count = 0
     total_sha1_count = 0
@@ -342,7 +342,7 @@ def match_resources_with_no_java_source(project, logger=None):
 
         _match_purldb_resources(
             project=project,
-            to_resources=to_no_java_source,
+            resources=to_no_java_source,
             matcher_func=match_purldb_resource,
             logger=logger,
         )

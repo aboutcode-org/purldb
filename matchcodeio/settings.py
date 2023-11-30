@@ -11,8 +11,11 @@ from scancodeio.settings import *
 
 
 INSTALLED_APPS += [
-    "packagedb",
+    "clearcode",
+    "clearindex",
     "matchcode",
+    "minecode",
+    "packagedb",
 ]
 
 # Database
@@ -32,3 +35,5 @@ DATABASES.update(
 )
 
 DATABASE_ROUTERS = ["matchcodeio.dbrouter.PackageDBReadOnlyRouter",]
+
+ROOT_URLCONF = 'matchcodeio.urls'
