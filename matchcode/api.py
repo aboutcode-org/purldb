@@ -12,6 +12,8 @@ from django.forms import widgets
 from django.forms.fields import MultipleChoiceField
 from django_filters.filters import MultipleChoiceFilter
 from django_filters.rest_framework import FilterSet
+from rest_framework import mixins
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.serializers import CharField
@@ -30,6 +32,10 @@ from matchcode.models import ExactFileIndex
 from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
+
+from scanpipe.api.serializers import ProjectSerializer
+from scanpipe.api.views import ProjectFilterSet
+from scanpipe.models import Project
 
 
 class BaseFileIndexSerializer(ModelSerializer):
@@ -307,3 +313,15 @@ class ApproximateDirectoryStructureIndexViewSet(BaseDirectoryIndexViewSet):
     queryset = ApproximateDirectoryStructureIndex.objects.all()
     serializer_class = ApproximateDirectoryStructureIndexSerializer
     filterset_class = ApproximateDirectoryStructureFilterSet
+
+
+class MatchingViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    filterset_class = ProjectFilterSet
