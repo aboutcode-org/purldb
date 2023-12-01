@@ -20,12 +20,13 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/nexB/scancode.io for support and download.
 
+from scanpipe.pipelines.load_inventory import LoadInventory
 from scanpipe.pipelines.scan_codebase import ScanCodebase
 from matchcode.pipes import matching
 from scanpipe.pipes import matchcode
 
 
-class Matching(ScanCodebase):
+class Matching(ScanCodebase, LoadInventory):
     """
     Establish relationships between two code trees: deployment and development.
 
@@ -38,9 +39,8 @@ class Matching(ScanCodebase):
     @classmethod
     def steps(cls):
         return (
-            cls.copy_inputs_to_codebase_directory,
-            cls.extract_archives,
-            cls.collect_and_create_codebase_resources,
+            cls.get_inputs,
+            cls.build_inventory_from_scans,
             cls.fingerprint_codebase_directories,
             cls.flag_empty_files,
             cls.flag_ignored_resources,
