@@ -12,11 +12,13 @@ from django.urls import path
 from django.views.generic import RedirectView
 from rest_framework import routers
 
-from matchcode.api import MatchingViewSet
+from matchcodeio.api import MatchingViewSet
+from scanpipe.api.views import RunViewSet
 
 
 api_router = routers.DefaultRouter()
 api_router.register('matching', MatchingViewSet)
+api_router.register('runs', RunViewSet)
 
 urlpatterns = [
     path('api/', include(api_router.urls)),
