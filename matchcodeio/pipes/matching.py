@@ -29,7 +29,6 @@ from scanpipe import pipes
 from scanpipe.pipes import LoopProgress
 from scanpipe.pipes import flag
 from scanpipe.pipes import js
-from scanpipe.pipes import purldb
 
 from matchcode.models import ApproximateDirectoryContentIndex
 from packagedb.models import Package
