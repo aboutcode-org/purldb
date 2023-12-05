@@ -19,6 +19,8 @@ from packageurl.contrib.django.utils import purl_to_lookups
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
+from rest_framework.throttling import UserRateThrottle
 from univers.version_constraint import InvalidConstraintsError
 from univers.version_range import RANGE_CLASS_BY_SCHEMES, VersionRange
 from univers.versions import InvalidVersion
@@ -39,6 +41,8 @@ from packagedb.serializers import (DependentPackageSerializer,
                                    PackageAPISerializer,
                                    PackageSetAPISerializer, PartySerializer,
                                    ResourceAPISerializer)
+from packagedb.throttling import StaffUserRateThrottle
+
 
 logger = logging.getLogger(__name__)
 
@@ -87,6 +91,7 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Resource.objects.select_related('package')
     serializer_class = ResourceAPISerializer
     filterset_class = ResourceFilterSet
+    throttle_classes = [StaffUserRateThrottle, UserRateThrottle, AnonRateThrottle]
     lookup_field = 'sha1'
 
     @action(detail=False, methods=['post'])
@@ -102,7 +107,7 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
         - sha1
 
         Example:
-        
+
             {
                 "sha1": [
                     "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
@@ -253,6 +258,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PackageAPISerializer
     lookup_field = 'uuid'
     filterset_class = PackageFilterSet
+    throttle_classes = [StaffUserRateThrottle, UserRateThrottle, AnonRateThrottle]
 
     @action(detail=True, methods=['get'])
     def latest_version(self, request, *args, **kwargs):
@@ -328,7 +334,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             }
 
         Multiple checksums algorithms can be passed together:
-        
+
             {
                 "sha1": [
                     "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
@@ -516,7 +522,7 @@ class CollectViewSet(viewsets.ViewSet):
 
     If the package does not exist, we will fetch the Package data and return
     it in the same request.
-    
+
     **Note:** Use `Index packages` for bulk indexing of packages; use `Reindex packages`
     for bulk reindexing of existing packages.
     """
@@ -556,15 +562,15 @@ class CollectViewSet(viewsets.ViewSet):
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
-    
+
     @action(detail=False, methods=['post'])
     def index_packages(self, request, *args, **kwargs):
         """
         Take a list of `packages` (where each item is a dictionary containing either PURL
         or versionless PURL along with vers range) and index it.
-        
+
         If `reindex` flag is True then existing package will be rescanned, if `reindex_set`
-        is True then all the package in the same set will be rescanned.  
+        is True then all the package in the same set will be rescanned.
         If reindex flag is set to true then all the non existing package will be indexed.
 
         **Note:** When a versionless PURL is supplied without a vers range, then all the versions
@@ -590,7 +596,7 @@ class CollectViewSet(viewsets.ViewSet):
                     "reindex": true,
                     "reindex_set": false,
                 }
-        
+
         Then return a mapping containing:
 
         - queued_packages_count
@@ -602,7 +608,7 @@ class CollectViewSet(viewsets.ViewSet):
         - requeued_packages
             - A list of existing package urls that were placed on the rescan queue.
         - unqueued_packages_count
-            - The number of package urls not placed on the index queue.  
+            - The number of package urls not placed on the index queue.
                 This is because the package url already exists on the index queue and has not
                 yet been processed.
         - unqueued_packages
@@ -610,7 +616,7 @@ class CollectViewSet(viewsets.ViewSet):
         - unsupported_packages_count
             - The number of package urls that are not processable by the index queue.
         - unsupported_packages
-            - A list of package urls that are not processable by the index queue.  
+            - A list of package urls that are not processable by the index queue.
                 The package indexing queue can only handle npm and maven purls.
         - unsupported_vers_count
             - The number of vers range that are not supported by the univers or package_manager.
@@ -622,18 +628,18 @@ class CollectViewSet(viewsets.ViewSet):
                 return
             package.rescan()
             reindexed_packages.append(package)
-        
+
         packages = request.data.get('packages') or []
         reindex = request.data.get('reindex') or False
         reindex_set = request.data.get('reindex_set') or False
 
         queued_packages = []
         unqueued_packages = []
-        
+
         nonexistent_packages = []
         reindexed_packages = []
         requeued_packages = []
-    
+
         supported_ecosystems = ['maven', 'npm']
 
         unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages, supported_ecosystems)

@@ -234,6 +234,8 @@ STATICFILES_DIRS = [
 
 # Django restframework
 
+REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {'anon': '3600/hour', 'user': '10800/hour'}
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (),
     "DEFAULT_PERMISSION_CLASSES": (),
@@ -246,6 +248,13 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
     ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'packagedb.throttling.StaffUserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': REST_FRAMEWORK_DEFAULT_THROTTLE_RATES,
+    'EXCEPTION_HANDLER': 'packagedb.throttling.throttled_exception_handler',
     'DEFAULT_PAGINATION_CLASS': 'packagedb.api_custom.PageSizePagination',
     # Limit the load on the Database returning a small number of records by default. https://github.com/nexB/vulnerablecode/issues/819
     "PAGE_SIZE": 20,
