@@ -22,7 +22,7 @@
 
 from scanpipe.pipelines.load_inventory import LoadInventory
 from scanpipe.pipelines.scan_codebase import ScanCodebase
-from matchcode.pipes import matching
+from matchcodeio.pipes import matching
 from scanpipe.pipes import matchcode
 
 
