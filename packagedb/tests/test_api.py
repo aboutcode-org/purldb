@@ -850,6 +850,8 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         response = self.client.post('/api/collect/index_packages/', data=data, content_type="application/json")
         self.assertEqual(0, response.data['queued_packages_count'])
         self.assertEqual([], response.data['queued_packages'])
+        self.assertEqual(0, response.data['requeued_packages_count'])
+        self.assertEqual([], response.data['requeued_packages'])
         self.assertEqual(2, response.data['unqueued_packages_count'])
         expected_unqueued_packages = [
             'pkg:maven/ch.qos.reload4j/reload4j@1.2.24',
@@ -912,6 +914,8 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         self.assertEqual(
             sorted(expected_queued_packages), sorted(response.data["queued_packages"])
         )
+        self.assertEqual(0, response.data['requeued_packages_count'])
+        self.assertEqual([], response.data['requeued_packages'])
         self.assertEqual(0, response.data["unqueued_packages_count"])
         self.assertEqual([], response.data["unqueued_packages"])
         self.assertEqual(0, response.data["unsupported_packages_count"])
@@ -968,9 +972,12 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         self.assertEqual(
             sorted(expected_queued_packages), sorted(response.data["queued_packages"])
         )
+        self.assertEqual(0, response.data['requeued_packages_count'])
+        self.assertEqual([], response.data['requeued_packages'])
         self.assertEqual(0, response.data["unqueued_packages_count"])
         self.assertEqual([], response.data["unqueued_packages"])
         self.assertEqual(0, response.data["unsupported_packages_count"])
+        self.assertEqual([], response.data["unsupported_packages"])
         priority_resource_uris_count = PriorityResourceURI.objects.all().count()
         self.assertEqual(13, priority_resource_uris_count)
     
@@ -988,21 +995,44 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         self.assertEqual('error', self.scannableuri2.scan_error)
         self.assertEqual('error', self.scannableuri2.index_error)
         self.assertEqual(self.scan_request_date2, self.scannableuri2.scan_request_date)
+
+        packages = [
+            # Existing package
+            {
+                "purl": 'pkg:maven/sample/Baz@90.12',
+            },
+            {
+                "purl": 'pkg:npm/example/bar@56.78',
+            },
+            # NOt in DB and unsupported
+            {
+                "purl":'pkg:pypi/does/not-exist@1',
+            },
+        ]
+        data = {"packages": packages, "reindex":True}
+
         existing_purls = [
             'pkg:maven/sample/Baz@90.12',
             'pkg:npm/example/bar@56.78',
         ]
-        nonexistent_purls = [
+        
+        unsupported_purls = [
             'pkg:pypi/does/not-exist@1',
         ]
-        data = {
-            'package_urls': existing_purls + nonexistent_purls,
-        }
-        response = self.client.post(f'/api/collect/reindex_packages/', data=data, content_type="application/json")
+
+        response = self.client.post(f'/api/collect/index_packages/', data=data, content_type="application/json")
+
         self.assertEqual(2, response.data['requeued_packages_count'])
-        self.assertEqual(existing_purls, response.data['requeued_packages'])
-        self.assertEqual(1, response.data['nonexistent_packages_count'])
-        self.assertEqual(nonexistent_purls, response.data['nonexistent_packages'])
+        self.assertListEqual(sorted(existing_purls), sorted(response.data['requeued_packages']))
+
+        self.assertEqual(1, response.data['unsupported_packages_count'])
+        self.assertListEqual(unsupported_purls, response.data['unsupported_packages'])
+
+        self.assertEqual(0, response.data['queued_packages_count'])
+        self.assertEqual([], response.data['queued_packages'])
+        self.assertEqual(0, response.data["unqueued_packages_count"])
+        self.assertEqual([], response.data["unqueued_packages"])
+
 
         self.scannableuri.refresh_from_db()
         self.assertEqual(True, self.scannableuri.rescan_uri)
