@@ -1103,7 +1103,7 @@ class PurlValidateApiTestCase(TestCase):
         self.assertEquals(True, response1.data["valid"])
         self.assertEquals(True, response1.data["exists"])
         self.assertEquals(
-            "The provided Package URL is valid, and the package exists in the real world.",
+            "The provided Package URL is valid, and the package exists in the upstream repo.",
             response1.data["message"],
         )
 

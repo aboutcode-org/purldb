@@ -742,10 +742,10 @@ class PurlValidateViewSet(viewsets.ViewSet):
         message_valid = "The provided PackageURL is valid."
         message_not_valid = "The provided PackageURL is not valid."
         message_valid_and_exists = (
-            "The provided Package URL is valid, and the package exists in the real world."
+            "The provided Package URL is valid, and the package exists in the upstream repo."
         )
-        message_valid_but_dont_exist = (
-            "The provided PackageURL is valid but does not exist in the real world."
+        message_valid_but_does_not_exist = (
+            "The provided PackageURL is valid but does not exist in the upstream repo."
         )
         message_error_no_purl = (
             "PackageURL (purl) is required. Please provide a PackageURL in the request."
@@ -790,10 +790,10 @@ class PurlValidateViewSet(viewsets.ViewSet):
                 if (all_versions and not package_url.version) or (
                     package_url.version in all_versions
                 ):
-                    # True, if requested purl has no version and any version of package exists upsteream.
+                    # True, if requested purl has no version and any version of package exists upstream.
                     # True, if requested purl.version exists upstream.
                     exists = True
-            message = message_valid_and_exists if exists else message_valid_but_dont_exist
+            message = message_valid_and_exists if exists else message_valid_but_does_not_exist
 
         return Response(
             {
