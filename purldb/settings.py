@@ -73,6 +73,7 @@ INSTALLED_APPS = (
     # Third-party apps
     'django_filters',
     'rest_framework',
+    'drf_spectacular',
 )
 
 MIDDLEWARE = (
@@ -247,6 +248,7 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
     ),
     'DEFAULT_PAGINATION_CLASS': 'packagedb.api_custom.PageSizePagination',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     # Limit the load on the Database returning a small number of records by default. https://github.com/nexB/vulnerablecode/issues/819
     "PAGE_SIZE": 20,
 }
@@ -286,3 +288,10 @@ if DEBUG_TOOLBAR:
 ACTIVE_SEEDERS = [
     'minecode.visitors.maven.MavenSeed',
 ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'PurlDB API',
+    'DESCRIPTION': 'Tools to create and expose a database of purls (Package URLs)',
+    'VERSION': '4.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
