@@ -253,7 +253,7 @@ class PackageFilterSet(FilterSet):
         )
 
 
-class PackageViewSet(viewsets.ReadOnlyModelViewSet):
+class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Package.objects.prefetch_related('dependencies', 'parties')
     serializer_class = PackageAPISerializer
     lookup_field = 'uuid'
@@ -297,18 +297,6 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         package = self.get_object()
         package_data = get_enhanced_package(package)
         return Response(package_data)
-
-    @action(detail=True)
-    def reindex_package(self, request, *args, **kwargs):
-        """
-        Reindex this package instance
-        """
-        package = self.get_object()
-        package.rescan()
-        data = {
-            'status': f'{package.package_url} has been queued for reindexing'
-        }
-        return Response(data)
 
     @action(detail=False, methods=['post'])
     def filter_by_checksums(self, request, *args, **kwargs):
@@ -393,6 +381,20 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
             serialized_package_data = serializer.data
         return self.get_paginated_response(serialized_package_data)
+
+
+class PackageViewSet(PackagePublicViewSet):
+    @action(detail=True)
+    def reindex_package(self, request, *args, **kwargs):
+        """
+        Reindex this package instance
+        """
+        package = self.get_object()
+        package.rescan()
+        data = {
+            'status': f'{package.package_url} has been queued for reindexing'
+        }
+        return Response(data)
 
 
 UPDATEABLE_FIELDS = [
