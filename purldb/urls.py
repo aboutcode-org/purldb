@@ -21,6 +21,7 @@ from matchcode.api import ApproximateDirectoryStructureIndexViewSet
 from matchcode.api import ExactFileIndexViewSet
 from matchcode.api import ExactPackageArchiveIndexViewSet
 from minecode.api import PriorityResourceURIViewSet
+from packagedb.api import CollectViewSet
 
 
 api_router = routers.DefaultRouter()
@@ -33,6 +34,8 @@ api_router.register('exact_file_index', ExactFileIndexViewSet)
 api_router.register('exact_package_archive_index', ExactPackageArchiveIndexViewSet)
 api_router.register('cditems', CDitemViewSet, 'cditems')
 api_router.register('on_demand_queue', PriorityResourceURIViewSet)
+api_router.register('collect', CollectViewSet, 'collect')
+
 
 urlpatterns = [
     path('api/', include((api_router.urls, 'api'))),
