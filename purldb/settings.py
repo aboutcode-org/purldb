@@ -73,6 +73,7 @@ INSTALLED_APPS = (
     # Third-party apps
     'django_filters',
     'rest_framework',
+    'rest_framework.authtoken',
 )
 
 MIDDLEWARE = (
@@ -236,11 +237,11 @@ STATICFILES_DIRS = [
 
 REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {'anon': '3600/hour', 'user': '10800/hour'}
 if IS_TESTS:
-    REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {"anon": "10/day", "user": "20/day"}
+    REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {'anon': '10/day', 'user': '20/day'}
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (),
-    "DEFAULT_PERMISSION_CLASSES": (),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',

@@ -20,7 +20,6 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
-from rest_framework.throttling import UserRateThrottle
 from univers.version_constraint import InvalidConstraintsError
 from univers.version_range import RANGE_CLASS_BY_SCHEMES, VersionRange
 from univers.versions import InvalidVersion
@@ -91,7 +90,7 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Resource.objects.select_related('package')
     serializer_class = ResourceAPISerializer
     filterset_class = ResourceFilterSet
-    throttle_classes = [StaffUserRateThrottle, UserRateThrottle, AnonRateThrottle]
+    throttle_classes = [StaffUserRateThrottle, AnonRateThrottle]
     lookup_field = 'sha1'
 
     @action(detail=False, methods=['post'])
@@ -258,7 +257,7 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PackageAPISerializer
     lookup_field = 'uuid'
     filterset_class = PackageFilterSet
-    throttle_classes = [StaffUserRateThrottle, UserRateThrottle, AnonRateThrottle]
+    throttle_classes = [StaffUserRateThrottle, AnonRateThrottle]
 
     @action(detail=True, methods=['get'])
     def latest_version(self, request, *args, **kwargs):
