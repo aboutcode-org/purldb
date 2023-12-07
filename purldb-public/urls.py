@@ -10,6 +10,8 @@
 from django.conf.urls import include
 from django.urls import path
 from django.views.generic import RedirectView
+from django.views.generic.base import TemplateView
+
 from rest_framework import routers
 
 from packagedb.api import PackagePublicViewSet
@@ -21,6 +23,10 @@ api_router.register('packages', PackagePublicViewSet)
 api_router.register('resources', ResourceViewSet)
 
 urlpatterns = [
+    path(
+        'robots.txt',
+        TemplateView.as_view(template_name='robots.txt', content_type='text/plain'),
+    ),
     path('api/', include((api_router.urls, 'api'))),
     path('', RedirectView.as_view(url='api/')),
 ]
