@@ -163,7 +163,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Testing
 
 # True if running tests through `./manage test or pytest`
-IS_TESTS = any(clue in sys.argv for clue in ("test", "pytest"))
+IS_TESTS = any(clue in arg for arg in sys.argv for clue in ("test", "pytest"))
 
 # Cache
 
@@ -237,7 +237,7 @@ STATICFILES_DIRS = [
 
 REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {'anon': '3600/hour', 'user': '10800/hour'}
 if IS_TESTS:
-    REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {'anon': '10/day', 'user': '20/day'}
+    REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {'anon': '100/day', 'user': '200/day'}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
