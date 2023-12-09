@@ -236,8 +236,6 @@ STATICFILES_DIRS = [
 # Django restframework
 
 REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {'anon': '3600/hour', 'user': '10800/hour'}
-if IS_TESTS:
-    REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {'anon': '100/day', 'user': '200/day'}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
