@@ -7,7 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from purldb.settings import *
+from purldb_project.settings import *
 
 
 ROOT_URLCONF = 'purldb_public.urls'
