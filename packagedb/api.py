@@ -39,6 +39,10 @@ from packagedb.serializers import (DependentPackageSerializer,
                                    PackageAPISerializer,
                                    PackageSetAPISerializer, PartySerializer,
                                    ResourceAPISerializer)
+from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import OpenApiParameter
+from packagedb.serializers import IndexPackagesSerializer
+from packagedb.serializers import IndexPackagesResponseSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -517,10 +521,13 @@ class CollectViewSet(viewsets.ViewSet):
     If the package does not exist, we will fetch the Package data and return
     it in the same request.
     
-    **Note:** Use `Index packages` for bulk indexing of packages; use `Reindex packages`
-    for bulk reindexing of existing packages.
+    **Note:** Use `Index packages` for bulk indexing/reindexing of packages.
     """
-
+    serializer_class=None
+    @extend_schema(
+            parameters=[OpenApiParameter('purl', str, 'query', description='PackageURL')],
+            responses={200:PackageAPISerializer()},
+    )
     def list(self, request, format=None):
         purl = request.query_params.get('purl')
 
@@ -550,14 +557,20 @@ class CollectViewSet(viewsets.ViewSet):
                 message = {}
                 if errors:
                     message = {
-                        'status': f'error(s) occured when fetching metadata for {purl}: {errors}'
+                        'status': f'error(s) occurred when fetching metadata for {purl}: {errors}'
                     }
                 return Response(message)
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
     
-    @action(detail=False, methods=['post'])
+    @extend_schema(
+        request=IndexPackagesSerializer,
+        responses={
+            200: IndexPackagesResponseSerializer(),
+        },
+    )
+    @action(detail=False, methods=['post'], serializer_class=IndexPackagesSerializer)
     def index_packages(self, request, *args, **kwargs):
         """
         Take a list of `packages` (where each item is a dictionary containing either PURL
@@ -570,7 +583,7 @@ class CollectViewSet(viewsets.ViewSet):
         **Note:** When a versionless PURL is supplied without a vers range, then all the versions
         of that package will be considered for indexing/reindexing.
 
-        **Input example:**
+        **Request example:**
 
                 {
                     "packages": [
@@ -623,9 +636,15 @@ class CollectViewSet(viewsets.ViewSet):
             package.rescan()
             reindexed_packages.append(package)
         
-        packages = request.data.get('packages') or []
-        reindex = request.data.get('reindex') or False
-        reindex_set = request.data.get('reindex_set') or False
+        serializer = self.serializer_class(data=request.data)
+
+        if not serializer.is_valid():
+            return Response({'errors': serializer.errors}, status=400)
+
+        validated_data = serializer.validated_data
+        packages = validated_data.get('packages', [])
+        reindex = validated_data.get('reindex', False)
+        reindex_set = validated_data.get('reindex_set', False)
 
         queued_packages = []
         unqueued_packages = []
@@ -679,7 +698,9 @@ class CollectViewSet(viewsets.ViewSet):
             'unsupported_vers_count': len(unsupported_vers),
             'unsupported_vers': unsupported_vers,
         }
-        return Response(response_data)
+
+        serializer = IndexPackagesResponseSerializer(response_data, context={'request': request})
+        return Response(serializer.data)
 
 
 def get_resolved_purls(packages, supported_ecosystems):

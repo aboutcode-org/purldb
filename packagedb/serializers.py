@@ -10,12 +10,16 @@
 from django.http import HttpRequest
 from django.urls import reverse_lazy
 
+from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import HyperlinkedIdentityField
 from rest_framework.serializers import HyperlinkedModelSerializer
 from rest_framework.serializers import HyperlinkedRelatedField
+from rest_framework.serializers import IntegerField
 from rest_framework.serializers import JSONField
+from rest_framework.serializers import ListField
 from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import Serializer
 from rest_framework.serializers import SerializerMethodField
 
 from packagedb.models import DependentPackage
@@ -328,3 +332,42 @@ class PackageSetAPISerializer(ModelSerializer):
             'uuid',
             'packages',
         ]
+
+
+class PackageVersSerializer(Serializer):
+    purl = CharField()
+    vers = CharField(required=False)
+
+
+class IndexPackagesSerializer(Serializer):
+    packages = PackageVersSerializer(many=True)
+    reindex = BooleanField(default=False)
+    reindex_set = BooleanField(default=False)
+
+
+class IndexPackagesResponseSerializer(Serializer):
+    queued_packages_count = IntegerField(help_text="Number of package urls placed on the index queue.")
+    queued_packages = ListField(
+        child=CharField(),
+        help_text="List of package urls that were placed on the index queue."
+    )
+    requeued_packages_count = IntegerField(help_text="Number of existing package urls placed on the rescan queue.")
+    requeued_packages = ListField(
+        child=CharField(),
+        help_text="List of existing package urls that were placed on the rescan queue."
+    )
+    unqueued_packages_count = IntegerField(help_text="Number of package urls not placed on the index queue.")
+    unqueued_packages = ListField(
+        child=CharField(),
+        help_text="List of package urls that were not placed on the index queue."
+    )
+    unsupported_packages_count = IntegerField(help_text="Number of package urls that are not processable by the index queue.")
+    unsupported_packages = ListField(
+        child=CharField(),
+        help_text="List of package urls that are not processable by the index queue."
+    )
+    unsupported_vers_count = IntegerField(help_text="Number of vers range that are not supported by the univers or package_manager.")
+    unsupported_vers = ListField(
+        child=CharField(),
+        help_text="List of vers range that are not supported by the univers or package_manager."
+    )
