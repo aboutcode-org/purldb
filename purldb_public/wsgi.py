@@ -7,9 +7,17 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from purldb.settings import *
+import os
+from django.core.wsgi import get_wsgi_application
 
 
-ROOT_URLCONF = 'purldb-public.urls'
+"""
+WSGI config for purldb-public.
 
-WSGI_APPLICATION = 'purldb-public.wsgi.application'
+It exposes the WSGI callable as a module-level variable named ``application``.
+"""
+
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'purldb_public.settings')
+
+application = get_wsgi_application()
