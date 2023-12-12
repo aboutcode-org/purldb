@@ -283,72 +283,6 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = ResourceAPISerializer(paginated_qs, many=True, context={'request': request})
         return self.get_paginated_response(serializer.data)
 
-    @action(detail=False)
-    def get_package(self, request, *args, **kwargs):
-        purl = request.query_params.get('purl')
-
-        # validate purl
-        try:
-            package_url = PackageURL.from_string(purl)
-        except ValueError as e:
-            message = {
-                'status': f'purl validation error: {e}'
-            }
-            return Response(message, status=status.HTTP_400_BAD_REQUEST)
-
-        lookups = purl_to_lookups(purl)
-        packages = Package.objects.filter(**lookups)
-        if packages.count() == 0:
-            # add to queue
-            PriorityResourceURI.objects.insert(purl)
-            return Response({})
-
-        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
-        return Response(serializer.data)
-
-    @action(detail=False)
-    def get_or_fetch_package(self, request, *args, **kwargs):
-        """
-        Return Package data for the purl passed in the `purl` query parameter.
-
-        If the package does not exist, we will fetch the Package data and return
-        it in the same request.
-        """
-        purl = request.query_params.get('purl')
-
-        # validate purl
-        try:
-            package_url = PackageURL.from_string(purl)
-        except ValueError as e:
-            message = {
-                'status': f'purl validation error: {e}'
-            }
-            return Response(message, status=status.HTTP_400_BAD_REQUEST)
-
-        lookups = purl_to_lookups(purl)
-        packages = Package.objects.filter(**lookups)
-        if packages.count() == 0:
-            try:
-                errors = priority_router.process(purl)
-            except NoRouteAvailable:
-                message = {
-                    'status': f'cannot fetch Package data for {purl}: no available handler'
-                }
-                return Response(message, status=status.HTTP_400_BAD_REQUEST)
-
-            lookups = purl_to_lookups(purl)
-            packages = Package.objects.filter(**lookups)
-            if packages.count() == 0:
-                message = {}
-                if errors:
-                    message = {
-                        'status': f'error(s) occured when fetching metadata for {purl}: {errors}'
-                    }
-                return Response(message)
-
-        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
-        return Response(serializer.data)
-
     @action(detail=True)
     def get_enhanced_package_data(self, request, *args, **kwargs):
         """
@@ -357,86 +291,6 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         package = self.get_object()
         package_data = get_enhanced_package(package)
         return Response(package_data)
-
-    @action(detail=False, methods=['post'])
-    def index_packages(self, request, *args, **kwargs):
-        """
-        Take a list of `packages` where each item is a dictionary containing either PURL
-        or versionless PURL along with vers range.  
-        **Note:** When a versionless PURL is supplied without a vers range, then all the versions
-        of that package will be indexed.
-
-        **Input example:**
-
-                {
-                    "packages": [
-                        {
-                            "purl": "pkg:npm/foobar@12.3.1",
-                        },
-                        {
-                            "purl": "pkg:npm/foobar",
-                            "vers": "vers:npm/>=1.0.0|<=4.1.0"
-                        },
-                        {
-                            "purl": "pkg:npm/foobar2",
-                        }
-                        ...
-                    ]
-                }
-        
-        Then return a mapping containing:
-
-        - queued_packages_count
-            - The number of package urls placed on the queue.
-        - queued_packages
-            - A list of package urls that were placed on the queue.
-        - unqueued_packages_count
-            - The number of package urls not placed on the queue. This is
-              because the package url already exists on the queue and has not
-              yet been processed.
-        - unqueued_packages
-            - A list of package urls that were not placed on the queue.
-        - unsupported_packages_count
-            - The number of package urls that are not processable by the queue.
-        - unsupported_packages
-            - A list of package urls that are not processable by the queue. The
-              package indexing queue can only handle npm and maven purls.
-        - unqueued_packages
-            - A list of package urls that were not placed on the queue.
-        - unsupported_vers_count
-            - The number of vers range that are not supported by the univers or package_manager.
-        - unsupported_vers
-            - A list of vers range that are not supported by the univers or package_manager.
-        """
-        packages = request.data.get('packages') or []
-        queued_packages = []
-        unqueued_packages = []
-        supported_ecosystems = ['maven', 'npm']
-
-        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages, supported_ecosystems)
-
-        for purl in unique_purls:
-            is_routable_purl = priority_router.is_routable(purl)
-            if not is_routable_purl:
-                unsupported_packages.append(purl)
-            else:
-                # add to queue
-                priority_resource_uri = PriorityResourceURI.objects.insert(purl)
-                if priority_resource_uri:
-                    queued_packages.append(purl)
-                else:
-                    unqueued_packages.append(purl)
-        response_data = {
-            'queued_packages_count': len(queued_packages),
-            'queued_packages': queued_packages,
-            'unqueued_packages_count': len(unqueued_packages),
-            'unqueued_packages': unqueued_packages,
-            'unsupported_packages_count': len(unsupported_packages),
-            'unsupported_packages': unsupported_packages,
-            'unsupported_vers_count': len(unsupported_vers),
-            'unsupported_vers': unsupported_vers,
-        }
-        return Response(response_data)
 
     @action(detail=True)
     def reindex_package(self, request, *args, **kwargs):
@@ -449,60 +303,6 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             'status': f'{package.package_url} has been queued for reindexing'
         }
         return Response(data)
-
-    @action(detail=False, methods=['post'])
-    def reindex_packages(self, request, *args, **kwargs):
-        """
-        Take a list of `package_urls` and for each Package URL, reindex the
-        corresponding package.
-        If the field `reindex_set` is True, then the Packages in the same
-        package set as the packages from `package_urls` will be reindexed.
-
-        Then return a mapping containing:
-
-        - requeued_packages_count
-            - The number of package urls placed on the queue.
-        - requeued_packages
-            - A list of package urls that were placed on the queue.
-        - nonexistent_packages_count
-            - The number of package urls that do not correspond to a package in
-              the database.
-        - nonexistent_packages
-            - A list of package urls that do not correspond to a package in the
-              database.
-        """
-        def _reindex_package(package, reindexed_packages):
-            if package in reindexed_packages:
-                return
-            package.rescan()
-            reindexed_packages.append(package)
-
-        purls = request.data.getlist('package_urls')
-        reindex_set = request.data.get('reindex_set') or False
-
-        nonexistent_packages = []
-        reindexed_packages = []
-        for purl in purls:
-            lookups = purl_to_lookups(purl)
-            packages = Package.objects.filter(**lookups)
-            if packages.count() > 0:
-                for package in packages:
-                    _reindex_package(package, reindexed_packages)
-                    if reindex_set:
-                        for package_set in package.package_sets.all():
-                            for p in package_set.packages.all():
-                                _reindex_package(p, reindexed_packages)
-            else:
-                nonexistent_packages.append(purl)
-
-        requeued_packages = [p.package_url for p in reindexed_packages]
-        response_data = {
-            'requeued_packages_count': len(requeued_packages),
-            'requeued_packages': requeued_packages,
-            'nonexistent_packages_count': len(nonexistent_packages),
-            'nonexistent_packages': nonexistent_packages,
-        }
-        return Response(response_data)
 
     @action(detail=False, methods=['post'])
     def filter_by_checksums(self, request, *args, **kwargs):
@@ -708,6 +508,178 @@ def _get_enhanced_package(package, packages):
 class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PackageSet.objects.prefetch_related('packages')
     serializer_class = PackageSetAPISerializer
+
+
+class CollectViewSet(viewsets.ViewSet):
+    """
+    Return Package data for the purl passed in the `purl` query parameter.
+
+    If the package does not exist, we will fetch the Package data and return
+    it in the same request.
+    
+    **Note:** Use `Index packages` for bulk indexing of packages; use `Reindex packages`
+    for bulk reindexing of existing packages.
+    """
+
+    def list(self, request, format=None):
+        purl = request.query_params.get('purl')
+
+        # validate purl
+        try:
+            package_url = PackageURL.from_string(purl)
+        except ValueError as e:
+            message = {
+                'status': f'purl validation error: {e}'
+            }
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+        lookups = purl_to_lookups(purl)
+        packages = Package.objects.filter(**lookups)
+        if packages.count() == 0:
+            try:
+                errors = priority_router.process(purl)
+            except NoRouteAvailable:
+                message = {
+                    'status': f'cannot fetch Package data for {purl}: no available handler'
+                }
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+            lookups = purl_to_lookups(purl)
+            packages = Package.objects.filter(**lookups)
+            if packages.count() == 0:
+                message = {}
+                if errors:
+                    message = {
+                        'status': f'error(s) occured when fetching metadata for {purl}: {errors}'
+                    }
+                return Response(message)
+
+        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['post'])
+    def index_packages(self, request, *args, **kwargs):
+        """
+        Take a list of `packages` (where each item is a dictionary containing either PURL
+        or versionless PURL along with vers range) and index it.
+        
+        If `reindex` flag is True then existing package will be rescanned, if `reindex_set`
+        is True then all the package in the same set will be rescanned.  
+        If reindex flag is set to true then all the non existing package will be indexed.
+
+        **Note:** When a versionless PURL is supplied without a vers range, then all the versions
+        of that package will be considered for indexing/reindexing.
+
+        **Input example:**
+
+                {
+                    "packages": [
+                        {
+                            "purl": "pkg:npm/less@1.0.32",
+                            "vers": null
+                        },
+                        {
+                            "purl": "pkg:npm/less",
+                            "vers": "vers:npm/>=1.1.0|<=1.1.4"
+                        },
+                        {
+                            "purl": "pkg:npm/foobar",
+                            "vers": null
+                        }
+                    ]
+                    "reindex": true,
+                    "reindex_set": false,
+                }
+        
+        Then return a mapping containing:
+
+        - queued_packages_count
+            - The number of package urls placed on the index queue.
+        - queued_packages
+            - A list of package urls that were placed on the index queue.
+        - requeued_packages_count
+            - The number of existing package urls placed on the rescan queue.
+        - requeued_packages
+            - A list of existing package urls that were placed on the rescan queue.
+        - unqueued_packages_count
+            - The number of package urls not placed on the index queue.  
+                This is because the package url already exists on the index queue and has not
+                yet been processed.
+        - unqueued_packages
+            - A list of package urls that were not placed on the index queue.
+        - unsupported_packages_count
+            - The number of package urls that are not processable by the index queue.
+        - unsupported_packages
+            - A list of package urls that are not processable by the index queue.  
+                The package indexing queue can only handle npm and maven purls.
+        - unsupported_vers_count
+            - The number of vers range that are not supported by the univers or package_manager.
+        - unsupported_vers
+            - A list of vers range that are not supported by the univers or package_manager.
+        """
+        def _reindex_package(package, reindexed_packages):
+            if package in reindexed_packages:
+                return
+            package.rescan()
+            reindexed_packages.append(package)
+        
+        packages = request.data.get('packages') or []
+        reindex = request.data.get('reindex') or False
+        reindex_set = request.data.get('reindex_set') or False
+
+        queued_packages = []
+        unqueued_packages = []
+        
+        nonexistent_packages = []
+        reindexed_packages = []
+        requeued_packages = []
+    
+        supported_ecosystems = ['maven', 'npm']
+
+        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages, supported_ecosystems)
+
+        if reindex:
+            for purl in unique_purls:
+                lookups = purl_to_lookups(purl)
+                packages = Package.objects.filter(**lookups)
+                if packages.count() > 0:
+                    for package in packages:
+                        _reindex_package(package, reindexed_packages)
+                        if reindex_set:
+                            for package_set in package.package_sets.all():
+                                for p in package_set.packages.all():
+                                    _reindex_package(p, reindexed_packages)
+                else:
+                    nonexistent_packages.append(purl)
+            requeued_packages.extend([p.package_url for p in reindexed_packages])
+
+        elif not reindex or nonexistent_packages:
+            interesting_purls = nonexistent_packages if nonexistent_packages else unique_purls
+            for purl in interesting_purls:
+                is_routable_purl = priority_router.is_routable(purl)
+                if not is_routable_purl:
+                    unsupported_packages.append(purl)
+                else:
+                    # add to queue
+                    priority_resource_uri = PriorityResourceURI.objects.insert(purl)
+                    if priority_resource_uri:
+                        queued_packages.append(purl)
+                    else:
+                        unqueued_packages.append(purl)
+
+        response_data = {
+            'queued_packages_count': len(queued_packages),
+            'queued_packages': queued_packages,
+            'requeued_packages_count': len(requeued_packages),
+            'requeued_packages': requeued_packages,
+            'unqueued_packages_count': len(unqueued_packages),
+            'unqueued_packages': unqueued_packages,
+            'unsupported_packages_count': len(unsupported_packages),
+            'unsupported_packages': unsupported_packages,
+            'unsupported_vers_count': len(unsupported_vers),
+            'unsupported_vers': unsupported_vers,
+        }
+        return Response(response_data)
 
 
 class PurlValidateViewSet(viewsets.ViewSet):
