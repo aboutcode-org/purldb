@@ -689,6 +689,101 @@ class CollectViewSet(viewsets.ViewSet):
         return Response(response_data)
 
 
+class PurlValidateViewSet(viewsets.ViewSet):
+    """
+    Take a `purl` and check whether it's valid PackageURL or not.  
+    Optionally set `check_existence` to true to check whether the package exists in real world. 
+    
+    **Note:** As of now `check_existence` only supports `apache`, `composer`, `deb`, `gem`, 
+    `github`, `golang`, `maven`, `npm`, `nuget`and `pypi` ecosystems.
+
+    **Input example:**
+
+            {
+                "purl": "pkg:npm/foobar@12.3.1",
+                "check_existence": true,
+            }
+    
+    Response contains:
+
+    - valid
+        - True, if input PURL is a valid PackageURL.
+    - exists
+        - True, if input PURL exists in real world and `check_existence` flag is enabled.
+    """
+    def get_view_name(self):
+        return 'Validate PURL'
+
+    def list(self, request):
+        purl = request.query_params.get("purl")
+        check_existence = request.query_params.get("check_existence") or False
+
+        message_valid = "The provided PackageURL is valid."
+        message_not_valid = "The provided PackageURL is not valid."
+        message_valid_and_exists = (
+            "The provided Package URL is valid, and the package exists in the upstream repo."
+        )
+        message_valid_but_does_not_exist = (
+            "The provided PackageURL is valid but does not exist in the upstream repo."
+        )
+        message_error_no_purl = (
+            "PackageURL (purl) is required. Please provide a PackageURL in the request."
+        )
+
+        if not purl:
+            return Response(
+                {
+                    "error": "Bad Request",
+                    "message": message_error_no_purl,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # validate purl
+        try:
+            package_url = PackageURL.from_string(purl)
+        except ValueError:
+            return Response(
+                {
+                    "valid": False,
+                    "message": message_not_valid,
+                    "purl": purl,
+                }
+            )
+
+        exists = None
+        message = message_valid
+        if check_existence:
+            exists = False
+            lookups = purl_to_lookups(purl)
+            packages = Package.objects.filter(**lookups)
+            if packages.exists():
+                exists = True
+            else:
+                versionless_purl = PackageURL(
+                    type=package_url.type,
+                    namespace=package_url.namespace,
+                    name=package_url.name,
+                )
+                all_versions = get_all_versions_plain(versionless_purl)
+                if (all_versions and not package_url.version) or (
+                    package_url.version in all_versions
+                ):
+                    # True, if requested purl has no version and any version of package exists upstream.
+                    # True, if requested purl.version exists upstream.
+                    exists = True
+            message = message_valid_and_exists if exists else message_valid_but_does_not_exist
+
+        return Response(
+            {
+                "valid": True,
+                "exists": exists,
+                "message": message,
+                "purl": purl,
+            }
+        )
+
+
 def get_resolved_purls(packages, supported_ecosystems):
     """
     Take a list of dict containing purl or version-less purl along with vers
@@ -786,7 +881,7 @@ def resolve_versions(parsed_purl, vers):
 
     return result
 
-def get_all_versions(purl: PackageURL):
+def get_all_versions_plain(purl: PackageURL):
     """
     Return all the versions available for the given purls.
     """
@@ -803,14 +898,22 @@ def get_all_versions(purl: PackageURL):
         return
 
     all_versions = versionAPI().fetch(package_name) or []
+    return [ version.value for version in all_versions ]
+
+def get_all_versions(purl):
+    """
+    Return all the versions available for the given purls as 
+    proper Version objects from `univers`.
+    """
+    all_versions = get_all_versions_plain(purl)
     versionClass = VERSION_CLASS_BY_PACKAGE_TYPE.get(purl.type)
 
     result = []
-    for package_version in all_versions:
+    for version in all_versions:
         try:
-            result.append(versionClass(package_version.value))
+            result.append(versionClass(version))
         except InvalidVersion:
-            logger.warning(f"Invalid version '{package_version.value}' for '{purl}'")
+            logger.warning(f"Invalid version '{version}' for '{purl}'")
             pass
 
     return result

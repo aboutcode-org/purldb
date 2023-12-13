@@ -1107,3 +1107,48 @@ class ResourceApiTestCase(TestCase):
             self.resource2.name,
         ])
         self.assertEquals(expected_names, names)
+
+class PurlValidateApiTestCase(TestCase):
+
+    def setUp(self):
+        self.package_data = {
+            'type': 'npm',
+            'namespace': '',
+            'name': 'foobar',
+            'version': '1,1.0',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': '',
+            'filename': 'Foo.zip',
+            'sha1': 'testsha1',
+            'md5': 'testmd5',
+            'size': 101,
+        }
+        self.package = Package.objects.create(**self.package_data)
+        self.package.refresh_from_db()
+    
+    def test_api_purl_validation(self):
+        data1 = {
+            "purl": "pkg:npm/foobar@1.1.0",
+            "check_existence": True,
+        }
+        response1 = self.client.get(f"/api/validate/", data=data1)
+
+        data2 = {
+            "purl": "pkg:npm/?foobar@1.1.0",
+            "check_existence": True,
+        }
+        response2 = self.client.get(f"/api/validate/", data=data2)
+
+        self.assertEquals(True, response1.data["valid"])
+        self.assertEquals(True, response1.data["exists"])
+        self.assertEquals(
+            "The provided Package URL is valid, and the package exists in the upstream repo.",
+            response1.data["message"],
+        )
+
+        self.assertEquals(False, response2.data["valid"])
+        self.assertEquals(
+            "The provided PackageURL is not valid.", response2.data["message"]
+        )
+
