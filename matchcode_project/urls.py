@@ -12,7 +12,7 @@ from django.urls import path
 from django.views.generic import RedirectView
 from rest_framework import routers
 
-from matchcodeio.api import MatchingViewSet
+from matchcode_pipeline.api import MatchingViewSet
 from scanpipe.api.views import RunViewSet
 
 

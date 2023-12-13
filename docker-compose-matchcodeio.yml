@@ -1,0 +1,83 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:13
+    env_file:
+      - docker.env
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    shm_size: "1gb"
+    restart: always
+
+  redis:
+    image: redis
+    # Enable redis data persistence using the "Append Only File" with the
+    # default policy of fsync every second. See https://redis.io/topics/persistence
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: always
+
+  web:
+    build: .
+    command: wait-for-it --strict --timeout=60 db:5432 -- sh -c "
+        python manage.py migrate &&
+        python manage.py collectstatic --no-input --verbosity 0 --clear &&
+        gunicorn matchcodeio.wsgi:application --bind :8000 --timeout 600 --workers 8"
+    environment:
+      - DJANGO_SETTINGS_MODULE=matchcodeio.settings
+    env_file:
+      - docker.env
+    expose:
+      - 8000
+    volumes:
+      - .env:/opt/scancodeio/.env
+      - /etc/scancodeio/:/etc/scancodeio/
+      - workspace:/var/scancodeio/workspace/
+      - static:/var/scancodeio/static/
+    depends_on:
+      - db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.matchcodeio.rule=(Host(`127.0.0.1`) && Path(`/project`))"
+      - "traefik.http.routers.matchcodeio.entrypoints=web"
+
+  worker:
+    build: .
+    # Ensure that potential db migrations run first by waiting until "web" is up
+    command: wait-for-it --strict --timeout=120 web:8000 -- sh -c "
+        ./manage.py rqworker --worker-class scancodeio.worker.ScanCodeIOWorker
+                             --queue-class scancodeio.worker.ScanCodeIOQueue
+                             --verbosity 1"
+    env_file:
+      - docker.env
+    volumes:
+      - .env:/opt/scancodeio/.env
+      - /etc/scancodeio/:/etc/scancodeio/
+      - workspace:/var/scancodeio/workspace/
+    depends_on:
+      - redis
+      - db
+      - web
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./etc/nginx/conf.d/:/etc/nginx/conf.d/
+      - /var/www/html:/var/www/html
+      - static:/var/scancodeio/static/
+    depends_on:
+      - web
+    restart: always
+
+networks:
+  default:
+    external:
+      name: purldb
+
+volumes:
+  db_data:
+  redis_data:
+  static:
+  workspace:
