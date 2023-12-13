@@ -59,6 +59,8 @@ PACKAGE_TYPES_BY_CD_TYPE = {
     'nuget': 'nuget',
     'pypi': 'pypi',
     'gem': 'gem',
+    'npm': 'npm',
+    'go': 'golang',
 }
 
 
@@ -104,7 +106,7 @@ class Coordinate(object):
     ClearlyDefined coordinates are used to identify any tracked component.
     """
 
-    base_api_url = 'https://api.clearlydefined.io'
+    base_api_url = 'https://dev-api.clearlydefined.io'
 
     type = attr.ib()
     provider = attr.ib()
@@ -236,15 +238,15 @@ class Coordinate(object):
 
         >>> expected = 'pkg:maven/io.dropwizard/dropwizard@2.0.0-rc13'
         >>> test  = Coordinate('maven', 'mavencentral', 'io.dropwizard', 'dropwizard', '2.0.0-rc13').to_purl()
-        >>> assert expected == test
+        >>> assert expected == str(test)
 
         >>> expected = 'pkg:maven/io.dropwizard/dropwizard@2.0.0-rc13?classifier=sources'
         >>> test  = Coordinate('sourcearchive', 'mavencentral', 'io.dropwizard', 'dropwizard', '2.0.0-rc13').to_purl()
-        >>> assert expected == test
+        >>> assert expected == str(test)
 
         >>> expected = 'pkg:deb/debian/gedit-plugins@3.34.0-3?arch=source'
         >>> test  = Coordinate('debsrc', 'debian', '', 'gedit-plugins', '3.34.0-3').to_purl()
-        >>> assert expected == test
+        >>> assert expected == str(test)
         """
         converted_package_type = PACKAGE_TYPES_BY_CD_TYPE[self.type]
 
@@ -265,7 +267,7 @@ class Coordinate(object):
             name=self.name,
             version=self.revision,
             qualifiers=qualifiers,
-        ).to_string()
+        )
 
     @classmethod
     def from_purl(cls, purl):
@@ -519,6 +521,7 @@ def str2coord(s):
         URN: "urn:gem:rubygems:-:mocha:revision:1.7.0:tool:scancode:3.1.0"
         plain: /gem/rubygems/foo/mocha/1.7.0"
     """
+    #TODO: Add doctest
     is_urn = s.startswith('urn')
     is_url = s.startswith('cd:')
     splitter = ':' if is_urn else '/'
