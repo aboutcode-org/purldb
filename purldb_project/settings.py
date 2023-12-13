@@ -86,9 +86,9 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'purldb.urls'
+ROOT_URLCONF = 'purldb_project.urls'
 
-WSGI_APPLICATION = "purldb.wsgi.application"
+WSGI_APPLICATION = "purldb_project.wsgi.application"
 
 SECURE_PROXY_SSL_HEADER = env.tuple(
     "SECURE_PROXY_SSL_HEADER", default=("HTTP_X_FORWARDED_PROTO", "https")
