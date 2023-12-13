@@ -14,7 +14,10 @@ import natsort
 import sys
 import uuid
 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
+from django.core import exceptions
 from django.core.paginator import Paginator
 from django.db import models
 from django.db import transaction
@@ -27,6 +30,8 @@ from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
+from rest_framework.authtoken.models import Token
+
 
 TRACE = False
 
@@ -1236,3 +1241,58 @@ class PackageSet(models.Model):
         return self.packages.order_by(
             'package_content',
         )
+
+
+UserModel = get_user_model()
+
+
+class ApiUserManager(UserManager):
+    def create_api_user(self, username, first_name="", last_name="", **extra_fields):
+        """
+        Create and return an API-only user. Raise ValidationError.
+        """
+        username = self.normalize_email(username)
+        email = username
+        self._validate_username(email)
+
+        # note we use the email as username and we could instead override
+        # django.contrib.auth.models.AbstractUser.USERNAME_FIELD
+
+        user = self.create_user(
+            username=email,
+            email=email,
+            password=None,
+            first_name=first_name,
+            last_name=last_name,
+            **extra_fields,
+        )
+
+        # this ensure that this is not a valid password
+        user.set_unusable_password()
+        user.save()
+
+        Token._default_manager.get_or_create(user=user)
+
+        return user
+
+    def _validate_username(self, email):
+        """
+        Validate username. If invalid, raise a ValidationError
+        """
+        try:
+            self.get_by_natural_key(email)
+        except models.ObjectDoesNotExist:
+            pass
+        else:
+            raise exceptions.ValidationError(f"Error: This email already exists: {email}")
+
+
+class ApiUser(UserModel):
+    """
+    A User proxy model to facilitate simplified admin API user creation.
+    """
+
+    objects = ApiUserManager()
+
+    class Meta:
+        proxy = True
