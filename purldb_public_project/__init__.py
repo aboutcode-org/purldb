@@ -15,5 +15,5 @@ def command_line():
     '''Command line entry point.'''
     from django.core.management import execute_from_command_line
 
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'purldb_public.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'purldb_public_project.settings')
     execute_from_command_line(sys.argv)
