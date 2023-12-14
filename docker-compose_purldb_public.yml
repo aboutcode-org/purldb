@@ -1,0 +1,134 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:13
+    env_file:
+      - docker_purldb.env
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+
+  web:
+    build: .
+    command: sh -c "
+        python manage_purldb_public.py migrate &&
+        python manage_purldb_public.py collectstatic --no-input --verbosity 0 --clear &&
+        gunicorn purldb_public_project.wsgi:application --bind :8000 --timeout 600 --workers 8"
+    env_file:
+      - docker_purldb.env
+    expose:
+      - 8000
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+      - static:/var/purldb/static/
+    depends_on:
+      - db
+
+  visitor:
+    build: .
+    command: sh -c "
+        wait-for-it web:8000 -- python manage_purldb_public.py seed &&
+        python manage_purldb_public.py run_visit --ignore-robots --ignore-throttle"
+    env_file:
+      - docker_purldb.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - visit_and_map
+    depends_on:
+      - db
+      - web # Ensure that potential db migrations run first
+
+  mapper:
+    build: .
+    command: wait-for-it web:8000 -- python manage_purldb_public.py run_map
+    env_file:
+      - docker_purldb.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - visit_and_map
+    depends_on:
+      - db
+      - web # Ensure that potential db migrations run first
+
+  clearsync:
+    build: .
+    command: wait-for-it web:8000 -- clearsync --save-to-db  --verbose -n 3
+    env_file:
+      - docker_purldb.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - clearsync
+    depends_on:
+      - db
+      - web # Ensure that potential db migrations run first
+
+  clearindex:
+    build: .
+    command: wait-for-it web:8000 -- python manage_purldb_public.py run_clearindex
+    profiles:
+      - clearsync
+    depends_on:
+      - db
+      - web # Ensure that potential db migrations run first
+
+  request_scan:
+    build: .
+    command: wait-for-it web:8000 -- python manage_purldb_public.py request_scans
+    env_file:
+      - docker_purldb.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - scan_queue
+    depends_on:
+      - db
+      - web
+
+  process_scan:
+    build: .
+    command: wait-for-it web:8000 -- python manage_purldb_public.py process_scans
+    env_file:
+      - docker_purldb.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - scan_queue
+    depends_on:
+      - db
+      - web
+
+  priority_queue:
+    build: .
+    command: wait-for-it web:8000 -- python manage_purldb_public.py priority_queue
+    env_file:
+      - docker_purldb.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - priority_queue
+    depends_on:
+      - db
+      - web
+
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./etc/nginx/conf.d/:/etc/nginx/conf.d/
+      - static:/var/purldb/static/
+    depends_on:
+      - web
+
+networks:
+  default:
+    name: purldb
+    external: true
+
+volumes:
+  db_data:
+  static:

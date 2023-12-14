@@ -10,7 +10,7 @@
 # Python version can be specified with `$ PYTHON_EXE=python3.x make conf`
 PYTHON_EXE?=python3
 VENV=venv
-MANAGE=${VENV}/bin/python manage.py
+MANAGE=${VENV}/bin/python manage_purldb.py
 ACTIVATE?=. ${VENV}/bin/activate;
 VIRTUALENV_PYZ=../etc/thirdparty/virtualenv.pyz
 # Do not depend on Python to generate the SECRET_KEY
@@ -107,8 +107,9 @@ process_scans:
 
 test:
 	@echo "-> Run the test suite"
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode-toolkit --ignore matchcodeio
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=matchcodeio.settings ${PYTHON_EXE} -m pytest -vvs matchcodeio
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode-toolkit --ignore packagedb/tests/test_throttling.py --ignore matchcode_pipeline --ignore matchcode_project
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=matchcode_project.settings ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline
 	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs matchcode-toolkit --ignore matchcode-toolkit/src/matchcode_toolkit/pipelines
 
 shell:
