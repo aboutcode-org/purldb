@@ -4,10 +4,9 @@ services:
   db:
     image: postgres:13
     env_file:
-      - docker.env
+      - docker_purldb.env
     volumes:
       - db_data:/var/lib/postgresql/data/
-      - ./etc/postgresql/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
 
   web:
     build: .
@@ -16,7 +15,7 @@ services:
         python manage_purldb_public.py collectstatic --no-input --verbosity 0 --clear &&
         gunicorn purldb_public_project.wsgi:application --bind :8000 --timeout 600 --workers 8"
     env_file:
-      - docker.env
+      - docker_purldb.env
     expose:
       - 8000
     volumes:
@@ -31,7 +30,7 @@ services:
         wait-for-it web:8000 -- python manage_purldb_public.py seed &&
         python manage_purldb_public.py run_visit --ignore-robots --ignore-throttle"
     env_file:
-      - docker.env
+      - docker_purldb.env
     volumes:
       - /etc/purldb/:/etc/purldb/
     profiles:
@@ -44,7 +43,7 @@ services:
     build: .
     command: wait-for-it web:8000 -- python manage_purldb_public.py run_map
     env_file:
-      - docker.env
+      - docker_purldb.env
     volumes:
       - /etc/purldb/:/etc/purldb/
     profiles:
@@ -57,7 +56,7 @@ services:
     build: .
     command: wait-for-it web:8000 -- clearsync --save-to-db  --verbose -n 3
     env_file:
-      - docker.env
+      - docker_purldb.env
     volumes:
       - /etc/purldb/:/etc/purldb/
     profiles:
@@ -79,7 +78,7 @@ services:
     build: .
     command: wait-for-it web:8000 -- python manage_purldb_public.py request_scans
     env_file:
-      - docker.env
+      - docker_purldb.env
     volumes:
       - /etc/purldb/:/etc/purldb/
     profiles:
@@ -92,7 +91,7 @@ services:
     build: .
     command: wait-for-it web:8000 -- python manage_purldb_public.py process_scans
     env_file:
-      - docker.env
+      - docker_purldb.env
     volumes:
       - /etc/purldb/:/etc/purldb/
     profiles:
@@ -105,7 +104,7 @@ services:
     build: .
     command: wait-for-it web:8000 -- python manage_purldb_public.py priority_queue
     env_file:
-      - docker.env
+      - docker_purldb.env
     volumes:
       - /etc/purldb/:/etc/purldb/
     profiles:

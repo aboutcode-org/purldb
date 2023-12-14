@@ -4,7 +4,7 @@ services:
   db:
     image: postgres:13
     env_file:
-      - docker.env
+      - docker_matchcode.env
     volumes:
       - db_data:/var/lib/postgresql/data/
     shm_size: "1gb"
@@ -22,13 +22,13 @@ services:
   web:
     build: .
     command: wait-for-it --strict --timeout=60 db:5432 -- sh -c "
-        python manage.py migrate &&
-        python manage.py collectstatic --no-input --verbosity 0 --clear &&
-        gunicorn matchcodeio.wsgi:application --bind :8000 --timeout 600 --workers 8"
+        python manage_matchcode.py migrate &&
+        python manage_matchcode.py collectstatic --no-input --verbosity 0 --clear &&
+        gunicorn matchcode_project.wsgi:application --bind :8000 --timeout 600 --workers 8"
     environment:
-      - DJANGO_SETTINGS_MODULE=matchcodeio.settings
+      - DJANGO_SETTINGS_MODULE=matchcode_project.settings
     env_file:
-      - docker.env
+      - docker_matchcode.env
     expose:
       - 8000
     volumes:
@@ -47,11 +47,13 @@ services:
     build: .
     # Ensure that potential db migrations run first by waiting until "web" is up
     command: wait-for-it --strict --timeout=120 web:8000 -- sh -c "
-        ./manage.py rqworker --worker-class scancodeio.worker.ScanCodeIOWorker
+        ./manage_matchcode.py rqworker --worker-class scancodeio.worker.ScanCodeIOWorker
                              --queue-class scancodeio.worker.ScanCodeIOQueue
                              --verbosity 1"
+    environment:
+      - DJANGO_SETTINGS_MODULE=matchcode_project.settings
     env_file:
-      - docker.env
+      - docker_matchcode.env
     volumes:
       - .env:/opt/scancodeio/.env
       - /etc/scancodeio/:/etc/scancodeio/
