@@ -34,6 +34,6 @@ DATABASES.update(
     }
 )
 
-DATABASE_ROUTERS = ["matchcodeio.dbrouter.PackageDBReadOnlyRouter",]
+DATABASE_ROUTERS = ["matchcodeio.dbrouter.PackageDBRouter",]
 
 ROOT_URLCONF = 'matchcodeio.urls'
