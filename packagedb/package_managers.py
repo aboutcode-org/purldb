@@ -442,27 +442,12 @@ class HexVersionAPI(VersionAPI):
             url=f"https://hex.pm/api/packages/{pkg}",
             content_type="json",
         )
-        for release in response["releases"]:
-            yield PackageVersion(
-                value=release["version"],
-                release_date=dateparser.parse(release["inserted_at"]),
-            )
-
-
-class ConanVersionAPI(VersionAPI):
-    """
-    Fetch versions of ``conan`` packages from the Conan API
-    """
-
-    package_type = "conan"
-
-    def fetch(self, pkg: str) -> Iterable[PackageVersion]:
-        response = get_response(
-            url=f"https://conan.io/center/api/ui/details?name={pkg}&user=_&channel=_",
-            content_type="json",
-        )
-        for release in response["versions"]:
-            yield PackageVersion(value=release["version"])
+        if response:
+            for release in response["releases"]:
+                yield PackageVersion(
+                    value=release["version"],
+                    release_date=dateparser.parse(release["inserted_at"]),
+                )
 
 
 class GoproxyVersionAPI(VersionAPI):
@@ -596,7 +581,6 @@ VERSION_API_CLASSES = {
     LaunchpadVersionAPI,
     CratesVersionAPI,
     DebianVersionAPI,
-    ConanVersionAPI,
 }
 
 
