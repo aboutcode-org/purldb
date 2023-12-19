@@ -1096,7 +1096,7 @@ class ResourceApiTestCase(TestCase):
             self.resource1.name,
             self.resource2.name,
         ])
-        self.assertEquals(expected_names, names)
+        self.assertEqual(expected_names, names)
 
         filters = f'?sha1={self.resource1.sha1}&sha1={self.resource2.sha1}'
         response = self.client.get(f'/api/resources/{filters}')
@@ -1106,7 +1106,7 @@ class ResourceApiTestCase(TestCase):
             self.resource1.name,
             self.resource2.name,
         ])
-        self.assertEquals(expected_names, names)
+        self.assertEqual(expected_names, names)
 
 class PurlValidateApiTestCase(TestCase):
 
@@ -1140,15 +1140,15 @@ class PurlValidateApiTestCase(TestCase):
         }
         response2 = self.client.get(f"/api/validate/", data=data2)
 
-        self.assertEquals(True, response1.data["valid"])
-        self.assertEquals(True, response1.data["exists"])
-        self.assertEquals(
+        self.assertEqual(True, response1.data["valid"])
+        self.assertEqual(True, response1.data["exists"])
+        self.assertEqual(
             "The provided Package URL is valid, and the package exists in the upstream repo.",
             response1.data["message"],
         )
 
-        self.assertEquals(False, response2.data["valid"])
-        self.assertEquals(
+        self.assertEqual(False, response2.data["valid"])
+        self.assertEqual(
             "The provided PackageURL is not valid.", response2.data["message"]
         )
     
@@ -1160,11 +1160,11 @@ class PurlValidateApiTestCase(TestCase):
         response1 = self.client.get(f"/api/validate/", data=data1)
 
 
-        self.assertEquals(True, response1.data["valid"])
-        self.assertEquals(
+        self.assertEqual(True, response1.data["valid"])
+        self.assertEqual(
             "The provided PackageURL is valid, but `check_existence` is not supported for this package type.", response1.data["message"]
         )
-        self.assertEquals(None, response1.data["exists"])
+        self.assertEqual(None, response1.data["exists"])
 
     def test_api_purl_validation_empty_request(self):
         data1 = {}

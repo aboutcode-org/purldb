@@ -719,7 +719,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
     `gem`, `golang`, `hex`, `maven`, `npm`, `nuget` and `pypi` ecosystems.
 
     **Example request:**
-            ```doc
+            ```
             GET /api/validate/?purl=pkg:npm/foobar@12.3.1&check_existence=false
             ```
     
@@ -735,6 +735,13 @@ class PurlValidateViewSet(viewsets.ViewSet):
     def get_view_name(self):
         return 'Validate PURL'
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter('purl', str, 'query', description='PackageURL'),
+            OpenApiParameter('check_existence', bool, 'query', description='Check existence', default=False),
+        ],
+        responses={200: PurlValidateResponseSerializer()},
+    )
     def list(self, request):
         serializer = self.serializer_class(data=request.query_params)
 
