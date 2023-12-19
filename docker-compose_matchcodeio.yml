@@ -58,7 +58,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.matchcodeio.rule=Host(`127.0.0.1`) && PathPrefix(`/api/matching`) || Host(`localhost`) && PathPrefix(`/api/matching`) || Host(`127.0.0.1`) && PathPrefix(`/project`) || Host(`localhost`) && PathPrefix(`/project`)"
+      - "traefik.http.routers.matchcodeio.rule=Host(`127.0.0.1`) && PathPrefix(`/api/matching`) || Host(`localhost`) && PathPrefix(`/api/matching`) || Host(`192.168.1.12`) && PathPrefix(`/api/matching`) || Host(`127.0.0.1`) && PathPrefix(`/project`) || Host(`localhost`) && PathPrefix(`/project`) || Host(`192.168.1.12`) && PathPrefix(`/project`) || Host(`127.0.0.1`) && PathPrefix(`/api/runs`) || Host(`localhost`) && PathPrefix(`/api/runs`) || Host(`192.168.1.12`) && PathPrefix(`/api/runs`)"
       - "traefik.http.routers.matchcodeio.entrypoints=web"
 
 networks:
