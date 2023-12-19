@@ -21,6 +21,7 @@ from rest_framework.serializers import ListField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import Serializer
 from rest_framework.serializers import SerializerMethodField
+from rest_framework.serializers import Serializer
 
 from packagedb.models import DependentPackage
 from packagedb.models import Package
@@ -371,3 +372,12 @@ class IndexPackagesResponseSerializer(Serializer):
         child=CharField(),
         help_text="List of vers range that are not supported by the univers or package_manager."
     )
+class PurlValidateResponseSerializer(Serializer):
+    valid = BooleanField()
+    exists = BooleanField(required=False)
+    message = CharField()
+    purl = CharField()
+
+class PurlValidateSerializer(Serializer):
+    purl = CharField(required=True)
+    check_existence = BooleanField(required=False, default=False)

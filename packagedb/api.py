@@ -19,6 +19,7 @@ from packageurl.contrib.django.utils import purl_to_lookups
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
 from univers.version_constraint import InvalidConstraintsError
 from univers.version_range import RANGE_CLASS_BY_SCHEMES, VersionRange
 from univers.versions import InvalidVersion
@@ -37,12 +38,14 @@ from packagedb.package_managers import (VERSION_API_CLASSES_BY_PACKAGE_TYPE,
                                         get_version_fetcher)
 from packagedb.serializers import (DependentPackageSerializer,
                                    PackageAPISerializer,
-                                   PackageSetAPISerializer, PartySerializer,
+                                   PackageSetAPISerializer, PartySerializer, PurlValidateResponseSerializer, PurlValidateSerializer,
                                    ResourceAPISerializer)
 from drf_spectacular.utils import extend_schema
 from drf_spectacular.utils import OpenApiParameter
 from packagedb.serializers import IndexPackagesSerializer
 from packagedb.serializers import IndexPackagesResponseSerializer
+from packagedb.throttling import StaffUserRateThrottle
+
 
 logger = logging.getLogger(__name__)
 
@@ -91,6 +94,7 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Resource.objects.select_related('package')
     serializer_class = ResourceAPISerializer
     filterset_class = ResourceFilterSet
+    throttle_classes = [StaffUserRateThrottle, AnonRateThrottle]
     lookup_field = 'sha1'
 
     @action(detail=False, methods=['post'])
@@ -106,7 +110,7 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
         - sha1
 
         Example:
-        
+
             {
                 "sha1": [
                     "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
@@ -252,11 +256,12 @@ class PackageFilterSet(FilterSet):
         )
 
 
-class PackageViewSet(viewsets.ReadOnlyModelViewSet):
+class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Package.objects.prefetch_related('dependencies', 'parties')
     serializer_class = PackageAPISerializer
     lookup_field = 'uuid'
     filterset_class = PackageFilterSet
+    throttle_classes = [StaffUserRateThrottle, AnonRateThrottle]
 
     @action(detail=True, methods=['get'])
     def latest_version(self, request, *args, **kwargs):
@@ -296,18 +301,6 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
         package_data = get_enhanced_package(package)
         return Response(package_data)
 
-    @action(detail=True)
-    def reindex_package(self, request, *args, **kwargs):
-        """
-        Reindex this package instance
-        """
-        package = self.get_object()
-        package.rescan()
-        data = {
-            'status': f'{package.package_url} has been queued for reindexing'
-        }
-        return Response(data)
-
     @action(detail=False, methods=['post'])
     def filter_by_checksums(self, request, *args, **kwargs):
         """
@@ -332,7 +325,7 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             }
 
         Multiple checksums algorithms can be passed together:
-        
+
             {
                 "sha1": [
                     "b55fd82f80cc1bd0bdabf9c6e3153788d35d7911",
@@ -391,6 +384,20 @@ class PackageViewSet(viewsets.ReadOnlyModelViewSet):
             serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
             serialized_package_data = serializer.data
         return self.get_paginated_response(serialized_package_data)
+
+
+class PackageViewSet(PackagePublicViewSet):
+    @action(detail=True)
+    def reindex_package(self, request, *args, **kwargs):
+        """
+        Reindex this package instance
+        """
+        package = self.get_object()
+        package.rescan()
+        data = {
+            'status': f'{package.package_url} has been queued for reindexing'
+        }
+        return Response(data)
 
 
 UPDATEABLE_FIELDS = [
@@ -575,9 +582,9 @@ class CollectViewSet(viewsets.ViewSet):
         """
         Take a list of `packages` (where each item is a dictionary containing either PURL
         or versionless PURL along with vers range) and index it.
-        
+
         If `reindex` flag is True then existing package will be rescanned, if `reindex_set`
-        is True then all the package in the same set will be rescanned.  
+        is True then all the package in the same set will be rescanned.
         If reindex flag is set to true then all the non existing package will be indexed.
 
         **Note:** When a versionless PURL is supplied without a vers range, then all the versions
@@ -603,7 +610,7 @@ class CollectViewSet(viewsets.ViewSet):
                     "reindex": true,
                     "reindex_set": false,
                 }
-        
+
         Then return a mapping containing:
 
         - queued_packages_count
@@ -615,7 +622,7 @@ class CollectViewSet(viewsets.ViewSet):
         - requeued_packages
             - A list of existing package urls that were placed on the rescan queue.
         - unqueued_packages_count
-            - The number of package urls not placed on the index queue.  
+            - The number of package urls not placed on the index queue.
                 This is because the package url already exists on the index queue and has not
                 yet been processed.
         - unqueued_packages
@@ -623,7 +630,7 @@ class CollectViewSet(viewsets.ViewSet):
         - unsupported_packages_count
             - The number of package urls that are not processable by the index queue.
         - unsupported_packages
-            - A list of package urls that are not processable by the index queue.  
+            - A list of package urls that are not processable by the index queue.
                 The package indexing queue can only handle npm and maven purls.
         - unsupported_vers_count
             - The number of vers range that are not supported by the univers or package_manager.
@@ -648,11 +655,11 @@ class CollectViewSet(viewsets.ViewSet):
 
         queued_packages = []
         unqueued_packages = []
-        
+
         nonexistent_packages = []
         reindexed_packages = []
         requeued_packages = []
-    
+
         supported_ecosystems = ['maven', 'npm']
 
         unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages, supported_ecosystems)
@@ -708,15 +715,13 @@ class PurlValidateViewSet(viewsets.ViewSet):
     Take a `purl` and check whether it's valid PackageURL or not.  
     Optionally set `check_existence` to true to check whether the package exists in real world. 
     
-    **Note:** As of now `check_existence` only supports `apache`, `composer`, `deb`, `gem`, 
-    `github`, `golang`, `maven`, `npm`, `nuget`and `pypi` ecosystems.
+    **Note:** As of now `check_existence` only supports `cargo`, `composer`, `deb`, 
+    `gem`, `golang`, `hex`, `maven`, `npm`, `nuget` and `pypi` ecosystems.
 
-    **Input example:**
-
-            {
-                "purl": "pkg:npm/foobar@12.3.1",
-                "check_existence": true,
-            }
+    **Example request:**
+            ```doc
+            GET /api/validate/?purl=pkg:npm/foobar@12.3.1&check_existence=false
+            ```
     
     Response contains:
 
@@ -725,12 +730,20 @@ class PurlValidateViewSet(viewsets.ViewSet):
     - exists
         - True, if input PURL exists in real world and `check_existence` flag is enabled.
     """
+    serializer_class = PurlValidateSerializer
+    
     def get_view_name(self):
         return 'Validate PURL'
 
     def list(self, request):
-        purl = request.query_params.get("purl")
-        check_existence = request.query_params.get("check_existence") or False
+        serializer = self.serializer_class(data=request.query_params)
+
+        if not serializer.is_valid():
+            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        validated_data = serializer.validated_data
+        purl = validated_data.get('purl')
+        check_existence = validated_data.get('check_existence', False)
 
         message_valid = "The provided PackageURL is valid."
         message_not_valid = "The provided PackageURL is not valid."
@@ -738,64 +751,65 @@ class PurlValidateViewSet(viewsets.ViewSet):
             "The provided Package URL is valid, and the package exists in the upstream repo."
         )
         message_valid_but_does_not_exist = (
-            "The provided PackageURL is valid but does not exist in the upstream repo."
+            "The provided PackageURL is valid, but does not exist in the upstream repo."
         )
-        message_error_no_purl = (
-            "PackageURL (purl) is required. Please provide a PackageURL in the request."
+        message_valid_but_package_type_not_supported = (
+            "The provided PackageURL is valid, but `check_existence` is not supported for this package type."
         )
 
-        if not purl:
-            return Response(
-                {
-                    "error": "Bad Request",
-                    "message": message_error_no_purl,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        response = {}
+        response['exists'] = None
+        response['purl'] = purl
+        response['valid'] = False
+        response['message'] = message_not_valid
 
         # validate purl
         try:
             package_url = PackageURL.from_string(purl)
         except ValueError:
-            return Response(
-                {
-                    "valid": False,
-                    "message": message_not_valid,
-                    "purl": purl,
-                }
-            )
+            serializer = PurlValidateResponseSerializer(response, context={'request': request})
+            return Response(serializer.data)
 
-        exists = None
-        message = message_valid
+
+        response['valid'] = True
+        response["message"] = message_valid
+        unsupported_ecosystem = False
         if check_existence:
-            exists = False
+            response['exists'] = False
             lookups = purl_to_lookups(purl)
             packages = Package.objects.filter(**lookups)
             if packages.exists():
-                exists = True
+                response['exists'] = True
             else:
                 versionless_purl = PackageURL(
                     type=package_url.type,
                     namespace=package_url.namespace,
                     name=package_url.name,
                 )
-                all_versions = get_all_versions_plain(versionless_purl)
-                if (all_versions and not package_url.version) or (
-                    package_url.version in all_versions
+                if (
+                    package_url.type in VERSION_API_CLASSES_BY_PACKAGE_TYPE
+                    and package_url.type in VERSION_CLASS_BY_PACKAGE_TYPE
                 ):
-                    # True, if requested purl has no version and any version of package exists upstream.
-                    # True, if requested purl.version exists upstream.
-                    exists = True
-            message = message_valid_and_exists if exists else message_valid_but_does_not_exist
-
-        return Response(
-            {
-                "valid": True,
-                "exists": exists,
-                "message": message,
-                "purl": purl,
-            }
-        )
+                    all_versions = get_all_versions_plain(versionless_purl)
+                    if all_versions and (not package_url.version or (
+                        package_url.version in all_versions)
+                    ):
+                        # True, if requested purl has no version and any version of package exists upstream.
+                        # True, if requested purl.version exists upstream.
+                        response['exists'] = True
+                else:
+                    unsupported_ecosystem = True
+            
+            if response['exists']:
+                response["message"] = message_valid_and_exists
+            elif unsupported_ecosystem:
+                response['exists'] = None
+                response["message"] = message_valid_but_package_type_not_supported
+            else:
+                response["message"] =message_valid_but_does_not_exist
+        
+        serializer = PurlValidateResponseSerializer(response, context={'request': request})
+        return Response(serializer.data)
 
 
 def get_resolved_purls(packages, supported_ecosystems):

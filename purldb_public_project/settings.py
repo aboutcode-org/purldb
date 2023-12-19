@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # purldb is a trademark of nexB Inc.
@@ -8,12 +7,9 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import os
-import sys
+from purldb_project.settings import *
 
 
-if __name__ == '__main__':
-    from django.core.management import execute_from_command_line
+ROOT_URLCONF = 'purldb_public_project.urls'
 
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'purldb_project.settings')
-    execute_from_command_line(sys.argv)
+WSGI_APPLICATION = 'purldb_public_project.wsgi.application'

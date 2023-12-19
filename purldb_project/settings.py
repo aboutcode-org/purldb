@@ -74,6 +74,7 @@ INSTALLED_APPS = (
     'django_filters',
     'rest_framework',
     'drf_spectacular',
+    'rest_framework.authtoken',
 )
 
 MIDDLEWARE = (
@@ -86,9 +87,9 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'purldb.urls'
+ROOT_URLCONF = 'purldb_project.urls'
 
-WSGI_APPLICATION = "purldb.wsgi.application"
+WSGI_APPLICATION = "purldb_project.wsgi.application"
 
 SECURE_PROXY_SSL_HEADER = env.tuple(
     "SECURE_PROXY_SSL_HEADER", default=("HTTP_X_FORWARDED_PROTO", "https")
@@ -163,7 +164,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Testing
 
 # True if running tests through `./manage test or pytest`
-IS_TESTS = any(clue in sys.argv for clue in ("test", "pytest"))
+IS_TESTS = any(clue in arg for arg in sys.argv for clue in ("test", "pytest"))
 
 # Cache
 
@@ -235,9 +236,11 @@ STATICFILES_DIRS = [
 
 # Django restframework
 
+REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {'anon': '3600/hour', 'user': '10800/hour'}
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (),
-    "DEFAULT_PERMISSION_CLASSES": (),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
@@ -247,6 +250,13 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
     ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'packagedb.throttling.StaffUserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': REST_FRAMEWORK_DEFAULT_THROTTLE_RATES,
+    'EXCEPTION_HANDLER': 'packagedb.throttling.throttled_exception_handler',
     'DEFAULT_PAGINATION_CLASS': 'packagedb.api_custom.PageSizePagination',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     # Limit the load on the Database returning a small number of records by default. https://github.com/nexB/vulnerablecode/issues/819

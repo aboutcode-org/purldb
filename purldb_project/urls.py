@@ -10,6 +10,8 @@
 from django.conf.urls import include
 from django.urls import path
 from django.views.generic import RedirectView
+from django.views.generic.base import TemplateView
+
 from rest_framework import routers
 
 from clearcode.api import CDitemViewSet
@@ -23,7 +25,6 @@ from matchcode.api import ExactPackageArchiveIndexViewSet
 from minecode.api import PriorityResourceURIViewSet
 from packagedb.api import PurlValidateViewSet
 from packagedb.api import CollectViewSet
-from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 
 
@@ -42,8 +43,11 @@ api_router.register('collect', CollectViewSet, 'collect')
 
 
 urlpatterns = [
+    path(
+        'robots.txt',
+        TemplateView.as_view(template_name='robots.txt', content_type='text/plain'),
+    ),
     path('api/', include((api_router.urls, 'api'))),
     path("", RedirectView.as_view(url="api/")),
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
