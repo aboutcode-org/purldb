@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v2.0.1
+------
+
+*2023-12-19* -- Update ``ScanAndFingerprintPackage`` pipeline with updates from the upstream ``ScanPackage`` pipeline from scancode.io
+
 v2.0.0
 ------
 
