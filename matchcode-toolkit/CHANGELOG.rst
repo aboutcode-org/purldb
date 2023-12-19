@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v2.0.0
+------
+
+*2023-12-18* -- Remove ``ScanAndFingerprintPackage`` pipeline from matchcode-toolkit's entry points. (https://github.com/nexB/purldb/issues/263)
+
 v1.1.3
 ------
 
