@@ -10,6 +10,7 @@
 from django.http import HttpRequest
 from django.urls import reverse_lazy
 
+from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import HyperlinkedIdentityField
 from rest_framework.serializers import HyperlinkedModelSerializer
@@ -17,6 +18,7 @@ from rest_framework.serializers import HyperlinkedRelatedField
 from rest_framework.serializers import JSONField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import SerializerMethodField
+from rest_framework.serializers import Serializer
 
 from packagedb.models import DependentPackage
 from packagedb.models import Package
@@ -328,3 +330,14 @@ class PackageSetAPISerializer(ModelSerializer):
             'uuid',
             'packages',
         ]
+
+
+class PurlValidateResponseSerializer(Serializer):
+    valid = BooleanField()
+    exists = BooleanField(required=False)
+    message = CharField()
+    purl = CharField()
+
+class PurlValidateSerializer(Serializer):
+    purl = CharField(required=True)
+    check_existence = BooleanField(required=False, default=False)

@@ -1151,4 +1151,31 @@ class PurlValidateApiTestCase(TestCase):
         self.assertEquals(
             "The provided PackageURL is not valid.", response2.data["message"]
         )
+    
+    def test_api_purl_validation_unsupported_package_type(self):
+        data1 = {
+            "purl": "pkg:random/foobar@1.1.0",
+            "check_existence": True,
+        }
+        response1 = self.client.get(f"/api/validate/", data=data1)
 
+
+        self.assertEquals(True, response1.data["valid"])
+        self.assertEquals(
+            "The provided PackageURL is valid, but `check_existence` is not supported for this package type.", response1.data["message"]
+        )
+        self.assertEquals(None, response1.data["exists"])
+
+    def test_api_purl_validation_empty_request(self):
+        data1 = {}
+        response1 = self.client.get(f"/api/validate/", data=data1)
+        
+        expected = {
+            "errors": {
+                "purl": [
+                    "This field is required."
+                ]
+            }
+        }
+
+        self.assertAlmostEquals(expected, response1.data)
