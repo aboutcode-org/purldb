@@ -197,11 +197,12 @@ def match_sha1s_to_purldb(
 
 
 def match_purldb_resources(
-    project, extensions, matcher_func, chunk_size=1000, logger=None
+    project, matcher_func, archives_only=False, chunk_size=1000, logger=None
 ):
     """
-    Match against PurlDB selecting codebase resources using provided
-    ``package_extensions`` for archive type files, and ``resource_extensions``.
+    Match CodebaseResources from `project` against the PurlDB. If
+    `archives_only` is True, then only CodebaseResources where the `is_archive`
+    flag is True is looked up in the PurlDB.
 
     Match requests are sent off in batches of 1000 SHA1s. This number is set
     using `chunk_size`.
@@ -210,21 +211,19 @@ def match_purldb_resources(
         project.codebaseresources.files()
         .no_status()
         .has_value("sha1")
-        .filter(extension__in=extensions)
+        .filter(is_archive=archives_only)
     )
     resource_count = resources.count()
 
-    extensions_str = ", ".join(extensions)
     if logger:
         if resource_count > 0:
             logger(
-                f"Matching {resource_count:,d} {extensions_str} resources in PurlDB, "
+                f"Matching {resource_count:,d} resources in PurlDB, "
                 "using SHA1"
             )
         else:
             logger(
-                f"Skipping matching for {extensions_str} resources, "
-                f"as there are {resource_count:,d}"
+                f"Skipping resource matching as there are {resource_count:,d}"
             )
 
     _match_purldb_resources(
@@ -282,28 +281,27 @@ def _match_purldb_resources(
 
 
 def match_purldb_directories(project, logger=None):
-    """Match against PurlDB selecting codebase directories."""
+    """Match directory CodebaseResources from `project` against the PurlDB."""
     # If we are able to get match results for a directory fingerprint, then that
     # means every resource and directory under that directory is part of a
     # Package. By starting from the root to/ directory, we are attempting to
     # match as many files as we can before attempting to match further down. The
     # more "higher-up" directories we can match to means that we reduce the
     # number of queries made to purldb.
-    to_directories = (
+    directories = (
         project.codebaseresources.directories()
-        .no_status(status=flag.ABOUT_MAPPED)
         .no_status(status=flag.MATCHED_TO_PURLDB_PACKAGE)
         .order_by("path")
     )
-    directory_count = to_directories.count()
+    directory_count = directories.count()
 
     if logger:
         logger(
             f"Matching {directory_count:,d} "
-            f"director{pluralize(directory_count, 'y,ies')} from to/ in PurlDB"
+            f"director{pluralize(directory_count, 'y,ies')} against PurlDB"
         )
 
-    directory_iterator = to_directories.iterator(chunk_size=2000)
+    directory_iterator = directories.iterator(chunk_size=2000)
     progress = LoopProgress(directory_count, logger)
 
     for directory in progress.iter(directory_iterator):
@@ -322,47 +320,18 @@ def match_purldb_directories(project, logger=None):
     )
 
 
-def match_resources_with_no_java_source(project, logger=None):
-    """
-    Match resources with ``no-java-source`` to PurlDB, if no match
-    is found update status to ``requires-review``.
-    """
-    project_files = project.codebaseresources.files()
-
-    to_no_java_source = project_files.to_codebase().filter(status=flag.NO_JAVA_SOURCE)
-
-    if to_no_java_source:
-        resource_count = to_no_java_source.count()
-        if logger:
-            logger(
-                f"Mapping {resource_count:,d} to/ resources with {flag.NO_JAVA_SOURCE} "
-                "status in PurlDB using SHA1"
-            )
-
-        _match_purldb_resources(
-            project=project,
-            resources=to_no_java_source,
-            matcher_func=match_purldb_resource,
-            logger=logger,
-        )
-        to_no_java_source.exclude(status=flag.MATCHED_TO_PURLDB_RESOURCE).update(
-            status=flag.REQUIRES_REVIEW
-        )
-
-
 def match_purldb_resources_post_process(project, logger=None):
     """Choose the best package for PurlDB matched resources."""
-    to_extract_directories = (
+    extract_directories = (
         project.codebaseresources.directories()
-        .to_codebase()
         .filter(path__regex=r"^.*-extract$")
     )
 
-    to_resources = project.codebaseresources.files().filter(
+    resources = project.codebaseresources.files().filter(
         status=flag.MATCHED_TO_PURLDB_RESOURCE
     )
 
-    resource_count = to_extract_directories.count()
+    resource_count = extract_directories.count()
 
     if logger:
         logger(
@@ -370,24 +339,24 @@ def match_purldb_resources_post_process(project, logger=None):
             f"{flag.MATCHED_TO_PURLDB_RESOURCE} archives."
         )
 
-    resource_iterator = to_extract_directories.iterator(chunk_size=2000)
+    resource_iterator = extract_directories.iterator(chunk_size=2000)
     progress = LoopProgress(resource_count, logger)
     map_count = 0
 
     for directory in progress.iter(resource_iterator):
         map_count += _match_purldb_resources_post_process(
-            directory, to_extract_directories, to_resources
+            directory.path, resources
         )
 
     logger(f"{map_count:,d} resource processed")
 
 
 def _match_purldb_resources_post_process(
-    directory_path, to_extract_directories, to_resources
+    directory_path, codebase_resources
 ):
     # Exclude the content of nested archive.
     interesting_codebase_resources = (
-        to_resources.filter(path__startswith=directory_path)
+        codebase_resources.filter(path__startswith=directory_path)
         .filter(status=flag.MATCHED_TO_PURLDB_RESOURCE)
         .exclude(path__regex=rf"^{directory_path}.*-extract\/.*$")
     )

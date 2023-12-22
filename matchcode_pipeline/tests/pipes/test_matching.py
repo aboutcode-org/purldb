@@ -1,20 +1,22 @@
 from pathlib import Path
 import io
+import uuid
+
 from django.test import TestCase
-from scanpipe.pipes import flag
-from scanpipe.models import CodebaseResource
+
 from scanpipe.models import Project
+from scanpipe.pipes import flag
 from scanpipe.tests import make_resource_directory
 from scanpipe.tests import make_resource_file
 from scanpipe.tests import package_data1
 from scanpipe.tests import package_data2
-from matchcode_pipeline.pipes import matching
-import uuid
-from packagedb.models import Package
+
 from matchcode.models import ApproximateDirectoryContentIndex
+from matchcode_pipeline.pipes import matching
+from packagedb.models import Package
 from scanpipe import pipes
 from scanpipe.pipes.input import copy_inputs
-from scanpipe.pipes.input import copy_input
+
 
 class MatchingPipesTest(TestCase):
     data_location = Path(__file__).parent.parent / "data"
@@ -74,12 +76,12 @@ class MatchingPipesTest(TestCase):
         buffer = io.StringIO()
         matching.match_purldb_resources(
             self.project1,
-            extensions=[".jar"],
             matcher_func=matching.match_purldb_package,
+            archives_only=True,
             logger=buffer.write,
         )
         expected = (
-            "Matching 1 .jar resources in PurlDB, using SHA1"
+            "Matching 1 resources in PurlDB, using SHA1"
             "3 resources matched in PurlDB using 1 SHA1s"
         )
         self.assertEqual(expected, buffer.getvalue())
@@ -108,7 +110,7 @@ class MatchingPipesTest(TestCase):
         )
 
         expected = (
-            "Matching 1 directory from to/ in PurlDB" "1 directory matched in PurlDB"
+            "Matching 1 directory against PurlDB" "1 directory matched in PurlDB"
         )
         self.assertEqual(expected, buffer.getvalue())
 
@@ -120,43 +122,13 @@ class MatchingPipesTest(TestCase):
             self.assertEqual("matched-to-purldb-directory", resource.status)
             self.assertEqual(package, resource.discovered_packages.get())
 
-    def test_match_resources_with_no_java_source(self):
-        to_dir = (
-            self.project1.codebase_path / "to/project.tar.zst-extract/osgi/marketplace/"
-            "resources/node_modules/foo-bar"
-        )
-        to_input_location = self.data_location / "d2d/find_java_packages/Foo.java"
-        to_dir.mkdir(parents=True)
-        copy_input(to_input_location, to_dir)
 
-        pipes.collect_and_create_codebase_resources(self.project1)
-
-        foo_java = self.project1.codebaseresources.get(
-            path=(
-                "to/project.tar.zst-extract/osgi/marketplace/"
-                "resources/node_modules/foo-bar/Foo.java"
-            )
-        )
-
-        foo_java.update(status=flag.NO_JAVA_SOURCE)
-
-        buffer = io.StringIO()
-        matching.match_resources_with_no_java_source(self.project1, logger=buffer.write)
-        foo_java.refresh_from_db()
-
-        expected = (
-            f"Mapping 1 to/ resources with {flag.NO_JAVA_SOURCE} "
-            "status in PurlDB using SHA1"
-        )
-        self.assertIn(expected, buffer.getvalue())
-        self.assertEqual(flag.REQUIRES_REVIEW, foo_java.status)
-
-    def test_scanpipe_pipes_d2d_match_purldb_resources_post_process(self):
+    def test_matchcode_pipeline_pipes_matching_match_purldb_resources_post_process(self):
         to_map = self.data_location / "d2d-javascript" / "to" / "main.js.map"
         to_mini = self.data_location / "d2d-javascript" / "to" / "main.js"
         to_dir = (
             self.project1.codebase_path
-            / "to/project.tar.zst/modules/apps/adaptive-media/"
+            / "project.tar.zst/modules/apps/adaptive-media/"
             "adaptive-media-web-extract/src/main/resources/META-INF/resources/"
             "adaptive_media/js"
         )
@@ -165,17 +137,17 @@ class MatchingPipesTest(TestCase):
 
         pipes.collect_and_create_codebase_resources(self.project1)
 
-        to_resources = self.project1.codebaseresources.filter(
+        resources = self.project1.codebaseresources.filter(
             path__startswith=(
-                "to/project.tar.zst/modules/apps/adaptive-media/"
+                "project.tar.zst/modules/apps/adaptive-media/"
                 "adaptive-media-web-extract/src/main/resources/META-INF/resources/"
                 "adaptive_media/js/main.js"
             )
         )
 
-        to_mini_resource = self.project1.codebaseresources.filter(
+        mini_resource = self.project1.codebaseresources.filter(
             path=(
-                "to/project.tar.zst/modules/apps/adaptive-media/"
+                "project.tar.zst/modules/apps/adaptive-media/"
                 "adaptive-media-web-extract/src/main/resources/META-INF/resources/"
                 "adaptive_media/js/main.js"
             )
@@ -185,7 +157,7 @@ class MatchingPipesTest(TestCase):
         dummy_package_data1["uuid"] = uuid.uuid4()
         package1, _ = matching.create_package_from_purldb_data(
             self.project1,
-            to_resources,
+            resources,
             dummy_package_data1,
             flag.MATCHED_TO_PURLDB_RESOURCE,
         )
@@ -194,7 +166,7 @@ class MatchingPipesTest(TestCase):
         dummy_package_data2["uuid"] = uuid.uuid4()
         package2, _ = matching.create_package_from_purldb_data(
             self.project1,
-            to_mini_resource,
+            mini_resource,
             dummy_package_data2,
             flag.MATCHED_TO_PURLDB_RESOURCE,
         )
