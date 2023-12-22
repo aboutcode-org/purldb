@@ -165,10 +165,13 @@ def match_purldb_resource(
     return match_count
 
 
-def match_purldb_directory(project, resource):
+def match_purldb_directory(project, resource, exact_directory_match=False):
     """Match a single directory resource in the PurlDB."""
     fingerprint = resource.extra_data.get("directory_content", "")
-    results = ApproximateDirectoryContentIndex.match(directory_fingerprint=fingerprint)
+    results = ApproximateDirectoryContentIndex.match(
+        directory_fingerprint=fingerprint,
+        exact_directory_match=exact_directory_match
+    )
     for result in results:
         package_data = result.package.to_dict()
         return create_package_from_purldb_data(
@@ -280,7 +283,7 @@ def _match_purldb_resources(
     )
 
 
-def match_purldb_directories(project, logger=None):
+def match_purldb_directories(project, exact_directory_match=False, logger=None):
     """Match directory CodebaseResources from `project` against the PurlDB."""
     # If we are able to get match results for a directory fingerprint, then that
     # means every resource and directory under that directory is part of a
@@ -307,7 +310,11 @@ def match_purldb_directories(project, logger=None):
     for directory in progress.iter(directory_iterator):
         directory.refresh_from_db()
         if directory.status != flag.MATCHED_TO_PURLDB_DIRECTORY:
-            match_purldb_directory(project, directory)
+            match_purldb_directory(
+                project,
+                directory,
+                exact_directory_match
+            )
 
     matched_count = (
         project.codebaseresources.directories()

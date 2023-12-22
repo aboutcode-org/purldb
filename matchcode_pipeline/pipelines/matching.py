@@ -51,8 +51,9 @@ class Matching(ScanCodebase, LoadInventory):
             cls.match_archives_to_purldb_packages,
             cls.match_archives_to_purldb_resources,
             cls.fingerprint_codebase_directories,
-            cls.match_directories_to_purldb,
+            cls.match_directories_exact_to_purldb,
             cls.match_resources_to_purldb,
+            cls.match_directories_to_purldb,
             cls.match_purldb_resources_post_process,
             cls.remove_packages_without_resources,
         )
@@ -83,6 +84,14 @@ class Matching(ScanCodebase, LoadInventory):
         """Match selected directories in PurlDB."""
         matching.match_purldb_directories(
             project=self.project,
+            logger=self.log,
+        )
+
+    def match_directories_exact_to_purldb(self):
+        """Match selected directories in PurlDB."""
+        matching.match_purldb_directories(
+            project=self.project,
+            exact_directory_match=True,
             logger=self.log,
         )
 
