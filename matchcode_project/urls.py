@@ -17,11 +17,11 @@ from scanpipe.api.views import RunViewSet
 
 
 api_router = routers.DefaultRouter()
-api_router.register('matching', MatchingViewSet)
-api_router.register('runs', RunViewSet)
+api_router.register('matching', MatchingViewSet, basename='matching')
+api_router.register('runs', RunViewSet, basename='runs')
 
 urlpatterns = [
     path('api/', include(api_router.urls)),
-    path("", include("scanpipe.urls")),
+    path('', include('scanpipe.urls')),
     path('', RedirectView.as_view(url='api/')),
 ]
