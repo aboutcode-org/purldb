@@ -38,11 +38,18 @@ def validate(purls, output, file):
     """
     if (purls and file) or not (purls or file):
         raise click.UsageError("Use either purls or file but not both.")
-    api_query = "https://public.purldb.io/api/validate/"
-    validated_purls = []
+
     if file:
         purls = file.read().splitlines(False)
 
+    validated_purls = validate_purls(purls)
+
+    json.dump(validated_purls, output, indent=4)
+
+
+def validate_purls(purls):
+    api_query = "https://public.purldb.io/api/validate/"
+    validated_purls = []
     for purl in purls:
         purl = purl.strip()
         if not purl:
@@ -52,7 +59,7 @@ def validate(purls, output, file):
         results = response.json()
         validated_purls.append(results)
 
-    json.dump(validated_purls, output, indent=4)
+    return validated_purls
 
 
 if __name__ == "__main__":
