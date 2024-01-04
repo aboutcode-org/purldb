@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from commoncode import cliutils
 from django.core.management.base import BaseCommand
 from fetchcode.package_versions import SUPPORTED_ECOSYSTEMS
 from fetchcode.package_versions import versions
@@ -48,42 +49,47 @@ class Command(BaseCommand):
                 type=purl.type, namespace=purl.namespace, name=purl.name
             )
 
-        for package in packages_qs:
-            version_class = VERSION_CLASS_BY_PACKAGE_TYPE.get(package.type)
-            latest_local = package.get_latest_version()
-            latest_local_version = version_class(latest_local.version)
-            all_versions = versions(str(package))
-            sorted_versions = sorted(
-                [version_class(version.value) for version in all_versions]
-            )
-
-            if latest_local_version not in sorted_versions:
-                self.stdout.write(
-                    f"NOTICE: {latest_local} not found upstream.",
-                    self.style.NOTICE,
+        with cliutils.progressmanager(
+            packages_qs,
+            show_eta=True,
+            show_percent=True,
+        ) as packages:
+            for package in packages:
+                version_class = VERSION_CLASS_BY_PACKAGE_TYPE.get(package.type)
+                latest_local = package.get_latest_version()
+                latest_local_version = version_class(latest_local.version)
+                all_versions = versions(str(package))
+                sorted_versions = sorted(
+                    [version_class(version.value) for version in all_versions]
                 )
 
-            new_versions = [v for v in sorted_versions if v > latest_local_version]
-            for version in new_versions:
-                purl = str(
-                    PackageURL(
-                        type=package.type,
-                        namespace=package.namespace,
-                        name=package.name,
-                        version=str(version),
+                if latest_local_version not in sorted_versions:
+                    self.stdout.write(
+                        f"\nNOTICE: {latest_local} not found upstream.",
+                        self.style.NOTICE,
                     )
-                )
 
-                priority_resource_uri = PriorityResourceURI.objects.insert(purl)
+                new_versions = [v for v in sorted_versions if v > latest_local_version]
+                for version in new_versions:
+                    purl = str(
+                        PackageURL(
+                            type=package.type,
+                            namespace=package.namespace,
+                            name=package.name,
+                            version=str(version),
+                        )
+                    )
 
-                if verbosity > 1:
-                    if priority_resource_uri:
-                        self.stdout.write(
-                            f"INFO: {purl} queued for indexing",
-                            self.style.SUCCESS,
-                        )
-                    else:
-                        self.stdout.write(
-                            f"INFO: {purl} already in queue for indexing",
-                            self.style.WARNING,
-                        )
+                    priority_resource_uri = PriorityResourceURI.objects.insert(purl)
+
+                    if verbosity > 1:
+                        if priority_resource_uri:
+                            self.stdout.write(
+                                f"\nINFO: {purl} queued for indexing",
+                                self.style.SUCCESS,
+                            )
+                        else:
+                            self.stdout.write(
+                                f"\nINFO: {purl} already in queue for indexing",
+                                self.style.WARNING,
+                            )
