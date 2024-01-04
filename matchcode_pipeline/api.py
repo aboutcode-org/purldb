@@ -14,16 +14,44 @@ from rest_framework import serializers
 from rest_framework import viewsets
 from rest_framework.decorators import action
 
-from scanpipe.api.serializers import RunSerializer
+from scanpipe.api import ExcludeFromListViewMixin
+from scanpipe.api.serializers import SerializerExcludeFieldsMixin
 from scanpipe.api.serializers import StrListField
 from scanpipe.api.views import ProjectFilterSet
 from scanpipe.models import Project
+from scanpipe.models import Run
 from scanpipe.pipes import count_group_by
 from scanpipe.pipes.fetch import fetch_urls
 from scanpipe.views import project_results_json_response
 
 
-class MatchingSerializer(serializers.ModelSerializer):
+class RunSerializer(SerializerExcludeFieldsMixin, serializers.ModelSerializer):
+    matching_project = serializers.HyperlinkedRelatedField(
+        view_name="matching-detail", read_only=True
+    )
+
+    class Meta:
+        model = Run
+        fields = [
+            "url",
+            "pipeline_name",
+            "status",
+            "description",
+            "matching_project",
+            "uuid",
+            "created_date",
+            "scancodeio_version",
+            "task_id",
+            "task_start_date",
+            "task_end_date",
+            "task_exitcode",
+            "task_output",
+            "log",
+            "execution_time",
+        ]
+
+
+class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
     upload_file = serializers.FileField(write_only=True, required=False)
     input_urls = StrListField(
         write_only=True,
@@ -58,6 +86,22 @@ class MatchingSerializer(serializers.ModelSerializer):
             "discovered_dependencies_summary",
             "codebase_relations_summary",
         )
+        exclude_from_list_view = [
+            "resource_count",
+            "package_count",
+            "dependency_count",
+            "relation_count",
+            "codebase_resources_summary",
+            "discovered_packages_summary",
+            "discovered_dependencies_summary",
+            "codebase_relations_summary",
+        ]
+        extra_kwargs = {
+            'url': {
+                'view_name': 'matching-detail',
+                'lookup_field': 'pk',
+            },
+        }
 
     def get_codebase_resources_summary(self, project):
         queryset = project.codebaseresources.all()

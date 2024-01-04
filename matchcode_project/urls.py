@@ -18,7 +18,7 @@ from scanpipe.api.views import RunViewSet
 
 api_router = routers.DefaultRouter()
 api_router.register('matching', MatchingViewSet, basename='matching')
-api_router.register('runs', RunViewSet, basename='runs')
+api_router.register('runs', RunViewSet)
 
 urlpatterns = [
     path('api/', include(api_router.urls)),

@@ -1,14 +1,19 @@
 from pathlib import Path
-from scanpipe.tests import dependency_data1
-from scanpipe.tests import package_data1
+
+from django.contrib.auth.models import User
 from django.test import TransactionTestCase
-from scanpipe.models import CodebaseRelation
-from scanpipe.models import DiscoveredDependency
-from scanpipe.models import Project
-from scanpipe.models import CodebaseResource
 from django.urls import reverse
 from rest_framework.test import APIClient
-from django.contrib.auth.models import User
+
+from django.contrib.auth import get_user_model
+
+from packagedb.models import ApiUser
+from scanpipe.models import CodebaseRelation
+from scanpipe.models import CodebaseResource
+from scanpipe.models import DiscoveredDependency
+from scanpipe.models import Project
+from scanpipe.tests import dependency_data1
+from scanpipe.tests import package_data1
 
 
 class MatchCodePipelineAPITest(TransactionTestCase):
@@ -52,3 +57,4 @@ class MatchCodePipelineAPITest(TransactionTestCase):
         self.assertNotContains(response, "resource_count")
         self.assertNotContains(response, "package_count")
         self.assertNotContains(response, "dependency_count")
+
