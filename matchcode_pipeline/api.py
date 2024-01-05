@@ -18,6 +18,7 @@ from scanpipe.api import ExcludeFromListViewMixin
 from scanpipe.api.serializers import SerializerExcludeFieldsMixin
 from scanpipe.api.serializers import StrListField
 from scanpipe.api.views import ProjectFilterSet
+from scanpipe.api.views import RunViewSet
 from scanpipe.models import Project
 from scanpipe.models import Run
 from scanpipe.pipes import count_group_by
@@ -26,7 +27,7 @@ from scanpipe.views import project_results_json_response
 
 
 class RunSerializer(SerializerExcludeFieldsMixin, serializers.ModelSerializer):
-    matching_project = serializers.HyperlinkedRelatedField(
+    project = serializers.HyperlinkedRelatedField(
         view_name="matching-detail", read_only=True
     )
 
@@ -37,7 +38,7 @@ class RunSerializer(SerializerExcludeFieldsMixin, serializers.ModelSerializer):
             "pipeline_name",
             "status",
             "description",
-            "matching_project",
+            "project",
             "uuid",
             "created_date",
             "scancodeio_version",
@@ -49,6 +50,10 @@ class RunSerializer(SerializerExcludeFieldsMixin, serializers.ModelSerializer):
             "log",
             "execution_time",
         ]
+
+
+class RunViewSet(RunViewSet):
+    serializer_class = RunSerializer
 
 
 class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):

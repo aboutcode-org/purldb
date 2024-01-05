@@ -13,7 +13,7 @@ from django.views.generic import RedirectView
 from rest_framework import routers
 
 from matchcode_pipeline.api import MatchingViewSet
-from scanpipe.api.views import RunViewSet
+from matchcode_pipeline.api import RunViewSet
 
 
 api_router = routers.DefaultRouter()
