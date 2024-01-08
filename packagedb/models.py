@@ -1219,6 +1219,143 @@ def make_relationship(
         relationship=relationship,
     )
 
+class UpdateMixin:
+    """
+    Provide a ``update()`` method to trigger a save() on the object with the
+    ``update_fields`` automatically set to force a SQL UPDATE.
+    """
+
+    def update(self, **kwargs):
+        """
+        Update this resource with the provided ``kwargs`` values.
+        The full ``save()`` process will be triggered, including signals, and the
+        ``update_fields`` is automatically set.
+        """
+        for field_name, value in kwargs.items():
+            setattr(self, field_name, value)
+
+        self.save(update_fields=list(kwargs.keys()))
+
+
+class PackageWatch(models.Model, UpdateMixin):
+    """
+    Model representing a watch on a package to monitor for new versions.
+    """
+
+    DEPTH_CHOICES = (
+        ("version", "Version"),
+        ("metadata", "Metadata"),
+        ("scan", "Scan"),
+    )
+
+    FREQUENCY_CHOICES = (
+        ("daily", "Daily"),
+        ("weekly", "Weekly"),
+        ("monthly", "Monthly"),
+    )
+
+    package_url = models.CharField(
+        max_length=2048,
+        unique=True,
+        null=False,
+        blank=False,
+        db_index=True,
+        help_text=_("PackageURL to watch."),
+    )
+
+    type = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_("A short code to identify the type of this package."),
+    )
+
+    namespace = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_(
+            "Package name prefix, such as Maven groupid, Docker image owner, "
+            "GitHub user or organization, etc."
+        ),
+    )
+
+    name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_("Name of the package."),
+    )
+
+    depth = models.CharField(
+        max_length=20,
+        choices=DEPTH_CHOICES,
+        default="version",
+        help_text=_("Select the depth of data collection."),
+    )
+
+    frequency = models.CharField(
+        max_length=20,
+        choices=FREQUENCY_CHOICES,
+        default="daily",
+        db_index=True,
+        help_text=_("Select how often the package should be watched."),
+    )
+
+    creation_date = models.DateTimeField(
+        auto_now_add=True,
+        help_text=_("Timestamp indicating when this watch object was created."),
+    )
+
+    last_watch_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_("Timestamp indicating when this watch object was last processed"),
+    )
+
+    watch_error = models.TextField(
+        null=True,
+        blank=True,
+        help_text=_("Watch error messages. When present this means the watch failed."),
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            try:
+                purl = PackageURL.from_string(self.package_url)
+            except ValueError as e:
+                raise exceptions.ValidationError(
+                    f"Error creating PackageWatch object: {e}"
+                )
+
+            self.package_url = PackageURL(
+                type=purl.type, namespace=purl.namespace, name=purl.name
+            )
+            self.type = purl.type
+            self.name = purl.name
+            self.namespace = purl.namespace
+        elif self.pk is not None:
+            existing = PackageWatch.objects.get(pk=self.pk)
+            if (
+                existing.package_url != self.package_url
+                or existing.name != self.name
+                or existing.type != self.type
+                or existing.namespace != self.namespace
+            ):
+                raise ValueError(
+                    "package_url, type, name, and namespace cannot be changed."
+                )
+
+        super(PackageWatch, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.package_url}"
+
+
 
 class PackageSet(models.Model):
     """
