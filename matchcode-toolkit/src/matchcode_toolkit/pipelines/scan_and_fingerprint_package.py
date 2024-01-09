@@ -26,8 +26,8 @@ from scanpipe.pipes import matchcode
 
 class ScanAndFingerprintPackage(ScanPackage):
     """
-    Scan a single package archive with ScanCode-toolkit, then calculate the
-    directory fingerprints of the codebase.
+    Scan a single package file or package archive with ScanCode-toolkit, then
+    calculate the directory fingerprints of the codebase.
 
     The output is a summary of the scan results in JSON format.
     """
@@ -35,10 +35,10 @@ class ScanAndFingerprintPackage(ScanPackage):
     @classmethod
     def steps(cls):
         return (
-            cls.get_package_archive_input,
-            cls.collect_archive_information,
-            cls.extract_archive_to_codebase_directory,
-            cls.run_scancode,
+            cls.get_package_input,
+            cls.collect_input_information,
+            cls.extract_input_to_codebase_directory,
+            cls.run_scan,
             cls.load_inventory_from_toolkit_scan,
             cls.fingerprint_codebase,
             cls.make_summary_from_scan_results,

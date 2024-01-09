@@ -38,7 +38,7 @@ from packagedb.package_managers import (VERSION_API_CLASSES_BY_PACKAGE_TYPE,
                                         get_version_fetcher)
 from packagedb.serializers import (DependentPackageSerializer,
                                    PackageAPISerializer,
-                                   PackageSetAPISerializer, PartySerializer,
+                                   PackageSetAPISerializer, PartySerializer, PurlValidateResponseSerializer, PurlValidateSerializer,
                                    ResourceAPISerializer)
 from packagedb.throttling import StaffUserRateThrottle
 
@@ -694,15 +694,13 @@ class PurlValidateViewSet(viewsets.ViewSet):
     Take a `purl` and check whether it's valid PackageURL or not.  
     Optionally set `check_existence` to true to check whether the package exists in real world. 
     
-    **Note:** As of now `check_existence` only supports `apache`, `composer`, `deb`, `gem`, 
-    `github`, `golang`, `maven`, `npm`, `nuget`and `pypi` ecosystems.
+    **Note:** As of now `check_existence` only supports `cargo`, `composer`, `deb`, 
+    `gem`, `golang`, `hex`, `maven`, `npm`, `nuget` and `pypi` ecosystems.
 
-    **Input example:**
-
-            {
-                "purl": "pkg:npm/foobar@12.3.1",
-                "check_existence": true,
-            }
+    **Example request:**
+            ```doc
+            GET /api/validate/?purl=pkg:npm/foobar@12.3.1&check_existence=false
+            ```
     
     Response contains:
 
@@ -711,12 +709,20 @@ class PurlValidateViewSet(viewsets.ViewSet):
     - exists
         - True, if input PURL exists in real world and `check_existence` flag is enabled.
     """
+    serializer_class = PurlValidateSerializer
+    
     def get_view_name(self):
         return 'Validate PURL'
 
     def list(self, request):
-        purl = request.query_params.get("purl")
-        check_existence = request.query_params.get("check_existence") or False
+        serializer = self.serializer_class(data=request.query_params)
+
+        if not serializer.is_valid():
+            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        validated_data = serializer.validated_data
+        purl = validated_data.get('purl')
+        check_existence = validated_data.get('check_existence', False)
 
         message_valid = "The provided PackageURL is valid."
         message_not_valid = "The provided PackageURL is not valid."
@@ -724,64 +730,65 @@ class PurlValidateViewSet(viewsets.ViewSet):
             "The provided Package URL is valid, and the package exists in the upstream repo."
         )
         message_valid_but_does_not_exist = (
-            "The provided PackageURL is valid but does not exist in the upstream repo."
+            "The provided PackageURL is valid, but does not exist in the upstream repo."
         )
-        message_error_no_purl = (
-            "PackageURL (purl) is required. Please provide a PackageURL in the request."
+        message_valid_but_package_type_not_supported = (
+            "The provided PackageURL is valid, but `check_existence` is not supported for this package type."
         )
 
-        if not purl:
-            return Response(
-                {
-                    "error": "Bad Request",
-                    "message": message_error_no_purl,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        response = {}
+        response['exists'] = None
+        response['purl'] = purl
+        response['valid'] = False
+        response['message'] = message_not_valid
 
         # validate purl
         try:
             package_url = PackageURL.from_string(purl)
         except ValueError:
-            return Response(
-                {
-                    "valid": False,
-                    "message": message_not_valid,
-                    "purl": purl,
-                }
-            )
+            serializer = PurlValidateResponseSerializer(response, context={'request': request})
+            return Response(serializer.data)
 
-        exists = None
-        message = message_valid
+
+        response['valid'] = True
+        response["message"] = message_valid
+        unsupported_ecosystem = False
         if check_existence:
-            exists = False
+            response['exists'] = False
             lookups = purl_to_lookups(purl)
             packages = Package.objects.filter(**lookups)
             if packages.exists():
-                exists = True
+                response['exists'] = True
             else:
                 versionless_purl = PackageURL(
                     type=package_url.type,
                     namespace=package_url.namespace,
                     name=package_url.name,
                 )
-                all_versions = get_all_versions_plain(versionless_purl)
-                if (all_versions and not package_url.version) or (
-                    package_url.version in all_versions
+                if (
+                    package_url.type in VERSION_API_CLASSES_BY_PACKAGE_TYPE
+                    and package_url.type in VERSION_CLASS_BY_PACKAGE_TYPE
                 ):
-                    # True, if requested purl has no version and any version of package exists upstream.
-                    # True, if requested purl.version exists upstream.
-                    exists = True
-            message = message_valid_and_exists if exists else message_valid_but_does_not_exist
-
-        return Response(
-            {
-                "valid": True,
-                "exists": exists,
-                "message": message,
-                "purl": purl,
-            }
-        )
+                    all_versions = get_all_versions_plain(versionless_purl)
+                    if all_versions and (not package_url.version or (
+                        package_url.version in all_versions)
+                    ):
+                        # True, if requested purl has no version and any version of package exists upstream.
+                        # True, if requested purl.version exists upstream.
+                        response['exists'] = True
+                else:
+                    unsupported_ecosystem = True
+            
+            if response['exists']:
+                response["message"] = message_valid_and_exists
+            elif unsupported_ecosystem:
+                response['exists'] = None
+                response["message"] = message_valid_but_package_type_not_supported
+            else:
+                response["message"] =message_valid_but_does_not_exist
+        
+        serializer = PurlValidateResponseSerializer(response, context={'request': request})
+        return Response(serializer.data)
 
 
 def get_resolved_purls(packages, supported_ecosystems):

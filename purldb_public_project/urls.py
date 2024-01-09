@@ -15,12 +15,15 @@ from django.views.generic.base import TemplateView
 from rest_framework import routers
 
 from packagedb.api import PackagePublicViewSet
+from packagedb.api import PurlValidateViewSet
 from packagedb.api import ResourceViewSet
 
 
 api_router = routers.DefaultRouter()
 api_router.register('packages', PackagePublicViewSet)
 api_router.register('resources', ResourceViewSet)
+api_router.register('validate', PurlValidateViewSet, 'validate')
+
 
 urlpatterns = [
     path(
