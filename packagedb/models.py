@@ -14,15 +14,17 @@ import natsort
 import sys
 import uuid
 
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
 from django.core import exceptions
 from django.core.paginator import Paginator
 from django.db import models
 from django.db import transaction
+from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from rest_framework.authtoken.models import Token
 
 from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
@@ -30,7 +32,6 @@ from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
-from rest_framework.authtoken.models import Token
 
 
 TRACE = False
@@ -1243,9 +1244,6 @@ class PackageSet(models.Model):
         )
 
 
-UserModel = get_user_model()
-
-
 class ApiUserManager(UserManager):
     def create_api_user(self, username, first_name="", last_name="", **extra_fields):
         """
@@ -1287,12 +1285,8 @@ class ApiUserManager(UserManager):
             raise exceptions.ValidationError(f"Error: This email already exists: {email}")
 
 
-class ApiUser(UserModel):
-    """
-    A User proxy model to facilitate simplified admin API user creation.
-    """
-
-    objects = ApiUserManager()
-
-    class Meta:
-        proxy = True
+@receiver(models.signals.post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    """Create an API key token on user creation, using the signal system."""
+    if created:
+        Token.objects.create(user_id=instance.pk)

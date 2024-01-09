@@ -15,6 +15,8 @@ class PackageDBRouter(object):
         'minecode',
         'matchcode',
         'packagedb',
+        'auth',
+        'authtoken',
     ]
 
     def db_for_read(self, model, **hints):
