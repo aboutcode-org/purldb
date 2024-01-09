@@ -43,17 +43,17 @@ def validate(purls, output, file):
     if file:
         purls = file.read().splitlines(False)
 
-    api_query = "https://public.purldb.io/api/validate/"
+    # api_query = "https://public.purldb.io/api/validate/"
 
-    # validated_purls = validate_purls(purls)
-    validated_purls = validate_purls(purls, api_query)
+    validated_purls = validate_purls(purls)
+    # validated_purls = validate_purls(purls, api_query)
 
     json.dump(validated_purls, output, indent=4)
 
 
-# def validate_purls(purls):
-def validate_purls(purls, api_query):
-    # api_query = "https://public.purldb.io/api/validate/"
+def validate_purls(purls):
+    # def validate_purls(purls, api_query):
+    api_query = "https://public.purldb.io/api/validate/"
     validated_purls = []
     for purl in purls:
         purl = purl.strip()
