@@ -1254,6 +1254,16 @@ class PackageWatch(models.Model, UpdateMixin):
         ("monthly", "Monthly"),
     )
 
+    uuid = models.UUIDField(
+        verbose_name=_("UUID"),
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+        help_text=_(
+            'The identifier of the PackageWatch.'
+        )
+    )
+
     package_url = models.CharField(
         max_length=2048,
         unique=True,
