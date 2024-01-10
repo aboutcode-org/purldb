@@ -9,7 +9,12 @@
 
 from django.http import HttpRequest
 from django.urls import reverse_lazy
-
+from packagedb.models import DependentPackage
+from packagedb.models import Package
+from packagedb.models import PackageSet
+from packagedb.models import PackageWatch
+from packagedb.models import Party
+from packagedb.models import Resource
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import HyperlinkedIdentityField
@@ -17,14 +22,8 @@ from rest_framework.serializers import HyperlinkedModelSerializer
 from rest_framework.serializers import HyperlinkedRelatedField
 from rest_framework.serializers import JSONField
 from rest_framework.serializers import ModelSerializer
-from rest_framework.serializers import SerializerMethodField
 from rest_framework.serializers import Serializer
-
-from packagedb.models import DependentPackage
-from packagedb.models import Package
-from packagedb.models import PackageSet
-from packagedb.models import Party
-from packagedb.models import Resource
+from rest_framework.serializers import SerializerMethodField
 
 
 class ResourceAPISerializer(HyperlinkedModelSerializer):
@@ -331,6 +330,35 @@ class PackageSetAPISerializer(ModelSerializer):
             'packages',
         ]
 
+class PackageWatchAPISerializer(HyperlinkedModelSerializer):
+    url = HyperlinkedIdentityField(
+        view_name='api:packagewatch-detail',
+        lookup_field='uuid'
+    )
+    class Meta:
+        model = PackageWatch
+        fields = [
+            'url',
+            'package_url',
+            'type',
+            'namespace',
+            'name',
+            'depth',
+            'frequency',
+            'creation_date',
+            'last_watch_date',
+            'watch_error',
+        ]
+
+class PackageWatchCreateSerializer(ModelSerializer):
+    class Meta:
+        model = PackageWatch
+        fields = ['package_url', 'depth', 'frequency']
+
+class PackageWatchUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = PackageWatch
+        fields = ['depth', 'frequency']
 
 class PurlValidateResponseSerializer(Serializer):
     valid = BooleanField()

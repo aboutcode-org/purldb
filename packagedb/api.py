@@ -11,39 +11,70 @@ import logging
 
 import django_filters
 from django.core.exceptions import ValidationError
-from django.db.models import OuterRef, Q, Subquery
-from django_filters.filters import Filter, OrderingFilter
+from django.db.models import OuterRef
+from django.db.models import Q
+from django.db.models import Subquery
+from django_filters.filters import Filter
+from django_filters.filters import OrderingFilter
 from django_filters.rest_framework import FilterSet
+from matchcode.api import MultipleCharFilter
+from matchcode.api import MultipleCharInFilter
+
+from minecode import priority_router
+# UnusedImport here!
+# But importing the mappers and visitors module triggers routes registration
+from minecode import visitors  # NOQA
+from minecode.models import PriorityResourceURI
+from minecode.models import ScannableURI
+from minecode.route import NoRouteAvailable
+from packagedb.filters import PackageSearchFilter
+from packagedb.models import Package
+from packagedb.models import PackageContentType
+from packagedb.models import PackageSet
+from packagedb.models import PackageWatch
+from packagedb.models import Resource
+from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
+from packagedb.package_managers import get_api_package_name
+from packagedb.package_managers import get_version_fetcher
+from packagedb.serializers import DependentPackageSerializer
+from packagedb.serializers import PackageAPISerializer
+from packagedb.serializers import PackageSetAPISerializer
+from packagedb.serializers import PackageWatchAPISerializer
+from packagedb.serializers import PackageWatchCreateSerializer
+from packagedb.serializers import PackageWatchUpdateSerializer
+from packagedb.serializers import PartySerializer
+from packagedb.serializers import PurlValidateResponseSerializer
+from packagedb.serializers import PurlValidateSerializer
+from packagedb.serializers import ResourceAPISerializer
+from packagedb.throttling import StaffUserRateThrottle
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
-from rest_framework import status, viewsets
+from rest_framework import mixins
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from univers.version_constraint import InvalidConstraintsError
-from univers.version_range import RANGE_CLASS_BY_SCHEMES, VersionRange
+from univers.version_range import RANGE_CLASS_BY_SCHEMES
+from univers.version_range import VersionRange
 from univers.versions import InvalidVersion
 
-from matchcode.api import MultipleCharFilter, MultipleCharInFilter
-# UnusedImport here!
-# But importing the mappers and visitors module triggers routes registration
-from minecode import visitors  # NOQA
-from minecode import priority_router
-from minecode.models import PriorityResourceURI, ScannableURI
-from minecode.route import NoRouteAvailable
-from packagedb.filters import PackageSearchFilter
-from packagedb.models import Package, PackageContentType, PackageSet, Resource
-from packagedb.package_managers import (VERSION_API_CLASSES_BY_PACKAGE_TYPE,
-                                        get_api_package_name,
-                                        get_version_fetcher)
-from packagedb.serializers import (DependentPackageSerializer,
-                                   PackageAPISerializer,
-                                   PackageSetAPISerializer, PartySerializer, PurlValidateResponseSerializer, PurlValidateSerializer,
-                                   ResourceAPISerializer)
-from packagedb.throttling import StaffUserRateThrottle
-
-
 logger = logging.getLogger(__name__)
+
+
+class CreateListRetrieveUpdateViewSet(mixins.CreateModelMixin,
+                                mixins.ListModelMixin,
+                                mixins.RetrieveModelMixin,
+                                mixins.UpdateModelMixin,
+                                viewsets.GenericViewSet):
+    """
+    A viewset that provides `retrieve`, `create`, `update` and `list` actions.
+
+    To use it, override the class and set the `.queryset` and
+    `.serializer_class` attributes.
+    """
+    pass
 
 class PackageResourcePurlFilter(Filter):
     def filter(self, qs, value):
@@ -516,6 +547,21 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PackageSet.objects.prefetch_related('packages')
     serializer_class = PackageSetAPISerializer
 
+
+class PackageWatchViewSet(CreateListRetrieveUpdateViewSet):
+    """
+    
+    """
+    queryset = PackageWatch.objects.get_queryset().order_by('-id')
+    serializer_class = PackageWatchAPISerializer
+    lookup_field = 'uuid'
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return PackageWatchCreateSerializer
+        elif self.action == 'update':
+            return PackageWatchUpdateSerializer
+        return super().get_serializer_class()
 
 class CollectViewSet(viewsets.ViewSet):
     """
