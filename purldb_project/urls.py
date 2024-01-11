@@ -40,7 +40,7 @@ api_router.register('cditems', CDitemViewSet, 'cditems')
 api_router.register('on_demand_queue', PriorityResourceURIViewSet)
 api_router.register('validate', PurlValidateViewSet, 'validate')
 api_router.register('collect', CollectViewSet, 'collect')
-api_router.register('package_watch',PackageWatchViewSet)
+api_router.register('watch',PackageWatchViewSet)
 
 
 urlpatterns = [

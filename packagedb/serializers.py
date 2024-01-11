@@ -340,25 +340,30 @@ class PackageWatchAPISerializer(HyperlinkedModelSerializer):
         fields = [
             'url',
             'package_url',
-            'type',
-            'namespace',
-            'name',
+            'is_active',
             'depth',
-            'frequency',
+            'watch_interval',
             'creation_date',
             'last_watch_date',
             'watch_error',
         ]
 
+
 class PackageWatchCreateSerializer(ModelSerializer):
     class Meta:
         model = PackageWatch
-        fields = ['package_url', 'depth', 'frequency']
+        fields = ["package_url", "depth", "watch_interval", "is_active"]
+        extra_kwargs = {
+            field: {"initial": PackageWatch._meta.get_field(field).get_default()}
+            for field in ["depth", "watch_interval", "is_active"]
+        }
+
 
 class PackageWatchUpdateSerializer(ModelSerializer):
     class Meta:
         model = PackageWatch
-        fields = ['depth', 'frequency']
+        fields = ['depth', 'watch_interval', 'is_active']
+
 
 class PurlValidateResponseSerializer(Serializer):
     valid = BooleanField()

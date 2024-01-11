@@ -63,18 +63,20 @@ from univers.versions import InvalidVersion
 logger = logging.getLogger(__name__)
 
 
-class CreateListRetrieveUpdateViewSet(mixins.CreateModelMixin,
-                                mixins.ListModelMixin,
-                                mixins.RetrieveModelMixin,
-                                mixins.UpdateModelMixin,
-                                viewsets.GenericViewSet):
+class CreateListRetrieveUpdateViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
     """
-    A viewset that provides `retrieve`, `create`, `update` and `list` actions.
-
+    A viewset that provides `create`, `list, `retrieve`, and `update` actions.
     To use it, override the class and set the `.queryset` and
     `.serializer_class` attributes.
     """
     pass
+
 
 class PackageResourcePurlFilter(Filter):
     def filter(self, qs, value):
@@ -549,9 +551,6 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class PackageWatchViewSet(CreateListRetrieveUpdateViewSet):
-    """
-    
-    """
     queryset = PackageWatch.objects.get_queryset().order_by('-id')
     serializer_class = PackageWatchAPISerializer
     lookup_field = 'uuid'
@@ -562,6 +561,7 @@ class PackageWatchViewSet(CreateListRetrieveUpdateViewSet):
         elif self.action == 'update':
             return PackageWatchUpdateSerializer
         return super().get_serializer_class()
+
 
 class CollectViewSet(viewsets.ViewSet):
     """
