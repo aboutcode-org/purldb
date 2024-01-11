@@ -1,29 +1,38 @@
 import json
 import os
 
-from click.testing import CliRunner
 from commoncode.testcase import FileBasedTesting
 from django.test import TestCase
-from fetchcode.package_versions import PackageVersion, router, versions
 
 import purlcli
 from packagedb.models import Package
 
 
-class TestPURLCLI(FileBasedTesting):
+class TestPURLCLI_validate(FileBasedTesting):
     test_data_dir = os.path.join(os.path.dirname(__file__), "data")
-
-    # QUESTION: These four validate tests call validate_purls(), which queries the validate endpoint.  Is that what we want here?  I think we might be able to mock the API if we pass the API to the validate_purls() function instead of defining the API inside the function as we do now.
 
     def test_validate_purl(self):
         test_purls = [
+            "pkg:pypi/fetchcode@0.2.0",
+            "pkg:pypi/fetchcode@10.2.0",
             "pkg:nginx/nginx@0.8.9?os=windows",
             "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0-rc1",
         ]
-
         validated_purls = purlcli.validate_purls(test_purls)
 
         expected_results = [
+            {
+                "valid": True,
+                "exists": True,
+                "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+                "purl": "pkg:pypi/fetchcode@0.2.0",
+            },
+            {
+                "valid": True,
+                "exists": False,
+                "message": "The provided PackageURL is valid, but does not exist in the upstream repo.",
+                "purl": "pkg:pypi/fetchcode@10.2.0",
+            },
             {
                 "valid": True,
                 "exists": None,
@@ -42,7 +51,6 @@ class TestPURLCLI(FileBasedTesting):
 
     def test_validate_purl_empty(self):
         test_purls = []
-
         validated_purls = purlcli.validate_purls(test_purls)
 
         expected_results = []
@@ -53,7 +61,6 @@ class TestPURLCLI(FileBasedTesting):
         test_purls = [
             "foo",
         ]
-
         validated_purls = purlcli.validate_purls(test_purls)
 
         expected_results = [
@@ -73,7 +80,6 @@ class TestPURLCLI(FileBasedTesting):
             " pkg:nginx/nginx@0.8.9?os=windows",
             "pkg:nginx/nginx@0.8.9?os=windows ",
         ]
-
         validated_purls = purlcli.validate_purls(test_purls)
 
         expected_results = [
@@ -99,31 +105,54 @@ class TestPURLCLI(FileBasedTesting):
 
         self.assertEqual(validated_purls, expected_results)
 
-    # def test_versions(self):
-    #     purls = ["pkg:pypi/fetchcode"]
-    #     abc = purlcli.list_versions(purls)
-    #     print(f"\nabc = {abc}")
 
-    #     for purl_list in abc:
-    #         for p in purl_list:
-    #             # print(PackageVersion.to_dict(p))
-    #             p_dict = PackageVersion.to_dict(p)
-    #             print(f"\np_dict = {p_dict}")
-    #             print(f"\ntype(p_dict) = {type(p_dict)}")
+class TestPURLCLI_versions(FileBasedTesting):
+    # TODO: can we test the terminal warnings, e.g., `There was an error with your 'zzzzz' query -- the Package URL you provided is not valid.`?
+    def test_versions(self):
+        purls1 = ["pkg:pypi/fetchcode"]
+        purls2 = ["pkg:pypi/zzzzz"]
+        purls3 = ["zzzzz"]
+        purl_versions1 = purlcli.list_versions(purls1)
+        purl_versions2 = purlcli.list_versions(purls2)
+        purl_versions3 = purlcli.list_versions(purls3)
 
-    #             json_p_dict = json.dumps(p_dict)
-    #             print(f"\njson_p_dict = {json_p_dict}")
-    #             print(f"\ntype(json_p_dict) = {type(json_p_dict)}")
+        expected_results1 = [
+            {
+                "purl": "pkg:pypi/fetchcode",
+                "versions": [
+                    {
+                        "purl": "pkg:pypi/fetchcode@0.1.0",
+                        "version": "0.1.0",
+                        "release_date": "2021-08-25T15:15:15.265015+00:00",
+                    },
+                    {
+                        "purl": "pkg:pypi/fetchcode@0.2.0",
+                        "version": "0.2.0",
+                        "release_date": "2022-09-14T16:36:02.242182+00:00",
+                    },
+                    {
+                        "purl": "pkg:pypi/fetchcode@0.3.0",
+                        "version": "0.3.0",
+                        "release_date": "2023-12-18T20:49:45.840364+00:00",
+                    },
+                ],
+            },
+        ]
+        expected_results2 = []
+        expected_results3 = []
+
+        self.assertEqual(purl_versions1, expected_results1)
+        self.assertEqual(purl_versions2, expected_results2)
+        self.assertEqual(purl_versions3, expected_results3)
 
 
-# 2024-01-08 Monday 17:55:15.  Based on test_api.py's class PurlValidateApiTestCase(TestCase).
-class TestPURLCLI_API(TestCase):
+class TestPURLAPI_validate(TestCase):
     def setUp(self):
         self.package_data = {
             "type": "npm",
             "namespace": "",
-            "name": "foobar",
-            "version": "1,1.0",
+            "name": "nosuchpackage",
+            "version": "1.1.0",
             "qualifiers": "",
             "subpath": "",
             "download_url": "",
@@ -135,29 +164,14 @@ class TestPURLCLI_API(TestCase):
         self.package = Package.objects.create(**self.package_data)
         self.package.refresh_from_db()
 
-    def test_api_purl_validation(self):
+    def test_api_validate_purl(self):
         data1 = {
-            # "purl": "pkg:npm/foobar@1.1.0",
             "purl": "pkg:pypi/packagedb@2.0.0",
             "check_existence": True,
         }
         response1 = self.client.get(f"/api/validate/", data=data1)
 
-        print(f"\nresponse1 = {response1}")
-        print(f"\nresponse1.data = {response1.data}")
-        print(f"")
-
-        data2 = {
-            # "purl": "pkg:npm/?foobar@1.1.0",
-            "purl": "pkg:pypi/?packagedb@2.0.0",
-            "check_existence": True,
-        }
-        response2 = self.client.get(f"/api/validate/", data=data2)
-
-        print(f"\nresponse2 = {response2}")
-        print(f"\nresponse2.data = {response2.data}")
-        print(f"")
-
+        self.assertEqual(response1.status_code, 200)
         self.assertEqual(True, response1.data["valid"])
         self.assertEqual(True, response1.data["exists"])
         self.assertEqual(
@@ -165,46 +179,71 @@ class TestPURLCLI_API(TestCase):
             response1.data["message"],
         )
 
+        data2 = {
+            "purl": "pkg:pypi/?packagedb@2.0.0",
+            "check_existence": True,
+        }
+        response2 = self.client.get(f"/api/validate/", data=data2)
+
+        self.assertEqual(response2.status_code, 200)
         self.assertEqual(False, response2.data["valid"])
+        self.assertEqual(None, response2.data["exists"])
         self.assertEqual(
             "The provided PackageURL is not valid.", response2.data["message"]
         )
 
-        # ZZZ: 2024-01-08 Monday 18:54:51.  Some exploring:
-
         data3 = {
-            # "purl": "pkg:npm/ogdendunes",
-            # "purl": "pkg:pypi/ogdendunes",
             "purl": "pkg:pypi/zzzzz@2.0.0",
             "check_existence": True,
         }
         response3 = self.client.get(f"/api/validate/", data=data3)
 
-        print(f"\nresponse3 = {response3}")
-        print(f"\nresponse3.data = {response3.data}")
-        print(f"")
-
+        self.assertEqual(response3.status_code, 200)
         self.assertEqual(True, response3.data["valid"])
         self.assertEqual(False, response3.data["exists"])
         self.assertEqual(
-            "The provided PackageURL is valid but does not exist in the upstream repo.",
+            "The provided PackageURL is valid, but does not exist in the upstream repo.",
             response3.data["message"],
         )
 
         data4 = {
-            # "purl": "pkg:nginx/nginx@0.8.9?os=windows",
             "purl": "pkg:nginx/nginx@0.8.9",
             "check_existence": True,
         }
         response4 = self.client.get(f"/api/validate/", data=data4)
 
-        print(f"\nresponse4 = {response4}")
-        print(f"\nresponse4.data = {response4.data}")
-        print(f"")
-
+        self.assertEqual(response4.status_code, 200)
         self.assertEqual(True, response4.data["valid"])
-        self.assertEqual(False, response4.data["exists"])
+        self.assertEqual(None, response4.data["exists"])
         self.assertEqual(
-            "The provided PackageURL is valid but does not exist in the upstream repo.",
+            "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
             response4.data["message"],
+        )
+
+        data5 = {
+            "purl": "pkg:npm/nosuchpackage@1.1.0",
+            "check_existence": True,
+        }
+        response5 = self.client.get(f"/api/validate/", data=data5)
+
+        self.assertEqual(response5.status_code, 200)
+        self.assertEqual(True, response5.data["valid"])
+        self.assertEqual(True, response5.data["exists"])
+        self.assertEqual(
+            "The provided Package URL is valid, and the package exists in the upstream repo.",
+            response5.data["message"],
+        )
+
+        data6 = {
+            "purl": "pkg:npm/nosuchpackage@1.1.1",
+            "check_existence": True,
+        }
+        response6 = self.client.get(f"/api/validate/", data=data6)
+
+        self.assertEqual(response6.status_code, 200)
+        self.assertEqual(True, response6.data["valid"])
+        self.assertEqual(False, response6.data["exists"])
+        self.assertEqual(
+            "The provided PackageURL is valid, but does not exist in the upstream repo.",
+            response6.data["message"],
         )
