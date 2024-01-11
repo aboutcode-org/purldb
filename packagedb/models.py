@@ -7,31 +7,31 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from collections import OrderedDict
 import copy
 import logging
-import natsort
 import sys
 import uuid
+from collections import OrderedDict
 
+import natsort
+from dateutil.parser import parse as dateutil_parse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
 from django.core import exceptions
 from django.core.paginator import Paginator
+from django.core.validators import MaxValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
-from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
 from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
 from rest_framework.authtoken.models import Token
-
 
 TRACE = False
 
@@ -1219,39 +1219,15 @@ def make_relationship(
         relationship=relationship,
     )
 
-class UpdateMixin:
-    """
-    Provide a ``update()`` method to trigger a save() on the object with the
-    ``update_fields`` automatically set to force a SQL UPDATE.
-    """
 
-    def update(self, **kwargs):
-        """
-        Update this resource with the provided ``kwargs`` values.
-        The full ``save()`` process will be triggered, including signals, and the
-        ``update_fields`` is automatically set.
-        """
-        for field_name, value in kwargs.items():
-            setattr(self, field_name, value)
-
-        self.save(update_fields=list(kwargs.keys()))
-
-
-class PackageWatch(models.Model, UpdateMixin):
+class PackageWatch(models.Model):
     """
     Model representing a watch on a package to monitor for new versions.
     """
-
     DEPTH_CHOICES = (
-        ("version", "Version"),
-        ("metadata", "Metadata"),
-        ("scan", "Scan"),
-    )
-
-    FREQUENCY_CHOICES = (
-        ("daily", "Daily"),
-        ("weekly", "Weekly"),
-        ("monthly", "Monthly"),
+        (1, "Version"),
+        (2, "Metadata"),
+        (3, "Scan"),
     )
 
     uuid = models.UUIDField(
@@ -1260,7 +1236,7 @@ class PackageWatch(models.Model, UpdateMixin):
         unique=True,
         editable=False,
         help_text=_(
-            'The identifier of the PackageWatch.'
+            "The identifier of the PackageWatch."
         )
     )
 
@@ -1270,7 +1246,10 @@ class PackageWatch(models.Model, UpdateMixin):
         null=False,
         blank=False,
         db_index=True,
-        help_text=_("PackageURL to watch."),
+        help_text=_(
+            "Package-URL to watch. If the PURL has a version, "
+            "qualifiers or subpath, they are stripped and ignored."
+        ),
     )
 
     type = models.CharField(
@@ -1300,19 +1279,32 @@ class PackageWatch(models.Model, UpdateMixin):
         help_text=_("Name of the package."),
     )
 
-    depth = models.CharField(
-        max_length=20,
+    is_active = models.BooleanField(
+        null=True,
+        db_index=True,
+        default=True,
+        help_text=_(
+            "When set to True (Yes), this Package Watch is active. "
+            "When set to False (No), this watch is inactive and not processed."
+        ),
+    )
+
+    depth = models.PositiveSmallIntegerField(
         choices=DEPTH_CHOICES,
-        default="version",
+        default=3,
         help_text=_("Select the depth of data collection."),
     )
 
-    frequency = models.CharField(
-        max_length=20,
-        choices=FREQUENCY_CHOICES,
-        default="daily",
-        db_index=True,
-        help_text=_("Select how often the package should be watched."),
+    watch_interval = models.PositiveSmallIntegerField(
+        validators=[
+            MinValueValidator(1, message="Interval must be at least 1 day."),
+            MaxValueValidator(365, message="Interval must be at most 365 days."),
+        ],
+        default=1,
+        help_text=_(
+            "Enter the interval in days for how often the package should be watched. "
+            "Must be a number between 1 and 365."
+        ),
     )
 
     creation_date = models.DateTimeField(
@@ -1324,13 +1316,17 @@ class PackageWatch(models.Model, UpdateMixin):
         null=True,
         blank=True,
         db_index=True,
-        help_text=_("Timestamp indicating when this watch object was last processed"),
+        help_text=_("Timestamp indicating when this PURL was last watched."),
     )
 
     watch_error = models.TextField(
         null=True,
         blank=True,
-        help_text=_("Watch error messages. When present this means the watch failed."),
+        help_text=_(
+            "Watch error messages of the last watch, if any. "
+            "When present this means the watch failed. "
+            "This is reset on each new watch."
+        ),
     )
 
     def save(self, *args, **kwargs):
@@ -1340,15 +1336,16 @@ class PackageWatch(models.Model, UpdateMixin):
             except ValueError as e:
                 raise exceptions.ValidationError(
                     f"Error creating PackageWatch object: {e}"
-                )
+                ) from e
 
+            # we are removing version/qualifiers/subpath before saving
             self.package_url = PackageURL(
                 type=purl.type, namespace=purl.namespace, name=purl.name
             )
             self.type = purl.type
             self.name = purl.name
             self.namespace = purl.namespace
-        elif self.pk is not None:
+        else:
             existing = PackageWatch.objects.get(pk=self.pk)
             if (
                 existing.package_url != self.package_url
@@ -1357,7 +1354,7 @@ class PackageWatch(models.Model, UpdateMixin):
                 or existing.namespace != self.namespace
             ):
                 raise ValueError(
-                    "package_url, type, name, and namespace cannot be changed."
+                    "The package_url, type, name, and namespace of a PackageWatch cannot be changed once saved."
                 )
 
         super(PackageWatch, self).save(*args, **kwargs)
