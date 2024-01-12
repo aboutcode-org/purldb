@@ -1230,16 +1230,6 @@ class PackageWatch(models.Model):
         (3, "Scan"),
     )
 
-    uuid = models.UUIDField(
-        verbose_name=_("UUID"),
-        default=uuid.uuid4,
-        unique=True,
-        editable=False,
-        help_text=_(
-            "The identifier of the PackageWatch."
-        )
-    )
-
     package_url = models.CharField(
         max_length=2048,
         unique=True,
@@ -1292,7 +1282,7 @@ class PackageWatch(models.Model):
     depth = models.PositiveSmallIntegerField(
         choices=DEPTH_CHOICES,
         default=3,
-        help_text=_("Select the depth of data collection."),
+        help_text=_("Depth of data collection from listing versions up to a full scan."),
     )
 
     watch_interval = models.PositiveSmallIntegerField(
@@ -1300,11 +1290,8 @@ class PackageWatch(models.Model):
             MinValueValidator(1, message="Interval must be at least 1 day."),
             MaxValueValidator(365, message="Interval must be at most 365 days."),
         ],
-        default=1,
-        help_text=_(
-            "Enter the interval in days for how often the package should be watched. "
-            "Must be a number between 1 and 365."
-        ),
+        default=7,
+        help_text=_("Number of days to wait between watches of this package."),
     )
 
     creation_date = models.DateTimeField(
