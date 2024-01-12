@@ -553,7 +553,8 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
 class PackageWatchViewSet(CreateListRetrieveUpdateViewSet):
     queryset = PackageWatch.objects.get_queryset().order_by('-id')
     serializer_class = PackageWatchAPISerializer
-    lookup_field = 'uuid'
+    lookup_field = 'package_url'
+    lookup_value_regex = r'pkg:[a-zA-Z0-9_]+\/[a-zA-Z0-9_.-]+(?:\/[a-zA-Z0-9_.-]+)*'
 
     def get_serializer_class(self):
         if self.action == 'create':

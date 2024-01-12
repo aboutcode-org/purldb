@@ -333,7 +333,7 @@ class PackageSetAPISerializer(ModelSerializer):
 class PackageWatchAPISerializer(HyperlinkedModelSerializer):
     url = HyperlinkedIdentityField(
         view_name='api:packagewatch-detail',
-        lookup_field='uuid'
+        lookup_field='package_url'
     )
     class Meta:
         model = PackageWatch
