@@ -48,6 +48,13 @@ envfile:
 	@mkdir -p $(shell dirname ${ENV_FILE}) && touch ${ENV_FILE}
 	@echo SECRET_KEY=\"${GET_SECRET_KEY}\" > ${ENV_FILE}
 
+envfile_testing:
+	@echo "-> Create the .env file and generate a secret key"
+	@if test -f ${ENV_FILE}; then echo ".env file exists already"; exit 1; fi
+	@mkdir -p $(shell dirname ${ENV_FILE}) && touch ${ENV_FILE}
+	@echo SECRET_KEY=\"${GET_SECRET_KEY}\" >> ${ENV_FILE}
+	@echo SCANCODEIO_DB_PORT=\"5433\" >> ${ENV_FILE}
+
 isort:
 	@echo "-> Apply isort changes to ensure proper imports ordering"
 	${VENV}/bin/isort .

@@ -3,34 +3,45 @@ name: PurlDB Tests CI
 on: [push, pull_request]
 
 env:
-  #POSTGRES_DB: packagedb
+  POSTGRES_DB: packagedb
   POSTGRES_USER: packagedb
   POSTGRES_PASSWORD: packagedb
   POSTGRES_INITDB_ARGS: --encoding=UTF-8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8
-  POSTGRES_MULTIPLE_DATABASES: scancodeio packagedb
 
 jobs:
   build:
     runs-on: ubuntu-20.04
 
-    # services:
-    #   postgres:
-    #     image: postgres:13
-    #     env:
-    #       POSTGRES_DB: ${{ env.POSTGRES_DB }}
-    #       POSTGRES_USER: ${{ env.POSTGRES_USER }}
-    #       POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
-    #       POSTGRES_INITDB_ARGS: ${{ env.POSTGRES_INITDB_ARGS }}
-    #       POSTGRES_MULTIPLE_DATABASES: scancodeio:scancodeio:scancodeio
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-    #     ports:
-    #       - 5432:5432
-    #     volumes:
-    #       - ${{ github.workspace }}/etc/multiple-databases:/docker-entrypoint-initdb.d
+    services:
+      postgres1:
+        image: postgres:13
+        env:
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_INITDB_ARGS: ${{ env.POSTGRES_INITDB_ARGS }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      postgres2:
+        image: postgres:13
+        env:
+          POSTGRES_DB: scancodeio
+          POSTGRES_USER: scancodeio
+          POSTGRES_PASSWORD: scancodeio
+          POSTGRES_INITDB_ARGS: ${{ env.POSTGRES_INITDB_ARGS }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5433:5432
 
     strategy:
       max-parallel: 4
@@ -46,20 +57,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Set up Postgres 13
-        working-directory: .
-        run: |
-          docker run \
-            --name postgres \
-            -p 5432:5432 \
-            -e POSTGRES_USER=${{ env.POSTGRES_USER }} \
-            -e POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }} \
-            -e POSTGRES_INITDB_ARGS="${{ env.POSTGRES_INITDB_ARGS }}" \
-            -e POSTGRES_MULTIPLE_DATABASES="scancodeio packagedb" \
-            -v ${{ github.workspace }}/etc/multiple-databases:/docker-entrypoint-initdb.d \
-            -d \
-            postgres:13
-
       - name: Install dependencies
         working-directory: .
         run: |
@@ -68,7 +65,7 @@ jobs:
       - name: Run tests
         working-directory: .
         run: |
-          make envfile
+          make envfile_testing
           sudo mkdir /etc/scancodeio
           sudo cp .env /etc/scancodeio
           make test
