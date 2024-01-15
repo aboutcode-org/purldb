@@ -26,6 +26,7 @@ from rest_framework import status
 
 
 class MatchCodePipelineAPITest(TransactionTestCase):
+    databases = {'default', 'packagedb'}
     data_location = Path(__file__).parent / 'data'
 
     def setUp(self):

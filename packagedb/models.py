@@ -1289,4 +1289,4 @@ class ApiUserManager(UserManager):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     """Create an API key token on user creation, using the signal system."""
     if created:
-        Token.objects.create(user_id=instance.pk)
+        Token.objects.get_or_create(user_id=instance.pk)
