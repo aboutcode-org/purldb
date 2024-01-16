@@ -74,6 +74,7 @@ INSTALLED_APPS = (
     'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_rq',
 )
 
 MIDDLEWARE = (
@@ -296,3 +297,17 @@ if DEBUG_TOOLBAR:
 ACTIVE_SEEDERS = [
     'minecode.visitors.maven.MavenSeed',
 ]
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        # 'USERNAME': 'some-user',
+        # 'PASSWORD': 'some-password',
+        'DEFAULT_TIMEOUT': 360,
+        'REDIS_CLIENT_KWARGS': {    # Eventual additional Redis connection arguments
+            # 'ssl_cert_reqs': None,
+        },
+    }
+}

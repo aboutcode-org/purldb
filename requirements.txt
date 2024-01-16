@@ -77,8 +77,10 @@ python-dateutil==2.8.2
 pytz==2023.3.post1
 PyYAML==6.0.1
 rdflib==7.0.0
+redis==5.0.1
 reppy2==0.3.6
 requests==2.31.0
+rq==1.15.1
 rubymarshal==1.0.3
 saneyaml==0.6.0
 scancode-toolkit==32.0.8
