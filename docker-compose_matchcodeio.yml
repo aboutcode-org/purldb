@@ -1,6 +1,13 @@
 version: "3"
 
 services:
+  matchcodeio_db:
+    image: postgres:13
+    env_file:
+      - docker_matchcodeio.env
+    volumes:
+      - matchcodeio_db_data:/var/lib/postgresql/data/
+
   matchcodeio_redis:
     image: redis
     # Enable redis data persistence using the "Append Only File" with the
@@ -19,7 +26,7 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=matchcode_project.settings
     env_file:
-      - docker_matchcode.env
+      - docker_matchcodeio.env
     expose:
       - 8001
     volumes:
@@ -38,7 +45,7 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=matchcode_project.settings
     env_file:
-      - docker_matchcode.env
+      - docker_matchcodeio.env
     volumes:
       - .env:/opt/scancodeio/.env
       - /etc/scancodeio/:/etc/scancodeio/
@@ -78,3 +85,4 @@ volumes:
   redis_data:
   static:
   workspace:
+  matchcodeio_db_data:
