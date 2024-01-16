@@ -27,6 +27,8 @@ from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from licensedcode.cache import build_spdx_license_expression
+from packagedb.schedules import clear_job
+from packagedb.schedules import schedule_watch
 from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
@@ -1316,7 +1318,17 @@ class PackageWatch(models.Model):
         ),
     )
 
+    rq_schedule_id = models.CharField(
+        max_length=255,
+        unique=True,
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_("Identifier used to manage the periodic RQ watch job."),
+    )
+
     def save(self, *args, **kwargs):
+        schedule = False
         if not self.pk:
             try:
                 purl = PackageURL.from_string(self.package_url)
@@ -1326,12 +1338,19 @@ class PackageWatch(models.Model):
                 ) from e
 
             # we are removing version/qualifiers/subpath before saving
-            self.package_url = PackageURL(
-                type=purl.type, namespace=purl.namespace, name=purl.name
+            self.package_url = str(
+                PackageURL(
+                    type=purl.type, 
+                    namespace=purl.namespace, 
+                    name=purl.name,
+                )
             )
             self.type = purl.type
             self.name = purl.name
             self.namespace = purl.namespace
+
+            # Schedule job for the newly created watch.
+            schedule = True
         else:
             existing = PackageWatch.objects.get(pk=self.pk)
             if (
@@ -1343,12 +1362,28 @@ class PackageWatch(models.Model):
                 raise ValueError(
                     "The package_url, type, name, and namespace of a PackageWatch cannot be changed once saved."
                 )
+            # Update the scheduled job if depth/watch_interval/is_active is modified.
+            elif (
+                existing.is_active != self.is_active
+                or existing.watch_interval != self.watch_interval
+                or existing.depth != self.depth
+            ):
+                schedule = True
+        
+        if schedule and self.is_active:
+            self.rq_schedule_id = self.create_new_job()
 
         super(PackageWatch, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.package_url}"
 
+    def create_new_job(self):
+        old_job_id = self.rq_schedule_id
+        if old_job_id:
+            clear_job(old_job_id)
+
+        return schedule_watch(self)
 
 
 class PackageSet(models.Model):
