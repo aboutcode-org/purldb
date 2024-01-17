@@ -69,8 +69,6 @@ def watch_new_purls(purl):
     watch.last_watch_date = datetime.datetime.now(tz=datetime.timezone.utc)
     watch.save(update_fields=["last_watch_date"])
 
-    return datetime.datetime.utcnow()
-
 
 def is_supported_watch_ecosystem(watch):
     for ecosystem, error_message in [
@@ -83,7 +81,7 @@ def is_supported_watch_ecosystem(watch):
                 f"`{watch.type}` ecosystem is not supported by {error_message}"
             )
             watch.last_watch_date = datetime.datetime.now(tz=datetime.timezone.utc)
-            watch.save()
+            watch.save(update_fields=["last_watch_date"])
             return False
 
     return True

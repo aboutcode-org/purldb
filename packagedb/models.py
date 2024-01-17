@@ -27,8 +27,7 @@ from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from licensedcode.cache import build_spdx_license_expression
-from packagedb.schedules import clear_job
-from packagedb.schedules import schedule_watch
+from packagedb import schedules
 from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
@@ -1370,7 +1369,7 @@ class PackageWatch(models.Model):
             ):
                 schedule = True
         
-        if schedule and self.is_active:
+        if schedule:
             self.rq_schedule_id = self.create_new_job()
 
         super(PackageWatch, self).save(*args, **kwargs)
@@ -1379,11 +1378,10 @@ class PackageWatch(models.Model):
         return f"{self.package_url}"
 
     def create_new_job(self):
-        old_job_id = self.rq_schedule_id
-        if old_job_id:
-            clear_job(old_job_id)
+        if self.rq_schedule_id:
+            schedules.clear_job(self.rq_schedule_id)
 
-        return schedule_watch(self)
+        return schedules.schedule_watch(self) if self.is_active else None
 
 
 class PackageSet(models.Model):
