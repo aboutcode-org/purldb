@@ -1,249 +1,524 @@
 import json
 import os
+import sys
 
+import pytest
 from commoncode.testcase import FileBasedTesting
 from django.test import TestCase
+from rest_framework import status
+from rest_framework.test import APIClient
 
 import purlcli
 from packagedb.models import Package
 
 
-class TestPURLCLI_validate(FileBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), "data")
-
-    def test_validate_purl(self):
-        test_purls = [
-            "pkg:pypi/fetchcode@0.2.0",
-            "pkg:pypi/fetchcode@10.2.0",
-            "pkg:nginx/nginx@0.8.9?os=windows",
-            "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0-rc1",
-        ]
-        validated_purls = purlcli.validate_purls(test_purls)
-
-        expected_results = [
-            {
-                "valid": True,
-                "exists": True,
-                "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                "purl": "pkg:pypi/fetchcode@0.2.0",
-            },
-            {
-                "valid": True,
-                "exists": False,
-                "message": "The provided PackageURL is valid, but does not exist in the upstream repo.",
-                "purl": "pkg:pypi/fetchcode@10.2.0",
-            },
-            {
-                "valid": True,
-                "exists": None,
-                "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-            },
-            {
-                "valid": True,
-                "exists": True,
-                "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0-rc1",
-            },
-        ]
-
-        self.assertEqual(validated_purls, expected_results)
+class TestPURLCLI_validate(object):
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                ["pkg:pypi/fetchcode@0.2.0"],
+                [
+                    {
+                        "valid": True,
+                        "exists": True,
+                        "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+                        "purl": "pkg:pypi/fetchcode@0.2.0",
+                    }
+                ],
+            ),
+            (
+                ["pkg:pypi/fetchcode@10.2.0"],
+                [
+                    {
+                        "valid": True,
+                        "exists": False,
+                        "message": "The provided PackageURL is valid, but does not exist in the upstream repo.",
+                        "purl": "pkg:pypi/fetchcode@10.2.0",
+                    }
+                ],
+            ),
+            (
+                ["pkg:nginx/nginx@0.8.9?os=windows"],
+                [
+                    {
+                        "valid": True,
+                        "exists": None,
+                        "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+                        "purl": "pkg:nginx/nginx@0.8.9?os=windows",
+                    }
+                ],
+            ),
+            (
+                ["pkg:gem/bundler-sass"],
+                [
+                    {
+                        "valid": True,
+                        "exists": True,
+                        "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+                        "purl": "pkg:gem/bundler-sass",
+                    }
+                ],
+            ),
+            (
+                ["pkg:rubygems/bundler-sass"],
+                [
+                    {
+                        "valid": True,
+                        "exists": None,
+                        "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+                        "purl": "pkg:rubygems/bundler-sass",
+                    }
+                ],
+            ),
+            (
+                ["pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0-rc1"],
+                [
+                    {
+                        "valid": True,
+                        "exists": True,
+                        "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+                        "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0-rc1",
+                    }
+                ],
+            ),
+        ],
+    )
+    def test_validate_purl(self, test_input, expected):
+        validated_purls = purlcli.validate_purls(test_input)
+        assert validated_purls == expected
 
     def test_validate_purl_empty(self):
         test_purls = []
         validated_purls = purlcli.validate_purls(test_purls)
-
         expected_results = []
+        assert validated_purls == expected_results
 
-        self.assertEqual(validated_purls, expected_results)
-
-    def test_validate_purl_invalid(self):
-        test_purls = [
-            "foo",
-        ]
-        validated_purls = purlcli.validate_purls(test_purls)
-
-        expected_results = [
-            {
-                "valid": False,
-                "exists": None,
-                "message": "The provided PackageURL is not valid.",
-                "purl": "foo",
-            }
-        ]
-
-        self.assertEqual(validated_purls, expected_results)
-
-    def test_validate_purl_strip(self):
-        test_purls = [
-            "pkg:nginx/nginx@0.8.9?os=windows",
-            " pkg:nginx/nginx@0.8.9?os=windows",
-            "pkg:nginx/nginx@0.8.9?os=windows ",
-        ]
-        validated_purls = purlcli.validate_purls(test_purls)
-
-        expected_results = [
-            {
-                "valid": True,
-                "exists": None,
-                "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-            },
-            {
-                "valid": True,
-                "exists": None,
-                "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-            },
-            {
-                "valid": True,
-                "exists": None,
-                "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-            },
-        ]
-
-        self.assertEqual(validated_purls, expected_results)
-
-
-class TestPURLCLI_versions(FileBasedTesting):
-    # TODO: can we test the terminal warnings, e.g., `There was an error with your 'zzzzz' query -- the Package URL you provided is not valid.`?
-    def test_versions(self):
-        purls1 = ["pkg:pypi/fetchcode"]
-        purls2 = ["pkg:pypi/zzzzz"]
-        purls3 = ["zzzzz"]
-        purl_versions1 = purlcli.list_versions(purls1)
-        purl_versions2 = purlcli.list_versions(purls2)
-        purl_versions3 = purlcli.list_versions(purls3)
-
-        expected_results1 = [
-            {
-                "purl": "pkg:pypi/fetchcode",
-                "versions": [
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                ["pkg:pypi/fetchcode@0.2.0"],
+                [
                     {
-                        "purl": "pkg:pypi/fetchcode@0.1.0",
-                        "version": "0.1.0",
-                        "release_date": "2021-08-25T15:15:15.265015+00:00",
-                    },
-                    {
+                        "valid": True,
+                        "exists": True,
+                        "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
                         "purl": "pkg:pypi/fetchcode@0.2.0",
-                        "version": "0.2.0",
-                        "release_date": "2022-09-14T16:36:02.242182+00:00",
-                    },
+                    }
+                ],
+            ),
+            (
+                ["pkg:pypi/fetchcode@0.2.0?"],
+                [
                     {
-                        "purl": "pkg:pypi/fetchcode@0.3.0",
-                        "version": "0.3.0",
-                        "release_date": "2023-12-18T20:49:45.840364+00:00",
+                        "valid": True,
+                        "exists": True,
+                        "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+                        "purl": "pkg:pypi/fetchcode@0.2.0?",
+                    }
+                ],
+            ),
+            (
+                ["pkg:pypi/fetchcode@?0.2.0"],
+                [
+                    {
+                        "valid": False,
+                        "exists": None,
+                        "message": "The provided PackageURL is not valid.",
+                        "purl": "pkg:pypi/fetchcode@?0.2.0",
+                    }
+                ],
+            ),
+            (
+                ["foo"],
+                [
+                    {
+                        "valid": False,
+                        "exists": None,
+                        "message": "The provided PackageURL is not valid.",
+                        "purl": "foo",
+                    }
+                ],
+            ),
+        ],
+    )
+    def test_validate_purl_invalid(self, test_input, expected):
+        validated_purls = purlcli.validate_purls(test_input)
+        assert validated_purls == expected
+
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                ["pkg:nginx/nginx@0.8.9?os=windows"],
+                [
+                    {
+                        "valid": True,
+                        "exists": None,
+                        "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+                        "purl": "pkg:nginx/nginx@0.8.9?os=windows",
                     },
                 ],
-            },
-        ]
-        expected_results2 = []
-        expected_results3 = []
+            ),
+            (
+                [" pkg:nginx/nginx@0.8.9?os=windows"],
+                [
+                    {
+                        "valid": True,
+                        "exists": None,
+                        "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+                        "purl": "pkg:nginx/nginx@0.8.9?os=windows",
+                    },
+                ],
+            ),
+            (
+                ["pkg:nginx/nginx@0.8.9?os=windows "],
+                [
+                    {
+                        "valid": True,
+                        "exists": None,
+                        "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+                        "purl": "pkg:nginx/nginx@0.8.9?os=windows",
+                    }
+                ],
+            ),
+        ],
+    )
+    def test_validate_purl_strip(self, test_input, expected):
+        validated_purls = purlcli.validate_purls(test_input)
+        assert validated_purls == expected
 
-        self.assertEqual(purl_versions1, expected_results1)
-        self.assertEqual(purl_versions2, expected_results2)
-        self.assertEqual(purl_versions3, expected_results3)
+
+class TestPURLCLI_versions(object):
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                ["pkg:pypi/fetchcode"],
+                [
+                    {
+                        "purl": "pkg:pypi/fetchcode",
+                        "versions": [
+                            {
+                                "purl": "pkg:pypi/fetchcode@0.1.0",
+                                "version": "0.1.0",
+                                "release_date": "2021-08-25T15:15:15.265015+00:00",
+                            },
+                            {
+                                "purl": "pkg:pypi/fetchcode@0.2.0",
+                                "version": "0.2.0",
+                                "release_date": "2022-09-14T16:36:02.242182+00:00",
+                            },
+                            {
+                                "purl": "pkg:pypi/fetchcode@0.3.0",
+                                "version": "0.3.0",
+                                "release_date": "2023-12-18T20:49:45.840364+00:00",
+                            },
+                        ],
+                    },
+                ],
+            ),
+            (
+                ["pkg:gem/bundler-sass"],
+                [
+                    {
+                        "purl": "pkg:gem/bundler-sass",
+                        "versions": [
+                            {
+                                "purl": "pkg:gem/bundler-sass@0.1.2",
+                                "release_date": "2013-12-11T00:27:10.097000+00:00",
+                                "version": "0.1.2",
+                            },
+                        ],
+                    },
+                ],
+            ),
+            (
+                ["pkg:rubygems/bundler-sass"],
+                [],
+            ),
+            (
+                ["pkg:nginx/nginx"],
+                [],
+            ),
+            (
+                ["pkg:pypi/zzzzz"],
+                [],
+            ),
+            (
+                ["pkg:pypi/?fetchcode"],
+                [],
+            ),
+            (
+                ["zzzzz"],
+                [],
+            ),
+        ],
+    )
+    def test_versions(self, test_input, expected):
+        purl_versions = purlcli.list_versions(test_input)
+        assert purl_versions == expected
+
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                ["pkg:pypi/fetchcode"],
+                None,
+            ),
+            (
+                ["pkg:gem/bundler-sass"],
+                None,
+            ),
+            (
+                ["pkg:rubygems/bundler-sass"],
+                "The provided PackageURL 'pkg:rubygems/bundler-sass' is valid, but `versions` is not supported for this package type.",
+            ),
+            (
+                ["pkg:nginx/nginx"],
+                "The provided PackageURL 'pkg:nginx/nginx' is valid, but `versions` is not supported for this package type.",
+            ),
+            (
+                ["pkg:pypi/zzzzz"],
+                "There was an error with your 'pkg:pypi/zzzzz' query.  Make sure that 'pkg:pypi/zzzzz' actually exists in the relevant repository.",
+            ),
+            (
+                ["pkg:pypi/?fetchcode"],
+                "There was an error with your 'pkg:pypi/?fetchcode' query -- the Package URL you provided is not valid.",
+            ),
+            (
+                ["zzzzz"],
+                "There was an error with your 'zzzzz' query -- the Package URL you provided is not valid.",
+            ),
+        ],
+    )
+    def test_messages_versions(self, test_input, expected):
+        purl_versions = purlcli.check_versions_purl(test_input[0])
+        assert purl_versions == expected
 
 
-class TestPURLAPI_validate(TestCase):
-    def setUp(self):
-        self.package_data = {
-            "type": "npm",
-            "namespace": "",
-            "name": "nosuchpackage",
-            "version": "1.1.0",
-            "qualifiers": "",
-            "subpath": "",
-            "download_url": "",
-            "filename": "Foo.zip",
-            "sha1": "testsha1",
-            "md5": "testmd5",
-            "size": 101,
-        }
-        self.package = Package.objects.create(**self.package_data)
-        self.package.refresh_from_db()
+class TestPURLCLI_meta(object):
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                ["pkg:pypi/fetchcode"],
+                [
+                    {
+                        "purl": "pkg:pypi/fetchcode",
+                        "metadata": [
+                            {
+                                "type": "pypi",
+                                "namespace": None,
+                                "name": "fetchcode",
+                                "version": None,
+                                "qualifiers": {},
+                                "subpath": None,
+                                "primary_language": None,
+                                "description": None,
+                                "release_date": None,
+                                "parties": [],
+                                "keywords": [],
+                                "homepage_url": "https://github.com/nexB/fetchcode",
+                                "download_url": None,
+                                "api_url": "https://pypi.org/pypi/fetchcode/json",
+                                "size": None,
+                                "sha1": None,
+                                "md5": None,
+                                "sha256": None,
+                                "sha512": None,
+                                "bug_tracking_url": None,
+                                "code_view_url": None,
+                                "vcs_url": None,
+                                "copyright": None,
+                                "license_expression": None,
+                                "declared_license": "Apache-2.0",
+                                "notice_text": None,
+                                "root_path": None,
+                                "dependencies": [],
+                                "contains_source_code": None,
+                                "source_packages": [],
+                                "purl": "pkg:pypi/fetchcode",
+                                "repository_homepage_url": None,
+                                "repository_download_url": None,
+                                "api_data_url": None,
+                            },
+                            {
+                                "type": "pypi",
+                                "namespace": None,
+                                "name": "fetchcode",
+                                "version": "0.1.0",
+                                "qualifiers": {},
+                                "subpath": None,
+                                "primary_language": None,
+                                "description": None,
+                                "release_date": None,
+                                "parties": [],
+                                "keywords": [],
+                                "homepage_url": "https://github.com/nexB/fetchcode",
+                                "download_url": "https://files.pythonhosted.org/packages/19/a0/c90e5ba4d71ea1a1a89784f6d839ffb0dbf32d270cba04d5602188cb3713/fetchcode-0.1.0-py3-none-any.whl",
+                                "api_url": "https://pypi.org/pypi/fetchcode/json",
+                                "size": None,
+                                "sha1": None,
+                                "md5": None,
+                                "sha256": None,
+                                "sha512": None,
+                                "bug_tracking_url": None,
+                                "code_view_url": None,
+                                "vcs_url": None,
+                                "copyright": None,
+                                "license_expression": None,
+                                "declared_license": "Apache-2.0",
+                                "notice_text": None,
+                                "root_path": None,
+                                "dependencies": [],
+                                "contains_source_code": None,
+                                "source_packages": [],
+                                "purl": "pkg:pypi/fetchcode@0.1.0",
+                                "repository_homepage_url": None,
+                                "repository_download_url": None,
+                                "api_data_url": None,
+                            },
+                            {
+                                "type": "pypi",
+                                "namespace": None,
+                                "name": "fetchcode",
+                                "version": "0.2.0",
+                                "qualifiers": {},
+                                "subpath": None,
+                                "primary_language": None,
+                                "description": None,
+                                "release_date": None,
+                                "parties": [],
+                                "keywords": [],
+                                "homepage_url": "https://github.com/nexB/fetchcode",
+                                "download_url": "https://files.pythonhosted.org/packages/d7/e9/96e9302e84e326b3c10a40c1723f21f4db96b557a17c6871e7a4c6336906/fetchcode-0.2.0-py3-none-any.whl",
+                                "api_url": "https://pypi.org/pypi/fetchcode/json",
+                                "size": None,
+                                "sha1": None,
+                                "md5": None,
+                                "sha256": None,
+                                "sha512": None,
+                                "bug_tracking_url": None,
+                                "code_view_url": None,
+                                "vcs_url": None,
+                                "copyright": None,
+                                "license_expression": None,
+                                "declared_license": "Apache-2.0",
+                                "notice_text": None,
+                                "root_path": None,
+                                "dependencies": [],
+                                "contains_source_code": None,
+                                "source_packages": [],
+                                "purl": "pkg:pypi/fetchcode@0.2.0",
+                                "repository_homepage_url": None,
+                                "repository_download_url": None,
+                                "api_data_url": None,
+                            },
+                            {
+                                "type": "pypi",
+                                "namespace": None,
+                                "name": "fetchcode",
+                                "version": "0.3.0",
+                                "qualifiers": {},
+                                "subpath": None,
+                                "primary_language": None,
+                                "description": None,
+                                "release_date": None,
+                                "parties": [],
+                                "keywords": [],
+                                "homepage_url": "https://github.com/nexB/fetchcode",
+                                "download_url": "https://files.pythonhosted.org/packages/8d/fb/e45da0abf63504c3f88ad02537dc9dc64ea5206b09ce29cfb8191420d678/fetchcode-0.3.0-py3-none-any.whl",
+                                "api_url": "https://pypi.org/pypi/fetchcode/json",
+                                "size": None,
+                                "sha1": None,
+                                "md5": None,
+                                "sha256": None,
+                                "sha512": None,
+                                "bug_tracking_url": None,
+                                "code_view_url": None,
+                                "vcs_url": None,
+                                "copyright": None,
+                                "license_expression": None,
+                                "declared_license": "Apache-2.0",
+                                "notice_text": None,
+                                "root_path": None,
+                                "dependencies": [],
+                                "contains_source_code": None,
+                                "source_packages": [],
+                                "purl": "pkg:pypi/fetchcode@0.3.0",
+                                "repository_homepage_url": None,
+                                "repository_download_url": None,
+                                "api_data_url": None,
+                            },
+                        ],
+                    }
+                ],
+            ),
+            (
+                ["pkg:gem/bundler-sass"],
+                [],
+            ),
+            (
+                ["pkg:rubygems/bundler-sass"],
+                [],
+            ),
+            (
+                ["pkg:nginx/nginx"],
+                [],
+            ),
+            (
+                ["pkg:pypi/zzzzz"],
+                [],
+            ),
+            (
+                ["pkg:pypi/?fetchcode"],
+                [],
+            ),
+            (
+                ["zzzzz"],
+                [],
+            ),
+        ],
+    )
+    def test_meta_details(self, test_input, expected):
+        purl_meta = purlcli.get_meta_details(test_input)
+        assert purl_meta == expected
 
-    def test_api_validate_purl(self):
-        data1 = {
-            "purl": "pkg:pypi/packagedb@2.0.0",
-            "check_existence": True,
-        }
-        response1 = self.client.get(f"/api/validate/", data=data1)
-
-        self.assertEqual(response1.status_code, 200)
-        self.assertEqual(True, response1.data["valid"])
-        self.assertEqual(True, response1.data["exists"])
-        self.assertEqual(
-            "The provided Package URL is valid, and the package exists in the upstream repo.",
-            response1.data["message"],
-        )
-
-        data2 = {
-            "purl": "pkg:pypi/?packagedb@2.0.0",
-            "check_existence": True,
-        }
-        response2 = self.client.get(f"/api/validate/", data=data2)
-
-        self.assertEqual(response2.status_code, 200)
-        self.assertEqual(False, response2.data["valid"])
-        self.assertEqual(None, response2.data["exists"])
-        self.assertEqual(
-            "The provided PackageURL is not valid.", response2.data["message"]
-        )
-
-        data3 = {
-            "purl": "pkg:pypi/zzzzz@2.0.0",
-            "check_existence": True,
-        }
-        response3 = self.client.get(f"/api/validate/", data=data3)
-
-        self.assertEqual(response3.status_code, 200)
-        self.assertEqual(True, response3.data["valid"])
-        self.assertEqual(False, response3.data["exists"])
-        self.assertEqual(
-            "The provided PackageURL is valid, but does not exist in the upstream repo.",
-            response3.data["message"],
-        )
-
-        data4 = {
-            "purl": "pkg:nginx/nginx@0.8.9",
-            "check_existence": True,
-        }
-        response4 = self.client.get(f"/api/validate/", data=data4)
-
-        self.assertEqual(response4.status_code, 200)
-        self.assertEqual(True, response4.data["valid"])
-        self.assertEqual(None, response4.data["exists"])
-        self.assertEqual(
-            "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-            response4.data["message"],
-        )
-
-        data5 = {
-            "purl": "pkg:npm/nosuchpackage@1.1.0",
-            "check_existence": True,
-        }
-        response5 = self.client.get(f"/api/validate/", data=data5)
-
-        self.assertEqual(response5.status_code, 200)
-        self.assertEqual(True, response5.data["valid"])
-        self.assertEqual(True, response5.data["exists"])
-        self.assertEqual(
-            "The provided Package URL is valid, and the package exists in the upstream repo.",
-            response5.data["message"],
-        )
-
-        data6 = {
-            "purl": "pkg:npm/nosuchpackage@1.1.1",
-            "check_existence": True,
-        }
-        response6 = self.client.get(f"/api/validate/", data=data6)
-
-        self.assertEqual(response6.status_code, 200)
-        self.assertEqual(True, response6.data["valid"])
-        self.assertEqual(False, response6.data["exists"])
-        self.assertEqual(
-            "The provided PackageURL is valid, but does not exist in the upstream repo.",
-            response6.data["message"],
-        )
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                ["pkg:pypi/fetchcode"],
+                None,
+            ),
+            (
+                ["pkg:gem/bundler-sass"],
+                "The provided PackageURL 'pkg:gem/bundler-sass' is valid, but `meta` is not supported for this package type.",
+            ),
+            (
+                ["pkg:rubygems/bundler-sass"],
+                "There was an error with your 'pkg:rubygems/bundler-sass' query.  Make sure that 'pkg:rubygems/bundler-sass' actually exists in the relevant repository.",
+            ),
+            (
+                ["pkg:nginx/nginx"],
+                "The provided PackageURL 'pkg:nginx/nginx' is valid, but `meta` is not supported for this package type.",
+            ),
+            (
+                ["pkg:pypi/zzzzz"],
+                "There was an error with your 'pkg:pypi/zzzzz' query.  Make sure that 'pkg:pypi/zzzzz' actually exists in the relevant repository.",
+            ),
+            (
+                ["pkg:pypi/?fetchcode"],
+                "There was an error with your 'pkg:pypi/?fetchcode' query -- the Package URL you provided is not valid.",
+            ),
+            (
+                ["zzzzz"],
+                "There was an error with your 'zzzzz' query -- the Package URL you provided is not valid.",
+            ),
+        ],
+    )
+    def test_check_meta_purl(self, test_input, expected):
+        purl_meta = purlcli.check_meta_purl(test_input[0])
+        assert purl_meta == expected
