@@ -1373,6 +1373,13 @@ class PackageWatch(models.Model):
             self.rq_schedule_id = self.create_new_job()
 
         super(PackageWatch, self).save(*args, **kwargs)
+    
+    def delete(self, *args, **kwargs):
+        # Clear associated watch schedule
+        if self.rq_schedule_id:
+            schedules.clear_job(self.rq_schedule_id)
+
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return f"{self.package_url}"
