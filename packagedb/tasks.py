@@ -12,6 +12,7 @@ import datetime
 import django_rq
 from fetchcode.package_versions import SUPPORTED_ECOSYSTEMS
 from univers.version_range import RANGE_CLASS_BY_SCHEMES
+from univers.versions import InvalidVersion
 
 PRIORITY_QUEUE_SUPPORTED_ECOSYSTEMS = ["maven", "npm"]
 
@@ -35,39 +36,38 @@ def watch_new_purls(purl):
         return
 
     version_class = VERSION_CLASS_BY_PACKAGE_TYPE.get(watch.type)
+    watch.watch_error = None
 
-    latest_local_version = None
-    if package := Package.objects.filter(
+    local_versions = Package.objects.filter(
         type=watch.type,
         namespace=watch.namespace,
         name=watch.name,
-    ).first():
-        latest_local = package.get_latest_version()
-        latest_local_version = version_class(latest_local.version)
+    ).values_list("version", flat=True)
 
-    all_versions = versions(watch.package_url)
-    sorted_versions = sorted(
-        [version_class(version.value) for version in all_versions or []]
-    )
+    all_versions = versions(watch.package_url) or []
+    
+    try:
+        local_versions = [version_class(version) for version in local_versions]
+        all_versions = [version_class(version.value) for version in all_versions]
+    except InvalidVersion as e:
+        watch.watch_error = f"InvalidVersion exception: {e}"
 
-    if latest_local_version:
-        new_versions = [v for v in sorted_versions if v > latest_local_version]
-    else:
-        new_versions = sorted_versions
-
-    for version in new_versions:
-        purl = str(
-            PackageURL(
-                type=watch.type,
-                namespace=watch.namespace,
-                name=watch.name,
-                version=str(version),
+    if not watch.watch_error:
+        for version in all_versions:
+            if version in local_versions:
+                continue
+            new_purl = str(
+                PackageURL(
+                    type=watch.type,
+                    namespace=watch.namespace,
+                    name=watch.name,
+                    version=str(version),
+                )
             )
-        )
-        PriorityResourceURI.objects.insert(purl)
+            PriorityResourceURI.objects.insert(new_purl)
 
     watch.last_watch_date = datetime.datetime.now(tz=datetime.timezone.utc)
-    watch.save(update_fields=["last_watch_date"])
+    watch.save(update_fields=["last_watch_date", "watch_error"])
 
 
 def is_supported_watch_ecosystem(watch):
