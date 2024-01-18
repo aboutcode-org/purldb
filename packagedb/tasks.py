@@ -45,7 +45,7 @@ def watch_new_purls(purl):
     ).values_list("version", flat=True)
 
     all_versions = versions(watch.package_url) or []
-    
+
     try:
         local_versions = [version_class(version) for version in local_versions]
         all_versions = [version_class(version.value) for version in all_versions]

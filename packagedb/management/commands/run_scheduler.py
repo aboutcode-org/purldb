@@ -9,10 +9,11 @@
 
 from django_rq.management.commands import rqscheduler
 from packagedb.models import PackageWatch
+from packagedb.schedules import clear_zombie_watch_schedules
 from packagedb.schedules import scheduled_job_exists
 
 
-def init_watch_jobs():
+def init_watch_scheduled():
     active_watch_qs = PackageWatch.objects.filter(is_active=True)
     for watch in active_watch_qs:
         if scheduled_job_exists(watch.schedule_work_id):
@@ -24,6 +25,6 @@ def init_watch_jobs():
 
 class Command(rqscheduler.Command):
     def handle(self, *args, **kwargs):
-        # clear_scheduled_jobs()
-        init_watch_jobs()
+        clear_zombie_watch_schedules()
+        init_watch_scheduled()
         super(Command, self).handle(*args, **kwargs)

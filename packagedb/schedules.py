@@ -30,16 +30,12 @@ def schedule_watch(watch):
 
     interval_in_seconds = watch_interval * 24 * 60 * 60
 
-    # Debug
-    # interval_in_seconds = 60
-    # first_execution = datetime.datetime.now(tz=datetime.timezone.utc)
     job = scheduler.schedule(
         scheduled_time=first_execution,
         func=watch_new_purls,
         args=[watch.package_url],
         interval=interval_in_seconds,
-        # Enable in prod
-        # result_ttl=interval_in_seconds,  # Remove job results after next run
+        result_ttl=interval_in_seconds,  # Remove job results after next run
         repeat=None,  # None means repeat forever
     )
     return job._id
@@ -49,22 +45,18 @@ def clear_job(job):
     scheduler.cancel(job)
 
 
-def clear_scheduled_jobs():
-    # Delete all scheduled jobs
-    for job in scheduler.get_jobs():
-        log.debug(f"Deleting scheduled job {job}")
-        clear_job(job)
-
-
-def clear_scheduled_jobs():
-    # Delete all scheduled jobs
-    for job in scheduler.get_jobs():
-        log.debug(f"Deleting scheduled job {job}")
-        clear_job(job)
-
-
 def scheduled_job_exists(job_id):
     return job_id and (job_id in scheduler)
+
+
+def clear_zombie_watch_schedules():
+    from packagedb.models import PackageWatch
+    schedule_ids = PackageWatch.objects.all().values_list("schedule_work_id", flat=True)
+    
+    for job in scheduler.get_jobs():
+        if job._id not in schedule_ids:
+            log.debug(f"Deleting scheduled job {job}")
+            clear_job(job)
 
 
 def is_redis_running():
