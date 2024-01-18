@@ -4,6 +4,7 @@ import click
 import requests
 from fetchcode.package import info
 from fetchcode.package_versions import SUPPORTED_ECOSYSTEMS, versions
+from packageurl import PackageURL
 
 
 @click.group()
@@ -241,8 +242,8 @@ def check_meta_purl(purl):
         "bitbucket",
         "rubygems",
     ]
-    purl_type = purl.split(":")[1].split("/")[0]
-    if purl_type not in SUPPORTED_ECOSYSTEMS:
+    purl = PackageURL.from_string(purl)
+    if purl.type not in SUPPORTED_ECOSYSTEMS:
         return f"The provided PackageURL '{purl}' is valid, but `meta` is not supported for this package type."
 
     if results["exists"] != True:

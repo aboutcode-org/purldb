@@ -107,9 +107,10 @@ process_scans:
 
 test:
 	@echo "-> Run the test suite"
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode-toolkit --ignore packagedb/tests/test_throttling.py
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode-toolkit --ignore purldb-toolkit --ignore packagedb/tests/test_throttling.py
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
 	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs matchcode-toolkit --ignore matchcode-toolkit/src/matchcode_toolkit/pipelines
+	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs purldb-toolkit
 
 shell:
 	${MANAGE} shell
