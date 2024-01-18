@@ -1317,13 +1317,13 @@ class PackageWatch(models.Model):
         ),
     )
 
-    rq_schedule_id = models.CharField(
+    schedule_work_id = models.CharField(
         max_length=255,
         unique=True,
         null=True,
         blank=True,
         db_index=True,
-        help_text=_("Identifier used to manage the periodic RQ watch job."),
+        help_text=_("Identifier used to manage the periodic watch job."),
     )
 
     def save(self, *args, **kwargs):
@@ -1370,14 +1370,14 @@ class PackageWatch(models.Model):
                 schedule = True
         
         if schedule:
-            self.rq_schedule_id = self.create_new_job()
+            self.schedule_work_id = self.create_new_job()
 
         super(PackageWatch, self).save(*args, **kwargs)
     
     def delete(self, *args, **kwargs):
         # Clear associated watch schedule
-        if self.rq_schedule_id:
-            schedules.clear_job(self.rq_schedule_id)
+        if self.schedule_work_id and schedules.is_redis_running():
+            schedules.clear_job(self.schedule_work_id)
 
         super().delete(*args, **kwargs)
 
@@ -1385,8 +1385,10 @@ class PackageWatch(models.Model):
         return f"{self.package_url}"
 
     def create_new_job(self):
-        if self.rq_schedule_id:
-            schedules.clear_job(self.rq_schedule_id)
+        if not schedules.is_redis_running():
+            return
+        if self.schedule_work_id:
+            schedules.clear_job(self.schedule_work_id)
 
         return schedules.schedule_watch(self) if self.is_active else None
 

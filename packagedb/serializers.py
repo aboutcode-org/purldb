@@ -346,7 +346,7 @@ class PackageWatchAPISerializer(HyperlinkedModelSerializer):
             'creation_date',
             'last_watch_date',
             'watch_error',
-            'rq_schedule_id',
+            'schedule_work_id',
         ]
 
 

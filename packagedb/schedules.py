@@ -12,6 +12,7 @@ import logging
 
 import django_rq
 from packagedb.tasks import watch_new_purls
+from redis.exceptions import ConnectionError
 
 log = logging.getLogger(__name__)
 scheduler = django_rq.get_scheduler()
@@ -64,3 +65,13 @@ def clear_scheduled_jobs():
 
 def scheduled_job_exists(job_id):
     return job_id and (job_id in scheduler)
+
+
+def is_redis_running():
+    try:
+        connection =django_rq.get_connection()
+        return connection.ping()
+    except ConnectionError as e:
+        error_message = f"Error checking Redis status: {e}. Redis is not reachable."
+        log.error(error_message)
+        return False

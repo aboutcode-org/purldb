@@ -15,11 +15,11 @@ from packagedb.schedules import scheduled_job_exists
 def init_watch_jobs():
     active_watch_qs = PackageWatch.objects.filter(is_active=True)
     for watch in active_watch_qs:
-        if scheduled_job_exists(watch.rq_schedule_id):
+        if scheduled_job_exists(watch.schedule_work_id):
             continue
         new_id = watch.create_new_job()
-        watch.rq_schedule_id = new_id
-        watch.save(update_fields=["rq_schedule_id"])
+        watch.schedule_work_id = new_id
+        watch.save(update_fields=["schedule_work_id"])
 
 
 class Command(rqscheduler.Command):
