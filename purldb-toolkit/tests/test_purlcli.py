@@ -7,7 +7,6 @@ from commoncode.testcase import FileBasedTesting
 from django.test import TestCase
 from purldb_toolkit import purlcli
 from rest_framework import status
-from rest_framework.test import APIClient
 
 from packagedb.models import Package
 
