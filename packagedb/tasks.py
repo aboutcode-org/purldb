@@ -23,7 +23,11 @@ VERSION_CLASS_BY_PACKAGE_TYPE = {
 
 
 @django_rq.job("default")
-def watch_new_purls(purl):
+def watch_new_packages(purl):
+    """
+    Collect new versions of a package and insert the
+    new PURLs in PriorityResourceURI for indexing.
+    """
     from fetchcode.package_versions import versions
     from minecode.models import PriorityResourceURI
     from packagedb.models import Package
@@ -71,6 +75,11 @@ def watch_new_purls(purl):
 
 
 def is_supported_watch_ecosystem(watch):
+    """
+    Check if PackageWatch.type ecosystem is supported in
+    `fetchcode`, `PriorityResourceURI`, and `Univers`.
+    If not supported update the `watch_error` field with error message.
+    """
     for ecosystem, error_message in [
         (SUPPORTED_ECOSYSTEMS, "fetchcode"),
         (PRIORITY_QUEUE_SUPPORTED_ECOSYSTEMS, "Priority Queue"),

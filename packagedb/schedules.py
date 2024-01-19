@@ -11,7 +11,7 @@ import datetime
 import logging
 
 import django_rq
-from packagedb.tasks import watch_new_purls
+from packagedb.tasks import watch_new_packages
 from redis.exceptions import ConnectionError
 
 log = logging.getLogger(__name__)
@@ -19,6 +19,10 @@ scheduler = django_rq.get_scheduler()
 
 
 def schedule_watch(watch):
+    """
+    Takes a `PackageWatch` object as input and schedule a
+    recurring job using `rq_scheduler` to watch the package.
+    """
     watch_interval = watch.watch_interval
     last_watch_date = watch.last_watch_date
 
@@ -32,7 +36,7 @@ def schedule_watch(watch):
 
     job = scheduler.schedule(
         scheduled_time=first_execution,
-        func=watch_new_purls,
+        func=watch_new_packages,
         args=[watch.package_url],
         interval=interval_in_seconds,
         result_ttl=interval_in_seconds,  # Remove job results after next run
@@ -42,14 +46,24 @@ def schedule_watch(watch):
 
 
 def clear_job(job):
+    """
+    Take a job object or job ID as input
+    and cancel the corresponding scheduled job.
+    """
     scheduler.cancel(job)
 
 
 def scheduled_job_exists(job_id):
+    """
+    Check if a scheduled job with the given job ID exists.
+    """
     return job_id and (job_id in scheduler)
 
 
 def clear_zombie_watch_schedules():
+    """
+    Clear scheduled jobs not associated with any PackageWatch object.
+    """
     from packagedb.models import PackageWatch
     schedule_ids = PackageWatch.objects.all().values_list("schedule_work_id", flat=True)
     
@@ -60,6 +74,9 @@ def clear_zombie_watch_schedules():
 
 
 def is_redis_running():
+    """
+    Check the status of the Redis server.
+    """
     try:
         connection =django_rq.get_connection()
         return connection.ping()

@@ -1326,6 +1326,9 @@ class PackageWatch(models.Model):
         help_text=_("Identifier used to manage the periodic watch job."),
     )
 
+    def __str__(self):
+        return f"{self.package_url}"
+
     def save(self, *args, **kwargs):
         schedule = False
         if not self.pk:
@@ -1339,8 +1342,8 @@ class PackageWatch(models.Model):
             # we are removing version/qualifiers/subpath before saving
             self.package_url = str(
                 PackageURL(
-                    type=purl.type, 
-                    namespace=purl.namespace, 
+                    type=purl.type,
+                    namespace=purl.namespace,
                     name=purl.name,
                 )
             )
@@ -1361,30 +1364,30 @@ class PackageWatch(models.Model):
                 raise ValueError(
                     "The package_url, type, name, and namespace of a PackageWatch cannot be changed once saved."
                 )
-            # Update the scheduled job if depth/watch_interval/is_active is modified.
+            # Update the scheduled job if watch_interval/is_active is modified.
             elif (
                 existing.is_active != self.is_active
                 or existing.watch_interval != self.watch_interval
-                or existing.depth != self.depth
             ):
                 schedule = True
-        
+
         if schedule:
             self.schedule_work_id = self.create_new_job()
 
         super(PackageWatch, self).save(*args, **kwargs)
-    
+
     def delete(self, *args, **kwargs):
-        # Clear associated watch schedule
+        """Clear associated watch schedule."""
         if self.schedule_work_id and schedules.is_redis_running():
             schedules.clear_job(self.schedule_work_id)
 
         super().delete(*args, **kwargs)
 
-    def __str__(self):
-        return f"{self.package_url}"
-
     def create_new_job(self):
+        """
+        Create a new scheduled job. If a previous scheduled job
+        exists remove the existing job from the scheduler.
+        """
         if not schedules.is_redis_running():
             return
         if self.schedule_work_id:

@@ -14,6 +14,7 @@ from packagedb.schedules import scheduled_job_exists
 
 
 def init_watch_scheduled():
+    """Initialize scheduled jobs for active PackageWatch."""
     active_watch_qs = PackageWatch.objects.filter(is_active=True)
     for watch in active_watch_qs:
         if scheduled_job_exists(watch.schedule_work_id):
