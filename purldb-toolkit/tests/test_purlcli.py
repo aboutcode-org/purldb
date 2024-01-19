@@ -1,14 +1,5 @@
-import json
-import os
-import sys
-
 import pytest
-from commoncode.testcase import FileBasedTesting
-from django.test import TestCase
 from purldb_toolkit import purlcli
-from rest_framework import status
-
-from packagedb.models import Package
 
 
 class TestPURLCLI_validate(object):
