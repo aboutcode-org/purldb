@@ -106,11 +106,16 @@ def get_versions(purls, output, file):
 
 
 def list_versions(purls):
+    """
+    Return a list of dictionaries containing version-related data for each PURL
+    in the `purls` input list.  `check_versions_purl()` will print an error
+    message to the console when necessary.
+    """
     purl_versions = []
     for purl in purls:
-        dict_output = {}
-        dict_output["purl"] = purl
-        dict_output["versions"] = []
+        purl_data = {}
+        purl_data["purl"] = purl
+        purl_data["versions"] = []
 
         purl = purl.strip()
         if not purl:
@@ -121,18 +126,19 @@ def list_versions(purls):
             continue
 
         for package_version_object in list(versions(purl)):
-            nested_dict = {}
-            nested_purl = purl + "@" + f'{package_version_object.to_dict()["value"]}'
+            purl_version_data = {}
+            purl_version = package_version_object.to_dict()["value"]
+            nested_purl = purl + "@" + f"{purl_version}"
 
-            nested_dict["purl"] = nested_purl
-            nested_dict["version"] = f'{package_version_object.to_dict()["value"]}'
-            nested_dict[
+            purl_version_data["purl"] = nested_purl
+            purl_version_data["version"] = f"{purl_version}"
+            purl_version_data[
                 "release_date"
             ] = f'{package_version_object.to_dict()["release_date"]}'
 
-            dict_output["versions"].append(nested_dict)
+            purl_data["versions"].append(purl_version_data)
 
-        purl_versions.append(dict_output)
+        purl_versions.append(purl_data)
 
     return purl_versions
 
@@ -176,13 +182,17 @@ def get_meta(purls, output, file):
 
 
 def get_meta_details(purls):
+    """
+    Return a list of dictionaries containing metadata for each PURL
+    in the `purls` input list.  `check_meta_purl()` will print an error
+    message to the console when necessary.
+    """
     meta_details = []
-    purl_versions = []
 
     for purl in purls:
-        dict_output = {}
-        dict_output["purl"] = purl
-        dict_output["metadata"] = []
+        meta_detail = {}
+        meta_detail["purl"] = purl
+        meta_detail["metadata"] = []
 
         purl = purl.strip()
         if not purl:
@@ -194,14 +204,17 @@ def get_meta_details(purls):
 
         releases = []
         for release in list(info(purl)):
-            dict_output["metadata"].append(release.to_dict())
+            meta_detail["metadata"].append(release.to_dict())
 
-        purl_versions.append(dict_output)
+        meta_details.append(meta_detail)
 
-    return purl_versions
+    return meta_details
 
 
 def check_existence(purl):
+    """
+    Return a JSON object containing data regarding the validity of the input PURL.
+    """
     api_query = "https://public.purldb.io/api/validate/"
     purl = purl.strip()
     request_body = {"purl": purl, "check_existence": True}
@@ -212,6 +225,10 @@ def check_existence(purl):
 
 
 def check_versions_purl(purl):
+    """
+    Return a message for printing to the console if the input PURL is invalid,
+    its type is not supported by `versions` or its existence was not validated.
+    """
     results = check_existence(purl)
 
     if results["valid"] == False:
@@ -219,9 +236,9 @@ def check_versions_purl(purl):
 
     supported = SUPPORTED_ECOSYSTEMS
 
-    purl_type = purl.split(":")[1].split("/")[0]
+    versions_purl = PackageURL.from_string(purl)
 
-    if purl_type not in supported:
+    if versions_purl.type not in supported:
         return f"The provided PackageURL '{purl}' is valid, but `versions` is not supported for this package type."
 
     if results["exists"] != True:
@@ -229,7 +246,12 @@ def check_versions_purl(purl):
 
 
 def check_meta_purl(purl):
+    """
+    Return a message for printing to the console if the input PURL is invalid,
+    its type is not supported by `meta` or its existence was not validated.
+    """
     results = check_existence(purl)
+
     if results["valid"] == False:
         return f"There was an error with your '{purl}' query -- the Package URL you provided is not valid."
 
@@ -242,8 +264,9 @@ def check_meta_purl(purl):
         "bitbucket",
         "rubygems",
     ]
-    purl = PackageURL.from_string(purl)
-    if purl.type not in SUPPORTED_ECOSYSTEMS:
+    meta_purl = PackageURL.from_string(purl)
+
+    if meta_purl.type not in SUPPORTED_ECOSYSTEMS:
         return f"The provided PackageURL '{purl}' is valid, but `meta` is not supported for this package type."
 
     if results["exists"] != True:
