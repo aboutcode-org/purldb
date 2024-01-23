@@ -27,6 +27,7 @@ extractcode==31.0.0
 extractcode-7z==16.5.210531
 extractcode-libarchive==3.5.1.210531
 fasteners==0.19
+fetchcode==0.3.0
 fingerprints==1.2.3
 ftfy==6.1.3
 ftputil==5.0.4
