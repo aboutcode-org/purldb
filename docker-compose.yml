@@ -8,6 +8,13 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data/
 
+  redis:
+    image: redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: always
+
   web:
     build: .
     command: sh -c "
@@ -110,6 +117,30 @@ services:
     profiles:
       - priority_queue
     depends_on:
+      - db
+      - web
+  
+  scheduler:
+    build: .
+    command: wait-for-it web:8000 -- python manage.py run_scheduler
+    env_file:
+      - docker.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    depends_on:
+      - redis
+      - db
+      - web
+
+  rq_worker:
+    build: .
+    command: wait-for-it web:8000 -- python manage.py rqworker default
+    env_file:
+      - docker.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    depends_on:
+      - redis
       - db
       - web
 
