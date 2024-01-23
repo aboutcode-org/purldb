@@ -11,11 +11,25 @@ import datetime
 import logging
 
 import django_rq
-from packagedb.tasks import watch_new_packages
 from redis.exceptions import ConnectionError
+
+from packagedb.tasks import watch_new_packages
 
 log = logging.getLogger(__name__)
 scheduler = django_rq.get_scheduler()
+
+
+def get_next_execution(watch_interval_days, last_watch_date):
+    """
+    Calculate the next execution time based on the watch_interval_days and last_watch_date.
+    """
+    current_date_time = datetime.datetime.now(tz=datetime.timezone.utc)
+    if last_watch_date:
+        next_execution = last_watch_date + datetime.timedelta(days=watch_interval_days)
+        if next_execution > current_date_time:
+            return next_execution
+
+    return current_date_time
 
 
 def schedule_watch(watch):
@@ -26,12 +40,7 @@ def schedule_watch(watch):
     watch_interval = watch.watch_interval
     last_watch_date = watch.last_watch_date
 
-    first_execution = datetime.datetime.now(tz=datetime.timezone.utc)
-    if last_watch_date:
-        next_watch_time = last_watch_date + datetime.timedelta(days=watch_interval)
-        if next_watch_time > first_execution:
-            first_execution = next_watch_time
-
+    first_execution = get_next_execution(watch_interval,last_watch_date)
     interval_in_seconds = watch_interval * 24 * 60 * 60
 
     job = scheduler.schedule(
@@ -50,7 +59,7 @@ def clear_job(job):
     Take a job object or job ID as input
     and cancel the corresponding scheduled job.
     """
-    scheduler.cancel(job)
+    return scheduler.cancel(job)
 
 
 def scheduled_job_exists(job_id):
@@ -60,7 +69,7 @@ def scheduled_job_exists(job_id):
     return job_id and (job_id in scheduler)
 
 
-def clear_zombie_watch_schedules():
+def clear_zombie_watch_schedules(logger=log):
     """
     Clear scheduled jobs not associated with any PackageWatch object.
     """
@@ -69,16 +78,16 @@ def clear_zombie_watch_schedules():
     
     for job in scheduler.get_jobs():
         if job._id not in schedule_ids:
-            log.debug(f"Deleting scheduled job {job}")
+            logger.info(f"Deleting scheduled job {job}")
             clear_job(job)
 
 
-def is_redis_running():
+def is_redis_running(logger=log):
     """
     Check the status of the Redis server.
     """
     try:
-        connection =django_rq.get_connection()
+        connection = django_rq.get_connection()
         return connection.ping()
     except ConnectionError as e:
         error_message = f"Error checking Redis status: {e}. Redis is not reachable."
