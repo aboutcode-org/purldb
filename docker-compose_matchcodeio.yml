@@ -78,8 +78,8 @@ services:
 
 networks:
   default:
-    external:
-      name: purldb
+    name: purldb
+    external: true
 
 volumes:
   redis_data:
