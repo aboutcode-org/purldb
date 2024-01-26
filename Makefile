@@ -20,7 +20,7 @@ GET_SECRET_KEY=`base64 /dev/urandom | head -c50`
 ENV_FILE=.env
 # Customize with `$ make postgres PACKAGEDB_DB_PASSWORD=YOUR_PASSWORD`
 PACKAGEDB_DB_PASSWORD=packagedb
-SCANCODEIO_DB_PASSWORD=scancodeio
+MATCHCODEIO_DB_PASSWORD=matchcodeio
 
 # Use sudo for postgres, but only on Linux
 UNAME := $(shell uname)
@@ -96,15 +96,15 @@ postgres:
 	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=packagedb packagedb
 	@$(MAKE) migrate
 
-postgres_scancodeio:
+postgres_matchcodeio:
 	@echo "-> Configure PostgreSQL database"
-	@echo "-> Create database user 'scancodeio'"
-	${SUDO_POSTGRES} createuser --no-createrole --no-superuser --login --inherit --createdb scancodeio || true
-	${SUDO_POSTGRES} psql -c "alter user scancodeio with encrypted password '${SCANCODEIO_DB_PASSWORD}';" || true
-	@echo "-> Drop 'scancodeio' database"
-	${SUDO_POSTGRES} dropdb scancodeio || true
-	@echo "-> Create 'scancodeio' database"
-	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=scancodeio scancodeio
+	@echo "-> Create database user 'matchcodeio'"
+	${SUDO_POSTGRES} createuser --no-createrole --no-superuser --login --inherit --createdb matchcodeio || true
+	${SUDO_POSTGRES} psql -c "alter user matchcodeio with encrypted password '${MATCHCODEIO_DB_PASSWORD}';" || true
+	@echo "-> Drop 'matchcodeio' database"
+	${SUDO_POSTGRES} dropdb matchcodeio || true
+	@echo "-> Create 'matchcodeio' database"
+	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=matchcodeio matchcodeio
 	${MATCHCODE_MANAGE} migrate
 
 run:
