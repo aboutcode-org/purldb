@@ -110,7 +110,7 @@ postgres_matchcodeio:
 run:
 	${MANAGE} runserver 8001 --insecure
 
-run_matchcode:
+run_matchcodeio:
 	${MATCHCODE_MANAGE} runserver 8002 --insecure
 
 seed:

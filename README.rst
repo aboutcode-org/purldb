@@ -8,6 +8,7 @@ This repo consists of four main tools:
 - MineCode that contains utilities to mine package repositories
 - MatchCode that contains utilities to index package metadata and resources for
   matching
+- MatchCode.io that provides package matching functionalities for codebases
 - ClearCode that contains utilities to mine Clearlydefined for package data
 
 These are designed to be used first for reference such that one can query for
@@ -39,6 +40,7 @@ Once the prerequisites have been installed, set up PurlDB with the following com
     make dev
     make envfile
     make postgres
+    make postgres_matchcodeio
 
 Once PurlDB and the database has been set up, run tests to ensure functionality:
 ::
@@ -52,6 +54,11 @@ Start the PurlDB server by running:
 ::
 
     make run
+
+Start the MatchCode.io server by running:
+::
+
+    make run_matchcodeio
 
 To start visiting upstream package repositories for package metadata:
 ::
@@ -69,32 +76,12 @@ Populating Package Resource Data
 The Resources of Packages can be collected using the scan queue. By default, a
 scan request will be created for each mapped Package.
 
-The following environment variables will have to be set for the scan queue
-commands to work:
+Given that you have access to a ScanCode.io instance, the following environment
+variables will have to be set for the scan queue commands to work:
 ::
 
     SCANCODEIO_URL=<ScanCode.io API URL>
     SCANCODEIO_API_KEY=<ScanCode.io API Key>
-
-``matchcode-toolkit`` will also have to be installed in the same environment as
-ScanCode.io. If running ScanCode.io in a virtual environment from a git
-checkout, you can install ``matchcode-toolkit`` in editable mode:
-::
-
-    pip install -e <Path to purldb/matchcode-toolkit>
-
-Otherwise, you can create a wheel from ``matchcode-toolkit`` and install it in
-the ScanCode.io virutal environment or modify the ScanCode.io Dockerfile to
-install the ``matchcode-toolkit`` wheel.
-
-To build the ``matchcode-toolkit`` wheel:
-::
-
-    # From the matchcode-toolkit directory
-    python setup.py bdist_wheel
-
-The wheel ``matchcode_toolkit-0.0.1-py3-none-any.whl`` will be created in the
-``matchcode-toolkit/dist/`` directory.
 
 The scan queue is run using two commands:
 ::
@@ -134,6 +121,24 @@ matching indices from the collected Package data:
 ::
 
     make index_packages
+
+
+MatchCode.io
+------------
+
+MatchCode.io is a Django app, based off of ScanCode.io, that exposes one API
+endpoint, ``api/matching``, which takes a ScanCode.io codebase scan, and
+performs Package matching on it.
+
+Currently, it performs three matching steps:
+
+  * Match codebase resources against the Packages in the PackageDB
+  * Match codebase resources against the Resources in the PackageDB
+  * Match codebase directories against the directory matching indices of
+    MatchCode
+
+This API endpoint is intended to be used with the ``match_to_purldb`` pipeline
+in ScanCode.io.
 
 
 API Endpoints
