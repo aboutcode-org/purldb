@@ -177,6 +177,27 @@ API Endpoints
   * Used to check the SHA1 values of archives from a scan to determine if they are known Packages
 
 
+Docker Setup for Local Development and Testing
+----------------------------------------------
+
+PurlDB and MatchCode.io are two separate Django apps. In order to run both of
+these Django apps on the same host, we need to use Traefik.
+
+Traefik is an edge router that receives requests and finds out which services
+are responsible for handling them. In the docker-compose.yml files for PurlDB
+and MatchCode.io, we have made these two services part of the same Docker
+network and set up the routes for each service.
+
+All requests to the host go to the PurlDB service, but requests that go to the
+``api/matching`` endpoint are routed to the MatchCode.io service.
+
+To run PurlDB and Matchcode.io with Docker:
+::
+
+  docker compose -f docker-compose_traefik.yml up -d
+  docker compose -f docker-compose_purldb.yml up -d
+  docker compose -f docker-compose_matchcodeio.yml up -d
+
 Funding
 -------
 
