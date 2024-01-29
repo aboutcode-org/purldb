@@ -158,3 +158,4 @@ services:
 volumes:
   db_data:
   static:
+  redis_data:
