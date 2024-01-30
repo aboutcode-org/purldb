@@ -123,26 +123,8 @@ matching indices from the collected Package data:
     make index_packages
 
 
-MatchCode.io
-------------
-
-MatchCode.io is a Django app, based off of ScanCode.io, that exposes one API
-endpoint, ``api/matching``, which takes a ScanCode.io codebase scan, and
-performs Package matching on it.
-
-Currently, it performs three matching steps:
-
-  * Match codebase resources against the Packages in the PackageDB
-  * Match codebase resources against the Resources in the PackageDB
-  * Match codebase directories against the directory matching indices of
-    MatchCode
-
-This API endpoint is intended to be used with the ``match_to_purldb`` pipeline
-in ScanCode.io.
-
-
-API Endpoints
--------------
+PurlDB API Endpoints
+--------------------
 
 * ``api/packages``
 
@@ -175,6 +157,30 @@ API Endpoints
 
   * Contains the SHA1 values of Package archives
   * Used to check the SHA1 values of archives from a scan to determine if they are known Packages
+
+
+MatchCode.io
+------------
+
+MatchCode.io is a Django app, based off of ScanCode.io, that exposes one API
+endpoint, ``api/matching``, which takes a ScanCode.io codebase scan, and
+performs Package matching on it.
+
+Currently, it performs three matching steps:
+
+  * Match codebase resources against the Packages in the PackageDB
+  * Match codebase resources against the Resources in the PackageDB
+  * Match codebase directories against the directory matching indices of
+    MatchCode
+
+
+MatchCode.io API Endpoints
+--------------------------
+
+* ``api/matching``
+
+  * Performs Package matching on an uploaded ScanCode.io scan
+  * Intended to be used with the ``match_to_purldb`` pipeline in ScanCode.io
 
 
 Docker Setup for Local Development and Testing
