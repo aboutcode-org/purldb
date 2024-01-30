@@ -8,12 +8,19 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data/
 
+  redis:
+    image: redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: always
+
   web:
     build: .
     command: sh -c "
         python manage.py migrate &&
         python manage.py collectstatic --no-input --verbosity 0 --clear &&
-        gunicorn purldb.wsgi:application --bind :8000 --timeout 600 --workers 8"
+        gunicorn purldb_project.wsgi:application --bind :8000 --timeout 600 --workers 8"
     env_file:
       - docker.env
     expose:
@@ -112,6 +119,30 @@ services:
     depends_on:
       - db
       - web
+  
+  scheduler:
+    build: .
+    command: wait-for-it web:8000 -- python manage.py run_scheduler
+    env_file:
+      - docker.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    depends_on:
+      - redis
+      - db
+      - web
+
+  rq_worker:
+    build: .
+    command: wait-for-it web:8000 -- python manage.py rqworker default
+    env_file:
+      - docker.env
+    volumes:
+      - /etc/purldb/:/etc/purldb/
+    depends_on:
+      - redis
+      - db
+      - web
 
   nginx:
     image: nginx
@@ -127,3 +158,4 @@ services:
 volumes:
   db_data:
   static:
+  redis_data:

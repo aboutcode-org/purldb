@@ -7,31 +7,32 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from collections import OrderedDict
 import copy
 import logging
-import natsort
 import sys
 import uuid
+from collections import OrderedDict
 
+import natsort
+from dateutil.parser import parse as dateutil_parse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
 from django.core import exceptions
 from django.core.paginator import Paginator
+from django.core.validators import MaxValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
-from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
+from packagedb import schedules
 from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
 from rest_framework.authtoken.models import Token
-
 
 TRACE = False
 
@@ -1218,6 +1219,181 @@ def make_relationship(
         to_package=to_package,
         relationship=relationship,
     )
+
+
+class PackageWatch(models.Model):
+    """
+    Model representing a watch on a package to monitor for new versions.
+    """
+    DEPTH_CHOICES = (
+        (1, "Version"),
+        (2, "Metadata"),
+        (3, "Scan"),
+    )
+
+    package_url = models.CharField(
+        max_length=2048,
+        unique=True,
+        null=False,
+        blank=False,
+        db_index=True,
+        help_text=_(
+            "Package-URL to watch. If the PURL has a version, "
+            "qualifiers or subpath, they are stripped and ignored."
+        ),
+    )
+
+    type = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_("A short code to identify the type of this package."),
+    )
+
+    namespace = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_(
+            "Package name prefix, such as Maven groupid, Docker image owner, "
+            "GitHub user or organization, etc."
+        ),
+    )
+
+    name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_("Name of the package."),
+    )
+
+    is_active = models.BooleanField(
+        null=True,
+        db_index=True,
+        default=True,
+        help_text=_(
+            "When set to True (Yes), this Package Watch is active. "
+            "When set to False (No), this watch is inactive and not processed."
+        ),
+    )
+
+    depth = models.PositiveSmallIntegerField(
+        choices=DEPTH_CHOICES,
+        default=3,
+        help_text=_("Depth of data collection from listing versions up to a full scan."),
+    )
+
+    watch_interval = models.PositiveSmallIntegerField(
+        validators=[
+            MinValueValidator(1, message="Interval must be at least 1 day."),
+            MaxValueValidator(365, message="Interval must be at most 365 days."),
+        ],
+        default=7,
+        help_text=_("Number of days to wait between watches of this package."),
+    )
+
+    creation_date = models.DateTimeField(
+        auto_now_add=True,
+        help_text=_("Timestamp indicating when this watch object was created."),
+    )
+
+    last_watch_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_("Timestamp indicating when this PURL was last watched."),
+    )
+
+    watch_error = models.TextField(
+        null=True,
+        blank=True,
+        help_text=_(
+            "Watch error messages of the last watch, if any. "
+            "When present this means the watch failed. "
+            "This is reset on each new watch."
+        ),
+    )
+
+    schedule_work_id = models.CharField(
+        max_length=255,
+        unique=True,
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_("Identifier used to manage the periodic watch job."),
+    )
+
+    def __str__(self):
+        return f"{self.package_url}"
+
+    def save(self, *args, **kwargs):
+        schedule = False
+        if not self.pk:
+            try:
+                purl = PackageURL.from_string(self.package_url)
+            except ValueError as e:
+                raise exceptions.ValidationError(
+                    f"Error creating PackageWatch object: {e}"
+                ) from e
+
+            # we are removing version/qualifiers/subpath before saving
+            self.package_url = str(
+                PackageURL(
+                    type=purl.type,
+                    namespace=purl.namespace,
+                    name=purl.name,
+                )
+            )
+            self.type = purl.type
+            self.name = purl.name
+            self.namespace = purl.namespace
+
+            # Schedule job for the newly created watch.
+            schedule = True
+        else:
+            existing = PackageWatch.objects.get(pk=self.pk)
+            if (
+                existing.package_url != self.package_url
+                or existing.name != self.name
+                or existing.type != self.type
+                or existing.namespace != self.namespace
+            ):
+                raise ValueError(
+                    "The package_url, type, name, and namespace of a PackageWatch cannot be changed once saved."
+                )
+            # Update the scheduled job if watch_interval/is_active is modified.
+            elif (
+                existing.is_active != self.is_active
+                or existing.watch_interval != self.watch_interval
+            ):
+                schedule = True
+
+        if schedule:
+            self.schedule_work_id = self.create_new_job()
+
+        super(PackageWatch, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        """Clear associated watch schedule."""
+        if self.schedule_work_id and schedules.is_redis_running():
+            schedules.clear_job(self.schedule_work_id)
+
+        super().delete(*args, **kwargs)
+
+    def create_new_job(self):
+        """
+        Create a new scheduled job. If a previous scheduled job
+        exists remove the existing job from the scheduler.
+        """
+        if not schedules.is_redis_running():
+            return
+        if self.schedule_work_id:
+            schedules.clear_job(self.schedule_work_id)
+
+        return schedules.schedule_watch(self) if self.is_active else None
 
 
 class PackageSet(models.Model):
