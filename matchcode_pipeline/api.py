@@ -15,6 +15,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 
 from scanpipe.api import ExcludeFromListViewMixin
+from scanpipe.api.serializers import InputSourceSerializer
 from scanpipe.api.serializers import SerializerExcludeFieldsMixin
 from scanpipe.api.serializers import StrListField
 from scanpipe.api.views import ProjectFilterSet
@@ -65,7 +66,11 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
     )
     webhook_url = serializers.CharField(write_only=True, required=False)
     runs = RunSerializer(many=True, read_only=True)
-    input_sources = serializers.JSONField(source="input_sources_list", read_only=True)
+    input_sources = InputSourceSerializer(
+        source="inputsources",
+        many=True,
+        read_only=True,
+    )
     codebase_resources_summary = serializers.SerializerMethodField()
     discovered_packages_summary = serializers.SerializerMethodField()
     discovered_dependencies_summary = serializers.SerializerMethodField()

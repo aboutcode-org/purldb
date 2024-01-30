@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("packagedb", "0081_apiuser"),
+        ("packagedb", "0082_packagewatch"),
     ]
 
     operations = [
