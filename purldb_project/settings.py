@@ -74,6 +74,7 @@ INSTALLED_APPS = (
     'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_rq',
 )
 
 MIDDLEWARE = (
@@ -296,3 +297,12 @@ if DEBUG_TOOLBAR:
 ACTIVE_SEEDERS = [
     'minecode.visitors.maven.MavenSeed',
 ]
+
+RQ_QUEUES = {
+    'default': {
+        "HOST": env.str("PURLDB_REDIS_HOST", default="localhost"),
+        "PORT": env.str("PURLDB_REDIS_PORT", default="6379"),
+        "PASSWORD": env.str("PURLDB_REDIS_PASSWORD", default=""),
+        "DEFAULT_TIMEOUT": env.int("PURLDB_REDIS_DEFAULT_TIMEOUT", default=360),
+    }
+}
