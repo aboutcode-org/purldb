@@ -233,7 +233,7 @@ class BaseDirectoryIndex(models.Model):
             logger.error(msg)
 
     @classmethod
-    def match(cls, directory_fingerprint):
+    def match(cls, directory_fingerprint, exact_directory_match=False):
         """
         Return a list of matched Packages
         """
@@ -243,9 +243,21 @@ class BaseDirectoryIndex(models.Model):
         if not directory_fingerprint:
             return cls.objects.none()
 
-        # Step 1: find fingerprints with matching chunks
         indexed_elements_count, bah128 = split_fingerprint(directory_fingerprint)
         chunk1, chunk2, chunk3, chunk4 = create_halohash_chunks(bah128)
+
+        # Step 0: if exact only, then return a filter
+        if exact_directory_match:
+            matches = cls.objects.filter(
+                indexed_elements_count=indexed_elements_count,
+                chunk1=chunk1,
+                chunk2=chunk2,
+                chunk3=chunk3,
+                chunk4=chunk4,
+            )
+            return matches
+
+        # Step 1: find fingerprints with matching chunks
         range = bah128_ranges(indexed_elements_count)
         matches = cls.objects.filter(
             models.Q(

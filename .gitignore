@@ -74,3 +74,5 @@ tcl
 
 # Env Files
 .env
+
+var/
