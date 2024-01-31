@@ -1,7 +1,7 @@
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-FROM --platform=linux/amd64 python:3.9
+FROM --platform=linux/amd64 python:3.11
 
 WORKDIR /app
 
