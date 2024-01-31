@@ -84,7 +84,8 @@ class TestPURLCLI_meta(object):
             "--purl",
             "pkg:pypi/minecode",
             "--file",
-            "/mnt/c/nexb/purldb-testing/2024-current-01-testing/txt-input/2024-01-23-purl-meta-input-01.txt",
+            # "meta_input_purls.txt",
+            "purldb-toolkit/tests/data/purlcli/meta_input_purls.txt",
             "--output",
             "-",
         ]
@@ -491,6 +492,7 @@ class TestPURLCLI_meta(object):
 
 # To come once I've converted the output to a SCTK-like data structure.
 # class TestPURLCLI_urls(object):
+# xxx
 
 
 # These tests and the underlying code have not yet been converted to a SCTK-like data structure.
