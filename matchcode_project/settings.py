@@ -7,8 +7,41 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from pathlib import Path
+
+import environ
+
 from scancodeio.settings import *
 
+PROJECT_DIR = environ.Path(__file__) - 1
+ROOT_DIR = PROJECT_DIR - 1
+
+# Environment
+
+ENV_FILE = "/etc/matchcodeio/.env"
+if not Path(ENV_FILE).exists():
+    ENV_FILE = ROOT_DIR(".env")
+
+env = environ.Env()
+environ.Env.read_env(ENV_FILE)
+
+SECRET_KEY = env.str("SECRET_KEY")
+
+ALLOWED_HOSTS = env.list(
+    "ALLOWED_HOSTS",
+    default=[".localhost", "127.0.0.1", "[::1]", "host.docker.internal"],
+)
+
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+
+MATCHCODEIO_REQUIRE_AUTHENTICATION = env.bool(
+    "MATCHCODEIO_REQUIRE_AUTHENTICATION", default=False
+)
+
+if not MATCHCODEIO_REQUIRE_AUTHENTICATION:
+    REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] = (
+        "rest_framework.permissions.AllowAny",
+    )
 
 INSTALLED_APPS += [
     'clearcode',
