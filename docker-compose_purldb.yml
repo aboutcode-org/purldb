@@ -124,7 +124,7 @@ services:
     build: .
     command: wait-for-it web:8000 -- python manage.py run_scheduler
     env_file:
-      - docker.env
+      - docker_purldb.env
     volumes:
       - /etc/purldb/:/etc/purldb/
     depends_on:
@@ -136,7 +136,7 @@ services:
     build: .
     command: wait-for-it web:8000 -- python manage.py rqworker default
     env_file:
-      - docker.env
+      - docker_purldb.env
     volumes:
       - /etc/purldb/:/etc/purldb/
     depends_on:
