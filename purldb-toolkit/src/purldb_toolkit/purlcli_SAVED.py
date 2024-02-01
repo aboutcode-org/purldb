@@ -60,68 +60,65 @@ def get_meta_details(purls, output, file, manual_command_name):
     list.  `check_meta_purl()` will print an error message to the console
     (also displayed in the JSON output) when necessary.
     """
-    # context_purls = [p for p in purls]
-    # context_file = file
-    # context_file_value = None
-    # if context_file:
-    #     context_file_value = context_file.name
+    context_purls = [p for p in purls]
+    context_file = file
+    context_file_value = None
+    if context_file:
+        context_file_value = context_file.name
 
     meta_details = {}
-    # meta_details["headers"] = []
-    meta_details["headers"] = construct_headers(
-        purls, output, file, manual_command_name
-    )
+    meta_details["headers"] = []
+    # meta_details["headers"] = construct_headers(
+    #     purls, output, file, manual_command_name
+    # )
     meta_details["packages"] = []
 
-    # headers_content = {}
-    # options = {}
+    headers_content = {}
+    options = {}
 
-    # errors = []
-    # warnings = []
+    errors = []
+    warnings = []
 
-    # # TODO: How do we want to implement the try/except, the results of which will be reported in the JSON output?
+    # TODO: How do we want to implement the try/except, the results of which will be reported in the JSON output?
 
-    # headers_content["tool_name"] = "purlcli"
-    # headers_content["tool_version"] = version("purldb_toolkit")
+    headers_content["tool_name"] = "purlcli"
+    headers_content["tool_version"] = version("purldb_toolkit")
 
-    # options["command"] = manual_command_name
-    # options["--purl"] = context_purls
-    # options["--file"] = context_file_value
+    options["command"] = manual_command_name
+    options["--purl"] = context_purls
+    options["--file"] = context_file_value
 
-    # if isinstance(output, str):
-    #     options["--output"] = output
-    # else:
-    #     options["--output"] = output.name
+    if isinstance(output, str):
+        options["--output"] = output
+    else:
+        options["--output"] = output.name
 
-    # headers_content["options"] = options
-    # headers_content["purls"] = purls
+    headers_content["options"] = options
+    headers_content["purls"] = purls
 
-    # meta_details["headers"].append(headers_content)
+    meta_details["headers"].append(headers_content)
 
     for purl in purls:
-        #     # meta_detail = {}
-        #     # meta_detail["purl"] = purl
-        #     # meta_detail["metadata"] = []
+        # meta_detail = {}
+        # meta_detail["purl"] = purl
+        # meta_detail["metadata"] = []
 
         purl = purl.strip()
         if not purl:
             continue
 
         if check_meta_purl(purl):
+            print(check_meta_purl(purl))
+            warnings.append(check_meta_purl(purl))
             continue
-
-        #     if check_meta_purl(purl):
-        #         print(check_meta_purl(purl))
-        #         warnings.append(check_meta_purl(purl))
-        #         continue
 
         for release in list(info(purl)):
             release_detail = release.to_dict()
             release_detail.move_to_end("purl", last=False)
             meta_details["packages"].append(release_detail)
 
-    # headers_content["errors"] = errors
-    # headers_content["warnings"] = warnings
+    headers_content["errors"] = errors
+    headers_content["warnings"] = warnings
 
     return meta_details
 
@@ -188,7 +185,7 @@ def construct_headers(purls, output, file, manual_command_name):
 
     meta_details_headers.append(headers_content)
 
-    return meta_details_headers
+    # return meta_details_headers
 
 
 def check_meta_purl(purl):
