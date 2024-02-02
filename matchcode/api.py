@@ -6,7 +6,6 @@
 # See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
-
 from django.db.models import Q
 from django.forms import widgets
 from django.forms.fields import MultipleChoiceField

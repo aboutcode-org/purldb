@@ -11,27 +11,34 @@ from rest_framework.test import APIClient
 from rest_framework.test import APITestCase
 from unittest.mock import patch
 
-from packagedb.models import ApiUser
-
+from django.contrib.auth.models import User
 
 @patch('rest_framework.throttling.UserRateThrottle.get_rate', lambda x: '20/day')
 @patch('rest_framework.throttling.AnonRateThrottle.get_rate', lambda x: '10/day')
 class ThrottleApiTests(APITestCase):
     def setUp(self):
         # create a basic user
-        self.user = ApiUser.objects.create_api_user(username='e@mail.com')
-        self.auth = f'Token {self.user.auth_token.key}'
+        self.user = User.objects.create_user(
+            username="username",
+            email="e@mail.com",
+            password="secret"
+        )
+        self.auth = f"Token {self.user.auth_token.key}"
         self.csrf_client = APIClient(enforce_csrf_checks=True)
         self.csrf_client.credentials(HTTP_AUTHORIZATION=self.auth)
 
         # create a staff user
-        self.staff_user = ApiUser.objects.create_api_user(username='staff@mail.com', is_staff=True)
-        self.staff_auth = f'Token {self.staff_user.auth_token.key}'
+        self.staff_user = User.objects.create_user(
+            username="staff_username",
+            email="staff_e@mail.com",
+            password="secret",
+            is_staff=True
+        )
+        self.staff_auth = f"Token {self.staff_user.auth_token.key}"
         self.staff_csrf_client = APIClient(enforce_csrf_checks=True)
         self.staff_csrf_client.credentials(HTTP_AUTHORIZATION=self.staff_auth)
 
         self.csrf_client_anon = APIClient(enforce_csrf_checks=True)
-        self.csrf_client_anon_1 = APIClient(enforce_csrf_checks=True)
 
     def test_package_endpoint_throttling(self):
         for i in range(0, 20):

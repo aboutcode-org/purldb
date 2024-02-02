@@ -13,10 +13,12 @@ from django.db import IntegrityError
 from django.test import TransactionTestCase
 from django.utils import timezone
 
-from packagedb.models import DependentPackage
+from packagedb.models import DependentPackage, PackageWatch
 from packagedb.models import Package
 from packagedb.models import Party
 from packagedb.models import Resource
+
+from unittest.mock import patch
 
 
 class ResourceModelTestCase(TransactionTestCase):
@@ -445,3 +447,65 @@ class PackageModelTestCase(TransactionTestCase):
 
         with self.assertRaises(ValueError):
             p1.update_fields(parties=[1])
+
+
+class PackageWatchModelTestCase(TransactionTestCase):
+    @patch("packagedb.models.PackageWatch.create_new_job")
+    def setUp(self, mock_create_new_job):
+        mock_create_new_job.return_value = None
+
+        self.package_watch1 = PackageWatch.objects.create(
+            package_url="pkg:maven/org.test/test-package"
+        )
+
+        self.package_watch2 = PackageWatch.objects.create(
+            package_url="pkg:maven/org.test/test-package2"
+        )
+
+    def test_package_watch_no_duplicate(self):
+        self.assertRaises(
+            IntegrityError,
+            PackageWatch.objects.create, 
+            package_url="pkg:maven/org.test/test-package",
+        )
+
+    def test_package_watch_immutable_fields(self):
+        self.package_watch1.type = "npm"
+        self.assertRaises(ValueError, self.package_watch1.save)
+
+        self.package_watch1.namespace = "org.test1"
+        self.assertRaises(ValueError, self.package_watch1.save)
+
+        self.package_watch1.name = "new"
+        self.assertRaises(ValueError, self.package_watch1.save)
+
+    @patch("packagedb.models.PackageWatch.create_new_job")
+    def test_package_watch_mutable_fields(self, mock_create_new_job):
+        mock_create_new_job.return_value = None
+
+        self.package_watch1.is_active = False
+        self.package_watch1.save()
+        self.assertEqual(False, self.package_watch1.is_active)
+
+        self.package_watch1.watch_interval = 1
+        self.package_watch1.save()
+        self.assertEqual(1, self.package_watch1.watch_interval)
+
+        self.package_watch1.watch_error = "error"
+        self.package_watch1.save()
+        self.assertEqual("error", self.package_watch1.watch_error)
+
+    @patch("packagedb.models.PackageWatch.create_new_job")
+    def test_package_watch_reschedule_on_modification(self, mock_create_new_job):
+        mock_create_new_job.side_effect = ["reschedule_id_new_interval", None]
+
+        self.package_watch1.watch_interval = 1
+        self.package_watch1.save()
+        self.assertEqual("reschedule_id_new_interval", self.package_watch1.schedule_work_id)
+
+        self.package_watch1.is_active = False
+        self.package_watch1.save()
+        self.assertEqual(None, self.package_watch1.schedule_work_id)
+
+
+        

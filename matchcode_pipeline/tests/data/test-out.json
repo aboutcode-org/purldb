@@ -1,0 +1,111 @@
+{
+  "headers": [
+    {
+      "tool_name": "scancode-toolkit",
+      "tool_version": "32.0.8",
+      "options": {
+        "input": [
+          "."
+        ],
+        "--info": true,
+        "--json-pp": "/home/jono/test-out.json"
+      },
+      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/nexB/scancode-toolkit/ for support and download.",
+      "start_timestamp": "2024-01-05T014959.288450",
+      "end_timestamp": "2024-01-05T014959.409373",
+      "output_format_version": "3.0.0",
+      "duration": 0.12093544006347656,
+      "message": null,
+      "errors": [],
+      "warnings": [],
+      "extra_data": {
+        "system_environment": {
+          "operating_system": "linux",
+          "cpu_architecture": "64",
+          "platform": "Linux-6.2.16-19-pve-x86_64-with-glibc2.35",
+          "platform_version": "#1 SMP PREEMPT_DYNAMIC PMX 6.2.16-19 (2023-10-24T12:07Z)",
+          "python_version": "3.11.4 (main, Aug  3 2023, 18:50:43) [GCC 11.3.0]"
+        },
+        "spdx_license_list_version": "3.21",
+        "files_count": 1
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "test",
+      "type": "directory",
+      "name": "test",
+      "base_name": "test",
+      "extension": "",
+      "size": 0,
+      "date": null,
+      "sha1": null,
+      "md5": null,
+      "sha256": null,
+      "mime_type": null,
+      "file_type": null,
+      "programming_language": null,
+      "is_binary": false,
+      "is_text": false,
+      "is_archive": false,
+      "is_media": false,
+      "is_source": false,
+      "is_script": false,
+      "files_count": 1,
+      "dirs_count": 1,
+      "size_count": 0,
+      "scan_errors": []
+    },
+    {
+      "path": "test/foo",
+      "type": "directory",
+      "name": "foo",
+      "base_name": "foo",
+      "extension": "",
+      "size": 0,
+      "date": null,
+      "sha1": null,
+      "md5": null,
+      "sha256": null,
+      "mime_type": null,
+      "file_type": null,
+      "programming_language": null,
+      "is_binary": false,
+      "is_text": false,
+      "is_archive": false,
+      "is_media": false,
+      "is_source": false,
+      "is_script": false,
+      "files_count": 1,
+      "dirs_count": 0,
+      "size_count": 0,
+      "scan_errors": []
+    },
+    {
+      "path": "test/foo/test_package",
+      "type": "file",
+      "name": "test_package",
+      "base_name": "test_package",
+      "extension": "",
+      "size": 0,
+      "date": "2024-01-05",
+      "sha1": null,
+      "md5": null,
+      "sha256": null,
+      "mime_type": "inode/x-empty",
+      "file_type": "empty",
+      "programming_language": null,
+      "is_binary": false,
+      "is_text": true,
+      "is_archive": false,
+      "is_media": false,
+      "is_source": false,
+      "is_script": false,
+      "files_count": 0,
+      "dirs_count": 0,
+      "size_count": 0,
+      "scan_errors": []
+    }
+  ]
+}
