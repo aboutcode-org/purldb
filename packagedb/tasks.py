@@ -27,51 +27,62 @@ def watch_new_packages(purl):
     """
     Collect new versions of a package and insert the
     new PURLs in PriorityResourceURI for indexing.
+    Update the error message if any.
     """
-    from fetchcode.package_versions import versions
-    from minecode.models import PriorityResourceURI
-    from packagedb.models import Package
     from packagedb.models import PackageWatch
-    from packageurl import PackageURL
 
     watch = PackageWatch.objects.get(package_url=purl)
 
     if not is_supported_watch_ecosystem(watch):
         return
 
-    version_class = VERSION_CLASS_BY_PACKAGE_TYPE.get(watch.type)
-    watch.watch_error = None
+    watch.watch_error = get_and_index_new_purls(watch.package_url)
+
+    watch.last_watch_date = datetime.datetime.now(tz=datetime.timezone.utc)
+    watch.save(update_fields=["last_watch_date", "watch_error"])
+
+
+def get_and_index_new_purls(package_url):
+    """
+    Get new versions of a package and insert the
+    new PURLs in PriorityResourceURI for indexing.
+    Return error message if any.
+    """
+    from fetchcode.package_versions import versions
+    from packageurl import PackageURL
+
+    from minecode.models import PriorityResourceURI
+    from packagedb.models import Package
+
+    purl = PackageURL.from_string(package_url)
+    version_class = VERSION_CLASS_BY_PACKAGE_TYPE.get(purl.type)
 
     local_versions = Package.objects.filter(
-        type=watch.type,
-        namespace=watch.namespace,
-        name=watch.name,
+        type=purl.type,
+        namespace=purl.namespace,
+        name=purl.name,
     ).values_list("version", flat=True)
 
-    all_versions = versions(watch.package_url) or []
+    all_versions = versions(package_url) or []
 
     try:
         local_versions = [version_class(version) for version in local_versions]
         all_versions = [version_class(version.value) for version in all_versions]
     except InvalidVersion as e:
-        watch.watch_error = f"InvalidVersion exception: {e}"
+        return f"InvalidVersion exception: {e}"
 
-    if not watch.watch_error:
-        for version in all_versions:
-            if version in local_versions:
-                continue
-            new_purl = str(
-                PackageURL(
-                    type=watch.type,
-                    namespace=watch.namespace,
-                    name=watch.name,
-                    version=str(version),
-                )
+    for version in all_versions:
+        if version in local_versions:
+            continue
+        new_purl = str(
+            PackageURL(
+                type=purl.type,
+                namespace=purl.namespace,
+                name=purl.name,
+                version=str(version),
             )
-            PriorityResourceURI.objects.insert(new_purl)
-
-    watch.last_watch_date = datetime.datetime.now(tz=datetime.timezone.utc)
-    watch.save(update_fields=["last_watch_date", "watch_error"])
+        )
+        PriorityResourceURI.objects.insert(new_purl)
 
 
 def is_supported_watch_ecosystem(watch):
