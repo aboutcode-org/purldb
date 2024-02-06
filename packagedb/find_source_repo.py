@@ -21,7 +21,7 @@ from packageurl.contrib.purl2url import purl2url
 from scancode.api import get_urls as get_urls_from_location
 
 from minecode.model_utils import add_package_to_scan_queue
-from minecode.visitors.maven import get_merged_ancestor_package_from_maven_package
+from minecode.collectors.maven import get_merged_ancestor_package_from_maven_package
 from packagedb.models import Package
 from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
@@ -170,7 +170,7 @@ def add_source_repo_to_package_set(
         package_content=PackageContentType.SOURCE_REPO,
     )
     package_sets = package.package_sets.all()
-    if not package_sets:        
+    if not package_sets:
         # Create a Package set if we don't have one
         package_set = PackageSet.objects.create()
         package_set.add_to_package_set(package)

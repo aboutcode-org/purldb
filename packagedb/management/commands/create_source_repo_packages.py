@@ -9,7 +9,6 @@
 
 import logging
 import sys
-from uuid import uuid4
 
 import openpyxl
 from packageurl.contrib.django.utils import purl_to_lookups
@@ -94,10 +93,10 @@ class Command(VerboseCommand):
             # binary packages can only be part of one package set
             add_source_repo_to_package_set(source_repo_type = row['source_type'],
                 source_repo_name = row['source_name'],
-                source_repo_namespace = row['source_namespace'], 
+                source_repo_namespace = row['source_namespace'],
                 source_repo_version = row['source_version'],
                 download_url = row['source_download_url'],
-                purl=purl, 
-                source_purl=source_purl, 
+                purl=purl,
+                source_purl=source_purl,
                 package=package,
             )

@@ -22,15 +22,14 @@ from packageurl import PackageURL
 from minecode.management.commands import get_error_message
 from minecode.management.commands import VerboseCommand
 from minecode.models import ImportableURI
-from minecode.visitors.maven import get_artifact_links
-from minecode.visitors.maven import get_classifier_from_artifact_url
-from minecode.visitors.maven import collect_links_from_text
-from minecode.visitors.maven import filter_only_directories
-from minecode.visitors.maven import get_artifact_sha1
+from minecode.collectors.maven import get_artifact_links
+from minecode.collectors.maven import get_classifier_from_artifact_url
+from minecode.collectors.maven import collect_links_from_text
+from minecode.collectors.maven import filter_only_directories
+from minecode.collectors.maven import get_artifact_sha1
 from minecode.model_utils import merge_or_create_package
 from packagedcode.models import PackageData
-from packagedb.models import Package
-from minecode.visitors.maven import determine_namespace_name_version_from_url
+from minecode.collectors.maven import determine_namespace_name_version_from_url
 
 
 logger = logging.getLogger(__name__)
