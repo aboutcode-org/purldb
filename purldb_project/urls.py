@@ -17,6 +17,7 @@ from rest_framework import routers
 from clearcode.api import CDitemViewSet
 from packagedb.api import PackageViewSet
 from packagedb.api import PackageSetViewSet
+from packagedb.api import PackageWatchViewSet
 from packagedb.api import ResourceViewSet
 from matchcode.api import ApproximateDirectoryContentIndexViewSet
 from matchcode.api import ApproximateDirectoryStructureIndexViewSet
@@ -41,6 +42,7 @@ api_router.register('cditems', CDitemViewSet, 'cditems')
 api_router.register('on_demand_queue', PriorityResourceURIViewSet)
 api_router.register('validate', PurlValidateViewSet, 'validate')
 api_router.register('collect', CollectViewSet, 'collect')
+api_router.register('watch',PackageWatchViewSet)
 
 
 urlpatterns = [

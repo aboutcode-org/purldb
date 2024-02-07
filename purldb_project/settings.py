@@ -11,7 +11,9 @@ import sys
 from pathlib import Path
 
 import environ
+from purldb_project import __version__
 
+PURLDB_VERSION = __version__
 
 PROJECT_DIR = Path(__file__).resolve().parent
 ROOT_DIR = PROJECT_DIR.parent
@@ -75,6 +77,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'drf_spectacular',
     'rest_framework.authtoken',
+    'django_rq',
 )
 
 MIDDLEWARE = (
@@ -294,7 +297,7 @@ if DEBUG_TOOLBAR:
         "127.0.0.1",
     ]
 
-# Active seeders: each active seeder class need to be added explictly here
+# Active seeders: each active seeder class need to be added explicitly here
 ACTIVE_SEEDERS = [
     'minecode.visitors.maven.MavenSeed',
 ]
@@ -302,6 +305,14 @@ ACTIVE_SEEDERS = [
 SPECTACULAR_SETTINGS = {
     'TITLE': 'PurlDB API',
     'DESCRIPTION': 'Tools to create and expose a database of purls (Package URLs)',
-    'VERSION': '4.0.0',
+    'VERSION': PURLDB_VERSION,
     'SERVE_INCLUDE_SCHEMA': False,
+}
+RQ_QUEUES = {
+    'default': {
+        "HOST": env.str("PURLDB_REDIS_HOST", default="localhost"),
+        "PORT": env.str("PURLDB_REDIS_PORT", default="6379"),
+        "PASSWORD": env.str("PURLDB_REDIS_PASSWORD", default=""),
+        "DEFAULT_TIMEOUT": env.int("PURLDB_REDIS_DEFAULT_TIMEOUT", default=360),
+    }
 }

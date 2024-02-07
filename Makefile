@@ -10,7 +10,8 @@
 # Python version can be specified with `$ PYTHON_EXE=python3.x make conf`
 PYTHON_EXE?=python3
 VENV=venv
-MANAGE=${VENV}/bin/python manage.py
+MANAGE=${VENV}/bin/python manage_purldb.py
+MATCHCODE_MANAGE=${VENV}/bin/python manage_matchcode.py
 ACTIVATE?=. ${VENV}/bin/activate;
 VIRTUALENV_PYZ=../etc/thirdparty/virtualenv.pyz
 # Do not depend on Python to generate the SECRET_KEY
@@ -19,6 +20,7 @@ GET_SECRET_KEY=`base64 /dev/urandom | head -c50`
 ENV_FILE=.env
 # Customize with `$ make postgres PACKAGEDB_DB_PASSWORD=YOUR_PASSWORD`
 PACKAGEDB_DB_PASSWORD=packagedb
+MATCHCODEIO_DB_PASSWORD=matchcodeio
 
 # Use sudo for postgres, but only on Linux
 UNAME := $(shell uname)
@@ -45,6 +47,13 @@ envfile:
 	@if test -f ${ENV_FILE}; then echo ".env file exists already"; exit 1; fi
 	@mkdir -p $(shell dirname ${ENV_FILE}) && touch ${ENV_FILE}
 	@echo SECRET_KEY=\"${GET_SECRET_KEY}\" > ${ENV_FILE}
+
+envfile_testing:
+	@echo "-> Create the .env file and generate a secret key"
+	@if test -f ${ENV_FILE}; then echo ".env file exists already"; exit 1; fi
+	@mkdir -p $(shell dirname ${ENV_FILE}) && touch ${ENV_FILE}
+	@echo SECRET_KEY=\"${GET_SECRET_KEY}\" >> ${ENV_FILE}
+	@echo SCANCODEIO_DB_PORT=\"5433\" >> ${ENV_FILE}
 
 isort:
 	@echo "-> Apply isort changes to ensure proper imports ordering"
@@ -87,8 +96,22 @@ postgres:
 	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=packagedb packagedb
 	@$(MAKE) migrate
 
+postgres_matchcodeio:
+	@echo "-> Configure PostgreSQL database"
+	@echo "-> Create database user 'matchcodeio'"
+	${SUDO_POSTGRES} createuser --no-createrole --no-superuser --login --inherit --createdb matchcodeio || true
+	${SUDO_POSTGRES} psql -c "alter user matchcodeio with encrypted password '${MATCHCODEIO_DB_PASSWORD}';" || true
+	@echo "-> Drop 'matchcodeio' database"
+	${SUDO_POSTGRES} dropdb matchcodeio || true
+	@echo "-> Create 'matchcodeio' database"
+	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=matchcodeio matchcodeio
+	${MATCHCODE_MANAGE} migrate
+
 run:
 	${MANAGE} runserver 8001 --insecure
+
+run_matchcodeio:
+	${MATCHCODE_MANAGE} runserver 8002 --insecure
 
 seed:
 	${MANAGE} seed
@@ -107,9 +130,11 @@ process_scans:
 
 test:
 	@echo "-> Run the test suite"
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode-toolkit --ignore packagedb/tests/test_throttling.py
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode-toolkit --ignore matchcode_pipeline --ignore matchcode_project --ignore purldb-toolkit --ignore packagedb/tests/test_throttling.py
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=matchcode_project.settings ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline
 	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs matchcode-toolkit --ignore matchcode-toolkit/src/matchcode_toolkit/pipelines
+	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs purldb-toolkit
 
 shell:
 	${MANAGE} shell

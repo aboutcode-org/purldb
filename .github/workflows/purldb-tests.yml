@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     services:
-      postgres:
+      postgres1:
         image: postgres:13
         env:
           POSTGRES_DB: ${{ env.POSTGRES_DB }}
@@ -28,10 +28,25 @@ jobs:
         ports:
           - 5432:5432
 
+      postgres2:
+        image: postgres:13
+        env:
+          POSTGRES_DB: matchcodeio
+          POSTGRES_USER: matchcodeio
+          POSTGRES_PASSWORD: matchcodeio
+          POSTGRES_INITDB_ARGS: ${{ env.POSTGRES_INITDB_ARGS }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5433:5432
+
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.10", "3.11"]
 
     steps:
       - name: Checkout code
@@ -50,5 +65,7 @@ jobs:
       - name: Run tests
         working-directory: .
         run: |
-          make envfile
+          make envfile_testing
+          sudo mkdir /etc/scancodeio
+          sudo cp .env /etc/scancodeio
           make test

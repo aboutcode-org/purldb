@@ -1,7 +1,7 @@
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-FROM --platform=linux/amd64 python:3.9
+FROM --platform=linux/amd64 python:3.11
 
 WORKDIR /app
 
@@ -31,10 +31,9 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY setup.cfg setup.py /app/
-RUN mkdir -p /app/matchcode-toolkit/src/
-COPY matchcode-toolkit/setup.cfg matchcode-toolkit/setup.py /app/matchcode-toolkit/
-RUN pip install -e matchcode-toolkit
-RUN pip install -e .
+# Install the dependencies before the codebase COPY for proper Docker layer caching
+COPY setup.cfg setup.py requirements.txt /app/
+RUN pip install --no-cache-dir -c requirements.txt .
 
+# Copy the codebase
 COPY . /app

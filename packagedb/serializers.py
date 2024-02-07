@@ -9,7 +9,12 @@
 
 from django.http import HttpRequest
 from django.urls import reverse_lazy
-
+from packagedb.models import DependentPackage
+from packagedb.models import Package
+from packagedb.models import PackageSet
+from packagedb.models import PackageWatch
+from packagedb.models import Party
+from packagedb.models import Resource
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import HyperlinkedIdentityField
@@ -21,13 +26,6 @@ from rest_framework.serializers import ListField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import Serializer
 from rest_framework.serializers import SerializerMethodField
-from rest_framework.serializers import Serializer
-
-from packagedb.models import DependentPackage
-from packagedb.models import Package
-from packagedb.models import PackageSet
-from packagedb.models import Party
-from packagedb.models import Resource
 
 
 class ResourceAPISerializer(HyperlinkedModelSerializer):
@@ -333,6 +331,41 @@ class PackageSetAPISerializer(ModelSerializer):
             'uuid',
             'packages',
         ]
+
+class PackageWatchAPISerializer(HyperlinkedModelSerializer):
+    url = HyperlinkedIdentityField(
+        view_name='api:packagewatch-detail',
+        lookup_field='package_url'
+    )
+    class Meta:
+        model = PackageWatch
+        fields = [
+            'url',
+            'package_url',
+            'is_active',
+            'depth',
+            'watch_interval',
+            'creation_date',
+            'last_watch_date',
+            'watch_error',
+            'schedule_work_id',
+        ]
+
+
+class PackageWatchCreateSerializer(ModelSerializer):
+    class Meta:
+        model = PackageWatch
+        fields = ["package_url", "depth", "watch_interval", "is_active"]
+        extra_kwargs = {
+            field: {"initial": PackageWatch._meta.get_field(field).get_default()}
+            for field in ["depth", "watch_interval", "is_active"]
+        }
+
+
+class PackageWatchUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = PackageWatch
+        fields = ['depth', 'watch_interval', 'is_active']
 
 
 class PackageVersSerializer(Serializer):
