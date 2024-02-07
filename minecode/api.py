@@ -7,19 +7,19 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from rest_framework import serializers
-from rest_framework import status
-from rest_framework import viewsets
+import json
+from django.db import transaction
+from packageurl import PackageURL
+from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from packageurl import PackageURL
 
 # UnusedImport here!
 # But importing the mappers and visitors module triggers routes registration
 from minecode import visitors  # NOQA
 from minecode import priority_router
-from minecode.models import ResourceURI
-from minecode.models import PriorityResourceURI
+from minecode.management.commands.process_scans import index_package_files
+from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 
 
 class ResourceURISerializer(serializers.ModelSerializer):
@@ -83,3 +83,64 @@ class PriorityResourceURIViewSet(viewsets.ModelViewSet):
             }
         # TODO: revisiting a package should be handled on another level, dependent on data we store
         return Response(message)
+
+
+class ScannableURISerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScannableURI
+        fields = '__all__'
+
+
+# TODO: guard these API endpoints behind an API key
+class ScannableURIViewSet(viewsets.ModelViewSet):
+    queryset = ScannableURI.objects.all()
+    serializer_class = ScannableURISerializer
+
+    @action(detail=False, methods=["get"])
+    def get_next_download_url(self, request, *args, **kwargs):
+        """
+        Return download url for next Package on scan queue
+        """
+        with transaction.atomic():
+            scannable_uri = ScannableURI.objects.get_next_scannable()
+            if scannable_uri:
+                response = {
+                    'package_uuid': scannable_uri.package.uuid,
+                    'download_url': scannable_uri.uri,
+                }
+                scannable_uri.scan_status = ScannableURI.SCAN_SUBMITTED
+                scannable_uri.save()
+            else:
+                response = {
+                    'message': 'no more packages on scan queue'
+                }
+            return Response(response)
+
+    @action(detail=False, methods=["post"])
+    def submit_scan_results(self, request, *args, **kwargs):
+        """
+        Receive and index completed scan
+        """
+        from packagedb.models import Package
+
+        package_uuid = request.data.get('package_uuid')
+        scan_file = request.data.get('scan_file')
+
+        missing = []
+        if not package_uuid:
+            missing.append('package_uuid')
+        if not scan_file:
+            missing.append('scan_file')
+        if missing:
+            msg = ', '.join(missing)
+            response = {
+                'error': f'missing {msg}'
+            }
+            return Response(response)
+
+        package = Package.objects.get(uuid=package_uuid)
+        scan_data= json.load(scan_file)
+        indexing_errors = index_package_files(package, scan_data, reindex=True)
+        if indexing_errors:
+            return Response({'error': f'indexing errors:\n\n{indexing_errors}'})
+        return Response({'message': 'success'})
