@@ -67,7 +67,7 @@ from packagedb.throttling import StaffUserRateThrottle
 logger = logging.getLogger(__name__)
 
 
-class CreateListRetrieveUpdateViewSet(
+class CreateListRetrieveUpdateViewSetMixin(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
@@ -554,7 +554,12 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PackageSetAPISerializer
 
 
-class PackageWatchViewSet(CreateListRetrieveUpdateViewSet):
+class PackageWatchViewSet(CreateListRetrieveUpdateViewSetMixin):
+    """
+    Take a `purl` and periodically watch for the new version of the package.
+    Add the new package version to the scan queue. 
+    Default watch interval is 7 days.
+    """
     queryset = PackageWatch.objects.get_queryset().order_by('-id')
     serializer_class = PackageWatchAPISerializer
     lookup_field = 'package_url'
