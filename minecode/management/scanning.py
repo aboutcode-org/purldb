@@ -97,7 +97,7 @@ class Scan(object):
         execution_time = run_data.get('execution_time')
 
         if len(input_sources) > 0:
-            uri = input_sources[0]["source"]
+            uri = input_sources[0]["download_url"]
 
         md5 = extra_data.get('md5')
         sha1 = extra_data.get('sha1')
