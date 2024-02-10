@@ -151,7 +151,7 @@ def match_purldb_resource(
     for resource in results:
         # Get package data
         package_data = resource.package.to_dict()
-        sha1 = package_data["sha1"]
+        sha1 = resource.sha1
         resources = resources_by_sha1.get(sha1) or []
         if not resources:
             continue
@@ -212,7 +212,7 @@ def match_purldb_resources(
     """
     resources = (
         project.codebaseresources.files()
-        .no_status()
+        .no_status(status=flag.MATCHED_TO_PURLDB_PACKAGE)
         .has_value("sha1")
         .filter(is_archive=archives_only)
     )
