@@ -112,7 +112,8 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
                 scannable_uri.save()
             else:
                 response = {
-                    'message': 'no more packages on scan queue'
+                    'package_uuid': "",
+                    'download_url': "",
                 }
             return Response(response)
 
