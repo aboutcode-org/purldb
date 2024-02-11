@@ -84,7 +84,6 @@ class TestPURLCLI_meta(object):
             "--purl",
             "pkg:pypi/minecode",
             "--file",
-            # "meta_input_purls.txt",
             "purldb-toolkit/tests/data/purlcli/meta_input_purls.txt",
             "--output",
             "-",
@@ -310,7 +309,7 @@ class TestPURLCLI_meta(object):
                             "tool_version": "0.0.1",
                             "warnings": [
                                 "The provided PackageURL 'pkg:gem/bundler-sass' is "
-                                "valid, but `meta` is not supported for this "
+                                "valid, but `meta` does not support this "
                                 "package type."
                             ],
                         }
@@ -333,14 +332,47 @@ class TestPURLCLI_meta(object):
                             "purls": ["pkg:rubygems/bundler-sass"],
                             "tool_name": "purlcli",
                             "tool_version": "0.0.1",
-                            "warnings": [
-                                "There was an error with your 'pkg:rubygems/bundler-sass' "
-                                "query.  Make sure that 'pkg:rubygems/bundler-sass' actually "
-                                "exists in the relevant repository.",
-                            ],
+                            "warnings": [],
                         }
                     ],
-                    "packages": [],
+                    "packages": [
+                        {
+                            "purl": "pkg:rubygems/bundler-sass",
+                            "type": "rubygems",
+                            "namespace": None,
+                            "name": "bundler-sass",
+                            "version": None,
+                            "qualifiers": {},
+                            "subpath": None,
+                            "primary_language": None,
+                            "description": None,
+                            "release_date": None,
+                            "parties": [],
+                            "keywords": [],
+                            "homepage_url": "http://github.com/vogelbek/bundler-sass",
+                            "download_url": "https://rubygems.org/gems/bundler-sass-0.1.2.gem",
+                            "api_url": "https://rubygems.org/api/v1/gems/bundler-sass.json",
+                            "size": None,
+                            "sha1": None,
+                            "md5": None,
+                            "sha256": None,
+                            "sha512": None,
+                            "bug_tracking_url": None,
+                            "code_view_url": None,
+                            "vcs_url": None,
+                            "copyright": None,
+                            "license_expression": None,
+                            "declared_license": ["MIT"],
+                            "notice_text": None,
+                            "root_path": None,
+                            "dependencies": [],
+                            "contains_source_code": None,
+                            "source_packages": [],
+                            "repository_homepage_url": None,
+                            "repository_download_url": None,
+                            "api_data_url": None,
+                        },
+                    ],
                 },
             ),
             (
@@ -360,7 +392,7 @@ class TestPURLCLI_meta(object):
                             "tool_version": "0.0.1",
                             "warnings": [
                                 "The provided PackageURL 'pkg:nginx/nginx' is "
-                                "valid, but `meta` is not supported for this "
+                                "valid, but `meta` does not support this "
                                 "package type."
                             ],
                         }
@@ -448,7 +480,10 @@ class TestPURLCLI_meta(object):
         Test the `meta` nested function, `get_meta_details()`.
         """
         purl_meta = purlcli.get_meta_details(
-            test_input, output="", file="", manual_command_name="meta"
+            test_input,
+            output="",
+            file="",
+            command_name="meta",
         )
         assert purl_meta == expected
 
@@ -461,27 +496,27 @@ class TestPURLCLI_meta(object):
             ),
             (
                 ["pkg:gem/bundler-sass"],
-                "The provided PackageURL 'pkg:gem/bundler-sass' is valid, but `meta` is not supported for this package type.",
+                "valid_but_not_supported",
             ),
             (
                 ["pkg:rubygems/bundler-sass"],
-                "There was an error with your 'pkg:rubygems/bundler-sass' query.  Make sure that 'pkg:rubygems/bundler-sass' actually exists in the relevant repository.",
+                None,
             ),
             (
                 ["pkg:nginx/nginx"],
-                "The provided PackageURL 'pkg:nginx/nginx' is valid, but `meta` is not supported for this package type.",
+                "valid_but_not_supported",
             ),
             (
                 ["pkg:pypi/zzzzz"],
-                "There was an error with your 'pkg:pypi/zzzzz' query.  Make sure that 'pkg:pypi/zzzzz' actually exists in the relevant repository.",
+                "failed_to_fetch",
             ),
             (
                 ["pkg:pypi/?fetchcode"],
-                "There was an error with your 'pkg:pypi/?fetchcode' query -- the Package URL you provided is not valid.",
+                "not_valid",
             ),
             (
                 ["zzzzz"],
-                "There was an error with your 'zzzzz' query -- the Package URL you provided is not valid.",
+                "not_valid",
             ),
         ],
     )
@@ -492,7 +527,6 @@ class TestPURLCLI_meta(object):
 
 # To come once I've converted the output to a SCTK-like data structure.
 # class TestPURLCLI_urls(object):
-# xxx
 
 
 # These tests and the underlying code have not yet been converted to a SCTK-like data structure.
@@ -742,7 +776,12 @@ class TestPURLCLI_versions(object):
         ],
     )
     def test_versions(self, test_input, expected):
-        purl_versions = purlcli.list_versions(test_input)
+        # TODO: 2024-02-08 Thursday 10:25:14.  The versions data structure is not yet updated to SCTK-like but we've started passing the required additional arguments, so need to do so here as well.
+        output = ""
+        file = ""
+        command_name = "versions"
+
+        purl_versions = purlcli.list_versions(test_input, output, file, command_name)
         assert purl_versions == expected
 
     @pytest.mark.parametrize(
@@ -758,26 +797,26 @@ class TestPURLCLI_versions(object):
             ),
             (
                 ["pkg:rubygems/bundler-sass"],
-                "The provided PackageURL 'pkg:rubygems/bundler-sass' is valid, but `versions` is not supported for this package type.",
+                "valid_but_not_supported",
             ),
             (
                 ["pkg:nginx/nginx"],
-                "The provided PackageURL 'pkg:nginx/nginx' is valid, but `versions` is not supported for this package type.",
+                "valid_but_not_supported",
             ),
             (
                 ["pkg:pypi/zzzzz"],
-                "There was an error with your 'pkg:pypi/zzzzz' query.  Make sure that 'pkg:pypi/zzzzz' actually exists in the relevant repository.",
+                "failed_to_fetch",
             ),
             (
                 ["pkg:pypi/?fetchcode"],
-                "There was an error with your 'pkg:pypi/?fetchcode' query -- the Package URL you provided is not valid.",
+                "not_valid",
             ),
             (
                 ["zzzzz"],
-                "There was an error with your 'zzzzz' query -- the Package URL you provided is not valid.",
+                "not_valid",
             ),
         ],
     )
-    def test_messages_versions(self, test_input, expected):
+    def test_check_versions_purl(self, test_input, expected):
         purl_versions = purlcli.check_versions_purl(test_input[0])
         assert purl_versions == expected
