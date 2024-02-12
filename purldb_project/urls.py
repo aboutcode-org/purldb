@@ -26,6 +26,8 @@ from matchcode.api import ExactPackageArchiveIndexViewSet
 from minecode.api import PriorityResourceURIViewSet
 from packagedb.api import PurlValidateViewSet
 from packagedb.api import CollectViewSet
+from drf_spectacular.views import SpectacularAPIView
+from drf_spectacular.views import SpectacularSwaggerView
 
 
 api_router = routers.DefaultRouter()
@@ -49,5 +51,7 @@ urlpatterns = [
         TemplateView.as_view(template_name='robots.txt', content_type='text/plain'),
     ),
     path('api/', include((api_router.urls, 'api'))),
-    path('', RedirectView.as_view(url='api/')),
+    path("", RedirectView.as_view(url="api/")),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
