@@ -12,26 +12,38 @@ test_env = FileDrivenTesting()
 test_env.test_data_dir = os.path.join(os.path.dirname(__file__), "data")
 
 
-class TestPURLCLI_meta(object):
-    def test_meta_cli(self):
+class TestPURLCLI_metadata(object):
+    def test_metadata_cli(self):
         """
-        Test the `meta` command with actual and expected JSON output files.
+        Test the `metadata` command with actual and expected JSON output files.
+
         Note that we can't simply compare the actual and expected JSON files
         because the `--output` values (paths) differ due to the use of
         temporary files, and therefore we test a list of relevant key-value pairs.
         """
+        # NOTE: options do not yet include `unique`.
         expected_result_file = test_env.get_test_loc(
-            "purlcli/expected_meta_output.json"
+            "purlcli/expected_metadata_output.json"
         )
-        actual_result_file = test_env.get_temp_file("actual_meta_output.json")
+        actual_result_file = test_env.get_temp_file("actual_metadata_output.json")
         options = [
             "--purl",
-            "pkg:pypi/minecode",
+            "pkg:pypi/fetchcode",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:cargo/banquo",
+            "--purl",
+            "pkg:nginx/nginx",
+            "--purl",
+            "pkg:gem/rails",
+            "--purl",
+            "pkg:rubygems/rails",
             "--output",
             actual_result_file,
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_meta, options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         f_output = open(actual_result_file)
@@ -76,33 +88,114 @@ class TestPURLCLI_meta(object):
         for output, expected in result_objects:
             assert output == expected
 
-    def test_meta_cli_duplicate_input_sources(self):
+    def test_metadata_cli_unique(self):
         """
-        Test the `meta` command with both `--purl` and `--file` inputs.
+        Test the `metadata` command with actual and expected JSON output files
+        with the `--unique` flag included in the command.
+        """
+        # NOTE: options do not yet include `unique`.
+        expected_result_file = test_env.get_test_loc(
+            "purlcli/expected_metadata_output_unique.json"
+        )
+        actual_result_file = test_env.get_temp_file("actual_metadata_output.json")
+        options = [
+            "--purl",
+            "pkg:pypi/fetchcode",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:cargo/banquo",
+            "--purl",
+            "pkg:nginx/nginx",
+            "--purl",
+            "pkg:gem/rails",
+            "--purl",
+            "pkg:rubygems/rails",
+            "--output",
+            actual_result_file,
+            "--unique",
+        ]
+        runner = CliRunner()
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
+        assert result.exit_code == 0
+
+        f_output = open(actual_result_file)
+        output_data = json.load(f_output)
+
+        f_expected = open(expected_result_file)
+        expected_data = json.load(f_expected)
+
+        result_objects = [
+            (
+                output_data["headers"][0]["tool_name"],
+                expected_data["headers"][0]["tool_name"],
+            ),
+            (
+                output_data["headers"][0]["tool_version"],
+                expected_data["headers"][0]["tool_version"],
+            ),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
+            (
+                output_data["headers"][0]["warnings"],
+                expected_data["headers"][0]["warnings"],
+            ),
+            (
+                output_data["headers"][0]["errors"],
+                expected_data["headers"][0]["errors"],
+            ),
+            (
+                output_data["headers"][0]["options"]["command"],
+                expected_data["headers"][0]["options"]["command"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--purl"],
+                expected_data["headers"][0]["options"]["--purl"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--file"],
+                expected_data["headers"][0]["options"]["--file"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--file"],
+                expected_data["headers"][0]["options"]["--file"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--unique"],
+                expected_data["headers"][0]["options"]["--unique"],
+            ),
+            (output_data["packages"], expected_data["packages"]),
+        ]
+
+        for output, expected in result_objects:
+            assert output == expected
+
+    def test_metadata_cli_duplicate_input_sources(self):
+        """
+        Test the `metadata` command with both `--purl` and `--file` inputs.
         """
         options = [
             "--purl",
             "pkg:pypi/minecode",
             "--file",
-            "purldb-toolkit/tests/data/purlcli/meta_input_purls.txt",
+            "purldb-toolkit/tests/data/purlcli/metadata_input_purls.txt",
             "--output",
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_meta, options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
         assert "Use either purls or file but not both." in result.output
         assert result.exit_code == 2
 
-    def test_meta_cli_no_input_sources(self):
+    def test_metadata_cli_no_input_sources(self):
         """
-        Test the `meta` command with neither `--purl` nor `--file` inputs.
+        Test the `metadata` command with neither `--purl` nor `--file` inputs.
         """
         options = [
             "--output",
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_meta, options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
         assert "Use either purls or file." in result.output
         assert result.exit_code == 2
 
@@ -117,7 +210,7 @@ class TestPURLCLI_meta(object):
                             "tool_name": "purlcli",
                             "tool_version": "0.0.1",
                             "options": {
-                                "command": "meta",
+                                "command": "metadata",
                                 "--purl": ["pkg:pypi/fetchcode"],
                                 "--file": None,
                                 "--output": "",
@@ -302,15 +395,13 @@ class TestPURLCLI_meta(object):
                                 "--file": None,
                                 "--output": "",
                                 "--purl": ["pkg:gem/bundler-sass"],
-                                "command": "meta",
+                                "command": "metadata",
                             },
                             "purls": ["pkg:gem/bundler-sass"],
                             "tool_name": "purlcli",
                             "tool_version": "0.0.1",
                             "warnings": [
-                                "The provided PackageURL 'pkg:gem/bundler-sass' is "
-                                "valid, but `meta` does not support this "
-                                "package type."
+                                "'pkg:gem/bundler-sass' not supported with `metadata` command"
                             ],
                         }
                     ],
@@ -327,7 +418,7 @@ class TestPURLCLI_meta(object):
                                 "--file": None,
                                 "--output": "",
                                 "--purl": ["pkg:rubygems/bundler-sass"],
-                                "command": "meta",
+                                "command": "metadata",
                             },
                             "purls": ["pkg:rubygems/bundler-sass"],
                             "tool_name": "purlcli",
@@ -385,15 +476,13 @@ class TestPURLCLI_meta(object):
                                 "--file": None,
                                 "--output": "",
                                 "--purl": ["pkg:nginx/nginx"],
-                                "command": "meta",
+                                "command": "metadata",
                             },
                             "purls": ["pkg:nginx/nginx"],
                             "tool_name": "purlcli",
                             "tool_version": "0.0.1",
                             "warnings": [
-                                "The provided PackageURL 'pkg:nginx/nginx' is "
-                                "valid, but `meta` does not support this "
-                                "package type."
+                                "'pkg:nginx/nginx' not supported with `metadata` command"
                             ],
                         }
                     ],
@@ -410,15 +499,13 @@ class TestPURLCLI_meta(object):
                                 "--file": None,
                                 "--output": "",
                                 "--purl": ["pkg:pypi/zzzzz"],
-                                "command": "meta",
+                                "command": "metadata",
                             },
                             "purls": ["pkg:pypi/zzzzz"],
                             "tool_name": "purlcli",
                             "tool_version": "0.0.1",
                             "warnings": [
-                                "There was an error with your 'pkg:pypi/zzzzz' "
-                                "query.  Make sure that 'pkg:pypi/zzzzz' actually "
-                                "exists in the relevant repository.",
+                                "'pkg:pypi/zzzzz' could not be fetched",
                             ],
                         }
                     ],
@@ -435,15 +522,12 @@ class TestPURLCLI_meta(object):
                                 "--file": None,
                                 "--output": "",
                                 "--purl": ["pkg:pypi/?fetchcode"],
-                                "command": "meta",
+                                "command": "metadata",
                             },
                             "purls": ["pkg:pypi/?fetchcode"],
                             "tool_name": "purlcli",
                             "tool_version": "0.0.1",
-                            "warnings": [
-                                "There was an error with your 'pkg:pypi/?fetchcode' query -- the "
-                                "Package URL you provided is not valid."
-                            ],
+                            "warnings": ["'pkg:pypi/?fetchcode' not valid"],
                         }
                     ],
                     "packages": [],
@@ -459,15 +543,12 @@ class TestPURLCLI_meta(object):
                                 "--file": None,
                                 "--output": "",
                                 "--purl": ["zzzzz"],
-                                "command": "meta",
+                                "command": "metadata",
                             },
                             "purls": ["zzzzz"],
                             "tool_name": "purlcli",
                             "tool_version": "0.0.1",
-                            "warnings": [
-                                "There was an error with your 'zzzzz' query -- the "
-                                "Package URL you provided is not valid."
-                            ],
+                            "warnings": ["'zzzzz' not valid"],
                         }
                     ],
                     "packages": [],
@@ -475,17 +556,18 @@ class TestPURLCLI_meta(object):
             ),
         ],
     )
-    def test_meta_details(self, test_input, expected):
+    def test_metadata_details(self, test_input, expected):
         """
-        Test the `meta` nested function, `get_meta_details()`.
+        Test the `metadata` nested function, `get_metadata_details()`.
         """
-        purl_meta = purlcli.get_meta_details(
+        purl_metadata = purlcli.get_metadata_details(
             test_input,
             output="",
             file="",
-            command_name="meta",
+            command_name="metadata",
+            unique=False,
         )
-        assert purl_meta == expected
+        assert purl_metadata == expected
 
     @pytest.mark.parametrize(
         "test_input,expected",
@@ -520,16 +602,165 @@ class TestPURLCLI_meta(object):
             ),
         ],
     )
-    def test_check_meta_purl(self, test_input, expected):
-        purl_meta = purlcli.check_meta_purl(test_input[0])
-        assert purl_meta == expected
+    def test_check_metadata_purl(self, test_input, expected):
+        purl_metadata = purlcli.check_metadata_purl(test_input[0])
+        assert purl_metadata == expected
+
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                ["pkg:pypi/fetchcode"],
+                ("pkg:pypi/fetchcode", "pkg:pypi/fetchcode"),
+            ),
+            (
+                ["pkg:pypi/fetchcode@1.2.3"],
+                ("pkg:pypi/fetchcode@1.2.3", "pkg:pypi/fetchcode"),
+            ),
+            (
+                ["pkg:pypi/fetchcode@1.2.3?howistheweather=rainy"],
+                (
+                    "pkg:pypi/fetchcode@1.2.3?howistheweather=rainy",
+                    "pkg:pypi/fetchcode",
+                ),
+            ),
+            (
+                ["pkg:pypi/fetchcode?howistheweather=rainy"],
+                ("pkg:pypi/fetchcode?howistheweather=rainy", "pkg:pypi/fetchcode"),
+            ),
+            (
+                ["pkg:pypi/fetchcode#this/is/a/path"],
+                ("pkg:pypi/fetchcode#this/is/a/path", "pkg:pypi/fetchcode"),
+            ),
+            (
+                ["pkg:pypi/?fetchcode"],
+                ("pkg:pypi/?fetchcode", "pkg:pypi/"),
+            ),
+            (["zzzzz"], ("zzzzz", "zzzzz")),
+        ],
+    )
+    def test_normalize_purl(self, test_input, expected):
+        normalized_purl = purlcli.normalize_purl(test_input[0])
+        assert normalized_purl == expected
+
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                [
+                    "pkg:gem/bundler-sass",
+                    "pkg:pypi/fetchcode",
+                    "pkg:pypi/fetchcode@0.1.0",
+                    "pkg:pypi/fetchcode@0.2.0",
+                ],
+                [
+                    {
+                        "errors": [],
+                        "options": {
+                            "--file": None,
+                            "--output": "",
+                            "--purl": [
+                                "pkg:gem/bundler-sass",
+                                "pkg:pypi/fetchcode",
+                                "pkg:pypi/fetchcode@0.1.0",
+                                "pkg:pypi/fetchcode@0.2.0",
+                            ],
+                            "command": "metadata",
+                        },
+                        "purls": [
+                            "pkg:gem/bundler-sass",
+                            "pkg:pypi/fetchcode",
+                            "pkg:pypi/fetchcode@0.1.0",
+                            "pkg:pypi/fetchcode@0.2.0",
+                        ],
+                        "tool_name": "purlcli",
+                        "tool_version": "0.0.1",
+                        "warnings": [
+                            "'pkg:gem/bundler-sass' not supported with `metadata` command"
+                        ],
+                    }
+                ],
+            ),
+        ],
+    )
+    def test_construct_headers(self, test_input, expected):
+        metadata_headers = purlcli.construct_headers(
+            test_input,
+            output="",
+            file="",
+            command_name="metadata",
+            head=None,
+            normalized_purls=None,
+            unique=None,
+        )
+        assert metadata_headers == expected
+
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                [
+                    "pkg:gem/bundler-sass",
+                    "pkg:pypi/fetchcode",
+                    "pkg:pypi/fetchcode@0.1.0",
+                    "pkg:pypi/fetchcode@0.2.0",
+                ],
+                [
+                    {
+                        "errors": [],
+                        "options": {
+                            "--file": None,
+                            "--output": "",
+                            "--purl": [
+                                "pkg:gem/bundler-sass",
+                                "pkg:pypi/fetchcode",
+                                "pkg:pypi/fetchcode@0.1.0",
+                                "pkg:pypi/fetchcode@0.2.0",
+                            ],
+                            "--unique": True,
+                            "command": "metadata",
+                        },
+                        "purls": [
+                            "pkg:gem/bundler-sass",
+                            "pkg:pypi/fetchcode",
+                            "pkg:pypi/fetchcode@0.1.0",
+                            "pkg:pypi/fetchcode@0.2.0",
+                        ],
+                        "tool_name": "purlcli",
+                        "tool_version": "0.0.1",
+                        "warnings": [
+                            "input PURL: 'pkg:pypi/fetchcode@0.1.0' normalized to 'pkg:pypi/fetchcode'",
+                            "input PURL: 'pkg:pypi/fetchcode@0.2.0' normalized to 'pkg:pypi/fetchcode'",
+                            "'pkg:gem/bundler-sass' not supported with `metadata` command",
+                        ],
+                    }
+                ],
+            ),
+        ],
+    )
+    def test_construct_headers_unique(self, test_input, expected):
+        metadata_headers = purlcli.construct_headers(
+            test_input,
+            output="",
+            file="",
+            command_name="metadata",
+            head=None,
+            normalized_purls=[
+                ("pkg:gem/bundler-sass", "pkg:gem/bundler-sass"),
+                ("pkg:pypi/fetchcode", "pkg:pypi/fetchcode"),
+                ("pkg:pypi/fetchcode@0.1.0", "pkg:pypi/fetchcode"),
+                ("pkg:pypi/fetchcode@0.2.0", "pkg:pypi/fetchcode"),
+            ],
+            unique=True,
+        )
+        assert metadata_headers == expected
 
 
-# To come once I've converted the output to a SCTK-like data structure.
+# TODO: after converting the output to a SCTK-like data structure.
 # class TestPURLCLI_urls(object):
 
 
-# These tests and the underlying code have not yet been converted to a SCTK-like data structure.
+# TODO: not yet converted to a SCTK-like data structure.
 class TestPURLCLI_validate(object):
     @pytest.mark.parametrize(
         "test_input,expected",
@@ -708,7 +939,7 @@ class TestPURLCLI_validate(object):
         assert validated_purls == expected
 
 
-# These tests and the underlying code have not yet been converted to a SCTK-like data structure.
+# TODO: not yet converted to a SCTK-like data structure.
 class TestPURLCLI_versions(object):
     @pytest.mark.parametrize(
         "test_input,expected",
@@ -776,7 +1007,7 @@ class TestPURLCLI_versions(object):
         ],
     )
     def test_versions(self, test_input, expected):
-        # TODO: 2024-02-08 Thursday 10:25:14.  The versions data structure is not yet updated to SCTK-like but we've started passing the required additional arguments, so need to do so here as well.
+        # TODO: not yet updated to SCTK-like structure.
         output = ""
         file = ""
         command_name = "versions"

@@ -19,7 +19,7 @@ def purlcli():
     """
 
 
-@purlcli.command(name="meta")
+@purlcli.command(name="metadata")
 @click.option(
     "--purl",
     "purls",
@@ -40,14 +40,16 @@ def purlcli():
     required=False,
     help="Read a list of PURLs from a FILE, one per line.",
 )
-# TODO: need to strip versions, qualifiers and subpath data and note that in a warning.
-def get_meta(purls, output, file):
+@click.option(
+    "--unique",
+    is_flag=True,
+    required=False,
+    help="Return data only for unique PURLs.",
+)
+def get_metadata(purls, output, file, unique):
     """
     Given one or more PURLs, for each PURL, return a mapping of metadata
     fetched from the fetchcode package.py info() function.
-
-    Version information is not needed in submitted PURLs and if included will
-    be removed before processing.
     """
     check_for_duplicate_input_sources(purls, file)
 
@@ -55,121 +57,101 @@ def get_meta(purls, output, file):
         purls = file.read().splitlines(False)
 
     context = click.get_current_context()
-    manual_command_name = context.command.name
     command_name = context.command.name
 
-    meta_info = get_meta_details(purls, output, file, command_name)
-    json.dump(meta_info, output, indent=4)
+    metadata_info = get_metadata_details(purls, output, file, unique, command_name)
+    json.dump(metadata_info, output, indent=4)
 
 
-def get_meta_details(purls, output, file, command_name):
+def get_metadata_details(purls, output, file, unique, command_name):
     """
     Return a dictionary containing metadata for each PURL in the `purls` input
     list.  `check_meta_purl()` will print an error message to the console
     (also displayed in the JSON output) when necessary.
     """
-    meta_details = {}
-    # 2024-02-10 Saturday 13:40:43.  Move this to after the for loop so we can add stripped_purls.
-    # meta_details["headers"] = construct_headers(
-    #     purls=purls,
-    #     output=output,
-    #     file=file,
-    #     command_name=command_name,
-    # )
-    # Create here so it appears before `packages`.
-    meta_details["headers"] = []
-    meta_details["packages"] = []
+    metadata_details = {}
+    metadata_details["headers"] = []
+    metadata_details["packages"] = []
 
-    processed_purls = []
+    normalized_purls = []
+    input_purls = []
+    if unique:
+        for purl in purls:
+            purl, normalized_purl = normalize_purl(purl)
+            normalized_purls.append((purl, normalized_purl))
+            if normalized_purl not in input_purls:
+                input_purls.append(normalized_purl)
+    else:
+        input_purls = purls
 
-    for purl in purls:
+    for purl in input_purls:
         if not purl:
             continue
 
-        # Remove substrings that start with the '@', '?' or '#' separators.
-        # purl = purl.strip()
-        purl = strip_purl(purl)
-        if purl not in processed_purls:
-            processed_purls.append(purl)
-        else:
-            continue
-
-        if command_name == "meta" and check_meta_purl(purl) == "not_valid":
-            print(
-                f"There was an error with your '{purl}' query -- the Package URL you provided is not valid."
-            )
+        if command_name == "metadata" and check_metadata_purl(purl) == "not_valid":
+            print(f"'{purl}' not valid")
             continue
 
         if (
-            command_name == "meta"
-            and check_meta_purl(purl) == "valid_but_not_supported"
+            command_name == "metadata"
+            and check_metadata_purl(purl) == "valid_but_not_supported"
         ):
-            print(
-                f"The provided PackageURL '{purl}' is valid, but `meta` does not support this package type."
-            )
+            print(f"'{purl}' not supported with `metadata` command")
             continue
 
-        if command_name == "meta" and check_meta_purl(purl) == "failed_to_fetch":
-            print(
-                f"There was an error with your '{purl}' query.  Make sure that '{purl}' actually exists in the relevant repository."
-            )
+        if (
+            command_name == "metadata"
+            and check_metadata_purl(purl) == "failed_to_fetch"
+        ):
+            print(f"'{purl}' could not be fetched")
             continue
 
         for release in list(info(purl)):
             release_detail = release.to_dict()
             release_detail.move_to_end("purl", last=False)
-            meta_details["packages"].append(release_detail)
+            metadata_details["packages"].append(release_detail)
 
-    print(f"\nprocessed_purls = {processed_purls}\n")
-    # stripped = 'One or more input PURLs contain "@", "?" and/or "#" separators and have been stripped (starting with the separator) to enable proper processing.'
-    # if stripped_purls:
-    #     print(f'\n{stripped}')
-    # meta_details["headers"] = construct_headers(
-    #     purls=purls,
-    #     output=output,
-    #     file=file,
-    #     command_name=command_name,
-    # )
-    meta_details["headers"].append(
-        construct_headers(
-            purls=purls,
-            output=output,
-            file=file,
-            command_name=command_name,
-            processed_purls=processed_purls,
-        )
+    metadata_details["headers"] = construct_headers(
+        purls=purls,
+        output=output,
+        file=file,
+        command_name=command_name,
+        normalized_purls=normalized_purls,
+        unique=unique,
     )
 
-    return meta_details
+    return metadata_details
 
 
-def strip_purl(purl):
+def normalize_purl(purl):
     """
     Remove substrings that start with the '@', '?' or '#' separators.
     """
-    # print(f"input PURL = {purl}")
-
+    input_purl = purl
     purl = purl.strip()
     purl = re.split("[@,?,#,]+", purl)[0]
+    normalized_purl = purl
 
-    # print(f"stripped PURL = {purl}\n")
-
-    return purl
+    return input_purl, normalized_purl
 
 
-# def construct_headers(purls=None, output=None, file=None, command_name=None, head=None):
 def construct_headers(
     purls=None,
     output=None,
     file=None,
     command_name=None,
     head=None,
-    processed_purls=None,
+    normalized_purls=None,
+    unique=None,
 ):
     """
     Return a list comprising the `headers` content of the dictionary output.
     """
     headers = []
+    headers_content = {}
+    options = {}
+    errors = []
+    warnings = []
 
     context_purls = [p for p in purls]
     context_file = file
@@ -177,20 +159,18 @@ def construct_headers(
     if context_file:
         context_file_value = context_file.name
 
-    headers_content = {}
-    options = {}
-
-    errors = []
-    warnings = []
-
     headers_content["tool_name"] = "purlcli"
     headers_content["tool_version"] = version("purldb_toolkit")
 
     options["command"] = command_name
     options["--purl"] = context_purls
     options["--file"] = context_file_value
+
     if head:
         options["--head"] = True
+
+    if unique:
+        options["--unique"] = True
 
     if isinstance(output, str):
         options["--output"] = output
@@ -200,67 +180,47 @@ def construct_headers(
     headers_content["options"] = options
     headers_content["purls"] = purls
 
-    if command_name == "meta" and processed_purls:
-        warnings.append(
-            f"One or more input PURLs have been stripped to enable proper processing.  The final set of processed PURLs is listed in the 'processed_purls' field above."
-        )
+    if command_name == "metadata" and unique:
+        for purl in normalized_purls:
+            if purl[0] != purl[1]:
+                warnings.append(f"input PURL: '{purl[0]}' normalized to '{purl[1]}'")
 
     for purl in purls:
-        # Remove substrings that start with the '@', '?' or '#' separators.
-        # purl = purl.strip()
-        purl = strip_purl(purl)
         if not purl:
             continue
 
-        # `meta` warnings:
-
-        if command_name == "meta" and check_meta_purl(purl) == "not_valid":
-            warnings.append(
-                f"There was an error with your '{purl}' query -- the Package URL you provided is not valid."
-            )
+        # `metadata` warnings:
+        if command_name == "metadata" and check_metadata_purl(purl) == "not_valid":
+            warnings.append(f"'{purl}' not valid")
             continue
-
         if (
-            command_name == "meta"
-            and check_meta_purl(purl) == "valid_but_not_supported"
+            command_name == "metadata"
+            and check_metadata_purl(purl) == "valid_but_not_supported"
         ):
-            warnings.append(
-                f"The provided PackageURL '{purl}' is valid, but `meta` does not support this package type."
-            )
+            warnings.append(f"'{purl}' not supported with `metadata` command")
             continue
-
-        if command_name == "meta" and check_meta_purl(purl) == "failed_to_fetch":
-            warnings.append(
-                f"There was an error with your '{purl}' query.  Make sure that '{purl}' actually exists in the relevant repository."
-            )
+        if (
+            command_name == "metadata"
+            and check_metadata_purl(purl) == "failed_to_fetch"
+        ):
+            warnings.append(f"'{purl}' could not be fetched")
             continue
 
         # `urls` warnings:
-
         if command_name == "urls" and check_urls_purl(purl) == "not_valid":
-            warnings.append(
-                f"There was an error with your '{purl}' query -- the Package URL you provided is not valid."
-            )
+            warnings.append(f"'{purl}' not valid")
             continue
-
         if (
             command_name == "urls"
             and check_urls_purl(purl) == "valid_but_not_supported"
         ):
-            warnings.append(
-                f"The provided PackageURL '{purl}' is valid, but `urls` does not support this package type."
-            )
+            warnings.append(f"'{purl}' not supported with `urls` command")
             continue
-
         if (
             command_name == "urls"
             and check_urls_purl(purl) == "valid_but_not_fully_supported"
         ):
-            warnings.append(
-                f"The provided PackageURL '{purl}' is valid, but `urls` does not fully support this package type."
-            )
-
-    headers_content["processed_purls"] = processed_purls
+            warnings.append(f"'{purl}' not fully supported with `urls` command")
 
     headers_content["errors"] = errors
     headers_content["warnings"] = warnings
@@ -269,16 +229,16 @@ def construct_headers(
     return headers
 
 
-def check_meta_purl(purl):
+def check_metadata_purl(purl):
     """
     Return a variable identifying the message for printing to the console by
-    get_meta_details() if (1) the input PURL is invalid, (2) its type is not
-    supported by `meta` or (3) its existence was not validated (e.g.,
+    get_metadata_details() if (1) the input PURL is invalid, (2) its type is not
+    supported by `metadata` or (3) its existence was not validated (e.g.,
     `Exception: Failed to fetch` or `Error while fetching`).
 
     This message will also be reported by construct_headers() in the
     `warnings` field of the `header` section of the JSON object returned by
-    the `meta` command.
+    the `metadata` command.
     """
     results = check_existence(purl)
 
@@ -286,7 +246,7 @@ def check_meta_purl(purl):
         return "not_valid"
 
     # This is manually constructed from a visual inspection of fetchcode/package.py.
-    meta_supported_ecosystems = [
+    metadata_supported_ecosystems = [
         "bitbucket",
         "cargo",
         "github",
@@ -294,9 +254,9 @@ def check_meta_purl(purl):
         "pypi",
         "rubygems",
     ]
-    meta_purl = PackageURL.from_string(purl)
+    metadata_purl = PackageURL.from_string(purl)
 
-    if meta_purl.type not in meta_supported_ecosystems:
+    if metadata_purl.type not in metadata_supported_ecosystems:
         return "valid_but_not_supported"
 
     if results["exists"] == False:
@@ -330,14 +290,10 @@ def check_meta_purl(purl):
     required=False,
     help="Validate each URL's existence with a head request.",
 )
-# TODO: need to strip versions, qualifiers and subpath data and note that in a warning.
 def get_urls(purls, output, file, head):
     """
     Given one or more PURLs, for each PURL, return a list of all known URLs
     fetched from the packageurl-python purl2url.py code.
-
-    Version information is not needed in submitted PURLs and if included will
-    be removed before processing.
     """
     check_for_duplicate_input_sources(purls, file)
 
@@ -377,32 +333,24 @@ def get_urls_details(purls, output, file, head, command_name):
             continue
 
         # Print warnings to terminal.
-
         if command_name == "urls" and check_urls_purl(purl) == "not_valid":
-            print(
-                f"There was an error with your '{purl}' query -- the Package URL you provided is not valid."
-            )
+            print(f"'{purl}' not valid")
             continue
 
         if (
             command_name == "urls"
             and check_urls_purl(purl) == "valid_but_not_supported"
         ):
-            print(
-                f"The provided PackageURL '{purl}' is valid, but `urls` does not support this package type."
-            )
+            print(f"'{purl}' not supported with `urls` command")
             continue
 
         if (
             command_name == "urls"
             and check_urls_purl(purl) == "valid_but_not_fully_supported"
         ):
-            print(
-                f"The provided PackageURL '{purl}' is valid, but `urls` does not fully support this package type."
-            )
+            print(f"'{purl}' not fully supported with `urls` command")
 
         # Add the URLs.
-
         url_purl = PackageURL.from_string(purl)
 
         url_detail["download_url"] = {"url": purl2url.get_download_url(purl)}
@@ -424,7 +372,6 @@ def get_urls_details(purls, output, file, head, command_name):
         url_detail["url"] = {"url": purl2url.get_url(purl)}
 
         # Add the http status code data.
-
         url_list = [
             "download_url",
             # "inferred_urls" has to be handled separately because it has a nested list
@@ -475,18 +422,17 @@ def make_head_request(url_detail):
     head_response = requests.head(url_detail)
     head_request_status_code = head_response.status_code
 
-    # Return a dictionary for best readability.
+    # Return a dictionary for readability.
     return {
         "get_request": get_request_status_code,
         "head_request": head_request_status_code,
     }
 
 
-# HEY 2024-02-02 Friday 09:31:27.  This has been simplified to return a short string that can be converted on the receiving end to a more nuanced message re the status of the PURL in question.
 def check_urls_purl(purl):
     """
-    If applicable, return a variable indicating that the input PURL is invalid,
-    its type is not supported by `urls` or its existence was not validated.
+    If applicable, return a variable indicating that the input PURL is invalid or
+    its type is not supported (or not fully supported) by `urls`.
     """
     results = check_existence(purl)
 
@@ -543,7 +489,7 @@ def check_urls_purl(purl):
         return "valid_but_not_fully_supported"
 
 
-# This code and the related tests have not yet been converted to a SCTK-like data structure.
+# Not yet converted to a SCTK-like data structure.
 @purlcli.command(name="validate")
 @click.option(
     "--purl",
@@ -565,24 +511,14 @@ def check_urls_purl(purl):
     required=False,
     help="Read a list of PURLs from a FILE, one per line.",
 )
-# TODO: need to strip qualifiers and subpath data and note that in a warning.
 def validate(purls, output, file):
     """
     Check the syntax of one or more PURLs.
-
-    The validation process includes the `check_existence` step, which checks
-    whether the package exists in the upstream repo.  Accordingly, version
-    information can be included in the submitted PURLs and will be part of the
-    validation process.
     """
     check_for_duplicate_input_sources(purls, file)
 
     if file:
         purls = file.read().splitlines(False)
-
-    # 2024-02-07 Wednesday 18:12:40.  Not yet!
-    # context = click.get_current_context()
-    # command_name = context.command.name
 
     validated_purls = validate_purls(purls)
     json.dump(validated_purls, output, indent=4)
@@ -600,19 +536,6 @@ def validate_purls(purls):
         results = response.json()
         validated_purls.append(results)
 
-    # # from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
-    # print(
-    #     f"\n\nVERSION_API_CLASSES_BY_PACKAGE_TYPE = {VERSION_API_CLASSES_BY_PACKAGE_TYPE}"
-    # )
-    # print()
-    # for k, v in VERSION_API_CLASSES_BY_PACKAGE_TYPE.items():
-    #     print(f"{k} = {v}")
-    # print()
-
-    # # VERSION_API_CLASS_BY_PACKAGE_NAMESPACE
-    # for k, v in VERSION_API_CLASS_BY_PACKAGE_NAMESPACE.items():
-    #     print(f"{k} = {v}")
-
     return validated_purls
 
 
@@ -621,7 +544,7 @@ def check_existence(purl):
     Return a JSON object containing data regarding the validity of the input PURL.
     """
 
-    # 2/5/2024 5:59 PM Monday.  Based on packagedb.package_managers VERSION_API_CLASSES_BY_PACKAGE_TYPE -- and supported by testing the command -- it appears that the `validate` command `check_existence` check supports the following PURL types:
+    # Based on packagedb.package_managers VERSION_API_CLASSES_BY_PACKAGE_TYPE -- and supported by testing the command -- it appears that the `validate` command `check_existence` check supports the following PURL types:
 
     # validate_supported_ecosystems = [
     # "cargo",
@@ -645,38 +568,7 @@ def check_existence(purl):
     return results
 
 
-# 2024-02-05 Monday 11:05:55.  Current output has this structure -- to be converted to SCTK-like structure.  These messages are defined in purldb/packagedb/api.py `class PurlValidateViewSet(viewsets.ViewSet)`.
-
-# python -m purldb_toolkit.purlcli validate --purl pkg:pypi/@dejacode --purl pkg:pypi/dejacode@12345 --purl pkg:cargo/rand@0.7.2 --purl pkg:nginx/nginx@0.8.9?os=windows --output -
-# [
-#     {
-#         "valid": false,
-#         "exists": null,
-#         "message": "The provided PackageURL is not valid.",
-#         "purl": "pkg:pypi/@dejacode"
-#     },
-#     {
-#         "valid": true,
-#         "exists": false,
-#         "message": "The provided PackageURL is valid, but does not exist in the upstream repo.",
-#         "purl": "pkg:pypi/dejacode@12345"
-#     },
-#     {
-#         "valid": true,
-#         "exists": true,
-#         "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-#         "purl": "pkg:cargo/rand@0.7.2"
-#     },
-#     {
-#         "valid": true,
-#         "exists": null,
-#         "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-#         "purl": "pkg:nginx/nginx@0.8.9?os=windows"
-#     }
-# ]
-
-
-# This code and the related tests have not yet been converted to a SCTK-like data structure.
+# Not yet converted to a SCTK-like data structure.
 @purlcli.command(name="versions")
 @click.option(
     "--purl",
@@ -698,7 +590,6 @@ def check_existence(purl):
     required=False,
     help="Read a list of PURLs from a FILE, one per line.",
 )
-# TODO: need to strip versions, qualifiers and subpath data and note that in a warning.
 def get_versions(purls, output, file):
     """
     Given one or more PURLs, return a list of all known versions for each PURL.
@@ -714,13 +605,11 @@ def get_versions(purls, output, file):
     context = click.get_current_context()
     command_name = context.command.name
 
-    # purl_versions = list_versions(purls)
     purl_versions = list_versions(purls, output, file, command_name)
     json.dump(purl_versions, output, indent=4)
 
 
-# def list_versions(purls):
-# HEY: 2024-02-07 Wednesday 18:23:54.  Though we're now passing data needed for construct_headers(), construct_headers() has not yet been implemented for this `versions` command -- or for the `validate` command either.
+# construct_headers() has not yet been implemented for this `versions` command -- or for the `validate` command.
 def list_versions(purls, output, file, command_name):
     """
     Return a list of dictionaries containing version-related data for each PURL
@@ -737,60 +626,30 @@ def list_versions(purls, output, file, command_name):
         if not purl:
             continue
 
-        # TODO: Add to warnings when we restructure to SCTK-like structure.
+        # TODO: Revisit TypeError previously thrown by `for` statement (`TypeError: 'NoneType' object is not iterable`) if, e.g., the PURL is missing `/debian/` -- `pkg:deb/debian/2ping` succeeds while `pkg:deb/2ping` throws the TypeError.
         # if check_versions_purl(purl):
         #     print(check_versions_purl(purl))
         #     continue
 
-        # # TODO: The `for` statement throws `TypeError: 'NoneType' object is not iterable` if, e.g., the PURL is missing `/debian/` -- `pkg:deb/debian/2ping` succeeds while `pkg:deb/2ping` throws that TypeError.
-        # # TODO: So let's define it first as a variable so we can catch with a try/except.  Need to add it as a warning, too.
-        # # HEY: In place of a return, we want somehow to pass this as a `warning` in the `header` -- this has not yet been converted to the SCTK-like data structure -- and then we want a `continue`
-        # # versions() calls /home/jmh/dev/nexb/purldb/venv/lib/python3.8/site-packages/fetchcode/package_versions.py
-        # if versions(purl) is None:
-        #     # print(f"\n\nNone None None None None")
-        #     print(
-        #         f"There was an error with your '{purl}' query.  Make sure that '{purl}' actually exists in the relevant repository."
-        #     )
-        #     # TODO: Add as a warning to headers
-        #     continue
-
         if command_name == "versions" and check_versions_purl(purl) == "not_valid":
-            print(
-                f"There was an error with your '{purl}' query -- the Package URL you provided is not valid."
-            )
+            print(f"'{purl}' not valid")
             continue
 
         if (
             command_name == "versions"
             and check_versions_purl(purl) == "valid_but_not_supported"
         ):
-            print(
-                f"The provided PackageURL '{purl}' is valid, but `versions` does not support this package type."
-            )
+            print(f"'{purl}' not supported with `versions` command")
             continue
 
         if (
             command_name == "versions"
             and check_versions_purl(purl) == "failed_to_fetch"
         ):
-            print(
-                f"There was an error with your '{purl}' query.  Make sure that '{purl}' actually exists in the relevant repository."
-            )
+            print(f"'{purl}' failed to fetch")
             continue
 
-        # else:
-        #     # print(f"\n\nOh oh ....")
-
-        #     # try:
-        #     #     list_purl_versions = list(versions(purl))
-        #     # except TypeError as error:
-        #     #     print(
-        #     #         f"There was an error with your '{purl}' query.  Make sure that '{purl}' actually exists in the relevant repository."
-        #     #     )
-        #     #     continue
-
         for package_version_object in list(versions(purl)):
-            # for package_version_object in list_purl_versions:
             purl_version_data = {}
             purl_version = package_version_object.to_dict()["value"]
             nested_purl = purl + "@" + f"{purl_version}"
@@ -816,7 +675,6 @@ def check_versions_purl(purl):
     results = check_existence(purl)
 
     if results["valid"] == False:
-        # return f"There was an error with your '{purl}' query -- the Package URL you provided is not valid."
         return "not_valid"
 
     supported = SUPPORTED_ECOSYSTEMS
@@ -824,18 +682,9 @@ def check_versions_purl(purl):
     versions_purl = PackageURL.from_string(purl)
 
     if versions_purl.type not in supported:
-        # return f"The provided PackageURL '{purl}' is valid, but `versions` is not supported for this package type."
         return "valid_but_not_supported"
 
-    # # TODO 2024-02-05 Monday 16:29:23.  I originally used this if test and message in `meta` but found today that it blocks the desired return of data on `pkg:rubygems/bundler-sass` and commented it out -- to be deleted when I'm certain.  Same with `urls` -- commented out, to be deleted.  Do we want this here?
-    # # HEY: 2024-02-05 Monday 16:44:21.  This is triggered by running `versions` on 'pkg:pypi/dejacode@55.0.0' or 'pkg:pypi/matchcode', neither of which exists -- so we'll keep this here.
-    # # 2024-02-05 Monday 19:02:34.  We'll also add it above in the try/catch because fetchcode/package_versions.py throws an error
-    # if results["exists"] != True:
-    #     return f"There was an error with your '{purl}' query.  Make sure that '{purl}' actually exists in the relevant repository."
-
-    # YO: 2024-02-07 Wednesday 13:17:57.  Revisit this after my break.  `urls` has this entirely commented out, while `meta` has this:
     if results["exists"] == False:
-        #     return f"There was an error with your '{purl}' query.  Make sure that '{purl}' actually exists in the relevant repository."
         return "failed_to_fetch"
 
 
