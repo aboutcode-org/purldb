@@ -7,7 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-
+import uuid
 from datetime import timedelta
 import logging
 import sys
@@ -649,11 +649,15 @@ class ScannableURI(BaseURI):
         - update the matching index for the PackageDB as needed with fingerprints from the scan
         - set status and timestamps as needed
     """
-    scan_request_date = models.DateTimeField(
+    uuid = models.UUIDField(
+        verbose_name=_("UUID"), default=uuid.uuid4, unique=True, editable=False
+    )
+
+    scan_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text='Timestamp set to the date when a scan was requested.  Used to track scan status.',
+        help_text='Timestamp set to the date when a scan was taken by a worker',
     )
 
     last_status_poll_date = models.DateTimeField(
@@ -664,12 +668,10 @@ class ScannableURI(BaseURI):
                   'Used to track the scan polling.',
     )
 
-    scan_uuid = models.CharField(
-        max_length=36,
-        blank=True,
-        null=True,
+    scan_project_url = models.CharField(
+        max_length=2048,
         db_index=True,
-        help_text='UUID of a scan for this URI in ScanCode.io.',
+        help_text='URL to scan project for this Package',
     )
 
     SCAN_NEW = 0
@@ -706,14 +708,6 @@ class ScannableURI(BaseURI):
         null=True,
         blank=True,
         help_text='Flag indicating whether or not this URI should be rescanned and reindexed.',
-    )
-
-    scan_uuid = models.CharField(
-        max_length=36,
-        blank=True,
-        null=True,
-        db_index=True,
-        help_text='UUID of a scan for this URI in ScanCode.io.',
     )
 
     scan_error = models.TextField(

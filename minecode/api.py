@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from django.utils import timezone
 import json
 from django.db import transaction
 from packageurl import PackageURL
@@ -105,10 +106,11 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             scannable_uri = ScannableURI.objects.get_next_scannable()
             if scannable_uri:
                 response = {
-                    'package_uuid': scannable_uri.package.uuid,
+                    'scannable_uri_uuid': scannable_uri.uuid,
                     'download_url': scannable_uri.uri,
                 }
                 scannable_uri.scan_status = ScannableURI.SCAN_SUBMITTED
+                scannable_uri.scan_date = timezone.now()
                 scannable_uri.save()
             else:
                 response = {
@@ -118,30 +120,38 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             return Response(response)
 
     @action(detail=False, methods=["post"])
-    def submit_scan_results(self, request, *args, **kwargs):
-        """
-        Receive and index completed scan
-        """
-        from packagedb.models import Package
-
-        package_uuid = request.data.get('package_uuid')
-        scan_file = request.data.get('scan_file')
-
-        missing = []
-        if not package_uuid:
-            missing.append('package_uuid')
-        if not scan_file:
-            missing.append('scan_file')
-        if missing:
-            msg = ', '.join(missing)
+    def update_status(self, request, *args, **kwargs):
+        scannable_uri_uuid = request.data.get('scannable_uri_uuid')
+        scan_status = request.data.get('scan_status')
+        if not scannable_uri_uuid:
             response = {
-                'error': f'missing {msg}'
+                'error': 'missing scannable_uri_uuid'
             }
             return Response(response)
 
-        package = Package.objects.get(uuid=package_uuid)
-        scan_data= json.load(scan_file)
-        indexing_errors = index_package_files(package, scan_data, reindex=True)
-        if indexing_errors:
-            return Response({'error': f'indexing errors:\n\n{indexing_errors}'})
-        return Response({'message': 'success'})
+        scannable_uri = ScannableURI.objects.get(uuid=scannable_uri_uuid)
+
+        if scan_status == 'in progress':
+            scannable_uri.scan_status = ScannableURI.SCAN_IN_PROGRESS
+            scannable_uri.save()
+
+        if scan_status == 'failed':
+            scan_log = request.data.get('scan_log')
+            scannable_uri.scan_error = scan_log
+            scannable_uri.scan_status = ScannableURI.SCAN_FAILED
+            scannable_uri.wip_date = None
+            scannable_uri.save()
+
+        if scan_status == 'scanned':
+            scan_file = request.data.get('scan_file')
+            scannable_uri.scan_status = ScannableURI.SCAN_COMPLETED
+            package = scannable_uri.package
+            scan_data= json.load(scan_file)
+            indexing_errors = index_package_files(package, scan_data, reindex=True)
+            if indexing_errors:
+                scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
+                scannable_uri.index_error = indexing_errors
+            else:
+                scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
+            scannable_uri.wip_date = None
+            scannable_uri.save()
