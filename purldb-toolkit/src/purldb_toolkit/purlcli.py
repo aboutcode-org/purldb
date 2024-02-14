@@ -66,7 +66,7 @@ def get_metadata(purls, output, file, unique):
 def get_metadata_details(purls, output, file, unique, command_name):
     """
     Return a dictionary containing metadata for each PURL in the `purls` input
-    list.  `check_meta_purl()` will print an error message to the console
+    list.  `check_metadata_purl()` will print an error message to the console
     (also displayed in the JSON output) when necessary.
     """
     metadata_details = {}
@@ -88,21 +88,17 @@ def get_metadata_details(purls, output, file, unique, command_name):
         if not purl:
             continue
 
-        if command_name == "metadata" and check_metadata_purl(purl) == "not_valid":
+        metadata_purl = check_metadata_purl(purl)
+
+        if command_name == "metadata" and metadata_purl == "not_valid":
             print(f"'{purl}' not valid")
             continue
 
-        if (
-            command_name == "metadata"
-            and check_metadata_purl(purl) == "valid_but_not_supported"
-        ):
+        if command_name == "metadata" and metadata_purl == "valid_but_not_supported":
             print(f"'{purl}' not supported with `metadata` command")
             continue
 
-        if (
-            command_name == "metadata"
-            and check_metadata_purl(purl) == "failed_to_fetch"
-        ):
+        if command_name == "metadata" and metadata_purl == "failed_to_fetch":
             print(f"'{purl}' could not be fetched")
             continue
 
@@ -155,16 +151,16 @@ def construct_headers(
 
     context_purls = [p for p in purls]
     context_file = file
-    context_file_value = None
+    context_file_name = None
     if context_file:
-        context_file_value = context_file.name
+        context_file_name = context_file.name
 
     headers_content["tool_name"] = "purlcli"
     headers_content["tool_version"] = version("purldb_toolkit")
 
     options["command"] = command_name
     options["--purl"] = context_purls
-    options["--file"] = context_file_value
+    options["--file"] = context_file_name
 
     if head:
         options["--head"] = True
@@ -190,36 +186,32 @@ def construct_headers(
             continue
 
         # `metadata` warnings:
-        if command_name == "metadata" and check_metadata_purl(purl) == "not_valid":
+        metadata_purl = check_metadata_purl(purl)
+
+        if command_name == "metadata" and metadata_purl == "not_valid":
             warnings.append(f"'{purl}' not valid")
             continue
-        if (
-            command_name == "metadata"
-            and check_metadata_purl(purl) == "valid_but_not_supported"
-        ):
+
+        if command_name == "metadata" and metadata_purl == "valid_but_not_supported":
             warnings.append(f"'{purl}' not supported with `metadata` command")
             continue
-        if (
-            command_name == "metadata"
-            and check_metadata_purl(purl) == "failed_to_fetch"
-        ):
+
+        if command_name == "metadata" and metadata_purl == "failed_to_fetch":
             warnings.append(f"'{purl}' could not be fetched")
             continue
 
         # `urls` warnings:
-        if command_name == "urls" and check_urls_purl(purl) == "not_valid":
+        urls_purl = check_urls_purl(purl)
+
+        if command_name == "urls" and urls_purl == "not_valid":
             warnings.append(f"'{purl}' not valid")
             continue
-        if (
-            command_name == "urls"
-            and check_urls_purl(purl) == "valid_but_not_supported"
-        ):
+
+        if command_name == "urls" and urls_purl == "valid_but_not_supported":
             warnings.append(f"'{purl}' not supported with `urls` command")
             continue
-        if (
-            command_name == "urls"
-            and check_urls_purl(purl) == "valid_but_not_fully_supported"
-        ):
+
+        if command_name == "urls" and urls_purl == "valid_but_not_fully_supported":
             warnings.append(f"'{purl}' not fully supported with `urls` command")
 
     headers_content["errors"] = errors
