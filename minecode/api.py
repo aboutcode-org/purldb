@@ -132,6 +132,8 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
         scannable_uri = ScannableURI.objects.get(uuid=scannable_uri_uuid)
 
         if scan_status == 'in progress':
+            scan_project_url = request.data.get('scan_project_url')
+            scannable_uri.scan_project_url = scan_project_url
             scannable_uri.scan_status = ScannableURI.SCAN_IN_PROGRESS
             scannable_uri.save()
 

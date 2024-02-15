@@ -650,7 +650,9 @@ class ScannableURI(BaseURI):
         - set status and timestamps as needed
     """
     uuid = models.UUIDField(
-        verbose_name=_("UUID"), default=uuid.uuid4, unique=True, editable=False
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
     )
 
     scan_date = models.DateTimeField(
@@ -671,6 +673,8 @@ class ScannableURI(BaseURI):
     scan_project_url = models.CharField(
         max_length=2048,
         db_index=True,
+        null=True,
+        blank=True,
         help_text='URL to scan project for this Package',
     )
 
@@ -733,12 +737,12 @@ class ScannableURI(BaseURI):
 
     class Meta:
         verbose_name = 'Scannable URI'
-        unique_together = ['canonical', 'scan_uuid']
+        unique_together = ['canonical', 'scan_project_url']
 
         indexes = [
             # to get the scannables
             models.Index(
-                fields=['scan_status', 'scan_request_date', 'last_status_poll_date', ]),
+                fields=['scan_status', 'scan_date', 'last_status_poll_date', ]),
             # ordered by for the main queue query e.g. '-priority'
             models.Index(
                 fields=['-priority'])
