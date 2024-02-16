@@ -11,7 +11,9 @@ import sys
 from pathlib import Path
 
 import environ
+from purldb_project import __version__
 
+PURLDB_VERSION = __version__
 
 PROJECT_DIR = Path(__file__).resolve().parent
 ROOT_DIR = PROJECT_DIR.parent
@@ -73,7 +75,9 @@ INSTALLED_APPS = (
     # Third-party apps
     'django_filters',
     'rest_framework',
+    'drf_spectacular',
     'rest_framework.authtoken',
+    'django_rq',
 )
 
 MIDDLEWARE = (
@@ -257,6 +261,7 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': REST_FRAMEWORK_DEFAULT_THROTTLE_RATES,
     'EXCEPTION_HANDLER': 'packagedb.throttling.throttled_exception_handler',
     'DEFAULT_PAGINATION_CLASS': 'packagedb.api_custom.PageSizePagination',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     # Limit the load on the Database returning a small number of records by default. https://github.com/nexB/vulnerablecode/issues/819
     "PAGE_SIZE": 20,
 }
@@ -292,7 +297,22 @@ if DEBUG_TOOLBAR:
         "127.0.0.1",
     ]
 
-# Active seeders: each active seeder class need to be added explictly here
+# Active seeders: each active seeder class need to be added explicitly here
 ACTIVE_SEEDERS = [
     'minecode.visitors.maven.MavenSeed',
 ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'PurlDB API',
+    'DESCRIPTION': 'Tools to create and expose a database of purls (Package URLs)',
+    'VERSION': PURLDB_VERSION,
+    'SERVE_INCLUDE_SCHEMA': False,
+}
+RQ_QUEUES = {
+    'default': {
+        "HOST": env.str("PURLDB_REDIS_HOST", default="localhost"),
+        "PORT": env.str("PURLDB_REDIS_PORT", default="6379"),
+        "PASSWORD": env.str("PURLDB_REDIS_PASSWORD", default=""),
+        "DEFAULT_TIMEOUT": env.int("PURLDB_REDIS_DEFAULT_TIMEOUT", default=360),
+    }
+}

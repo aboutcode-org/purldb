@@ -1,10 +1,10 @@
 Changelog
 =========
 
-next-version
+v4.0.0
 ------------
 
-- TBD
+- Add `/api/docs` Swagger API documentation for API endpoints.
 
 v3.0.0
 -------

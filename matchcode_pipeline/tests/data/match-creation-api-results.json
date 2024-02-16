@@ -1,0 +1,142 @@
+{
+    "headers": [
+        {
+            "tool_name": "scanpipe",
+            "tool_version": "v3.0.0-243-g79d480f",
+            "other_tools": [
+                "pkg:pypi/scancode-toolkit@32.0.8"
+            ],
+            "notice": "Generated with ScanCode.io and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied.\nNo content created from ScanCode.io should be considered or used as legal advice.\nConsult an Attorney for any legal advice.\nScanCode.io is a free software code scanning tool from nexB Inc. and others\nlicensed under the Apache License version 2.0.\nScanCode is a trademark of nexB Inc.\nVisit https://github.com/nexB/scancode.io for support and download.\n",
+            "uuid": "0d08f9c9-daa7-49b3-b672-570ef9b9c106",
+            "created_date": "2024-01-05T04:06:23.300Z",
+            "notes": "",
+            "settings": {},
+            "input_sources": [],
+            "runs": [],
+            "extra_data": {}
+        }
+    ],
+    "packages": [
+        {
+            "purl": "pkg:deb/debian/adduser@3.118?arch=all",
+            "type": "deb",
+            "namespace": "debian",
+            "name": "adduser",
+            "version": "3.118",
+            "qualifiers": "arch=all",
+            "subpath": "",
+            "tag": "",
+            "primary_language": "bash",
+            "description": "add and remove users and groups",
+            "release_date": "1999-10-10",
+            "parties": [
+                {
+                    "url": null,
+                    "name": "Debian Adduser Developers <adduser@packages.debian.org>",
+                    "role": "maintainer",
+                    "type": null,
+                    "email": null
+                }
+            ],
+            "keywords": [
+                "admin"
+            ],
+            "homepage_url": "https://packages.debian.org",
+            "download_url": "https://download.url/package.zip",
+            "bug_tracking_url": "",
+            "code_view_url": "",
+            "vcs_url": "https://packages.vcs.url",
+            "repository_homepage_url": "",
+            "repository_download_url": "",
+            "api_data_url": "",
+            "size": 849,
+            "md5": "76cf50f29e47676962645632737365a7",
+            "sha1": "",
+            "sha256": "",
+            "sha512": "",
+            "copyright": "Copyright (c) 2000 Roland Bauerschmidt <rb@debian.org>\nCopyright (c) 1997, 1998, 1999 Guy Maor <maor@debian.org>\nCopyright (c) 1995 Ted Hajek <tedhajek@boombox.micro.umn.edu>\nportions Copyright (c) 1994 Debian Association, Inc.",
+            "holder": "",
+            "declared_license_expression": "gpl-2.0 AND gpl-2.0-plus",
+            "declared_license_expression_spdx": "GPL-2.0-only AND GPL-2.0-or-later",
+            "license_detections": [],
+            "other_license_expression": "",
+            "other_license_expression_spdx": "",
+            "other_license_detections": [],
+            "extracted_license_statement": "",
+            "compliance_alert": "",
+            "notice_text": "Notice\nText",
+            "source_packages": [],
+            "extra_data": {},
+            "package_uid": "pkg:deb/debian/adduser@3.118?uuid=610bed29-ce39-40e7-92d6-fd8b",
+            "datasource_id": "",
+            "file_references": [],
+            "missing_resources": [],
+            "modified_resources": [],
+            "affected_by_vulnerabilities": []
+        }
+    ],
+    "dependencies": [
+        {
+            "purl": "pkg:pypi/dask",
+            "extracted_requirement": "dask<2023.0.0,>=2022.6.0",
+            "scope": "install",
+            "is_runtime": true,
+            "is_optional": false,
+            "is_resolved": false,
+            "dependency_uid": "pkg:pypi/dask?uuid=e656b571-7d3f-46d1-b95b-8f037aef9692",
+            "for_package_uid": "pkg:deb/debian/adduser@3.118?uuid=610bed29-ce39-40e7-92d6-fd8b",
+            "datafile_path": "daglib-0.3.2.tar.gz-extract/daglib-0.3.2/PKG-INFO",
+            "datasource_id": "pypi_sdist_pkginfo",
+            "package_type": "pypi",
+            "affected_by_vulnerabilities": []
+        }
+    ],
+    "files": [
+        {
+            "path": "daglib-0.3.2.tar.gz-extract/daglib-0.3.2/PKG-INFO",
+            "type": "",
+            "name": "",
+            "status": "",
+            "tag": "",
+            "extension": "",
+            "size": null,
+            "md5": "",
+            "sha1": "",
+            "sha256": "",
+            "sha512": "",
+            "mime_type": "",
+            "file_type": "",
+            "programming_language": "",
+            "is_binary": false,
+            "is_text": false,
+            "is_archive": false,
+            "is_media": false,
+            "is_key_file": false,
+            "detected_license_expression": "",
+            "detected_license_expression_spdx": "",
+            "license_detections": [],
+            "license_clues": [],
+            "percentage_of_license_text": null,
+            "compliance_alert": "",
+            "copyrights": [],
+            "holders": [],
+            "authors": [],
+            "package_data": [],
+            "for_packages": [
+                "pkg:deb/debian/adduser@3.118?uuid=610bed29-ce39-40e7-92d6-fd8b"
+            ],
+            "emails": [],
+            "urls": [],
+            "extra_data": {}
+        }
+    ],
+    "relations": [
+        {
+            "to_resource": "daglib-0.3.2.tar.gz-extract/daglib-0.3.2/PKG-INFO",
+            "status": "",
+            "map_type": "java_to_class",
+            "score": "",
+            "from_resource": "daglib-0.3.2.tar.gz-extract/daglib-0.3.2/PKG-INFO"
+        }
+    ]
+}

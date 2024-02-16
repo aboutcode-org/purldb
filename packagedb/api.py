@@ -11,39 +11,76 @@ import logging
 
 import django_filters
 from django.core.exceptions import ValidationError
-from django.db.models import OuterRef, Q, Subquery
-from django_filters.filters import Filter, OrderingFilter
+from django.db.models import OuterRef
+from django.db.models import Q
+from django.db.models import Subquery
+from django_filters.filters import Filter
+from django_filters.filters import OrderingFilter
 from django_filters.rest_framework import FilterSet
+from drf_spectacular.utils import OpenApiParameter
+from drf_spectacular.utils import extend_schema
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
-from rest_framework import status, viewsets
+from rest_framework import mixins
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from univers.version_constraint import InvalidConstraintsError
-from univers.version_range import RANGE_CLASS_BY_SCHEMES, VersionRange
+from univers.version_range import RANGE_CLASS_BY_SCHEMES
+from univers.version_range import VersionRange
 from univers.versions import InvalidVersion
 
-from matchcode.api import MultipleCharFilter, MultipleCharInFilter
+from matchcode.api import MultipleCharFilter
+from matchcode.api import MultipleCharInFilter
 # UnusedImport here!
 # But importing the mappers and visitors module triggers routes registration
-from minecode import visitors  # NOQA
 from minecode import priority_router
-from minecode.models import PriorityResourceURI, ScannableURI
+from minecode import visitors  # NOQA
+from minecode.models import PriorityResourceURI
+from minecode.models import ScannableURI
 from minecode.route import NoRouteAvailable
 from packagedb.filters import PackageSearchFilter
-from packagedb.models import Package, PackageContentType, PackageSet, Resource
-from packagedb.package_managers import (VERSION_API_CLASSES_BY_PACKAGE_TYPE,
-                                        get_api_package_name,
-                                        get_version_fetcher)
-from packagedb.serializers import (DependentPackageSerializer,
-                                   PackageAPISerializer,
-                                   PackageSetAPISerializer, PartySerializer, PurlValidateResponseSerializer, PurlValidateSerializer,
-                                   ResourceAPISerializer)
+from packagedb.models import Package
+from packagedb.models import PackageContentType
+from packagedb.models import PackageSet
+from packagedb.models import PackageWatch
+from packagedb.models import Resource
+from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
+from packagedb.package_managers import get_api_package_name
+from packagedb.package_managers import get_version_fetcher
+from packagedb.serializers import DependentPackageSerializer
+from packagedb.serializers import IndexPackagesResponseSerializer
+from packagedb.serializers import IndexPackagesSerializer
+from packagedb.serializers import PackageAPISerializer
+from packagedb.serializers import PackageSetAPISerializer
+from packagedb.serializers import PackageWatchAPISerializer
+from packagedb.serializers import PackageWatchCreateSerializer
+from packagedb.serializers import PackageWatchUpdateSerializer
+from packagedb.serializers import PartySerializer
+from packagedb.serializers import PurlValidateResponseSerializer
+from packagedb.serializers import PurlValidateSerializer
+from packagedb.serializers import ResourceAPISerializer
 from packagedb.throttling import StaffUserRateThrottle
 
-
 logger = logging.getLogger(__name__)
+
+
+class CreateListRetrieveUpdateViewSetMixin(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    A viewset that provides `create`, `list, `retrieve`, and `update` actions.
+    To use it, override the class and set the `.queryset` and
+    `.serializer_class` attributes.
+    """
+    pass
+
 
 class PackageResourcePurlFilter(Filter):
     def filter(self, qs, value):
@@ -517,17 +554,39 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PackageSetAPISerializer
 
 
+class PackageWatchViewSet(CreateListRetrieveUpdateViewSetMixin):
+    """
+    Take a `purl` and periodically watch for the new version of the package.
+    Add the new package version to the scan queue. 
+    Default watch interval is 7 days.
+    """
+    queryset = PackageWatch.objects.get_queryset().order_by('-id')
+    serializer_class = PackageWatchAPISerializer
+    lookup_field = 'package_url'
+    lookup_value_regex = r'pkg:[a-zA-Z0-9_]+\/[a-zA-Z0-9_.-]+(?:\/[a-zA-Z0-9_.-]+)*'
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return PackageWatchCreateSerializer
+        elif self.action == 'update':
+            return PackageWatchUpdateSerializer
+        return super().get_serializer_class()
+
+
 class CollectViewSet(viewsets.ViewSet):
     """
     Return Package data for the purl passed in the `purl` query parameter.
 
     If the package does not exist, we will fetch the Package data and return
     it in the same request.
-
-    **Note:** Use `Index packages` for bulk indexing of packages; use `Reindex packages`
-    for bulk reindexing of existing packages.
+    
+    **Note:** Use `Index packages` for bulk indexing/reindexing of packages.
     """
-
+    serializer_class=None
+    @extend_schema(
+            parameters=[OpenApiParameter('purl', str, 'query', description='PackageURL')],
+            responses={200:PackageAPISerializer()},
+    )
     def list(self, request, format=None):
         purl = request.query_params.get('purl')
 
@@ -557,14 +616,20 @@ class CollectViewSet(viewsets.ViewSet):
                 message = {}
                 if errors:
                     message = {
-                        'status': f'error(s) occured when fetching metadata for {purl}: {errors}'
+                        'status': f'error(s) occurred when fetching metadata for {purl}: {errors}'
                     }
                 return Response(message)
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
-
-    @action(detail=False, methods=['post'])
+    
+    @extend_schema(
+        request=IndexPackagesSerializer,
+        responses={
+            200: IndexPackagesResponseSerializer(),
+        },
+    )
+    @action(detail=False, methods=['post'], serializer_class=IndexPackagesSerializer)
     def index_packages(self, request, *args, **kwargs):
         """
         Take a list of `packages` (where each item is a dictionary containing either PURL
@@ -577,7 +642,7 @@ class CollectViewSet(viewsets.ViewSet):
         **Note:** When a versionless PURL is supplied without a vers range, then all the versions
         of that package will be considered for indexing/reindexing.
 
-        **Input example:**
+        **Request example:**
 
                 {
                     "packages": [
@@ -629,10 +694,16 @@ class CollectViewSet(viewsets.ViewSet):
                 return
             package.rescan()
             reindexed_packages.append(package)
+        
+        serializer = self.serializer_class(data=request.data)
 
-        packages = request.data.get('packages') or []
-        reindex = request.data.get('reindex') or False
-        reindex_set = request.data.get('reindex_set') or False
+        if not serializer.is_valid():
+            return Response({'errors': serializer.errors}, status=400)
+
+        validated_data = serializer.validated_data
+        packages = validated_data.get('packages', [])
+        reindex = validated_data.get('reindex', False)
+        reindex_set = validated_data.get('reindex_set', False)
 
         queued_packages = []
         unqueued_packages = []
@@ -686,7 +757,9 @@ class CollectViewSet(viewsets.ViewSet):
             'unsupported_vers_count': len(unsupported_vers),
             'unsupported_vers': unsupported_vers,
         }
-        return Response(response_data)
+
+        serializer = IndexPackagesResponseSerializer(response_data, context={'request': request})
+        return Response(serializer.data)
 
 
 class PurlValidateViewSet(viewsets.ViewSet):
@@ -698,7 +771,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
     `gem`, `golang`, `hex`, `maven`, `npm`, `nuget` and `pypi` ecosystems.
 
     **Example request:**
-            ```doc
+            ```
             GET /api/validate/?purl=pkg:npm/foobar@12.3.1&check_existence=false
             ```
     
@@ -714,6 +787,13 @@ class PurlValidateViewSet(viewsets.ViewSet):
     def get_view_name(self):
         return 'Validate PURL'
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter('purl', str, 'query', description='PackageURL'),
+            OpenApiParameter('check_existence', bool, 'query', description='Check existence', default=False),
+        ],
+        responses={200: PurlValidateResponseSerializer()},
+    )
     def list(self, request):
         serializer = self.serializer_class(data=request.query_params)
 

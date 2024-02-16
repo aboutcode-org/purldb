@@ -9,22 +9,23 @@
 
 from django.http import HttpRequest
 from django.urls import reverse_lazy
-
+from packagedb.models import DependentPackage
+from packagedb.models import Package
+from packagedb.models import PackageSet
+from packagedb.models import PackageWatch
+from packagedb.models import Party
+from packagedb.models import Resource
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import HyperlinkedIdentityField
 from rest_framework.serializers import HyperlinkedModelSerializer
 from rest_framework.serializers import HyperlinkedRelatedField
+from rest_framework.serializers import IntegerField
 from rest_framework.serializers import JSONField
+from rest_framework.serializers import ListField
 from rest_framework.serializers import ModelSerializer
-from rest_framework.serializers import SerializerMethodField
 from rest_framework.serializers import Serializer
-
-from packagedb.models import DependentPackage
-from packagedb.models import Package
-from packagedb.models import PackageSet
-from packagedb.models import Party
-from packagedb.models import Resource
+from rest_framework.serializers import SerializerMethodField
 
 
 class ResourceAPISerializer(HyperlinkedModelSerializer):
@@ -331,7 +332,79 @@ class PackageSetAPISerializer(ModelSerializer):
             'packages',
         ]
 
+class PackageWatchAPISerializer(HyperlinkedModelSerializer):
+    url = HyperlinkedIdentityField(
+        view_name='api:packagewatch-detail',
+        lookup_field='package_url'
+    )
+    class Meta:
+        model = PackageWatch
+        fields = [
+            'url',
+            'package_url',
+            'is_active',
+            'depth',
+            'watch_interval',
+            'creation_date',
+            'last_watch_date',
+            'watch_error',
+            'schedule_work_id',
+        ]
 
+
+class PackageWatchCreateSerializer(ModelSerializer):
+    class Meta:
+        model = PackageWatch
+        fields = ["package_url", "depth", "watch_interval", "is_active"]
+        extra_kwargs = {
+            field: {"initial": PackageWatch._meta.get_field(field).get_default()}
+            for field in ["depth", "watch_interval", "is_active"]
+        }
+
+
+class PackageWatchUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = PackageWatch
+        fields = ['depth', 'watch_interval', 'is_active']
+
+
+class PackageVersSerializer(Serializer):
+    purl = CharField()
+    vers = CharField(required=False)
+
+
+class IndexPackagesSerializer(Serializer):
+    packages = PackageVersSerializer(many=True)
+    reindex = BooleanField(default=False)
+    reindex_set = BooleanField(default=False)
+
+
+class IndexPackagesResponseSerializer(Serializer):
+    queued_packages_count = IntegerField(help_text="Number of package urls placed on the index queue.")
+    queued_packages = ListField(
+        child=CharField(),
+        help_text="List of package urls that were placed on the index queue."
+    )
+    requeued_packages_count = IntegerField(help_text="Number of existing package urls placed on the rescan queue.")
+    requeued_packages = ListField(
+        child=CharField(),
+        help_text="List of existing package urls that were placed on the rescan queue."
+    )
+    unqueued_packages_count = IntegerField(help_text="Number of package urls not placed on the index queue.")
+    unqueued_packages = ListField(
+        child=CharField(),
+        help_text="List of package urls that were not placed on the index queue."
+    )
+    unsupported_packages_count = IntegerField(help_text="Number of package urls that are not processable by the index queue.")
+    unsupported_packages = ListField(
+        child=CharField(),
+        help_text="List of package urls that are not processable by the index queue."
+    )
+    unsupported_vers_count = IntegerField(help_text="Number of vers range that are not supported by the univers or package_manager.")
+    unsupported_vers = ListField(
+        child=CharField(),
+        help_text="List of vers range that are not supported by the univers or package_manager."
+    )
 class PurlValidateResponseSerializer(Serializer):
     valid = BooleanField()
     exists = BooleanField(required=False)

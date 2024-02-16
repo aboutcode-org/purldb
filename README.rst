@@ -8,6 +8,7 @@ This repo consists of four main tools:
 - MineCode that contains utilities to mine package repositories
 - MatchCode that contains utilities to index package metadata and resources for
   matching
+- MatchCode.io that provides package matching functionalities for codebases
 - ClearCode that contains utilities to mine Clearlydefined for package data
 
 These are designed to be used first for reference such that one can query for
@@ -39,6 +40,7 @@ Once the prerequisites have been installed, set up PurlDB with the following com
     make dev
     make envfile
     make postgres
+    make postgres_matchcodeio
 
 Once PurlDB and the database has been set up, run tests to ensure functionality:
 ::
@@ -52,6 +54,11 @@ Start the PurlDB server by running:
 ::
 
     make run
+
+Start the MatchCode.io server by running:
+::
+
+    make run_matchcodeio
 
 To start visiting upstream package repositories for package metadata:
 ::
@@ -69,32 +76,12 @@ Populating Package Resource Data
 The Resources of Packages can be collected using the scan queue. By default, a
 scan request will be created for each mapped Package.
 
-The following environment variables will have to be set for the scan queue
-commands to work:
+Given that you have access to a ScanCode.io instance, the following environment
+variables will have to be set for the scan queue commands to work:
 ::
 
     SCANCODEIO_URL=<ScanCode.io API URL>
     SCANCODEIO_API_KEY=<ScanCode.io API Key>
-
-``matchcode-toolkit`` will also have to be installed in the same environment as
-ScanCode.io. If running ScanCode.io in a virtual environment from a git
-checkout, you can install ``matchcode-toolkit`` in editable mode:
-::
-
-    pip install -e <Path to purldb/matchcode-toolkit>
-
-Otherwise, you can create a wheel from ``matchcode-toolkit`` and install it in
-the ScanCode.io virutal environment or modify the ScanCode.io Dockerfile to
-install the ``matchcode-toolkit`` wheel.
-
-To build the ``matchcode-toolkit`` wheel:
-::
-
-    # From the matchcode-toolkit directory
-    python setup.py bdist_wheel
-
-The wheel ``matchcode_toolkit-0.0.1-py3-none-any.whl`` will be created in the
-``matchcode-toolkit/dist/`` directory.
 
 The scan queue is run using two commands:
 ::
@@ -136,8 +123,8 @@ matching indices from the collected Package data:
     make index_packages
 
 
-API Endpoints
--------------
+PurlDB API Endpoints
+--------------------
 
 * ``api/packages``
 
@@ -171,6 +158,51 @@ API Endpoints
   * Contains the SHA1 values of Package archives
   * Used to check the SHA1 values of archives from a scan to determine if they are known Packages
 
+
+MatchCode.io
+------------
+
+MatchCode.io is a Django app, based off of ScanCode.io, that exposes one API
+endpoint, ``api/matching``, which takes a ScanCode.io codebase scan, and
+performs Package matching on it.
+
+Currently, it performs three matching steps:
+
+  * Match codebase resources against the Packages in the PackageDB
+  * Match codebase resources against the Resources in the PackageDB
+  * Match codebase directories against the directory matching indices of
+    MatchCode
+
+
+MatchCode.io API Endpoints
+--------------------------
+
+* ``api/matching``
+
+  * Performs Package matching on an uploaded ScanCode.io scan
+  * Intended to be used with the ``match_to_purldb`` pipeline in ScanCode.io
+
+
+Docker Setup for Local Development and Testing
+----------------------------------------------
+
+PurlDB and MatchCode.io are two separate Django apps. In order to run both of
+these Django apps on the same host, we need to use Traefik.
+
+Traefik is an edge router that receives requests and finds out which services
+are responsible for handling them. In the docker-compose.yml files for PurlDB
+and MatchCode.io, we have made these two services part of the same Docker
+network and set up the routes for each service.
+
+All requests to the host go to the PurlDB service, but requests that go to the
+``api/matching`` endpoint are routed to the MatchCode.io service.
+
+To run PurlDB and Matchcode.io with Docker:
+::
+
+  docker compose -f docker-compose_traefik.yml up -d
+  docker compose -f docker-compose_purldb.yml up -d
+  docker compose -f docker-compose_matchcodeio.yml up -d
 
 Funding
 -------

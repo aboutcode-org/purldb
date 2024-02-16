@@ -10,6 +10,8 @@
 import os
 import sys
 
+__version__ = "3.0.0"
+
 
 def command_line():
     '''Command line entry point.'''
