@@ -21,7 +21,6 @@ class TestPURLCLI_metadata(object):
         because the `--output` values (paths) differ due to the use of
         temporary files, and therefore we test a list of relevant key-value pairs.
         """
-        # NOTE: options do not yet include `unique`.
         expected_result_file = test_env.get_test_loc(
             "purlcli/expected_metadata_output.json"
         )
@@ -93,7 +92,6 @@ class TestPURLCLI_metadata(object):
         Test the `metadata` command with actual and expected JSON output files
         with the `--unique` flag included in the command.
         """
-        # NOTE: options do not yet include `unique`.
         expected_result_file = test_env.get_test_loc(
             "purlcli/expected_metadata_output_unique.json"
         )
@@ -505,7 +503,7 @@ class TestPURLCLI_metadata(object):
                             "tool_name": "purlcli",
                             "tool_version": "0.0.1",
                             "warnings": [
-                                "'pkg:pypi/zzzzz' could not be fetched",
+                                "'pkg:pypi/zzzzz' does not exist in the upstream repo",
                             ],
                         }
                     ],
@@ -590,7 +588,7 @@ class TestPURLCLI_metadata(object):
             ),
             (
                 ["pkg:pypi/zzzzz"],
-                "failed_to_fetch",
+                "not_in_upstream_repo",
             ),
             (
                 ["pkg:pypi/?fetchcode"],
@@ -756,8 +754,560 @@ class TestPURLCLI_metadata(object):
         assert metadata_headers == expected
 
 
-# TODO: after converting the output to a SCTK-like data structure.
-# class TestPURLCLI_urls(object):
+class TestPURLCLI_urls(object):
+    def test_urls_cli(self):
+        """
+        Test the `urls` command with actual and expected JSON output files.
+
+        Note that we can't simply compare the actual and expected JSON files
+        because the `--output` values (paths) differ due to the use of
+        temporary files, and therefore we test a list of relevant key-value pairs.
+        """
+        # NOTE: options do not yet include `unique`.
+        expected_result_file = test_env.get_test_loc(
+            "purlcli/expected_urls_output.json"
+        )
+        actual_result_file = test_env.get_temp_file("actual_urls_output.json")
+        options = [
+            "--purl",
+            "pkg:pypi/fetchcode",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
+            "--purl",
+            "pkg:pypi/dejacode",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0?os=windows",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0os=windows",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0#how/are/you",
+            "--purl",
+            "pkg:pypi/dejacode@10.0.0",
+            "--purl",
+            "pkg:cargo/banquo",
+            "--purl",
+            "pkg:cargo/socksprox",
+            "--purl",
+            "pkg:nginx/nginx",
+            "--purl",
+            "pkg:nginx/nginx@0.8.9?os=windows",
+            "--purl",
+            "pkg:gem/bundler-sass",
+            "--purl",
+            "pkg:rubygems/bundler-sass",
+            "--purl",
+            "pkg:pypi/matchcode",
+            "--purl",
+            "pkg:rubygems/bundler-sass",
+            "--purl",
+            "abcdefg",
+            "--purl",
+            "pkg/abc",
+            "--purl",
+            "pkg:nuget/auth0-aspnet@1.1.0",
+            "--purl",
+            "pkg:cargo/socksprox",
+            "--output",
+            actual_result_file,
+        ]
+        runner = CliRunner()
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
+        assert result.exit_code == 0
+
+        f_output = open(actual_result_file)
+        output_data = json.load(f_output)
+
+        f_expected = open(expected_result_file)
+        expected_data = json.load(f_expected)
+
+        result_objects = [
+            (
+                output_data["headers"][0]["tool_name"],
+                expected_data["headers"][0]["tool_name"],
+            ),
+            (
+                output_data["headers"][0]["tool_version"],
+                expected_data["headers"][0]["tool_version"],
+            ),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
+            (
+                output_data["headers"][0]["warnings"],
+                expected_data["headers"][0]["warnings"],
+            ),
+            (
+                output_data["headers"][0]["errors"],
+                expected_data["headers"][0]["errors"],
+            ),
+            (
+                output_data["headers"][0]["options"]["command"],
+                expected_data["headers"][0]["options"]["command"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--purl"],
+                expected_data["headers"][0]["options"]["--purl"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--file"],
+                expected_data["headers"][0]["options"]["--file"],
+            ),
+            (output_data["packages"], expected_data["packages"]),
+        ]
+
+        for output, expected in result_objects:
+            assert output == expected
+
+    def test_urls_cli_head(self):
+        """
+        Test the `urls` command with actual and expected JSON output files.
+
+        Note that we can't simply compare the actual and expected JSON files
+        because the `--output` values (paths) differ due to the use of
+        temporary files, and therefore we test a list of relevant key-value pairs.
+        """
+        # NOTE: options do not yet include `unique`.
+        expected_result_file = test_env.get_test_loc(
+            "purlcli/expected_urls_output_head.json"
+        )
+        actual_result_file = test_env.get_temp_file("actual_urls_output_head.json")
+        options = [
+            "--purl",
+            "pkg:pypi/fetchcode",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
+            "--purl",
+            "pkg:pypi/dejacode",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0?os=windows",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0os=windows",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0#how/are/you",
+            "--purl",
+            "pkg:pypi/dejacode@10.0.0",
+            "--purl",
+            "pkg:cargo/banquo",
+            "--purl",
+            "pkg:cargo/socksprox",
+            "--purl",
+            "pkg:nginx/nginx",
+            "--purl",
+            "pkg:nginx/nginx@0.8.9?os=windows",
+            "--purl",
+            "pkg:gem/bundler-sass",
+            "--purl",
+            "pkg:rubygems/bundler-sass",
+            "--purl",
+            "pkg:pypi/matchcode",
+            "--purl",
+            "pkg:rubygems/bundler-sass",
+            "--purl",
+            "abcdefg",
+            "--purl",
+            "pkg/abc",
+            "--purl",
+            "pkg:nuget/auth0-aspnet@1.1.0",
+            "--purl",
+            "pkg:cargo/socksprox",
+            "--head",
+            "--output",
+            actual_result_file,
+        ]
+        runner = CliRunner()
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
+        assert result.exit_code == 0
+
+        f_output = open(actual_result_file)
+        output_data = json.load(f_output)
+
+        f_expected = open(expected_result_file)
+        expected_data = json.load(f_expected)
+
+        result_objects = [
+            (
+                output_data["headers"][0]["tool_name"],
+                expected_data["headers"][0]["tool_name"],
+            ),
+            (
+                output_data["headers"][0]["tool_version"],
+                expected_data["headers"][0]["tool_version"],
+            ),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
+            (
+                output_data["headers"][0]["warnings"],
+                expected_data["headers"][0]["warnings"],
+            ),
+            (
+                output_data["headers"][0]["errors"],
+                expected_data["headers"][0]["errors"],
+            ),
+            (
+                output_data["headers"][0]["options"]["command"],
+                expected_data["headers"][0]["options"]["command"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--purl"],
+                expected_data["headers"][0]["options"]["--purl"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--file"],
+                expected_data["headers"][0]["options"]["--file"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--head"],
+                expected_data["headers"][0]["options"]["--head"],
+            ),
+            (output_data["packages"], expected_data["packages"]),
+        ]
+
+        for output, expected in result_objects:
+            assert output == expected
+
+    def test_urls_cli_duplicate_input_sources(self):
+        """
+        Test the `urls` command with both `--purl` and `--file` inputs.
+        """
+        options = [
+            "--purl",
+            "pkg:pypi/minecode",
+            "--file",
+            "purldb-toolkit/tests/data/purlcli/metadata_input_purls.txt",
+            "--output",
+            "-",
+        ]
+        runner = CliRunner()
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
+        assert "Use either purls or file but not both." in result.output
+        assert result.exit_code == 2
+
+    def test_urls_cli_no_input_sources(self):
+        """
+        Test the `urls` command with neither `--purl` nor `--file` inputs.
+        """
+        options = [
+            "--output",
+            "-",
+        ]
+        runner = CliRunner()
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
+        assert "Use either purls or file." in result.output
+        assert result.exit_code == 2
+
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                ["pkg:pypi/fetchcode"],
+                {
+                    "headers": [
+                        {
+                            "tool_name": "purlcli",
+                            "tool_version": "0.0.1",
+                            "options": {
+                                "command": "urls",
+                                "--purl": ["pkg:pypi/fetchcode"],
+                                "--file": None,
+                                "--output": "",
+                            },
+                            "purls": ["pkg:pypi/fetchcode"],
+                            "errors": [],
+                            "warnings": [
+                                "'pkg:pypi/fetchcode' not fully supported with `urls` command"
+                            ],
+                        }
+                    ],
+                    "packages": [
+                        {
+                            "purl": "pkg:pypi/fetchcode",
+                            "download_url": {
+                                "url": None,
+                            },
+                            "inferred_urls": [
+                                {
+                                    "url": "https://pypi.org/project/fetchcode/",
+                                }
+                            ],
+                            "repo_download_url": {
+                                "url": None,
+                            },
+                            "repo_download_url_by_package_type": {
+                                "url": None,
+                            },
+                            "repo_url": {
+                                "url": "https://pypi.org/project/fetchcode/",
+                            },
+                            "url": {
+                                "url": "https://pypi.org/project/fetchcode/",
+                            },
+                        },
+                    ],
+                },
+            ),
+            (
+                ["pkg:pypi/fetchcode@10.0.0"],
+                {
+                    "headers": [
+                        {
+                            "tool_name": "purlcli",
+                            "tool_version": "0.0.1",
+                            "options": {
+                                "command": "urls",
+                                "--purl": ["pkg:pypi/fetchcode@10.0.0"],
+                                "--file": None,
+                                "--output": "",
+                            },
+                            "purls": ["pkg:pypi/fetchcode@10.0.0"],
+                            "errors": [],
+                            "warnings": [
+                                "'pkg:pypi/fetchcode@10.0.0' does not exist in the upstream repo",
+                            ],
+                        }
+                    ],
+                    "packages": [],
+                },
+            ),
+            (
+                ["pkg:gem/bundler-sass"],
+                {
+                    "headers": [
+                        {
+                            "errors": [],
+                            "options": {
+                                "--file": None,
+                                "--output": "",
+                                "--purl": ["pkg:gem/bundler-sass"],
+                                "command": "urls",
+                            },
+                            "purls": ["pkg:gem/bundler-sass"],
+                            "tool_name": "purlcli",
+                            "tool_version": "0.0.1",
+                            "warnings": [],
+                        }
+                    ],
+                    "packages": [
+                        {
+                            "purl": "pkg:gem/bundler-sass",
+                            "download_url": {
+                                "url": None,
+                            },
+                            "inferred_urls": [
+                                {
+                                    "url": "https://rubygems.org/gems/bundler-sass",
+                                }
+                            ],
+                            "repo_download_url": {
+                                "url": None,
+                            },
+                            "repo_download_url_by_package_type": {
+                                "url": None,
+                            },
+                            "repo_url": {
+                                "url": "https://rubygems.org/gems/bundler-sass",
+                            },
+                            "url": {
+                                "url": "https://rubygems.org/gems/bundler-sass",
+                            },
+                        },
+                    ],
+                },
+            ),
+            (
+                ["pkg:rubygems/bundler-sass"],
+                {
+                    "headers": [
+                        {
+                            "errors": [],
+                            "options": {
+                                "--file": None,
+                                "--output": "",
+                                "--purl": ["pkg:rubygems/bundler-sass"],
+                                "command": "urls",
+                            },
+                            "purls": ["pkg:rubygems/bundler-sass"],
+                            "tool_name": "purlcli",
+                            "tool_version": "0.0.1",
+                            "warnings": [],
+                        }
+                    ],
+                    "packages": [
+                        {
+                            "purl": "pkg:rubygems/bundler-sass",
+                            "download_url": {
+                                "url": None,
+                            },
+                            "inferred_urls": [
+                                {
+                                    "url": "https://rubygems.org/gems/bundler-sass",
+                                }
+                            ],
+                            "repo_download_url": {
+                                "url": None,
+                            },
+                            "repo_download_url_by_package_type": {
+                                "url": None,
+                            },
+                            "repo_url": {
+                                "url": "https://rubygems.org/gems/bundler-sass",
+                            },
+                            "url": {
+                                "url": "https://rubygems.org/gems/bundler-sass",
+                            },
+                        },
+                    ],
+                },
+            ),
+            (
+                ["pkg:nginx/nginx"],
+                {
+                    "headers": [
+                        {
+                            "errors": [],
+                            "options": {
+                                "--file": None,
+                                "--output": "",
+                                "--purl": ["pkg:nginx/nginx"],
+                                "command": "urls",
+                            },
+                            "purls": ["pkg:nginx/nginx"],
+                            "tool_name": "purlcli",
+                            "tool_version": "0.0.1",
+                            "warnings": [
+                                "'pkg:nginx/nginx' not supported with `urls` command"
+                            ],
+                        }
+                    ],
+                    "packages": [],
+                },
+            ),
+            (
+                ["pkg:pypi/zzzzz"],
+                {
+                    "headers": [
+                        {
+                            "errors": [],
+                            "options": {
+                                "--file": None,
+                                "--output": "",
+                                "--purl": ["pkg:pypi/zzzzz"],
+                                "command": "urls",
+                            },
+                            "purls": ["pkg:pypi/zzzzz"],
+                            "tool_name": "purlcli",
+                            "tool_version": "0.0.1",
+                            "warnings": [
+                                "'pkg:pypi/zzzzz' does not exist in the upstream repo",
+                            ],
+                        }
+                    ],
+                    "packages": [],
+                },
+            ),
+            (
+                ["pkg:pypi/?fetchcode"],
+                {
+                    "headers": [
+                        {
+                            "errors": [],
+                            "options": {
+                                "--file": None,
+                                "--output": "",
+                                "--purl": ["pkg:pypi/?fetchcode"],
+                                "command": "urls",
+                            },
+                            "purls": ["pkg:pypi/?fetchcode"],
+                            "tool_name": "purlcli",
+                            "tool_version": "0.0.1",
+                            "warnings": ["'pkg:pypi/?fetchcode' not valid"],
+                        }
+                    ],
+                    "packages": [],
+                },
+            ),
+            (
+                ["zzzzz"],
+                {
+                    "headers": [
+                        {
+                            "errors": [],
+                            "options": {
+                                "--file": None,
+                                "--output": "",
+                                "--purl": ["zzzzz"],
+                                "command": "urls",
+                            },
+                            "purls": ["zzzzz"],
+                            "tool_name": "purlcli",
+                            "tool_version": "0.0.1",
+                            "warnings": ["'zzzzz' not valid"],
+                        }
+                    ],
+                    "packages": [],
+                },
+            ),
+        ],
+    )
+    def test_urls_details(self, test_input, expected):
+        """
+        Test the `urls` nested function, `get_urls_details()`.
+        """
+        purl_urls = purlcli.get_urls_details(
+            test_input,
+            output="",
+            file="",
+            command_name="urls",
+            head=False,
+        )
+        assert purl_urls == expected
+
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                ["pkg:pypi/fetchcode"],
+                "valid_but_not_fully_supported",
+            ),
+            (
+                ["pkg:gem/bundler-sass"],
+                None,
+            ),
+            (
+                ["pkg:rubygems/bundler-sass"],
+                None,
+            ),
+            (
+                ["pkg:nginx/nginx"],
+                "valid_but_not_supported",
+            ),
+            (
+                ["pkg:pypi/zzzzz"],
+                "not_in_upstream_repo",
+            ),
+            (
+                ["pkg:pypi/?fetchcode"],
+                "not_valid",
+            ),
+            (
+                ["zzzzz"],
+                "not_valid",
+            ),
+        ],
+    )
+    def test_check_urls_purl(self, test_input, expected):
+        purl_urls = purlcli.check_urls_purl(test_input[0])
+        assert purl_urls == expected
+
+    # TODO: test_make_head_request()
 
 
 # TODO: not yet converted to a SCTK-like data structure.
@@ -1036,7 +1586,7 @@ class TestPURLCLI_versions(object):
             ),
             (
                 ["pkg:pypi/zzzzz"],
-                "failed_to_fetch",
+                "not_in_upstream_repo",
             ),
             (
                 ["pkg:pypi/?fetchcode"],
@@ -1045,6 +1595,14 @@ class TestPURLCLI_versions(object):
             (
                 ["zzzzz"],
                 "not_valid",
+            ),
+            (
+                ["pkg:deb/debian/2ping"],
+                None,
+            ),
+            (
+                ["pkg:deb/2ping"],
+                "valid_but_not_supported",
             ),
         ],
     )

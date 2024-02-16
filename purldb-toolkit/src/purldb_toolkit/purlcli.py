@@ -98,8 +98,8 @@ def get_metadata_details(purls, output, file, unique, command_name):
             print(f"'{purl}' not supported with `metadata` command")
             continue
 
-        if command_name == "metadata" and metadata_purl == "failed_to_fetch":
-            print(f"'{purl}' could not be fetched")
+        if command_name == "metadata" and metadata_purl == "not_in_upstream_repo":
+            print(f"'{purl}' does not exist in the upstream repo")
             continue
 
         for release in list(info(purl)):
@@ -196,8 +196,8 @@ def construct_headers(
             warnings.append(f"'{purl}' not supported with `metadata` command")
             continue
 
-        if command_name == "metadata" and metadata_purl == "failed_to_fetch":
-            warnings.append(f"'{purl}' could not be fetched")
+        if command_name == "metadata" and metadata_purl == "not_in_upstream_repo":
+            warnings.append(f"'{purl}' does not exist in the upstream repo")
             continue
 
         # `urls` warnings:
@@ -214,6 +214,10 @@ def construct_headers(
         if command_name == "urls" and urls_purl == "valid_but_not_fully_supported":
             warnings.append(f"'{purl}' not fully supported with `urls` command")
 
+        if command_name == "urls" and urls_purl == "not_in_upstream_repo":
+            warnings.append(f"'{purl}' does not exist in the upstream repo")
+            continue
+
     headers_content["errors"] = errors
     headers_content["warnings"] = warnings
     headers.append(headers_content)
@@ -226,7 +230,7 @@ def check_metadata_purl(purl):
     Return a variable identifying the message for printing to the console by
     get_metadata_details() if (1) the input PURL is invalid, (2) its type is not
     supported by `metadata` or (3) its existence was not validated (e.g.,
-    `Exception: Failed to fetch` or `Error while fetching`).
+    "does not exist in the upstream repo").
 
     This message will also be reported by construct_headers() in the
     `warnings` field of the `header` section of the JSON object returned by
@@ -252,7 +256,7 @@ def check_metadata_purl(purl):
         return "valid_but_not_supported"
 
     if results["exists"] == False:
-        return "failed_to_fetch"
+        return "not_in_upstream_repo"
 
 
 @purlcli.command(name="urls")
@@ -277,12 +281,19 @@ def check_metadata_purl(purl):
     help="Read a list of PURLs from a FILE, one per line.",
 )
 @click.option(
+    "--unique",
+    is_flag=True,
+    required=False,
+    help="Return data only for unique PURLs.",
+)
+@click.option(
     "--head",
     is_flag=True,
     required=False,
     help="Validate each URL's existence with a head request.",
 )
-def get_urls(purls, output, file, head):
+# We're passing `unique` but it's not yet fully implemented here or in the `urls` tests.
+def get_urls(purls, output, file, unique, head):
     """
     Given one or more PURLs, for each PURL, return a list of all known URLs
     fetched from the packageurl-python purl2url.py code.
@@ -324,23 +335,23 @@ def get_urls_details(purls, output, file, head, command_name):
         if not purl:
             continue
 
+        urls_purl = check_urls_purl(purl)
+
         # Print warnings to terminal.
-        if command_name == "urls" and check_urls_purl(purl) == "not_valid":
+        if command_name == "urls" and urls_purl == "not_valid":
             print(f"'{purl}' not valid")
             continue
 
-        if (
-            command_name == "urls"
-            and check_urls_purl(purl) == "valid_but_not_supported"
-        ):
+        if command_name == "urls" and urls_purl == "valid_but_not_supported":
             print(f"'{purl}' not supported with `urls` command")
             continue
 
-        if (
-            command_name == "urls"
-            and check_urls_purl(purl) == "valid_but_not_fully_supported"
-        ):
+        if command_name == "urls" and urls_purl == "valid_but_not_fully_supported":
             print(f"'{purl}' not fully supported with `urls` command")
+
+        if command_name == "urls" and urls_purl == "not_in_upstream_repo":
+            print(f"'{purl}' does not exist in the upstream repo")
+            continue
 
         # Add the URLs.
         url_purl = PackageURL.from_string(purl)
@@ -423,8 +434,9 @@ def make_head_request(url_detail):
 
 def check_urls_purl(purl):
     """
-    If applicable, return a variable indicating that the input PURL is invalid or
-    its type is not supported (or not fully supported) by `urls`.
+    If applicable, return a variable indicating that the input PURL is invalid,
+    or its type is not supported (or not fully supported) by `urls`, or it
+    does not exist in the upstream repo.
     """
     results = check_existence(purl)
 
@@ -469,6 +481,9 @@ def check_urls_purl(purl):
         and urls_purl.type not in urls_supported_ecosystems_download_url
     ):
         return "valid_but_not_supported"
+
+    if results["exists"] == False:
+        return "not_in_upstream_repo"
 
     if (
         urls_purl.type in urls_supported_ecosystems_repo_url
@@ -536,7 +551,9 @@ def check_existence(purl):
     Return a JSON object containing data regarding the validity of the input PURL.
     """
 
-    # Based on packagedb.package_managers VERSION_API_CLASSES_BY_PACKAGE_TYPE -- and supported by testing the command -- it appears that the `validate` command `check_existence` check supports the following PURL types:
+    # Based on packagedb.package_managers VERSION_API_CLASSES_BY_PACKAGE_TYPE
+    # -- and supported by testing the command -- it appears that the `validate`
+    # command `check_existence` check supports the following PURL types:
 
     # validate_supported_ecosystems = [
     # "cargo",
@@ -601,7 +618,8 @@ def get_versions(purls, output, file):
     json.dump(purl_versions, output, indent=4)
 
 
-# construct_headers() has not yet been implemented for this `versions` command -- or for the `validate` command.
+# construct_headers() has not yet been implemented for this `versions` command
+# -- or for the `validate` command.
 def list_versions(purls, output, file, command_name):
     """
     Return a list of dictionaries containing version-related data for each PURL
@@ -618,27 +636,18 @@ def list_versions(purls, output, file, command_name):
         if not purl:
             continue
 
-        # TODO: Revisit TypeError previously thrown by `for` statement (`TypeError: 'NoneType' object is not iterable`) if, e.g., the PURL is missing `/debian/` -- `pkg:deb/debian/2ping` succeeds while `pkg:deb/2ping` throws the TypeError.
-        # if check_versions_purl(purl):
-        #     print(check_versions_purl(purl))
-        #     continue
+        versions_purl = check_versions_purl(purl)
 
-        if command_name == "versions" and check_versions_purl(purl) == "not_valid":
+        if command_name == "versions" and versions_purl == "not_valid":
             print(f"'{purl}' not valid")
             continue
 
-        if (
-            command_name == "versions"
-            and check_versions_purl(purl) == "valid_but_not_supported"
-        ):
+        if command_name == "versions" and versions_purl == "valid_but_not_supported":
             print(f"'{purl}' not supported with `versions` command")
             continue
 
-        if (
-            command_name == "versions"
-            and check_versions_purl(purl) == "failed_to_fetch"
-        ):
-            print(f"'{purl}' failed to fetch")
+        if command_name == "versions" and versions_purl == "not_in_upstream_repo":
+            print(f"'{purl}' does not exist in the upstream repo")
             continue
 
         for package_version_object in list(versions(purl)):
@@ -663,6 +672,23 @@ def check_versions_purl(purl):
     """
     Return a message for printing to the console if the input PURL is invalid,
     its type is not supported by `versions` or its existence was not validated.
+
+    Note for dev purposes: SUPPORTED_ECOSYSTEMS (imported from
+    fetchcode.package_versions) comprises the following types:
+    [
+        "cargo",
+        "composer",
+        "conan",
+        "deb",
+        "gem",
+        "github",
+        "golang",
+        "hex",
+        "maven",
+        "npm",
+        "nuget",
+        "pypi",
+    ]
     """
     results = check_existence(purl)
 
@@ -677,7 +703,13 @@ def check_versions_purl(purl):
         return "valid_but_not_supported"
 
     if results["exists"] == False:
-        return "failed_to_fetch"
+        return "not_in_upstream_repo"
+
+    # This handles the conflict between the `validate`` endpoint (treats
+    # both "pkg:deb/debian/2ping" and "pkg:deb/2ping" as valid) and
+    # fetchcode.package_versions versions() (returns None for "pkg:deb/2ping").
+    if versions(purl) is None:
+        return "valid_but_not_supported"
 
 
 def check_for_duplicate_input_sources(purls, file):
