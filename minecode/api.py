@@ -133,18 +133,29 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
 
         if scan_status == 'in progress':
             scan_project_url = request.data.get('scan_project_url')
-            scannable_uri.scan_project_url = scan_project_url
-            scannable_uri.scan_status = ScannableURI.SCAN_IN_PROGRESS
-            scannable_uri.save()
+            if scan_project_url:
+                scannable_uri.scan_project_url = scan_project_url
+                scannable_uri.scan_status = ScannableURI.SCAN_IN_PROGRESS
+                scannable_uri.save()
+                msg = {
+                    'status': f'scan_status updated to {scan_status} for scannable_uri {scannable_uri_uuid}'
+                }
+            else:
+                msg = {
+                    'status': f'missing scan_project_url when updating scannable_uri {scannable_uri_uuid} scan_status to {scan_status}'
+                }
 
-        if scan_status == 'failed':
+        elif scan_status == 'failed':
             scan_log = request.data.get('scan_log')
             scannable_uri.scan_error = scan_log
             scannable_uri.scan_status = ScannableURI.SCAN_FAILED
             scannable_uri.wip_date = None
             scannable_uri.save()
+            msg = {
+                'status': f'updated scannable uri {scannable_uri_uuid} scan_status to {scan_status}'
+            }
 
-        if scan_status == 'scanned':
+        elif scan_status == 'scanned':
             scan_file = request.data.get('scan_file')
             scannable_uri.scan_status = ScannableURI.SCAN_COMPLETED
             package = scannable_uri.package
@@ -153,7 +164,20 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             if indexing_errors:
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
                 scannable_uri.index_error = indexing_errors
+                msg = {
+                    'status': f'scan index failed for scannable uri {scannable_uri_uuid}'
+                }
             else:
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
+                msg = {
+                    'status': f'scan indexed for scannable uri {scannable_uri_uuid}'
+                }
             scannable_uri.wip_date = None
             scannable_uri.save()
+
+        else:
+            msg = {
+                'status': f'invalid scan_status: {scan_status}'
+            }
+
+        return Response(msg)
