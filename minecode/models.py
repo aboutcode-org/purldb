@@ -737,15 +737,22 @@ class ScannableURI(BaseURI):
 
     class Meta:
         verbose_name = 'Scannable URI'
-        unique_together = ['canonical', 'scan_project_url']
 
         indexes = [
             # to get the scannables
             models.Index(
-                fields=['scan_status', 'scan_date', 'last_status_poll_date', ]),
+                fields=[
+                    'scan_status',
+                    'scan_date',
+                    'last_status_poll_date',
+                ]
+            ),
             # ordered by for the main queue query e.g. '-priority'
             models.Index(
-                fields=['-priority'])
+                fields=[
+                    '-priority'
+                ]
+            )
         ]
 
     def save(self, *args, **kwargs):

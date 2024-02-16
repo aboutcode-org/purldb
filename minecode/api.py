@@ -114,7 +114,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
                 scannable_uri.save()
             else:
                 response = {
-                    'package_uuid': "",
+                    'scannable_uri_uuid': "",
                     'download_url': "",
                 }
             return Response(response)
