@@ -103,3 +103,18 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         self.scannable_uri1.refresh_from_db()
         self.assertEqual(ScannableURI.SCAN_FAILED, self.scannable_uri1.scan_status)
         self.assertEqual('scan_log', self.scannable_uri1.scan_error)
+
+        self.assertEqual(0, Resource.objects.all().count())
+        scan_file = self.get_test_loc('scancodeio/get_scan_data.json')
+        with open(scan_file) as f:
+            data = {
+                "scannable_uri_uuid": self.scannable_uri1.uuid,
+                "scan_status": 'scanned',
+                'scan_file': f,
+            }
+            response = self.client.post('/api/scan_queue/update_status/', data=data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.scannable_uri1.refresh_from_db()
+        self.assertEqual(ScannableURI.SCAN_INDEXED, self.scannable_uri1.scan_status)
+        self.assertEqual('scan_log', self.scannable_uri1.scan_error)
+        self.assertEqual(64, Resource.objects.all().count())
