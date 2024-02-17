@@ -36,11 +36,11 @@ virtualenv:
 
 conf:
 	@echo "-> Install dependencies"
-	@./configure
+	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure
 
 dev:
 	@echo "-> Configure and install development dependencies"
-	@./configure --dev
+	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --dev
 
 envfile:
 	@echo "-> Create the .env file and generate a secret key"
@@ -79,7 +79,7 @@ check:
 
 clean:
 	@echo "-> Clean the Python env"
-	@./configure --clean
+	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --clean
 
 migrate:
 	@echo "-> Apply database migrations"
