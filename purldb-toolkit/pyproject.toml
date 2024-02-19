@@ -72,7 +72,7 @@ testing = [
 
 
 [tool.bumpversion]
-current_version = "0.0.1"
+current_version = "0.1.0"
 allow_dirty = true
 
 files = [
