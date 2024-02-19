@@ -1,11 +1,10 @@
-PurlDB toolkit
+purldb-toolkit
 ==============
 
-PurlDB is toolkit and library to use the PurlDB and its API.
+purldb-toolkit is command line utility and library to use the PurlDB, its API and various related libraries.
 
-The ``purlcli`` command acts as a client to the PurlDB REST API end point(s) to expose various
-PURL services. It serves both as a tool, as a library and as an example on how to use the services
-programmatically.
+The ``purlcli`` command acts as a client to the PurlDB REST API end point(s) to expose PURL services.
+It serves both as a tool, as a library and as an example on how to use the services programmatically.
 
  
 Installation
