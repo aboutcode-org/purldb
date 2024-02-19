@@ -4,7 +4,7 @@ build-backend = "flot.buildapi"
 
 [project]
 name = "purldb-toolkit"
-version = "0.1.0"
+version = "0.2.0"
 description = "A toolkit and library to use the PurlDB and its API"
 readme = "README.rst"
 license = { text = "Apache-2.0" }
@@ -66,13 +66,13 @@ testing = [
     "pytest-rerunfailures",
     "pytest-xdist >= 2",
     "twine",
-    "vendorize >= 0.3.0",
+    "vendorize >= 0.2.0",
     "bump-my-version",
 ]
 
 
 [tool.bumpversion]
-current_version = "0.1.0"
+current_version = "0.2.0"
 allow_dirty = true
 
 files = [
