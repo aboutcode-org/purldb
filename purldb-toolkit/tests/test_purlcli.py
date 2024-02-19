@@ -184,7 +184,7 @@ class TestPURLCLI_metadata(object):
             "--purl",
             "pkg:pypi/minecode",
             "--file",
-            "tests/data/purlcli/metadata_input_purls.txt",
+            test_env.get_test_loc("purlcli/metadata_input_purls.txt"),
             "--output",
             "-",
         ]
@@ -991,7 +991,7 @@ class TestPURLCLI_urls(object):
             "--purl",
             "pkg:pypi/minecode",
             "--file",
-            "tests/data/purlcli/metadata_input_purls.txt",
+            test_env.get_test_loc("purlcli/metadata_input_purls.txt"),
             "--output",
             "-",
         ]
