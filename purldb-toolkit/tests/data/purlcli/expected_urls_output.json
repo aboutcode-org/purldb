@@ -2,7 +2,7 @@
     "headers": [
         {
             "tool_name": "purlcli",
-            "tool_version": "0.0.1",
+            "tool_version": "0.1.0",
             "options": {
                 "command": "urls",
                 "--purl": [

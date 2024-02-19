@@ -134,7 +134,7 @@ test:
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=matchcode_project.settings ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline
 	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs matchcode-toolkit --ignore matchcode-toolkit/src/matchcode_toolkit/pipelines
-	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs purldb-toolkit
+	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs purldb-toolkit/
 
 shell:
 	${MANAGE} shell
