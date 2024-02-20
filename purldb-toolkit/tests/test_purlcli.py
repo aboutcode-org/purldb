@@ -15,8 +15,7 @@ import click
 import pytest
 from click.testing import CliRunner
 from commoncode.testcase import FileDrivenTesting
-from purldb_toolkit import purlcli
-from scancode import cli_test_utils
+from purldb_toolkit import cli_test_utils, purlcli
 
 test_env = FileDrivenTesting()
 test_env.test_data_dir = os.path.join(os.path.dirname(__file__), "data")
