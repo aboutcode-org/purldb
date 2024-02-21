@@ -15,23 +15,26 @@ from unittest.mock import patch
 import pytest
 from django.test import TestCase
 from packageurl import PackageURL
+from requests import Response
 
-from packagedb.find_source_repo import convert_repo_urls_to_purls
-from packagedb.find_source_repo import get_repo_urls
-from packagedb.find_source_repo import get_source_repo
-from packagedb.find_source_repo import get_source_urls_from_package_data_and_resources
-from packagedb.find_source_repo import get_tag_and_commit
-from packagedb.find_source_repo import get_tags_and_commits
-from packagedb.find_source_repo import get_urls_from_package_data
-from packagedb.find_source_repo import get_urls_from_package_resources
-from packagedb.find_source_repo import fetch_response
-from packagedb.models import Package
-from packagedb.models import PackageContentType
-from packagedb.models import Resource
+from packagedb.find_source_repo import (
+    convert_repo_urls_to_purls,
+    fetch_response,
+    get_repo_urls,
+    get_source_repo,
+    get_source_urls_from_package_data_and_resources,
+    get_tag_and_commit,
+    get_tags_and_commits,
+    get_urls_from_package_data,
+    get_urls_from_package_resources,
+)
+from packagedb.models import Package, PackageContentType, Resource
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEST_DATA = os.path.join(BASE_DIR, "testfiles", "find_source_repo", "tags_commits.txt")
-TAGS_COMMITS_FILE = os.path.join(BASE_DIR, "testfiles", "find_source_repo", "tags_commits_list.txt")
+TAGS_COMMITS_FILE = os.path.join(
+    BASE_DIR, "testfiles", "find_source_repo", "tags_commits_list.txt"
+)
 
 
 class TestFindSourceRepo(TestCase):
@@ -123,14 +126,18 @@ class TestFindSourceRepo(TestCase):
         )
 
     @mock.patch("packagedb.find_source_repo.fetch_response")
-    def test_get_source_purl_from_package_data(self, mock):
-        mock.side_effect = [
-            "https://bitbucket/ab/cd",
+    @mock.patch("packagedb.find_source_repo.get_urls_from_text")
+    def test_get_source_purl_from_package_data(self, mock_text, mock_response):
+        mock_response.side_effect = [
+            None,
             None,
             None,
             None,
         ]
-        source_urls = list(get_urls_from_package_data(self.package_with_resources_and_package_data))
+        mock_text.side_effect = [["https://bitbucket/ab/cd"], [], [], []]
+        source_urls = list(
+            get_urls_from_package_data(self.package_with_resources_and_package_data)
+        )
         assert source_urls == [
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/src/master/",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
@@ -140,15 +147,19 @@ class TestFindSourceRepo(TestCase):
 
     def test_get_source_purl_from_package_resources(self):
         source_urls = list(
-            get_urls_from_package_resources(self.package_with_resources_and_package_data)
+            get_urls_from_package_resources(
+                self.package_with_resources_and_package_data
+            )
         )
         assert source_urls == [
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/tree/master/oauth-oidc-sdk/src/main/resources/META-INF/MANIFEST.MF",
         ]
 
-    @mock.patch("packagedb.find_source_repo.get_urls_from_description_and_homepage_urls")
-    @mock.patch("packagedb.find_source_repo.get_merged_ancestor_package_from_maven_package")
+    @mock.patch("packagedb.find_source_repo.get_urls_from_package_data")
+    @mock.patch(
+        "packagedb.find_source_repo.get_merged_ancestor_package_from_maven_package"
+    )
     def test_get_source_purl_from_package_data_and_resources(self, mock1, mock2):
         mock1.return_value = None
         mock2.return_value = []
@@ -160,9 +171,8 @@ class TestFindSourceRepo(TestCase):
             self.package_with_resources_and_package_data
         )
         assert source_urls == [
-            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/src/master/",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
-            "git+https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions.git",
+            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/tree/master/oauth-oidc-sdk/src/main/resources/META-INF/MANIFEST.MF",
         ]
         source_urls = get_source_urls_from_package_data_and_resources(
             self.package_with_resources_and_without_package_data
@@ -171,35 +181,40 @@ class TestFindSourceRepo(TestCase):
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
         ]
 
-    @mock.patch("packagedb.find_source_repo.get_urls_from_description_and_homepage_urls")
-    @mock.patch("packagedb.find_source_repo.get_merged_ancestor_package_from_maven_package")
+    @mock.patch("packagedb.find_source_repo.get_urls_from_package_data")
+    @mock.patch(
+        "packagedb.find_source_repo.get_merged_ancestor_package_from_maven_package"
+    )
     def test_get_repo_urls(self, mock1, mock2):
         mock1.return_value = None
         mock2.return_value = []
-        source_urls = list(get_repo_urls(package=self.package_without_resources_and_package_data))
+        source_urls = list(
+            get_repo_urls(package=self.package_without_resources_and_package_data)
+        )
         assert source_urls == [
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
-            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/src/master/",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
-            "git+https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions.git",
+            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/tree/master/oauth-oidc-sdk/src/main/resources/META-INF/MANIFEST.MF",
         ]
         source_urls = list(get_repo_urls(package=self.package_without_versions))
         assert source_urls == []
-        source_urls = list(get_repo_urls(package=self.package_with_resources_and_package_data))
+        source_urls = list(
+            get_repo_urls(package=self.package_with_resources_and_package_data)
+        )
         assert source_urls == [
-            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/src/master/",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
-            "git+https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions.git",
+            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/tree/master/oauth-oidc-sdk/src/main/resources/META-INF/MANIFEST.MF",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
-            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/src/master/",
-            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
-            "git+https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions.git",
+            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions.git",
+            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/tree/master/oauth-oidc-sdk/src/main/resources/META-INF/MANIFEST.MF",
         ]
 
     def test_convert_repo_urls_to_purls(self):
         source_urls = list(
             convert_repo_urls_to_purls(
-                ["https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions"]
+                [
+                    "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions"
+                ]
             )
         )
         source_urls = [str(source_url) for source_url in source_urls]
@@ -219,7 +234,9 @@ class TestFindSourceRepo(TestCase):
         ]
 
         assert list(
-            convert_repo_urls_to_purls(["git://github.com:maxmind/MaxMind-DB-Reader-java"])
+            convert_repo_urls_to_purls(
+                ["git://github.com:maxmind/MaxMind-DB-Reader-java"]
+            )
         ) == [
             PackageURL(
                 type="github",
@@ -249,7 +266,9 @@ class TestFindSourceRepo(TestCase):
         ]
 
         assert list(
-            convert_repo_urls_to_purls(["git+https://github.com/ckeditor/ckeditor4-react.git"])
+            convert_repo_urls_to_purls(
+                ["git+https://github.com/ckeditor/ckeditor4-react.git"]
+            )
         ) == [
             PackageURL(
                 type="github",
