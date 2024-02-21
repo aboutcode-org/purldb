@@ -15,7 +15,7 @@ import click
 import pytest
 from click.testing import CliRunner
 from commoncode.testcase import FileDrivenTesting
-from purldb_toolkit import purlcli
+from purldb_toolkit import cli_test_utils, purlcli
 
 test_env = FileDrivenTesting()
 test_env.test_data_dir = os.path.join(os.path.dirname(__file__), "data")
@@ -56,18 +56,16 @@ class TestPURLCLI_metadata(object):
 
         f_output = open(actual_result_file)
         output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
 
         f_expected = open(expected_result_file)
         expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
 
         result_objects = [
             (
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
-            ),
-            (
-                output_data["headers"][0]["tool_version"],
-                expected_data["headers"][0]["tool_version"],
             ),
             (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
@@ -128,18 +126,16 @@ class TestPURLCLI_metadata(object):
 
         f_output = open(actual_result_file)
         output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
 
         f_expected = open(expected_result_file)
         expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
 
         result_objects = [
             (
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
-            ),
-            (
-                output_data["headers"][0]["tool_version"],
-                expected_data["headers"][0]["tool_version"],
             ),
             (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
@@ -574,6 +570,9 @@ class TestPURLCLI_metadata(object):
             command_name="metadata",
             unique=False,
         )
+        cli_test_utils.streamline_headers(purl_metadata["headers"])
+        cli_test_utils.streamline_headers(expected["headers"])
+
         assert purl_metadata == expected
 
     @pytest.mark.parametrize(
@@ -700,6 +699,9 @@ class TestPURLCLI_metadata(object):
             normalized_purls=None,
             unique=None,
         )
+        cli_test_utils.streamline_headers(expected)
+        cli_test_utils.streamline_headers(metadata_headers)
+
         assert metadata_headers == expected
 
     @pytest.mark.parametrize(
@@ -760,6 +762,9 @@ class TestPURLCLI_metadata(object):
             ],
             unique=True,
         )
+        cli_test_utils.streamline_headers(expected)
+        cli_test_utils.streamline_headers(metadata_headers)
+
         assert metadata_headers == expected
 
 
@@ -831,18 +836,16 @@ class TestPURLCLI_urls(object):
 
         f_output = open(actual_result_file)
         output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
 
         f_expected = open(expected_result_file)
         expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
 
         result_objects = [
             (
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
-            ),
-            (
-                output_data["headers"][0]["tool_version"],
-                expected_data["headers"][0]["tool_version"],
             ),
             (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
@@ -939,18 +942,16 @@ class TestPURLCLI_urls(object):
 
         f_output = open(actual_result_file)
         output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
 
         f_expected = open(expected_result_file)
         expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
 
         result_objects = [
             (
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
-            ),
-            (
-                output_data["headers"][0]["tool_version"],
-                expected_data["headers"][0]["tool_version"],
             ),
             (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
@@ -1277,6 +1278,9 @@ class TestPURLCLI_urls(object):
             command_name="urls",
             head=False,
         )
+        cli_test_utils.streamline_headers(expected["headers"])
+        cli_test_utils.streamline_headers(purl_urls["headers"])
+
         assert purl_urls == expected
 
     @pytest.mark.parametrize(
