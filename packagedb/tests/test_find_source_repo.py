@@ -205,7 +205,7 @@ class TestFindSourceRepo(TestCase):
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/tree/master/oauth-oidc-sdk/src/main/resources/META-INF/MANIFEST.MF",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
-            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions.git",
+            "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/tree/master/oauth-oidc-sdk/src/main/resources/META-INF/MANIFEST.MF",
         ]
 
