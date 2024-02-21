@@ -509,3 +509,12 @@ class PackageWatchModelTestCase(TransactionTestCase):
 
 
         
+def test_get_or_none(self):
+    Package.objects.create(download_url='http://a.ab', name='name', version='1.0', type="foo")
+    package = Package.objects.filter(
+        download_url="http://a.ab"
+    ).get_or_none()
+    assert package
+    assert Package.objects.filter(
+        download_url="http://a.ab-foobar"
+    ).get_or_none() == None

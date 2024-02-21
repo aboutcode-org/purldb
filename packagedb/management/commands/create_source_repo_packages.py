@@ -15,7 +15,7 @@ import openpyxl
 from packageurl.contrib.django.utils import purl_to_lookups
 
 from minecode.management.commands import VerboseCommand
-from packagedb.find_source_repo import add_source_repo_to_package_set
+from packagedb.find_source_repo import add_source_package_to_package_set
 from packagedb.models import Package
 
 TRACE = False
@@ -92,7 +92,7 @@ class Command(VerboseCommand):
                 continue
 
             # binary packages can only be part of one package set
-            add_source_repo_to_package_set(source_repo_type = row['source_type'],
+            add_source_package_to_package_set(source_repo_type = row['source_type'],
                 source_repo_name = row['source_name'],
                 source_repo_namespace = row['source_namespace'], 
                 source_repo_version = row['source_version'],

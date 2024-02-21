@@ -66,7 +66,7 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         """
         try:
             return self.get(*args, **kwargs)
-        except self.DoesNotExist:
+        except self.model.DoesNotExist:
             return
 
     def paginated(self, per_page=5000):

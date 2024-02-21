@@ -11,7 +11,6 @@ import json
 import os
 from unittest import mock
 from unittest.mock import patch
-from uuid import uuid4
 
 import pytest
 from django.test import TestCase
@@ -25,6 +24,7 @@ from packagedb.find_source_repo import get_tag_and_commit
 from packagedb.find_source_repo import get_tags_and_commits
 from packagedb.find_source_repo import get_urls_from_package_data
 from packagedb.find_source_repo import get_urls_from_package_resources
+from packagedb.find_source_repo import fetch_response
 from packagedb.models import Package
 from packagedb.models import PackageContentType
 from packagedb.models import Resource
@@ -122,9 +122,14 @@ class TestFindSourceRepo(TestCase):
             download_url="https://repo1.maven.org/maven2/com/foo/bar/11/bar.11.jar",
         )
 
-    @mock.patch("packagedb.find_source_repo.get_urls_from_description_and_homepage_urls")
+    @mock.patch("packagedb.find_source_repo.fetch_response")
     def test_get_source_purl_from_package_data(self, mock):
-        mock.return_value = ["https://bitbucket/ab/cd"]
+        mock.side_effect = [
+            "https://bitbucket/ab/cd",
+            None,
+            None,
+            None,
+        ]
         source_urls = list(get_urls_from_package_data(self.package_with_resources_and_package_data))
         assert source_urls == [
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/src/master/",
@@ -257,7 +262,7 @@ class TestFindSourceRepo(TestCase):
         ]
 
     def test_get_tags_commits(self):
-        with patch("packagedb.find_source_repo.get_data_from_url"):
+        with patch("packagedb.find_source_repo.fetch_response"):
             with patch("subprocess.getoutput") as mock_popen:
                 mock_popen.return_value = open(TEST_DATA).read()
                 with open(TAGS_COMMITS_FILE) as f:
@@ -280,7 +285,7 @@ class TestFindSourceRepo(TestCase):
                     ) == ("9.35", "fdc8117af75b192e3f8afcc0119c904b02686af8")
 
     def test_get_source_repo(self):
-        with patch("packagedb.find_source_repo.get_data_from_url"):
+        with patch("packagedb.find_source_repo.fetch_response"):
             with patch("subprocess.getoutput") as mock_popen:
                 mock_popen.return_value = open(TEST_DATA).read()
                 assert get_source_repo(
@@ -293,3 +298,10 @@ class TestFindSourceRepo(TestCase):
                     qualifiers={"commit": "e86fb3431972d302fcb615aca0baed4d8ab89791"},
                     subpath=None,
                 )
+
+    @mock.patch("packagedb.find_source_repo.requests.get")
+    def test_fetch_response(self, mock_get):
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.text = "abc"
+        assert fetch_response("https://github.com/assets") == None
+        assert fetch_response("https://github.com/abc.js") == None
