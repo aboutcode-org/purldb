@@ -620,24 +620,15 @@ class Package(
         if sorted_versions:
             return sorted_versions[-1]
 
-    # TODO: Should this be called `reindex` in this context?
-    def rescan(self):
+    def reindex(self):
         """
-        Trigger another scan of this Package, where the URI at `download_url` is
-        sent to scancode.io for a scan. The fingerprints and Resources associated with this
-        Package are deleted and recreated from the updated scan data.
+        Trigger another scan of this Package, where a new ScannableURI is
+        created for this Package. The fingerprints and Resources associated with
+        this Package are deleted and recreated from the updated scan data.
         """
-        from minecode.models import ScannableURI
+        from minecode.model_utils import add_package_to_scan_queue
 
-        # TODO: Consider sending a new scan request instead of reusing the
-        # existing one
-        try:
-            scannable_uri = ScannableURI.objects.get(package=self)
-        except ScannableURI.DoesNotExist:
-            scannable_uri = None
-
-        if scannable_uri:
-            scannable_uri.rescan()
+        add_package_to_scan_queue(self, reindex_uri=True)
 
     def update_fields(self, save=False, **values_by_fields):
         """

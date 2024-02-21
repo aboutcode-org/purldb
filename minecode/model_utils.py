@@ -24,7 +24,7 @@ logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
 
 
-def add_package_to_scan_queue(package):
+def add_package_to_scan_queue(package, reindex_uri=False):
     """
     Add a Package `package` to the scan queue
     """
@@ -32,6 +32,7 @@ def add_package_to_scan_queue(package):
     _, scannable_uri_created = ScannableURI.objects.get_or_create(
         uri=uri,
         package=package,
+        reindex_uri=reindex_uri,
     )
     if scannable_uri_created:
         logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))

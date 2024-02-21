@@ -707,7 +707,7 @@ class ScannableURI(BaseURI):
         help_text='Status of the scan for this URI.',
     )
 
-    rescan_uri = models.BooleanField(
+    reindex_uri = models.BooleanField(
         default=False,
         null=True,
         blank=True,
@@ -763,19 +763,6 @@ class ScannableURI(BaseURI):
             self.canonical = get_canonical(self.uri)
         self.normalize_fields()
         super(ScannableURI, self).save(*args, **kwargs)
-
-    def rescan(self):
-        """
-        Reset fields such that a ScannableURI can be sent off for scanning again
-        """
-        self.rescan_uri = True
-        self.scan_status = ScannableURI.SCAN_NEW
-        self.scan_error = None
-        self.index_error = None
-        self.scan_uuid = None
-        self.scan_request_date = None
-        self.priority = 100
-        self.save()
 
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
