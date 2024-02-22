@@ -19,7 +19,7 @@ from rest_framework.response import Response
 # But importing the mappers and visitors module triggers routes registration
 from minecode import visitors  # NOQA
 from minecode import priority_router
-from minecode.management.commands.process_scans import index_package_files
+from minecode.management.indexing import index_package_files
 from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 
 
