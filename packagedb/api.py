@@ -584,15 +584,21 @@ class CollectViewSet(viewsets.ViewSet):
     """
     serializer_class=None
     @extend_schema(
-            parameters=[OpenApiParameter('purl', str, 'query', description='PackageURL')],
+            parameters=[
+                OpenApiParameter('purl', str, 'query', description='PackageURL'),
+                OpenApiParameter('source_purl', str, 'query', description='Source PackageURL', default=False),
+            ],
             responses={200:PackageAPISerializer()},
     )
     def list(self, request, format=None):
         purl = request.query_params.get('purl')
+        source_purl = request.query_params.get('source_purl', None)
 
         # validate purl
         try:
             package_url = PackageURL.from_string(purl)
+            if source_purl:
+                source_package_url = PackageURL.from_string(source_purl)
         except ValueError as e:
             message = {
                 'status': f'purl validation error: {e}'
@@ -603,7 +609,10 @@ class CollectViewSet(viewsets.ViewSet):
         packages = Package.objects.filter(**lookups)
         if packages.count() == 0:
             try:
-                errors = priority_router.process(purl)
+                kwargs = dict()
+                if source_purl:
+                    kwargs["source_purl"] = source_purl
+                errors = priority_router.process(purl, **kwargs)
             except NoRouteAvailable:
                 message = {
                     'status': f'cannot fetch Package data for {purl}: no available handler'

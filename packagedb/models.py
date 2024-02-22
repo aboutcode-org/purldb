@@ -456,11 +456,12 @@ class PackageContentType(models.IntegerChoices):
     # fields matches with the current package
     CURATION = 1, 'curation'
     PATCH = 2, 'patch'
-    SOURCE_REPO = 3, 'source_repo'
-    SOURCE_ARCHIVE = 4, 'source_archive'
-    BINARY = 5, 'binary'
-    TEST = 6, 'test'
-    DOC = 7, 'doc'
+    METADATA = 3, 'metadata'
+    SOURCE_REPO = 4, 'source_repo'
+    SOURCE_ARCHIVE = 5, 'source_archive'
+    BINARY = 6, 'binary'
+    TEST = 7, 'test'
+    DOC = 8, 'doc'
 
 
 def get_class_name(obj):
@@ -1183,6 +1184,7 @@ class PackageRelation(models.Model):
 
     class Relationship(models.TextChoices):
         SOURCE_PACKAGE = "source_package"
+        BINARY_PACKAGE = "binary_package"
 
     from_package = models.ForeignKey(
         Package,
