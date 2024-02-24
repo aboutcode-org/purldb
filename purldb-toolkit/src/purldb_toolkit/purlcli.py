@@ -94,6 +94,7 @@ def get_metadata_details(purls, output, file, unique, command_name):
         input_purls = purls
 
     for purl in input_purls:
+        purl = purl.strip()
         if not purl:
             continue
 
@@ -185,7 +186,7 @@ def construct_headers(
     headers_content["options"] = options
     headers_content["purls"] = purls
 
-    if command_name == "metadata" and unique:
+    if (command_name in ["metadata", "urls"]) and unique:
         for purl in normalized_purls:
             if purl[0] != purl[1]:
                 warnings.append(f"input PURL: '{purl[0]}' normalized to '{purl[1]}'")
@@ -245,7 +246,7 @@ def check_metadata_purl(purl):
     `warnings` field of the `header` section of the JSON object returned by
     the `metadata` command.
     """
-    results = check_existence(purl)
+    results = validate_purls([purl])[0]
 
     if results["valid"] == False:
         return "not_valid"
@@ -301,7 +302,6 @@ def check_metadata_purl(purl):
     required=False,
     help="Validate each URL's existence with a head request.",
 )
-# We're passing `unique` but it's not yet fully implemented here or in the `urls` tests.
 def get_urls(purls, output, file, unique, head):
     """
     Given one or more PURLs, for each PURL, return a list of all known URLs
@@ -315,28 +315,32 @@ def get_urls(purls, output, file, unique, head):
     context = click.get_current_context()
     command_name = context.command.name
 
-    urls_info = get_urls_details(purls, output, file, head, command_name)
+    urls_info = get_urls_details(purls, output, file, unique, head, command_name)
     json.dump(urls_info, output, indent=4)
 
 
-def get_urls_details(purls, output, file, head, command_name):
+def get_urls_details(purls, output, file, unique, head, command_name):
     """
     Return a dictionary containing URLs for each PURL in the `purls` input
     list.  `check_urls_purl()` will print an error message to the console
     (also displayed in the JSON output) when necessary.
     """
     urls_details = {}
-    urls_details["headers"] = construct_headers(
-        purls=purls,
-        output=output,
-        file=file,
-        head=head,
-        command_name=command_name,
-    )
-
+    urls_details["headers"] = []
     urls_details["packages"] = []
 
-    for purl in purls:
+    normalized_purls = []
+    input_purls = []
+    if unique:
+        for purl in purls:
+            purl, normalized_purl = normalize_purl(purl)
+            normalized_purls.append((purl, normalized_purl))
+            if normalized_purl not in input_purls:
+                input_purls.append(normalized_purl)
+    else:
+        input_purls = purls
+
+    for purl in input_purls:
         url_detail = {}
         url_detail["purl"] = purl
 
@@ -411,6 +415,16 @@ def get_urls_details(purls, output, file, head, command_name):
 
         urls_details["packages"].append(url_detail)
 
+    urls_details["headers"] = construct_headers(
+        purls=purls,
+        output=output,
+        file=file,
+        head=head,
+        command_name=command_name,
+        normalized_purls=normalized_purls,
+        unique=unique,
+    )
+
     return urls_details
 
 
@@ -447,7 +461,7 @@ def check_urls_purl(purl):
     or its type is not supported (or not fully supported) by `urls`, or it
     does not exist in the upstream repo.
     """
-    results = check_existence(purl)
+    results = validate_purls([purl])[0]
 
     if results["valid"] == False:
         return "not_valid"
@@ -541,6 +555,25 @@ def validate(purls, output, file):
 
 
 def validate_purls(purls):
+    """
+    Return a JSON object containing data regarding the validity of the input PURL.
+
+    Based on packagedb.package_managers VERSION_API_CLASSES_BY_PACKAGE_TYPE
+    and packagedb/api.py class PurlValidateViewSet(viewsets.ViewSet)
+    -- and supported by testing the command -- it appears that the `validate`
+    command `check_existence` parameter supports the following PURL types:
+
+    "cargo",
+    "composer",
+    "deb",
+    "gem",
+    "golang",
+    "hex",
+    "maven",
+    "npm",
+    "nuget",
+    "pypi",
+    """
     api_query = "https://public.purldb.io/api/validate/"
     validated_purls = []
     for purl in purls:
@@ -549,41 +582,14 @@ def validate_purls(purls):
             continue
         request_body = {"purl": purl, "check_existence": True}
         response = requests.get(api_query, params=request_body)
-        results = response.json()
+        # results = response.json()
+        try:
+            results = response.json()
+        except:
+            return
         validated_purls.append(results)
 
     return validated_purls
-
-
-def check_existence(purl):
-    """
-    Return a JSON object containing data regarding the validity of the input PURL.
-    """
-
-    # Based on packagedb.package_managers VERSION_API_CLASSES_BY_PACKAGE_TYPE
-    # -- and supported by testing the command -- it appears that the `validate`
-    # command `check_existence` check supports the following PURL types:
-
-    # validate_supported_ecosystems = [
-    # "cargo",
-    # "composer",
-    # "deb",
-    # "gem",
-    # "golang",
-    # "hex",
-    # "maven",
-    # "npm",
-    # "nuget",
-    # "pypi",
-    # ]
-
-    api_query = "https://public.purldb.io/api/validate/"
-    purl = purl.strip()
-    request_body = {"purl": purl, "check_existence": True}
-    response = requests.get(api_query, params=request_body)
-    results = response.json()
-
-    return results
 
 
 # Not yet converted to a SCTK-like data structure.
@@ -611,9 +617,6 @@ def check_existence(purl):
 def get_versions(purls, output, file):
     """
     Given one or more PURLs, return a list of all known versions for each PURL.
-
-    Version information is not needed in submitted PURLs and if included will
-    be removed before processing.
     """
     check_for_duplicate_input_sources(purls, file)
 
@@ -659,6 +662,11 @@ def list_versions(purls, output, file, command_name):
             print(f"'{purl}' does not exist in the upstream repo")
             continue
 
+        # TODO: Add to warnings and test it as well.
+        if command_name == "versions" and versions_purl == "error_fetching_purl":
+            print(f"Error fetching '{purl}'")
+            continue
+
         for package_version_object in list(versions(purl)):
             purl_version_data = {}
             purl_version = package_version_object.to_dict()["value"]
@@ -699,7 +707,10 @@ def check_versions_purl(purl):
         "pypi",
     ]
     """
-    results = check_existence(purl)
+    results = validate_purls([purl])[0]
+
+    if results is None:
+        return "error_fetching_purl"
 
     if results["valid"] == False:
         return "not_valid"

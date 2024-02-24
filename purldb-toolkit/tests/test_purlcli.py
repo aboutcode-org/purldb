@@ -15,7 +15,7 @@ import click
 import pytest
 from click.testing import CliRunner
 from commoncode.testcase import FileDrivenTesting
-from purldb_toolkit import purlcli
+from purldb_toolkit import cli_test_utils, purlcli
 
 test_env = FileDrivenTesting()
 test_env.test_data_dir = os.path.join(os.path.dirname(__file__), "data")
@@ -56,18 +56,18 @@ class TestPURLCLI_metadata(object):
 
         f_output = open(actual_result_file)
         output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
+        streamline_metadata_packages(output_data["packages"])
 
         f_expected = open(expected_result_file)
         expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
+        streamline_metadata_packages(expected_data["packages"])
 
         result_objects = [
             (
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
-            ),
-            (
-                output_data["headers"][0]["tool_version"],
-                expected_data["headers"][0]["tool_version"],
             ),
             (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
@@ -95,6 +95,16 @@ class TestPURLCLI_metadata(object):
 
         for output, expected in result_objects:
             assert output == expected
+
+        """
+        QUESTION: Is this a better way to test the contents of `packages`?
+        We already remove some dynamic fields like `download_url`, but
+        `metadata` also adds new versions as they appear.  The below approach
+        avoids an error from a new version while checking whether the existing
+        expected versions still appear in the result data.
+        """
+        for expected in expected_data["packages"]:
+            assert expected in output_data["packages"]
 
     def test_metadata_cli_unique(self):
         """
@@ -128,18 +138,18 @@ class TestPURLCLI_metadata(object):
 
         f_output = open(actual_result_file)
         output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
+        streamline_metadata_packages(output_data["packages"])
 
         f_expected = open(expected_result_file)
         expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
+        streamline_metadata_packages(expected_data["packages"])
 
         result_objects = [
             (
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
-            ),
-            (
-                output_data["headers"][0]["tool_version"],
-                expected_data["headers"][0]["tool_version"],
             ),
             (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
@@ -163,10 +173,6 @@ class TestPURLCLI_metadata(object):
                 expected_data["headers"][0]["options"]["--file"],
             ),
             (
-                output_data["headers"][0]["options"]["--file"],
-                expected_data["headers"][0]["options"]["--file"],
-            ),
-            (
                 output_data["headers"][0]["options"]["--unique"],
                 expected_data["headers"][0]["options"]["--unique"],
             ),
@@ -175,6 +181,13 @@ class TestPURLCLI_metadata(object):
 
         for output, expected in result_objects:
             assert output == expected
+
+        """
+        QUESTION: Is this a better way to test the contents of `packages`?
+        See point under test_metadata_cli() re addition of new versions.
+        """
+        for expected in expected_data["packages"]:
+            assert expected in output_data["packages"]
 
     def test_metadata_cli_duplicate_input_sources(self):
         """
@@ -574,7 +587,22 @@ class TestPURLCLI_metadata(object):
             command_name="metadata",
             unique=False,
         )
+        cli_test_utils.streamline_headers(purl_metadata["headers"])
+        streamline_metadata_packages(purl_metadata["packages"])
+
+        cli_test_utils.streamline_headers(expected["headers"])
+        streamline_metadata_packages(expected["packages"])
+
         assert purl_metadata == expected
+
+        """
+        QUESTION: Is this a better way to test the contents of `packages`?
+        See note under test_metadata_cli() re addition of new versions.
+        """
+        assert purl_metadata["headers"] == expected["headers"]
+
+        for expected in expected["packages"]:
+            assert expected in purl_metadata["packages"]
 
     @pytest.mark.parametrize(
         "test_input,expected",
@@ -700,6 +728,9 @@ class TestPURLCLI_metadata(object):
             normalized_purls=None,
             unique=None,
         )
+        cli_test_utils.streamline_headers(expected)
+        cli_test_utils.streamline_headers(metadata_headers)
+
         assert metadata_headers == expected
 
     @pytest.mark.parametrize(
@@ -760,6 +791,9 @@ class TestPURLCLI_metadata(object):
             ],
             unique=True,
         )
+        cli_test_utils.streamline_headers(expected)
+        cli_test_utils.streamline_headers(metadata_headers)
+
         assert metadata_headers == expected
 
 
@@ -772,7 +806,6 @@ class TestPURLCLI_urls(object):
         because the `--output` values (paths) differ due to the use of
         temporary files, and therefore we test a list of relevant key-value pairs.
         """
-        # NOTE: options do not yet include `unique`.
         expected_result_file = test_env.get_test_loc(
             "purlcli/expected_urls_output.json"
         )
@@ -813,15 +846,11 @@ class TestPURLCLI_urls(object):
             "--purl",
             "pkg:pypi/matchcode",
             "--purl",
-            "pkg:rubygems/bundler-sass",
-            "--purl",
             "abcdefg",
             "--purl",
             "pkg/abc",
             "--purl",
             "pkg:nuget/auth0-aspnet@1.1.0",
-            "--purl",
-            "pkg:cargo/socksprox",
             "--output",
             actual_result_file,
         ]
@@ -831,18 +860,117 @@ class TestPURLCLI_urls(object):
 
         f_output = open(actual_result_file)
         output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
 
         f_expected = open(expected_result_file)
         expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
 
         result_objects = [
             (
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
-                output_data["headers"][0]["tool_version"],
-                expected_data["headers"][0]["tool_version"],
+                output_data["headers"][0]["warnings"],
+                expected_data["headers"][0]["warnings"],
+            ),
+            (
+                output_data["headers"][0]["errors"],
+                expected_data["headers"][0]["errors"],
+            ),
+            (
+                output_data["headers"][0]["options"]["command"],
+                expected_data["headers"][0]["options"]["command"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--purl"],
+                expected_data["headers"][0]["options"]["--purl"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--file"],
+                expected_data["headers"][0]["options"]["--file"],
+            ),
+            (output_data["packages"], expected_data["packages"]),
+        ]
+
+        for output, expected in result_objects:
+            assert output == expected
+
+    def test_urls_cli_unique(self):
+        """
+        Test the `urls` command with actual and expected JSON output files.
+
+        Note that we can't simply compare the actual and expected JSON files
+        because the `--output` values (paths) differ due to the use of
+        temporary files, and therefore we test a list of relevant key-value pairs.
+        """
+        expected_result_file = test_env.get_test_loc(
+            "purlcli/expected_urls_output_unique.json"
+        )
+        actual_result_file = test_env.get_temp_file("actual_urls_output_unique.json")
+        options = [
+            "--purl",
+            "pkg:pypi/fetchcode",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
+            "--purl",
+            "pkg:pypi/dejacode",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0?os=windows",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0os=windows",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0#how/are/you",
+            "--purl",
+            "pkg:pypi/dejacode@10.0.0",
+            "--purl",
+            "pkg:cargo/banquo",
+            "--purl",
+            "pkg:cargo/socksprox",
+            "--purl",
+            "pkg:nginx/nginx",
+            "--purl",
+            "pkg:nginx/nginx@0.8.9?os=windows",
+            "--purl",
+            "pkg:gem/bundler-sass",
+            "--purl",
+            "pkg:rubygems/bundler-sass",
+            "--purl",
+            "pkg:pypi/matchcode",
+            "--purl",
+            "abcdefg",
+            "--purl",
+            "pkg/abc",
+            "--purl",
+            "pkg:nuget/auth0-aspnet@1.1.0",
+            "--output",
+            actual_result_file,
+            "--unique",
+        ]
+        runner = CliRunner()
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
+        assert result.exit_code == 0
+
+        f_output = open(actual_result_file)
+        output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
+
+        f_expected = open(expected_result_file)
+        expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
+
+        result_objects = [
+            (
+                output_data["headers"][0]["tool_name"],
+                expected_data["headers"][0]["tool_name"],
             ),
             (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
@@ -879,7 +1007,6 @@ class TestPURLCLI_urls(object):
         because the `--output` values (paths) differ due to the use of
         temporary files, and therefore we test a list of relevant key-value pairs.
         """
-        # NOTE: options do not yet include `unique`.
         expected_result_file = test_env.get_test_loc(
             "purlcli/expected_urls_output_head.json"
         )
@@ -920,15 +1047,11 @@ class TestPURLCLI_urls(object):
             "--purl",
             "pkg:pypi/matchcode",
             "--purl",
-            "pkg:rubygems/bundler-sass",
-            "--purl",
             "abcdefg",
             "--purl",
             "pkg/abc",
             "--purl",
             "pkg:nuget/auth0-aspnet@1.1.0",
-            "--purl",
-            "pkg:cargo/socksprox",
             "--head",
             "--output",
             actual_result_file,
@@ -939,18 +1062,16 @@ class TestPURLCLI_urls(object):
 
         f_output = open(actual_result_file)
         output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
 
         f_expected = open(expected_result_file)
         expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
 
         result_objects = [
             (
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
-            ),
-            (
-                output_data["headers"][0]["tool_version"],
-                expected_data["headers"][0]["tool_version"],
             ),
             (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
@@ -1276,7 +1397,11 @@ class TestPURLCLI_urls(object):
             file="",
             command_name="urls",
             head=False,
+            unique=False,
         )
+        cli_test_utils.streamline_headers(expected["headers"])
+        cli_test_utils.streamline_headers(purl_urls["headers"])
+
         assert purl_urls == expected
 
     @pytest.mark.parametrize(
@@ -1316,7 +1441,35 @@ class TestPURLCLI_urls(object):
         purl_urls = purlcli.check_urls_purl(test_input[0])
         assert purl_urls == expected
 
-    # TODO: test_make_head_request()
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                ["https://pypi.org/project/fetchcode/"],
+                {"get_request": 200, "head_request": 200},
+            ),
+            (
+                [None],
+                {"get_request": "N/A", "head_request": "N/A"},
+            ),
+            (
+                ["https://crates.io/crates/banquo"],
+                {"get_request": 404, "head_request": 404},
+            ),
+            (
+                ["https://crates.io/crates/socksprox"],
+                {"get_request": 404, "head_request": 404},
+            ),
+            (
+                ["https://www.nuget.org/api/v2/package/auth0-aspnet/1.1.0"],
+                {"get_request": 200, "head_request": 404},
+            ),
+        ],
+    )
+    def test_make_head_request(self, test_input, expected):
+        purl_status_code = purlcli.make_head_request(test_input[0])
+
+        assert purl_status_code == expected
 
 
 # TODO: not yet converted to a SCTK-like data structure.
@@ -1572,6 +1725,7 @@ class TestPURLCLI_versions(object):
         command_name = "versions"
 
         purl_versions = purlcli.list_versions(test_input, output, file, command_name)
+        # TODO: consider `expected in purl_versions` instead of `purl_versions == expected` ==> handles dynamic data in the result better.
         assert purl_versions == expected
 
     @pytest.mark.parametrize(
@@ -1606,15 +1760,20 @@ class TestPURLCLI_versions(object):
                 "not_valid",
             ),
             (
-                ["pkg:deb/debian/2ping"],
+                ["pkg:maven/axis/axis@1.0"],
                 None,
-            ),
-            (
-                ["pkg:deb/2ping"],
-                "valid_but_not_supported",
             ),
         ],
     )
     def test_check_versions_purl(self, test_input, expected):
         purl_versions = purlcli.check_versions_purl(test_input[0])
         assert purl_versions == expected
+
+
+def streamline_metadata_packages(packages):
+    """
+    Modify the `packages` list of `metadata` mappings in place to make it easier to test.
+    """
+    for hle in packages:
+        hle.pop("code_view_url", None)
+        hle.pop("download_url", None)
