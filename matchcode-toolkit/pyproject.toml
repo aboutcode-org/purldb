@@ -1,15 +1,124 @@
+[build-system]
+requires = [ "flot>=0.7.0" ]
+build-backend = "flot.buildapi"
+
 [project]
 name = "matchcode-toolkit"
-version = "2.0.1"
+version = "3.0.0"
+description = "matchcode-toolkit"
+readme = "README.rst"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.7"
 
-[build-system]
-requires = ["setuptools >= 50", "wheel", "setuptools_scm[toml] >= 6"]
-build-backend = "setuptools.build_meta"
+authors = [
+    { name = "nexB. Inc. and others", email = "info@aboutcode.org" },
+]
 
-[tool.setuptools_scm]
-# this is used populated when creating a git archive
-# and when there is .git dir and/or there is no git installed
-fallback_version = "9999.$Format:%h-%cs$"
+keywords = [
+    "matchcode",
+    "ScanCode.io",
+    "open source",
+]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+]
+
+dependencies = [
+    "bitarray",
+    "commoncode",
+    "plugincode",
+]
+
+urls = { Homepage = "https://github.com/nexB/purldb/tree/main/matchcode-toolkit" }
+
+
+[project.optional-dependencies]
+docs = [
+    "doc8 >= 0.8.1",
+    "Sphinx == 5.1.0",
+    "sphinx-autobuild",
+    "sphinx-copybutton",
+    "sphinx-reredirects >= 0.1.2",
+    "sphinx-rtd-dark-mode>=1.3.0",
+    "sphinx_rtd_theme >= 0.5.1",
+]
+
+testing = [
+    "aboutcode-toolkit >= 7.0.2",
+    "black",
+    "isort",
+    "pycodestyle >= 2.8.0",
+    "pytest >= 6, != 7.0.0",
+    "pytest-rerunfailures",
+    "pytest-xdist >= 2",
+    "twine",
+    "vendorize >= 0.2.0",
+    "bump-my-version",
+]
+
+
+[project.entry-points."scancode_post_scan"]
+fingerprint = "matchcode_toolkit.plugin_fingerprint:Fingerprint"
+
+
+[tool.bumpversion]
+current_version = "3.0.0"
+allow_dirty = true
+
+files = [
+    { filename = "pyproject.toml" },
+]
+
+
+[tool.flot]
+includes = [
+    "src/**/*",
+]
+excludes = [
+    # Python compiled files
+    "**/*.py[cod]",
+    "**/*.egg-info",
+    # Various junk and temp files
+    "**/.DS_Store",
+    "**/*~",
+    "**/.*.sw[po]",
+    "**/.ve",
+    "**/*.bak",
+    "**/.ipynb_checkpoints",
+]
+
+metadata_files = ["*.LICENSE", "NOTICE",  ]
+editable_paths = ["src", "tests"]
+wheel_path_prefixes_to_strip = ["src"]
+sdist_extra_includes = [
+    "etc/**/*",
+    "docs/**/*",
+    ".github/**/*",
+    "tests/**/*",
+    ".gitattributes",
+    ".gitignore",
+    "thirdparty/**/*",
+    "*.LICENSE",
+    "NOTICE",
+    "*.ABOUT",
+    "*.toml",
+    "*.yml",
+    "*.rst",
+    "*.py",
+]
+
+[tool.isort]
+force_single_line = "True"
+line_length = 88
+sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+skip = "doc,venv,tmp,thirdparty,build,dist"
+
 
 [tool.pytest.ini_options]
 norecursedirs = [

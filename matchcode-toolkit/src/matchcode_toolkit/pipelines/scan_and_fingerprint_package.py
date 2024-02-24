@@ -20,11 +20,11 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/nexB/scancode.io for support and download.
 
-from scanpipe.pipelines.scan_package import ScanPackage
+from scanpipe.pipelines.scan_single_package import ScanSinglePackage
 from scanpipe.pipes import matchcode
 
 
-class ScanAndFingerprintPackage(ScanPackage):
+class ScanAndFingerprintPackage(ScanSinglePackage):
     """
     Scan a single package file or package archive with ScanCode-toolkit, then
     calculate the directory fingerprints of the codebase.
