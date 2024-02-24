@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v3.0.0
+------
+
+*2024-02-23* -- Update ``ScanAndFingerprintPackage`` pipeline to reflect the renaming of the ``ScanPackage`` pipeline to ``ScanSinglePackage`` in scancode.io
+
 v2.0.1
 ------
 
