@@ -29,7 +29,8 @@ A checkout of this repo can also be installed into an environment using pip's
 or built into a wheel and then installed:
 ::
 
-  python setup.py bdist_wheel # The built wheel will be in the dist/ directory
+  pip install flot
+  flot --wheel --sdist # The built wheel will be in the dist/ directory
   pip install matchcode_toolkit-*-py3-none-any.whl
 
 
@@ -46,7 +47,7 @@ Resources and computes those values for directories.
 
 
 MatchCode toolkit provides the ``scan_and_fingerprint_package`` pipeline for
-ScanCode.io. This is the same as the ``scan_package`` pipeline, but has the
+ScanCode.io. This is the same as the ``scan_single_package`` pipeline, but has the
 added step of computing fingerprints for directories.
 
 
