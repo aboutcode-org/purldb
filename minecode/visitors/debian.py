@@ -50,7 +50,7 @@ There are two approaches:
 """
 
 
-DEBIAN_BASE_URL = "http://deb.debian.org/debian/pool/main/"
+DEBIAN_BASE_URL = "https://deb.debian.org/debian/pool/main/"
 DEBIAN_METADATA_URL = "https://metadata.ftp-master.debian.org/changelogs/main/"
 # Other URLs and sources to consider
 # 'http://ftp.debian.org/debian/'
@@ -328,19 +328,20 @@ def process_request(purl_str, **kwargs):
 
     Return an error string for errors that occur, or empty string if there is no error.
     """
-    source_package_url = kwargs.get("source_purl", None)
+    source_purl = kwargs.get("source_purl", None)
     try:
         package_url = PackageURL.from_string(purl_str)
-        
+        source_package_url = PackageURL.from_string(source_purl)
+
     except ValueError as e:
-        error = f'error occured when parsing {purl_str}: {e}'
+        error = f'error occured when parsing purl: {purl_str} source_purl: {source_purl} : {e}'
         return error
 
     has_version = bool(package_url.version)
     if has_version:
         error = map_debian_metadata_binary_and_source(
             package_url=package_url, 
-            source_package_url=source_package_url
+            source_package_url=source_package_url,
         )
 
     return error
@@ -358,11 +359,10 @@ def map_debian_package(debian_package, package_content):
     db_package = None
     error = ''
 
-    if package_content == PackageContentType.BINARY:
-        purl = debian_package.package_url
+    purl = debian_package.package_url
+    if package_content == PackageContentType.BINARY:  
         download_url = debian_package.binary_archive_url
     elif package_content == PackageContentType.SOURCE_ARCHIVE:
-        purl = debian_package.source_package_url
         download_url = debian_package.source_archive_url
     
     response = requests.get(download_url)
@@ -372,26 +372,33 @@ def map_debian_package(debian_package, package_content):
         logger.error(msg)
         return db_package, error
 
-    package = PackageData(
+    purl_package = PackageData(
         type=purl.type,
         namespace=purl.namespace,
         name=purl.name,
         version=purl.version,
         qualifiers=purl.qualifiers,
-        download_url=download_url,
     )
+
+    package, error_metadata = get_debian_package_metadata(debian_package)
+    if error_metadata:
+        error += error_metadata
+    package.update_purl_fields(package_data=purl_package, replace=True)
+
+    # This will be used to download and scan the package
+    package.download_url = download_url
 
     # Set package_content value
     package.extra_data['package_content'] = package_content
 
     # If sha1 exists for an archive, we know we can create the package
     # Use purl info as base and create packages for binary and source package
-    sha1 = get_package_sha1(package)
+    sha1 = get_package_sha1(package=package, field="download_url")
     if sha1:
         package.sha1 = sha1
         db_package, _, _, _ = merge_or_create_package(package, visit_level=50)
     else:
-        msg = f'Failed to retrieve JAR: {purl.to_string()} from url: {download_url}'
+        msg = f'Failed to retrieve package archive: {purl.to_string()} from url: {download_url}'
         error += msg + '\n'
         logger.error(msg)
 
@@ -402,13 +409,9 @@ def map_debian_package(debian_package, package_content):
     return db_package, error
 
 
-def map_debian_package_metadata(debian_package, package_content):
+def get_debian_package_metadata(debian_package):
     """
     """
-    from minecode.model_utils import add_package_to_scan_queue
-    from minecode.model_utils import merge_or_create_package
-
-    db_package = None
     error = ''
 
     metadata_url = debian_package.package_metadata_url
@@ -417,15 +420,17 @@ def map_debian_package_metadata(debian_package, package_content):
         msg = f'Package metadata not exist on debian: {metadata_url}'
         error += msg + '\n'
         logger.error(msg)
-        return db_package, error
-    
+        return None, error
+
     metadata_content = response.text
     filename = metadata_url.split("/")[-1]
     file_name, _, extension = filename.rpartition(".")
-    temp_metadata_file = get_temp_file(file_name=file_name, extension=extension) 
+    temp_metadata_file = get_temp_file(file_name=file_name, extension=extension)
+    with open(temp_metadata_file, 'a') as metadata_file:
+        metadata_file.write(metadata_content)
 
-    package = DebianDscFileHandler.parse(location=temp_metadata_file)
-
+    packages = DebianDscFileHandler.parse(location=temp_metadata_file)
+    package = list(packages).pop()
     # In the case of looking up a maven package with qualifiers of
     # `classifiers=sources`, the purl of the package created from the pom does
     # not have the qualifiers, so we need to set them. Additionally, the download
@@ -433,27 +438,7 @@ def map_debian_package_metadata(debian_package, package_content):
     # from the filename.
     package.qualifiers = debian_package.package_url.qualifiers
 
-    # Set package_content value
-    package.extra_data['package_content'] = package_content
-
-    # If sha1 exists for a jar, we know we can create the package
-    # Use pom info as base and create packages for binary and source package
-
-    # Check to see if binary is available
-    sha1 = get_package_sha1(package)
-    if sha1:
-        package.sha1 = sha1
-        db_package, _, _, _ = merge_or_create_package(package, visit_level=50)
-    else:
-        msg = f'Failed to retrieve JAR: {debian_package.package_url}'
-        error += msg + '\n'
-        logger.error(msg)
-
-    # Submit package for scanning
-    if db_package:
-        add_package_to_scan_queue(db_package)
-
-    return db_package, error
+    return package, error
 
 
 def map_debian_metadata_binary_and_source(package_url, source_package_url):
@@ -463,6 +448,8 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url):
 
     Return an error string for errors that occur, or empty string if there is no error.
     """
+    error = ''
+
     if "repository_url" in package_url.qualifiers:
         base_url = package_url.qualifiers["repository_url"]
     else:
@@ -480,14 +467,6 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url):
         metadata_base_url=metadata_base_url,
     )
 
-    error = ''
-    metadata_package, emsg = map_debian_package_metadata(
-        debian_package,
-        PackageContentType.METADATA,
-    )
-    if emsg:
-        error += emsg
-
     binary_package, emsg = map_debian_package(
         debian_package,
         PackageContentType.BINARY,
@@ -503,16 +482,9 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url):
     if emsg:
         error += emsg
 
-    if metadata_package and binary_package:
+    if binary_package and source_package:
         make_relationship(
-            from_package=metadata_package,
-            to_package=binary_package,
-            relationship=PackageRelation.Relationship.BINARY_PACKAGE,
-        )
-
-    if metadata_package and source_package:
-        make_relationship(
-            from_package=metadata_package,
+            from_package=binary_package,
             to_package=source_package,
             relationship=PackageRelation.Relationship.SOURCE_PACKAGE,
         )
@@ -527,8 +499,8 @@ class DebianPackage:
     metadata_base_url = attr.ib(type=str)
     package_url = attr.ib(type=str)
     source_package_url = attr.ib(type=str)
-    metadata_directory_url = attr.ib(type=str)
-    archive_directory_url = attr.ib(type=str)
+    metadata_directory_url = attr.ib(type=str, default=None)
+    archive_directory_url = attr.ib(type=str, default=None)
 
     def __attrs_post_init__(self, *args, **kwargs):
         self.set_debian_archive_directory()

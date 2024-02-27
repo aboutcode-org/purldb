@@ -238,7 +238,7 @@ def get_http_response(uri, timeout=10):
     return response
 
 
-def get_package_sha1(package):
+def get_package_sha1(package, field="repository_download_url"):
     """
     Return the sha1 value for `package` by checking if the sha1 file exists for
     `package` on maven and returning the contents if it does.
@@ -246,20 +246,22 @@ def get_package_sha1(package):
     If the sha1 is invalid, we download the package's JAR and calculate the sha1
     from that.
     """
-    download_url = package.repository_download_url
+    download_url = getattr(package, field)
     sha1_download_url = f'{download_url}.sha1'
     response = requests.get(sha1_download_url)
+    sha1 = None
     if response.ok:
         sha1_contents = response.text.strip().split()
         sha1 = sha1_contents[0]
         sha1 = validate_sha1(sha1)
-        if not sha1:
-            # Download JAR and calculate sha1 if we cannot get it from the repo
-            response = requests.get(download_url)
-            if response:
-                sha1_hash = hashlib.new('sha1', response.content)
-                sha1 = sha1_hash.hexdigest()
-        return sha1
+
+    if not sha1:
+        # Download JAR and calculate sha1 if we cannot get it from the repo
+        response = requests.get(download_url)
+        if response:
+            sha1_hash = hashlib.new('sha1', response.content)
+            sha1 = sha1_hash.hexdigest()
+    return sha1
 
 
 def validate_sha1(sha1):
