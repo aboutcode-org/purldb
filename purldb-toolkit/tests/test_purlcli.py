@@ -13,6 +13,7 @@ from collections import OrderedDict
 
 import click
 import pytest
+import requests
 from click.testing import CliRunner
 from commoncode.testcase import FileDrivenTesting
 from purldb_toolkit import cli_test_utils, purlcli
@@ -39,6 +40,12 @@ class TestPURLCLI_metadata(object):
             "pkg:pypi/fetchcode",
             "--purl",
             "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0?os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
             "--purl",
             "pkg:cargo/banquo",
             "--purl",
@@ -120,6 +127,12 @@ class TestPURLCLI_metadata(object):
             "pkg:pypi/fetchcode",
             "--purl",
             "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0?os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
             "--purl",
             "pkg:cargo/banquo",
             "--purl",
@@ -642,41 +655,58 @@ class TestPURLCLI_metadata(object):
         assert purl_metadata == expected
 
     @pytest.mark.parametrize(
-        "test_input,expected",
+        "test_input,expected_input_purls,expected_normalized_purls",
         [
             (
-                ["pkg:pypi/fetchcode"],
-                ("pkg:pypi/fetchcode", "pkg:pypi/fetchcode"),
+                [["pkg:pypi/fetchcode"]],
+                (["pkg:pypi/fetchcode"]),
+                ([("pkg:pypi/fetchcode", "pkg:pypi/fetchcode")]),
             ),
             (
-                ["pkg:pypi/fetchcode@1.2.3"],
-                ("pkg:pypi/fetchcode@1.2.3", "pkg:pypi/fetchcode"),
+                [["pkg:pypi/fetchcode@1.2.3"]],
+                (["pkg:pypi/fetchcode"]),
+                ([("pkg:pypi/fetchcode@1.2.3", "pkg:pypi/fetchcode")]),
             ),
             (
-                ["pkg:pypi/fetchcode@1.2.3?howistheweather=rainy"],
+                [["pkg:pypi/fetchcode@1.2.3?howistheweather=rainy"]],
+                (["pkg:pypi/fetchcode"]),
                 (
-                    "pkg:pypi/fetchcode@1.2.3?howistheweather=rainy",
-                    "pkg:pypi/fetchcode",
+                    [
+                        (
+                            "pkg:pypi/fetchcode@1.2.3?howistheweather=rainy",
+                            "pkg:pypi/fetchcode",
+                        )
+                    ]
                 ),
             ),
             (
-                ["pkg:pypi/fetchcode?howistheweather=rainy"],
-                ("pkg:pypi/fetchcode?howistheweather=rainy", "pkg:pypi/fetchcode"),
+                [["pkg:pypi/fetchcode?howistheweather=rainy"]],
+                (["pkg:pypi/fetchcode"]),
+                ([("pkg:pypi/fetchcode?howistheweather=rainy", "pkg:pypi/fetchcode")]),
             ),
             (
-                ["pkg:pypi/fetchcode#this/is/a/path"],
-                ("pkg:pypi/fetchcode#this/is/a/path", "pkg:pypi/fetchcode"),
+                [["pkg:pypi/fetchcode#this/is/a/path"]],
+                (["pkg:pypi/fetchcode"]),
+                ([("pkg:pypi/fetchcode#this/is/a/path", "pkg:pypi/fetchcode")]),
             ),
             (
-                ["pkg:pypi/?fetchcode"],
-                ("pkg:pypi/?fetchcode", "pkg:pypi/"),
+                [["pkg:pypi/?fetchcode"]],
+                (["pkg:pypi/"]),
+                ([("pkg:pypi/?fetchcode", "pkg:pypi/")]),
             ),
-            (["zzzzz"], ("zzzzz", "zzzzz")),
         ],
     )
-    def test_normalize_purl(self, test_input, expected):
-        normalized_purl = purlcli.normalize_purl(test_input[0])
-        assert normalized_purl == expected
+    def test_normalize_purls(
+        self, test_input, expected_input_purls, expected_normalized_purls
+    ):
+        input_purls = []
+        normalized_purls = []
+        input_purls, normalized_purls = purlcli.normalize_purls(
+            test_input[0], input_purls, normalized_purls
+        )
+
+        assert input_purls == expected_input_purls
+        assert normalized_purls == expected_normalized_purls
 
     @pytest.mark.parametrize(
         "test_input,expected",
@@ -727,6 +757,7 @@ class TestPURLCLI_metadata(object):
             head=None,
             normalized_purls=None,
             unique=None,
+            purl_warnings={"pkg:gem/bundler-sass": "valid_but_not_supported"},
         )
         cli_test_utils.streamline_headers(expected)
         cli_test_utils.streamline_headers(metadata_headers)
@@ -790,6 +821,7 @@ class TestPURLCLI_metadata(object):
                 ("pkg:pypi/fetchcode@0.2.0", "pkg:pypi/fetchcode"),
             ],
             unique=True,
+            purl_warnings={"pkg:gem/bundler-sass": "valid_but_not_supported"},
         )
         cli_test_utils.streamline_headers(expected)
         cli_test_utils.streamline_headers(metadata_headers)

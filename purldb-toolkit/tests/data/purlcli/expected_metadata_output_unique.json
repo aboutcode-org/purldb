@@ -8,6 +8,9 @@
                 "--purl": [
                     "pkg:pypi/fetchcode",
                     "pkg:pypi/fetchcode@0.3.0",
+                    "pkg:pypi/fetchcode@0.3.0?os=windows",
+                    "pkg:pypi/fetchcode@0.3.0os=windows",
+                    "pkg:pypi/fetchcode@5.0.0",
                     "pkg:cargo/banquo",
                     "pkg:nginx/nginx",
                     "pkg:gem/rails",
@@ -20,6 +23,9 @@
             "purls": [
                 "pkg:pypi/fetchcode",
                 "pkg:pypi/fetchcode@0.3.0",
+                "pkg:pypi/fetchcode@0.3.0?os=windows",
+                "pkg:pypi/fetchcode@0.3.0os=windows",
+                "pkg:pypi/fetchcode@5.0.0",
                 "pkg:cargo/banquo",
                 "pkg:nginx/nginx",
                 "pkg:gem/rails",
@@ -28,6 +34,9 @@
             "errors": [],
             "warnings": [
                 "input PURL: 'pkg:pypi/fetchcode@0.3.0' normalized to 'pkg:pypi/fetchcode'",
+                "input PURL: 'pkg:pypi/fetchcode@0.3.0?os=windows' normalized to 'pkg:pypi/fetchcode'",
+                "input PURL: 'pkg:pypi/fetchcode@0.3.0os=windows' normalized to 'pkg:pypi/fetchcode'",
+                "input PURL: 'pkg:pypi/fetchcode@5.0.0' normalized to 'pkg:pypi/fetchcode'",
                 "'pkg:nginx/nginx' not supported with `metadata` command",
                 "'pkg:gem/rails' not supported with `metadata` command"
             ]

@@ -82,14 +82,14 @@ def get_metadata_details(purls, output, file, unique, command_name):
     metadata_details["headers"] = []
     metadata_details["packages"] = []
 
-    normalized_purls = []
+    metadata_warnings = {}
+
     input_purls = []
+    normalized_purls = []
     if unique:
-        for purl in purls:
-            purl, normalized_purl = normalize_purl(purl)
-            normalized_purls.append((purl, normalized_purl))
-            if normalized_purl not in input_purls:
-                input_purls.append(normalized_purl)
+        input_purls, normalized_purls = normalize_purls(
+            purls, input_purls, normalized_purls
+        )
     else:
         input_purls = purls
 
@@ -100,16 +100,8 @@ def get_metadata_details(purls, output, file, unique, command_name):
 
         metadata_purl = check_metadata_purl(purl)
 
-        if command_name == "metadata" and metadata_purl == "not_valid":
-            print(f"'{purl}' not valid")
-            continue
-
-        if command_name == "metadata" and metadata_purl == "valid_but_not_supported":
-            print(f"'{purl}' not supported with `metadata` command")
-            continue
-
-        if command_name == "metadata" and metadata_purl == "not_in_upstream_repo":
-            print(f"'{purl}' does not exist in the upstream repo")
+        if command_name == "metadata" and metadata_purl:
+            metadata_warnings[purl] = metadata_purl
             continue
 
         for release in list(info(purl)):
@@ -124,21 +116,61 @@ def get_metadata_details(purls, output, file, unique, command_name):
         command_name=command_name,
         normalized_purls=normalized_purls,
         unique=unique,
+        purl_warnings=metadata_warnings,
     )
 
     return metadata_details
 
 
-def normalize_purl(purl):
+def check_metadata_purl(purl):
     """
-    Remove substrings that start with the '@', '?' or '#' separators.
-    """
-    input_purl = purl
-    purl = purl.strip()
-    purl = re.split("[@,?,#,]+", purl)[0]
-    normalized_purl = purl
+    Return a variable identifying the message for printing to the console by
+    get_metadata_details() if (1) the input PURL is invalid, (2) its type is not
+    supported by `metadata` or (3) its existence was not validated (e.g.,
+    "does not exist in the upstream repo").
 
-    return input_purl, normalized_purl
+    This message will also be reported by construct_headers() in the
+    `warnings` field of the `header` section of the JSON object returned by
+    the `metadata` command.
+    """
+    check_validation = validate_purls([purl])
+    if check_validation is None:
+        return "validation_error"
+    results = check_validation[0]
+
+    if results["valid"] == False:
+        return "not_valid"
+
+    # This is manually constructed from a visual inspection of fetchcode/package.py.
+    metadata_supported_ecosystems = [
+        "bitbucket",
+        "cargo",
+        "github",
+        "npm",
+        "pypi",
+        "rubygems",
+    ]
+    metadata_purl = PackageURL.from_string(purl)
+
+    if metadata_purl.type not in metadata_supported_ecosystems:
+        return "valid_but_not_supported"
+
+    if results["exists"] == False:
+        return "not_in_upstream_repo"
+
+
+def normalize_purls(purls, input_purls, normalized_purls):
+    for purl in purls:
+        input_purl = purl
+        purl = purl.strip()
+        purl = re.split("[@,?,#,]+", purl)[0]
+        normalized_purl = purl
+
+        normalized_purls.append((input_purl, normalized_purl))
+        if normalized_purl not in input_purls:
+            input_purls.append(normalized_purl)
+
+    return input_purls, normalized_purls
 
 
 def construct_headers(
@@ -149,6 +181,7 @@ def construct_headers(
     head=None,
     normalized_purls=None,
     unique=None,
+    purl_warnings=None,
 ):
     """
     Return a list comprising the `headers` content of the dictionary output.
@@ -195,78 +228,38 @@ def construct_headers(
         if not purl:
             continue
 
+        warning_text = {
+            "validation_error": f"'{purl}' encountered a validation error",
+            "not_valid": f"'{purl}' not valid",
+            "valid_but_not_supported": f"'{purl}' not supported with `{command_name}` command",
+            "valid_but_not_fully_supported": f"'{purl}' not fully supported with `urls` command",
+            "not_in_upstream_repo": f"'{purl}' does not exist in the upstream repo",
+        }
+
         # `metadata` warnings:
-        metadata_purl = check_metadata_purl(purl)
-
-        if command_name == "metadata" and metadata_purl == "not_valid":
-            warnings.append(f"'{purl}' not valid")
-            continue
-
-        if command_name == "metadata" and metadata_purl == "valid_but_not_supported":
-            warnings.append(f"'{purl}' not supported with `metadata` command")
-            continue
-
-        if command_name == "metadata" and metadata_purl == "not_in_upstream_repo":
-            warnings.append(f"'{purl}' does not exist in the upstream repo")
-            continue
+        if command_name == "metadata":
+            purl_warning = purl_warnings.get(purl, None)
+            if purl_warning:
+                warnings.append(warning_text[purl_warning])
+                print(warning_text[purl_warning])
+                continue
 
         # `urls` warnings:
-        urls_purl = check_urls_purl(purl)
+        if command_name == "urls":
+            purl_warning = purl_warnings.get(purl, None)
+            if purl_warning:
+                warnings.append(warning_text[purl_warning])
+                print(warning_text[purl_warning])
+                continue
 
-        if command_name == "urls" and urls_purl == "not_valid":
-            warnings.append(f"'{purl}' not valid")
-            continue
-
-        if command_name == "urls" and urls_purl == "valid_but_not_supported":
-            warnings.append(f"'{purl}' not supported with `urls` command")
-            continue
-
-        if command_name == "urls" and urls_purl == "valid_but_not_fully_supported":
-            warnings.append(f"'{purl}' not fully supported with `urls` command")
-
-        if command_name == "urls" and urls_purl == "not_in_upstream_repo":
-            warnings.append(f"'{purl}' does not exist in the upstream repo")
-            continue
+        # add `versions` warnings here
+        # it's not yet clear whether `validate` will have any similar warnings
 
     headers_content["errors"] = errors
     headers_content["warnings"] = warnings
     headers.append(headers_content)
 
     return headers
-
-
-def check_metadata_purl(purl):
-    """
-    Return a variable identifying the message for printing to the console by
-    get_metadata_details() if (1) the input PURL is invalid, (2) its type is not
-    supported by `metadata` or (3) its existence was not validated (e.g.,
-    "does not exist in the upstream repo").
-
-    This message will also be reported by construct_headers() in the
-    `warnings` field of the `header` section of the JSON object returned by
-    the `metadata` command.
-    """
-    results = validate_purls([purl])[0]
-
-    if results["valid"] == False:
-        return "not_valid"
-
-    # This is manually constructed from a visual inspection of fetchcode/package.py.
-    metadata_supported_ecosystems = [
-        "bitbucket",
-        "cargo",
-        "github",
-        "npm",
-        "pypi",
-        "rubygems",
-    ]
-    metadata_purl = PackageURL.from_string(purl)
-
-    if metadata_purl.type not in metadata_supported_ecosystems:
-        return "valid_but_not_supported"
-
-    if results["exists"] == False:
-        return "not_in_upstream_repo"
 
 
 @purlcli.command(name="urls")
@@ -329,14 +322,14 @@ def get_urls_details(purls, output, file, unique, head, command_name):
     urls_details["headers"] = []
     urls_details["packages"] = []
 
-    normalized_purls = []
+    urls_warnings = {}
+
     input_purls = []
+    normalized_purls = []
     if unique:
-        for purl in purls:
-            purl, normalized_purl = normalize_purl(purl)
-            normalized_purls.append((purl, normalized_purl))
-            if normalized_purl not in input_purls:
-                input_purls.append(normalized_purl)
+        input_purls, normalized_purls = normalize_purls(
+            purls, input_purls, normalized_purls
+        )
     else:
         input_purls = purls
 
@@ -350,21 +343,17 @@ def get_urls_details(purls, output, file, unique, head, command_name):
 
         urls_purl = check_urls_purl(purl)
 
-        # Print warnings to terminal.
-        if command_name == "urls" and urls_purl == "not_valid":
-            print(f"'{purl}' not valid")
+        if command_name == "urls" and urls_purl in [
+            "validation_error",
+            "not_valid",
+            "valid_but_not_supported",
+            "not_in_upstream_repo",
+        ]:
+            urls_warnings[purl] = urls_purl
             continue
 
-        if command_name == "urls" and urls_purl == "valid_but_not_supported":
-            print(f"'{purl}' not supported with `urls` command")
-            continue
-
-        if command_name == "urls" and urls_purl == "valid_but_not_fully_supported":
-            print(f"'{purl}' not fully supported with `urls` command")
-
-        if command_name == "urls" and urls_purl == "not_in_upstream_repo":
-            print(f"'{purl}' does not exist in the upstream repo")
-            continue
+        if command_name == "urls" and urls_purl in ["valid_but_not_fully_supported"]:
+            urls_warnings[purl] = urls_purl
 
         # Add the URLs.
         url_purl = PackageURL.from_string(purl)
@@ -423,6 +412,7 @@ def get_urls_details(purls, output, file, unique, head, command_name):
         command_name=command_name,
         normalized_purls=normalized_purls,
         unique=unique,
+        purl_warnings=urls_warnings,
     )
 
     return urls_details
@@ -461,7 +451,10 @@ def check_urls_purl(purl):
     or its type is not supported (or not fully supported) by `urls`, or it
     does not exist in the upstream repo.
     """
-    results = validate_purls([purl])[0]
+    check_validation = validate_purls([purl])
+    if check_validation is None:
+        return "validation_error"
+    results = check_validation[0]
 
     if results["valid"] == False:
         return "not_valid"
@@ -582,10 +575,16 @@ def validate_purls(purls):
             continue
         request_body = {"purl": purl, "check_existence": True}
         response = requests.get(api_query, params=request_body)
-        # results = response.json()
         try:
             results = response.json()
-        except:
+            # print(f"response - {response}")
+            # print(f"response.text - {response.text}")
+            # print(f"response.json() - {response.json()}")
+        except Exception as e:
+            print(f"'validate' endpoint error for '{purl}': {e}")
+            # print(f"response - {response}")
+            # print(f"response.text - {response.text}")
+            # print(f"response.json() - {response.json()}")
             return
         validated_purls.append(results)
 
@@ -663,9 +662,18 @@ def list_versions(purls, output, file, command_name):
             continue
 
         # TODO: Add to warnings and test it as well.
-        if command_name == "versions" and versions_purl == "error_fetching_purl":
-            print(f"Error fetching '{purl}'")
+        if command_name == "versions" and versions_purl == "validation_error":
+            print(f"'{purl}' encountered a validation error")
             continue
+
+        # TODO: Is this needed to catch the intermittent fetchcode/package_versions.py versions()/get_response() `Error while fetching` error?  I don't think so.
+        # if command_name == "versions" and versions_purl == "error_fetching_purl":
+        #     print(f"Error fetching '{purl}'")
+
+        # TODO: Is the subsumed by the preceding `validation_error`?  I think YES.
+        # if versions(purl) is None:
+        #     print(f"{purl} encountered a versions(purl) error")
+        #     continue
 
         for package_version_object in list(versions(purl)):
             purl_version_data = {}
@@ -707,10 +715,19 @@ def check_versions_purl(purl):
         "pypi",
     ]
     """
-    results = validate_purls([purl])[0]
+    check_validation = validate_purls([purl])
+    if check_validation is None:
+        return "validation_error"
+    results = check_validation[0]
 
-    if results is None:
-        return "error_fetching_purl"
+    # TODO: Is this needed to catch the intermittent fetchcode/package_versions.py versions()/get_response() `Error while fetching` error?  No, it does not catch that error.
+    # 2024-02-27 Tuesday 16:43:54.  Just got one:
+    # (venv) Tue Feb 27, 2024 04:40 PM  /home/jmh/dev/nexb/purldb jmh (247-purlcli-update-validate-and-versions)
+    # $ python -m purldb_toolkit.purlcli versions --purl pkg:gem/bundler-sass --purl pkg:deb/debian/2ping --output -
+    # Error while fetching 'https://sources.debian.org/api/src/2ping': 503
+    # Traceback (most recent call last):
+    # if results is None:
+    #     return "error_fetching_purl"
 
     if results["valid"] == False:
         return "not_valid"
