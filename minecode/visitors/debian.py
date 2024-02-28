@@ -21,6 +21,7 @@ from debian_inspector import copyright as debcopy
 from debian_inspector.version import Version as DebVersion
 from packagedcode.models import PackageData
 from packagedcode.debian import DebianDscFileHandler
+from packagedcode.debian_copyright import StandaloneDebianCopyrightFileHandler
 from packageurl import PackageURL
 
 from minecode import ls
@@ -30,7 +31,6 @@ from minecode import priority_router
 from minecode.visitors import HttpVisitor
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
-from minecode.utils import get_temp_dir
 from minecode.utils import get_temp_file
 from minecode.utils import get_package_sha1
 from packagedb.models import make_relationship
@@ -52,6 +52,10 @@ There are two approaches:
 
 DEBIAN_BASE_URL = "https://deb.debian.org/debian/pool/main/"
 DEBIAN_METADATA_URL = "https://metadata.ftp-master.debian.org/changelogs/main/"
+
+UBUNTU_BASE_URL = "http://archive.ubuntu.com/ubuntu/pool/main/"
+UBUNTU_METADATA_URL = "http://changelogs.ubuntu.com/changelogs/pool/main/"
+
 # Other URLs and sources to consider
 # 'http://ftp.debian.org/debian/'
 # rsync://archive.debian.org/debian-archive
@@ -383,7 +387,14 @@ def map_debian_package(debian_package, package_content):
     package, error_metadata = get_debian_package_metadata(debian_package)
     if error_metadata:
         error += error_metadata
+
+    package_copyright, error_copyright = get_debian_package_copyright(debian_package)
     package.update_purl_fields(package_data=purl_package, replace=True)
+    update_license_copyright_fields(
+        package_from=package_copyright,
+        package_to=package,
+        replace=True,
+    )
 
     # This will be used to download and scan the package
     package.download_url = download_url
@@ -431,14 +442,57 @@ def get_debian_package_metadata(debian_package):
 
     packages = DebianDscFileHandler.parse(location=temp_metadata_file)
     package = list(packages).pop()
-    # In the case of looking up a maven package with qualifiers of
-    # `classifiers=sources`, the purl of the package created from the pom does
-    # not have the qualifiers, so we need to set them. Additionally, the download
-    # url is not properly generated since it would be missing the sources bit
-    # from the filename.
+
     package.qualifiers = debian_package.package_url.qualifiers
 
     return package, error
+
+
+def get_debian_package_copyright(debian_package):
+    """
+    """
+    error = ''
+
+    metadata_url = debian_package.package_copyright_url
+    response = requests.get(metadata_url)
+    if not response.ok:
+        msg = f'Package metadata does not exist on debian: {metadata_url}'
+        error += msg + '\n'
+        logger.error(msg)
+        return None, error
+
+    metadata_content = response.text
+    filename = metadata_url.split("/")[-1]
+    file_name, _, extension = filename.rpartition(".")
+    temp_metadata_file = get_temp_file(file_name=file_name, extension=extension)
+    with open(temp_metadata_file, 'a') as metadata_file:
+        metadata_file.write(metadata_content)
+
+    packages = StandaloneDebianCopyrightFileHandler.parse(location=temp_metadata_file)
+    package = list(packages).pop()
+
+    package.qualifiers = debian_package.package_url.qualifiers
+
+    return package, error
+
+
+def update_license_copyright_fields(package_from, package_to, replace=True):
+    fields_to_update = [
+        'copyright',
+        'holder',
+        'declared_license_expression',
+        'declared_license_expression_spdx',
+        'license_detections',
+        'other_license_expression',
+        'other_license_expression_spdx',
+        'other_license_detections',
+        'extracted_license_statement'
+    ]
+
+    for field in fields_to_update:
+        value = getattr(package_from, field)
+        if value and replace:
+            setattr(package_to, field, value)
 
 
 def map_debian_metadata_binary_and_source(package_url, source_package_url):
@@ -452,11 +506,15 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url):
 
     if "repository_url" in package_url.qualifiers:
         base_url = package_url.qualifiers["repository_url"]
+    elif package_url.namespace == 'ubuntu':
+        base_url = UBUNTU_BASE_URL
     else:
         base_url = DEBIAN_BASE_URL
     
     if "api_data_url" in package_url.qualifiers:
         metadata_base_url = package_url.qualifiers["api_data_url"]
+    elif package_url.namespace == 'ubuntu':
+        metadata_base_url = UBUNTU_METADATA_URL
     else:
         metadata_base_url = DEBIAN_METADATA_URL
 
@@ -503,7 +561,7 @@ class DebianPackage:
     archive_directory_url = attr.ib(type=str, default=None)
 
     def __attrs_post_init__(self, *args, **kwargs):
-        self.set_debian_archive_directory()
+        self.set_debian_directories()
 
     @property
     def package_archive_version(self):
@@ -576,10 +634,31 @@ class DebianPackage:
 
         return metadata_dsc_package_url
 
-    def set_debian_archive_directory(self):
+    @property
+    def package_copyright_url(self):
+        
+        metadata_version = self.package_archive_version
+        if not self.source_package_url:
+            metadata_package_name = self.package_url.name
+        else:
+            metadata_package_name = self.source_package_url.name
+            if self.source_package_url.version:
+                metadata_version = self.source_package_url.version
+
+        copyright_package_url = self.metadata_directory_url + f"{metadata_package_name}_{metadata_version}_copyright"
+        response = requests.get(copyright_package_url)
+        if not response.ok:
+            base_version_metadata = metadata_version.split('+')[0]
+            copyright_package_url = self.metadata_directory_url + f"{metadata_package_name}_{base_version_metadata}_copyright"
+
+        return copyright_package_url
+
+    def set_debian_directories(self):
         """
         """
-        base_url = self.archive_base_url
+        archive_base_url = self.archive_base_url
+        metadata_base_url = self.metadata_base_url
+
         index_folder = None
         if self.package_url.name.startswith('lib'):
             name_wout_lib = self.package_url.name.replace("lib", "")
@@ -589,7 +668,9 @@ class DebianPackage:
 
         msg = "No directory exists for package at: "
 
-        package_directory = f"{base_url}{index_folder}/{self.package_url.name}/"
+        package_directory = f"{archive_base_url}{index_folder}/{self.package_url.name}/"
+        metadata_directory = f"{metadata_base_url}{index_folder}/{self.package_url.name}/"
+
         response = requests.get(package_directory)
         if not response.ok:
             if not self.source_package_url:
@@ -599,12 +680,15 @@ class DebianPackage:
                 index_folder = 'lib' + name_wout_lib[0]
             else:
                 index_folder = self.source_package_url.name[0]
-            package_directory = f"{base_url}{index_folder}/{self.source_package_url.name}/"
+            package_directory = f"{archive_base_url}{index_folder}/{self.source_package_url.name}/"
+            metadata_directory = f"{metadata_base_url}{index_folder}/{self.source_package_url.name}/"
+
             response = requests.get(package_directory)
             if not response.ok:
                 raise PackageDirectoryMissingException(msg + str(package_directory))
 
         self.archive_directory_url = package_directory
+        self.metadata_directory_url = metadata_directory
 
 
 class PackageDirectoryMissingException(Exception):
