@@ -264,6 +264,25 @@ def get_package_sha1(package, field="repository_download_url"):
     return sha1
 
 
+def fetch_and_write_file_from_url(url):
+    """
+    Fetches a file from the `url` and returns the location for the
+    temporary file. Return None if the url is not reachable.
+    """
+    response = requests.get(url)
+    if not response.ok:
+        return None
+
+    metadata_content = response.text
+    filename = url.split("/")[-1]
+    file_name, _, extension = filename.rpartition(".")
+    temp_metadata_file = get_temp_file(file_name=file_name, extension=extension)
+    with open(temp_metadata_file, 'a') as metadata_file:
+        metadata_file.write(metadata_content)
+
+    return temp_metadata_file
+
+
 def validate_sha1(sha1):
     """
     Validate a `sha1` string.

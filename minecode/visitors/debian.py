@@ -31,7 +31,7 @@ from minecode import priority_router
 from minecode.visitors import HttpVisitor
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
-from minecode.utils import get_temp_file
+from minecode.utils import fetch_and_write_file_from_url
 from minecode.utils import get_package_sha1
 from packagedb.models import make_relationship
 from packagedb.models import PackageContentType
@@ -426,19 +426,12 @@ def get_debian_package_metadata(debian_package):
     error = ''
 
     metadata_url = debian_package.package_metadata_url
-    response = requests.get(metadata_url)
-    if not response.ok:
-        msg = f'Package metadata not exist on debian: {metadata_url}'
+    temp_metadata_file = fetch_and_write_file_from_url(url=metadata_url)
+    if not temp_metadata_file:
+        msg = f'Package metadata does not exist on debian: {metadata_url}'
         error += msg + '\n'
         logger.error(msg)
         return None, error
-
-    metadata_content = response.text
-    filename = metadata_url.split("/")[-1]
-    file_name, _, extension = filename.rpartition(".")
-    temp_metadata_file = get_temp_file(file_name=file_name, extension=extension)
-    with open(temp_metadata_file, 'a') as metadata_file:
-        metadata_file.write(metadata_content)
 
     packages = DebianDscFileHandler.parse(location=temp_metadata_file)
     package = list(packages).pop()
@@ -454,19 +447,12 @@ def get_debian_package_copyright(debian_package):
     error = ''
 
     metadata_url = debian_package.package_copyright_url
-    response = requests.get(metadata_url)
-    if not response.ok:
+    temp_metadata_file = fetch_and_write_file_from_url(url=metadata_url)
+    if not temp_metadata_file:
         msg = f'Package metadata does not exist on debian: {metadata_url}'
         error += msg + '\n'
         logger.error(msg)
         return None, error
-
-    metadata_content = response.text
-    filename = metadata_url.split("/")[-1]
-    file_name, _, extension = filename.rpartition(".")
-    temp_metadata_file = get_temp_file(file_name=file_name, extension=extension)
-    with open(temp_metadata_file, 'a') as metadata_file:
-        metadata_file.write(metadata_content)
 
     packages = StandaloneDebianCopyrightFileHandler.parse(location=temp_metadata_file)
     package = list(packages).pop()
@@ -636,6 +622,11 @@ class DebianPackage:
 
     @property
     def package_copyright_url(self):
+        # Copyright files for ubuntu are named just `copyright` and placed under a name-version folder
+        # instead of having the name-version in the copyright file itself
+        copyright_file_string = "_copyright"
+        if self.package_url.namespace == "ubuntu":
+            copyright_file_string = "/copyright"
         
         metadata_version = self.package_archive_version
         if not self.source_package_url:
@@ -645,11 +636,11 @@ class DebianPackage:
             if self.source_package_url.version:
                 metadata_version = self.source_package_url.version
 
-        copyright_package_url = self.metadata_directory_url + f"{metadata_package_name}_{metadata_version}_copyright"
+        copyright_package_url = self.metadata_directory_url + f"{metadata_package_name}_{metadata_version}{copyright_file_string}"
         response = requests.get(copyright_package_url)
         if not response.ok:
             base_version_metadata = metadata_version.split('+')[0]
-            copyright_package_url = self.metadata_directory_url + f"{metadata_package_name}_{base_version_metadata}_copyright"
+            copyright_package_url = self.metadata_directory_url + f"{metadata_package_name}_{base_version_metadata}{copyright_file_string}"
 
         return copyright_package_url
 
