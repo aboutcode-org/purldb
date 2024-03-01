@@ -30,7 +30,7 @@ class GolangPurlViewSet(viewsets.ViewSet):
     serializer_class = GoLangPurlSerializer
 
     def get_view_name(self):
-        return "Validate PURL"
+        return "GoLang purl"
 
     def list(self, request):
         serializer = self.serializer_class(data=request.query_params)
