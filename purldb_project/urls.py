@@ -25,6 +25,7 @@ from matchcode.api import ExactFileIndexViewSet
 from matchcode.api import ExactPackageArchiveIndexViewSet
 from minecode.api import PriorityResourceURIViewSet
 from packagedb.api import PurlValidateViewSet
+from packagedb.to_purl import api_to_purl_router
 from packagedb.api import CollectViewSet
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
@@ -51,6 +52,7 @@ urlpatterns = [
         TemplateView.as_view(template_name='robots.txt', content_type='text/plain'),
     ),
     path('api/', include((api_router.urls, 'api'))),
+    path('api/to', include((api_to_purl_router.urls, 'api_to'))),
     path("", RedirectView.as_view(url="api/")),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
