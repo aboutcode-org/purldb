@@ -21,7 +21,7 @@ from rest_framework import routers
 
 @extend_schema(
     parameters=[
-        OpenApiParameter("go_package", str, "query", description="PackageURL"),
+        OpenApiParameter("go_package", str, "query", description="go import package"),
     ],
     responses={200: GoLangPurlResponseSerializer()},
 )
