@@ -43,30 +43,35 @@
     "license_detections":[
       {
         "license_expression":"gpl-1.0-plus AND gpl-3.0",
+        "license_expression_spdx":"GPL-1.0-or-later AND GPL-3.0-only",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"gpl-1.0-plus",
+            "spdx_license_expression":"GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-1.0-plus",
-            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_relevance":99,
+            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-1.0-plus_154.RULE",
             "matched_text":"../../licenses/GPL-3"
           },
           {
-            "score":100.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_relevance":100,
+            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-3.0_25.RULE",
             "matched_text":"../../licenses/GPL-3"
           }
@@ -133,30 +138,35 @@
     "license_detections":[
       {
         "license_expression":"gpl-1.0-plus AND gpl-3.0",
+        "license_expression_spdx":"GPL-1.0-or-later AND GPL-3.0-only",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"gpl-1.0-plus",
+            "spdx_license_expression":"GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-1.0-plus",
-            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_relevance":99,
+            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-1.0-plus_154.RULE",
             "matched_text":"../../licenses/GPL-3"
           },
           {
-            "score":100.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_relevance":100,
+            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-3.0_25.RULE",
             "matched_text":"../../licenses/GPL-3"
           }
@@ -223,30 +233,35 @@
     "license_detections":[
       {
         "license_expression":"gpl-1.0-plus AND gpl-3.0",
+        "license_expression_spdx":"GPL-1.0-or-later AND GPL-3.0-only",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"gpl-1.0-plus",
+            "spdx_license_expression":"GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-1.0-plus",
-            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_relevance":99,
+            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-1.0-plus_154.RULE",
             "matched_text":"../../licenses/GPL-3"
           },
           {
-            "score":100.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_relevance":100,
+            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-3.0_25.RULE",
             "matched_text":"../../licenses/GPL-3"
           }
@@ -313,30 +328,35 @@
     "license_detections":[
       {
         "license_expression":"gpl-1.0-plus AND gpl-3.0",
+        "license_expression_spdx":"GPL-1.0-or-later AND GPL-3.0-only",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"gpl-1.0-plus",
+            "spdx_license_expression":"GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-1.0-plus",
-            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_relevance":99,
+            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-1.0-plus_154.RULE",
             "matched_text":"../../licenses/GPL-3"
           },
           {
-            "score":100.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_relevance":100,
+            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-3.0_25.RULE",
             "matched_text":"../../licenses/GPL-3"
           }
@@ -403,30 +423,35 @@
     "license_detections":[
       {
         "license_expression":"gpl-1.0-plus AND gpl-3.0",
+        "license_expression_spdx":"GPL-1.0-or-later AND GPL-3.0-only",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"gpl-1.0-plus",
+            "spdx_license_expression":"GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-1.0-plus",
-            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_relevance":99,
+            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-1.0-plus_154.RULE",
             "matched_text":"../../licenses/GPL-3"
           },
           {
-            "score":100.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_relevance":100,
+            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-3.0_25.RULE",
             "matched_text":"../../licenses/GPL-3"
           }
@@ -493,30 +518,35 @@
     "license_detections":[
       {
         "license_expression":"gpl-1.0-plus AND gpl-3.0",
+        "license_expression_spdx":"GPL-1.0-or-later AND GPL-3.0-only",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"gpl-1.0-plus",
+            "spdx_license_expression":"GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-1.0-plus",
-            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_relevance":99,
+            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-1.0-plus_154.RULE",
             "matched_text":"../../licenses/GPL-3"
           },
           {
-            "score":100.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_relevance":100,
+            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-3.0_25.RULE",
             "matched_text":"../../licenses/GPL-3"
           }
@@ -583,30 +613,35 @@
     "license_detections":[
       {
         "license_expression":"gpl-1.0-plus AND gpl-3.0",
+        "license_expression_spdx":"GPL-1.0-or-later AND GPL-3.0-only",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"gpl-1.0-plus",
+            "spdx_license_expression":"GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-1.0-plus",
-            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_relevance":99,
+            "rule_identifier":"gpl-1.0-plus_154.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-1.0-plus_154.RULE",
             "matched_text":"../../licenses/GPL-3"
           },
           {
-            "score":100.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_relevance":100,
+            "rule_identifier":"gpl-3.0_25.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-3.0_25.RULE",
             "matched_text":"../../licenses/GPL-3"
           }
