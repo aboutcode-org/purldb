@@ -1186,4 +1186,4 @@ class ToGolangPurlTestCase(TestCase):
     def test_to_golang_purl(self):
         response = self.client.get(f"/api/to/golang/purl?go_package=github.com/gorilla/mux@v1.7.3")
         expected = "pkg:golang/github.com/gorilla/mux@1.7.3",
-        self.assertEqual(expected, response["golang_package"])
+        self.assertEqual(expected, response["golang_purl"])
