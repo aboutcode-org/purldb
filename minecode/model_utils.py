@@ -24,13 +24,16 @@ logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
 
 
-def add_package_to_scan_queue(package, reindex_uri=False, priority=0):
+def add_package_to_scan_queue(package, pipelines, reindex_uri=False, priority=0):
     """
     Add a Package `package` to the scan queue
     """
+    if not pipelines:
+        raise Exception('pipelines required to add package to scan queue')
     uri = package.download_url
     _, scannable_uri_created = ScannableURI.objects.get_or_create(
         uri=uri,
+        pipelines=pipelines,
         package=package,
         reindex_uri=reindex_uri,
         priority=priority,

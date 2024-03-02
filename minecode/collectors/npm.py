@@ -59,7 +59,7 @@ def map_npm_package(package_url):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package)
+        add_package_to_scan_queue(db_package, pipelines=['scan_and_fingerprint_package'])
 
     return error
 

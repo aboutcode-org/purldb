@@ -108,6 +108,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
                 response = {
                     'scannable_uri_uuid': scannable_uri.uuid,
                     'download_url': scannable_uri.uri,
+                    'pipelines': scannable_uri.pipelines,
                 }
                 scannable_uri.scan_status = ScannableURI.SCAN_SUBMITTED
                 scannable_uri.scan_date = timezone.now()
@@ -116,6 +117,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
                 response = {
                     'scannable_uri_uuid': "",
                     'download_url': "",
+                    'pipelines': [],
                 }
             return Response(response)
 

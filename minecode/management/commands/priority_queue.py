@@ -113,6 +113,7 @@ def add_package_to_scan_queue(package):
     _, scannable_uri_created = ScannableURI.objects.get_or_create(
         uri=uri,
         package=package,
+        pipelines=['scan_and_fingerprint_package'],
     )
     if scannable_uri_created:
         logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))

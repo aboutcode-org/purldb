@@ -678,6 +678,13 @@ class ScannableURI(BaseURI):
         help_text='URL to scan project for this Package',
     )
 
+    pipelines = models.JSONField(
+        default=list,
+        blank=True,
+        editable=False,
+        help_text=_('A list of ScanCode.io pipeline names to be run for this scan'),
+    )
+
     SCAN_NEW = 0
     SCAN_SUBMITTED = 1
     SCAN_IN_PROGRESS = 2

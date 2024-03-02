@@ -179,7 +179,7 @@ def add_source_repo_to_package_set(
         for package_set in package_sets.all():
             package_set.add_to_package_set(source_repo_package)
     if created:
-        add_package_to_scan_queue(source_repo_package)
+        add_package_to_scan_queue(source_repo_package, pipelines=['scan_and_fingerprint_package'])
         logger.info(f"\tCreated source repo package {source_purl} for {purl}")
     else:
         logger.info(
