@@ -725,7 +725,7 @@ class CollectViewSet(viewsets.ViewSet):
         reindexed_packages = []
         requeued_packages = []
 
-        supported_ecosystems = ['maven', 'npm', 'debian']
+        supported_ecosystems = ['maven', 'npm', 'deb']
 
         unique_packages, unsupported_packages, unsupported_vers = get_resolved_packages(packages, supported_ecosystems)
 
@@ -754,7 +754,10 @@ class CollectViewSet(viewsets.ViewSet):
                     unsupported_packages.append(purl)
                 else:
                     # add to queue
-                    priority_resource_uri = PriorityResourceURI.objects.insert(purl)
+                    extra_fields = dict()
+                    if source_purl := package.get('source_purl'):
+                        extra_fields["source_uri"] = source_purl
+                    priority_resource_uri = PriorityResourceURI.objects.insert(purl, **extra_fields)
                     if priority_resource_uri:
                         queued_packages.append(purl)
                     else:

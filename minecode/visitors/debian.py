@@ -335,7 +335,9 @@ def process_request(purl_str, **kwargs):
     source_purl = kwargs.get("source_purl", None)
     try:
         package_url = PackageURL.from_string(purl_str)
-        source_package_url = PackageURL.from_string(source_purl)
+        source_package_url = None
+        if source_purl:
+            source_package_url = PackageURL.from_string(source_purl)
 
     except ValueError as e:
         error = f'error occured when parsing purl: {purl_str} source_purl: {source_purl} : {e}'
@@ -385,16 +387,20 @@ def map_debian_package(debian_package, package_content):
     )
 
     package, error_metadata = get_debian_package_metadata(debian_package)
-    if error_metadata:
+    if not package:
         error += error_metadata
+        return db_package, error
 
     package_copyright, error_copyright = get_debian_package_copyright(debian_package)
     package.update_purl_fields(package_data=purl_package, replace=True)
-    update_license_copyright_fields(
-        package_from=package_copyright,
-        package_to=package,
-        replace=True,
-    )
+    if package_copyright:
+        update_license_copyright_fields(
+            package_from=package_copyright,
+            package_to=package,
+            replace=True,
+        )
+    else:
+        error += error_metadata
 
     # This will be used to download and scan the package
     package.download_url = download_url
