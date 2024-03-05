@@ -682,7 +682,7 @@ class ScannableURI(BaseURI):
         default=list,
         blank=True,
         editable=False,
-        help_text=_('A list of ScanCode.io pipeline names to be run for this scan'),
+        help_text='A list of ScanCode.io pipeline names to be run for this scan',
     )
 
     SCAN_NEW = 0

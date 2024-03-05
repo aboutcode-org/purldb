@@ -7,9 +7,10 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from django.utils import timezone
 import json
+
 from django.db import transaction
+from django.utils import timezone
 from packageurl import PackageURL
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
@@ -21,6 +22,7 @@ from minecode import visitors  # NOQA
 from minecode import priority_router
 from minecode.management.indexing import index_package_files
 from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
+from minecode.permissions import IsScanQueueWorkerAPIUser
 
 
 class ResourceURISerializer(serializers.ModelSerializer):
@@ -92,10 +94,10 @@ class ScannableURISerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# TODO: guard these API endpoints behind an API key
 class ScannableURIViewSet(viewsets.ModelViewSet):
     queryset = ScannableURI.objects.all()
     serializer_class = ScannableURISerializer
+    permission_classes = [IsScanQueueWorkerAPIUser]
 
     @action(detail=False, methods=["get"])
     def get_next_download_url(self, request, *args, **kwargs):

@@ -628,7 +628,7 @@ class Package(
         """
         from minecode.model_utils import add_package_to_scan_queue
 
-        add_package_to_scan_queue(self, reindex_uri=True, priority=100)
+        add_package_to_scan_queue(self, pipelines=['scan_and_fingerprint_package'], reindex_uri=True, priority=100)
 
     def update_fields(self, save=False, **values_by_fields):
         """
