@@ -56,7 +56,7 @@ def map_generic_package(package_url):
     return error
 
 
-@priority_router.route('pkg:generic/.*')
+@priority_router.route("pkg:generic/.*?download_url=.*")
 def process_request(purl_str):
     """
     Process `priority_resource_uri` containing a generic Package URL (PURL) with
