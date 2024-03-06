@@ -9,12 +9,11 @@
 
 import logging
 
+from fetchcode.package import info
+from packagedcode.models import PackageData
 from packageurl import PackageURL
 
-from packagedcode.models import PackageData
-
 from minecode import priority_router
-
 
 """
 Collect generic packages from a download URL.
@@ -74,6 +73,85 @@ def process_request(purl_str):
         return error
 
     error_msg = map_generic_package(package_url)
+
+    if error_msg:
+        return error_msg
+
+
+def map_directory_listed_package(package_url):
+    """
+    Add a GNU `package_url` to the PackageDB.
+
+    Return an error string if any errors are encountered during the process
+    """
+    from minecode.model_utils import add_package_to_scan_queue
+    from minecode.model_utils import merge_or_create_package
+
+    packages = [p for p in info(str(package_url)) or []]
+
+    if not packages:
+        error = f"Could not find package using fetchcode: {package_url}"
+        logger.error(error)
+        return error
+
+    package_data = packages[0].to_dict()
+
+    # Remove obsolete Package fields see https://github.com/nexB/fetchcode/issues/108
+    del package_data["api_url"]
+    del package_data["license_expression"]
+    del package_data["declared_license"]
+    del package_data["root_path"]
+    del package_data["contains_source_code"]
+    del package_data["purl"]
+
+    package = PackageData(**package_data)
+
+    db_package, _, _, error = merge_or_create_package(package, visit_level=0)
+
+    # Submit package for scanning
+    if db_package:
+        add_package_to_scan_queue(db_package)
+
+    return error
+
+
+DIR_SUPPORTED_PURLS = [
+    "pkg:generic/busybox@.*",
+    "pkg:generic/bzip2@.*",
+    "pkg:generic/dnsmasq@.*",
+    "pkg:generic/dropbear@.*",
+    "pkg:generic/ebtables@.*",
+    "pkg:generic/hostapd@.*",
+    "pkg:generic/iproute2@.*",
+    "pkg:generic/iptables@.*",
+    "pkg:generic/libnl@.*",
+    "pkg:generic/lighttpd@.*",
+    "pkg:generic/nftables@.*",
+    "pkg:generic/openssh@.*",
+    "pkg:generic/samba@.*",
+    "pkg:generic/syslinux@.*",
+    "pkg:generic/toybox@.*",
+    "pkg:generic/uclibc@@.*",
+    "pkg:generic/uclibc-ng@.*",
+    "pkg:generic/util-linux@.*",
+    "pkg:generic/wpa_supplicant@.*",
+    "pkg:generic/ipkg@.*",
+]
+
+
+@priority_router.route(*DIR_SUPPORTED_PURLS)
+def process_request(purl_str):
+    """
+    Process `priority_resource_uri` containing a generic Package URL (PURL)
+    supported by fetchcode
+    """
+    try:
+        package_url = PackageURL.from_string(purl_str)
+    except ValueError as e:
+        error = f"error occured when parsing {purl_str}: {e}"
+        return error
+
+    error_msg = map_directory_listed_package(package_url)
 
     if error_msg:
         return error_msg
