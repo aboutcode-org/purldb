@@ -140,7 +140,7 @@ DIR_SUPPORTED_PURLS = [
 
 
 @priority_router.route(*DIR_SUPPORTED_PURLS)
-def process_request(purl_str):
+def process_request_dir_listed(purl_str):
     """
     Process `priority_resource_uri` containing a generic Package URL (PURL)
     supported by fetchcode
@@ -148,7 +148,7 @@ def process_request(purl_str):
     try:
         package_url = PackageURL.from_string(purl_str)
     except ValueError as e:
-        error = f"error occured when parsing {purl_str}: {e}"
+        error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
     error_msg = map_directory_listed_package(package_url)
