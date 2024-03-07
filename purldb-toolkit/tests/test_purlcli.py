@@ -2022,17 +2022,17 @@ class TestPURLCLI_versions(object):
                                 {
                                     "purl": "pkg:pypi/fetchcode@0.1.0",
                                     "version": "0.1.0",
-                                    "release_date": "2021-08-25T15:15:15.265015+00:00",
+                                    "release_date": "2021-08-25 15:15:15.265015+00:00",
                                 },
                                 {
                                     "purl": "pkg:pypi/fetchcode@0.2.0",
                                     "version": "0.2.0",
-                                    "release_date": "2022-09-14T16:36:02.242182+00:00",
+                                    "release_date": "2022-09-14 16:36:02.242182+00:00",
                                 },
                                 {
                                     "purl": "pkg:pypi/fetchcode@0.3.0",
                                     "version": "0.3.0",
-                                    "release_date": "2023-12-18T20:49:45.840364+00:00",
+                                    "release_date": "2023-12-18 20:49:45.840364+00:00",
                                 },
                             ],
                         }
@@ -2064,7 +2064,7 @@ class TestPURLCLI_versions(object):
                                 {
                                     "purl": "pkg:gem/bundler-sass@0.1.2",
                                     "version": "0.1.2",
-                                    "release_date": "2013-12-11T00:27:10.097000+00:00",
+                                    "release_date": "2013-12-11 00:27:10.097000+00:00",
                                 }
                             ],
                         }

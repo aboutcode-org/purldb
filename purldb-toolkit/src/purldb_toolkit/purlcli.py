@@ -156,6 +156,13 @@ def check_metadata_purl(purl):
 
 
 def normalize_purls(purls, unique):
+    """
+    If the command includes the `--unique` flag, take the list of input PURLs,
+    remove the portion of the PURL that starts with a PURL separator (`@`, `?`
+    or `#`), and return a deduplicated list of the resulting PURLs (in
+    `input_purls`) and a list of tuples of each pair of the original input PURL
+    and the normalized PURL (in `normalized_purls`).
+    """
     input_purls = []
     normalized_purls = []
     if unique:
@@ -220,9 +227,11 @@ def construct_headers(
     headers_content["purls"] = purls
 
     if (command_name in ["metadata", "urls", "validate", "versions"]) and unique:
-        for purl in normalized_purls:
-            if purl[0] != purl[1]:
-                warnings.append(f"input PURL: '{purl[0]}' normalized to '{purl[1]}'")
+        for input_purl, normalized_purl in normalized_purls:
+            if input_purl != normalized_purl:
+                warnings.append(
+                    f"input PURL: '{input_purl}' normalized to '{normalized_purl}'"
+                )
 
     for purl in purls:
         if not purl:
@@ -240,11 +249,12 @@ def construct_headers(
         if command_name in ["metadata", "urls", "validate", "versions"]:
             purl_warning = purl_warnings.get(purl, None)
             if purl_warning:
-                warnings.append(warning_text[purl_warning])
-                print(warning_text[purl_warning])
+                warning = warning_text[purl_warning]
+                warnings.append(warning)
+                print(warning)
                 continue
 
-    log_file = Path("purldb-toolkit/src/purldb_toolkit/app.log")
+    log_file = Path(log_file=os.path.join(os.path.expanduser("~"), "app.log"))
     if log_file.is_file():
         with open(log_file, "r") as f:
             for line in f:
@@ -331,19 +341,19 @@ def get_urls_details(purls, output, file, unique, head, command_name):
         if not purl:
             continue
 
-        urls_purl = check_urls_purl(purl)
+        purl_status = check_urls_purl(purl)
 
-        if command_name == "urls" and urls_purl in [
+        if command_name == "urls" and purl_status in [
             "validation_error",
             "not_valid",
             "valid_but_not_supported",
             "not_in_upstream_repo",
         ]:
-            urls_warnings[purl] = urls_purl
+            urls_warnings[purl] = purl_status
             continue
 
-        if command_name == "urls" and urls_purl in ["valid_but_not_fully_supported"]:
-            urls_warnings[purl] = urls_purl
+        if command_name == "urls" and purl_status in ["valid_but_not_fully_supported"]:
+            urls_warnings[purl] = purl_status
 
         # Add the URLs.
         url_purl = PackageURL.from_string(purl)
@@ -647,7 +657,7 @@ def validate_purl(purl):
         print(f"validate_purl(): json.decoder.JSONDecodeError for '{purl}': {e}")
 
         logging.basicConfig(
-            filename="purldb-toolkit/src/purldb_toolkit/app.log",
+            filename=os.path.join(os.path.expanduser("~"), "app.log"),
             level=logging.ERROR,
             format="%(levelname)s - %(message)s",
             filemode="w",
@@ -740,7 +750,7 @@ def get_versions_details(purls, output, file, unique, command_name):
 
         for package_version in list(versions(purl)):
             purl_version_data = {}
-            purl_version = package_version.to_dict()["value"]
+            purl_version = package_version.value
 
             # We use `versions()` from fetchcode/package_versions.py, which
             # keeps the version (if any) of the input PURL in its output, so
@@ -752,9 +762,7 @@ def get_versions_details(purls, output, file, unique, command_name):
 
             purl_version_data["purl"] = nested_purl
             purl_version_data["version"] = f"{purl_version}"
-            purl_version_data["release_date"] = (
-                f'{package_version.to_dict()["release_date"]}'
-            )
+            purl_version_data["release_date"] = f"{package_version.release_date}"
 
             purl_data["versions"].append(purl_version_data)
 
@@ -834,7 +842,8 @@ def check_for_duplicate_input_sources(purls, file):
 
 
 def clear_log_file():
-    log_file = Path("purldb-toolkit/src/purldb_toolkit/app.log")
+    log_file = Path(log_file=os.path.join(os.path.expanduser("~"), "app.log"))
+
     if log_file.is_file():
         os.remove(log_file)
 
