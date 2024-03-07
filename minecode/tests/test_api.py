@@ -75,12 +75,12 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         self.assertEqual(response.data.get('scannable_uri_uuid'), self.scannable_uri1.uuid)
         self.assertEqual(response.data.get('download_url'), self.scannable_uri1.uri)
 
-        response = self.client.get('/api/scan_queue/get_next_download_url/')
+        response = self.csrf_client.get('/api/scan_queue/get_next_download_url/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get('scannable_uri_uuid'), self.scannable_uri2.uuid)
         self.assertEqual(response.data.get('download_url'), self.scannable_uri2.uri)
 
-        response = self.client.get('/api/scan_queue/get_next_download_url/')
+        response = self.csrf_client.get('/api/scan_queue/get_next_download_url/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get('scannable_uri_uuid'), '')
         self.assertEqual(response.data.get('download_url'), '')
@@ -88,29 +88,15 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
     def test_api_scannable_uri_update_status(self):
         self.assertEqual(ScannableURI.SCAN_NEW, self.scannable_uri1.scan_status)
 
-        data = {
-            "scannable_uri_uuid": self.scannable_uri1.uuid,
-            "scan_status": 'in progress',
-            'scan_project_url': 'scan_project_url',
-        }
-        response = self.client.post('/api/scan_queue/update_status/', data=data)
+        response = self.client.post('/api/scan_queue/update_status/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-        self.scannable_uri1.refresh_from_db()
-        self.assertEqual(ScannableURI.SCAN_NEW, self.scannable_uri1.scan_status)
-
-        response = self.csrf_client.post('/api/scan_queue/update_status/', data=data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.scannable_uri1.refresh_from_db()
-        self.assertEqual(ScannableURI.SCAN_IN_PROGRESS, self.scannable_uri1.scan_status)
-        self.assertEqual('scan_project_url', self.scannable_uri1.scan_project_url)
 
         data = {
             "scannable_uri_uuid": self.scannable_uri1.uuid,
             "scan_status": 'failed',
             'scan_log': 'scan_log',
         }
-        response = self.client.post('/api/scan_queue/update_status/', data=data)
+        response = self.csrf_client.post('/api/scan_queue/update_status/', data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.scannable_uri1.refresh_from_db()
         self.assertEqual(ScannableURI.SCAN_FAILED, self.scannable_uri1.scan_status)
@@ -124,7 +110,7 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
                 "scan_status": 'scanned',
                 'scan_file': f,
             }
-            response = self.client.post('/api/scan_queue/update_status/', data=data)
+            response = self.csrf_client.post('/api/scan_queue/update_status/', data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.scannable_uri1.refresh_from_db()
         self.assertEqual(ScannableURI.SCAN_INDEXED, self.scannable_uri1.scan_status)

@@ -135,21 +135,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
 
         scannable_uri = ScannableURI.objects.get(uuid=scannable_uri_uuid)
 
-        if scan_status == 'in progress':
-            scan_project_url = request.data.get('scan_project_url')
-            if scan_project_url:
-                scannable_uri.scan_project_url = scan_project_url
-                scannable_uri.scan_status = ScannableURI.SCAN_IN_PROGRESS
-                scannable_uri.save()
-                msg = {
-                    'status': f'scan_status updated to {scan_status} for scannable_uri {scannable_uri_uuid}'
-                }
-            else:
-                msg = {
-                    'status': f'missing scan_project_url when updating scannable_uri {scannable_uri_uuid} scan_status to {scan_status}'
-                }
-
-        elif scan_status == 'failed':
+        if scan_status == 'failed':
             scan_log = request.data.get('scan_log')
             scannable_uri.scan_error = scan_log
             scannable_uri.scan_status = ScannableURI.SCAN_FAILED
