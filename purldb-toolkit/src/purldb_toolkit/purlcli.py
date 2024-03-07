@@ -21,6 +21,8 @@ from fetchcode.package_versions import SUPPORTED_ECOSYSTEMS, versions
 from packageurl import PackageURL
 from packageurl.contrib import purl2url
 
+LOG_FILE_LOCATION = os.path.join(os.path.expanduser("~"), "purlcli.log")
+
 
 @click.group()
 def purlcli():
@@ -254,7 +256,7 @@ def construct_headers(
                 print(warning)
                 continue
 
-    log_file = Path(os.path.join(os.path.expanduser("~"), "app.log"))
+    log_file = Path(LOG_FILE_LOCATION)
     if log_file.is_file():
         with open(log_file, "r") as f:
             for line in f:
@@ -657,7 +659,7 @@ def validate_purl(purl):
         print(f"validate_purl(): json.decoder.JSONDecodeError for '{purl}': {e}")
 
         logging.basicConfig(
-            filename=os.path.join(os.path.expanduser("~"), "app.log"),
+            filename=LOG_FILE_LOCATION,
             level=logging.ERROR,
             format="%(levelname)s - %(message)s",
             filemode="w",
@@ -842,7 +844,7 @@ def check_for_duplicate_input_sources(purls, file):
 
 
 def clear_log_file():
-    log_file = Path(os.path.join(os.path.expanduser("~"), "app.log"))
+    log_file = Path(LOG_FILE_LOCATION)
 
     if log_file.is_file():
         os.remove(log_file)
