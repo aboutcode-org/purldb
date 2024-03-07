@@ -662,22 +662,6 @@ class ScannableURI(BaseURI):
         help_text='Timestamp set to the date when a scan was taken by a worker',
     )
 
-    last_status_poll_date = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True,
-        help_text='Timestamp set to the date of the last status poll. '
-                  'Used to track the scan polling.',
-    )
-
-    scan_project_url = models.CharField(
-        max_length=2048,
-        db_index=True,
-        null=True,
-        blank=True,
-        help_text='URL to scan project for this Package',
-    )
-
     pipelines = models.JSONField(
         default=list,
         blank=True,
@@ -751,7 +735,6 @@ class ScannableURI(BaseURI):
                 fields=[
                     'scan_status',
                     'scan_date',
-                    'last_status_poll_date',
                 ]
             ),
             # ordered by for the main queue query e.g. '-priority'

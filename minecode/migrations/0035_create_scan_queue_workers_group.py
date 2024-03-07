@@ -31,7 +31,7 @@ def create_scan_queue_workers_group_and_permissions(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("minecode", "0036_scannableuri_pipelines"),
+        ("minecode", "0034_scannableuri_alter_uuid_field"),
     ]
 
     operations = [
