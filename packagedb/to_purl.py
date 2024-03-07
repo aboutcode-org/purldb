@@ -26,6 +26,10 @@ from rest_framework import routers
     responses={200: GoLangPurlResponseSerializer()},
 )
 class GolangPurlViewSet(viewsets.ViewSet):
+    """
+    Return a ``golang_purl`` from a standard go import string 
+    ``go_package``.
+    """
 
     serializer_class = GoLangPurlSerializer
 
