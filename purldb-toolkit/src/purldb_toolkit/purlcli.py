@@ -254,7 +254,7 @@ def construct_headers(
                 print(warning)
                 continue
 
-    log_file = Path(log_file=os.path.join(os.path.expanduser("~"), "app.log"))
+    log_file = Path(os.path.join(os.path.expanduser("~"), "app.log"))
     if log_file.is_file():
         with open(log_file, "r") as f:
             for line in f:
@@ -842,7 +842,7 @@ def check_for_duplicate_input_sources(purls, file):
 
 
 def clear_log_file():
-    log_file = Path(log_file=os.path.join(os.path.expanduser("~"), "app.log"))
+    log_file = Path(os.path.join(os.path.expanduser("~"), "app.log"))
 
     if log_file.is_file():
         os.remove(log_file)
