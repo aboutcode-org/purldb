@@ -31,7 +31,7 @@ from django.core.management.base import CommandError
 from rest_framework.authtoken.models import Token
 
 
-class Command(BaseCommand):
+class CreateUserCommand(BaseCommand):
     help = "Create a user and generate an API key for authentication."
     requires_migrations_checks = True
 
@@ -53,21 +53,31 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         username = options["username"]
+        interactive = options["interactive"]
+        verbosity = options["verbosity"]
+        self.create_user(
+            username=username,
+            interactive=interactive,
+            verbosity=verbosity
+        )
 
+    def create_user(self, username, interactive, verbosity):
         error_msg = self._validate_username(username)
         if error_msg:
             raise CommandError(error_msg)
 
         password = None
-        if options["interactive"]:
+        if interactive:
             password = self.get_password_from_stdin(username)
 
         user = self.UserModel._default_manager.create_user(username, password=password)
         token, _ = Token._default_manager.get_or_create(user=user)
 
-        if options["verbosity"] >= 1:
+        if verbosity >= 1:
             msg = f"User {username} created with API key: {token.key}"
             self.stdout.write(msg, self.style.SUCCESS)
+
+        return user
 
     def get_password_from_stdin(self, username):
         # Validators, such as UserAttributeSimilarityValidator, depends on other user's

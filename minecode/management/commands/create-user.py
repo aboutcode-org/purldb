@@ -20,7 +20,6 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/nexB/scancode.io for support and download.
 
-from django.contrib.auth.models import Group
 from minecode.management.user_creation import CreateUserCommand
 
 
@@ -31,13 +30,8 @@ class Command(CreateUserCommand):
         username = options["username"]
         interactive = options["interactive"]
         verbosity = options["verbosity"]
-        user = self.create_user(
+        self.create_user(
             username=username,
             interactive=interactive,
             verbosity=verbosity
         )
-        # Add user to `scan_queue_workers` group
-        scan_queue_workers_group, _ = Group.objects.get_or_create(name='scan_queue_workers')
-        scan_queue_workers_group.user_set.add(user)
-        msg = f"User {username} added to `scan_queue_workers` group"
-        self.stdout.write(msg, self.style.SUCCESS)
