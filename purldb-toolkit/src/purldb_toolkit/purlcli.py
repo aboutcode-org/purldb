@@ -8,8 +8,11 @@
 #
 
 import json
+import logging
+import os
 import re
 from importlib.metadata import version
+from pathlib import Path
 
 import click
 import requests
@@ -18,7 +21,7 @@ from fetchcode.package_versions import SUPPORTED_ECOSYSTEMS, versions
 from packageurl import PackageURL
 from packageurl.contrib import purl2url
 
-from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
+LOG_FILE_LOCATION = os.path.join(os.path.expanduser("~"), "purlcli.log")
 
 
 @click.group()
@@ -82,33 +85,21 @@ def get_metadata_details(purls, output, file, unique, command_name):
     metadata_details["headers"] = []
     metadata_details["packages"] = []
 
-    normalized_purls = []
-    input_purls = []
-    if unique:
-        for purl in purls:
-            purl, normalized_purl = normalize_purl(purl)
-            normalized_purls.append((purl, normalized_purl))
-            if normalized_purl not in input_purls:
-                input_purls.append(normalized_purl)
-    else:
-        input_purls = purls
+    metadata_warnings = {}
+
+    input_purls, normalized_purls = normalize_purls(purls, unique)
+
+    clear_log_file()
 
     for purl in input_purls:
+        purl = purl.strip()
         if not purl:
             continue
 
         metadata_purl = check_metadata_purl(purl)
 
-        if command_name == "metadata" and metadata_purl == "not_valid":
-            print(f"'{purl}' not valid")
-            continue
-
-        if command_name == "metadata" and metadata_purl == "valid_but_not_supported":
-            print(f"'{purl}' not supported with `metadata` command")
-            continue
-
-        if command_name == "metadata" and metadata_purl == "not_in_upstream_repo":
-            print(f"'{purl}' does not exist in the upstream repo")
+        if command_name == "metadata" and metadata_purl:
+            metadata_warnings[purl] = metadata_purl
             continue
 
         for release in list(info(purl)):
@@ -123,21 +114,72 @@ def get_metadata_details(purls, output, file, unique, command_name):
         command_name=command_name,
         normalized_purls=normalized_purls,
         unique=unique,
+        purl_warnings=metadata_warnings,
     )
 
     return metadata_details
 
 
-def normalize_purl(purl):
+def check_metadata_purl(purl):
     """
-    Remove substrings that start with the '@', '?' or '#' separators.
-    """
-    input_purl = purl
-    purl = purl.strip()
-    purl = re.split("[@,?,#,]+", purl)[0]
-    normalized_purl = purl
+    Return a variable identifying the message for printing to the console by
+    get_metadata_details() if (1) the input PURL is invalid, (2) its type is not
+    supported by `metadata` or (3) its existence was not validated (e.g.,
+    "does not exist in the upstream repo").
 
-    return input_purl, normalized_purl
+    This message will also be reported by construct_headers() in the
+    `warnings` field of the `header` section of the JSON object returned by
+    the `metadata` command.
+    """
+    check_validation = validate_purl(purl)
+    if check_validation is None:
+        return "validation_error"
+    results = check_validation
+
+    if results["valid"] == False:
+        return "not_valid"
+
+    # This is manually constructed from a visual inspection of fetchcode/package.py.
+    metadata_supported_ecosystems = [
+        "bitbucket",
+        "cargo",
+        "github",
+        "npm",
+        "pypi",
+        "rubygems",
+    ]
+    metadata_purl = PackageURL.from_string(purl)
+
+    if metadata_purl.type not in metadata_supported_ecosystems:
+        return "valid_but_not_supported"
+
+    if results["exists"] == False:
+        return "not_in_upstream_repo"
+
+
+def normalize_purls(purls, unique):
+    """
+    If the command includes the `--unique` flag, take the list of input PURLs,
+    remove the portion of the PURL that starts with a PURL separator (`@`, `?`
+    or `#`), and return a deduplicated list of the resulting PURLs (in
+    `input_purls`) and a list of tuples of each pair of the original input PURL
+    and the normalized PURL (in `normalized_purls`).
+    """
+    input_purls = []
+    normalized_purls = []
+    if unique:
+        for purl in purls:
+            input_purl = purl
+            purl = purl.strip()
+            purl = re.split("[@,?,#,]+", purl)[0]
+            normalized_purl = purl
+            normalized_purls.append((input_purl, normalized_purl))
+            if normalized_purl not in input_purls:
+                input_purls.append(normalized_purl)
+    else:
+        input_purls = purls
+
+    return input_purls, normalized_purls
 
 
 def construct_headers(
@@ -148,6 +190,7 @@ def construct_headers(
     head=None,
     normalized_purls=None,
     unique=None,
+    purl_warnings=None,
 ):
     """
     Return a list comprising the `headers` content of the dictionary output.
@@ -185,87 +228,45 @@ def construct_headers(
     headers_content["options"] = options
     headers_content["purls"] = purls
 
-    if command_name == "metadata" and unique:
-        for purl in normalized_purls:
-            if purl[0] != purl[1]:
-                warnings.append(f"input PURL: '{purl[0]}' normalized to '{purl[1]}'")
+    if (command_name in ["metadata", "urls", "validate", "versions"]) and unique:
+        for input_purl, normalized_purl in normalized_purls:
+            if input_purl != normalized_purl:
+                warnings.append(
+                    f"input PURL: '{input_purl}' normalized to '{normalized_purl}'"
+                )
 
     for purl in purls:
         if not purl:
             continue
 
-        # `metadata` warnings:
-        metadata_purl = check_metadata_purl(purl)
+        warning_text = {
+            "error_fetching_purl": f"'error fetching {purl}'",
+            "validation_error": f"'{purl}' encountered a validation error",
+            "not_valid": f"'{purl}' not valid",
+            "valid_but_not_supported": f"'{purl}' not supported with `{command_name}` command",
+            "valid_but_not_fully_supported": f"'{purl}' not fully supported with `urls` command",
+            "not_in_upstream_repo": f"'{purl}' does not exist in the upstream repo",
+        }
 
-        if command_name == "metadata" and metadata_purl == "not_valid":
-            warnings.append(f"'{purl}' not valid")
-            continue
+        if command_name in ["metadata", "urls", "validate", "versions"]:
+            purl_warning = purl_warnings.get(purl, None)
+            if purl_warning:
+                warning = warning_text[purl_warning]
+                warnings.append(warning)
+                print(warning)
+                continue
 
-        if command_name == "metadata" and metadata_purl == "valid_but_not_supported":
-            warnings.append(f"'{purl}' not supported with `metadata` command")
-            continue
-
-        if command_name == "metadata" and metadata_purl == "not_in_upstream_repo":
-            warnings.append(f"'{purl}' does not exist in the upstream repo")
-            continue
-
-        # `urls` warnings:
-        urls_purl = check_urls_purl(purl)
-
-        if command_name == "urls" and urls_purl == "not_valid":
-            warnings.append(f"'{purl}' not valid")
-            continue
-
-        if command_name == "urls" and urls_purl == "valid_but_not_supported":
-            warnings.append(f"'{purl}' not supported with `urls` command")
-            continue
-
-        if command_name == "urls" and urls_purl == "valid_but_not_fully_supported":
-            warnings.append(f"'{purl}' not fully supported with `urls` command")
-
-        if command_name == "urls" and urls_purl == "not_in_upstream_repo":
-            warnings.append(f"'{purl}' does not exist in the upstream repo")
-            continue
+    log_file = Path(LOG_FILE_LOCATION)
+    if log_file.is_file():
+        with open(log_file, "r") as f:
+            for line in f:
+                errors.append(line)
 
     headers_content["errors"] = errors
     headers_content["warnings"] = warnings
     headers.append(headers_content)
 
     return headers
-
-
-def check_metadata_purl(purl):
-    """
-    Return a variable identifying the message for printing to the console by
-    get_metadata_details() if (1) the input PURL is invalid, (2) its type is not
-    supported by `metadata` or (3) its existence was not validated (e.g.,
-    "does not exist in the upstream repo").
-
-    This message will also be reported by construct_headers() in the
-    `warnings` field of the `header` section of the JSON object returned by
-    the `metadata` command.
-    """
-    results = check_existence(purl)
-
-    if results["valid"] == False:
-        return "not_valid"
-
-    # This is manually constructed from a visual inspection of fetchcode/package.py.
-    metadata_supported_ecosystems = [
-        "bitbucket",
-        "cargo",
-        "github",
-        "npm",
-        "pypi",
-        "rubygems",
-    ]
-    metadata_purl = PackageURL.from_string(purl)
-
-    if metadata_purl.type not in metadata_supported_ecosystems:
-        return "valid_but_not_supported"
-
-    if results["exists"] == False:
-        return "not_in_upstream_repo"
 
 
 @purlcli.command(name="urls")
@@ -301,7 +302,6 @@ def check_metadata_purl(purl):
     required=False,
     help="Validate each URL's existence with a head request.",
 )
-# We're passing `unique` but it's not yet fully implemented here or in the `urls` tests.
 def get_urls(purls, output, file, unique, head):
     """
     Given one or more PURLs, for each PURL, return a list of all known URLs
@@ -315,28 +315,27 @@ def get_urls(purls, output, file, unique, head):
     context = click.get_current_context()
     command_name = context.command.name
 
-    urls_info = get_urls_details(purls, output, file, head, command_name)
+    urls_info = get_urls_details(purls, output, file, unique, head, command_name)
     json.dump(urls_info, output, indent=4)
 
 
-def get_urls_details(purls, output, file, head, command_name):
+def get_urls_details(purls, output, file, unique, head, command_name):
     """
     Return a dictionary containing URLs for each PURL in the `purls` input
     list.  `check_urls_purl()` will print an error message to the console
     (also displayed in the JSON output) when necessary.
     """
     urls_details = {}
-    urls_details["headers"] = construct_headers(
-        purls=purls,
-        output=output,
-        file=file,
-        head=head,
-        command_name=command_name,
-    )
-
+    urls_details["headers"] = []
     urls_details["packages"] = []
 
-    for purl in purls:
+    urls_warnings = {}
+
+    input_purls, normalized_purls = normalize_purls(purls, unique)
+
+    clear_log_file()
+
+    for purl in input_purls:
         url_detail = {}
         url_detail["purl"] = purl
 
@@ -344,23 +343,19 @@ def get_urls_details(purls, output, file, head, command_name):
         if not purl:
             continue
 
-        urls_purl = check_urls_purl(purl)
+        purl_status = check_urls_purl(purl)
 
-        # Print warnings to terminal.
-        if command_name == "urls" and urls_purl == "not_valid":
-            print(f"'{purl}' not valid")
+        if command_name == "urls" and purl_status in [
+            "validation_error",
+            "not_valid",
+            "valid_but_not_supported",
+            "not_in_upstream_repo",
+        ]:
+            urls_warnings[purl] = purl_status
             continue
 
-        if command_name == "urls" and urls_purl == "valid_but_not_supported":
-            print(f"'{purl}' not supported with `urls` command")
-            continue
-
-        if command_name == "urls" and urls_purl == "valid_but_not_fully_supported":
-            print(f"'{purl}' not fully supported with `urls` command")
-
-        if command_name == "urls" and urls_purl == "not_in_upstream_repo":
-            print(f"'{purl}' does not exist in the upstream repo")
-            continue
+        if command_name == "urls" and purl_status in ["valid_but_not_fully_supported"]:
+            urls_warnings[purl] = purl_status
 
         # Add the URLs.
         url_purl = PackageURL.from_string(purl)
@@ -411,6 +406,17 @@ def get_urls_details(purls, output, file, head, command_name):
 
         urls_details["packages"].append(url_detail)
 
+    urls_details["headers"] = construct_headers(
+        purls=purls,
+        output=output,
+        file=file,
+        head=head,
+        command_name=command_name,
+        normalized_purls=normalized_purls,
+        unique=unique,
+        purl_warnings=urls_warnings,
+    )
+
     return urls_details
 
 
@@ -447,7 +453,10 @@ def check_urls_purl(purl):
     or its type is not supported (or not fully supported) by `urls`, or it
     does not exist in the upstream repo.
     """
-    results = check_existence(purl)
+    check_validation = validate_purl(purl)
+    if check_validation is None:
+        return "validation_error"
+    results = check_validation
 
     if results["valid"] == False:
         return "not_valid"
@@ -505,7 +514,6 @@ def check_urls_purl(purl):
         return "valid_but_not_fully_supported"
 
 
-# Not yet converted to a SCTK-like data structure.
 @purlcli.command(name="validate")
 @click.option(
     "--purl",
@@ -527,66 +535,147 @@ def check_urls_purl(purl):
     required=False,
     help="Read a list of PURLs from a FILE, one per line.",
 )
-def validate(purls, output, file):
+@click.option(
+    "--unique",
+    is_flag=True,
+    required=False,
+    help="Return data only for unique PURLs.",
+)
+def validate(purls, output, file, unique):
     """
-    Check the syntax of one or more PURLs.
+    Check the syntax and upstream repo status of one or more PURLs.
     """
     check_for_duplicate_input_sources(purls, file)
 
     if file:
         purls = file.read().splitlines(False)
 
-    validated_purls = validate_purls(purls)
+    context = click.get_current_context()
+    command_name = context.command.name
+
+    validated_purls = get_validate_details(purls, output, file, unique, command_name)
     json.dump(validated_purls, output, indent=4)
 
 
-def validate_purls(purls):
-    api_query = "https://public.purldb.io/api/validate/"
-    validated_purls = []
-    for purl in purls:
+def get_validate_details(purls, output, file, unique, command_name):
+    """
+    Return a dictionary containing validation data for each PURL in the `purls`
+    input list.
+    """
+    validate_details = {}
+    validate_details["headers"] = []
+
+    validate_warnings = {}
+
+    input_purls, normalized_purls = normalize_purls(purls, unique)
+
+    validate_details["packages"] = []
+
+    clear_log_file()
+
+    for purl in input_purls:
         purl = purl.strip()
         if not purl:
             continue
-        request_body = {"purl": purl, "check_existence": True}
-        response = requests.get(api_query, params=request_body)
-        results = response.json()
-        validated_purls.append(results)
 
-    return validated_purls
+        validated_purl = check_validate_purl(purl)
+
+        if command_name == "urls" and validated_purl in [
+            "validation_error",
+            "not_valid",
+            "valid_but_not_supported",
+            "not_in_upstream_repo",
+        ]:
+            validate_warnings[purl] = validated_purl
+            continue
+
+        if validated_purl:
+            validate_details["packages"].append(validate_purl(purl))
+
+    validate_details["headers"] = construct_headers(
+        purls=purls,
+        output=output,
+        file=file,
+        command_name=command_name,
+        normalized_purls=normalized_purls,
+        unique=unique,
+        purl_warnings=validate_warnings,
+    )
+
+    return validate_details
 
 
-def check_existence(purl):
+def check_validate_purl(purl):
     """
-    Return a JSON object containing data regarding the validity of the input PURL.
+    As applicable, return a variable indicating that the input PURL is
+    valid/invalid or does not exist in the upstream repo.
     """
+    check_validation = validate_purl(purl)
+    if check_validation is None:
+        return "validation_error"
+    results = check_validation
 
-    # Based on packagedb.package_managers VERSION_API_CLASSES_BY_PACKAGE_TYPE
-    # -- and supported by testing the command -- it appears that the `validate`
-    # command `check_existence` check supports the following PURL types:
+    if results["valid"] == False:
+        return "not_valid"
 
-    # validate_supported_ecosystems = [
-    # "cargo",
-    # "composer",
-    # "deb",
-    # "gem",
-    # "golang",
-    # "hex",
-    # "maven",
-    # "npm",
-    # "nuget",
-    # "pypi",
-    # ]
+    if results["exists"] == False:
+        return "not_in_upstream_repo"
+
+    if results["exists"] == True:
+        return check_validation
+
+
+def validate_purl(purl):
+    """
+    Return a JSON object containing data from the PurlDB `validate` endpoint
+    regarding the validity of the input PURL.
+
+    Based on packagedb.package_managers VERSION_API_CLASSES_BY_PACKAGE_TYPE
+    and packagedb/api.py class PurlValidateViewSet(viewsets.ViewSet)
+    -- and supported by testing the command -- it appears that the `validate`
+    command `check_existence` parameter supports the following PURL types:
+
+    "cargo",
+    "composer",
+    "deb",
+    "gem",
+    "golang",
+    "hex",
+    "maven",
+    "npm",
+    "nuget",
+    "pypi",
+    """
+    logger = logging.getLogger(__name__)
 
     api_query = "https://public.purldb.io/api/validate/"
-    purl = purl.strip()
     request_body = {"purl": purl, "check_existence": True}
-    response = requests.get(api_query, params=request_body)
-    results = response.json()
 
-    return results
+    try:
+        response = requests.get(api_query, params=request_body).json()
+
+    except json.decoder.JSONDecodeError as e:
+
+        print(f"validate_purl(): json.decoder.JSONDecodeError for '{purl}': {e}")
+
+        logging.basicConfig(
+            filename=LOG_FILE_LOCATION,
+            level=logging.ERROR,
+            format="%(levelname)s - %(message)s",
+            filemode="w",
+        )
+
+        logger.error(f"validate_purl(): json.decoder.JSONDecodeError for '{purl}': {e}")
+
+    except Exception as e:
+        print(f"'validate' endpoint error for '{purl}': {e}")
+
+    else:
+        if response is None:
+            print(f"'{purl}' -- response.status_code for None = {response.status_code}")
+        return response
 
 
-# Not yet converted to a SCTK-like data structure.
 @purlcli.command(name="versions")
 @click.option(
     "--purl",
@@ -608,12 +697,15 @@ def check_existence(purl):
     required=False,
     help="Read a list of PURLs from a FILE, one per line.",
 )
-def get_versions(purls, output, file):
+@click.option(
+    "--unique",
+    is_flag=True,
+    required=False,
+    help="Return data only for unique PURLs.",
+)
+def get_versions(purls, output, file, unique):
     """
     Given one or more PURLs, return a list of all known versions for each PURL.
-
-    Version information is not needed in submitted PURLs and if included will
-    be removed before processing.
     """
     check_for_duplicate_input_sources(purls, file)
 
@@ -623,64 +715,84 @@ def get_versions(purls, output, file):
     context = click.get_current_context()
     command_name = context.command.name
 
-    purl_versions = list_versions(purls, output, file, command_name)
+    purl_versions = get_versions_details(purls, output, file, unique, command_name)
     json.dump(purl_versions, output, indent=4)
 
 
-# construct_headers() has not yet been implemented for this `versions` command
-# -- or for the `validate` command.
-def list_versions(purls, output, file, command_name):
+def get_versions_details(purls, output, file, unique, command_name):
     """
     Return a list of dictionaries containing version-related data for each PURL
     in the `purls` input list.  `check_versions_purl()` will print an error
     message to the console (also displayed in the JSON output) when necessary.
     """
-    purl_versions = []
-    for purl in purls:
-        purl_data = {}
-        purl_data["purl"] = purl
-        purl_data["versions"] = []
+    versions_details = {}
+    versions_details["headers"] = []
+    versions_details["packages"] = []
 
+    versions_warnings = {}
+
+    input_purls, normalized_purls = normalize_purls(purls, unique)
+
+    clear_log_file()
+
+    for purl in input_purls:
         purl = purl.strip()
         if not purl:
             continue
 
+        purl_data = {}
+        purl_data["purl"] = purl
+        purl_data["versions"] = []
+
         versions_purl = check_versions_purl(purl)
 
-        if command_name == "versions" and versions_purl == "not_valid":
-            print(f"'{purl}' not valid")
+        if command_name == "versions" and versions_purl:
+            versions_warnings[purl] = versions_purl
             continue
 
-        if command_name == "versions" and versions_purl == "valid_but_not_supported":
-            print(f"'{purl}' not supported with `versions` command")
-            continue
-
-        if command_name == "versions" and versions_purl == "not_in_upstream_repo":
-            print(f"'{purl}' does not exist in the upstream repo")
-            continue
-
-        for package_version_object in list(versions(purl)):
+        for package_version in list(versions(purl)):
             purl_version_data = {}
-            purl_version = package_version_object.to_dict()["value"]
-            nested_purl = purl + "@" + f"{purl_version}"
+            purl_version = package_version.value
+
+            # We use `versions()` from fetchcode/package_versions.py, which
+            # keeps the version (if any) of the input PURL in its output, so
+            # "pkg:pypi/fetchcode@0.3.0" is returned as
+            # "pkg:pypi/fetchcode@0.3.0@0.1.0", "pkg:pypi/fetchcode@0.3.0@0.2.0"
+            # etc.  Thus, we remove any string starting with `@` first.
+            raw_purl = purl = re.split("[@,]+", purl)[0]
+            nested_purl = raw_purl + "@" + f"{purl_version}"
 
             purl_version_data["purl"] = nested_purl
             purl_version_data["version"] = f"{purl_version}"
-            purl_version_data["release_date"] = (
-                f'{package_version_object.to_dict()["release_date"]}'
-            )
+            purl_version_data["release_date"] = f"{package_version.release_date}"
 
             purl_data["versions"].append(purl_version_data)
 
-        purl_versions.append(purl_data)
+        versions_details["packages"].append(purl_data)
 
-    return purl_versions
+    versions_details["headers"] = construct_headers(
+        purls=purls,
+        output=output,
+        file=file,
+        command_name=command_name,
+        normalized_purls=normalized_purls,
+        unique=unique,
+        purl_warnings=versions_warnings,
+    )
+
+    return versions_details
 
 
 def check_versions_purl(purl):
     """
-    Return a message for printing to the console if the input PURL is invalid,
-    its type is not supported by `versions` or its existence was not validated.
+    Return a variable identifying the message for printing to the console by
+    get_versions_details() if (1) the input PURL is invalid, (2) its type is not
+    supported by `versions` or (3) its existence was not validated (e.g.,
+    "does not exist in the upstream repo").
+
+    This message will also be reported by construct_headers() in the
+    `warnings` field of the `header` section of the JSON object returned by
+    the `versions` command.
 
     Note for dev purposes: SUPPORTED_ECOSYSTEMS (imported from
     fetchcode.package_versions) comprises the following types:
@@ -699,13 +811,15 @@ def check_versions_purl(purl):
         "pypi",
     ]
     """
-    results = check_existence(purl)
+    check_validation = validate_purl(purl)
+    if check_validation is None:
+        return "validation_error"
+    results = check_validation
 
     if results["valid"] == False:
         return "not_valid"
 
     supported = SUPPORTED_ECOSYSTEMS
-
     versions_purl = PackageURL.from_string(purl)
 
     if versions_purl.type not in supported:
@@ -727,6 +841,13 @@ def check_for_duplicate_input_sources(purls, file):
 
     if not (purls or file):
         raise click.UsageError("Use either purls or file.")
+
+
+def clear_log_file():
+    log_file = Path(LOG_FILE_LOCATION)
+
+    if log_file.is_file():
+        os.remove(log_file)
 
 
 if __name__ == "__main__":

@@ -28,6 +28,7 @@
                     "pkg:nuget/auth0-aspnet@1.1.0"
                 ],
                 "--file": null,
+                "--unique": true,
                 "--output": "<stdout>"
             },
             "purls": [
@@ -54,18 +55,19 @@
             ],
             "errors": [],
             "warnings": [
+                "input PURL: 'pkg:pypi/fetchcode@0.3.0' normalized to 'pkg:pypi/fetchcode'",
+                "input PURL: 'pkg:pypi/fetchcode@5.0.0' normalized to 'pkg:pypi/fetchcode'",
+                "input PURL: 'pkg:pypi/dejacode@5.0.0' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:pypi/dejacode@5.0.0?os=windows' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:pypi/dejacode@5.0.0os=windows' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:pypi/dejacode@5.0.0#how/are/you' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:pypi/dejacode@10.0.0' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:nginx/nginx@0.8.9?os=windows' normalized to 'pkg:nginx/nginx'",
+                "input PURL: 'pkg:nuget/auth0-aspnet@1.1.0' normalized to 'pkg:nuget/auth0-aspnet'",
                 "'pkg:pypi/fetchcode' not fully supported with `urls` command",
-                "'pkg:pypi/fetchcode@0.3.0' not fully supported with `urls` command",
-                "'pkg:pypi/fetchcode@5.0.0' does not exist in the upstream repo",
                 "'pkg:pypi/dejacode' not fully supported with `urls` command",
-                "'pkg:pypi/dejacode@5.0.0' not fully supported with `urls` command",
-                "'pkg:pypi/dejacode@5.0.0?os=windows' not fully supported with `urls` command",
-                "'pkg:pypi/dejacode@5.0.0os=windows' does not exist in the upstream repo",
-                "'pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy' not fully supported with `urls` command",
-                "'pkg:pypi/dejacode@5.0.0#how/are/you' not fully supported with `urls` command",
-                "'pkg:pypi/dejacode@10.0.0' does not exist in the upstream repo",
                 "'pkg:nginx/nginx' not supported with `urls` command",
-                "'pkg:nginx/nginx@0.8.9?os=windows' not supported with `urls` command",
                 "'pkg:pypi/matchcode' does not exist in the upstream repo",
                 "'abcdefg' not valid",
                 "'pkg/abc' not valid"
@@ -97,29 +99,6 @@
             }
         },
         {
-            "purl": "pkg:pypi/fetchcode@0.3.0",
-            "download_url": {
-                "url": null
-            },
-            "inferred_urls": [
-                {
-                    "url": "https://pypi.org/project/fetchcode/0.3.0/"
-                }
-            ],
-            "repo_download_url": {
-                "url": null
-            },
-            "repo_download_url_by_package_type": {
-                "url": null
-            },
-            "repo_url": {
-                "url": "https://pypi.org/project/fetchcode/0.3.0/"
-            },
-            "url": {
-                "url": "https://pypi.org/project/fetchcode/0.3.0/"
-            }
-        },
-        {
             "purl": "pkg:pypi/dejacode",
             "download_url": {
                 "url": null
@@ -140,98 +119,6 @@
             },
             "url": {
                 "url": "https://pypi.org/project/dejacode/"
-            }
-        },
-        {
-            "purl": "pkg:pypi/dejacode@5.0.0",
-            "download_url": {
-                "url": null
-            },
-            "inferred_urls": [
-                {
-                    "url": "https://pypi.org/project/dejacode/5.0.0/"
-                }
-            ],
-            "repo_download_url": {
-                "url": null
-            },
-            "repo_download_url_by_package_type": {
-                "url": null
-            },
-            "repo_url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/"
-            },
-            "url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/"
-            }
-        },
-        {
-            "purl": "pkg:pypi/dejacode@5.0.0?os=windows",
-            "download_url": {
-                "url": null
-            },
-            "inferred_urls": [
-                {
-                    "url": "https://pypi.org/project/dejacode/5.0.0/"
-                }
-            ],
-            "repo_download_url": {
-                "url": null
-            },
-            "repo_download_url_by_package_type": {
-                "url": null
-            },
-            "repo_url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/"
-            },
-            "url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/"
-            }
-        },
-        {
-            "purl": "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
-            "download_url": {
-                "url": null
-            },
-            "inferred_urls": [
-                {
-                    "url": "https://pypi.org/project/dejacode/5.0.0/"
-                }
-            ],
-            "repo_download_url": {
-                "url": null
-            },
-            "repo_download_url_by_package_type": {
-                "url": null
-            },
-            "repo_url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/"
-            },
-            "url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/"
-            }
-        },
-        {
-            "purl": "pkg:pypi/dejacode@5.0.0#how/are/you",
-            "download_url": {
-                "url": null
-            },
-            "inferred_urls": [
-                {
-                    "url": "https://pypi.org/project/dejacode/5.0.0/"
-                }
-            ],
-            "repo_download_url": {
-                "url": null
-            },
-            "repo_download_url_by_package_type": {
-                "url": null
-            },
-            "repo_url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/"
-            },
-            "url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/"
             }
         },
         {
@@ -327,16 +214,13 @@
             }
         },
         {
-            "purl": "pkg:nuget/auth0-aspnet@1.1.0",
+            "purl": "pkg:nuget/auth0-aspnet",
             "download_url": {
-                "url": "https://www.nuget.org/api/v2/package/auth0-aspnet/1.1.0"
+                "url": null
             },
             "inferred_urls": [
                 {
-                    "url": "https://www.nuget.org/packages/auth0-aspnet/1.1.0"
-                },
-                {
-                    "url": "https://www.nuget.org/api/v2/package/auth0-aspnet/1.1.0"
+                    "url": "https://www.nuget.org/packages/auth0-aspnet"
                 }
             ],
             "repo_download_url": {
@@ -346,10 +230,10 @@
                 "url": null
             },
             "repo_url": {
-                "url": "https://www.nuget.org/packages/auth0-aspnet/1.1.0"
+                "url": "https://www.nuget.org/packages/auth0-aspnet"
             },
             "url": {
-                "url": "https://www.nuget.org/packages/auth0-aspnet/1.1.0"
+                "url": "https://www.nuget.org/packages/auth0-aspnet"
             }
         }
     ]

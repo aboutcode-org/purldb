@@ -11,7 +11,6 @@ import json
 import os
 from collections import OrderedDict
 
-import click
 import pytest
 from click.testing import CliRunner
 from commoncode.testcase import FileDrivenTesting
@@ -40,6 +39,12 @@ class TestPURLCLI_metadata(object):
             "--purl",
             "pkg:pypi/fetchcode@0.3.0",
             "--purl",
+            "pkg:pypi/fetchcode@0.3.0?os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
+            "--purl",
             "pkg:cargo/banquo",
             "--purl",
             "pkg:nginx/nginx",
@@ -57,10 +62,12 @@ class TestPURLCLI_metadata(object):
         f_output = open(actual_result_file)
         output_data = json.load(f_output)
         cli_test_utils.streamline_headers(output_data["headers"])
+        streamline_metadata_packages(output_data["packages"])
 
         f_expected = open(expected_result_file)
         expected_data = json.load(f_expected)
         cli_test_utils.streamline_headers(expected_data["headers"])
+        streamline_metadata_packages(expected_data["packages"])
 
         result_objects = [
             (
@@ -88,11 +95,16 @@ class TestPURLCLI_metadata(object):
                 output_data["headers"][0]["options"]["--file"],
                 expected_data["headers"][0]["options"]["--file"],
             ),
-            (output_data["packages"], expected_data["packages"]),
         ]
 
         for output, expected in result_objects:
             assert output == expected
+
+        # NOTE: To avoid errors from the addition of new versions, we exclude
+        # `(output_data["packages"], expected_data["packages"])` from the
+        # result_objects list above and handle here.
+        for expected in expected_data["packages"]:
+            assert expected in output_data["packages"]
 
     def test_metadata_cli_unique(self):
         """
@@ -108,6 +120,12 @@ class TestPURLCLI_metadata(object):
             "pkg:pypi/fetchcode",
             "--purl",
             "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0?os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
             "--purl",
             "pkg:cargo/banquo",
             "--purl",
@@ -127,10 +145,12 @@ class TestPURLCLI_metadata(object):
         f_output = open(actual_result_file)
         output_data = json.load(f_output)
         cli_test_utils.streamline_headers(output_data["headers"])
+        streamline_metadata_packages(output_data["packages"])
 
         f_expected = open(expected_result_file)
         expected_data = json.load(f_expected)
         cli_test_utils.streamline_headers(expected_data["headers"])
+        streamline_metadata_packages(expected_data["packages"])
 
         result_objects = [
             (
@@ -159,18 +179,17 @@ class TestPURLCLI_metadata(object):
                 expected_data["headers"][0]["options"]["--file"],
             ),
             (
-                output_data["headers"][0]["options"]["--file"],
-                expected_data["headers"][0]["options"]["--file"],
-            ),
-            (
                 output_data["headers"][0]["options"]["--unique"],
                 expected_data["headers"][0]["options"]["--unique"],
             ),
-            (output_data["packages"], expected_data["packages"]),
         ]
 
         for output, expected in result_objects:
             assert output == expected
+
+        # See note under test_metadata_cli() re addition of new versions.
+        for expected in expected_data["packages"]:
+            assert expected in output_data["packages"]
 
     def test_metadata_cli_duplicate_input_sources(self):
         """
@@ -571,9 +590,16 @@ class TestPURLCLI_metadata(object):
             unique=False,
         )
         cli_test_utils.streamline_headers(purl_metadata["headers"])
-        cli_test_utils.streamline_headers(expected["headers"])
+        streamline_metadata_packages(purl_metadata["packages"])
 
-        assert purl_metadata == expected
+        cli_test_utils.streamline_headers(expected["headers"])
+        streamline_metadata_packages(expected["packages"])
+
+        # See note under test_metadata_cli() re addition of new versions.
+        assert purl_metadata["headers"] == expected["headers"]
+
+        for expected in expected["packages"]:
+            assert expected in purl_metadata["packages"]
 
     @pytest.mark.parametrize(
         "test_input,expected",
@@ -613,41 +639,103 @@ class TestPURLCLI_metadata(object):
         assert purl_metadata == expected
 
     @pytest.mark.parametrize(
-        "test_input,expected",
+        "test_input,expected_input_purls,expected_normalized_purls",
         [
             (
-                ["pkg:pypi/fetchcode"],
-                ("pkg:pypi/fetchcode", "pkg:pypi/fetchcode"),
+                [["pkg:pypi/fetchcode"]],
+                (["pkg:pypi/fetchcode"]),
+                ([("pkg:pypi/fetchcode", "pkg:pypi/fetchcode")]),
             ),
             (
-                ["pkg:pypi/fetchcode@1.2.3"],
-                ("pkg:pypi/fetchcode@1.2.3", "pkg:pypi/fetchcode"),
+                [["pkg:pypi/fetchcode@1.2.3"]],
+                (["pkg:pypi/fetchcode"]),
+                ([("pkg:pypi/fetchcode@1.2.3", "pkg:pypi/fetchcode")]),
             ),
             (
-                ["pkg:pypi/fetchcode@1.2.3?howistheweather=rainy"],
+                [["pkg:pypi/fetchcode@1.2.3?howistheweather=rainy"]],
+                (["pkg:pypi/fetchcode"]),
                 (
-                    "pkg:pypi/fetchcode@1.2.3?howistheweather=rainy",
-                    "pkg:pypi/fetchcode",
+                    [
+                        (
+                            "pkg:pypi/fetchcode@1.2.3?howistheweather=rainy",
+                            "pkg:pypi/fetchcode",
+                        )
+                    ]
                 ),
             ),
             (
-                ["pkg:pypi/fetchcode?howistheweather=rainy"],
-                ("pkg:pypi/fetchcode?howistheweather=rainy", "pkg:pypi/fetchcode"),
+                [["pkg:pypi/fetchcode?howistheweather=rainy"]],
+                (["pkg:pypi/fetchcode"]),
+                ([("pkg:pypi/fetchcode?howistheweather=rainy", "pkg:pypi/fetchcode")]),
             ),
             (
-                ["pkg:pypi/fetchcode#this/is/a/path"],
-                ("pkg:pypi/fetchcode#this/is/a/path", "pkg:pypi/fetchcode"),
+                [["pkg:pypi/fetchcode#this/is/a/path"]],
+                (["pkg:pypi/fetchcode"]),
+                ([("pkg:pypi/fetchcode#this/is/a/path", "pkg:pypi/fetchcode")]),
             ),
             (
-                ["pkg:pypi/?fetchcode"],
-                ("pkg:pypi/?fetchcode", "pkg:pypi/"),
+                [["pkg:pypi/?fetchcode"]],
+                (["pkg:pypi/"]),
+                ([("pkg:pypi/?fetchcode", "pkg:pypi/")]),
             ),
-            (["zzzzz"], ("zzzzz", "zzzzz")),
+            (
+                [
+                    [
+                        "pkg:pypi/fetchcode@0.3.0",
+                        "pkg:pypi/fetchcode@5.0.0",
+                        "pkg:pypi/dejacode",
+                        "pkg:pypi/dejacode@5.0.0",
+                        "pkg:pypi/dejacode@5.0.0?os=windows",
+                        "pkg:pypi/dejacode@5.0.0os=windows",
+                        "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
+                        "pkg:pypi/dejacode@5.0.0#how/are/you",
+                        "pkg:pypi/dejacode@10.0.0",
+                        "pkg:cargo/banquo",
+                        "pkg:cargo/socksprox",
+                        "pkg:nginx/nginx",
+                        "pkg:nginx/nginx@0.8.9?os=windows",
+                    ]
+                ],
+                (
+                    [
+                        "pkg:pypi/fetchcode",
+                        "pkg:pypi/dejacode",
+                        "pkg:cargo/banquo",
+                        "pkg:cargo/socksprox",
+                        "pkg:nginx/nginx",
+                    ]
+                ),
+                (
+                    [
+                        ("pkg:pypi/fetchcode@0.3.0", "pkg:pypi/fetchcode"),
+                        ("pkg:pypi/fetchcode@5.0.0", "pkg:pypi/fetchcode"),
+                        ("pkg:pypi/dejacode", "pkg:pypi/dejacode"),
+                        ("pkg:pypi/dejacode@5.0.0", "pkg:pypi/dejacode"),
+                        ("pkg:pypi/dejacode@5.0.0?os=windows", "pkg:pypi/dejacode"),
+                        ("pkg:pypi/dejacode@5.0.0os=windows", "pkg:pypi/dejacode"),
+                        (
+                            "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
+                            "pkg:pypi/dejacode",
+                        ),
+                        ("pkg:pypi/dejacode@5.0.0#how/are/you", "pkg:pypi/dejacode"),
+                        ("pkg:pypi/dejacode@10.0.0", "pkg:pypi/dejacode"),
+                        ("pkg:cargo/banquo", "pkg:cargo/banquo"),
+                        ("pkg:cargo/socksprox", "pkg:cargo/socksprox"),
+                        ("pkg:nginx/nginx", "pkg:nginx/nginx"),
+                        ("pkg:nginx/nginx@0.8.9?os=windows", "pkg:nginx/nginx"),
+                    ]
+                ),
+            ),
         ],
     )
-    def test_normalize_purl(self, test_input, expected):
-        normalized_purl = purlcli.normalize_purl(test_input[0])
-        assert normalized_purl == expected
+    def test_normalize_purls(
+        self, test_input, expected_input_purls, expected_normalized_purls
+    ):
+        unique = True
+        input_purls, normalized_purls = purlcli.normalize_purls(test_input[0], unique)
+
+        assert input_purls == expected_input_purls
+        assert normalized_purls == expected_normalized_purls
 
     @pytest.mark.parametrize(
         "test_input,expected",
@@ -698,6 +786,7 @@ class TestPURLCLI_metadata(object):
             head=None,
             normalized_purls=None,
             unique=None,
+            purl_warnings={"pkg:gem/bundler-sass": "valid_but_not_supported"},
         )
         cli_test_utils.streamline_headers(expected)
         cli_test_utils.streamline_headers(metadata_headers)
@@ -761,6 +850,7 @@ class TestPURLCLI_metadata(object):
                 ("pkg:pypi/fetchcode@0.2.0", "pkg:pypi/fetchcode"),
             ],
             unique=True,
+            purl_warnings={"pkg:gem/bundler-sass": "valid_but_not_supported"},
         )
         cli_test_utils.streamline_headers(expected)
         cli_test_utils.streamline_headers(metadata_headers)
@@ -772,12 +862,7 @@ class TestPURLCLI_urls(object):
     def test_urls_cli(self):
         """
         Test the `urls` command with actual and expected JSON output files.
-
-        Note that we can't simply compare the actual and expected JSON files
-        because the `--output` values (paths) differ due to the use of
-        temporary files, and therefore we test a list of relevant key-value pairs.
         """
-        # NOTE: options do not yet include `unique`.
         expected_result_file = test_env.get_test_loc(
             "purlcli/expected_urls_output.json"
         )
@@ -818,17 +903,110 @@ class TestPURLCLI_urls(object):
             "--purl",
             "pkg:pypi/matchcode",
             "--purl",
+            "abcdefg",
+            "--purl",
+            "pkg/abc",
+            "--purl",
+            "pkg:nuget/auth0-aspnet@1.1.0",
+            "--output",
+            actual_result_file,
+        ]
+        runner = CliRunner()
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
+        assert result.exit_code == 0
+
+        f_output = open(actual_result_file)
+        output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
+
+        f_expected = open(expected_result_file)
+        expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
+
+        result_objects = [
+            (
+                output_data["headers"][0]["tool_name"],
+                expected_data["headers"][0]["tool_name"],
+            ),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
+            (
+                output_data["headers"][0]["warnings"],
+                expected_data["headers"][0]["warnings"],
+            ),
+            (
+                output_data["headers"][0]["errors"],
+                expected_data["headers"][0]["errors"],
+            ),
+            (
+                output_data["headers"][0]["options"]["command"],
+                expected_data["headers"][0]["options"]["command"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--purl"],
+                expected_data["headers"][0]["options"]["--purl"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--file"],
+                expected_data["headers"][0]["options"]["--file"],
+            ),
+            (output_data["packages"], expected_data["packages"]),
+        ]
+
+        for output, expected in result_objects:
+            assert output == expected
+
+    def test_urls_cli_unique(self):
+        """
+        Test the `urls` command with actual and expected JSON output files.
+        """
+        expected_result_file = test_env.get_test_loc(
+            "purlcli/expected_urls_output_unique.json"
+        )
+        actual_result_file = test_env.get_temp_file("actual_urls_output_unique.json")
+        options = [
+            "--purl",
+            "pkg:pypi/fetchcode",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
+            "--purl",
+            "pkg:pypi/dejacode",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0?os=windows",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0os=windows",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
+            "--purl",
+            "pkg:pypi/dejacode@5.0.0#how/are/you",
+            "--purl",
+            "pkg:pypi/dejacode@10.0.0",
+            "--purl",
+            "pkg:cargo/banquo",
+            "--purl",
+            "pkg:cargo/socksprox",
+            "--purl",
+            "pkg:nginx/nginx",
+            "--purl",
+            "pkg:nginx/nginx@0.8.9?os=windows",
+            "--purl",
+            "pkg:gem/bundler-sass",
+            "--purl",
             "pkg:rubygems/bundler-sass",
+            "--purl",
+            "pkg:pypi/matchcode",
             "--purl",
             "abcdefg",
             "--purl",
             "pkg/abc",
             "--purl",
             "pkg:nuget/auth0-aspnet@1.1.0",
-            "--purl",
-            "pkg:cargo/socksprox",
             "--output",
             actual_result_file,
+            "--unique",
         ]
         runner = CliRunner()
         result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
@@ -877,12 +1055,7 @@ class TestPURLCLI_urls(object):
     def test_urls_cli_head(self):
         """
         Test the `urls` command with actual and expected JSON output files.
-
-        Note that we can't simply compare the actual and expected JSON files
-        because the `--output` values (paths) differ due to the use of
-        temporary files, and therefore we test a list of relevant key-value pairs.
         """
-        # NOTE: options do not yet include `unique`.
         expected_result_file = test_env.get_test_loc(
             "purlcli/expected_urls_output_head.json"
         )
@@ -923,15 +1096,11 @@ class TestPURLCLI_urls(object):
             "--purl",
             "pkg:pypi/matchcode",
             "--purl",
-            "pkg:rubygems/bundler-sass",
-            "--purl",
             "abcdefg",
             "--purl",
             "pkg/abc",
             "--purl",
             "pkg:nuget/auth0-aspnet@1.1.0",
-            "--purl",
-            "pkg:cargo/socksprox",
             "--head",
             "--output",
             actual_result_file,
@@ -1277,6 +1446,7 @@ class TestPURLCLI_urls(object):
             file="",
             command_name="urls",
             head=False,
+            unique=False,
         )
         cli_test_utils.streamline_headers(expected["headers"])
         cli_test_utils.streamline_headers(purl_urls["headers"])
@@ -1320,263 +1490,718 @@ class TestPURLCLI_urls(object):
         purl_urls = purlcli.check_urls_purl(test_input[0])
         assert purl_urls == expected
 
-    # TODO: test_make_head_request()
-
-
-# TODO: not yet converted to a SCTK-like data structure.
-class TestPURLCLI_validate(object):
     @pytest.mark.parametrize(
         "test_input,expected",
         [
             (
-                ["pkg:pypi/fetchcode@0.2.0"],
-                [
-                    {
-                        "valid": True,
-                        "exists": True,
-                        "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                        "purl": "pkg:pypi/fetchcode@0.2.0",
-                    }
-                ],
+                ["https://pypi.org/project/fetchcode/"],
+                {"get_request": 200, "head_request": 200},
             ),
             (
-                ["pkg:pypi/fetchcode@10.2.0"],
-                [
-                    {
-                        "valid": True,
-                        "exists": False,
-                        "message": "The provided PackageURL is valid, but does not exist in the upstream repo.",
-                        "purl": "pkg:pypi/fetchcode@10.2.0",
-                    }
-                ],
+                [None],
+                {"get_request": "N/A", "head_request": "N/A"},
             ),
             (
-                ["pkg:nginx/nginx@0.8.9?os=windows"],
-                [
-                    {
-                        "valid": True,
-                        "exists": None,
-                        "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                        "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-                    }
-                ],
+                ["https://crates.io/crates/banquo"],
+                {"get_request": 404, "head_request": 404},
             ),
             (
-                ["pkg:gem/bundler-sass"],
-                [
-                    {
-                        "valid": True,
-                        "exists": True,
-                        "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                        "purl": "pkg:gem/bundler-sass",
-                    }
-                ],
+                ["https://crates.io/crates/socksprox"],
+                {"get_request": 404, "head_request": 404},
             ),
             (
-                ["pkg:rubygems/bundler-sass"],
-                [
-                    {
-                        "valid": True,
-                        "exists": None,
-                        "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                        "purl": "pkg:rubygems/bundler-sass",
-                    }
-                ],
+                ["https://www.nuget.org/api/v2/package/auth0-aspnet/1.1.0"],
+                {"get_request": 200, "head_request": 404},
+            ),
+        ],
+    )
+    def test_make_head_request(self, test_input, expected):
+        purl_status_code = purlcli.make_head_request(test_input[0])
+
+        assert purl_status_code == expected
+
+
+class TestPURLCLI_validate(object):
+    def test_validate_cli(self):
+        """
+        Test the `validate` command with actual and expected JSON output files.
+        """
+        expected_result_file = test_env.get_test_loc(
+            "purlcli/expected_validate_output.json"
+        )
+        actual_result_file = test_env.get_temp_file("actual_validate_output.json")
+        options = [
+            "--purl",
+            "pkg:pypi/fetchcode",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0?os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
+            "--purl",
+            "pkg:cargo/banquo",
+            "--purl",
+            "pkg:nginx/nginx",
+            "--purl",
+            "pkg:gem/rails",
+            "--purl",
+            "pkg:rubygems/rails",
+            "--output",
+            actual_result_file,
+        ]
+        runner = CliRunner()
+        result = runner.invoke(purlcli.validate, options, catch_exceptions=False)
+        assert result.exit_code == 0
+
+        f_output = open(actual_result_file)
+        output_data = json.load(f_output)
+
+        f_expected = open(expected_result_file)
+        expected_data = json.load(f_expected)
+
+        result_objects = [
+            (
+                output_data["headers"][0]["tool_name"],
+                expected_data["headers"][0]["tool_name"],
+            ),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
+            (
+                output_data["headers"][0]["warnings"],
+                expected_data["headers"][0]["warnings"],
             ),
             (
-                ["pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0-rc1"],
-                [
-                    {
-                        "valid": True,
-                        "exists": True,
-                        "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                        "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0-rc1",
-                    }
-                ],
+                output_data["headers"][0]["errors"],
+                expected_data["headers"][0]["errors"],
+            ),
+            (
+                output_data["headers"][0]["options"]["command"],
+                expected_data["headers"][0]["options"]["command"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--purl"],
+                expected_data["headers"][0]["options"]["--purl"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--file"],
+                expected_data["headers"][0]["options"]["--file"],
+            ),
+            (output_data["packages"], expected_data["packages"]),
+        ]
+
+        for output, expected in result_objects:
+            assert output == expected
+
+    def test_validate_cli_unique(self):
+        """
+        Test the `validate` command with actual and expected JSON output files
+        with the `--unique` flag included in the command.
+        """
+        expected_result_file = test_env.get_test_loc(
+            "purlcli/expected_validate_output_unique.json"
+        )
+        actual_result_file = test_env.get_temp_file("actual_validate_output.json")
+        options = [
+            "--purl",
+            "pkg:pypi/fetchcode",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0?os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
+            "--purl",
+            "pkg:cargo/banquo",
+            "--purl",
+            "pkg:nginx/nginx",
+            "--purl",
+            "pkg:gem/rails",
+            "--purl",
+            "pkg:rubygems/rails",
+            "--output",
+            actual_result_file,
+            "--unique",
+        ]
+        runner = CliRunner()
+        result = runner.invoke(purlcli.validate, options, catch_exceptions=False)
+        assert result.exit_code == 0
+
+        f_output = open(actual_result_file)
+        output_data = json.load(f_output)
+
+        f_expected = open(expected_result_file)
+        expected_data = json.load(f_expected)
+
+        result_objects = [
+            (
+                output_data["headers"][0]["tool_name"],
+                expected_data["headers"][0]["tool_name"],
+            ),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
+            (
+                output_data["headers"][0]["warnings"],
+                expected_data["headers"][0]["warnings"],
+            ),
+            (
+                output_data["headers"][0]["errors"],
+                expected_data["headers"][0]["errors"],
+            ),
+            (
+                output_data["headers"][0]["options"]["command"],
+                expected_data["headers"][0]["options"]["command"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--purl"],
+                expected_data["headers"][0]["options"]["--purl"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--file"],
+                expected_data["headers"][0]["options"]["--file"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--unique"],
+                expected_data["headers"][0]["options"]["--unique"],
+            ),
+            (output_data["packages"], expected_data["packages"]),
+        ]
+
+        for output, expected in result_objects:
+            assert output == expected
+
+    @pytest.mark.parametrize(
+        "test_input,expected",
+        [
+            (
+                "pkg:pypi/fetchcode@0.2.0",
+                {
+                    "valid": True,
+                    "exists": True,
+                    "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+                    "purl": "pkg:pypi/fetchcode@0.2.0",
+                },
+            ),
+            (
+                "pkg:pypi/fetchcode@10.2.0",
+                {
+                    "valid": True,
+                    "exists": False,
+                    "message": "The provided PackageURL is valid, but does not exist in the upstream repo.",
+                    "purl": "pkg:pypi/fetchcode@10.2.0",
+                },
+            ),
+            (
+                "pkg:nginx/nginx@0.8.9?os=windows",
+                {
+                    "valid": True,
+                    "exists": None,
+                    "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+                    "purl": "pkg:nginx/nginx@0.8.9?os=windows",
+                },
+            ),
+            (
+                "pkg:gem/bundler-sass",
+                {
+                    "valid": True,
+                    "exists": True,
+                    "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+                    "purl": "pkg:gem/bundler-sass",
+                },
+            ),
+            (
+                "pkg:rubygems/bundler-sass",
+                {
+                    "valid": True,
+                    "exists": None,
+                    "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+                    "purl": "pkg:rubygems/bundler-sass",
+                },
+            ),
+            (
+                "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0-rc1",
+                {
+                    "valid": True,
+                    "exists": True,
+                    "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+                    "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0-rc1",
+                },
             ),
         ],
     )
     def test_validate_purl(self, test_input, expected):
-        validated_purls = purlcli.validate_purls(test_input)
-        assert validated_purls == expected
+        validated_purl = purlcli.validate_purl(test_input)
+        assert validated_purl == expected
 
     def test_validate_purl_empty(self):
-        test_purls = []
-        validated_purls = purlcli.validate_purls(test_purls)
-        expected_results = []
-        assert validated_purls == expected_results
+        test_input = None
+        validated_purl = purlcli.validate_purl(test_input)
+        expected_results = {"errors": {"purl": ["This field is required."]}}
+        assert validated_purl == expected_results
 
     @pytest.mark.parametrize(
         "test_input,expected",
         [
             (
-                ["pkg:pypi/fetchcode@0.2.0"],
-                [
-                    {
-                        "valid": True,
-                        "exists": True,
-                        "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                        "purl": "pkg:pypi/fetchcode@0.2.0",
-                    }
-                ],
+                "pkg:pypi/fetchcode@0.2.0",
+                {
+                    "valid": True,
+                    "exists": True,
+                    "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+                    "purl": "pkg:pypi/fetchcode@0.2.0",
+                },
             ),
             (
-                ["pkg:pypi/fetchcode@0.2.0?"],
-                [
-                    {
-                        "valid": True,
-                        "exists": True,
-                        "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                        "purl": "pkg:pypi/fetchcode@0.2.0?",
-                    }
-                ],
+                "pkg:pypi/fetchcode@0.2.0?",
+                {
+                    "valid": True,
+                    "exists": True,
+                    "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+                    "purl": "pkg:pypi/fetchcode@0.2.0?",
+                },
             ),
             (
-                ["pkg:pypi/fetchcode@?0.2.0"],
-                [
-                    {
-                        "valid": False,
-                        "exists": None,
-                        "message": "The provided PackageURL is not valid.",
-                        "purl": "pkg:pypi/fetchcode@?0.2.0",
-                    }
-                ],
+                "pkg:pypi/fetchcode@?0.2.0",
+                {
+                    "valid": False,
+                    "exists": None,
+                    "message": "The provided PackageURL is not valid.",
+                    "purl": "pkg:pypi/fetchcode@?0.2.0",
+                },
             ),
             (
-                ["foo"],
-                [
-                    {
-                        "valid": False,
-                        "exists": None,
-                        "message": "The provided PackageURL is not valid.",
-                        "purl": "foo",
-                    }
-                ],
+                "foo",
+                {
+                    "valid": False,
+                    "exists": None,
+                    "message": "The provided PackageURL is not valid.",
+                    "purl": "foo",
+                },
             ),
         ],
     )
     def test_validate_purl_invalid(self, test_input, expected):
-        validated_purls = purlcli.validate_purls(test_input)
-        assert validated_purls == expected
+        validated_purl = purlcli.validate_purl(test_input)
+        assert validated_purl == expected
 
     @pytest.mark.parametrize(
         "test_input,expected",
         [
             (
-                ["pkg:nginx/nginx@0.8.9?os=windows"],
-                [
-                    {
-                        "valid": True,
-                        "exists": None,
-                        "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                        "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-                    },
-                ],
+                "pkg:nginx/nginx@0.8.9?os=windows",
+                {
+                    "valid": True,
+                    "exists": None,
+                    "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+                    "purl": "pkg:nginx/nginx@0.8.9?os=windows",
+                },
             ),
             (
-                [" pkg:nginx/nginx@0.8.9?os=windows"],
-                [
-                    {
-                        "valid": True,
-                        "exists": None,
-                        "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                        "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-                    },
-                ],
+                " pkg:nginx/nginx@0.8.9?os=windows",
+                {
+                    "valid": True,
+                    "exists": None,
+                    "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+                    "purl": "pkg:nginx/nginx@0.8.9?os=windows",
+                },
             ),
             (
-                ["pkg:nginx/nginx@0.8.9?os=windows "],
-                [
-                    {
-                        "valid": True,
-                        "exists": None,
-                        "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                        "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-                    }
-                ],
+                "pkg:nginx/nginx@0.8.9?os=windows ",
+                {
+                    "valid": True,
+                    "exists": None,
+                    "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+                    "purl": "pkg:nginx/nginx@0.8.9?os=windows",
+                },
             ),
         ],
     )
     def test_validate_purl_strip(self, test_input, expected):
-        validated_purls = purlcli.validate_purls(test_input)
-        assert validated_purls == expected
+        validated_purl = purlcli.validate_purl(test_input)
+        assert validated_purl == expected
 
 
-# TODO: not yet converted to a SCTK-like data structure.
 class TestPURLCLI_versions(object):
+    def test_versions_cli(self):
+        """
+        Test the `versions` command with actual and expected JSON output files.
+        """
+        expected_result_file = test_env.get_test_loc(
+            "purlcli/expected_versions_output.json"
+        )
+        actual_result_file = test_env.get_temp_file("actual_versions_output.json")
+        options = [
+            "--purl",
+            "pkg:pypi/fetchcode",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0?os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
+            "--purl",
+            "pkg:cargo/banquo",
+            "--purl",
+            "pkg:nginx/nginx",
+            "--purl",
+            "pkg:hex/coherence@0.1.0",
+            "--output",
+            actual_result_file,
+        ]
+        runner = CliRunner()
+        result = runner.invoke(purlcli.get_versions, options, catch_exceptions=False)
+        assert result.exit_code == 0
+
+        f_output = open(actual_result_file)
+        output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
+
+        f_expected = open(expected_result_file)
+        expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
+
+        result_objects = [
+            (
+                output_data["headers"][0]["tool_name"],
+                expected_data["headers"][0]["tool_name"],
+            ),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
+            (
+                output_data["headers"][0]["warnings"],
+                expected_data["headers"][0]["warnings"],
+            ),
+            (
+                output_data["headers"][0]["errors"],
+                expected_data["headers"][0]["errors"],
+            ),
+            (
+                output_data["headers"][0]["options"]["command"],
+                expected_data["headers"][0]["options"]["command"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--purl"],
+                expected_data["headers"][0]["options"]["--purl"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--file"],
+                expected_data["headers"][0]["options"]["--file"],
+            ),
+        ]
+
+        for output, expected in result_objects:
+            assert output == expected
+
+        # NOTE: To avoid errors from the addition of new versions, we exclude
+        # `(output_data["packages"], expected_data["packages"])` from the
+        # result_objects list above and handle here.
+        expected_versions = []
+        output_versions = []
+        for expected in expected_data["packages"]:
+            expected_versions = expected["versions"]
+        for output in output_data["packages"]:
+            output_versions = output["versions"]
+
+        assert [i for i in expected_versions if i not in output_versions] == []
+
+    def test_versions_cli_unique(self):
+        """
+        Test the `versions` command with actual and expected JSON output files
+        with the `--unique` flag included in the command.
+        """
+        expected_result_file = test_env.get_test_loc(
+            "purlcli/expected_versions_output_unique.json"
+        )
+        actual_result_file = test_env.get_temp_file("actual_versions_output.json")
+        options = [
+            "--purl",
+            "pkg:pypi/fetchcode",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0?os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@0.3.0os=windows",
+            "--purl",
+            "pkg:pypi/fetchcode@5.0.0",
+            "--purl",
+            "pkg:cargo/banquo",
+            "--purl",
+            "pkg:nginx/nginx",
+            "--purl",
+            "pkg:hex/coherence@0.1.0",
+            "--output",
+            actual_result_file,
+            "--unique",
+        ]
+        runner = CliRunner()
+        result = runner.invoke(purlcli.get_versions, options, catch_exceptions=False)
+        assert result.exit_code == 0
+
+        f_output = open(actual_result_file)
+        output_data = json.load(f_output)
+        cli_test_utils.streamline_headers(output_data["headers"])
+
+        f_expected = open(expected_result_file)
+        expected_data = json.load(f_expected)
+        cli_test_utils.streamline_headers(expected_data["headers"])
+
+        result_objects = [
+            (
+                output_data["headers"][0]["tool_name"],
+                expected_data["headers"][0]["tool_name"],
+            ),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
+            (
+                output_data["headers"][0]["warnings"],
+                expected_data["headers"][0]["warnings"],
+            ),
+            (
+                output_data["headers"][0]["errors"],
+                expected_data["headers"][0]["errors"],
+            ),
+            (
+                output_data["headers"][0]["options"]["command"],
+                expected_data["headers"][0]["options"]["command"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--purl"],
+                expected_data["headers"][0]["options"]["--purl"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--file"],
+                expected_data["headers"][0]["options"]["--file"],
+            ),
+            (
+                output_data["headers"][0]["options"]["--unique"],
+                expected_data["headers"][0]["options"]["--unique"],
+            ),
+        ]
+
+        for output, expected in result_objects:
+            assert output == expected
+
+        # See note under test_versions_cli() re addition of new versions.
+        expected_versions = []
+        output_versions = []
+        for expected in expected_data["packages"]:
+            expected_versions = expected["versions"]
+        for output in output_data["packages"]:
+            output_versions = output["versions"]
+
+        assert [i for i in expected_versions if i not in output_versions] == []
+
     @pytest.mark.parametrize(
         "test_input,expected",
         [
             (
                 ["pkg:pypi/fetchcode"],
-                [
-                    {
-                        "purl": "pkg:pypi/fetchcode",
-                        "versions": [
-                            {
-                                "purl": "pkg:pypi/fetchcode@0.1.0",
-                                "version": "0.1.0",
-                                "release_date": "2021-08-25T15:15:15.265015+00:00",
+                {
+                    "headers": [
+                        {
+                            "tool_name": "purlcli",
+                            "tool_version": "0.2.0",
+                            "options": {
+                                "command": "versions",
+                                "--purl": ["pkg:pypi/fetchcode"],
+                                "--file": None,
+                                "--output": "",
                             },
-                            {
-                                "purl": "pkg:pypi/fetchcode@0.2.0",
-                                "version": "0.2.0",
-                                "release_date": "2022-09-14T16:36:02.242182+00:00",
-                            },
-                            {
-                                "purl": "pkg:pypi/fetchcode@0.3.0",
-                                "version": "0.3.0",
-                                "release_date": "2023-12-18T20:49:45.840364+00:00",
-                            },
-                        ],
-                    },
-                ],
+                            "purls": ["pkg:pypi/fetchcode"],
+                            "errors": [],
+                            "warnings": [],
+                        }
+                    ],
+                    "packages": [
+                        {
+                            "purl": "pkg:pypi/fetchcode",
+                            "versions": [
+                                {
+                                    "purl": "pkg:pypi/fetchcode@0.1.0",
+                                    "version": "0.1.0",
+                                    "release_date": "2021-08-25 15:15:15.265015+00:00",
+                                },
+                                {
+                                    "purl": "pkg:pypi/fetchcode@0.2.0",
+                                    "version": "0.2.0",
+                                    "release_date": "2022-09-14 16:36:02.242182+00:00",
+                                },
+                                {
+                                    "purl": "pkg:pypi/fetchcode@0.3.0",
+                                    "version": "0.3.0",
+                                    "release_date": "2023-12-18 20:49:45.840364+00:00",
+                                },
+                            ],
+                        }
+                    ],
+                },
             ),
             (
                 ["pkg:gem/bundler-sass"],
-                [
-                    {
-                        "purl": "pkg:gem/bundler-sass",
-                        "versions": [
-                            {
-                                "purl": "pkg:gem/bundler-sass@0.1.2",
-                                "release_date": "2013-12-11T00:27:10.097000+00:00",
-                                "version": "0.1.2",
+                {
+                    "headers": [
+                        {
+                            "tool_name": "purlcli",
+                            "tool_version": "0.2.0",
+                            "options": {
+                                "command": "versions",
+                                "--purl": ["pkg:gem/bundler-sass"],
+                                "--file": None,
+                                "--output": "",
                             },
-                        ],
-                    },
-                ],
+                            "purls": ["pkg:gem/bundler-sass"],
+                            "errors": [],
+                            "warnings": [],
+                        }
+                    ],
+                    "packages": [
+                        {
+                            "purl": "pkg:gem/bundler-sass",
+                            "versions": [
+                                {
+                                    "purl": "pkg:gem/bundler-sass@0.1.2",
+                                    "version": "0.1.2",
+                                    "release_date": "2013-12-11 00:27:10.097000+00:00",
+                                }
+                            ],
+                        }
+                    ],
+                },
             ),
             (
                 ["pkg:rubygems/bundler-sass"],
-                [],
+                {
+                    "headers": [
+                        {
+                            "tool_name": "purlcli",
+                            "tool_version": "0.2.0",
+                            "options": {
+                                "command": "versions",
+                                "--purl": ["pkg:rubygems/bundler-sass"],
+                                "--file": None,
+                                "--output": "",
+                            },
+                            "purls": ["pkg:rubygems/bundler-sass"],
+                            "errors": [],
+                            "warnings": [
+                                "'pkg:rubygems/bundler-sass' not supported with `versions` command"
+                            ],
+                        }
+                    ],
+                    "packages": [],
+                },
             ),
             (
                 ["pkg:nginx/nginx"],
-                [],
+                {
+                    "headers": [
+                        {
+                            "tool_name": "purlcli",
+                            "tool_version": "0.2.0",
+                            "options": {
+                                "command": "versions",
+                                "--purl": ["pkg:nginx/nginx"],
+                                "--file": None,
+                                "--output": "",
+                            },
+                            "purls": ["pkg:nginx/nginx"],
+                            "errors": [],
+                            "warnings": [
+                                "'pkg:nginx/nginx' not supported with `versions` command"
+                            ],
+                        }
+                    ],
+                    "packages": [],
+                },
             ),
             (
                 ["pkg:pypi/zzzzz"],
-                [],
+                {
+                    "headers": [
+                        {
+                            "tool_name": "purlcli",
+                            "tool_version": "0.2.0",
+                            "options": {
+                                "command": "versions",
+                                "--purl": ["pkg:pypi/zzzzz"],
+                                "--file": None,
+                                "--output": "",
+                            },
+                            "purls": ["pkg:pypi/zzzzz"],
+                            "errors": [],
+                            "warnings": [
+                                "'pkg:pypi/zzzzz' does not exist in the upstream repo"
+                            ],
+                        }
+                    ],
+                    "packages": [],
+                },
             ),
             (
                 ["pkg:pypi/?fetchcode"],
-                [],
+                {
+                    "headers": [
+                        {
+                            "tool_name": "purlcli",
+                            "tool_version": "0.2.0",
+                            "options": {
+                                "command": "versions",
+                                "--purl": ["pkg:pypi/?fetchcode"],
+                                "--file": None,
+                                "--output": "",
+                            },
+                            "purls": ["pkg:pypi/?fetchcode"],
+                            "errors": [],
+                            "warnings": ["'pkg:pypi/?fetchcode' not valid"],
+                        }
+                    ],
+                    "packages": [],
+                },
             ),
             (
                 ["zzzzz"],
-                [],
+                {
+                    "headers": [
+                        {
+                            "tool_name": "purlcli",
+                            "tool_version": "0.2.0",
+                            "options": {
+                                "command": "versions",
+                                "--purl": ["zzzzz"],
+                                "--file": None,
+                                "--output": "",
+                            },
+                            "purls": ["zzzzz"],
+                            "errors": [],
+                            "warnings": ["'zzzzz' not valid"],
+                        }
+                    ],
+                    "packages": [],
+                },
             ),
         ],
     )
-    def test_versions(self, test_input, expected):
-        # TODO: not yet updated to SCTK-like structure.
+    def test_versions_details(self, test_input, expected):
         output = ""
         file = ""
         command_name = "versions"
+        unique = False
 
-        purl_versions = purlcli.list_versions(test_input, output, file, command_name)
-        assert purl_versions == expected
+        purl_versions = purlcli.get_versions_details(
+            test_input, output, file, unique, command_name
+        )
+
+        cli_test_utils.streamline_headers(purl_versions["headers"])
+        cli_test_utils.streamline_headers(expected["headers"])
+
+        # See note under test_versions_cli() re addition of new versions.
+        assert purl_versions["headers"] == expected["headers"]
+
+        for expected in expected["packages"]:
+            assert expected in purl_versions["packages"]
 
     @pytest.mark.parametrize(
         "test_input,expected",
@@ -1610,15 +2235,20 @@ class TestPURLCLI_versions(object):
                 "not_valid",
             ),
             (
-                ["pkg:deb/debian/2ping"],
+                ["pkg:maven/axis/axis@1.0"],
                 None,
-            ),
-            (
-                ["pkg:deb/2ping"],
-                "valid_but_not_supported",
             ),
         ],
     )
     def test_check_versions_purl(self, test_input, expected):
         purl_versions = purlcli.check_versions_purl(test_input[0])
         assert purl_versions == expected
+
+
+def streamline_metadata_packages(packages):
+    """
+    Modify the `packages` list of `metadata` mappings in place to make it easier to test.
+    """
+    for hle in packages:
+        hle.pop("code_view_url", None)
+        hle.pop("download_url", None)
