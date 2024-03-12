@@ -370,10 +370,10 @@ def map_debian_package(debian_package, package_content):
         download_url = debian_package.binary_archive_url
     elif package_content == PackageContentType.SOURCE_ARCHIVE:
         download_url = debian_package.source_archive_url
-    
+
     response = requests.get(download_url)
     if not response.ok:
-        msg = f'Package metadata not exist on debian: {download_url}'
+        msg = f'Package metadata does not exist on debian: {download_url}'
         error += msg + '\n'
         logger.error(msg)
         return db_package, error
@@ -571,7 +571,7 @@ class DebianPackage:
         """
         """
         purl_version = self.package_archive_version
-        arch = self.package_url.qualifiers.get("architecture")
+        arch = self.package_url.qualifiers.get("arch")
         if arch:
             archive_name =f"{self.package_url.name}_{purl_version}_{arch}.deb"
         else:
