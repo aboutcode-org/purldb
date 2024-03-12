@@ -80,7 +80,7 @@ def process_request(purl_str):
 
 def map_directory_listed_package(package_url):
     """
-    Add a GNU `package_url` to the PackageDB.
+    Add a directory listed `package_url` to the PackageDB.
 
     Return an error string if any errors are encountered during the process
     """
@@ -143,7 +143,11 @@ DIR_SUPPORTED_PURLS = [
 def process_request_dir_listed(purl_str):
     """
     Process `priority_resource_uri` containing a generic Package URL (PURL)
-    supported by fetchcode
+    supported by fetchcode.
+
+    This involves obtaining Package information for the PURL using
+    https://github.com/nexB/fetchcode and using it to create a new
+    PackageDB entry. The package is then added to the scan queue afterwards.
     """
     try:
         package_url = PackageURL.from_string(purl_str)
