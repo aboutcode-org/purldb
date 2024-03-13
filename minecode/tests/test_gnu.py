@@ -54,7 +54,7 @@ class GnuPriorityQueueTests(JsonBasedTesting, TestCase):
         package = Package.objects.first()
         self.assertEqual("glibc", package.name)
         self.assertEqual("2.15", package.version)
-        print(package.download_url)
+
         self.assertEqual(
             "https://ftp.gnu.org/pub/gnu/glibc/glibc-2.15.tar.gz",
             package.download_url,
