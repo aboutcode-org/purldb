@@ -7,16 +7,16 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from django.db import router
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.utils import OpenApiParameter
+from drf_spectacular.utils import extend_schema
 from packageurl.utils import get_golang_purl
+from rest_framework import routers
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 
 from packagedb.serializers import GoLangPurlResponseSerializer
 from packagedb.serializers import GoLangPurlSerializer
-from rest_framework import routers
 
 
 @extend_schema(
@@ -27,7 +27,7 @@ from rest_framework import routers
 )
 class GolangPurlViewSet(viewsets.ViewSet):
     """
-    Return a ``golang_purl`` from a standard go import string or 
+    Return a ``golang_purl`` from a standard go import string or
     a go.mod string ``go_package``.
     For example:
     >>> get_golang_purl("github.com/gorilla/mux v1.8.1")
@@ -53,12 +53,22 @@ class GolangPurlViewSet(viewsets.ViewSet):
 
         validated_data = serializer.validated_data
         go_import = validated_data.get("go_package")
-        purl = get_golang_purl(go_import)
+        try:
+            purl = get_golang_purl(go_import)
+        except:
+            serializer = GoLangPurlResponseSerializer(
+                response, context={"request": request}
+            )
+            return Response(
+                {"errors": "`@` is not supported either in import or go.mod string"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         response["package_url"] = purl
         serializer = GoLangPurlResponseSerializer(
             response, context={"request": request}
         )
         return Response(serializer.data)
+
 
 api_to_purl_router = routers.DefaultRouter()
 api_to_purl_router.register("go", GolangPurlViewSet, "go")

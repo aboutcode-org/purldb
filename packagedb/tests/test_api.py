@@ -7,9 +7,10 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from uuid import uuid4
 import json
 import os
+from unittest import mock
+from uuid import uuid4
 
 from django.contrib.postgres.search import SearchVector
 from django.test import TestCase
@@ -17,6 +18,7 @@ from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
+from univers.versions import MavenVersion
 
 from minecode.models import PriorityResourceURI
 from minecode.models import ScannableURI
@@ -26,8 +28,6 @@ from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
 from packagedb.models import Resource
 
-from unittest import mock
-from univers.versions import MavenVersion
 
 class ResourceAPITestCase(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
@@ -1184,6 +1184,18 @@ class PurlValidateApiTestCase(TestCase):
 class ToGolangPurlTestCase(TestCase):
 
     def test_to_golang_purl(self):
-        response = self.client.get("/api/to_purl/go", data={"go_package": "github.com/gorilla/mux@v1.7.3"}, follow=True)
-        expected = "pkg:golang/github.com/gorilla/mux%40v1.7.3"
+        response = self.client.get(
+            "/api/to_purl/go",
+            data={"go_package": "github.com/gorilla/mux@v1.7.3"},
+            follow=True,
+        )
+        expected = "`@` is not supported either in import or go.mod string"
+        self.assertEqual(expected, response.data["errors"])
+
+        response = self.client.get(
+            "/api/to_purl/go",
+            data={"go_package": "github.com/gorilla/mux v1.7.3"},
+            follow=True,
+        )
+        expected = "pkg:golang/github.com/gorilla/mux@v1.7.3"
         self.assertEqual(expected, response.data["package_url"])
