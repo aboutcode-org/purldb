@@ -27,8 +27,14 @@ from rest_framework import routers
 )
 class GolangPurlViewSet(viewsets.ViewSet):
     """
-    Return a ``golang_purl`` from a standard go import string 
-    ``go_package``.
+    Return a ``golang_purl`` from a standard go import string or 
+    a go.mod string ``go_package``.
+    For example:
+    >>> get_golang_purl("github.com/gorilla/mux v1.8.1")
+    "pkg:golang/github.com/gorilla/mux@v1.8.1"
+    >>> # This is an example of go.mod string
+    >>> get_golang_purl("github.com/gorilla/mux")
+    "pkg:golang/github.com/gorilla/mux"
     """
 
     serializer_class = GoLangPurlSerializer
@@ -48,7 +54,7 @@ class GolangPurlViewSet(viewsets.ViewSet):
         validated_data = serializer.validated_data
         go_import = validated_data.get("go_package")
         purl = get_golang_purl(go_import)
-        response["golang_purl"] = purl
+        response["package_url"] = purl
         serializer = GoLangPurlResponseSerializer(
             response, context={"request": request}
         )

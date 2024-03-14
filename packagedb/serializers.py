@@ -421,4 +421,4 @@ class GoLangPurlSerializer(Serializer):
 
 
 class GoLangPurlResponseSerializer(Serializer):
-    golang_purl = CharField()
+    package_url = CharField()
