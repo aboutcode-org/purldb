@@ -74,7 +74,7 @@ natsort==8.2.0
 normality==2.5.0
 openpyxl==3.1.2
 packagedcode-msitools==0.101.210706
-packageurl-python==0.13.4
+packageurl-python==0.15.0
 packaging==23.2
 packvers==21.5
 parameter-expansion-patched==0.3.1
