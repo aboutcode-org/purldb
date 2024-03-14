@@ -64,7 +64,7 @@ class GolangPurlViewSet(viewsets.ViewSet):
                 {"errors": "`@` is not supported either in import or go.mod string"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        response["package_url"] = purl
+        response["package_url"] = str(purl)
         serializer = GoLangPurlResponseSerializer(
             response, context={"request": request}
         )
