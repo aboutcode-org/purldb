@@ -428,6 +428,13 @@ def map_debian_package(debian_package, package_content):
 
 def get_debian_package_metadata(debian_package):
     """
+    Given a DebianPackage object with package url and source package url
+    information, get the .dsc package metadata url, fetch the .dsc file,
+    parse and return the PackageData object containing the package metadata
+    for that Debian package.
+
+    If there are errors, return None and a string containing the error
+    information.
     """
     error = ''
 
@@ -449,6 +456,13 @@ def get_debian_package_metadata(debian_package):
 
 def get_debian_package_copyright(debian_package):
     """
+    Given a DebianPackage object with package url and source package url
+    information, get the debian copyright file url, fetch and run license
+    detection, and return the PackageData object containing the package
+    metadata for that Debian package.
+
+    If there are errors, return None and a string containing the error
+    information.
     """
     error = ''
 
@@ -489,7 +503,7 @@ def update_license_copyright_fields(package_from, package_to, replace=True):
 
 def map_debian_metadata_binary_and_source(package_url, source_package_url):
     """
-    Get metadata for the binary and source release of the Debain package
+    Get metadata for the binary and source release of the Debian package
     `package_url` and save it to the PackageDB.
 
     Return an error string for errors that occur, or empty string if there is no error.
@@ -510,12 +524,15 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url):
     else:
         metadata_base_url = DEBIAN_METADATA_URL
 
-    debian_package = DebianPackage(
+    package_urls = dict(
         package_url=package_url,
         source_package_url=source_package_url,
         archive_base_url=base_url,
         metadata_base_url=metadata_base_url,
     )
+    debian_package, emsg = DebianPackage.from_purls(package_urls)
+    if emsg:
+        return emsg
 
     binary_package, emsg = map_debian_package(
         debian_package,
@@ -544,6 +561,10 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url):
 
 @attr.s
 class DebianPackage:
+    """
+    Contains the package url and source package url for a debian package
+    necessary to get source, binary, metadata and copyright urls for it.
+    """
 
     archive_base_url = attr.ib(type=str)
     metadata_base_url = attr.ib(type=str)
@@ -552,12 +573,20 @@ class DebianPackage:
     metadata_directory_url = attr.ib(type=str, default=None)
     archive_directory_url = attr.ib(type=str, default=None)
 
-    def __attrs_post_init__(self, *args, **kwargs):
-        self.set_debian_directories()
+    @classmethod
+    def from_purls(cls, package_urls):
+        """
+        Set the directory URLs for metadata and package archives.
+        """
+        debian_package = cls(**package_urls)
+        error = debian_package.set_debian_directories()
+        return debian_package, error
 
     @property
     def package_archive_version(self):
         """
+        Get the useful part of the debian package version used in
+        source, binary, metadata and copyright URLs optionally. 
         """
         debvers = DebVersion.from_string(self.package_url.version)
         if debvers.revision != "0":
@@ -569,6 +598,7 @@ class DebianPackage:
     @property
     def binary_archive_url(self):
         """
+        Get the .deb debian binary archive url for this debian package.
         """
         purl_version = self.package_archive_version
         arch = self.package_url.qualifiers.get("arch")
@@ -582,6 +612,7 @@ class DebianPackage:
     @property
     def source_archive_url(self):
         """
+        Get the debian source tarball archive url for this debian package.
         """
         debian_source_archive_formats = [
             ".tar.xz", ".tar.gz", ".orig.tar.xz", ".orig.tar.gz", ".orig.tar.bz2"
@@ -610,6 +641,9 @@ class DebianPackage:
 
     @property
     def package_metadata_url(self):
+        """
+        Get the .dsc metadata file url for this debian package.
+        """
         metadata_version = self.package_archive_version
         if not self.source_package_url:
             metadata_package_name = self.package_url.name
@@ -628,6 +662,10 @@ class DebianPackage:
 
     @property
     def package_copyright_url(self):
+        """
+        Get the debian copyright file url containing license and copyright
+        declarations for this debian package.
+        """
         # Copyright files for ubuntu are named just `copyright` and placed under a name-version folder
         # instead of having the name-version in the copyright file itself
         copyright_file_string = "_copyright"
@@ -652,7 +690,11 @@ class DebianPackage:
 
     def set_debian_directories(self):
         """
+        Compute and set base urls for metadata and archives, to get
+        source/binary
         """
+        error = ''
+
         archive_base_url = self.archive_base_url
         metadata_base_url = self.metadata_base_url
 
@@ -671,22 +713,22 @@ class DebianPackage:
         response = requests.get(package_directory)
         if not response.ok:
             if not self.source_package_url:
-                raise PackageDirectoryMissingException(msg + str(package_directory))
+                error = msg + str(package_directory)
+                return error
+
             if self.source_package_url.name.startswith('lib'):
                 name_wout_lib = self.source_package_url.name.replace("lib", "")
                 index_folder = 'lib' + name_wout_lib[0]
             else:
                 index_folder = self.source_package_url.name[0]
+
             package_directory = f"{archive_base_url}{index_folder}/{self.source_package_url.name}/"
             metadata_directory = f"{metadata_base_url}{index_folder}/{self.source_package_url.name}/"
 
             response = requests.get(package_directory)
             if not response.ok:
-                raise PackageDirectoryMissingException(msg + str(package_directory))
+                error = msg + str(package_directory)
+                return error
 
         self.archive_directory_url = package_directory
         self.metadata_directory_url = metadata_directory
-
-
-class PackageDirectoryMissingException(Exception):
-    pass

@@ -892,7 +892,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
 def get_resolved_packages(packages, supported_ecosystems):
     """
     Take a list of dict containing purl or version-less purl along with vers
-    and return a list of package dicsts containing resolved purls, a list of
+    and return a list of package dicts containing resolved purls, a list of
     unsupported purls, and a list of unsupported vers.
     """
     resolved_packages_by_purl = {}
