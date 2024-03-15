@@ -76,7 +76,7 @@ def fetch_response(
 
         response = requests.get(url=url, timeout=timeout)
         if response.status_code != 200:
-            UNREACHABLE_URLS.append(url)
+            UNREACHABLE_URLS.add(url)
             return
 
         RESPONSE_BY_URL_CACHE[url] = response
@@ -84,7 +84,7 @@ def fetch_response(
 
     except Exception as e:
         logger.error(f"Error getting {url}: {e}")
-        UNREACHABLE_URLS.append(url)
+        UNREACHABLE_URLS.add(url)
         return
 
 

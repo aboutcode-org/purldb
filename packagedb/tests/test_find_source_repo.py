@@ -12,10 +12,8 @@ import os
 from unittest import mock
 from unittest.mock import patch
 
-import pytest
 from django.test import TestCase
 from packageurl import PackageURL
-from requests import Response
 
 from packagedb.find_source_repo import convert_repo_urls_to_purls
 from packagedb.find_source_repo import fetch_response
@@ -331,5 +329,5 @@ class TestFindSourceRepo(TestCase):
             data={"package_url": str(self.package_without_resources_and_package_data)},
             follow=True,
         )
-        expected = "pkg:bitbucket/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/9.36?commit=e86fb3431972d302fcb615aca0baed4d8ab89791"
+        expected = "pkg:bitbucket/connect2id/oauth-2.0-sdk-with-openid-connect-extensions@9.36?commit=e86fb3431972d302fcb615aca0baed4d8ab89791"
         self.assertEqual(expected, response.data["git_repo"])
