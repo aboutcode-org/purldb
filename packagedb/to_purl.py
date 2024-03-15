@@ -27,17 +27,17 @@ from packagedb.serializers import GoLangPurlSerializer
 )
 class GolangPurlViewSet(viewsets.ViewSet):
     """
-    Return a ``golang_purl`` from a standard go import string or
+    Return a ``golang_purl`` PackageURL from a standard go import string or
     a go.mod string ``go_package``.
     
     For example:
 
-        >>> get_golang_purl("github.com/gorilla/mux v1.8.1")
-        "pkg:golang/github.com/gorilla/mux@v1.8.1"
+        >>> get_golang_purl("github.com/gorilla/mux v1.8.1").to_string()
+        'pkg:golang/github.com/gorilla/mux@v1.8.1'
         >>> # This is an example of go.mod string `package version`
         >>> 
-        >>> get_golang_purl("github.com/gorilla/mux")
-        "pkg:golang/github.com/gorilla/mux"
+        >>> get_golang_purl("github.com/gorilla/mux").to_string()
+        'pkg:golang/github.com/gorilla/mux'
         >>> #This is an example a go import string `package`
     """
 
