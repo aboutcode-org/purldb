@@ -415,3 +415,11 @@ class PurlValidateResponseSerializer(Serializer):
 class PurlValidateSerializer(Serializer):
     purl = CharField(required=True)
     check_existence = BooleanField(required=False, default=False)
+
+
+class GoLangPurlSerializer(Serializer):
+    go_package = CharField(required=True)
+
+
+class GoLangPurlResponseSerializer(Serializer):
+    package_url = CharField()

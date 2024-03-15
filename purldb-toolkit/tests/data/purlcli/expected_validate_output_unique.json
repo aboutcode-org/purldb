@@ -1,0 +1,63 @@
+{
+    "headers": [
+        {
+            "tool_name": "purlcli",
+            "tool_version": "0.2.0",
+            "options": {
+                "command": "validate",
+                "--purl": [
+                    "pkg:pypi/fetchcode",
+                    "pkg:pypi/fetchcode@0.3.0",
+                    "pkg:pypi/fetchcode@0.3.0?os=windows",
+                    "pkg:pypi/fetchcode@0.3.0os=windows",
+                    "pkg:pypi/fetchcode@5.0.0",
+                    "pkg:cargo/banquo",
+                    "pkg:nginx/nginx",
+                    "pkg:gem/rails",
+                    "pkg:rubygems/rails"
+                ],
+                "--file": null,
+                "--unique": true,
+                "--output": "<stdout>"
+            },
+            "purls": [
+                "pkg:pypi/fetchcode",
+                "pkg:pypi/fetchcode@0.3.0",
+                "pkg:pypi/fetchcode@0.3.0?os=windows",
+                "pkg:pypi/fetchcode@0.3.0os=windows",
+                "pkg:pypi/fetchcode@5.0.0",
+                "pkg:cargo/banquo",
+                "pkg:nginx/nginx",
+                "pkg:gem/rails",
+                "pkg:rubygems/rails"
+            ],
+            "errors": [],
+            "warnings": [
+                "input PURL: 'pkg:pypi/fetchcode@0.3.0' normalized to 'pkg:pypi/fetchcode'",
+                "input PURL: 'pkg:pypi/fetchcode@0.3.0?os=windows' normalized to 'pkg:pypi/fetchcode'",
+                "input PURL: 'pkg:pypi/fetchcode@0.3.0os=windows' normalized to 'pkg:pypi/fetchcode'",
+                "input PURL: 'pkg:pypi/fetchcode@5.0.0' normalized to 'pkg:pypi/fetchcode'"
+            ]
+        }
+    ],
+    "packages": [
+        {
+            "valid": true,
+            "exists": true,
+            "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+            "purl": "pkg:pypi/fetchcode"
+        },
+        {
+            "valid": true,
+            "exists": true,
+            "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+            "purl": "pkg:cargo/banquo"
+        },
+        {
+            "valid": true,
+            "exists": true,
+            "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+            "purl": "pkg:gem/rails"
+        }
+    ]
+}
