@@ -9,6 +9,7 @@
 
 from collections import namedtuple
 import gzip
+import hashlib
 import io
 import json
 import logging
@@ -39,7 +40,6 @@ from minecode.visitors import java_stream
 from minecode.visitors import HttpVisitor
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
-from minecode.utils import get_package_sha1
 from minecode.utils import validate_sha1
 from packagedb.models import make_relationship
 from packagedb.models import PackageContentType
@@ -387,6 +387,29 @@ def map_maven_packages(package_url):
         if emsg:
             error += emsg
     return error
+
+
+def get_package_sha1(package):
+    """
+    Return the sha1 value for `package` by checking if the sha1 file exists for
+    `package` on maven and returning the contents if it does.
+    If the sha1 is invalid, we download the package's JAR and calculate the sha1
+    from that.
+    """
+    download_url = package.repository_download_url
+    sha1_download_url = f'{download_url}.sha1'
+    response = requests.get(sha1_download_url)
+    if response.ok:
+        sha1_contents = response.text.strip().split()
+        sha1 = sha1_contents[0]
+        sha1 = validate_sha1(sha1)
+        if not sha1:
+            # Download JAR and calculate sha1 if we cannot get it from the repo
+            response = requests.get(download_url)
+            if response:
+                sha1_hash = hashlib.new('sha1', response.content)
+                sha1 = sha1_hash.hexdigest()
+        return sha1
 
 
 @priority_router.route('pkg:maven/.*')

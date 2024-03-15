@@ -247,21 +247,13 @@ def get_package_sha1(package, field="repository_download_url"):
     from that.
     """
     download_url = getattr(package, field)
-    sha1_download_url = f'{download_url}.sha1'
-    response = requests.get(sha1_download_url)
-    sha1 = None
-    if response.ok:
-        sha1_contents = response.text.strip().split()
-        sha1 = sha1_contents[0]
-        sha1 = validate_sha1(sha1)
 
-    if not sha1:
-        # Download JAR and calculate sha1 if we cannot get it from the repo
-        response = requests.get(download_url)
-        if response:
-            sha1_hash = hashlib.new('sha1', response.content)
-            sha1 = sha1_hash.hexdigest()
-    return sha1
+    # Download archive from URL and calculate sha1
+    response = requests.get(download_url)
+    if response:
+        sha1_hash = hashlib.new('sha1', response.content)
+        sha1 = sha1_hash.hexdigest()
+        return sha1
 
 
 def fetch_and_write_file_from_url(url):
