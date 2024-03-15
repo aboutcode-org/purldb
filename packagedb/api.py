@@ -61,6 +61,7 @@ from packagedb.serializers import PackageWatchUpdateSerializer
 from packagedb.serializers import PartySerializer
 from packagedb.serializers import UpdatePackagesSerializer
 from packagedb.serializers import PurlValidateResponseSerializer
+from packagedb.serializers import PurlUpdateResponseSerializer
 from packagedb.serializers import PurlValidateSerializer
 from packagedb.serializers import ResourceAPISerializer
 from packagedb.throttling import StaffUserRateThrottle
@@ -438,6 +439,8 @@ class PackageUpdateSet(viewsets.ViewSet):
 
     def create (self, request):
 
+        res = []
+
         serializer = UpdatePackagesSerializer(data=request.data)
 
         if not serializer.is_valid():
@@ -446,7 +449,6 @@ class PackageUpdateSet(viewsets.ViewSet):
         validated_data = serializer.validated_data
         packages = validated_data.get('purls', [])
         uuid = validated_data.get('uuid', None)
-        package_set = None
 
         if uuid:
             pack = PackageSet.objects.filter(uuid = uuid)
@@ -458,44 +460,32 @@ class PackageUpdateSet(viewsets.ViewSet):
 
         else:
             # Create Package Set and set package_set as the same object
-            pass
+            # pass
             package_set = PackageSet.objects.create()
 
-
-
         for items in packages or []:
+            temp = {}
             purl = items.get('purl')
+
+            temp['purl'] = purl
             content_type = items.get('content_type')
             lookups = purl_to_lookups(purl)
 
             packages = Package.objects.filter(**lookups)
+            temp['update_status'] = "Already Exists"
 
-            if packages:
-                package_set.add_to_package_set(packages)
-
-            else:
+            if not packages:
                 lookups['package_content'] = content_type
                 cr = Package.objects.create(**lookups)
                 package_set.add_to_package_set(cr)
+                temp['update_status'] = "Updated"
 
-        return Response({"msg" : "Successfully update the purls"})
+            res.append(temp)
 
+        serializer = PurlUpdateResponseSerializer(res, many=True)
 
+        return Response(serializer.data)
 
-    # @action(detail=False, methods=['post'], serializer_class=UpdatePackagesSerializer)
-    # def insert_purls(self, request, *args, **kwargs):
-    #
-    #     serializer = self.serializer_class(data=request.data)
-    #
-    #     if not serializer.is_valid():
-    #         return Response({'errors': serializer.errors}, status=400)
-    #
-    #     validated_data = serializer.validated_data
-    #     packages = validated_data.get('purls', [])
-    #     uuid = validated_data.get('uuid', None)
-    #
-    #
-    #     return Response(packages)
 
 
 UPDATEABLE_FIELDS = [

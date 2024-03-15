@@ -417,6 +417,10 @@ class PurlValidateResponseSerializer(Serializer):
     message = CharField()
     purl = CharField()
 
+class PurlUpdateResponseSerializer(Serializer):
+    purl = CharField()
+    update_status = CharField()
+
 class PurlValidateSerializer(Serializer):
     purl = CharField(required=True)
     check_existence = BooleanField(required=False, default=False)
