@@ -35,7 +35,6 @@ class GolangPurlViewSet(viewsets.ViewSet):
         >>> get_golang_purl("github.com/gorilla/mux v1.8.1").to_string()
         'pkg:golang/github.com/gorilla/mux@v1.8.1'
         >>> # This is an example of go.mod string `package version`
-        >>> 
         >>> get_golang_purl("github.com/gorilla/mux").to_string()
         'pkg:golang/github.com/gorilla/mux'
         >>> #This is an example a go import string `package`
