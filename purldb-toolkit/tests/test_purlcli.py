@@ -2034,6 +2034,11 @@ class TestPURLCLI_versions(object):
                                     "version": "0.3.0",
                                     "release_date": "2023-12-18 20:49:45.840364+00:00",
                                 },
+                                {
+                                    'purl': 'pkg:pypi/fetchcode@0.4.0',
+                                    'release_date': '2024-03-12 07:01:29.239299+00:00',
+                                    'version': '0.4.0'
+                                },
                             ],
                         }
                     ],
