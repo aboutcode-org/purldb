@@ -20,7 +20,7 @@ from rest_framework.response import Response
 # But importing the mappers and visitors module triggers routes registration
 from minecode import visitors  # NOQA
 from minecode import priority_router
-from minecode.management.indexing import index_package_files
+from minecode.management.indexing import index_package
 from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 from minecode.permissions import IsScanQueueWorkerAPIUser
 
@@ -147,10 +147,12 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
 
         elif scan_status == 'scanned':
             scan_file = request.data.get('scan_file')
+            summary_file = request.data.get('summary_file')
             scannable_uri.scan_status = ScannableURI.SCAN_COMPLETED
             package = scannable_uri.package
-            scan_data= json.load(scan_file)
-            indexing_errors = index_package_files(package, scan_data, reindex=True)
+            scan_data = json.load(scan_file)
+            summary_data = json.load(summary_file)
+            indexing_errors = index_package(package, scan_data, summary_data, reindex=True)
             if indexing_errors:
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
                 scannable_uri.index_error = indexing_errors
