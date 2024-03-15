@@ -15,6 +15,7 @@ from urllib.parse import urlparse
 
 import requests
 from packageurl import PackageURL
+from packageurl.contrib.django.utils import purl_to_lookups
 from packageurl.contrib.purl2url import get_download_url
 from packageurl.contrib.purl2url import purl2url
 from scancode.api import get_urls as get_urls_from_location
@@ -46,12 +47,13 @@ UNREACHABLE_URLS = set()
 # We keep cache of the requests.Response of each URL during a session
 RESPONSE_BY_URL_CACHE = {}
 
+
 def fetch_response(
     url,
     timeout=10,
 ):
     """
-    Return the request response for url or None, use a session cache 
+    Return the request response for url or None, use a session cache
     and ignore unreachable URLs
     """
     try:
@@ -61,7 +63,7 @@ def fetch_response(
         # and it does not contain any data of use
         if not is_good_repo_url(url):
             return
-        
+
         if not is_url_with_usable_content(url):
             return
 
@@ -123,7 +125,7 @@ def add_source_package_to_package_set(
     the package set if it doesn't exist
     """
     package_sets = package.package_sets.all()
-    if not package_sets:        
+    if not package_sets:
         # Create a Package set if we don't have one
         package_set = PackageSet.objects.create()
         package_set.add_to_package_set(package)
@@ -155,7 +157,9 @@ def get_source_repo_and_add_to_package_set():
             logger.error(f"Error getting download_url for {source_purl}")
             continue
 
-        source_package = Package.objects.for_package_url(purl_str=str(source_purl)).get_or_none()
+        source_package = Package.objects.for_package_url(
+            purl_str=str(source_purl)
+        ).get_or_none()
         if not source_package:
             source_package, _created = Package.objects.get_or_create(
                 type=source_purl.type,
@@ -184,7 +188,7 @@ def get_source_repo_and_add_to_package_set():
 def get_source_repo(package: Package) -> PackageURL:
     """
     Return the PackageURL of the source repository of a Package
-    or None if not found. Package is either a PackageCode Package object or 
+    or None if not found. Package is either a PackageCode Package object or
     Package instance object.
     """
     repo_urls = list(get_repo_urls(package))
@@ -228,7 +232,7 @@ def get_repo_urls(package: Package) -> Generator[str, None, None]:
 
 def get_source_urls_from_package_data_and_resources(package: Package) -> List[str]:
     """
-    Return a list of URLs of source repositories for a package, 
+    Return a list of URLs of source repositories for a package,
     possibly empty.
     """
     if not package:
@@ -323,7 +327,9 @@ def get_urls_from_package_data(package) -> Generator[str, None, None]:
     found_urls.extend(get_urls_from_text(text=homepage_text))
 
     repository_homepage_response = fetch_response(url=package.repository_homepage_url)
-    repository_homepage_text = repository_homepage_response and repository_homepage_response.text
+    repository_homepage_text = (
+        repository_homepage_response and repository_homepage_response.text
+    )
     found_urls.extend(get_urls_from_text(text=repository_homepage_text))
 
     found_urls.extend(get_urls_from_text(text=package.description))
@@ -383,7 +389,7 @@ def get_tags_and_commits(source_purl):
 
 def is_good_repo_url(url):
     """
-    Return True if it's a good repo URL or 
+    Return True if it's a good repo URL or
     False if it's some kind of problematic URL that we want to skip
     """
     # This is a jQuery Plugins Site Reserved Word and we don't want to scan it
@@ -394,8 +400,8 @@ def is_good_repo_url(url):
 
 def is_url_with_usable_content(url):
     """
-    Return True if this URL contains usable 
-    text data, otherwise False. Usable here means it is text 
+    Return True if this URL contains usable
+    text data, otherwise False. Usable here means it is text
     and we are likely to find interesting URLs in that.
     """
     not_supported_extensions = (
@@ -466,3 +472,27 @@ def find_package_version_tag_and_commit(version, source_purls):
             version=tag,
             qualifiers={"commit": commit},
         )
+
+
+def get_package_object_from_purl(package_url):
+    """
+    Get a ``Package`` object for a ``package_url`` string.
+    """
+    lookups = purl_to_lookups(package_url)
+    packages = Package.objects.filter(**lookups)
+    packages_count = packages.count()
+
+    if packages_count == 1:
+        package = packages.first()
+        return package
+
+    if not packages_count:
+        return
+
+    if packages_count > 1:
+        # Get the binary package
+        # We use .get(qualifiers="") because the binary maven JAR has no qualifiers
+        package = packages.get_or_none(qualifiers="")
+        if not package:
+            print(f"\t{package_url} does not exist in this database. Continuing.")
+            return

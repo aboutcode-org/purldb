@@ -324,3 +324,12 @@ class TestFindSourceRepo(TestCase):
         mock_get.return_value.text = "abc"
         assert fetch_response("https://github.com/assets") == None
         assert fetch_response("https://github.com/abc.js") == None
+
+    def test_from_purl_to_git(self):
+        response = self.client.get(
+            "/api/from_purl/purl2git",
+            data={"package_url": str(self.package_without_resources_and_package_data)},
+            follow=True,
+        )
+        expected = "pkg:bitbucket/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/9.36?commit=e86fb3431972d302fcb615aca0baed4d8ab89791"
+        self.assertEqual(expected, response.data["git_repo"])

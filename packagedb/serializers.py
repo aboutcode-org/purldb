@@ -423,3 +423,11 @@ class GoLangPurlSerializer(Serializer):
 
 class GoLangPurlResponseSerializer(Serializer):
     package_url = CharField()
+
+
+class PurltoGitRepoSerializer(Serializer):
+    package_url = CharField(required=True)
+
+
+class PurltoGitRepoResponseSerializer(Serializer):
+    git_repo = CharField(required=True)
