@@ -59,6 +59,7 @@ from packagedb.serializers import PackageWatchAPISerializer
 from packagedb.serializers import PackageWatchCreateSerializer
 from packagedb.serializers import PackageWatchUpdateSerializer
 from packagedb.serializers import PartySerializer
+from packagedb.serializers import UpdatePackagesSerializer
 from packagedb.serializers import PurlValidateResponseSerializer
 from packagedb.serializers import PurlValidateSerializer
 from packagedb.serializers import ResourceAPISerializer
@@ -422,6 +423,7 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
 class PackageViewSet(PackagePublicViewSet):
     @action(detail=True)
     def reindex_package(self, request, *args, **kwargs):
+
         """
         Reindex this package instance
         """
@@ -431,6 +433,69 @@ class PackageViewSet(PackagePublicViewSet):
             'status': f'{package.package_url} has been queued for reindexing'
         }
         return Response(data)
+
+class PackageUpdateSet(viewsets.ViewSet):
+
+    def create (self, request):
+
+        serializer = UpdatePackagesSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response({'errors': serializer.errors}, status=400)
+
+        validated_data = serializer.validated_data
+        packages = validated_data.get('purls', [])
+        uuid = validated_data.get('uuid', None)
+        package_set = None
+
+        if uuid:
+            pack = PackageSet.objects.filter(uuid = uuid)
+
+            if pack:
+                package_set = pack
+            else:
+                return "Package Set not Found"
+
+        else:
+            # Create Package Set and set package_set as the same object
+            pass
+            package_set = PackageSet.objects.create()
+
+
+
+        for items in packages or []:
+            purl = items.get('purl')
+            content_type = items.get('content_type')
+            lookups = purl_to_lookups(purl)
+
+            packages = Package.objects.filter(**lookups)
+
+            if packages:
+                package_set.add_to_package_set(packages)
+
+            else:
+                lookups['package_content'] = content_type
+                cr = Package.objects.create(**lookups)
+                package_set.add_to_package_set(cr)
+
+        return Response({"msg" : "Successfully update the purls"})
+
+
+
+    # @action(detail=False, methods=['post'], serializer_class=UpdatePackagesSerializer)
+    # def insert_purls(self, request, *args, **kwargs):
+    #
+    #     serializer = self.serializer_class(data=request.data)
+    #
+    #     if not serializer.is_valid():
+    #         return Response({'errors': serializer.errors}, status=400)
+    #
+    #     validated_data = serializer.validated_data
+    #     packages = validated_data.get('purls', [])
+    #     uuid = validated_data.get('uuid', None)
+    #
+    #
+    #     return Response(packages)
 
 
 UPDATEABLE_FIELDS = [
@@ -794,6 +859,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
         ],
         responses={200: PurlValidateResponseSerializer()},
     )
+
     def list(self, request):
         serializer = self.serializer_class(data=request.query_params)
 
@@ -865,7 +931,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
                 response['exists'] = None
                 response["message"] = message_valid_but_package_type_not_supported
             else:
-                response["message"] =message_valid_but_does_not_exist
+                response["message"] = message_valid_but_does_not_exist
         
         serializer = PurlValidateResponseSerializer(response, context={'request': request})
         return Response(serializer.data)
@@ -914,6 +980,13 @@ def get_resolved_purls(packages, supported_ecosystems):
             unsupported_vers.add(vers)
 
     return list(unique_resolved_purls), list(unsupported_purls), list(unsupported_vers)
+
+# def update_purls(packages, uuid):
+#
+#     if uuid:
+
+
+
 
 def resolve_all_versions(parsed_purl):
     """

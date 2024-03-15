@@ -372,12 +372,18 @@ class PackageVersSerializer(Serializer):
     purl = CharField()
     vers = CharField(required=False)
 
+class PackageUpdateSerializer(Serializer):
+    purl = CharField(required=True)
+    content_type = IntegerField(required=True)
 
 class IndexPackagesSerializer(Serializer):
     packages = PackageVersSerializer(many=True)
     reindex = BooleanField(default=False)
     reindex_set = BooleanField(default=False)
 
+class UpdatePackagesSerializer(Serializer):
+    purls = PackageUpdateSerializer(many=True)
+    uuid = CharField(required=False)
 
 class IndexPackagesResponseSerializer(Serializer):
     queued_packages_count = IntegerField(help_text="Number of package urls placed on the index queue.")
