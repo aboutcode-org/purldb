@@ -437,6 +437,25 @@ class PackageViewSet(PackagePublicViewSet):
 
 class PackageUpdateSet(viewsets.ViewSet):
 
+    """
+    Take a list of `packages` (where each item is a dictionary containing PURL
+    and content_type).
+
+    If `uuid` is given then all purls will be added to package set if it exists
+    else a new set would be created and all the purls will be added to that new set.
+
+    **Note:** There is also a slight addition to the logic where a purl already exists in the database
+    and so there are no changes done to the purl entry it is passed as it is.
+
+    **Request example:**
+        {
+          "purls": [
+            {"purl": "pkg:npm/less@1.0.32", "content_type": 1}
+          ],
+          "uuid" : "b67ceb49-1538-481f-a572-431062f382gg"
+        }
+    """
+
     def create (self, request):
 
         res = []
@@ -450,20 +469,18 @@ class PackageUpdateSet(viewsets.ViewSet):
         packages = validated_data.get('purls', [])
         uuid = validated_data.get('uuid', None)
 
+        flag = True
+
         if uuid:
-            pack = PackageSet.objects.filter(uuid = uuid)
+            pack = PackageSet.objects.filter(uuid=uuid)
 
             if pack:
                 package_set = pack
-            else:
-                return "Package Set not Found"
+                flag = False
 
         else:
             # Create Package Set and set package_set as the same object
-            # pass
             package_set = PackageSet.objects.create()
-
-        flag = True
 
         for items in packages or []:
             temp = {}
@@ -976,12 +993,6 @@ def get_resolved_purls(packages, supported_ecosystems):
             unsupported_vers.add(vers)
 
     return list(unique_resolved_purls), list(unsupported_purls), list(unsupported_vers)
-
-# def update_purls(packages, uuid):
-#
-#     if uuid:
-
-
 
 
 def resolve_all_versions(parsed_purl):
