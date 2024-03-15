@@ -28,18 +28,7 @@ from packagedb.serializers import PurltoGitRepoSerializer
 )
 class FromPurlToGitRepoViewSet(viewsets.ViewSet):
     """
-    Return a ``golang_purl`` from a standard go import string or
-    a go.mod string ``go_package``.
-
-    For example:
-
-        >>> get_golang_purl("github.com/gorilla/mux v1.8.1")
-        "pkg:golang/github.com/gorilla/mux@v1.8.1"
-        >>> # This is an example of go.mod string `package version`
-        >>>
-        >>> get_golang_purl("github.com/gorilla/mux")
-        "pkg:golang/github.com/gorilla/mux"
-        >>> #This is an example a go import string `package`
+    Return a ``git_repo`` from a standard PackageURL.
     """
 
     serializer_class = PurltoGitRepoSerializer
