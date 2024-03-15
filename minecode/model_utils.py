@@ -24,9 +24,18 @@ logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
 
 
-def add_package_to_scan_queue(package, pipelines, reindex_uri=False, priority=0):
+# These are the list of default pipelines to run when we scan a Package for
+# indexing
+DEFAULT_PIPELINES = (
+    'scan_and_fingerprint_package',
+)
+
+
+def add_package_to_scan_queue(package, pipelines=DEFAULT_PIPELINES, reindex_uri=False, priority=0):
     """
-    Add a Package `package` to the scan queue
+    Add a Package `package` to the scan queue to run the list of provided `pipelines`
+
+    If `reindex_uri` is True, force rescanning of the package
     """
     if not pipelines:
         raise Exception('pipelines required to add package to scan queue')

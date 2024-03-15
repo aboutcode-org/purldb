@@ -251,7 +251,7 @@ def map_maven_package(package_url, package_content):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package, pipelines=['scan_and_fingerprint_package'])
+        add_package_to_scan_queue(db_package)
 
     return db_package, error
 
