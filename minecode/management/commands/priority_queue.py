@@ -120,11 +120,14 @@ def add_package_to_scan_queue(package):
 
 def process_request(priority_resource_uri, _priority_router=priority_router):
     purl_to_visit = priority_resource_uri.uri
+    source_purl = priority_resource_uri.source_uri
     try:
         if TRACE:
             logger.debug('visit_uri: uri: {}'.format(purl_to_visit))
-
-        errors = _priority_router.process(purl_to_visit)
+        kwargs = dict()
+        if source_purl:
+            kwargs["source_purl"] = source_purl
+        errors = _priority_router.process(purl_to_visit, **kwargs)
         if TRACE:
             new_uris_to_visit = list(new_uris_to_visit or [])
             logger.debug('visit_uri: new_uris_to_visit: {}'.format(new_uris_to_visit))

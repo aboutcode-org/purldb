@@ -371,6 +371,7 @@ class PackageWatchUpdateSerializer(ModelSerializer):
 class PackageVersSerializer(Serializer):
     purl = CharField()
     vers = CharField(required=False)
+    source_purl = CharField(required=False)
 
 
 class IndexPackagesSerializer(Serializer):

@@ -40,6 +40,7 @@ from minecode.visitors import java_stream
 from minecode.visitors import HttpVisitor
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
+from minecode.utils import validate_sha1
 from packagedb.models import make_relationship
 from packagedb.models import PackageContentType
 from packagedb.models import PackageRelation
@@ -131,30 +132,6 @@ def get_pom_text(namespace, name, version, qualifiers={}, base_url=MAVEN_BASE_UR
     if not response:
         return
     return response.text
-
-
-def get_package_sha1(package):
-    """
-    Return the sha1 value for `package` by checking if the sha1 file exists for
-    `package` on maven and returning the contents if it does.
-
-    If the sha1 is invalid, we download the package's JAR and calculate the sha1
-    from that.
-    """
-    download_url = package.repository_download_url
-    sha1_download_url = f'{download_url}.sha1'
-    response = requests.get(sha1_download_url)
-    if response.ok:
-        sha1_contents = response.text.strip().split()
-        sha1 = sha1_contents[0]
-        sha1 = validate_sha1(sha1)
-        if not sha1:
-            # Download JAR and calculate sha1 if we cannot get it from the repo
-            response = requests.get(download_url)
-            if response:
-                sha1_hash = hashlib.new('sha1', response.content)
-                sha1 = sha1_hash.hexdigest()
-        return sha1
 
 
 def fetch_parent(pom_text, base_url=MAVEN_BASE_URL):
@@ -348,20 +325,6 @@ def map_maven_package(package_url, package_content):
     return db_package, error
 
 
-def validate_sha1(sha1):
-    """
-    Validate a `sha1` string.
-
-    Return `sha1` if it is valid, None otherwise.
-    """
-    if sha1 and len(sha1) != 40:
-        logger.warning(
-            f'Invalid SHA1 length ({len(sha1)}): "{sha1}": SHA1 ignored!'
-        )
-        sha1 = None
-    return sha1
-
-
 def map_maven_binary_and_source(package_url):
     """
     Get metadata for the binary and source release of the Maven package
@@ -424,6 +387,29 @@ def map_maven_packages(package_url):
         if emsg:
             error += emsg
     return error
+
+
+def get_package_sha1(package):
+    """
+    Return the sha1 value for `package` by checking if the sha1 file exists for
+    `package` on maven and returning the contents if it does.
+    If the sha1 is invalid, we download the package's JAR and calculate the sha1
+    from that.
+    """
+    download_url = package.repository_download_url
+    sha1_download_url = f'{download_url}.sha1'
+    response = requests.get(sha1_download_url)
+    if response.ok:
+        sha1_contents = response.text.strip().split()
+        sha1 = sha1_contents[0]
+        sha1 = validate_sha1(sha1)
+        if not sha1:
+            # Download JAR and calculate sha1 if we cannot get it from the repo
+            response = requests.get(download_url)
+            if response:
+                sha1_hash = hashlib.new('sha1', response.content)
+                sha1 = sha1_hash.hexdigest()
+        return sha1
 
 
 @priority_router.route('pkg:maven/.*')

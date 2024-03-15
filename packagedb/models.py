@@ -1183,6 +1183,7 @@ class PackageRelation(models.Model):
 
     class Relationship(models.TextChoices):
         SOURCE_PACKAGE = "source_package"
+        BINARY_PACKAGE = "binary_package"
 
     from_package = models.ForeignKey(
         Package,
