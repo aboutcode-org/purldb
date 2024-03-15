@@ -463,6 +463,8 @@ class PackageUpdateSet(viewsets.ViewSet):
             # pass
             package_set = PackageSet.objects.create()
 
+        flag = True
+
         for items in packages or []:
             temp = {}
             purl = items.get('purl')
@@ -475,12 +477,16 @@ class PackageUpdateSet(viewsets.ViewSet):
             temp['update_status'] = "Already Exists"
 
             if not packages:
+                flag = False
                 lookups['package_content'] = content_type
                 cr = Package.objects.create(**lookups)
                 package_set.add_to_package_set(cr)
                 temp['update_status'] = "Updated"
 
             res.append(temp)
+
+        if flag:
+            package_set.delete()
 
         serializer = PurlUpdateResponseSerializer(res, many=True)
 
