@@ -148,11 +148,20 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
         elif scan_status == 'scanned':
             scan_results_file = request.data.get('scan_results_file')
             scan_summary_file = request.data.get('scan_summary_file')
+            project_extra_data = request.data.get('project_extra_data')
             scannable_uri.scan_status = ScannableURI.SCAN_COMPLETED
             package = scannable_uri.package
             scan_data = json.load(scan_results_file)
             summary_data = json.load(scan_summary_file)
-            indexing_errors = index_package(scannable_uri, package, scan_data, summary_data, reindex=True)
+            project_extra_data = json.loads(project_extra_data)
+            indexing_errors = index_package(
+                scannable_uri,
+                package,
+                scan_data,
+                summary_data,
+                project_extra_data,
+                reindex=True
+            )
             if indexing_errors:
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
                 scannable_uri.index_error = indexing_errors

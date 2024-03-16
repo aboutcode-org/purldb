@@ -71,7 +71,7 @@ def index_package_files(package, scan_data, reindex=False):
     return scan_index_errors
 
 
-def index_package(scannable_uri, package, scan_data, summary_data, reindex=False):
+def index_package(scannable_uri, package, scan_data, summary_data, project_extra_data, reindex=False):
     scan_index_errors = []
     try:
         indexing_errors = index_package_files(package, scan_data, reindex=reindex)
@@ -86,38 +86,21 @@ def index_package(scannable_uri, package, scan_data, summary_data, reindex=False
         if declared_holder:
             copyright = f'Copyright (c) {declared_holder}'
 
+        checksums_and_size_by_field = {
+            k: v
+            for k, v in project_extra_data.items()
+            if k in [
+                'md5','sha1', 'size', 'sha256', 'sha512', 'filename'
+            ]
+        }
         values_by_updateable_fields = {
             'summary': summary_data,
             'declared_license_expression': declared_license_expression,
             'other_license_expression': other_license_expression,
             'copyright': copyright,
+            **checksums_and_size_by_field
         }
-
-        updated_fields = []
-        for field, value in values_by_updateable_fields.items():
-            p_val = getattr(package, field)
-            if (
-                (not p_val and value)
-                or reindex
-            ):
-                setattr(package, field, value)
-                entry = dict(
-                    field=field,
-                    old_value=p_val,
-                    new_value=value,
-                )
-                updated_fields.append(entry)
-
-        if updated_fields:
-            data = {
-                'updated_fields': updated_fields,
-            }
-            package.append_to_history(
-                'Package field values have been updated.',
-                data=data,
-                save=True,
-            )
-
+        package.update_fields(save=True, **values_by_updateable_fields)
         scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
     except Exception as e:
         traceback_message = traceback.format_exc()
@@ -125,5 +108,7 @@ def index_package(scannable_uri, package, scan_data, summary_data, reindex=False
         # TODO: We should rerun the specific indexers that have failed
         if scan_index_errors:
             error_message += '\n'.join(scan_index_errors)
+        logger.error(error_message)
         scannable_uri.index_error = error_message
         scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
+        scannable_uri.save()
