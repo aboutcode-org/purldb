@@ -794,6 +794,7 @@ class Package(
             self.append_to_history(
                 'Package field values have been updated.',
                 data=data,
+                save=save,
             )
             updated_fields.append('history')
 
@@ -803,9 +804,6 @@ class Package(
         if updated_fields:
             # Deduplicate field names
             updated_fields = list(set(updated_fields))
-
-        if save:
-            self.save()
 
         return self, updated_fields
 

@@ -8,6 +8,7 @@
 #
 
 import json
+import uuid
 
 from django.db import transaction
 from django.utils import timezone
@@ -41,6 +42,14 @@ class PriorityResourceURISerializer(serializers.ModelSerializer):
     class Meta:
         model = PriorityResourceURI
         fields = '__all__'
+
+
+def validate_uuid(uuid_string):
+    try:
+        val = uuid.UUID(uuid_string)
+    except ValueError:
+        return False
+    return str(val).lower() == uuid_string.lower()
 
 
 class PriorityResourceURIViewSet(viewsets.ModelViewSet):
@@ -131,7 +140,13 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             response = {
                 'error': 'missing scannable_uri_uuid'
             }
-            return Response(response)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        if not validate_uuid(scannable_uri_uuid):
+            response = {
+                'error': f'invalid scannable_uri_uuid: {scannable_uri_uuid}'
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         scannable_uri = ScannableURI.objects.get(uuid=scannable_uri_uuid)
 
@@ -166,8 +181,9 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
                 scannable_uri.index_error = indexing_errors
                 msg = {
-                    'status': f'scan index failed for scannable uri {scannable_uri_uuid}'
+                    'error': f'scan index failed for scannable uri {scannable_uri_uuid}'
                 }
+                return Response(msg, status=status.HTTP_400_BAD_REQUEST)
             else:
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
                 msg = {
@@ -178,7 +194,8 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
 
         else:
             msg = {
-                'status': f'invalid scan_status: {scan_status}'
+                'error': f'invalid scan_status: {scan_status}'
             }
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(msg)
