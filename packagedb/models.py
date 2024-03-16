@@ -966,6 +966,7 @@ class AbstractResource(models.Model):
     mime_type = models.CharField(
         max_length=100,
         blank=True,
+        null=True,
         help_text=_(
             "MIME type (aka. media type) for this resource. "
             "See https://en.wikipedia.org/wiki/Media_type"
@@ -975,12 +976,14 @@ class AbstractResource(models.Model):
     file_type = models.CharField(
         max_length=1024,
         blank=True,
+        null=True,
         help_text=_("Descriptive file type for this resource."),
     )
 
     programming_language = models.CharField(
         max_length=50,
         blank=True,
+        null=True,
         help_text=_("Programming language of this resource if this is a code file."),
     )
 

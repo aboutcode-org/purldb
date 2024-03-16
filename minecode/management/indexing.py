@@ -9,7 +9,6 @@ import logging
 import sys
 from minecode.model_utils import merge_or_create_resource
 from packagedcode.utils import combine_expressions
-from licensedcode.cache import build_spdx_license_expression
 import traceback
 from minecode.models import ScannableURI
 
@@ -78,10 +77,6 @@ def index_package(scannable_uri, package, scan_data, summary_data, reindex=False
         indexing_errors = index_package_files(package, scan_data, reindex=reindex)
         scan_index_errors.extend(indexing_errors)
         declared_license_expression = summary_data.get('declared_license_expression')
-        declared_license_expression_spdx = None
-        if declared_license_expression:
-            declared_license_expression_spdx = build_spdx_license_expression(declared_license_expression)
-
         other_license_expressions = summary_data.get('other_license_expressions', [])
         other_license_expressions = [l['value'] for l in other_license_expressions if l['value']]
         other_license_expression = combine_expressions(other_license_expressions)
@@ -94,7 +89,6 @@ def index_package(scannable_uri, package, scan_data, summary_data, reindex=False
         values_by_updateable_fields = {
             'summary': summary_data,
             'declared_license_expression': declared_license_expression,
-            'declared_license_expression_spdx': declared_license_expression_spdx,
             'other_license_expression': other_license_expression,
             'copyright': copyright,
         }

@@ -146,13 +146,13 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             }
 
         elif scan_status == 'scanned':
-            scan_file = request.data.get('scan_file')
-            summary_file = request.data.get('summary_file')
+            scan_results_file = request.data.get('scan_results_file')
+            scan_summary_file = request.data.get('scan_summary_file')
             scannable_uri.scan_status = ScannableURI.SCAN_COMPLETED
             package = scannable_uri.package
-            scan_data = json.load(scan_file)
-            summary_data = json.load(summary_file)
-            indexing_errors = index_package(package, scan_data, summary_data, reindex=True)
+            scan_data = json.load(scan_results_file)
+            summary_data = json.load(scan_summary_file)
+            indexing_errors = index_package(scannable_uri, package, scan_data, summary_data, reindex=True)
             if indexing_errors:
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
                 scannable_uri.index_error = indexing_errors
