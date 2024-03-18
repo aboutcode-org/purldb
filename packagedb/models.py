@@ -66,7 +66,7 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         """
         try:
             return self.get(*args, **kwargs)
-        except self.DoesNotExist:
+        except self.model.DoesNotExist:
             return
 
     def paginated(self, per_page=5000):
@@ -1175,6 +1175,7 @@ class PackageRelation(models.Model):
 
     class Relationship(models.TextChoices):
         SOURCE_PACKAGE = "source_package"
+        BINARY_PACKAGE = "binary_package"
 
     from_package = models.ForeignKey(
         Package,

@@ -30,17 +30,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0",
+        "license_expression_spdx":"GPL-2.0-only",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"gpl-2.0",
+            "spdx_license_expression":"GPL-2.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0",
-            "rule_identifier":"spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "matched_text":"GPL-2.0-only"
           }
@@ -94,17 +97,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0",
+        "license_expression_spdx":"GPL-2.0-only",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"gpl-2.0",
+            "spdx_license_expression":"GPL-2.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0",
-            "rule_identifier":"spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "matched_text":"GPL-2.0-only"
           }
@@ -160,17 +166,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0",
+        "license_expression_spdx":"GPL-2.0-only",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"gpl-2.0",
+            "spdx_license_expression":"GPL-2.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0",
-            "rule_identifier":"spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "matched_text":"GPL-2.0-only"
           }
@@ -224,17 +233,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0",
+        "license_expression_spdx":"GPL-2.0-only",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"gpl-2.0",
+            "spdx_license_expression":"GPL-2.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0",
-            "rule_identifier":"spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
             "matched_text":"GPL-2.0-only"
           }
@@ -290,17 +302,20 @@
     "license_detections":[
       {
         "license_expression":"unknown",
+        "license_expression_spdx":"LicenseRef-scancode-unknown",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"unknown",
+            "spdx_license_expression":"LicenseRef-scancode-unknown",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"5-undetected",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"5-undetected",
-            "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-7026aeff9d47a5640cb2227df338505a25c2dc56",
             "rule_relevance":100,
+            "rule_identifier":"package-manifest-unknown-7026aeff9d47a5640cb2227df338505a25c2dc56",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-7026aeff9d47a5640cb2227df338505a25c2dc56",
             "matched_text":"license PublicDomain"
           }
@@ -354,17 +369,20 @@
     "license_detections":[
       {
         "license_expression":"unknown",
+        "license_expression_spdx":"LicenseRef-scancode-unknown",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"unknown",
+            "spdx_license_expression":"LicenseRef-scancode-unknown",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"5-undetected",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"5-undetected",
-            "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-7026aeff9d47a5640cb2227df338505a25c2dc56",
             "rule_relevance":100,
+            "rule_identifier":"package-manifest-unknown-7026aeff9d47a5640cb2227df338505a25c2dc56",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-7026aeff9d47a5640cb2227df338505a25c2dc56",
             "matched_text":"license PublicDomain"
           }
@@ -420,17 +438,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -484,17 +505,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -550,17 +574,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -614,17 +641,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -680,17 +710,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -744,17 +777,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -811,17 +847,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -876,17 +915,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -943,17 +985,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -1008,17 +1053,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -1075,17 +1123,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -1140,17 +1191,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -1214,17 +1268,20 @@
     "license_detections":[
       {
         "license_expression":"lgpl-3.0",
+        "license_expression_spdx":"LGPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"lgpl-3.0",
+            "spdx_license_expression":"LGPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"lgpl-3.0",
-            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "matched_text":"LGPL-3.0-only"
           }
@@ -1286,17 +1343,20 @@
     "license_detections":[
       {
         "license_expression":"lgpl-3.0",
+        "license_expression_spdx":"LGPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"lgpl-3.0",
+            "spdx_license_expression":"LGPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"lgpl-3.0",
-            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "matched_text":"LGPL-3.0-only"
           }
@@ -1360,17 +1420,20 @@
     "license_detections":[
       {
         "license_expression":"lgpl-3.0",
+        "license_expression_spdx":"LGPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"lgpl-3.0",
+            "spdx_license_expression":"LGPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"lgpl-3.0",
-            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "matched_text":"LGPL-3.0-only"
           }
@@ -1432,17 +1495,20 @@
     "license_detections":[
       {
         "license_expression":"lgpl-3.0",
+        "license_expression_spdx":"LGPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"lgpl-3.0",
+            "spdx_license_expression":"LGPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"lgpl-3.0",
-            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "matched_text":"LGPL-3.0-only"
           }
@@ -1506,17 +1572,20 @@
     "license_detections":[
       {
         "license_expression":"lgpl-3.0",
+        "license_expression_spdx":"LGPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"lgpl-3.0",
+            "spdx_license_expression":"LGPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"lgpl-3.0",
-            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "matched_text":"LGPL-3.0-only"
           }
@@ -1578,17 +1647,20 @@
     "license_detections":[
       {
         "license_expression":"lgpl-3.0",
+        "license_expression_spdx":"LGPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"lgpl-3.0",
+            "spdx_license_expression":"LGPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"lgpl-3.0",
-            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "matched_text":"LGPL-3.0-only"
           }
@@ -1652,17 +1724,20 @@
     "license_detections":[
       {
         "license_expression":"mpl-2.0",
+        "license_expression_spdx":"MPL-2.0",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"mpl-2.0",
+            "spdx_license_expression":"MPL-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"mpl-2.0",
-            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "matched_text":"MPL-2.0"
           }
@@ -1724,17 +1799,20 @@
     "license_detections":[
       {
         "license_expression":"mpl-2.0",
+        "license_expression_spdx":"MPL-2.0",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"mpl-2.0",
+            "spdx_license_expression":"MPL-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"mpl-2.0",
-            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "matched_text":"MPL-2.0"
           }
@@ -1798,17 +1876,20 @@
     "license_detections":[
       {
         "license_expression":"mpl-2.0",
+        "license_expression_spdx":"MPL-2.0",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"mpl-2.0",
+            "spdx_license_expression":"MPL-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"mpl-2.0",
-            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "matched_text":"MPL-2.0"
           }
@@ -1870,17 +1951,20 @@
     "license_detections":[
       {
         "license_expression":"mpl-2.0",
+        "license_expression_spdx":"MPL-2.0",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"mpl-2.0",
+            "spdx_license_expression":"MPL-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"mpl-2.0",
-            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "matched_text":"MPL-2.0"
           }
@@ -1944,17 +2028,20 @@
     "license_detections":[
       {
         "license_expression":"mpl-2.0",
+        "license_expression_spdx":"MPL-2.0",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"mpl-2.0",
+            "spdx_license_expression":"MPL-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"mpl-2.0",
-            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "matched_text":"MPL-2.0"
           }
@@ -2016,17 +2103,20 @@
     "license_detections":[
       {
         "license_expression":"mpl-2.0",
+        "license_expression_spdx":"MPL-2.0",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"mpl-2.0",
+            "spdx_license_expression":"MPL-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"mpl-2.0",
-            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_mpl-2.0_for_mpl-2.0.RULE",
             "matched_text":"MPL-2.0"
           }
@@ -2090,17 +2180,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2162,17 +2255,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2236,17 +2332,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2308,17 +2407,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2382,17 +2484,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2454,17 +2559,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2528,17 +2636,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2600,17 +2711,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2674,17 +2788,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2746,17 +2863,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2820,17 +2940,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2892,17 +3015,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2966,17 +3092,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -3038,17 +3167,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -3104,17 +3236,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -3168,17 +3303,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -3234,17 +3372,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -3298,17 +3439,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -3364,17 +3508,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -3428,17 +3575,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -3494,17 +3644,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -3558,17 +3711,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -3624,17 +3780,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -3688,17 +3847,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -3754,17 +3916,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -3818,17 +3983,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -3885,17 +4053,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -3950,17 +4121,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -4017,17 +4191,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -4082,17 +4259,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -4148,17 +4328,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -4212,17 +4395,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -4278,17 +4464,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -4342,17 +4531,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -4408,17 +4600,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -4472,17 +4667,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -4538,17 +4736,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -4602,17 +4803,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -4668,17 +4872,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -4732,17 +4939,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -4798,17 +5008,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -4862,17 +5075,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -4928,17 +5144,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -4992,17 +5211,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -5058,17 +5280,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -5122,17 +5347,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -5188,17 +5416,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -5252,17 +5483,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -5318,17 +5552,20 @@
     "license_detections":[
       {
         "license_expression":"lgpl-3.0",
+        "license_expression_spdx":"LGPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"lgpl-3.0",
+            "spdx_license_expression":"LGPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"lgpl-3.0",
-            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "matched_text":"LGPL-3.0-only"
           }
@@ -5382,17 +5619,20 @@
     "license_detections":[
       {
         "license_expression":"lgpl-3.0",
+        "license_expression_spdx":"LGPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"lgpl-3.0",
+            "spdx_license_expression":"LGPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"lgpl-3.0",
-            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_lgpl-3.0-only_for_lgpl-3.0.RULE",
             "matched_text":"LGPL-3.0-only"
           }
@@ -5457,17 +5697,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -5530,17 +5773,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -5604,17 +5850,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -5676,17 +5925,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -5750,17 +6002,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -5822,17 +6077,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -5896,17 +6154,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0-plus",
+        "license_expression_spdx":"GPL-2.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-2.0-plus",
+            "spdx_license_expression":"GPL-2.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "matched_text":"GPL-2.0-or-later"
           }
@@ -5968,17 +6229,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0-plus",
+        "license_expression_spdx":"GPL-2.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-2.0-plus",
+            "spdx_license_expression":"GPL-2.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "matched_text":"GPL-2.0-or-later"
           }
@@ -6034,17 +6298,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -6098,17 +6365,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -6172,17 +6442,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -6244,17 +6517,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -6318,17 +6594,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -6390,17 +6669,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -6464,17 +6746,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -6536,17 +6821,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -6603,17 +6891,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -6668,17 +6959,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -6735,17 +7029,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -6800,17 +7097,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -6866,17 +7166,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -6930,17 +7233,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -6996,17 +7302,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -7060,17 +7369,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -7126,17 +7438,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -7190,17 +7505,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0-plus",
+        "license_expression_spdx":"GPL-3.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0-plus",
+            "spdx_license_expression":"GPL-3.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-or-later_for_gpl-3.0-plus.RULE",
             "matched_text":"GPL-3.0-or-later"
           }
@@ -7265,17 +7583,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -7338,17 +7659,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -7413,17 +7737,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -7486,17 +7813,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -7561,17 +7891,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -7634,17 +7967,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -7700,17 +8036,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -7764,17 +8103,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -7830,17 +8172,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -7894,17 +8239,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -7960,17 +8308,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -8024,17 +8375,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -8090,17 +8444,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -8154,17 +8511,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -8220,17 +8580,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -8284,17 +8647,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -8350,17 +8716,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -8414,17 +8783,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -8480,17 +8852,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0-plus",
+        "license_expression_spdx":"GPL-2.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-2.0-plus",
+            "spdx_license_expression":"GPL-2.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "matched_text":"GPL-2.0-or-later"
           }
@@ -8544,17 +8919,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0-plus",
+        "license_expression_spdx":"GPL-2.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-2.0-plus",
+            "spdx_license_expression":"GPL-2.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "matched_text":"GPL-2.0-or-later"
           }
@@ -8610,17 +8988,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0-plus",
+        "license_expression_spdx":"GPL-2.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-2.0-plus",
+            "spdx_license_expression":"GPL-2.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "matched_text":"GPL-2.0-or-later"
           }
@@ -8674,17 +9055,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0-plus",
+        "license_expression_spdx":"GPL-2.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-2.0-plus",
+            "spdx_license_expression":"GPL-2.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "matched_text":"GPL-2.0-or-later"
           }
@@ -8740,17 +9124,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0-plus",
+        "license_expression_spdx":"GPL-2.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-2.0-plus",
+            "spdx_license_expression":"GPL-2.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "matched_text":"GPL-2.0-or-later"
           }
@@ -8804,17 +9191,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0-plus",
+        "license_expression_spdx":"GPL-2.0-or-later",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-2.0-plus",
+            "spdx_license_expression":"GPL-2.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0-plus",
-            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-or-later_for_gpl-2.0-plus.RULE",
             "matched_text":"GPL-2.0-or-later"
           }
@@ -8878,17 +9268,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -8950,17 +9343,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9024,17 +9420,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9096,17 +9495,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9170,17 +9572,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9242,17 +9647,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9316,17 +9724,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9388,17 +9799,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9454,17 +9868,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9518,17 +9935,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9584,17 +10004,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9648,17 +10071,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9714,17 +10140,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9778,17 +10207,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9844,17 +10276,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9908,17 +10343,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -9974,17 +10412,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10038,17 +10479,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10104,17 +10548,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10168,17 +10615,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10234,17 +10684,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10298,17 +10751,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10364,17 +10820,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10428,17 +10887,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10494,17 +10956,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10558,17 +11023,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10632,17 +11100,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10704,17 +11175,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10778,17 +11252,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -10850,17 +11327,20 @@
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":3,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_relevance":100,
+            "rule_identifier":"spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_apache-2.0_for_apache-2.0.RULE",
             "matched_text":"Apache-2.0"
           }
@@ -10916,17 +11396,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -10980,17 +11463,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -11046,17 +11532,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -11110,17 +11599,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -11176,17 +11668,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }
@@ -11240,17 +11735,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-3.0",
+        "license_expression_spdx":"GPL-3.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-3.0",
+            "spdx_license_expression":"GPL-3.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-3.0",
-            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_relevance":50,
+            "rule_identifier":"spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-3.0-only_for_gpl-3.0.RULE",
             "matched_text":"GPL-3.0-only"
           }

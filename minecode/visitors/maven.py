@@ -40,6 +40,8 @@ from minecode.visitors import java_stream
 from minecode.visitors import HttpVisitor
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
+from minecode.utils import validate_sha1
+from packagedb.models import make_relationship
 from packagedb.models import PackageContentType
 from packagedb.models import PackageRelation
 from packagedb.models import make_relationship
@@ -383,12 +385,11 @@ def get_package_sha1(package):
     """
     Return the sha1 value for `package` by checking if the sha1 file exists for
     `package` on maven and returning the contents if it does.
-
     If the sha1 is invalid, we download the package's JAR and calculate the sha1
     from that.
     """
     download_url = package.repository_download_url
-    sha1_download_url = f"{download_url}.sha1"
+    sha1_download_url = f'{download_url}.sha1'
     response = requests.get(sha1_download_url)
     if response.ok:
         sha1_contents = response.text.strip().split()
@@ -398,12 +399,12 @@ def get_package_sha1(package):
             # Download JAR and calculate sha1 if we cannot get it from the repo
             response = requests.get(download_url)
             if response:
-                sha1_hash = hashlib.new("sha1", response.content)
+                sha1_hash = hashlib.new('sha1', response.content)
                 sha1 = sha1_hash.hexdigest()
         return sha1
 
 
-@priority_router.route("pkg:maven/.*")
+@priority_router.route('pkg:maven/.*')
 def process_request(purl_str):
     """
     Process `priority_resource_uri` containing a maven Package URL (PURL) as a
@@ -727,18 +728,6 @@ def crawl_maven_repo_from_root(root_url):
     packages to the import queue.
     """
     crawl_to_package(root_url, root_url)
-
-
-def validate_sha1(sha1):
-    """
-    Validate a `sha1` string.
-
-    Return `sha1` if it is valid, None otherwise.
-    """
-    if sha1 and len(sha1) != 40:
-        logger.warning(f'Invalid SHA1 length ({len(sha1)}): "{sha1}": SHA1 ignored!')
-        sha1 = None
-    return sha1
 
 
 def get_artifact_sha1(artifact_url):

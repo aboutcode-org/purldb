@@ -584,15 +584,21 @@ class CollectViewSet(viewsets.ViewSet):
     """
     serializer_class=None
     @extend_schema(
-            parameters=[OpenApiParameter('purl', str, 'query', description='PackageURL')],
+            parameters=[
+                OpenApiParameter('purl', str, 'query', description='PackageURL'),
+                OpenApiParameter('source_purl', str, 'query', description='Source PackageURL', default=False),
+            ],
             responses={200:PackageAPISerializer()},
     )
     def list(self, request, format=None):
         purl = request.query_params.get('purl')
+        source_purl = request.query_params.get('source_purl', None)
 
         # validate purl
         try:
             package_url = PackageURL.from_string(purl)
+            if source_purl:
+                source_package_url = PackageURL.from_string(source_purl)
         except ValueError as e:
             message = {
                 'status': f'purl validation error: {e}'
@@ -603,7 +609,10 @@ class CollectViewSet(viewsets.ViewSet):
         packages = Package.objects.filter(**lookups)
         if packages.count() == 0:
             try:
-                errors = priority_router.process(purl)
+                kwargs = dict()
+                if source_purl:
+                    kwargs["source_purl"] = source_purl
+                errors = priority_router.process(purl, **kwargs)
             except NoRouteAvailable:
                 message = {
                     'status': f'cannot fetch Package data for {purl}: no available handler'
@@ -633,7 +642,8 @@ class CollectViewSet(viewsets.ViewSet):
     def index_packages(self, request, *args, **kwargs):
         """
         Take a list of `packages` (where each item is a dictionary containing either PURL
-        or versionless PURL along with vers range) and index it.
+        or versionless PURL along with vers range, optionally with source package PURL)
+        and index it.
 
         If `reindex` flag is True then existing package will be rescanned, if `reindex_set`
         is True then all the package in the same set will be rescanned.
@@ -648,15 +658,18 @@ class CollectViewSet(viewsets.ViewSet):
                     "packages": [
                         {
                             "purl": "pkg:npm/less@1.0.32",
-                            "vers": null
+                            "vers": null,
+                            "source_purl": None
                         },
                         {
                             "purl": "pkg:npm/less",
-                            "vers": "vers:npm/>=1.1.0|<=1.1.4"
+                            "vers": "vers:npm/>=1.1.0|<=1.1.4",
+                            "source_purl": None
                         },
                         {
                             "purl": "pkg:npm/foobar",
-                            "vers": null
+                            "vers": null,
+                            "source_purl": None
                         }
                     ]
                     "reindex": true,
@@ -712,12 +725,13 @@ class CollectViewSet(viewsets.ViewSet):
         reindexed_packages = []
         requeued_packages = []
 
-        supported_ecosystems = ['maven', 'npm']
+        supported_ecosystems = ['maven', 'npm', 'deb']
 
-        unique_purls, unsupported_packages, unsupported_vers = get_resolved_purls(packages, supported_ecosystems)
+        unique_packages, unsupported_packages, unsupported_vers = get_resolved_packages(packages, supported_ecosystems)
 
         if reindex:
-            for purl in unique_purls:
+            for package in unique_packages:
+                purl = package['purl']
                 lookups = purl_to_lookups(purl)
                 packages = Package.objects.filter(**lookups)
                 if packages.count() > 0:
@@ -728,18 +742,22 @@ class CollectViewSet(viewsets.ViewSet):
                                 for p in package_set.packages.all():
                                     _reindex_package(p, reindexed_packages)
                 else:
-                    nonexistent_packages.append(purl)
+                    nonexistent_packages.append(package)
             requeued_packages.extend([p.package_url for p in reindexed_packages])
 
-        elif not reindex or nonexistent_packages:
-            interesting_purls = nonexistent_packages if nonexistent_packages else unique_purls
-            for purl in interesting_purls:
+        if not reindex or nonexistent_packages:
+            interesting_packages = nonexistent_packages if nonexistent_packages else unique_packages
+            for package in interesting_packages:
+                purl = package['purl']
                 is_routable_purl = priority_router.is_routable(purl)
                 if not is_routable_purl:
                     unsupported_packages.append(purl)
                 else:
                     # add to queue
-                    priority_resource_uri = PriorityResourceURI.objects.insert(purl)
+                    extra_fields = dict()
+                    if source_purl := package.get('source_purl'):
+                        extra_fields["source_uri"] = source_purl
+                    priority_resource_uri = PriorityResourceURI.objects.insert(purl, **extra_fields)
                     if priority_resource_uri:
                         queued_packages.append(purl)
                     else:
@@ -871,19 +889,19 @@ class PurlValidateViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-def get_resolved_purls(packages, supported_ecosystems):
+def get_resolved_packages(packages, supported_ecosystems):
     """
     Take a list of dict containing purl or version-less purl along with vers
-    and return a list of resolved purls, a list of unsupported purls, and a
-    list of unsupported vers.
+    and return a list of package dicts containing resolved purls, a list of
+    unsupported purls, and a list of unsupported vers.
     """
-    unique_resolved_purls = set()
+    resolved_packages_by_purl = {}
     unsupported_purls = set()
     unsupported_vers = set()
 
-    for items in packages or []:
-        purl = items.get('purl')
-        vers = items.get('vers')
+    for package in packages or []:
+        purl = package.get('purl')
+        vers = package.get('vers')
 
         if not purl:
             continue
@@ -899,21 +917,26 @@ def get_resolved_purls(packages, supported_ecosystems):
             continue
 
         if parsed_purl.version:
-            unique_resolved_purls.add(purl)
+            resolved_packages_by_purl[purl] = package
             continue
 
         # Versionless PURL without any vers-range should give all versions.
         if not vers and not parsed_purl.version:
-            if resolved:= resolve_all_versions(parsed_purl):
-                unique_resolved_purls.update(resolved)
+            if resolved_purls := resolve_all_versions(parsed_purl):
+                for res_purl in resolved_purls:
+                    resolved_packages_by_purl[res_purl] = {'purl': res_purl}
             continue
 
-        if resolved:= resolve_versions(parsed_purl, vers):
-            unique_resolved_purls.update(resolved)
+        if resolved_purls := resolve_versions(parsed_purl, vers):
+            for res_purl in resolved_purls:
+                resolved_packages_by_purl[res_purl] = {'purl': res_purl}
         else:
             unsupported_vers.add(vers)
+    
+    unique_resolved_packages = resolved_packages_by_purl.values()
 
-    return list(unique_resolved_purls), list(unsupported_purls), list(unsupported_vers)
+    return list(unique_resolved_packages), list(unsupported_purls), list(unsupported_vers)
+
 
 def resolve_all_versions(parsed_purl):
     """
@@ -932,6 +955,7 @@ def resolve_all_versions(parsed_purl):
         )
         for version in all_versions
     ]
+
 
 def resolve_versions(parsed_purl, vers):
     """
@@ -968,6 +992,7 @@ def resolve_versions(parsed_purl, vers):
 
     return result
 
+
 def get_all_versions_plain(purl: PackageURL):
     """
     Return all the versions available for the given purls.
@@ -986,6 +1011,7 @@ def get_all_versions_plain(purl: PackageURL):
 
     all_versions = versionAPI().fetch(package_name) or []
     return [ version.value for version in all_versions ]
+
 
 def get_all_versions(purl):
     """

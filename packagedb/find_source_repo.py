@@ -7,7 +7,6 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import enum
 import logging
 import subprocess
 from typing import Generator
@@ -16,6 +15,7 @@ from urllib.parse import urlparse
 
 import requests
 from packageurl import PackageURL
+from packageurl.contrib.django.utils import purl_to_lookups
 from packageurl.contrib.purl2url import get_download_url
 from packageurl.contrib.purl2url import purl2url
 from scancode.api import get_urls as get_urls_from_location
@@ -29,92 +29,62 @@ from packagedb.models import PackageSet
 logger = logging.getLogger(__name__)
 
 
-class URLDataReturnType(enum.Enum):
-    """
-    Return type for get_urls_from_text
-    """
-
-    url = "url" # This the final URL after redirects
-    text = "text" # This is the text of the response
-
-
-non_reachable_urls = [
-]
-CACHE = {
-    #    url: data
-}
-
-
 def get_urls_from_text(text):
     """
     Return the URLs found in a text
     """
+    if not text:
+        return
     lines = text.splitlines()
     # location can be a list of lines
     for url in get_urls_from_location(location=lines)["urls"]:
         yield url["url"]
 
 
-def get_data_from_response(response, data_type=URLDataReturnType.text):
-    """
-    Return the data from a response
-    """
-    if not response:
-        return
-    data_by_type = {
-        URLDataReturnType.url: response.url,
-        URLDataReturnType.text: response.text,
-    }
-    if data_type in data_by_type:
-        return data_by_type[data_type]
-    else:
-        raise ValueError(f"Invalid data_type: {data_type}")
+# We keep track of unreachable URLs during a session
+UNREACHABLE_URLS = set()
+
+# We keep cache of the requests.Response of each URL during a session
+RESPONSE_BY_URL_CACHE = {}
 
 
-def get_data_from_url(
+def fetch_response(
     url,
-    data_type=URLDataReturnType.text,
     timeout=10,
 ):
     """
-    Take a ``url`` as input and return the data from the URL
-    depending on the ``data_type`` return URL or text if ``data_type`` is
-    ``URLDataReturnType.url`` or ``URLDataReturnType.text`` respectively.
+    Return the request response for url or None, use a session cache
+    and ignore unreachable URLs
     """
     try:
         if not url:
             return
-        if url.startswith("https://github.com/assets"):
+        # This URL takes a lot of time to download
+        # and it does not contain any data of use
+        if not is_good_repo_url(url):
             return
-        not_supported_extensions = [
-            ".pdf",
-            ".zip",
-            ".woff2",
-            ".jar",
-            ".js",
-            ".png",
-            ".css",
-            ".svg",
-            ".jpg",
-            ".tgz",
-        ]
-        for extension in not_supported_extensions:
-            if url.endswith(extension):
-                return
-        if url in non_reachable_urls:
+
+        if not is_url_with_usable_content(url):
             return
-        if url in CACHE:
-            response = CACHE[url]
-            return get_data_from_response(response=response, data_type=data_type)
+
+        if url in UNREACHABLE_URLS:
+            return
+
+        response = RESPONSE_BY_URL_CACHE.get(url)
+        if response:
+            return response
+
         response = requests.get(url=url, timeout=timeout)
         if response.status_code != 200:
-            non_reachable_urls.append(url)
+            UNREACHABLE_URLS.add(url)
             return
-        CACHE[url] = response
-        return get_data_from_response(response=response, data_type=data_type)
+
+        RESPONSE_BY_URL_CACHE[url] = response
+        return response
+
     except Exception as e:
         logger.error(f"Error getting {url}: {e}")
-        non_reachable_urls.append(url)
+        UNREACHABLE_URLS.add(url)
         return
 
 
@@ -146,44 +116,25 @@ def convert_apache_svn_to_github_url(url):
     return f"https://github.com/apache/{name}/tree/{tag}"
 
 
-def add_source_repo_to_package_set(
-    source_repo_type,
-    source_repo_name,
-    source_repo_namespace,
-    source_repo_version,
-    download_url,
-    purl,
-    source_purl,
+def add_source_package_to_package_set(
+    source_package,
     package,
 ):
     """
-    Take source repo package information, create source package
-    and add it to a Package set
+    Add ``source_package`` to the ``package`` package set. Create
+    the package set if it doesn't exist
     """
-    # Create new Package from the source_purl fields
-    source_repo_package, created = Package.objects.get_or_create(
-        type=source_repo_type,
-        namespace=source_repo_namespace,
-        name=source_repo_name,
-        version=source_repo_version,
-        download_url=download_url,
-        package_content=PackageContentType.SOURCE_REPO,
-    )
     package_sets = package.package_sets.all()
     if not package_sets:
         # Create a Package set if we don't have one
         package_set = PackageSet.objects.create()
         package_set.add_to_package_set(package)
-        package_set.add_to_package_set(source_repo_package)
-    else:
-        for package_set in package_sets.all():
-            package_set.add_to_package_set(source_repo_package)
-    if created:
-        add_package_to_scan_queue(source_repo_package)
-        logger.info(f"\tCreated source repo package {source_purl} for {purl}")
-    else:
+        package_sets = [package_set]
+
+    for package_set in package_sets:
+        package_set.add_to_package_set(source_package)
         logger.info(
-            f"\tAssigned source repo package {source_purl} to Package set {package_set.uuid}"
+            f"Assigned source repo package {source_package.purl} to Package set {package_set.uuid}"
         )
 
 
@@ -193,23 +144,43 @@ def get_source_repo_and_add_to_package_set():
     if found
     """
     for package in Package.objects.all().paginated():
-        source_purl_with_tag = get_source_repo(package=package)
-        download_url = None
+        source_purl = get_source_repo(package=package)
+
+        if not source_purl:
+            continue
+
         try:
-            download_url = get_download_url(str(source_purl_with_tag))
+            download_url = get_download_url(str(source_purl))
+            if not download_url:
+                continue
         except:
-            logger.error(f"Error getting download_url for {source_purl_with_tag}")
+            logger.error(f"Error getting download_url for {source_purl}")
             continue
-        if not download_url:
+
+        source_package = Package.objects.for_package_url(
+            purl_str=str(source_purl)
+        ).get_or_none()
+        if not source_package:
+            source_package, _created = Package.objects.get_or_create(
+                type=source_purl.type,
+                namespace=source_purl.namespace,
+                name=source_purl.name,
+                version=source_purl.version,
+                download_url=download_url,
+                package_content=PackageContentType.SOURCE_REPO,
+            )
+            add_package_to_scan_queue(source_package)
+            logger.info(f"Created source repo package {source_purl} for {package.purl}")
+
+        package_set_ids = set(package.package_sets.all().values("uuid"))
+        source_package_set_ids = set(source_package.package_sets.all().values("uuid"))
+
+        # If the package exists and already in the set then there is nothing left to do
+        if package_set_ids.intersection(source_package_set_ids):
             continue
-        add_source_repo_to_package_set(
-            source_repo_type=source_purl_with_tag.type,
-            source_repo_name=source_purl_with_tag.name,
-            source_repo_namespace=source_purl_with_tag.namespace,
-            source_repo_version=source_purl_with_tag.version,
-            download_url=download_url,
-            purl=package.purl,
-            source_purl=source_purl_with_tag,
+
+        add_source_package_to_package_set(
+            source_package=source_package,
             package=package,
         )
 
@@ -217,7 +188,8 @@ def get_source_repo_and_add_to_package_set():
 def get_source_repo(package: Package) -> PackageURL:
     """
     Return the PackageURL of the source repository of a Package
-    or None if not found
+    or None if not found. Package is either a PackageCode Package object or
+    Package instance object.
     """
     repo_urls = list(get_repo_urls(package))
     if not repo_urls:
@@ -260,17 +232,17 @@ def get_repo_urls(package: Package) -> Generator[str, None, None]:
 
 def get_source_urls_from_package_data_and_resources(package: Package) -> List[str]:
     """
-    Return the URL of the source repository of a package
-    or None if not found
+    Return a list of URLs of source repositories for a package,
+    possibly empty.
     """
     if not package:
         return []
-    source_urls = list(get_urls_from_package_data(package))
-    if source_urls:
-        return source_urls
-    source_urls = list(get_urls_from_package_resources(package))
-    if source_urls:
-        return source_urls
+    metadata_urls = list(get_urls_from_package_data(package))
+    if metadata_urls:
+        return metadata_urls
+    resource_urls = list(get_urls_from_package_resources(package))
+    if resource_urls:
+        return resource_urls
     return []
 
 
@@ -341,11 +313,7 @@ def get_urls_from_package_data(package) -> Generator[str, None, None]:
     # TODO: Use the source package url
     # TODO: If the package is already a repo package then don't do anything
     # TODO: Search for URLs in description, qualifiers, download_url, notice_text, extracted_license_statement.
-    description = package.description or ""
-    urls_from_description_and_homepage_urls = (
-        get_urls_from_description_and_homepage_urls(package, description)
-    )
-    urls = [
+    found_urls = [
         package.code_view_url,
         package.homepage_url,
         package.bug_tracking_url,
@@ -353,23 +321,20 @@ def get_urls_from_package_data(package) -> Generator[str, None, None]:
         package.vcs_url,
         package.repository_download_url,
     ]
-    urls.extend(urls_from_description_and_homepage_urls)
-    yield from get_git_repo_urls(urls=urls)
 
+    homepage_response = fetch_response(url=package.homepage_url)
+    homepage_text = homepage_response and homepage_response.text
+    found_urls.extend(get_urls_from_text(text=homepage_text))
 
-def get_urls_from_description_and_homepage_urls(package, description):
-    homepage_text = get_data_from_url(
-        url=package.homepage_url, data_type=URLDataReturnType.text
+    repository_homepage_response = fetch_response(url=package.repository_homepage_url)
+    repository_homepage_text = (
+        repository_homepage_response and repository_homepage_response.text
     )
-    repository_homepage_text = get_data_from_url(
-        url=package.repository_homepage_url, data_type=URLDataReturnType.text
-    )
-    if homepage_text:
-        description += homepage_text
-    if repository_homepage_text:
-        description += repository_homepage_text
-    urls_from_description = list(get_urls_from_text(text=description))
-    return urls_from_description
+    found_urls.extend(get_urls_from_text(text=repository_homepage_text))
+
+    found_urls.extend(get_urls_from_text(text=package.description))
+
+    yield from get_git_repo_urls(urls=found_urls)
 
 
 def get_git_repo_urls(urls):
@@ -393,9 +358,8 @@ def get_git_repo_urls(urls):
             if url and url.startswith("git+"):
                 _, _, url = url.partition("git+")
             try:
-                url = get_data_from_url(
-                    url=url, data_type=URLDataReturnType.url
-                )
+                resp = fetch_response(url=url)
+                url = resp and resp.url
                 if not url:
                     continue
             except Exception as e:
@@ -411,15 +375,50 @@ def get_tags_and_commits(source_purl):
     """
     try:
         repo_url = purl2url(str(source_purl))
-        if not get_data_from_url(url=repo_url, data_type=URLDataReturnType.url):
+        resp = fetch_response(url=repo_url)
+        url = resp and resp.url
+        if not url:
             return
-        # This is a jQuery Plugins Site Reserved Word and we don't want to scan it
-        if repo_url.startswith("https://github.com/assets"):
+        if not is_good_repo_url(repo_url):
             return
         output = subprocess.getoutput(f"git ls-remote {repo_url}")
         yield from get_tags_and_commits_from_git_output(output)
     except Exception as e:
         logger.error(f"Error getting tags and commits for {source_purl}: {e}")
+
+
+def is_good_repo_url(url):
+    """
+    Return True if it's a good repo URL or
+    False if it's some kind of problematic URL that we want to skip
+    """
+    # This is a jQuery Plugins Site Reserved Word and we don't want to scan it
+    if url.startswith("https://github.com/assets"):
+        return False
+    return True
+
+
+def is_url_with_usable_content(url):
+    """
+    Return True if this URL contains usable
+    text data, otherwise False. Usable here means it is text
+    and we are likely to find interesting URLs in that.
+    """
+    not_supported_extensions = (
+        ".pdf",
+        ".zip",
+        ".woff2",
+        ".jar",
+        ".js",
+        ".png",
+        ".css",
+        ".svg",
+        ".jpg",
+        ".tgz",
+    )
+    if url.endswith(not_supported_extensions):
+        return False
+    return True
 
 
 def get_tags_and_commits_from_git_output(git_ls_remote):
@@ -473,3 +472,27 @@ def find_package_version_tag_and_commit(version, source_purls):
             version=tag,
             qualifiers={"commit": commit},
         )
+
+
+def get_package_object_from_purl(package_url):
+    """
+    Get a ``Package`` object for a ``package_url`` string.
+    """
+    lookups = purl_to_lookups(package_url)
+    packages = Package.objects.filter(**lookups)
+    packages_count = packages.count()
+
+    if packages_count == 1:
+        package = packages.first()
+        return package
+
+    if not packages_count:
+        return
+
+    if packages_count > 1:
+        # Get the binary package
+        # We use .get(qualifiers="") because the binary maven JAR has no qualifiers
+        package = packages.get_or_none(qualifiers="")
+        if not package:
+            print(f"\t{package_url} does not exist in this database. Continuing.")
+            return

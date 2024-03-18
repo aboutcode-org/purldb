@@ -239,6 +239,57 @@ def get_http_response(uri, timeout=10):
     return response
 
 
+def get_package_sha1(package, field="repository_download_url"):
+    """
+    Return the sha1 value for `package` by checking if the sha1 file exists for
+    `package` on maven and returning the contents if it does.
+
+    If the sha1 is invalid, we download the package's JAR and calculate the sha1
+    from that.
+    """
+    download_url = getattr(package, field)
+
+    # Download archive from URL and calculate sha1
+    response = requests.get(download_url)
+    if response:
+        sha1_hash = hashlib.new('sha1', response.content)
+        sha1 = sha1_hash.hexdigest()
+        return sha1
+
+
+def fetch_and_write_file_from_url(url):
+    """
+    Fetches a file from the `url` and returns the location for the
+    temporary file. Return None if the url is not reachable.
+    """
+    response = requests.get(url)
+    if not response.ok:
+        return None
+
+    metadata_content = response.text
+    filename = url.split("/")[-1]
+    file_name, _, extension = filename.rpartition(".")
+    temp_metadata_file = get_temp_file(file_name=file_name, extension=extension)
+    with open(temp_metadata_file, 'a') as metadata_file:
+        metadata_file.write(metadata_content)
+
+    return temp_metadata_file
+
+
+def validate_sha1(sha1):
+    """
+    Validate a `sha1` string.
+
+    Return `sha1` if it is valid, None otherwise.
+    """
+    if sha1 and len(sha1) != 40:
+        logger.warning(
+            f'Invalid SHA1 length ({len(sha1)}): "{sha1}": SHA1 ignored!'
+        )
+        sha1 = None
+    return sha1
+
+
 def system_temp_dir(temp_dir=os.getenv('MINECODE_TMP')):
     """
     Return the global temp directory..

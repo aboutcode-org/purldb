@@ -2,7 +2,7 @@
     "headers": [
         {
             "tool_name": "purlcli",
-            "tool_version": "0.1.0",
+            "tool_version": "0.2.0",
             "options": {
                 "command": "urls",
                 "--purl": [
@@ -23,15 +23,13 @@
                     "pkg:gem/bundler-sass",
                     "pkg:rubygems/bundler-sass",
                     "pkg:pypi/matchcode",
-                    "pkg:rubygems/bundler-sass",
                     "abcdefg",
                     "pkg/abc",
-                    "pkg:nuget/auth0-aspnet@1.1.0",
-                    "pkg:cargo/socksprox"
+                    "pkg:nuget/auth0-aspnet@1.1.0"
                 ],
                 "--file": null,
                 "--head": true,
-                "--output": "/mnt/c/nexb/purldb-testing/2024-current-01-testing/json-output/2024-02-14-urls--head--output-01.json"
+                "--output": "<stdout>"
             },
             "purls": [
                 "pkg:pypi/fetchcode",
@@ -51,11 +49,9 @@
                 "pkg:gem/bundler-sass",
                 "pkg:rubygems/bundler-sass",
                 "pkg:pypi/matchcode",
-                "pkg:rubygems/bundler-sass",
                 "abcdefg",
                 "pkg/abc",
-                "pkg:nuget/auth0-aspnet@1.1.0",
-                "pkg:cargo/socksprox"
+                "pkg:nuget/auth0-aspnet@1.1.0"
             ],
             "errors": [],
             "warnings": [
@@ -464,41 +460,6 @@
             }
         },
         {
-            "purl": "pkg:rubygems/bundler-sass",
-            "download_url": {
-                "url": null,
-                "get_request_status_code": "N/A",
-                "head_request_status_code": "N/A"
-            },
-            "inferred_urls": [
-                {
-                    "url": "https://rubygems.org/gems/bundler-sass",
-                    "get_request_status_code": 200,
-                    "head_request_status_code": 200
-                }
-            ],
-            "repo_download_url": {
-                "url": null,
-                "get_request_status_code": "N/A",
-                "head_request_status_code": "N/A"
-            },
-            "repo_download_url_by_package_type": {
-                "url": null,
-                "get_request_status_code": "N/A",
-                "head_request_status_code": "N/A"
-            },
-            "repo_url": {
-                "url": "https://rubygems.org/gems/bundler-sass",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
-            },
-            "url": {
-                "url": "https://rubygems.org/gems/bundler-sass",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
-            }
-        },
-        {
             "purl": "pkg:nuget/auth0-aspnet@1.1.0",
             "download_url": {
                 "url": "https://www.nuget.org/api/v2/package/auth0-aspnet/1.1.0",
@@ -535,41 +496,6 @@
             "url": {
                 "url": "https://www.nuget.org/packages/auth0-aspnet/1.1.0",
                 "get_request_status_code": 200,
-                "head_request_status_code": 404
-            }
-        },
-        {
-            "purl": "pkg:cargo/socksprox",
-            "download_url": {
-                "url": null,
-                "get_request_status_code": "N/A",
-                "head_request_status_code": "N/A"
-            },
-            "inferred_urls": [
-                {
-                    "url": "https://crates.io/crates/socksprox",
-                    "get_request_status_code": 404,
-                    "head_request_status_code": 404
-                }
-            ],
-            "repo_download_url": {
-                "url": null,
-                "get_request_status_code": "N/A",
-                "head_request_status_code": "N/A"
-            },
-            "repo_download_url_by_package_type": {
-                "url": null,
-                "get_request_status_code": "N/A",
-                "head_request_status_code": "N/A"
-            },
-            "repo_url": {
-                "url": "https://crates.io/crates/socksprox",
-                "get_request_status_code": 404,
-                "head_request_status_code": 404
-            },
-            "url": {
-                "url": "https://crates.io/crates/socksprox",
-                "get_request_status_code": 404,
                 "head_request_status_code": 404
             }
         }
