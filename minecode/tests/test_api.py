@@ -167,6 +167,15 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
 
         data = {
             'scannable_uri_uuid': self.scannable_uri2.uuid,
+            'scan_status': ''
+        }
+        response = self.csrf_client.post('/api/scan_queue/update_status/', data=data)
+        expected_response = {'error': 'missing scan_status'}
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(expected_response, response.data)
+
+        data = {
+            'scannable_uri_uuid': self.scannable_uri2.uuid,
             'scan_status': 'invalid'
         }
         response = self.csrf_client.post('/api/scan_queue/update_status/', data=data)

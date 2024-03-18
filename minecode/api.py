@@ -8,13 +8,13 @@
 #
 
 import json
-import uuid
 
 from django.db import transaction
 from django.utils import timezone
 from packageurl import PackageURL
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 # UnusedImport here!
@@ -24,6 +24,7 @@ from minecode import priority_router
 from minecode.management.indexing import index_package
 from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 from minecode.permissions import IsScanQueueWorkerAPIUser
+from minecode.utils import validate_uuid
 
 
 class ResourceURISerializer(serializers.ModelSerializer):
@@ -42,14 +43,6 @@ class PriorityResourceURISerializer(serializers.ModelSerializer):
     class Meta:
         model = PriorityResourceURI
         fields = '__all__'
-
-
-def validate_uuid(uuid_string):
-    try:
-        val = uuid.UUID(uuid_string)
-    except ValueError:
-        return False
-    return str(val).lower() == uuid_string.lower()
 
 
 class PriorityResourceURIViewSet(viewsets.ModelViewSet):
@@ -106,7 +99,7 @@ class ScannableURISerializer(serializers.ModelSerializer):
 class ScannableURIViewSet(viewsets.ModelViewSet):
     queryset = ScannableURI.objects.all()
     serializer_class = ScannableURISerializer
-    permission_classes = [IsScanQueueWorkerAPIUser]
+    permission_classes = [IsScanQueueWorkerAPIUser|IsAdminUser]
 
     @action(detail=False, methods=["get"])
     def get_next_download_url(self, request, *args, **kwargs):
@@ -134,11 +127,29 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["post"])
     def update_status(self, request, *args, **kwargs):
+        """
+        Update the status of a ScannableURI with UUID of `scannable_uri_uuid`
+        with `scan_status`
+
+        If `scan_status` is 'failed', then a `scan_log` string is expected and
+        should contain the error messages for that scan.
+
+        If `scan_status` is 'scanned', then a `scan_results_file`,
+        `scan_summary_file`, and `project_extra_data` mapping are expected.
+        `scan_results_file`, `scan_summary_file`, and `project_extra_data` are
+        then used to update Package data and its Resources.
+        """
         scannable_uri_uuid = request.data.get('scannable_uri_uuid')
         scan_status = request.data.get('scan_status')
         if not scannable_uri_uuid:
             response = {
                 'error': 'missing scannable_uri_uuid'
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        if not scan_status:
+            response = {
+                'error': 'missing scan_status'
             }
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 

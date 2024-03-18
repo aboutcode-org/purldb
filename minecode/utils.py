@@ -12,6 +12,7 @@ import hashlib
 import logging
 import os
 import tempfile
+import uuid
 
 from django.conf import settings
 from django.utils.encoding import force_str
@@ -331,3 +332,11 @@ def form_vcs_url(vcs_tool, vcs_url, revision_tag_or_branch=None, sub_path=None):
         if sub_path:
             vcs_url = '#'.join(str(v) for v in [vcs_url, sub_path])
     return vcs_url
+
+
+def validate_uuid(uuid_string):
+    try:
+        val = uuid.UUID(uuid_string)
+    except ValueError:
+        return False
+    return str(val).lower() == uuid_string.lower()
