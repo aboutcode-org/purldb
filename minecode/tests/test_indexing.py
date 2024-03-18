@@ -32,7 +32,7 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
             version='20040705.181715'
         )
 
-    def test_ProcessScansTest_index_package_files(self):
+    def test_indexing_index_package_files(self):
         scan_data_loc = self.get_test_loc('scancodeio/get_scan_data.json')
         with open(scan_data_loc, 'rb') as f:
             scan_data = json.loads(f.read())
@@ -43,7 +43,7 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         expected_resources_loc = self.get_test_loc('scancodeio/get_scan_data_expected_resources.json')
         self.check_expected_results(results, expected_resources_loc, regen=False)
 
-    def test_ProcessScansTest_process_scan(self):
+    def test_indexing_index_package(self):
         scan_data_loc = self.get_test_loc('scancodeio/get_scan_data.json')
         with open(scan_data_loc, 'rb') as f:
             scan_data = json.load(f)
@@ -52,6 +52,14 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         with open(scan_summary_loc, 'rb') as f:
             scan_summary = json.load(f)
 
+        project_extra_data = {
+            'md5': 'md5',
+            'sha1': 'sha1',
+            'sha256': 'sha256',
+            'sha512': 'sha512',
+            'size': 100,
+        }
+
         # Set up ScannableURI
         scannable_uri = ScannableURI.objects.create(
             uri='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
@@ -59,12 +67,32 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
             package=self.package1
         )
 
-        # Run test
-        indexing.index_package(scannable_uri, self.package1, scan_data, scan_summary)
+        self.assertFalse(self.package1.md5)
+        self.assertFalse(self.package1.sha1)
+        self.assertFalse(self.package1.sha256)
+        self.assertFalse(self.package1.sha512)
+        self.assertFalse(self.package1.size)
+        self.assertFalse(self.package1.declared_license_expression)
+        self.assertFalse(self.package1.copyright)
+        self.assertEqual(0, Resource.objects.all().count())
 
-        # Make sure that we get license_expression and copyright from the summary
+        # Run test
+        indexing.index_package(
+            scannable_uri,
+            self.package1,
+            scan_data,
+            scan_summary,
+            project_extra_data,
+        )
+
+        # Make sure that Package data is updated
         self.assertEqual('apache-2.0', self.package1.declared_license_expression)
         self.assertEqual('Copyright (c) Apache Software Foundation', self.package1.copyright)
+        self.assertEqual('md5', self.package1.md5)
+        self.assertEqual('sha1', self.package1.sha1)
+        self.assertEqual('sha256', self.package1.sha256)
+        self.assertEqual('sha512', self.package1.sha512)
+        self.assertEqual(100, self.package1.size)
 
         result = Resource.objects.filter(package=self.package1)
         self.assertEqual(64, result.count())

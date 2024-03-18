@@ -22,7 +22,6 @@ from packageurl import PackageURL
 import packagedb
 from minecode import mappers
 from minecode import route
-from minecode.collectors import npm as npm_collector
 from minecode.models import ResourceURI
 from minecode.utils_test import JsonBasedTesting
 from minecode.utils_test import mocked_requests_get
@@ -185,7 +184,7 @@ class NpmPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         )
 
     def test_get_package_json(self, regen=False):
-        json_contents = npm_collector.get_package_json(
+        json_contents = npm.get_package_json(
             namespace=self.scan_package.namespace,
             name=self.scan_package.name,
             version=self.scan_package.version
@@ -199,7 +198,7 @@ class NpmPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(0, package_count)
         package_url = PackageURL.from_string(self.scan_package.purl)
-        npm_collector.map_npm_package(package_url)
+        npm.map_npm_package(package_url)
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(1, package_count)
         package = packagedb.models.Package.objects.all().first()
