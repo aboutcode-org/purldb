@@ -691,6 +691,12 @@ class ScannableURI(BaseURI):
 
     SCAN_STATUSES_BY_CODE = dict(SCAN_STATUS_CHOICES)
 
+    SCAN_STATUS_CODES_BY_SCAN_STATUS = {
+        status: code
+        for code, status
+        in SCAN_STATUS_CHOICES
+    }
+
     scan_status = models.IntegerField(
         default=SCAN_NEW,
         choices=SCAN_STATUS_CHOICES,

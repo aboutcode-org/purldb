@@ -149,6 +149,33 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         scannable_uri = ScannableURI.objects.get(uuid=scannable_uri_uuid)
+        scannable_uri_status = ScannableURI.SCAN_STATUSES_BY_CODE.get(scannable_uri.scan_status)
+        scan_status_code = ScannableURI.SCAN_STATUS_CODES_BY_SCAN_STATUS.get(scan_status)
+
+        if not scan_status_code:
+            msg = {
+                'error': f'invalid scan_status: {scan_status}'
+            }
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+
+        if scannable_uri.scan_status in [
+            ScannableURI.SCAN_INDEXED,
+            ScannableURI.SCAN_FAILED,
+            ScannableURI.SCAN_TIMEOUT,
+            ScannableURI.SCAN_INDEX_FAILED,
+        ]:
+            response = {
+                'error': f'cannot update status for scannable_uri {scannable_uri_uuid}: '
+                         f'scannable_uri has finished with status "{scannable_uri_status}"'
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        if scan_status == scannable_uri_status:
+            response = {
+                'error': f'cannot update status for scannable_uri {scannable_uri_uuid}: '
+                         f'scannable_uri status is already "{scannable_uri_status}"'
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         if scan_status == 'failed':
             scan_log = request.data.get('scan_log')
@@ -157,7 +184,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             scannable_uri.wip_date = None
             scannable_uri.save()
             msg = {
-                'status': f'updated scannable uri {scannable_uri_uuid} scan_status to {scan_status}'
+                'status': f'updated scannable_uri {scannable_uri_uuid} scan_status to {scan_status}'
             }
 
         elif scan_status == 'scanned':
@@ -181,21 +208,15 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
                 scannable_uri.index_error = indexing_errors
                 msg = {
-                    'error': f'scan index failed for scannable uri {scannable_uri_uuid}'
+                    'error': f'scan index failed for scannable_uri {scannable_uri_uuid}'
                 }
                 return Response(msg, status=status.HTTP_400_BAD_REQUEST)
             else:
                 scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
                 msg = {
-                    'status': f'scan indexed for scannable uri {scannable_uri_uuid}'
+                    'status': f'scan indexed for scannable_uri {scannable_uri_uuid}'
                 }
             scannable_uri.wip_date = None
             scannable_uri.save()
-
-        else:
-            msg = {
-                'error': f'invalid scan_status: {scan_status}'
-            }
-            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(msg)

@@ -100,8 +100,12 @@ def index_package(scannable_uri, package, scan_data, summary_data, project_extra
             'copyright': copyright,
             **checksums_and_size_by_field
         }
-        package.update_fields(save=True, **values_by_updateable_fields)
+        _, updated_fields = package.update_fields(save=True, **values_by_updateable_fields)
+        updated_fields = ', '.join(updated_fields)
+        message = f'Updated fields for Package {package.purl}: {updated_fields}'
+        logger.info(message)
         scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
+        scannable_uri.save()
     except Exception as e:
         traceback_message = traceback.format_exc()
         error_message = traceback_message + '\n'

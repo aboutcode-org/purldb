@@ -57,6 +57,17 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
             package=self.package2
         )
 
+        self.package3 = Package.objects.create(
+            download_url='https://test-url.com/package3.tar.gz',
+            type='type3',
+            name='name3',
+            version='3.0',
+        )
+        self.scannable_uri3 = ScannableURI.objects.create(
+            uri='https://test-url.com/package3.tar.gz',
+            package=self.package3
+        )
+
         self.client = APIClient()
 
     def test_api_scannable_uri_list_endpoint(self):
@@ -65,7 +76,7 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
 
         response = self.csrf_client.get('/api/scan_queue/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(2, response.data.get('count'))
+        self.assertEqual(3, response.data.get('count'))
 
     def test_api_scannable_uri_get_next_download_url(self):
         response = self.client.get('/api/scan_queue/get_next_download_url/')
@@ -80,6 +91,11 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get('scannable_uri_uuid'), self.scannable_uri2.uuid)
         self.assertEqual(response.data.get('download_url'), self.scannable_uri2.uri)
+
+        response = self.csrf_client.get('/api/scan_queue/get_next_download_url/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get('scannable_uri_uuid'), self.scannable_uri3.uuid)
+        self.assertEqual(response.data.get('download_url'), self.scannable_uri3.uri)
 
         response = self.csrf_client.get('/api/scan_queue/get_next_download_url/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -166,3 +182,26 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         expected_response = {'error': 'invalid scannable_uri_uuid: asdf'}
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(expected_response, response.data)
+
+    def test_api_scannable_uri_update_status_update_finished_scannable_uri(self):
+        scannable_uri_uuid = self.scannable_uri3.uuid
+        for scan_status in [
+            ScannableURI.SCAN_INDEXED,
+            ScannableURI.SCAN_FAILED,
+            ScannableURI.SCAN_TIMEOUT,
+            ScannableURI.SCAN_INDEX_FAILED,
+        ]:
+            self.scannable_uri3.scan_status = scan_status
+            self.scannable_uri3.save()
+            data = {
+                'scannable_uri_uuid': scannable_uri_uuid,
+                'scan_status': 'scanned'
+            }
+            response = self.csrf_client.post('/api/scan_queue/update_status/', data=data)
+            expected_response = {
+                'error': 'cannot update status for scannable_uri '
+                        f'{self.scannable_uri3.uuid}: scannable_uri has finished '
+                        f'with status "{ScannableURI.SCAN_STATUSES_BY_CODE[scan_status]}"'
+            }
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertEqual(expected_response, response.data)
