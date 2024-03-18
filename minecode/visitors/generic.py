@@ -9,6 +9,7 @@
 
 import logging
 
+import attr
 from fetchcode.package import info
 from packagedcode.models import PackageData
 from packageurl import PackageURL
@@ -78,6 +79,18 @@ def process_request(purl_str):
         return error_msg
 
 
+def packagedata_from_dict(package_data):
+    """
+    Return a PackageData built from a `package_data` mapping.
+    Ignore unknown and unsupported fields.
+    """
+    supported = {attr.name for attr in attr.fields(PackageData)}
+    cleaned_package_data = {
+        key: value for key, value in package_data.items() if key in supported
+    }
+    return PackageData(**cleaned_package_data)
+
+
 def map_directory_listed_package(package_url):
     """
     Add a directory listed `package_url` to the PackageDB.
@@ -97,14 +110,7 @@ def map_directory_listed_package(package_url):
     package_data = packages[0].to_dict()
 
     # Remove obsolete Package fields see https://github.com/nexB/fetchcode/issues/108
-    del package_data["api_url"]
-    del package_data["license_expression"]
-    del package_data["declared_license"]
-    del package_data["root_path"]
-    del package_data["contains_source_code"]
-    del package_data["purl"]
-
-    package = PackageData(**package_data)
+    package = packagedata_from_dict(package_data)
 
     db_package, _, _, error = merge_or_create_package(package, visit_level=0)
 
