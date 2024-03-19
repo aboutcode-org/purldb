@@ -27,7 +27,8 @@ logger.setLevel(logging.INFO)
 # These are the list of default pipelines to run when we scan a Package for
 # indexing
 DEFAULT_PIPELINES = (
-    'scan_and_fingerprint_package',
+    'scan_single_package',
+    'fingerprint_codebase',
 )
 
 
