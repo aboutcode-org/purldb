@@ -105,19 +105,6 @@ class Command(VerboseCommand):
         return processed_counter
 
 
-def add_package_to_scan_queue(package):
-    """
-    Add a Package `package` to the scan queue
-    """
-    uri = package.download_url
-    _, scannable_uri_created = ScannableURI.objects.get_or_create(
-        uri=uri,
-        package=package,
-    )
-    if scannable_uri_created:
-        logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
-
-
 def process_request(priority_resource_uri, _priority_router=priority_router):
     purl_to_visit = priority_resource_uri.uri
     source_purl = priority_resource_uri.source_uri

@@ -8,19 +8,20 @@
 #
 
 from collections import namedtuple
+from typing import Dict
+from urllib.parse import urlparse
 import gzip
 import hashlib
 import io
 import json
 import logging
+import os
 import re
-from typing import Dict
-from urllib.parse import urlparse
 
-import arrow
-import requests
 from bs4 import BeautifulSoup
 from dateutil import tz
+import arrow
+import requests
 
 from jawa.util.utf import decode_modified_utf8
 import javaproperties
@@ -29,12 +30,11 @@ from packageurl import PackageURL
 from packagedcode.maven import build_filename
 from packagedcode.maven import build_url
 from packagedcode.maven import get_urls
-from packagedcode.maven import _parse
 from packagedcode.maven import get_maven_pom
-from packageurl import PackageURL
+from packagedcode.maven import _parse
 
-from minecode import seed
 from minecode import priority_router
+from minecode import seed
 from minecode import visit_router
 from minecode.visitors import java_stream
 from minecode.visitors import HttpVisitor
@@ -44,6 +44,7 @@ from minecode.utils import validate_sha1
 from packagedb.models import make_relationship
 from packagedb.models import PackageContentType
 from packagedb.models import PackageRelation
+from packagedb.models import make_relationship
 
 """
 This module handles the Maven repositories such as central and other
@@ -236,7 +237,7 @@ def merge_ancestors(ancestor_pom_texts, package):
             datasource_id='maven_pom',
             package_type='maven',
             primary_language='Java',
-            text=ancestor_pom_text
+            text=ancestor_pom_text,
         )
         package = merge_parent(package, ancestor_package)
     return package
@@ -248,14 +249,13 @@ def map_maven_package(package_url, package_content):
 
     Return an error string if errors have occured in the process.
     """
-    from minecode.model_utils import add_package_to_scan_queue
-    from minecode.model_utils import merge_or_create_package
+    from minecode.model_utils import add_package_to_scan_queue, merge_or_create_package
 
     db_package = None
     error = ''
 
-    if "repository_url" in package_url.qualifiers:
-        base_url = package_url.qualifiers["repository_url"]
+    if 'repository_url' in package_url.qualifiers:
+        base_url = package_url.qualifiers['repository_url']
     else:
         base_url = MAVEN_BASE_URL
 
@@ -280,11 +280,7 @@ def map_maven_package(package_url, package_content):
         base_url=base_url,
     )
     ancestor_pom_texts = get_ancestry(pom_text=pom_text, base_url=base_url)
-    package = merge_ancestors(
-        ancestor_pom_texts=ancestor_pom_texts,
-        package=package
-    )
-
+    package = merge_ancestors(ancestor_pom_texts=ancestor_pom_texts, package=package)
 
     urls = get_urls(
         namespace=package_url.namespace,
@@ -333,18 +329,14 @@ def map_maven_binary_and_source(package_url):
     Return an error string for errors that occur, or empty string if there is no error.
     """
     error = ''
-    package, emsg = map_maven_package(
-        package_url,
-        PackageContentType.BINARY
-    )
+    package, emsg = map_maven_package(package_url, PackageContentType.BINARY)
     if emsg:
         error += emsg
 
     source_package_url = package_url
     source_package_url.qualifiers['classifier'] = 'sources'
     source_package, emsg = map_maven_package(
-        source_package_url,
-        PackageContentType.SOURCE_ARCHIVE
+        source_package_url, PackageContentType.SOURCE_ARCHIVE
     )
     if emsg:
         error += emsg
@@ -353,7 +345,7 @@ def map_maven_binary_and_source(package_url):
         make_relationship(
             from_package=source_package,
             to_package=package,
-            relationship=PackageRelation.Relationship.SOURCE_PACKAGE
+            relationship=PackageRelation.Relationship.SOURCE_PACKAGE,
         )
 
     return error
@@ -381,7 +373,7 @@ def map_maven_packages(package_url):
             type='maven',
             namespace=listing.get('g'),
             name=listing.get('a'),
-            version=listing.get('v')
+            version=listing.get('v'),
         )
         emsg = map_maven_binary_and_source(purl)
         if emsg:
@@ -472,17 +464,15 @@ def check_if_package_version_page(links, **kwargs):
     """
     Return True if `links` contains pom files and has no directories
     """
-    return (
-        check_if_page_has_pom_files(links=links)
-        and not check_if_page_has_directories(links=links)
-    )
+    return check_if_page_has_pom_files(
+        links=links
+    ) and not check_if_page_has_directories(links=links)
 
 
 def check_if_package_page(links, **kwargs):
-    return (
-        check_if_file_name_is_linked_on_page(file_name='maven-metadata.xml', links=links)
-        and not check_if_page_has_pom_files(links=links)
-    )
+    return check_if_file_name_is_linked_on_page(
+        file_name='maven-metadata.xml', links=links
+    ) and not check_if_page_has_pom_files(links=links)
 
 
 def check_if_maven_root(links, **kwargs):
@@ -490,7 +480,9 @@ def check_if_maven_root(links, **kwargs):
     Return True if "archetype-catalog.xml" is in `links`, as the root of a Maven
     repo contains "archetype-catalog.xml".
     """
-    return check_if_file_name_is_linked_on_page(file_name='archetype-catalog.xml', links=links)
+    return check_if_file_name_is_linked_on_page(
+        file_name='archetype-catalog.xml', links=links
+    )
 
 
 def check_on_page(url, checker):
@@ -551,7 +543,7 @@ def get_maven_root(url):
     """
     scheme, netloc, path_segments = url_parts(url)
     for i in range(len(path_segments)):
-        segments = path_segments[:i+1]
+        segments = path_segments[: i + 1]
         url_segment = create_url(scheme, netloc, segments)
         if is_maven_root(url_segment):
             return url_segment
@@ -583,7 +575,7 @@ def determine_namespace_name_version_from_url(url, root_url=None):
     package_version = ''
     for i in range(len(remaining_path_segments)):
         segment = remaining_path_segments[i]
-        segments = remaining_path_segments[:i+1]
+        segments = remaining_path_segments[: i + 1]
         path = '/'.join(segments)
         url_segment = f'{root_url}/{path}'
         if is_package_page(url_segment):
@@ -601,6 +593,7 @@ def add_to_import_queue(url, root_url):
     Create ImportableURI for the Maven repo package page at `url`.
     """
     from minecode.models import ImportableURI
+
     data = None
     response = requests.get(url)
     if response:
@@ -699,9 +692,7 @@ def get_directory_links(url):
     response = requests.get(url)
     if response:
         timestamps_by_directory_links = create_absolute_urls_for_links(
-            response.text,
-            url=url,
-            filter=filter_only_directories
+            response.text, url=url, filter=filter_only_directories
         )
     return timestamps_by_directory_links
 
@@ -714,9 +705,7 @@ def get_artifact_links(url):
     response = requests.get(url)
     if response:
         timestamps_by_artifact_links = create_absolute_urls_for_links(
-            response.text,
-            url=url,
-            filter=filter_for_artifacts
+            response.text, url=url, filter=filter_for_artifacts
         )
     return timestamps_by_artifact_links
 
@@ -755,7 +744,9 @@ def get_artifact_sha1(artifact_url):
     return sha1
 
 
-def get_classifier_from_artifact_url(artifact_url, package_version_page_url, package_name, package_version):
+def get_classifier_from_artifact_url(
+    artifact_url, package_version_page_url, package_name, package_version
+):
     """
     Return the classifier from a Maven artifact URL `artifact_url`, otherwise
     return None if a classifier cannot be determined from `artifact_url`
@@ -1555,19 +1546,19 @@ def _artifact_stats(location):
 
     print('Top packaging:')
     for n, c in pom_packs.most_common():
-        print(n, ":", c)
+        print(n, ':', c)
 
     print('Top classifiers:')
     for n, c in pom_classifs.most_common():
-        print(n, ":", c)
+        print(n, ':', c)
 
     print('Top extensions:')
     for n, c in pom_extensions.most_common():
-        print(n, ":", c)
+        print(n, ':', c)
 
     print('Top Combos: packaging, classifier, extension')
     for n, c in combos.most_common():
-        print(n, ":", c)
+        print(n, ':', c)
 
     """
     Latest stats on 2017-08-07:

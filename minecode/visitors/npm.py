@@ -7,20 +7,18 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-
 import logging
 import json
-import requests
-
-from packageurl import PackageURL
 
 from packagedcode.npm import npm_api_url
 from packagedcode.npm import split_scoped_package_name
 from packagedcode.npm import NpmPackageJsonHandler
+from packageurl import PackageURL
+import requests
 
 from minecode import seed
-from minecode import visit_router
 from minecode import priority_router
+from minecode import visit_router
 from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
 from packagedb.models import PackageContentType
@@ -139,10 +137,10 @@ def map_npm_package(package_url):
     from minecode.model_utils import merge_or_create_package
 
     package_json = get_package_json(
-        namespace = package_url.namespace,
+        namespace=package_url.namespace,
         name=package_url.name,
         version=package_url.version,
-        )
+    )
 
     if not package_json:
         error = f'Package does not exist on npmjs: {package_url}'

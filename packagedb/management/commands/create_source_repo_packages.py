@@ -9,7 +9,6 @@
 
 import logging
 import sys
-from uuid import uuid4
 
 import openpyxl
 from packageurl.contrib.django.utils import purl_to_lookups

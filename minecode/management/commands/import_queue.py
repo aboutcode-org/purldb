@@ -29,7 +29,6 @@ from minecode.visitors.maven import filter_only_directories
 from minecode.visitors.maven import get_artifact_sha1
 from minecode.model_utils import merge_or_create_package
 from packagedcode.models import PackageData
-from packagedb.models import Package
 from minecode.visitors.maven import determine_namespace_name_version_from_url
 
 

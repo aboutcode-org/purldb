@@ -24,6 +24,7 @@ from matchcode.api import ApproximateDirectoryStructureIndexViewSet
 from matchcode.api import ExactFileIndexViewSet
 from matchcode.api import ExactPackageArchiveIndexViewSet
 from minecode.api import PriorityResourceURIViewSet
+from minecode.api import ScannableURIViewSet
 from packagedb.api import PurlValidateViewSet
 from packagedb.to_purl import api_to_purl_router
 from packagedb.from_purl import api_from_purl_router 
@@ -45,7 +46,7 @@ api_router.register('on_demand_queue', PriorityResourceURIViewSet)
 api_router.register('validate', PurlValidateViewSet, 'validate')
 api_router.register('collect', CollectViewSet, 'collect')
 api_router.register('watch',PackageWatchViewSet)
-
+api_router.register('scan_queue', ScannableURIViewSet)
 
 urlpatterns = [
     path(

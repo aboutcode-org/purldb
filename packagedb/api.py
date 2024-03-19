@@ -426,7 +426,7 @@ class PackageViewSet(PackagePublicViewSet):
         Reindex this package instance
         """
         package = self.get_object()
-        package.rescan()
+        package.reindex()
         data = {
             'status': f'{package.package_url} has been queued for reindexing'
         }
@@ -557,7 +557,7 @@ class PackageSetViewSet(viewsets.ReadOnlyModelViewSet):
 class PackageWatchViewSet(CreateListRetrieveUpdateViewSetMixin):
     """
     Take a `purl` and periodically watch for the new version of the package.
-    Add the new package version to the scan queue. 
+    Add the new package version to the scan queue.
     Default watch interval is 7 days.
     """
     queryset = PackageWatch.objects.get_queryset().order_by('-id')
@@ -579,7 +579,7 @@ class CollectViewSet(viewsets.ViewSet):
 
     If the package does not exist, we will fetch the Package data and return
     it in the same request.
-    
+
     **Note:** Use `Index packages` for bulk indexing/reindexing of packages.
     """
     serializer_class=None
@@ -631,7 +631,7 @@ class CollectViewSet(viewsets.ViewSet):
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
-    
+
     @extend_schema(
         request=IndexPackagesSerializer,
         responses={
@@ -705,7 +705,7 @@ class CollectViewSet(viewsets.ViewSet):
         def _reindex_package(package, reindexed_packages):
             if package in reindexed_packages:
                 return
-            package.rescan()
+            package.reindex()
             reindexed_packages.append(package)
 
         serializer = self.serializer_class(data=request.data)
@@ -782,17 +782,17 @@ class CollectViewSet(viewsets.ViewSet):
 
 class PurlValidateViewSet(viewsets.ViewSet):
     """
-    Take a `purl` and check whether it's valid PackageURL or not.  
-    Optionally set `check_existence` to true to check whether the package exists in real world. 
-    
-    **Note:** As of now `check_existence` only supports `cargo`, `composer`, `deb`, 
+    Take a `purl` and check whether it's valid PackageURL or not.
+    Optionally set `check_existence` to true to check whether the package exists in real world.
+
+    **Note:** As of now `check_existence` only supports `cargo`, `composer`, `deb`,
     `gem`, `golang`, `hex`, `maven`, `npm`, `nuget` and `pypi` ecosystems.
 
     **Example request:**
             ```
             GET /api/validate/?purl=pkg:npm/foobar@12.3.1&check_existence=false
             ```
-    
+
     Response contains:
 
     - valid
@@ -801,7 +801,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
         - True, if input PURL exists in real world and `check_existence` flag is enabled.
     """
     serializer_class = PurlValidateSerializer
-    
+
     def get_view_name(self):
         return 'Validate PURL'
 
@@ -876,7 +876,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
                         response['exists'] = True
                 else:
                     unsupported_ecosystem = True
-            
+
             if response['exists']:
                 response["message"] = message_valid_and_exists
             elif unsupported_ecosystem:
@@ -884,7 +884,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
                 response["message"] = message_valid_but_package_type_not_supported
             else:
                 response["message"] =message_valid_but_does_not_exist
-        
+
         serializer = PurlValidateResponseSerializer(response, context={'request': request})
         return Response(serializer.data)
 
@@ -1015,7 +1015,7 @@ def get_all_versions_plain(purl: PackageURL):
 
 def get_all_versions(purl):
     """
-    Return all the versions available for the given purls as 
+    Return all the versions available for the given purls as
     proper Version objects from `univers`.
     """
     all_versions = get_all_versions_plain(purl)
