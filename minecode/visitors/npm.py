@@ -134,7 +134,8 @@ def map_npm_package(package_url):
 
     Return an error string if any errors are encountered during the process
     """
-    from minecode.model_utils import add_package_to_scan_queue, merge_or_create_package
+    from minecode.model_utils import add_package_to_scan_queue
+    from minecode.model_utils import merge_or_create_package
 
     package_json = get_package_json(
         namespace=package_url.namespace,
@@ -143,12 +144,14 @@ def map_npm_package(package_url):
     )
 
     if not package_json:
-        error = f"Package does not exist on npmjs: {package_url}"
+        error = f'Package does not exist on npmjs: {package_url}'
         logger.error(error)
         return error
 
-    package = NpmPackageJsonHandler._parse(json_data=package_json)
-    package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
+    package = NpmPackageJsonHandler._parse(
+        json_data=package_json
+    )
+    package.extra_data['package_content'] = PackageContentType.SOURCE_ARCHIVE
 
     db_package, _, _, error = merge_or_create_package(package, visit_level=0)
 
@@ -159,7 +162,7 @@ def map_npm_package(package_url):
     return error
 
 
-@priority_router.route("pkg:npm/.*")
+@priority_router.route('pkg:npm/.*')
 def process_request(purl_str):
     """
     Process `priority_resource_uri` containing a npm Package URL (PURL) as a

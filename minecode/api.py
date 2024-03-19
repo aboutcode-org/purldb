@@ -101,7 +101,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
     serializer_class = ScannableURISerializer
     permission_classes = [IsScanQueueWorkerAPIUser|IsAdminUser]
 
-    @action(detail=False, methods=["get"])
+    @action(detail=False, methods=['get'])
     def get_next_download_url(self, request, *args, **kwargs):
         """
         Return download url for next Package on scan queue
@@ -119,13 +119,13 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
                 scannable_uri.save()
             else:
                 response = {
-                    'scannable_uri_uuid': "",
-                    'download_url': "",
+                    'scannable_uri_uuid': '',
+                    'download_url': '',
                     'pipelines': [],
                 }
             return Response(response)
 
-    @action(detail=False, methods=["post"])
+    @action(detail=False, methods=['post'])
     def update_status(self, request, *args, **kwargs):
         """
         Update the status of a ScannableURI with UUID of `scannable_uri_uuid`
