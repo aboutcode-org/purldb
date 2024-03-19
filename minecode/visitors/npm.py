@@ -13,7 +13,6 @@ import json
 from packagedcode.npm import npm_api_url
 from packagedcode.npm import split_scoped_package_name
 from packagedcode.npm import NpmPackageJsonHandler
-from packagedcode.npm import npm_api_url
 from packageurl import PackageURL
 import requests
 
