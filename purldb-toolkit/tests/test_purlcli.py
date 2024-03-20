@@ -101,10 +101,22 @@ class TestPURLCLI_metadata(object):
             assert output == expected
 
         # NOTE: To avoid errors from the addition of new versions, we exclude
-        # `(output_data["packages"], expected_data["packages"])` from the
-        # result_objects list above and handle here.
-        for expected in expected_data["packages"]:
-            assert expected in output_data["packages"]
+        # "packages" from the result_objects list above and handle here.
+        # All other live-fetch tests are handled in a similar manner.
+
+        expected_metadata = []
+        for pkg in expected_data["packages"]:
+            expected_metadata.append(pkg)
+
+        actual_metadata = []
+        for pkg in output_data["packages"]:
+            actual_metadata.append(pkg)
+
+        for exp in expected_metadata:
+            for actual in actual_metadata:
+                if exp["purl"] == actual["purl"]:
+                    for exp_meta in exp["metadata"]:
+                        assert exp_meta in actual["metadata"]
 
     def test_metadata_cli_unique(self):
         """
@@ -187,9 +199,19 @@ class TestPURLCLI_metadata(object):
         for output, expected in result_objects:
             assert output == expected
 
-        # See note under test_metadata_cli() re addition of new versions.
-        for expected in expected_data["packages"]:
-            assert expected in output_data["packages"]
+        expected_metadata = []
+        for pkg in expected_data["packages"]:
+            expected_metadata.append(pkg)
+
+        actual_metadata = []
+        for pkg in output_data["packages"]:
+            actual_metadata.append(pkg)
+
+        for exp in expected_metadata:
+            for actual in actual_metadata:
+                if exp["purl"] == actual["purl"]:
+                    for exp_meta in exp["metadata"]:
+                        assert exp_meta in actual["metadata"]
 
     def test_metadata_cli_duplicate_input_sources(self):
         """
@@ -230,7 +252,6 @@ class TestPURLCLI_metadata(object):
                     "headers": [
                         {
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
                             "options": {
                                 "command": "metadata",
                                 "--purl": ["pkg:pypi/fetchcode"],
@@ -243,167 +264,196 @@ class TestPURLCLI_metadata(object):
                         }
                     ],
                     "packages": [
-                        OrderedDict(
-                            [
-                                ("purl", "pkg:pypi/fetchcode"),
-                                ("type", "pypi"),
-                                ("namespace", None),
-                                ("name", "fetchcode"),
-                                ("version", None),
-                                ("qualifiers", OrderedDict()),
-                                ("subpath", None),
-                                ("primary_language", None),
-                                ("description", None),
-                                ("release_date", None),
-                                ("parties", []),
-                                ("keywords", []),
-                                ("homepage_url", "https://github.com/nexB/fetchcode"),
-                                ("download_url", None),
-                                ("api_url", "https://pypi.org/pypi/fetchcode/json"),
-                                ("size", None),
-                                ("sha1", None),
-                                ("md5", None),
-                                ("sha256", None),
-                                ("sha512", None),
-                                ("bug_tracking_url", None),
-                                ("code_view_url", None),
-                                ("vcs_url", None),
-                                ("copyright", None),
-                                ("license_expression", None),
-                                ("declared_license", "Apache-2.0"),
-                                ("notice_text", None),
-                                ("root_path", None),
-                                ("dependencies", []),
-                                ("contains_source_code", None),
-                                ("source_packages", []),
-                                ("repository_homepage_url", None),
-                                ("repository_download_url", None),
-                                ("api_data_url", None),
-                            ]
-                        ),
-                        OrderedDict(
-                            [
-                                ("purl", "pkg:pypi/fetchcode@0.1.0"),
-                                ("type", "pypi"),
-                                ("namespace", None),
-                                ("name", "fetchcode"),
-                                ("version", "0.1.0"),
-                                ("qualifiers", OrderedDict()),
-                                ("subpath", None),
-                                ("primary_language", None),
-                                ("description", None),
-                                ("release_date", None),
-                                ("parties", []),
-                                ("keywords", []),
-                                ("homepage_url", "https://github.com/nexB/fetchcode"),
-                                (
-                                    "download_url",
-                                    "https://files.pythonhosted.org/packages/19/a0/c90e5ba4d71ea1a1a89784f6d839ffb0dbf32d270cba04d5602188cb3713/fetchcode-0.1.0-py3-none-any.whl",
+                        {
+                            "purl": "pkg:pypi/fetchcode",
+                            "metadata": [
+                                OrderedDict(
+                                    [
+                                        ("purl", "pkg:pypi/fetchcode"),
+                                        ("type", "pypi"),
+                                        ("namespace", None),
+                                        ("name", "fetchcode"),
+                                        ("version", None),
+                                        ("qualifiers", OrderedDict()),
+                                        ("subpath", None),
+                                        ("primary_language", None),
+                                        ("description", None),
+                                        ("release_date", None),
+                                        ("parties", []),
+                                        ("keywords", []),
+                                        (
+                                            "homepage_url",
+                                            "https://github.com/nexB/fetchcode",
+                                        ),
+                                        ("download_url", None),
+                                        (
+                                            "api_url",
+                                            "https://pypi.org/pypi/fetchcode/json",
+                                        ),
+                                        ("size", None),
+                                        ("sha1", None),
+                                        ("md5", None),
+                                        ("sha256", None),
+                                        ("sha512", None),
+                                        ("bug_tracking_url", None),
+                                        ("code_view_url", None),
+                                        ("vcs_url", None),
+                                        ("copyright", None),
+                                        ("license_expression", None),
+                                        ("declared_license", "Apache-2.0"),
+                                        ("notice_text", None),
+                                        ("root_path", None),
+                                        ("dependencies", []),
+                                        ("contains_source_code", None),
+                                        ("source_packages", []),
+                                        ("repository_homepage_url", None),
+                                        ("repository_download_url", None),
+                                        ("api_data_url", None),
+                                    ]
                                 ),
-                                ("api_url", "https://pypi.org/pypi/fetchcode/json"),
-                                ("size", None),
-                                ("sha1", None),
-                                ("md5", None),
-                                ("sha256", None),
-                                ("sha512", None),
-                                ("bug_tracking_url", None),
-                                ("code_view_url", None),
-                                ("vcs_url", None),
-                                ("copyright", None),
-                                ("license_expression", None),
-                                ("declared_license", "Apache-2.0"),
-                                ("notice_text", None),
-                                ("root_path", None),
-                                ("dependencies", []),
-                                ("contains_source_code", None),
-                                ("source_packages", []),
-                                ("repository_homepage_url", None),
-                                ("repository_download_url", None),
-                                ("api_data_url", None),
-                            ]
-                        ),
-                        OrderedDict(
-                            [
-                                ("purl", "pkg:pypi/fetchcode@0.2.0"),
-                                ("type", "pypi"),
-                                ("namespace", None),
-                                ("name", "fetchcode"),
-                                ("version", "0.2.0"),
-                                ("qualifiers", OrderedDict()),
-                                ("subpath", None),
-                                ("primary_language", None),
-                                ("description", None),
-                                ("release_date", None),
-                                ("parties", []),
-                                ("keywords", []),
-                                ("homepage_url", "https://github.com/nexB/fetchcode"),
-                                (
-                                    "download_url",
-                                    "https://files.pythonhosted.org/packages/d7/e9/96e9302e84e326b3c10a40c1723f21f4db96b557a17c6871e7a4c6336906/fetchcode-0.2.0-py3-none-any.whl",
+                                OrderedDict(
+                                    [
+                                        ("purl", "pkg:pypi/fetchcode@0.1.0"),
+                                        ("type", "pypi"),
+                                        ("namespace", None),
+                                        ("name", "fetchcode"),
+                                        ("version", "0.1.0"),
+                                        ("qualifiers", OrderedDict()),
+                                        ("subpath", None),
+                                        ("primary_language", None),
+                                        ("description", None),
+                                        ("release_date", None),
+                                        ("parties", []),
+                                        ("keywords", []),
+                                        (
+                                            "homepage_url",
+                                            "https://github.com/nexB/fetchcode",
+                                        ),
+                                        (
+                                            "download_url",
+                                            "https://files.pythonhosted.org/packages/19/a0/c90e5ba4d71ea1a1a89784f6d839ffb0dbf32d270cba04d5602188cb3713/fetchcode-0.1.0-py3-none-any.whl",
+                                        ),
+                                        (
+                                            "api_url",
+                                            "https://pypi.org/pypi/fetchcode/json",
+                                        ),
+                                        ("size", None),
+                                        ("sha1", None),
+                                        ("md5", None),
+                                        ("sha256", None),
+                                        ("sha512", None),
+                                        ("bug_tracking_url", None),
+                                        ("code_view_url", None),
+                                        ("vcs_url", None),
+                                        ("copyright", None),
+                                        ("license_expression", None),
+                                        ("declared_license", "Apache-2.0"),
+                                        ("notice_text", None),
+                                        ("root_path", None),
+                                        ("dependencies", []),
+                                        ("contains_source_code", None),
+                                        ("source_packages", []),
+                                        ("repository_homepage_url", None),
+                                        ("repository_download_url", None),
+                                        ("api_data_url", None),
+                                    ]
                                 ),
-                                ("api_url", "https://pypi.org/pypi/fetchcode/json"),
-                                ("size", None),
-                                ("sha1", None),
-                                ("md5", None),
-                                ("sha256", None),
-                                ("sha512", None),
-                                ("bug_tracking_url", None),
-                                ("code_view_url", None),
-                                ("vcs_url", None),
-                                ("copyright", None),
-                                ("license_expression", None),
-                                ("declared_license", "Apache-2.0"),
-                                ("notice_text", None),
-                                ("root_path", None),
-                                ("dependencies", []),
-                                ("contains_source_code", None),
-                                ("source_packages", []),
-                                ("repository_homepage_url", None),
-                                ("repository_download_url", None),
-                                ("api_data_url", None),
-                            ]
-                        ),
-                        OrderedDict(
-                            [
-                                ("purl", "pkg:pypi/fetchcode@0.3.0"),
-                                ("type", "pypi"),
-                                ("namespace", None),
-                                ("name", "fetchcode"),
-                                ("version", "0.3.0"),
-                                ("qualifiers", OrderedDict()),
-                                ("subpath", None),
-                                ("primary_language", None),
-                                ("description", None),
-                                ("release_date", None),
-                                ("parties", []),
-                                ("keywords", []),
-                                ("homepage_url", "https://github.com/nexB/fetchcode"),
-                                (
-                                    "download_url",
-                                    "https://files.pythonhosted.org/packages/8d/fb/e45da0abf63504c3f88ad02537dc9dc64ea5206b09ce29cfb8191420d678/fetchcode-0.3.0-py3-none-any.whl",
+                                OrderedDict(
+                                    [
+                                        ("purl", "pkg:pypi/fetchcode@0.2.0"),
+                                        ("type", "pypi"),
+                                        ("namespace", None),
+                                        ("name", "fetchcode"),
+                                        ("version", "0.2.0"),
+                                        ("qualifiers", OrderedDict()),
+                                        ("subpath", None),
+                                        ("primary_language", None),
+                                        ("description", None),
+                                        ("release_date", None),
+                                        ("parties", []),
+                                        ("keywords", []),
+                                        (
+                                            "homepage_url",
+                                            "https://github.com/nexB/fetchcode",
+                                        ),
+                                        (
+                                            "download_url",
+                                            "https://files.pythonhosted.org/packages/d7/e9/96e9302e84e326b3c10a40c1723f21f4db96b557a17c6871e7a4c6336906/fetchcode-0.2.0-py3-none-any.whl",
+                                        ),
+                                        (
+                                            "api_url",
+                                            "https://pypi.org/pypi/fetchcode/json",
+                                        ),
+                                        ("size", None),
+                                        ("sha1", None),
+                                        ("md5", None),
+                                        ("sha256", None),
+                                        ("sha512", None),
+                                        ("bug_tracking_url", None),
+                                        ("code_view_url", None),
+                                        ("vcs_url", None),
+                                        ("copyright", None),
+                                        ("license_expression", None),
+                                        ("declared_license", "Apache-2.0"),
+                                        ("notice_text", None),
+                                        ("root_path", None),
+                                        ("dependencies", []),
+                                        ("contains_source_code", None),
+                                        ("source_packages", []),
+                                        ("repository_homepage_url", None),
+                                        ("repository_download_url", None),
+                                        ("api_data_url", None),
+                                    ]
                                 ),
-                                ("api_url", "https://pypi.org/pypi/fetchcode/json"),
-                                ("size", None),
-                                ("sha1", None),
-                                ("md5", None),
-                                ("sha256", None),
-                                ("sha512", None),
-                                ("bug_tracking_url", None),
-                                ("code_view_url", None),
-                                ("vcs_url", None),
-                                ("copyright", None),
-                                ("license_expression", None),
-                                ("declared_license", "Apache-2.0"),
-                                ("notice_text", None),
-                                ("root_path", None),
-                                ("dependencies", []),
-                                ("contains_source_code", None),
-                                ("source_packages", []),
-                                ("repository_homepage_url", None),
-                                ("repository_download_url", None),
-                                ("api_data_url", None),
-                            ]
-                        ),
+                                OrderedDict(
+                                    [
+                                        ("purl", "pkg:pypi/fetchcode@0.3.0"),
+                                        ("type", "pypi"),
+                                        ("namespace", None),
+                                        ("name", "fetchcode"),
+                                        ("version", "0.3.0"),
+                                        ("qualifiers", OrderedDict()),
+                                        ("subpath", None),
+                                        ("primary_language", None),
+                                        ("description", None),
+                                        ("release_date", None),
+                                        ("parties", []),
+                                        ("keywords", []),
+                                        (
+                                            "homepage_url",
+                                            "https://github.com/nexB/fetchcode",
+                                        ),
+                                        (
+                                            "download_url",
+                                            "https://files.pythonhosted.org/packages/8d/fb/e45da0abf63504c3f88ad02537dc9dc64ea5206b09ce29cfb8191420d678/fetchcode-0.3.0-py3-none-any.whl",
+                                        ),
+                                        (
+                                            "api_url",
+                                            "https://pypi.org/pypi/fetchcode/json",
+                                        ),
+                                        ("size", None),
+                                        ("sha1", None),
+                                        ("md5", None),
+                                        ("sha256", None),
+                                        ("sha512", None),
+                                        ("bug_tracking_url", None),
+                                        ("code_view_url", None),
+                                        ("vcs_url", None),
+                                        ("copyright", None),
+                                        ("license_expression", None),
+                                        ("declared_license", "Apache-2.0"),
+                                        ("notice_text", None),
+                                        ("root_path", None),
+                                        ("dependencies", []),
+                                        ("contains_source_code", None),
+                                        ("source_packages", []),
+                                        ("repository_homepage_url", None),
+                                        ("repository_download_url", None),
+                                        ("api_data_url", None),
+                                    ]
+                                ),
+                            ],
+                        }
                     ],
                 },
             ),
@@ -435,56 +485,74 @@ class TestPURLCLI_metadata(object):
                 {
                     "headers": [
                         {
-                            "errors": [],
+                            "tool_name": "purlcli",
                             "options": {
+                                "command": "metadata",
+                                "--purl": ["pkg:rubygems/bundler-sass"],
                                 "--file": None,
                                 "--output": "",
-                                "--purl": ["pkg:rubygems/bundler-sass"],
-                                "command": "metadata",
                             },
                             "purls": ["pkg:rubygems/bundler-sass"],
-                            "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
-                            "warnings": [],
+                            "errors": [],
+                            "warnings": [
+                                "'check_existence' is not supported for "
+                                "'pkg:rubygems/bundler-sass'",
+                            ],
                         }
                     ],
                     "packages": [
                         {
                             "purl": "pkg:rubygems/bundler-sass",
-                            "type": "rubygems",
-                            "namespace": None,
-                            "name": "bundler-sass",
-                            "version": None,
-                            "qualifiers": {},
-                            "subpath": None,
-                            "primary_language": None,
-                            "description": None,
-                            "release_date": None,
-                            "parties": [],
-                            "keywords": [],
-                            "homepage_url": "http://github.com/vogelbek/bundler-sass",
-                            "download_url": "https://rubygems.org/gems/bundler-sass-0.1.2.gem",
-                            "api_url": "https://rubygems.org/api/v1/gems/bundler-sass.json",
-                            "size": None,
-                            "sha1": None,
-                            "md5": None,
-                            "sha256": None,
-                            "sha512": None,
-                            "bug_tracking_url": None,
-                            "code_view_url": None,
-                            "vcs_url": None,
-                            "copyright": None,
-                            "license_expression": None,
-                            "declared_license": ["MIT"],
-                            "notice_text": None,
-                            "root_path": None,
-                            "dependencies": [],
-                            "contains_source_code": None,
-                            "source_packages": [],
-                            "repository_homepage_url": None,
-                            "repository_download_url": None,
-                            "api_data_url": None,
-                        },
+                            "metadata": [
+                                OrderedDict(
+                                    [
+                                        ("purl", "pkg:rubygems/bundler-sass"),
+                                        ("type", "rubygems"),
+                                        ("namespace", None),
+                                        ("name", "bundler-sass"),
+                                        ("version", None),
+                                        ("qualifiers", OrderedDict()),
+                                        ("subpath", None),
+                                        ("primary_language", None),
+                                        ("description", None),
+                                        ("release_date", None),
+                                        ("parties", []),
+                                        ("keywords", []),
+                                        (
+                                            "homepage_url",
+                                            "http://github.com/vogelbek/bundler-sass",
+                                        ),
+                                        (
+                                            "download_url",
+                                            "https://rubygems.org/gems/bundler-sass-0.1.2.gem",
+                                        ),
+                                        (
+                                            "api_url",
+                                            "https://rubygems.org/api/v1/gems/bundler-sass.json",
+                                        ),
+                                        ("size", None),
+                                        ("sha1", None),
+                                        ("md5", None),
+                                        ("sha256", None),
+                                        ("sha512", None),
+                                        ("bug_tracking_url", None),
+                                        ("code_view_url", None),
+                                        ("vcs_url", None),
+                                        ("copyright", None),
+                                        ("license_expression", None),
+                                        ("declared_license", ["MIT"]),
+                                        ("notice_text", None),
+                                        ("root_path", None),
+                                        ("dependencies", []),
+                                        ("contains_source_code", None),
+                                        ("source_packages", []),
+                                        ("repository_homepage_url", None),
+                                        ("repository_download_url", None),
+                                        ("api_data_url", None),
+                                    ]
+                                )
+                            ],
+                        }
                     ],
                 },
             ),
@@ -595,11 +663,21 @@ class TestPURLCLI_metadata(object):
         cli_test_utils.streamline_headers(expected["headers"])
         streamline_metadata_packages(expected["packages"])
 
-        # See note under test_metadata_cli() re addition of new versions.
         assert purl_metadata["headers"] == expected["headers"]
 
-        for expected in expected["packages"]:
-            assert expected in purl_metadata["packages"]
+        expected_metadata = []
+        for pkg in expected["packages"]:
+            expected_metadata.append(pkg)
+
+        actual_metadata = []
+        for pkg in purl_metadata["packages"]:
+            actual_metadata.append(pkg)
+
+        for exp in expected_metadata:
+            for actual in actual_metadata:
+                if exp["purl"] == actual["purl"]:
+                    for exp_meta in exp["metadata"]:
+                        assert exp_meta in actual["metadata"]
 
     @pytest.mark.parametrize(
         "test_input,expected",
@@ -614,7 +692,7 @@ class TestPURLCLI_metadata(object):
             ),
             (
                 ["pkg:rubygems/bundler-sass"],
-                None,
+                "check_existence_not_supported",
             ),
             (
                 ["pkg:nginx/nginx"],
@@ -1895,17 +1973,19 @@ class TestPURLCLI_versions(object):
         for output, expected in result_objects:
             assert output == expected
 
-        # NOTE: To avoid errors from the addition of new versions, we exclude
-        # `(output_data["packages"], expected_data["packages"])` from the
-        # result_objects list above and handle here.
-        expected_versions = []
-        output_versions = []
-        for expected in expected_data["packages"]:
-            expected_versions = expected["versions"]
-        for output in output_data["packages"]:
-            output_versions = output["versions"]
+        expected_versions_01 = []
+        for pkg in expected_data["packages"]:
+            expected_versions_01.append(pkg)
 
-        assert [i for i in expected_versions if i not in output_versions] == []
+        actual_versions_01 = []
+        for pkg in output_data["packages"]:
+            actual_versions_01.append(pkg)
+
+        for exp in expected_versions_01:
+            for actual in actual_versions_01:
+                if exp["purl"] == actual["purl"]:
+                    for exp_vers in exp["versions"]:
+                        assert exp_vers in actual["versions"]
 
     def test_versions_cli_unique(self):
         """
@@ -1984,15 +2064,19 @@ class TestPURLCLI_versions(object):
         for output, expected in result_objects:
             assert output == expected
 
-        # See note under test_versions_cli() re addition of new versions.
-        expected_versions = []
-        output_versions = []
-        for expected in expected_data["packages"]:
-            expected_versions = expected["versions"]
-        for output in output_data["packages"]:
-            output_versions = output["versions"]
+        expected_versions_01 = []
+        for pkg in expected_data["packages"]:
+            expected_versions_01.append(pkg)
 
-        assert [i for i in expected_versions if i not in output_versions] == []
+        actual_versions_01 = []
+        for pkg in output_data["packages"]:
+            actual_versions_01.append(pkg)
+
+        for exp in expected_versions_01:
+            for actual in actual_versions_01:
+                if exp["purl"] == actual["purl"]:
+                    for exp_vers in exp["versions"]:
+                        assert exp_vers in actual["versions"]
 
     @pytest.mark.parametrize(
         "test_input,expected",
@@ -2197,11 +2281,21 @@ class TestPURLCLI_versions(object):
         cli_test_utils.streamline_headers(purl_versions["headers"])
         cli_test_utils.streamline_headers(expected["headers"])
 
-        # See note under test_versions_cli() re addition of new versions.
         assert purl_versions["headers"] == expected["headers"]
 
-        for expected in expected["packages"]:
-            assert expected in purl_versions["packages"]
+        expected_versions = []
+        for pkg in expected["packages"]:
+            expected_versions.append(pkg)
+
+        actual_versions = []
+        for pkg in purl_versions["packages"]:
+            actual_versions.append(pkg)
+
+        for exp in expected_versions:
+            for actual in actual_versions:
+                if exp["purl"] == actual["purl"]:
+                    for exp_versions in exp["versions"]:
+                        assert exp_versions in actual["versions"]
 
     @pytest.mark.parametrize(
         "test_input,expected",
