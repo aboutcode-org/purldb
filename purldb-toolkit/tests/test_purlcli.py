@@ -252,6 +252,7 @@ class TestPURLCLI_metadata(object):
                     "headers": [
                         {
                             "tool_name": "purlcli",
+                            "tool_version": "0.2.0",
                             "options": {
                                 "command": "metadata",
                                 "--purl": ["pkg:pypi/fetchcode"],
@@ -471,7 +472,7 @@ class TestPURLCLI_metadata(object):
                             },
                             "purls": ["pkg:gem/bundler-sass"],
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "warnings": [
                                 "'pkg:gem/bundler-sass' not supported with `metadata` command"
                             ],
@@ -570,7 +571,7 @@ class TestPURLCLI_metadata(object):
                             },
                             "purls": ["pkg:nginx/nginx"],
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "warnings": [
                                 "'pkg:nginx/nginx' not supported with `metadata` command"
                             ],
@@ -593,7 +594,7 @@ class TestPURLCLI_metadata(object):
                             },
                             "purls": ["pkg:pypi/zzzzz"],
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "warnings": [
                                 "'pkg:pypi/zzzzz' does not exist in the upstream repo",
                             ],
@@ -616,7 +617,7 @@ class TestPURLCLI_metadata(object):
                             },
                             "purls": ["pkg:pypi/?fetchcode"],
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "warnings": ["'pkg:pypi/?fetchcode' not valid"],
                         }
                     ],
@@ -637,7 +638,7 @@ class TestPURLCLI_metadata(object):
                             },
                             "purls": ["zzzzz"],
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "warnings": ["'zzzzz' not valid"],
                         }
                     ],
@@ -846,7 +847,7 @@ class TestPURLCLI_metadata(object):
                             "pkg:pypi/fetchcode@0.2.0",
                         ],
                         "tool_name": "purlcli",
-                        "tool_version": "0.1.0",
+                        "tool_version": "0.2.0",
                         "warnings": [
                             "'pkg:gem/bundler-sass' not supported with `metadata` command"
                         ],
@@ -903,7 +904,7 @@ class TestPURLCLI_metadata(object):
                             "pkg:pypi/fetchcode@0.2.0",
                         ],
                         "tool_name": "purlcli",
-                        "tool_version": "0.1.0",
+                        "tool_version": "0.2.0",
                         "warnings": [
                             "input PURL: 'pkg:pypi/fetchcode@0.1.0' normalized to 'pkg:pypi/fetchcode'",
                             "input PURL: 'pkg:pypi/fetchcode@0.2.0' normalized to 'pkg:pypi/fetchcode'",
@@ -1270,7 +1271,7 @@ class TestPURLCLI_urls(object):
                     "headers": [
                         {
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "options": {
                                 "command": "urls",
                                 "--purl": ["pkg:pypi/fetchcode"],
@@ -1317,7 +1318,7 @@ class TestPURLCLI_urls(object):
                     "headers": [
                         {
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "options": {
                                 "command": "urls",
                                 "--purl": ["pkg:pypi/fetchcode@10.0.0"],
@@ -1348,7 +1349,7 @@ class TestPURLCLI_urls(object):
                             },
                             "purls": ["pkg:gem/bundler-sass"],
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "warnings": [],
                         }
                     ],
@@ -1393,7 +1394,7 @@ class TestPURLCLI_urls(object):
                             },
                             "purls": ["pkg:rubygems/bundler-sass"],
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "warnings": [],
                         }
                     ],
@@ -1438,7 +1439,7 @@ class TestPURLCLI_urls(object):
                             },
                             "purls": ["pkg:nginx/nginx"],
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "warnings": [
                                 "'pkg:nginx/nginx' not supported with `urls` command"
                             ],
@@ -1461,7 +1462,7 @@ class TestPURLCLI_urls(object):
                             },
                             "purls": ["pkg:pypi/zzzzz"],
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "warnings": [
                                 "'pkg:pypi/zzzzz' does not exist in the upstream repo",
                             ],
@@ -1484,7 +1485,7 @@ class TestPURLCLI_urls(object):
                             },
                             "purls": ["pkg:pypi/?fetchcode"],
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "warnings": ["'pkg:pypi/?fetchcode' not valid"],
                         }
                     ],
@@ -1505,7 +1506,7 @@ class TestPURLCLI_urls(object):
                             },
                             "purls": ["zzzzz"],
                             "tool_name": "purlcli",
-                            "tool_version": "0.1.0",
+                            "tool_version": "0.2.0",
                             "warnings": ["'zzzzz' not valid"],
                         }
                     ],
@@ -2117,6 +2118,11 @@ class TestPURLCLI_versions(object):
                                     "purl": "pkg:pypi/fetchcode@0.3.0",
                                     "version": "0.3.0",
                                     "release_date": "2023-12-18 20:49:45.840364+00:00",
+                                },
+                                {
+                                    "purl": "pkg:pypi/fetchcode@0.4.0",
+                                    "release_date": "2024-03-12 07:01:29.239299+00:00",
+                                    "version": "0.4.0",
                                 },
                             ],
                         }

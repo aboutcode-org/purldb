@@ -7,7 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-
+import uuid
 from datetime import timedelta
 import logging
 import sys
@@ -649,27 +649,24 @@ class ScannableURI(BaseURI):
         - update the matching index for the PackageDB as needed with fingerprints from the scan
         - set status and timestamps as needed
     """
-    scan_request_date = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True,
-        help_text='Timestamp set to the date when a scan was requested.  Used to track scan status.',
+    uuid = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
     )
 
-    last_status_poll_date = models.DateTimeField(
+    scan_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text='Timestamp set to the date of the last status poll. '
-                  'Used to track the scan polling.',
+        help_text='Timestamp set to the date when a scan was taken by a worker',
     )
 
-    scan_uuid = models.CharField(
-        max_length=36,
+    pipelines = models.JSONField(
+        default=list,
         blank=True,
-        null=True,
-        db_index=True,
-        help_text='UUID of a scan for this URI in ScanCode.io.',
+        editable=False,
+        help_text='A list of ScanCode.io pipeline names to be run for this scan',
     )
 
     SCAN_NEW = 0
@@ -694,6 +691,12 @@ class ScannableURI(BaseURI):
 
     SCAN_STATUSES_BY_CODE = dict(SCAN_STATUS_CHOICES)
 
+    SCAN_STATUS_CODES_BY_SCAN_STATUS = {
+        status: code
+        for code, status
+        in SCAN_STATUS_CHOICES
+    }
+
     scan_status = models.IntegerField(
         default=SCAN_NEW,
         choices=SCAN_STATUS_CHOICES,
@@ -701,19 +704,11 @@ class ScannableURI(BaseURI):
         help_text='Status of the scan for this URI.',
     )
 
-    rescan_uri = models.BooleanField(
+    reindex_uri = models.BooleanField(
         default=False,
         null=True,
         blank=True,
         help_text='Flag indicating whether or not this URI should be rescanned and reindexed.',
-    )
-
-    scan_uuid = models.CharField(
-        max_length=36,
-        blank=True,
-        null=True,
-        db_index=True,
-        help_text='UUID of a scan for this URI in ScanCode.io.',
     )
 
     scan_error = models.TextField(
@@ -739,15 +734,21 @@ class ScannableURI(BaseURI):
 
     class Meta:
         verbose_name = 'Scannable URI'
-        unique_together = ['canonical', 'scan_uuid']
 
         indexes = [
             # to get the scannables
             models.Index(
-                fields=['scan_status', 'scan_request_date', 'last_status_poll_date', ]),
+                fields=[
+                    'scan_status',
+                    'scan_date',
+                ]
+            ),
             # ordered by for the main queue query e.g. '-priority'
             models.Index(
-                fields=['-priority'])
+                fields=[
+                    '-priority'
+                ]
+            )
         ]
 
     def save(self, *args, **kwargs):
@@ -758,19 +759,6 @@ class ScannableURI(BaseURI):
             self.canonical = get_canonical(self.uri)
         self.normalize_fields()
         super(ScannableURI, self).save(*args, **kwargs)
-
-    def rescan(self):
-        """
-        Reset fields such that a ScannableURI can be sent off for scanning again
-        """
-        self.rescan_uri = True
-        self.scan_status = ScannableURI.SCAN_NEW
-        self.scan_error = None
-        self.index_error = None
-        self.scan_uuid = None
-        self.scan_request_date = None
-        self.priority = 100
-        self.save()
 
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.

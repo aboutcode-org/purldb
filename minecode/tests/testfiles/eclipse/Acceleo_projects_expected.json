@@ -28,17 +28,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -90,17 +93,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -152,17 +158,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -214,17 +223,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -276,17 +288,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -338,17 +353,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -400,17 +418,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -462,17 +483,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -524,17 +548,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -586,17 +613,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }

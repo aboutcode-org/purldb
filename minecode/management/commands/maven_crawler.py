@@ -10,8 +10,8 @@
 import logging
 import sys
 
-from minecode.management.commands import VerboseCommand
 from minecode.visitors.maven import crawl_maven_repo_from_root
+from minecode.management.commands import VerboseCommand
 
 
 logger = logging.getLogger(__name__)
