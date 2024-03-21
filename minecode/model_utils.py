@@ -1,3 +1,4 @@
+import copy
 import logging
 import sys
 
@@ -433,6 +434,10 @@ def merge_or_create_resource(package, resource_data):
     try:
         resource = Resource.objects.get(package=package, path=path)
     except Resource.DoesNotExist:
+        extra_data = copy.deepcopy(resource_data.get('extra_data', {}))
+        extra_data.pop("directory_content", None)
+        extra_data.pop("directory_structure", None)
+    
         resource = Resource(
             package=package,
             path=path,
@@ -451,6 +456,7 @@ def merge_or_create_resource(package, resource_data):
             is_archive=resource_data.get('is_archive'),
             is_media=resource_data.get('is_media'),
             is_key_file=resource_data.get('is_key_file'),
+            extra_data=extra_data,
         )
         created = True
     _ = resource.set_scan_results(resource_data, save=True)
