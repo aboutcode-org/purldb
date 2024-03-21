@@ -60,6 +60,7 @@ from packagedb.serializers import PackageWatchCreateSerializer
 from packagedb.serializers import PackageWatchUpdateSerializer
 from packagedb.serializers import PartySerializer
 from packagedb.serializers import PurlValidateResponseSerializer
+from packagedb.serializers import PurlUpdateResponseSerializer
 from packagedb.serializers import PurlValidateSerializer
 from packagedb.serializers import ResourceAPISerializer
 from packagedb.throttling import StaffUserRateThrottle
@@ -417,6 +418,95 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
             serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
             serialized_package_data = serializer.data
         return self.get_paginated_response(serialized_package_data)
+
+
+class PackageViewSet(PackagePublicViewSet):
+    @action(detail=True)
+    def reindex_package(self, request, *args, **kwargs):
+
+        """
+        Reindex this package instance
+        """
+        package = self.get_object()
+        package.reindex()
+        data = {
+            'status': f'{package.package_url} has been queued for reindexing'
+        }
+        return Response(data)
+
+class PackageUpdateSet(viewsets.ViewSet):
+
+    """
+    Take a list of `packages` (where each item is a dictionary containing PURL
+    and content_type).
+
+    If `uuid` is given then all purls will be added to package set if it exists
+    else a new set would be created and all the purls will be added to that new set.
+
+    **Note:** There is also a slight addition to the logic where a purl already exists in the database
+    and so there are no changes done to the purl entry it is passed as it is.
+
+    **Request example:**
+        {
+          "purls": [
+            {"purl": "pkg:npm/less@1.0.32", "content_type": 1}
+          ],
+          "uuid" : "b67ceb49-1538-481f-a572-431062f382gg"
+        }
+    """
+
+    def create (self, request):
+
+        res = []
+
+        serializer = UpdatePackagesSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response({'errors': serializer.errors}, status=400)
+
+        validated_data = serializer.validated_data
+        packages = validated_data.get('purls', [])
+        uuid = validated_data.get('uuid', None)
+
+        flag = True
+
+        if uuid:
+            pack = PackageSet.objects.filter(uuid=uuid)
+
+            if pack:
+                package_set = pack
+                flag = False
+
+        else:
+            # Create Package Set and set package_set as the same object
+            package_set = PackageSet.objects.create()
+
+        for items in packages or []:
+            temp = {}
+            purl = items.get('purl')
+
+            temp['purl'] = purl
+            content_type = items.get('content_type')
+            lookups = purl_to_lookups(purl)
+
+            packages = Package.objects.filter(**lookups)
+            temp['update_status'] = "Already Exists"
+
+            if not packages:
+                flag = False
+                lookups['package_content'] = content_type
+                cr = Package.objects.create(**lookups)
+                package_set.add_to_package_set(cr)
+                temp['update_status'] = "Updated"
+
+            res.append(temp)
+
+        if flag:
+            package_set.delete()
+
+        serializer = PurlUpdateResponseSerializer(res, many=True)
+
+        return Response(serializer.data)
 
 
 class PackageViewSet(PackagePublicViewSet):

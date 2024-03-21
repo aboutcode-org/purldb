@@ -372,11 +372,23 @@ class PackageVersSerializer(Serializer):
     purl = CharField()
     vers = CharField(required=False)
 
+class PackageUpdateSerializer(Serializer):
+    purl = CharField(required=True)
+    content_type = IntegerField(required=True)
+
+class UpdatePackagesSerializer(Serializer):
+    purls = PackageUpdateSerializer(many=True)
+    uuid = CharField(required=False)
+
 
 class IndexPackagesSerializer(Serializer):
     packages = PackageVersSerializer(many=True)
     reindex = BooleanField(default=False)
     reindex_set = BooleanField(default=False)
+
+class PurlUpdateResponseSerializer(Serializer):
+    purl = CharField()
+    update_status = CharField()
 
 
 class IndexPackagesResponseSerializer(Serializer):
@@ -405,6 +417,7 @@ class IndexPackagesResponseSerializer(Serializer):
         child=CharField(),
         help_text="List of vers range that are not supported by the univers or package_manager."
     )
+
 class PurlValidateResponseSerializer(Serializer):
     valid = BooleanField()
     exists = BooleanField(required=False)

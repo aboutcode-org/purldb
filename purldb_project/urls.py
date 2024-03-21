@@ -17,6 +17,7 @@ from rest_framework import routers
 from clearcode.api import CDitemViewSet
 from packagedb.api import PackageViewSet
 from packagedb.api import PackageSetViewSet
+from packagedb.api import PackageUpdateSet
 from packagedb.api import PackageWatchViewSet
 from packagedb.api import ResourceViewSet
 from matchcode.api import ApproximateDirectoryContentIndexViewSet
@@ -32,6 +33,7 @@ from drf_spectacular.views import SpectacularSwaggerView
 
 api_router = routers.DefaultRouter()
 api_router.register('packages', PackageViewSet)
+api_router.register('update_packages', PackageUpdateSet, 'update_packages')
 api_router.register('package_sets', PackageSetViewSet)
 api_router.register('resources', ResourceViewSet)
 api_router.register('approximate_directory_content_index', ApproximateDirectoryContentIndexViewSet)
