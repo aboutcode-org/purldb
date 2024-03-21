@@ -30,15 +30,15 @@ CLI_ARGS=$1
 CUSTOM_PACKAGES=""
 
 # Requirement arguments passed to pip and used by default or with --dev.
-REQUIREMENTS="$CUSTOM_PACKAGES --editable matchcode-toolkit --editable purldb-toolkit --editable . --constraint requirements.txt"
-DEV_REQUIREMENTS="$CUSTOM_PACKAGES --editable matchcode-toolkit --editable purldb-toolkit --editable .[testing] --constraint requirements.txt --constraint requirements-dev.txt"
-DOCS_REQUIREMENTS="$CUSTOM_PACKAGES --editable matchcode-toolkit --editable purldb-toolkit --editable .[docs] --constraint requirements.txt"
+REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/ --editable . --constraint requirements.txt"
+DEV_REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/[testing] --editable .[testing] --constraint requirements.txt --constraint requirements-dev.txt"
+DOCS_REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/ --editable .[docs] --constraint requirements.txt"
 
 # where we create a virtualenv
 VIRTUALENV_DIR=venv
 
 # Cleanable files and directories to delete with the --clean option
-CLEANABLE="build dist venv .cache .eggs matchcode-toolkit/build matchcode-toolkit/dist matchcode-toolkit/.eggs"
+CLEANABLE="build dist venv .cache .eggs matchcode-toolkit/build matchcode-toolkit/dist matchcode-toolkit/.eggs purldb-toolkit/build purldb-toolkit/dist"
 
 # extra  arguments passed to pip
 PIP_EXTRA_ARGS=" "
@@ -131,6 +131,7 @@ install_packages() {
     # be reinstalled a second time and reused from the virtualenv and this
     # speeds up the installation.
     # We always have the PEP517 build dependencies installed already.
+    "$CFG_BIN_DIR/pip" install flot
 
     "$CFG_BIN_DIR/pip" install \
         --upgrade \

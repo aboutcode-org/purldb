@@ -371,6 +371,7 @@ class PackageWatchUpdateSerializer(ModelSerializer):
 class PackageVersSerializer(Serializer):
     purl = CharField()
     vers = CharField(required=False)
+    source_purl = CharField(required=False)
 
 class PackageUpdateSerializer(Serializer):
     purl = CharField(required=True)
@@ -427,3 +428,19 @@ class PurlValidateResponseSerializer(Serializer):
 class PurlValidateSerializer(Serializer):
     purl = CharField(required=True)
     check_existence = BooleanField(required=False, default=False)
+
+
+class GoLangPurlSerializer(Serializer):
+    go_package = CharField(required=True)
+
+
+class GoLangPurlResponseSerializer(Serializer):
+    package_url = CharField()
+
+
+class PurltoGitRepoSerializer(Serializer):
+    package_url = CharField(required=True)
+
+
+class PurltoGitRepoResponseSerializer(Serializer):
+    git_repo = CharField(required=True)

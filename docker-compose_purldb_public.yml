@@ -74,32 +74,6 @@ services:
       - db
       - web # Ensure that potential db migrations run first
 
-  request_scan:
-    build: .
-    command: wait-for-it web:8000 -- python manage_purldb_public.py request_scans
-    env_file:
-      - docker_purldb.env
-    volumes:
-      - /etc/purldb/:/etc/purldb/
-    profiles:
-      - scan_queue
-    depends_on:
-      - db
-      - web
-
-  process_scan:
-    build: .
-    command: wait-for-it web:8000 -- python manage_purldb_public.py process_scans
-    env_file:
-      - docker_purldb.env
-    volumes:
-      - /etc/purldb/:/etc/purldb/
-    profiles:
-      - scan_queue
-    depends_on:
-      - db
-      - web
-
   priority_queue:
     build: .
     command: wait-for-it web:8000 -- python manage_purldb_public.py priority_queue

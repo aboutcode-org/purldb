@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Next Release
+----------------
+
+- Add `/api/from_purl/purl2git` endpoint to get a git repo for a purl.
+- Add `/api/to_purl/go` endpoint to get a purl from a golang import string or a package string in go.mod.
+
+
 v4.0.0
 ------------
 
