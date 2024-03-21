@@ -28,17 +28,20 @@
     "license_detections":[
       {
         "license_expression":"openssl-ssleay",
+        "license_expression_spdx":"OpenSSL",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"openssl-ssleay",
+            "spdx_license_expression":"OpenSSL",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"openssl-ssleay",
-            "rule_identifier":"openssl-ssleay_2.RULE",
             "rule_relevance":100,
+            "rule_identifier":"openssl-ssleay_2.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/openssl-ssleay_2.RULE",
             "matched_text":"OpenSSL License"
           }

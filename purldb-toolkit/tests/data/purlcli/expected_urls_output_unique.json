@@ -1,0 +1,240 @@
+{
+    "headers": [
+        {
+            "tool_name": "purlcli",
+            "tool_version": "0.1.0",
+            "options": {
+                "command": "urls",
+                "--purl": [
+                    "pkg:pypi/fetchcode",
+                    "pkg:pypi/fetchcode@0.3.0",
+                    "pkg:pypi/fetchcode@5.0.0",
+                    "pkg:pypi/dejacode",
+                    "pkg:pypi/dejacode@5.0.0",
+                    "pkg:pypi/dejacode@5.0.0?os=windows",
+                    "pkg:pypi/dejacode@5.0.0os=windows",
+                    "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
+                    "pkg:pypi/dejacode@5.0.0#how/are/you",
+                    "pkg:pypi/dejacode@10.0.0",
+                    "pkg:cargo/banquo",
+                    "pkg:cargo/socksprox",
+                    "pkg:nginx/nginx",
+                    "pkg:nginx/nginx@0.8.9?os=windows",
+                    "pkg:gem/bundler-sass",
+                    "pkg:rubygems/bundler-sass",
+                    "pkg:pypi/matchcode",
+                    "abcdefg",
+                    "pkg/abc",
+                    "pkg:nuget/auth0-aspnet@1.1.0"
+                ],
+                "--file": null,
+                "--unique": true,
+                "--output": "<stdout>"
+            },
+            "purls": [
+                "pkg:pypi/fetchcode",
+                "pkg:pypi/fetchcode@0.3.0",
+                "pkg:pypi/fetchcode@5.0.0",
+                "pkg:pypi/dejacode",
+                "pkg:pypi/dejacode@5.0.0",
+                "pkg:pypi/dejacode@5.0.0?os=windows",
+                "pkg:pypi/dejacode@5.0.0os=windows",
+                "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
+                "pkg:pypi/dejacode@5.0.0#how/are/you",
+                "pkg:pypi/dejacode@10.0.0",
+                "pkg:cargo/banquo",
+                "pkg:cargo/socksprox",
+                "pkg:nginx/nginx",
+                "pkg:nginx/nginx@0.8.9?os=windows",
+                "pkg:gem/bundler-sass",
+                "pkg:rubygems/bundler-sass",
+                "pkg:pypi/matchcode",
+                "abcdefg",
+                "pkg/abc",
+                "pkg:nuget/auth0-aspnet@1.1.0"
+            ],
+            "errors": [],
+            "warnings": [
+                "input PURL: 'pkg:pypi/fetchcode@0.3.0' normalized to 'pkg:pypi/fetchcode'",
+                "input PURL: 'pkg:pypi/fetchcode@5.0.0' normalized to 'pkg:pypi/fetchcode'",
+                "input PURL: 'pkg:pypi/dejacode@5.0.0' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:pypi/dejacode@5.0.0?os=windows' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:pypi/dejacode@5.0.0os=windows' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:pypi/dejacode@5.0.0#how/are/you' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:pypi/dejacode@10.0.0' normalized to 'pkg:pypi/dejacode'",
+                "input PURL: 'pkg:nginx/nginx@0.8.9?os=windows' normalized to 'pkg:nginx/nginx'",
+                "input PURL: 'pkg:nuget/auth0-aspnet@1.1.0' normalized to 'pkg:nuget/auth0-aspnet'",
+                "'pkg:pypi/fetchcode' not fully supported with `urls` command",
+                "'pkg:pypi/dejacode' not fully supported with `urls` command",
+                "'pkg:nginx/nginx' not supported with `urls` command",
+                "'pkg:pypi/matchcode' does not exist in the upstream repo",
+                "'abcdefg' not valid",
+                "'pkg/abc' not valid"
+            ]
+        }
+    ],
+    "packages": [
+        {
+            "purl": "pkg:pypi/fetchcode",
+            "download_url": {
+                "url": null
+            },
+            "inferred_urls": [
+                {
+                    "url": "https://pypi.org/project/fetchcode/"
+                }
+            ],
+            "repo_download_url": {
+                "url": null
+            },
+            "repo_download_url_by_package_type": {
+                "url": null
+            },
+            "repo_url": {
+                "url": "https://pypi.org/project/fetchcode/"
+            },
+            "url": {
+                "url": "https://pypi.org/project/fetchcode/"
+            }
+        },
+        {
+            "purl": "pkg:pypi/dejacode",
+            "download_url": {
+                "url": null
+            },
+            "inferred_urls": [
+                {
+                    "url": "https://pypi.org/project/dejacode/"
+                }
+            ],
+            "repo_download_url": {
+                "url": null
+            },
+            "repo_download_url_by_package_type": {
+                "url": null
+            },
+            "repo_url": {
+                "url": "https://pypi.org/project/dejacode/"
+            },
+            "url": {
+                "url": "https://pypi.org/project/dejacode/"
+            }
+        },
+        {
+            "purl": "pkg:cargo/banquo",
+            "download_url": {
+                "url": null
+            },
+            "inferred_urls": [
+                {
+                    "url": "https://crates.io/crates/banquo"
+                }
+            ],
+            "repo_download_url": {
+                "url": null
+            },
+            "repo_download_url_by_package_type": {
+                "url": null
+            },
+            "repo_url": {
+                "url": "https://crates.io/crates/banquo"
+            },
+            "url": {
+                "url": "https://crates.io/crates/banquo"
+            }
+        },
+        {
+            "purl": "pkg:cargo/socksprox",
+            "download_url": {
+                "url": null
+            },
+            "inferred_urls": [
+                {
+                    "url": "https://crates.io/crates/socksprox"
+                }
+            ],
+            "repo_download_url": {
+                "url": null
+            },
+            "repo_download_url_by_package_type": {
+                "url": null
+            },
+            "repo_url": {
+                "url": "https://crates.io/crates/socksprox"
+            },
+            "url": {
+                "url": "https://crates.io/crates/socksprox"
+            }
+        },
+        {
+            "purl": "pkg:gem/bundler-sass",
+            "download_url": {
+                "url": null
+            },
+            "inferred_urls": [
+                {
+                    "url": "https://rubygems.org/gems/bundler-sass"
+                }
+            ],
+            "repo_download_url": {
+                "url": null
+            },
+            "repo_download_url_by_package_type": {
+                "url": null
+            },
+            "repo_url": {
+                "url": "https://rubygems.org/gems/bundler-sass"
+            },
+            "url": {
+                "url": "https://rubygems.org/gems/bundler-sass"
+            }
+        },
+        {
+            "purl": "pkg:rubygems/bundler-sass",
+            "download_url": {
+                "url": null
+            },
+            "inferred_urls": [
+                {
+                    "url": "https://rubygems.org/gems/bundler-sass"
+                }
+            ],
+            "repo_download_url": {
+                "url": null
+            },
+            "repo_download_url_by_package_type": {
+                "url": null
+            },
+            "repo_url": {
+                "url": "https://rubygems.org/gems/bundler-sass"
+            },
+            "url": {
+                "url": "https://rubygems.org/gems/bundler-sass"
+            }
+        },
+        {
+            "purl": "pkg:nuget/auth0-aspnet",
+            "download_url": {
+                "url": null
+            },
+            "inferred_urls": [
+                {
+                    "url": "https://www.nuget.org/packages/auth0-aspnet"
+                }
+            ],
+            "repo_download_url": {
+                "url": null
+            },
+            "repo_download_url_by_package_type": {
+                "url": null
+            },
+            "repo_url": {
+                "url": "https://www.nuget.org/packages/auth0-aspnet"
+            },
+            "url": {
+                "url": "https://www.nuget.org/packages/auth0-aspnet"
+            }
+        }
+    ]
+}
