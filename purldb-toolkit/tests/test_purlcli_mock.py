@@ -10,9 +10,12 @@
 import json
 import os
 from collections import OrderedDict
+from contextlib import redirect_stdout
+from io import StringIO
 from unittest import mock
 
 import pytest
+import requests
 from click.testing import CliRunner
 from commoncode.testcase import FileDrivenTesting
 from purldb_toolkit import cli_test_utils, purlcli
@@ -22,7 +25,6 @@ test_env.test_data_dir = os.path.join(os.path.dirname(__file__), "data")
 
 
 class TestPURLCLI_metadata(object):
-    # NOTE: Looks OK.
     def test_metadata_cli_duplicate_input_sources(self):
         """
         Test the `metadata` command with both `--purl` and `--file` inputs.
@@ -40,7 +42,6 @@ class TestPURLCLI_metadata(object):
         assert "Use either purls or file but not both." in result.output
         assert result.exit_code == 2
 
-    # NOTE: Looks OK.
     def test_metadata_cli_no_input_sources(self):
         """
         Test the `metadata` command with neither `--purl` nor `--file` inputs.
@@ -54,7 +55,6 @@ class TestPURLCLI_metadata(object):
         assert "Use either purls or file." in result.output
         assert result.exit_code == 2
 
-    # NOTE: This works.
     @mock.patch("purldb_toolkit.purlcli.collect_metadata")
     @mock.patch("purldb_toolkit.purlcli.check_metadata_purl")
     def test_metadata_details(self, mock_check_metadata_purl, mock_collect_metadata):
@@ -431,7 +431,6 @@ class TestPURLCLI_metadata(object):
 
         assert purl_metadata_data == expected_data
 
-    # NOTE: This works.
     @mock.patch("purldb_toolkit.purlcli.validate_purl")
     def test_check_metadata_purl(self, mock_validate_purl):
         mock_validate_purl.return_value = {
@@ -446,7 +445,6 @@ class TestPURLCLI_metadata(object):
 
         assert purl_metadata == expected
 
-    # NOTE: This works.
     @mock.patch("purldb_toolkit.purlcli.validate_purl")
     def test_check_metadata_purl_multiple(self, mock_validate_purl):
         mock_validate_purl.side_effect = [
@@ -515,7 +513,6 @@ class TestPURLCLI_metadata(object):
             purl_metadata = purlcli.check_metadata_purl(input_purl)
             assert purl_metadata == expected_state
 
-    # NOTE: Looks OK.
     @pytest.mark.parametrize(
         "test_input,expected_input_purls,expected_normalized_purls",
         [
@@ -615,7 +612,6 @@ class TestPURLCLI_metadata(object):
         assert input_purls == expected_input_purls
         assert normalized_purls == expected_normalized_purls
 
-    # NOTE: Looks OK.
     @pytest.mark.parametrize(
         "test_input,expected",
         [
@@ -672,7 +668,6 @@ class TestPURLCLI_metadata(object):
 
         assert metadata_headers == expected
 
-    # NOTE: Looks OK.
     @pytest.mark.parametrize(
         "test_input,expected",
         [
@@ -739,7 +734,6 @@ class TestPURLCLI_metadata(object):
 
 
 class TestPURLCLI_urls(object):
-    # NOTE: This works.  ;-)
     @mock.patch("purldb_toolkit.purlcli.make_head_request")
     def test_urls_cli_head(self, mock_make_head_request):
         """
@@ -818,7 +812,6 @@ class TestPURLCLI_urls(object):
         for output, expected in result_objects:
             assert output == expected
 
-    # NOTE: Looks OK.
     def test_urls_cli_duplicate_input_sources(self):
         """
         Test the `urls` command with both `--purl` and `--file` inputs.
@@ -836,7 +829,6 @@ class TestPURLCLI_urls(object):
         assert "Use either purls or file but not both." in result.output
         assert result.exit_code == 2
 
-    # NOTE: Looks OK.
     def test_urls_cli_no_input_sources(self):
         """
         Test the `urls` command with neither `--purl` nor `--file` inputs.
@@ -850,7 +842,6 @@ class TestPURLCLI_urls(object):
         assert "Use either purls or file." in result.output
         assert result.exit_code == 2
 
-    # NOTE: 2024-03-18 Monday 22:07:52.  This works!
     @mock.patch("purldb_toolkit.purlcli.check_urls_purl")
     def test_urls_details(self, mock_check_urls_purl):
         mock_check_urls_purl.return_value = "valid_but_not_fully_supported"
@@ -915,7 +906,6 @@ class TestPURLCLI_urls(object):
 
         assert purl_urls == expected_data
 
-    # NOTE: This works!
     @mock.patch("purldb_toolkit.purlcli.validate_purl")
     def test_check_urls_purl(self, mock_validate_purl):
         mock_validate_purl.return_value = {
@@ -931,210 +921,93 @@ class TestPURLCLI_urls(object):
 
         assert purl_urls == expected
 
+    @mock.patch("requests.get")
+    @mock.patch("requests.head")
+    def test_validate_purl_mock_requests_get_and_head(
+        self, mock_requests_head, mock_requests_get
+    ):
+        get_response = mock.Mock(requests.Response)
+        get_response.status_code = 200
+
+        head_response = mock.Mock(requests.Response)
+        head_response.status_code = 400
+
+        mock_requests_get.return_value = get_response
+        mock_requests_head.return_value = head_response
+
+        expected_results = {"get_request": 200, "head_request": 400}
+
+        url_detail = "https://pypi.org/project/fetchcode/"
+        results = purlcli.make_head_request(url_detail)
+
+        assert results == expected_results
+
 
 class TestPURLCLI_validate(object):
+    @mock.patch("requests.get")
+    def test_validate_purl_mock_requests_get(self, mock_requests_get):
+        mock_request_response = {
+            "valid": True,
+            "exists": True,
+            "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+            "purl": "pkg:pypi/fetchcode",
+        }
 
-    # # This is a test of mocking `validate_purl` itself.  But this is circular and really proves nothing, right?
-    # @mock.patch("purldb_toolkit.purlcli.validate_purl")
-    # # def test_validate_purl_mock(self, test_input, expected):
-    # def test_validate_purl_mock(self, mock_validate_purl):
-    #     mock_validate_purl.return_value = {
-    #         "valid": True,
-    #         "exists": None,
-    #         "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-    #         "purl": "pkg:rubygems/bundler-sass",
-    #     }
-    #     input_purl = "pkg:rubygems/bundler-sass"
+        def mock_requests_get_return_func():
+            return mock_request_response
 
-    #     expected = {
-    #         "valid": True,
-    #         "exists": None,
-    #         "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-    #         "purl": "pkg:rubygems/bundler-sass",
-    #     }
+        mock_requests_get.return_value.json = mock_requests_get_return_func
+        input_purl = "pkg:pypi/fetchcode"
+        results = purlcli.validate_purl(input_purl)
+        assert mock_request_response == results
 
-    #     validated_purl = purlcli.validate_purl(input_purl)
+    @mock.patch("requests.get")
+    def test_validate_purl_mock_requests_get_jsondecodeerror(self, mock_requests_get):
+        def json_decode_failure_exception(**kwargs):
+            raise json.decoder.JSONDecodeError("test", "[{}]", 0)
 
-    #     assert validated_purl == expected
+        mock_requests_get.return_value.json = json_decode_failure_exception
+        input_purl = "pkg:pypi/fetchcode"
+        out = StringIO()
+        with mock.patch("requests.Response.json", json_decode_failure_exception):
+            with redirect_stdout(out):
+                purlcli.validate_purl(input_purl)
+        results = out.getvalue()
+        assert (
+            "json.decoder.JSONDecodeError for 'pkg:pypi/fetchcode': test: line 1 column 1 (char 0)"
+            in results
+        )
 
-    def test_validate_purl_mock_01(self):
-        with mock.patch("requests.get") as mock_request:
-            # url = 'http://google.com'
-            input_purl = "pkg:rubygems/bundler-sass"
+    @mock.patch("requests.get")
+    def test_validate_purl_mock_requests_get_exception(self, mock_requests_get):
+        def raise_exception(**kwargs):
+            raise Exception
 
-            # set a `status_code` attribute on the mock object
-            # with value 200
-            mock_request.return_value.status_code = 200
-            mock_request.return_value.text = {"blah": "blah"}
+        mock_requests_get.return_value.json = raise_exception
+        input_purl = "pkg:pypi/fetchcode"
+        out = StringIO()
+        with mock.patch("requests.Response.json", raise_exception):
+            with redirect_stdout(out):
+                purlcli.validate_purl(input_purl)
+        results = out.getvalue()
+        assert "'validate' endpoint error for 'pkg:pypi/fetchcode': \n" in results
 
-            mock_request = mock.Mock(
-                return_value=mock.Mock(status_code=200, text='{"blah": "blah"}')
-            )
+    @mock.patch("requests.get")
+    def test_validate_purl_mock_requests_none(self, mock_requests_get):
+        def raise_exception(**kwargs):
+            raise Exception
 
-            mock_app = mock.MagicMock()
-            mock_app.get().json().return_value = {"fruit": "apple"}
-
-            # self.assertTrue(url_exists(url))
-
-            print(
-                f"\npurlcli.validate_purl(input_purl) = {purlcli.validate_purl(input_purl)}"
-            )
-
-    # NOTE: These 3 are the current live-fetch tests, each of which calls `validate_purl()`.
-
-    @pytest.mark.parametrize(
-        "test_input,expected",
-        [
-            (
-                "pkg:pypi/fetchcode@0.2.0",
-                {
-                    "valid": True,
-                    "exists": True,
-                    "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                    "purl": "pkg:pypi/fetchcode@0.2.0",
-                },
-            ),
-            (
-                "pkg:pypi/fetchcode@10.2.0",
-                {
-                    "valid": True,
-                    "exists": False,
-                    "message": "The provided PackageURL is valid, but does not exist in the upstream repo.",
-                    "purl": "pkg:pypi/fetchcode@10.2.0",
-                },
-            ),
-            (
-                "pkg:nginx/nginx@0.8.9?os=windows",
-                {
-                    "valid": True,
-                    "exists": None,
-                    "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                    "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-                },
-            ),
-            (
-                "pkg:gem/bundler-sass",
-                {
-                    "valid": True,
-                    "exists": True,
-                    "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                    "purl": "pkg:gem/bundler-sass",
-                },
-            ),
-            (
-                "pkg:rubygems/bundler-sass",
-                {
-                    "valid": True,
-                    "exists": None,
-                    "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                    "purl": "pkg:rubygems/bundler-sass",
-                },
-            ),
-            (
-                "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0-rc1",
-                {
-                    "valid": True,
-                    "exists": True,
-                    "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                    "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0-rc1",
-                },
-            ),
-        ],
-    )
-    def test_validate_purl(self, test_input, expected):
-        validated_purl = purlcli.validate_purl(test_input)
-        assert validated_purl == expected
-
-    def test_validate_purl_empty(self):
-        test_input = None
-        validated_purl = purlcli.validate_purl(test_input)
-        expected_results = {"errors": {"purl": ["This field is required."]}}
-        assert validated_purl == expected_results
-
-    @pytest.mark.parametrize(
-        "test_input,expected",
-        [
-            (
-                "pkg:pypi/fetchcode@0.2.0",
-                {
-                    "valid": True,
-                    "exists": True,
-                    "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                    "purl": "pkg:pypi/fetchcode@0.2.0",
-                },
-            ),
-            (
-                "pkg:pypi/fetchcode@0.2.0?",
-                {
-                    "valid": True,
-                    "exists": True,
-                    "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                    "purl": "pkg:pypi/fetchcode@0.2.0?",
-                },
-            ),
-            (
-                "pkg:pypi/fetchcode@?0.2.0",
-                {
-                    "valid": False,
-                    "exists": None,
-                    "message": "The provided PackageURL is not valid.",
-                    "purl": "pkg:pypi/fetchcode@?0.2.0",
-                },
-            ),
-            (
-                "foo",
-                {
-                    "valid": False,
-                    "exists": None,
-                    "message": "The provided PackageURL is not valid.",
-                    "purl": "foo",
-                },
-            ),
-        ],
-    )
-    def test_validate_purl_invalid(self, test_input, expected):
-        validated_purl = purlcli.validate_purl(test_input)
-        assert validated_purl == expected
-
-    @pytest.mark.parametrize(
-        "test_input,expected",
-        [
-            (
-                "pkg:nginx/nginx@0.8.9?os=windows",
-                {
-                    "valid": True,
-                    "exists": None,
-                    "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                    "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-                },
-            ),
-            (
-                " pkg:nginx/nginx@0.8.9?os=windows",
-                {
-                    "valid": True,
-                    "exists": None,
-                    "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                    "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-                },
-            ),
-            (
-                "pkg:nginx/nginx@0.8.9?os=windows ",
-                {
-                    "valid": True,
-                    "exists": None,
-                    "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                    "purl": "pkg:nginx/nginx@0.8.9?os=windows",
-                },
-            ),
-        ],
-    )
-    def test_validate_purl_strip(self, test_input, expected):
-        validated_purl = purlcli.validate_purl(test_input)
-        assert validated_purl == expected
+        mock_requests_get.return_value.json = raise_exception
+        input_purl = None
+        out = StringIO()
+        with mock.patch("requests.Response.json", raise_exception):
+            with redirect_stdout(out):
+                purlcli.validate_purl(input_purl)
+        results = out.getvalue()
+        assert "'validate' endpoint error for 'None': \n" in results
 
 
 class TestPURLCLI_versions(object):
-    # NOTE: This works.
     @mock.patch("purldb_toolkit.purlcli.collect_versions")
     @mock.patch("purldb_toolkit.purlcli.check_versions_purl")
     def test_versions_details_multiple(
@@ -1384,7 +1257,6 @@ class TestPURLCLI_versions(object):
 
             assert purl_versions_data == expected_data
 
-    # NOTE: This works.
     @mock.patch("purldb_toolkit.purlcli.collect_versions")
     @mock.patch("purldb_toolkit.purlcli.check_versions_purl")
     def test_versions_details(
@@ -1469,7 +1341,6 @@ class TestPURLCLI_versions(object):
         )
         assert purl_versions_data == expected_data
 
-    # NOTE: This works.
     @mock.patch("purldb_toolkit.purlcli.validate_purl")
     def test_check_versions_purl_multiple(self, mock_validate_purl):
         mock_validate_purl.side_effect = [
@@ -1536,7 +1407,6 @@ class TestPURLCLI_versions(object):
             purl_versions = purlcli.check_versions_purl(input_purl)
             assert purl_versions == expected_state
 
-    # NOTE: This works.
     @mock.patch("purldb_toolkit.purlcli.validate_purl")
     def test_check_versions_purl(self, mock_validate_purl):
         mock_validate_purl.return_value = {

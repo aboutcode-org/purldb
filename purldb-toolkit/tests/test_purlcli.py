@@ -19,6 +19,8 @@ from purldb_toolkit import cli_test_utils, purlcli
 test_env = FileDrivenTesting()
 test_env.test_data_dir = os.path.join(os.path.dirname(__file__), "data")
 
+pytestmark = pytest.mark.live_fetch()
+
 
 class TestPURLCLI_metadata(object):
     def test_metadata_cli(self):
