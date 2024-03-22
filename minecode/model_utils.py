@@ -431,13 +431,14 @@ def merge_or_create_resource(package, resource_data):
     created = False
     resource = None
     path = resource_data.get('path')
+
+    extra_data = copy.deepcopy(resource_data.get('extra_data', {}))
+    extra_data.pop("directory_content", None)
+    extra_data.pop("directory_structure", None)
+
     try:
         resource = Resource.objects.get(package=package, path=path)
     except Resource.DoesNotExist:
-        extra_data = copy.deepcopy(resource_data.get('extra_data', {}))
-        extra_data.pop("directory_content", None)
-        extra_data.pop("directory_structure", None)
-    
         resource = Resource(
             package=package,
             path=path,
@@ -460,4 +461,5 @@ def merge_or_create_resource(package, resource_data):
         )
         created = True
     _ = resource.set_scan_results(resource_data, save=True)
+    resource.update_extra_data(extra_data)
     return resource, created, merged
