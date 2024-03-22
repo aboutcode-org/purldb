@@ -96,16 +96,18 @@ def get_metadata_details(purls, output, file, unique, command_name):
         if not purl:
             continue
 
+        purl_data = {}
+        purl_data["purl"] = purl
+
         metadata_purl = check_metadata_purl(purl)
 
         if command_name == "metadata" and metadata_purl:
             metadata_warnings[purl] = metadata_purl
             continue
 
-        for release in list(info(purl)):
-            release_detail = release.to_dict()
-            release_detail.move_to_end("purl", last=False)
-            metadata_details["packages"].append(release_detail)
+        metadata_collection = collect_metadata(purl)
+        purl_data["metadata"] = metadata_collection
+        metadata_details["packages"].append(purl_data)
 
     metadata_details["headers"] = construct_headers(
         purls=purls,
@@ -118,6 +120,19 @@ def get_metadata_details(purls, output, file, unique, command_name):
     )
 
     return metadata_details
+
+
+def collect_metadata(purl):
+    """
+    Return a list of release-based metadata collections from fetchcode/package.py.
+    """
+    collected_metadata = []
+    for release in list(info(purl)):
+        release_detail = release.to_dict()
+        release_detail.move_to_end("purl", last=False)
+        collected_metadata.append(release_detail)
+
+    return collected_metadata
 
 
 def check_metadata_purl(purl):
@@ -155,6 +170,9 @@ def check_metadata_purl(purl):
 
     if results["exists"] == False:
         return "not_in_upstream_repo"
+
+    if results["exists"] == None:
+        return "check_existence_not_supported"
 
 
 def normalize_purls(purls, unique):
@@ -246,14 +264,15 @@ def construct_headers(
             "valid_but_not_supported": f"'{purl}' not supported with `{command_name}` command",
             "valid_but_not_fully_supported": f"'{purl}' not fully supported with `urls` command",
             "not_in_upstream_repo": f"'{purl}' does not exist in the upstream repo",
+            "check_existence_not_supported": f"'check_existence' is not supported for '{purl}'",
         }
 
         if command_name in ["metadata", "urls", "validate", "versions"]:
             purl_warning = purl_warnings.get(purl, None)
+
             if purl_warning:
                 warning = warning_text[purl_warning]
                 warnings.append(warning)
-                print(warning)
                 continue
 
     log_file = Path(LOG_FILE_LOCATION)
@@ -580,14 +599,14 @@ def get_validate_details(purls, output, file, unique, command_name):
 
         validated_purl = check_validate_purl(purl)
 
-        if command_name == "urls" and validated_purl in [
+        if command_name == "validate" and validated_purl in [
             "validation_error",
             "not_valid",
             "valid_but_not_supported",
             "not_in_upstream_repo",
+            "check_existence_not_supported",
         ]:
             validate_warnings[purl] = validated_purl
-            continue
 
         if validated_purl:
             validate_details["packages"].append(validate_purl(purl))
@@ -623,6 +642,9 @@ def check_validate_purl(purl):
 
     if results["exists"] == True:
         return check_validation
+
+    if results["exists"] == None:
+        return "check_existence_not_supported"
 
 
 def validate_purl(purl):
@@ -742,7 +764,6 @@ def get_versions_details(purls, output, file, unique, command_name):
 
         purl_data = {}
         purl_data["purl"] = purl
-        purl_data["versions"] = []
 
         versions_purl = check_versions_purl(purl)
 
@@ -750,24 +771,9 @@ def get_versions_details(purls, output, file, unique, command_name):
             versions_warnings[purl] = versions_purl
             continue
 
-        for package_version in list(versions(purl)):
-            purl_version_data = {}
-            purl_version = package_version.value
+        version_collection = collect_versions(purl)
 
-            # We use `versions()` from fetchcode/package_versions.py, which
-            # keeps the version (if any) of the input PURL in its output, so
-            # "pkg:pypi/fetchcode@0.3.0" is returned as
-            # "pkg:pypi/fetchcode@0.3.0@0.1.0", "pkg:pypi/fetchcode@0.3.0@0.2.0"
-            # etc.  Thus, we remove any string starting with `@` first.
-            raw_purl = purl = re.split("[@,]+", purl)[0]
-            nested_purl = raw_purl + "@" + f"{purl_version}"
-
-            purl_version_data["purl"] = nested_purl
-            purl_version_data["version"] = f"{purl_version}"
-            purl_version_data["release_date"] = f"{package_version.release_date}"
-
-            purl_data["versions"].append(purl_version_data)
-
+        purl_data["versions"] = version_collection
         versions_details["packages"].append(purl_data)
 
     versions_details["headers"] = construct_headers(
@@ -781,6 +787,32 @@ def get_versions_details(purls, output, file, unique, command_name):
     )
 
     return versions_details
+
+
+def collect_versions(purl):
+    """
+    Return a list of version objects collected from fetchcode/package_versions.py.
+    """
+    collected_versions = []
+    for package_version in list(versions(purl)):
+        purl_version_data = {}
+        purl_version = package_version.value
+
+        # We use `versions()` from fetchcode/package_versions.py, which
+        # keeps the version (if any) of the input PURL in its output, so
+        # "pkg:pypi/fetchcode@0.3.0" is returned as
+        # "pkg:pypi/fetchcode@0.3.0@0.1.0", "pkg:pypi/fetchcode@0.3.0@0.2.0"
+        # etc.  Thus, we remove any string starting with `@` first.
+        raw_purl = purl = re.split("[@,]+", purl)[0]
+        nested_purl = raw_purl + "@" + f"{purl_version}"
+
+        purl_version_data["purl"] = nested_purl
+        purl_version_data["version"] = f"{purl_version}"
+        purl_version_data["release_date"] = f"{package_version.release_date}"
+
+        collected_versions.append(purl_version_data)
+
+    return collected_versions
 
 
 def check_versions_purl(purl):
@@ -827,6 +859,9 @@ def check_versions_purl(purl):
 
     if results["exists"] == False:
         return "not_in_upstream_repo"
+
+    if results["exists"] == None:
+        return "check_existence_not_supported"
 
     # This handles the conflict between the `validate`` endpoint (treats
     # both "pkg:deb/debian/2ping" and "pkg:deb/2ping" as valid) and
