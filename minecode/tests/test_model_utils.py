@@ -10,11 +10,12 @@
 from datetime import timedelta
 import os
 
+from django.test import TransactionTestCase
 from django.utils import timezone
 
-from minecode.model_utils import merge_or_create_package
+from minecode.model_utils import merge_or_create_package, merge_or_create_resource
 from minecode.utils_test import JsonBasedTesting, MiningTestCase
-from packagedb.models import Package
+from packagedb.models import Package, Resource
 from packagedcode.maven import _parse
 
 
@@ -95,3 +96,57 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
         updated_fields = data['updated_fields']
         expected_updated_fields_loc = self.get_test_loc('model_utils/expected_updated_fields.json')
         self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=False)
+
+
+class MergeORCreateResourceTest(TransactionTestCase):
+    def setUp(self):
+        self.package = Package.objects.create(download_url='test-pkg.com')
+        self.resource_path = 'root/test.c'
+        self.old_extra_data = {
+            "source_symbols":[
+                "Old-symb1",
+                "Old-symb2",
+            ]
+        }
+        
+        self.new_extra_data = {
+            "source_symbols":[
+                "New-symb1",
+                "New-symb2",
+            ]
+        }
+
+        self.resource = Resource.objects.create(package=self.package, path=self.resource_path, extra_data=self.old_extra_data)
+
+    def test_merge_or_create_resource_update(self):
+        self.assertEqual(self.old_extra_data, self.resource.extra_data)
+
+        merge_or_create_resource(
+            self.package, 
+            {"extra_data":self.new_extra_data, "path":self.resource_path},
+            )
+        self.resource.refresh_from_db()
+
+        self.assertEqual(self.new_extra_data, self.resource.extra_data)
+    
+    def test_merge_or_create_resource_create(self):
+        merge_or_create_resource(
+            self.package, 
+            {
+                'type': 'file', 
+                'name':"test_new",
+                'extension':".c",
+                'is_binary':False,
+                'is_text':False,
+                'is_archive':False,
+                'is_media':False,
+                'is_key_file':False,
+                "extra_data":self.new_extra_data, 
+                "path":"root/test_new.c"},
+            )
+
+        resource = Resource.objects.get(path="root/test_new.c")
+        self.assertEqual(self.new_extra_data, resource.extra_data)
+
+
+
