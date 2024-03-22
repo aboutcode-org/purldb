@@ -32,6 +32,14 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
             version='20040705.181715'
         )
 
+        self.package2 = Package.objects.create(
+            download_url='https://github.com/nexB/elf-inspector/raw/4333e1601229da87fa88961389d7397af6e027c4/tests/data/dwarf_and_elf/analyze.so.debug',
+            type='generic',
+            namespace='',
+            name='debug',
+            version='1.23'
+        )
+
     def test_indexing_index_package_files(self):
         scan_data_loc = self.get_test_loc('scancodeio/get_scan_data.json')
         with open(scan_data_loc, 'rb') as f:
@@ -98,3 +106,36 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         self.assertEqual(64, result.count())
         result = ExactFileIndex.objects.filter(package=self.package1)
         self.assertEqual(45, result.count())
+    
+    def test_indexing_index_package_dwarf(self):
+        scan_data_loc = self.get_test_loc('scancodeio/get_scan_data_dwarf.json')
+        with open(scan_data_loc, 'rb') as f:
+            scan_data = json.load(f)
+
+        scan_summary_loc = self.get_test_loc('scancodeio/scan_summary_dwarf.json')
+        with open(scan_summary_loc, 'rb') as f:
+            scan_summary = json.load(f)
+
+        project_extra_data = {}
+
+        # Set up ScannableURI
+        scannable_uri = ScannableURI.objects.create(
+            uri='https://github.com/nexB/elf-inspector/raw/4333e1601229da87fa88961389d7397af6e027c4/tests/data/dwarf_and_elf/analyze.so.debug',
+            scan_status=ScannableURI.SCAN_COMPLETED,
+            package=self.package2
+        )
+
+        # Run test
+        indexing.index_package(
+            scannable_uri,
+            self.package1,
+            scan_data,
+            scan_summary,
+            project_extra_data,
+        )
+        result = Resource.objects.filter(package=self.package2)
+        self.assertEqual(1, result.count())
+
+        # Make sure that Package data is updated
+        self.assertEqual('apache-2.0', self.package2.extra_data)
+
