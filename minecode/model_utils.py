@@ -418,7 +418,7 @@ def merge_or_create_package(scanned_package, visit_level):
     return package, created, merged, map_error
 
 
-def merge_or_create_resource(package, resource_data):
+def update_or_create_resource(package, resource_data):
     """
     Using Resource data from `resource_data`, create or update the
     corresponding purldb Resource from `package`.
@@ -427,7 +427,7 @@ def merge_or_create_resource(package, resource_data):
     `resource`, as well as booleans representing whether the Resource was
     created or if the Resources scan field data was updated.
     """
-    merged = False
+    updated = False
     created = False
     resource = None
     path = resource_data.get('path')
@@ -438,6 +438,7 @@ def merge_or_create_resource(package, resource_data):
 
     try:
         resource = Resource.objects.get(package=package, path=path)
+        updated = True
     except Resource.DoesNotExist:
         resource = Resource(
             package=package,
@@ -462,4 +463,4 @@ def merge_or_create_resource(package, resource_data):
         created = True
     _ = resource.set_scan_results(resource_data, save=True)
     resource.update_extra_data(extra_data)
-    return resource, created, merged
+    return resource, created, updated
