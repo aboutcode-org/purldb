@@ -1,24 +1,11 @@
+#
+# Copyright (c) nexB Inc. and others. All rights reserved.
+# purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/purldb for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# http://nexb.com and https://github.com/nexB/scancode.io
-# The ScanCode.io software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode.io is provided as-is without warranties.
-# ScanCode is a trademark of nexB Inc.
-#
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# Data Generated with ScanCode.io is provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-# OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-# ScanCode.io should be considered or used as legal advice. Consult an Attorney
-# for any legal advice.
-#
-# ScanCode.io is a free software code scanning tool from nexB Inc. and others.
-# Visit https://github.com/nexB/scancode.io for support and download.
 
 import getpass
 
@@ -31,8 +18,8 @@ from django.core.management.base import CommandError
 from rest_framework.authtoken.models import Token
 
 
-class Command(BaseCommand):
-    help = "Create a user and generate an API key for authentication."
+class CreateUserCommand(BaseCommand):
+    help = 'Create a user and generate an API key for authentication.'
     requires_migrations_checks = True
 
     def __init__(self, *args, **kwargs):
@@ -43,31 +30,41 @@ class Command(BaseCommand):
         )
 
     def add_arguments(self, parser):
-        parser.add_argument("username", help="Specifies the username for the user.")
+        parser.add_argument('username', help='Specifies the username for the user.')
         parser.add_argument(
-            "--no-input",
-            action="store_false",
-            dest="interactive",
-            help="Do not prompt the user for input of any kind.",
+            '--no-input',
+            action='store_false',
+            dest='interactive',
+            help='Do not prompt the user for input of any kind.',
         )
 
     def handle(self, *args, **options):
-        username = options["username"]
+        username = options['username']
+        interactive = options['interactive']
+        verbosity = options['verbosity']
+        self.create_user(
+            username=username,
+            interactive=interactive,
+            verbosity=verbosity
+        )
 
+    def create_user(self, username, interactive, verbosity):
         error_msg = self._validate_username(username)
         if error_msg:
             raise CommandError(error_msg)
 
         password = None
-        if options["interactive"]:
+        if interactive:
             password = self.get_password_from_stdin(username)
 
         user = self.UserModel._default_manager.create_user(username, password=password)
         token, _ = Token._default_manager.get_or_create(user=user)
 
-        if options["verbosity"] >= 1:
-            msg = f"User {username} created with API key: {token.key}"
+        if verbosity >= 1:
+            msg = f'User {username} created with API key: {token.key}'
             self.stdout.write(msg, self.style.SUCCESS)
+
+        return user
 
     def get_password_from_stdin(self, username):
         # Validators, such as UserAttributeSimilarityValidator, depends on other user's
@@ -79,21 +76,21 @@ class Command(BaseCommand):
         password = None
         while password is None:
             password1 = getpass.getpass()
-            password2 = getpass.getpass("Password (again): ")
+            password2 = getpass.getpass('Password (again): ')
             if password1 != password2:
                 self.stderr.write("Error: Your passwords didn't match.")
                 continue
-            if password1.strip() == "":
+            if password1.strip() == '':
                 self.stderr.write("Error: Blank passwords aren't allowed.")
                 continue
             try:
                 validate_password(password2, self.UserModel(**fake_user_data))
             except exceptions.ValidationError as err:
-                self.stderr.write("\n".join(err.messages))
+                self.stderr.write('\n'.join(err.messages))
                 response = input(
-                    "Bypass password validation and create user anyway? [y/N]: "
+                    'Bypass password validation and create user anyway? [y/N]: '
                 )
-                if response.lower() != "y":
+                if response.lower() != 'y':
                     continue
             password = password1
 
@@ -107,9 +104,9 @@ class Command(BaseCommand):
             except self.UserModel.DoesNotExist:
                 pass
             else:
-                return "Error: That username is already taken."
+                return 'Error: That username is already taken.'
 
         try:
             self.username_field.clean(username, None)
         except exceptions.ValidationError as e:
-            return "; ".join(e.messages)
+            return '; '.join(e.messages)

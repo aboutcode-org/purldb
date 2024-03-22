@@ -1,3 +1,4 @@
+import copy
 import logging
 import sys
 
@@ -24,14 +25,30 @@ logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
 
 
-def add_package_to_scan_queue(package):
+# These are the list of default pipelines to run when we scan a Package for
+# indexing
+DEFAULT_PIPELINES = (
+    'scan_single_package',
+    'fingerprint_codebase',
+    'collect_symbols',
+)
+
+
+def add_package_to_scan_queue(package, pipelines=DEFAULT_PIPELINES, reindex_uri=False, priority=0):
     """
-    Add a Package `package` to the scan queue
+    Add a Package `package` to the scan queue to run the list of provided `pipelines`
+
+    If `reindex_uri` is True, force rescanning of the package
     """
+    if not pipelines:
+        raise Exception('pipelines required to add package to scan queue')
     uri = package.download_url
     _, scannable_uri_created = ScannableURI.objects.get_or_create(
         uri=uri,
+        pipelines=pipelines,
         package=package,
+        reindex_uri=reindex_uri,
+        priority=priority,
     )
     if scannable_uri_created:
         logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
@@ -401,7 +418,7 @@ def merge_or_create_package(scanned_package, visit_level):
     return package, created, merged, map_error
 
 
-def merge_or_create_resource(package, resource_data):
+def update_or_create_resource(package, resource_data):
     """
     Using Resource data from `resource_data`, create or update the
     corresponding purldb Resource from `package`.
@@ -410,12 +427,18 @@ def merge_or_create_resource(package, resource_data):
     `resource`, as well as booleans representing whether the Resource was
     created or if the Resources scan field data was updated.
     """
-    merged = False
+    updated = False
     created = False
     resource = None
     path = resource_data.get('path')
+
+    extra_data = copy.deepcopy(resource_data.get('extra_data', {}))
+    extra_data.pop("directory_content", None)
+    extra_data.pop("directory_structure", None)
+
     try:
         resource = Resource.objects.get(package=package, path=path)
+        updated = True
     except Resource.DoesNotExist:
         resource = Resource(
             package=package,
@@ -435,7 +458,9 @@ def merge_or_create_resource(package, resource_data):
             is_archive=resource_data.get('is_archive'),
             is_media=resource_data.get('is_media'),
             is_key_file=resource_data.get('is_key_file'),
+            extra_data=extra_data,
         )
         created = True
     _ = resource.set_scan_results(resource_data, save=True)
-    return resource, created, merged
+    resource.update_extra_data(extra_data)
+    return resource, created, updated

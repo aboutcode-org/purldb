@@ -1,0 +1,61 @@
+{
+    "headers": [
+        {
+            "tool_name": "purlcli",
+            "tool_version": "0.1.0",
+            "options": {
+                "command": "urls",
+                "--purl": [
+                    "pkg:pypi/fetchcode"
+                ],
+                "--file": null,
+                "--head": true,
+                "--output": "<stdout>"
+            },
+            "purls": [
+                "pkg:pypi/fetchcode"
+            ],
+            "errors": [],
+            "warnings": [
+                "'pkg:pypi/fetchcode' not fully supported with `urls` command"
+            ]
+        }
+    ],
+    "packages": [
+        {
+            "purl": "pkg:pypi/fetchcode",
+            "download_url": {
+                "url": null,
+                "get_request_status_code": "N/A",
+                "head_request_status_code": "N/A"
+            },
+            "inferred_urls": [
+                {
+                    "url": "https://pypi.org/project/fetchcode/",
+                    "get_request_status_code": 200,
+                    "head_request_status_code": 200
+                }
+            ],
+            "repo_download_url": {
+                "url": null,
+                "get_request_status_code": "N/A",
+                "head_request_status_code": "N/A"
+            },
+            "repo_download_url_by_package_type": {
+                "url": null,
+                "get_request_status_code": "N/A",
+                "head_request_status_code": "N/A"
+            },
+            "repo_url": {
+                "url": "https://pypi.org/project/fetchcode/",
+                "get_request_status_code": 200,
+                "head_request_status_code": 200
+            },
+            "url": {
+                "url": "https://pypi.org/project/fetchcode/",
+                "get_request_status_code": 200,
+                "head_request_status_code": 200
+            }
+        }
+    ]
+}

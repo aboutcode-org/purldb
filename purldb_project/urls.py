@@ -24,7 +24,10 @@ from matchcode.api import ApproximateDirectoryStructureIndexViewSet
 from matchcode.api import ExactFileIndexViewSet
 from matchcode.api import ExactPackageArchiveIndexViewSet
 from minecode.api import PriorityResourceURIViewSet
+from minecode.api import ScannableURIViewSet
 from packagedb.api import PurlValidateViewSet
+from packagedb.to_purl import api_to_purl_router
+from packagedb.from_purl import api_from_purl_router 
 from packagedb.api import CollectViewSet
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
@@ -43,7 +46,7 @@ api_router.register('on_demand_queue', PriorityResourceURIViewSet)
 api_router.register('validate', PurlValidateViewSet, 'validate')
 api_router.register('collect', CollectViewSet, 'collect')
 api_router.register('watch',PackageWatchViewSet)
-
+api_router.register('scan_queue', ScannableURIViewSet)
 
 urlpatterns = [
     path(
@@ -51,6 +54,8 @@ urlpatterns = [
         TemplateView.as_view(template_name='robots.txt', content_type='text/plain'),
     ),
     path('api/', include((api_router.urls, 'api'))),
+    path('api/to_purl/', include((api_to_purl_router.urls, 'api_to'))),
+    path('api/from_purl/', include((api_from_purl_router.urls, 'api_from'))),
     path("", RedirectView.as_view(url="api/")),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),

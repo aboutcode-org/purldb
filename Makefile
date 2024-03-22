@@ -122,12 +122,6 @@ run_visit: seed
 run_map:
 	${MANAGE} run_map
 
-request_scans:
-	${MANAGE} request_scans
-
-process_scans:
-	${MANAGE} process_scans
-
 test:
 	@echo "-> Run the test suite"
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode_pipeline --ignore matchcode_project --ignore purldb-toolkit --ignore packagedb/tests/test_throttling.py

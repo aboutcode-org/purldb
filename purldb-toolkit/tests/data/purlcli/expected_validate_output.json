@@ -31,7 +31,12 @@
                 "pkg:rubygems/rails"
             ],
             "errors": [],
-            "warnings": []
+            "warnings": [
+                "'pkg:pypi/fetchcode@0.3.0os=windows' does not exist in the upstream repo",
+                "'pkg:pypi/fetchcode@5.0.0' does not exist in the upstream repo",
+                "'check_existence' is not supported for 'pkg:nginx/nginx'",
+                "'check_existence' is not supported for 'pkg:rubygems/rails'"
+            ]
         }
     ],
     "packages": [
@@ -72,10 +77,22 @@
             "purl": "pkg:cargo/banquo"
         },
         {
+            "exists": null,
+            "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+            "purl": "pkg:nginx/nginx",
+            "valid": true
+        },
+        {
             "valid": true,
             "exists": true,
             "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
             "purl": "pkg:gem/rails"
+        },
+        {
+            "exists": null,
+            "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+            "purl": "pkg:rubygems/rails",
+            "valid": true
         }
     ]
 }
