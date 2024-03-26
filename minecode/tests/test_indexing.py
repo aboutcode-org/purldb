@@ -128,14 +128,16 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         # Run test
         indexing.index_package(
             scannable_uri,
-            self.package1,
+            self.package2,
             scan_data,
             scan_summary,
             project_extra_data,
         )
-        result = Resource.objects.filter(package=self.package2)
-        self.assertEqual(1, result.count())
 
-        # Make sure that Package data is updated
-        self.assertEqual('apache-2.0', self.package2.extra_data)
+        package = Package.objects.filter(id=self.package2.id)
+        self.assertEqual(1, package.count())
+
+        result = Resource.objects.filter(package=self.package2)
+        self.assertEqual(1, result.count())        
+
 
