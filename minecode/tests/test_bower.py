@@ -18,6 +18,7 @@ from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
 from minecode.visitors import bower
+from minecode.tests import FIXTURES_REGEN
 from minecode import mappers
 
 
@@ -31,7 +32,7 @@ class BowerVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = bower.BowerTopJsonVisitor(uri)
         expected_loc = self.get_test_loc('bower/packages_expected_uris.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_bower_json_file(self):
         uri = 'https://coding.net/u/QiaoButang/p/jquery.easing-qbt/git/raw/master/bower.json'
@@ -41,7 +42,7 @@ class BowerVistorTest(JsonBasedTesting):
             _, data, _ = bower.BowerJsonVisitor(uri)
         result = json.loads(data, object_pairs_hook=OrderedDict)
         expected_loc = self.get_test_loc('bower/expected_example1_bower.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
 
 class BowerMapperTest(JsonBasedTesting):
@@ -54,7 +55,7 @@ class BowerMapperTest(JsonBasedTesting):
             metadata, 'https://raw.githubusercontent.com/28msec/28.io-angularjs/master/bower.json', 'pkg:bower/1140-grid')
         result = [p.to_dict() for p in result]
         expected_loc = self.get_test_loc('bower/expected_28msec_bower.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_metafile_from_bowerjson2(self):
         with open(self.get_test_loc('bower/example1_bower.json')) as bower_metadata:
@@ -63,4 +64,4 @@ class BowerMapperTest(JsonBasedTesting):
             metadata, 'https://coding.net/u/QiaoButang/p/jquery.easing-qbt/git/raw/master/bower.json', 'pkg:bower/1140-grid')
         result = [p.to_dict() for p in result]
         expected_loc = self.get_test_loc('bower/expected_mapper_example1_bower.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)

@@ -20,6 +20,7 @@ from minecode import mappers
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 from minecode.visitors import apache
+from minecode.tests import FIXTURES_REGEN
 
 
 class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
@@ -33,7 +34,7 @@ class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
             uris, _, _ = apache.ApacheDistIndexVisitor(uri)
 
         expected_loc = self.get_test_loc('apache/find-ls.gz_uris-expected.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_ApacheChecksumVisitor(self):
         uri = 'http://archive.apache.org/dist/abdera/1.1.3/apache-abdera-1.1.3-src.zip.md5'
@@ -64,9 +65,9 @@ class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
             uris, result, _ = apache.ApacheProjectsJsonVisitor()(uri)
 
         expected_loc = self.get_test_loc('apache/projects_uris-expected.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
-        self.check_expected_results(result, test_loc, regen=False)
+        self.check_expected_results(result, test_loc, regen=FIXTURES_REGEN)
 
     def test_ApacheSingleProjectJsonVisitor(self):
         uri = 'https://projects.apache.org/json/projects/ant-dotnet.json'
@@ -77,7 +78,7 @@ class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
             _, result, _ = apache.ApacheSingleProjectJsonVisitor()(uri)
 
         expected_loc = self.get_test_loc('apache/ant-dotnet_expected.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_ApacheSingleProjectJsonVisitor_error1_json(self):
         uri = 'https://projects.apache.org/json/projects/felix.json'
@@ -88,7 +89,7 @@ class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
             _, result, _ = apache.ApacheSingleProjectJsonVisitor()(uri)
 
         expected_loc = self.get_test_loc('apache/felix_expected.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_ApacheSingleProjectJsonVisitor_error2_json(self):
         uri = 'https://projects.apache.org/json/projects/attic-mrunit.json'
@@ -99,7 +100,7 @@ class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
             _, result, _ = apache.ApacheSingleProjectJsonVisitor()(uri)
 
         expected_loc = self.get_test_loc('apache/attic-mrunit_expected.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_ApacheSingleProjectJsonVisitor_error3_json(self):
         uri = 'https://projects.apache.org/json/projects/metamodel.json'
@@ -110,7 +111,7 @@ class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
             _, result, _ = apache.ApacheSingleProjectJsonVisitor()(uri)
 
         expected_loc = self.get_test_loc('apache/metamodel_expected.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_ApachePodlingsJsonVisitor(self):
         uri = 'https://projects.apache.org/json/foundation/podlings.json'
@@ -121,10 +122,10 @@ class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
             uris, result, _ = apache.ApachePodlingsJsonVisitor()(uri)
 
         expected_loc = self.get_test_loc('apache/podlings_expected_uris.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
         expected_loc = self.get_test_loc('apache/podlings_expected.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
 
 class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
@@ -135,14 +136,14 @@ class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
             'http://archive.apache.org/dist/groovy/2.4.6/sources/apache-groovy-src-2.4.6.zip',
             'pkg:apache/groovy@2.4.6')
         expected_loc = self.get_test_loc('apache/map-groovy_expected.json')
-        self.check_expected_results(package.to_dict(), expected_loc, regen=False)
+        self.check_expected_results(package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_from_download2(self):
         package = mappers.apache.build_package_from_download(
             'http://archive.apache.org/dist/turbine/maven/turbine-webapp-2.3.3-1.0.0-source-release.zip',
             'pkg:apache/turbine-webapp@2.3.3-1.0.0-source-release')
         expected_loc = self.get_test_loc('apache/map-turbine-webapp_expected.json')
-        self.check_expected_results(package.to_dict(), expected_loc, regen=False)
+        self.check_expected_results(package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
 
     # TODO: add tests for checksums
 
@@ -153,7 +154,7 @@ class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
         packages = [p.to_dict() for p in packages]
 
         expected_loc = self.get_test_loc('apache/projects_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_from_one_podling_json(self):
         with open(self.get_test_loc('apache/podling_amaterasu.json')) as podlings_meta:
@@ -162,7 +163,7 @@ class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
         packages = [p.to_dict() for p in packages]
 
         expected_loc = self.get_test_loc('apache/podling_amaterasu_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     # TODO: add real mapper class tests c
 

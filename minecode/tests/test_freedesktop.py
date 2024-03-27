@@ -17,6 +17,7 @@ from minecode.utils_test import JsonBasedTesting
 
 from minecode import mappers
 from minecode.visitors import freedesktop
+from minecode.tests import FIXTURES_REGEN
 
 
 class FreedesktopTest(JsonBasedTesting):
@@ -47,7 +48,7 @@ class FreedesktopMapperTest(FreedesktopTest):
             purl='pkg:freedesktop/hal')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('freedesktop/hal_project_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_map_software_html_page_libinput(self):
         with open(self.get_test_loc('freedesktop/libinput.html')) as freedesktop_metadata:
@@ -58,4 +59,4 @@ class FreedesktopMapperTest(FreedesktopTest):
             purl='pkg:freedesktop/libinput')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('freedesktop/libinput_project_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

@@ -16,6 +16,7 @@ from minecode.model_utils import merge_or_create_package
 from minecode.model_utils import update_or_create_resource
 from minecode.utils_test import JsonBasedTesting
 from minecode.utils_test import MiningTestCase
+from minecode.tests import FIXTURES_REGEN
 from packagedb.models import Package
 from packagedb.models import Resource
 
@@ -46,7 +47,7 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
             package.to_dict(),
             expected_loc,
             fields_to_remove=['package_sets'],
-            regen=False,
+            regen=FIXTURES_REGEN,
         )
 
     def test_merge_or_create_package_merge_package(self):
@@ -64,7 +65,7 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
             package.to_dict(),
             before_merge_loc,
             fields_to_remove=['package_sets'],
-            regen=False,
+            regen=FIXTURES_REGEN,
         )
         package, created, merged, map_error = merge_or_create_package(
             self.scanned_package,
@@ -80,7 +81,7 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
             package.to_dict(),
             expected_loc,
             fields_to_remove=['package_sets'],
-            regen=False,
+            regen=FIXTURES_REGEN,
         )
         history = package.get_history()
         self.assertEqual(1, len(history))
@@ -96,7 +97,7 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
         data = entry['data']
         updated_fields = data['updated_fields']
         expected_updated_fields_loc = self.get_test_loc('model_utils/expected_updated_fields.json')
-        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=False)
+        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN)
 
 
 class UpdateORCreateResourceTest(TransactionTestCase):

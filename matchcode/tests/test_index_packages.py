@@ -28,6 +28,7 @@ from matchcode.utils import load_resources_from_scan
 from matchcode.utils import MatchcodeTestCase
 from packagedb.models import Package
 from packagedb.models import Resource
+from matchcode.tests import FIXTURES_REGEN
 
 
 class IndexPackagesTestCase(MatchcodeTestCase):

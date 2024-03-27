@@ -19,6 +19,7 @@ from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
 from minecode.visitors import dockerhub
+from minecode.tests import FIXTURES_REGEN
 from minecode import mappers
 
 
@@ -32,13 +33,13 @@ class DockerHubVistorTest(DockerHubTest):
     def test_searching_condition(self):
         combinations = dockerhub.get_search_conditions()
         expected_file = self.get_test_loc('dockerhub/conditions_expected')
-        self.check_expected_results(combinations, expected_file, regen=False)
+        self.check_expected_results(combinations, expected_file, regen=FIXTURES_REGEN)
 
     def test_seeds(self):
         seed = dockerhub.DockerHubSeed()
         seeds = list(seed.get_seeds())
         expected_file = self.get_test_loc('dockerhub/seeds_expected')
-        self.check_expected_results(seeds, expected_file, regen=False)
+        self.check_expected_results(seeds, expected_file, regen=FIXTURES_REGEN)
 
     def test_visit_dockerhub_exlpore_page(self):
         uri = 'https://hub.docker.com/explore/?page=1'
@@ -48,7 +49,7 @@ class DockerHubVistorTest(DockerHubTest):
             uris, _, _ = dockerhub.DockHubExplorePageVisitor(uri)
         expected_loc = self.get_test_loc(
             'dockerhub/visitor_explore_page1_expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_dockerhub_project(self):
         uri = 'https://hub.docker.com/_/elixir/'
@@ -60,7 +61,7 @@ class DockerHubVistorTest(DockerHubTest):
         result = json.loads(data, object_pairs_hook=OrderedDict)
         expected_file = self.get_test_loc(
             'dockerhub/visitor_library_elixir_expected')
-        self.check_expected_results(result, expected_file, regen=False)
+        self.check_expected_results(result, expected_file, regen=FIXTURES_REGEN)
 
     def test_visit_dockerhub_search_api(self):
         uri = 'https://index.docker.io/v1/search?q=1a&n=100&page=2'
@@ -69,7 +70,7 @@ class DockerHubVistorTest(DockerHubTest):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = dockerhub.DockHubLibraryRESTJsonVisitor(uri)
         expected_loc = self.get_test_loc('dockerhub/visitor_search_expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
 
 class DockerHubMapperTest(DockerHubTest):
@@ -82,4 +83,4 @@ class DockerHubMapperTest(DockerHubTest):
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'dockerhub/expected_dockerhubmapper.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
