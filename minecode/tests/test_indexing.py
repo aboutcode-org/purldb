@@ -138,6 +138,6 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         self.assertEqual(1, package.count())
 
         result = Resource.objects.filter(package=self.package2)
-        self.assertEqual(1, result.count())        
+        self.assertEqual(1, result.count())
 
-
+        self.assertEqual(result.extra_data, scan_data["files"][0]["extra_data"])
