@@ -29,10 +29,10 @@ class EclipseJsonPackageMapper(Mapper):
         """
         # FIXME: JSON deserialization should be handled eventually by the framework
         metadata = json.loads(resource_uri.data)
-        return build_packages_with_json(metadata, resource_uri.package_url)
+        return build_packages_with_json(metadata, resource_uri.package_url, uri)
 
 
-def build_packages_with_json(metadata, purl=None):
+def build_packages_with_json(metadata, purl=None, uri=None):
     """
     Yield Package built from Eclipse a `metadata` mapping
     The package can contain multiple projects, and each project can contain
@@ -44,6 +44,7 @@ def build_packages_with_json(metadata, purl=None):
     projects = metadata['projects']
     for project, project_metadata in projects.items():
         common_data = dict(
+            datasource_id="eclipse_metadata",
             type='eclipse',
             name=project,
         )
@@ -70,7 +71,10 @@ def build_packages_with_json(metadata, purl=None):
             durl = download_url.get('url')
             if durl:
                 common_data['download_url'] = durl
-                package = scan_models.Package(**common_data)
+                package = scan_models.Package.from_package_data(
+                    package_data=common_data,
+                    datafile_path=uri,
+                )
                 package.set_purl(purl)
                 yield package
 
@@ -84,16 +88,19 @@ class EclipseHTMLProjectMapper(Mapper):
         Yield as many Package as there are download URLs.
         """
         # FIXME: JSON deserialization should be handled eventually by the framework
-        return build_packages(resource_uri.data, resource_uri.package_url)
+        return build_packages(resource_uri.data, resource_uri.package_url, uri)
 
 
-def build_packages(html_text, purl=None):
+def build_packages(html_text, purl=None, uri=None):
     """
     Yield Package objects built from `html_text`and the `purl` package URL
     string.
     """
     page = BeautifulSoup(html_text, 'lxml')
-    common_data = dict(type='eclipse')
+    common_data = dict(
+        datasource_id="eclipse_html",
+        type='eclipse',
+    )
 
     extracted_license_statement = []
     for meta in page.find_all(name='meta'):
@@ -126,7 +133,10 @@ def build_packages(html_text, purl=None):
         if str(a.contents[0]).strip() == 'Downloads':
             download_data = dict(download_url=a['href'],)
             download_data.update(common_data)
-            package = scan_models.Package(**download_data)
+            package = scan_models.Package.from_package_data(
+                package_data=download_data,
+                datafile_path=uri,
+            )
             package.set_purl(purl)
             yield package
 
@@ -151,8 +161,14 @@ def build_packages(html_text, purl=None):
 
                 version = a.contents[0]
                 href = a['href']
-                download_data = dict(version=version, download_url=href)
+                download_data = dict(
+                    version=version,
+                    download_url=href,
+                )
                 download_data.update(common_data)
-                package = scan_models.Package(**download_data)
+                package = scan_models.Package.from_package_data(
+                    package_data=download_data,
+                    datafile_path=uri,
+                )
                 package.set_purl(purl)
                 yield package

@@ -18,7 +18,7 @@ from packageurl import PackageURL
 from scancode_config import scancode_root_dir
 
 
-FIXTURES_REGEN = os.environ.get("PURLDB_TOOLKIT_TEST_FIXTURES_REGEN", False)
+REGEN_TEST_FIXTURES = os.environ.get("PURLDB_TOOLKIT_TEST_FIXTURES_REGEN", False)
 
 
 def run_scan_plain(
@@ -178,7 +178,7 @@ def remove_windows_extra_timeout(scancode_options, timeout=WINDOWS_CI_TIMEOUT):
 def check_json_scan(
     expected_file,
     result_file,
-    regen=FIXTURES_REGEN,
+    regen=REGEN_TEST_FIXTURES,
     remove_file_date=False,
     check_headers=False,
     remove_uuid=True,
@@ -351,7 +351,7 @@ def streamline_scanned_file(scanned_file, remove_file_date=False):
 def check_jsonlines_scan(
     expected_file,
     result_file,
-    regen=FIXTURES_REGEN,
+    regen=REGEN_TEST_FIXTURES,
     remove_file_date=False,
     check_headers=False,
     remove_uuid=True,

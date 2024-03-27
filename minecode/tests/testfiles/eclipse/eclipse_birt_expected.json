@@ -61,7 +61,9 @@
     "api_data_url":null,
     "package_uid":"pkg:eclipse/birt?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_metadata"
+    ],
     "purl":"pkg:eclipse/birt"
   }
 ]

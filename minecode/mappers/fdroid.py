@@ -126,14 +126,15 @@ def build_packages(purl, data):
         src_size = src['size']
         download_url = f'https://f-droid.org/repo/{src_filename.strip("/")}'
 
-        src = PackageData(
+        package_mapping = dict(
             version=version_code,
             download_url=download_url,
             repository_download_url=download_url,
             sha256=src_sha256,
             size=src_size,
-            **shared_data,
         )
+        package_mapping.update(shared_data)
+        src = PackageData.from_data(package_mapping)
         yield src
 
         source_package = PackageURL(
@@ -150,15 +151,16 @@ def build_packages(purl, data):
         size = file['size']
         download_url = f'https://f-droid.org/repo/{filename}'
 
-        yield PackageData(
+        package_mappping = dict(
             version=version_code,
             download_url=download_url,
             repository_download_url=download_url,
             sha256=sha256,
             size=size,
             source_packages=[source_package.to_string()],
-            **shared_data,
         )
+        package_mapping.update(shared_data)
+        yield PackageData.from_data(package_mapping)
 
 
 def build_description(metadata, language='en-US'):

@@ -47,7 +47,7 @@ def get_dependencies(depends):
     if not dependencies:
         return dep_pkgs
     for name in dependencies:
-        dep_pkgs.append(scan_models.DependentPackage(purl=name))
+        dep_pkgs.append(scan_models.DependentPackage(purl=name).to_dict())
     return dep_pkgs
 
 
@@ -60,7 +60,7 @@ def comma_separated(text):
     return [t.strip() for t in text.split(',') if t and t.strip()]
 
 
-def build_packages_from_html(metadata, uri, purl=None):
+def build_packages_from_html(metadata, uri=None, purl=None):
     """
     Yield Package built from Cpan a `metadata` content
     metadata: json metadata content
@@ -69,6 +69,7 @@ def build_packages_from_html(metadata, uri, purl=None):
     """
     # Parse the name from the url, for example: https://cloud.r-project.org/web/packages/ANN2/index.html
     common_data = dict(
+        datasource_id="cran_metadata",
         type='cran',
         name=uri.rpartition('/')[0].rpartition('/')[-1]
     )
@@ -115,7 +116,7 @@ def build_packages_from_html(metadata, uri, purl=None):
                     if not parties:
                         common_data['parties'] = []
                     party = scan_models.Party(type=scan_models.party_person, name=value, role='author')
-                    common_data['parties'].append(party)
+                    common_data['parties'].append(party.to_dict())
                 elif key == 'Maintainer:':
                     maintainer_split = value.split('<')
                     if len(maintainer_split) > 1:
@@ -123,7 +124,7 @@ def build_packages_from_html(metadata, uri, purl=None):
                         if not parties:
                             common_data['parties'] = []
                         party = scan_models.Party(type=scan_models.party_person, name=maintainer_split[0].rstrip(), role='maintainer', email=maintainer_split[1].replace('>', '').replace(' at ', '@'))
-                        common_data['parties'].append(party)
+                        common_data['parties'].append(party.to_dict())
                 elif 'source' in key or 'binaries' in key:
                     if type(value) == list:
                         for url in value:
@@ -140,12 +141,18 @@ def build_packages_from_html(metadata, uri, purl=None):
 
     if download_urls:  # for else statement will have else running always if there is no break statement
         for download_url in download_urls:
-            package = scan_models.Package(**common_data)
+            package = scan_models.Package.from_package_data(
+                package_data=common_data,
+                datafile_path=uri,
+            )
             package.download_url = download_url
             package.set_purl(purl)
             yield package
     else:
         # Yield a package without download_url
-        package = scan_models.Package(**common_data)
+        package = scan_models.Package.from_package_data(
+            package_data=common_data,
+            datafile_path=uri,
+        )
         package.set_purl(purl)
         yield package

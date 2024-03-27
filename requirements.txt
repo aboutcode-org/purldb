@@ -122,7 +122,6 @@ rq==1.16.1
 rq-scheduler==0.13.1
 rubymarshal==1.0.3
 saneyaml==0.6.0
-scancode-toolkit==32.1.0
 scancodeio==34.1.0
 semantic-version==2.8.5
 semver==3.0.2

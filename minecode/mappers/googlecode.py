@@ -29,10 +29,10 @@ class GoogleNewAPIV2ProjectJsonMapper(Mapper):
         # FIXME: JSON deserialization should be handled eventually by the
         # framework
         metadata = json.loads(resource_uri.data)
-        return build_packages_from_projectsjson_v2(metadata, resource_uri.package_url)
+        return build_packages_from_projectsjson_v2(metadata, resource_uri.package_url, uri)
 
 
-def build_packages_from_projectsjson_v2(metadata, purl=None):
+def build_packages_from_projectsjson_v2(metadata, purl=None, uri=None):
     """
     Yield Package built from Googlecode API json `metadata` mapping
     which is a dictionary keyed by project name and values are metadatadata.
@@ -45,6 +45,7 @@ def build_packages_from_projectsjson_v2(metadata, purl=None):
     descriptions = [d for d in (short_desc, long_desc) if d and d.strip()]
     description = '\n'.join(descriptions)
     common_data = dict(
+        datasource_id='googlecode_api_json',
         type='googlecode',
         name=metadata.get('name'),
         description=description
@@ -61,7 +62,10 @@ def build_packages_from_projectsjson_v2(metadata, purl=None):
             keywords.append(label.strip())
     common_data['keywords'] = keywords
 
-    package = scan_models.Package(**common_data)
+    package = scan_models.Package.from_package_data(
+        package_data=common_data,
+        datafile_path=uri,
+    )
     package.set_purl(purl)
     yield package
 
@@ -77,16 +81,17 @@ class GoogleNewAPIV1ProjectJsonMapper(Mapper):
         # FIXME: JSON deserialization should be handled eventually by the
         # framework
         metadata = json.loads(resource_uri.data)
-        return build_packages_from_projectsjson_v1(metadata, resource_uri.package_url)
+        return build_packages_from_projectsjson_v1(metadata, resource_uri.package_url, uri)
 
 
-def build_packages_from_projectsjson_v1(metadata, purl=None):
+def build_packages_from_projectsjson_v1(metadata, purl=None, uri=None):
     """Yield Package from the project.json passed by the google code v1 API
     metadata: json metadata content from API call
     purl: String value of the package url of the ResourceURI object
     """
     if metadata.get('name'):
         common_data = dict(
+            datasource_id="googlecode_json",
             type='googlecode',
             name=metadata.get('name'),
             description=metadata.get('description')
@@ -112,6 +117,9 @@ def build_packages_from_projectsjson_v1(metadata, purl=None):
         # created_time = metadata.get('creationTime')
         # if created_time:
         #    common_data['release_date'] = date.fromtimestamp(created_time)
-        package = scan_models.Package(**common_data)
+        package = scan_models.Package.from_package_data(
+            package_data=common_data,
+            datafile_path=uri,
+        )
         package.set_purl(purl)
         yield package

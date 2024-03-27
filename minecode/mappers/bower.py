@@ -55,7 +55,7 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
     if devdependencies:
         for key, value in devdependencies.items():
             dev_dependencies.append(
-                DependentPackage(purl=key, extracted_requirement=value, scope='devdependency')
+                DependentPackage(purl=key, extracted_requirement=value, scope='devdependency').to_dict()
             )
 
     dependencies = content.get('dependencies')
@@ -63,7 +63,7 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
     if dependencies:
         for key, value in dependencies.items():
             dependencies_build.append(
-                DependentPackage(purl=key, extracted_requirement=value, scope='runtime')
+                DependentPackage(purl=key, extracted_requirement=value, scope='runtime').to_dict()
             )
 
     if name:
@@ -80,6 +80,7 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
             vcs_url=vcs_repo,
             keywords=keywords_content,
             homepage_url=content.get('homepage'),
+            datasource_id='bower_json',
         )
 
         if extracted_license_statement:
@@ -90,7 +91,7 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
             parties = common_data.get('parties')
             if not parties:
                 common_data['parties'] = []
-            common_data['parties'].append(scan_models.Party(name=author_content, role='author',))
+            common_data['parties'].append(scan_models.Party(name=author_content, role='author',).to_dict())
         else:
             parties = common_data.get('parties')
             if not parties:
@@ -99,7 +100,7 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
             for author in author_content:
                 author_split = author.split(':')
                 if len(author_split) > 1:
-                    common_data['parties'].append(scan_models.Party(name=author_split[1].strip(), role='author',))
+                    common_data['parties'].append(scan_models.Party(name=author_split[1].strip(), role='author',).to_dict())
 
         dependencies = []
         if dependencies_build:
@@ -108,7 +109,10 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
             dependencies.extend(dev_dependencies)
         if len(dependencies) > 0:
             common_data['dependencies'] = dependencies
-        package = scan_models.Package(**common_data)
+        package = scan_models.Package.from_package_data(
+            package_data=common_data,
+            datafile_path=uri,
+        )
         package.set_purl(purl)
         yield package
 

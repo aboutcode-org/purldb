@@ -108,7 +108,9 @@
     "api_data_url":null,
     "package_uid":"pkg:sourceforge/openstunts?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "sourceforge_metadata"
+    ],
     "purl":"pkg:sourceforge/openstunts"
   }
 ]

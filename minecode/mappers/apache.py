@@ -55,10 +55,10 @@ class ApacheProjectJsonMapper(Mapper):
         package version.
         """
         metadata = json.loads(resource_uri.data, object_pairs_hook=OrderedDict)
-        return build_packages_from_projects(metadata)
+        return build_packages_from_projects(metadata, uri=uri)
 
 
-def build_packages_from_projects(metadata):
+def build_packages_from_projects(metadata, uri=None):
     """
     Yield Package built from Apache a `metadata` mapping
     which is a dictionary keyed by project name and values are project_metadata.
@@ -70,6 +70,7 @@ def build_packages_from_projects(metadata):
         descriptions = [d for d in (short_desc, long_desc) if d and d.strip()]
         description = '\n'.join(descriptions)
         common_data = dict(
+            datasource_id="apache_json",
             type='apache',
             name=project_name,
             description=description,
@@ -96,7 +97,7 @@ def build_packages_from_projects(metadata):
             parties = common_data.get('parties')
             if not parties:
                 common_data['parties'] = []
-            common_data['parties'].append(party)
+            common_data['parties'].append(party.to_dict())
 
         # license is just a URL in the json file, for example:
         # http://usefulinc.com/doap/licenses/asl20
@@ -127,10 +128,16 @@ def build_packages_from_projects(metadata):
                     rdata['release_date'] = parse_date(release.get('created'))
                 else:
                     logger.warn('Unexpected date format for release date: {}'.format(release.get('created')))
-                package = scan_models.Package(**rdata)
+                package = scan_models.Package.from_package_data(
+                    package_data=rdata,
+                    datafile_path=uri,
+                )
                 yield package
         else:
-            package = scan_models.Package(**common_data)
+            package = scan_models.Package.from_package_data(
+                    package_data=common_data,
+                    datafile_path=uri,
+                )
             yield package
 
 

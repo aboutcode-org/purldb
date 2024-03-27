@@ -21,6 +21,8 @@ from scancode.cli_test_utils import purl_with_fake_uuid
 
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 
+from matchcode.tests import FIXTURES_REGEN
+
 
 ############## TEST UTILITIES ##############
 """
@@ -48,7 +50,7 @@ class BaseTestCase(TestCase):
 
 class CodebaseTester(object):
     def check_codebase(self, codebase, expected_codebase_json_loc,
-                       regen=False, remove_file_date=True):
+                       regen=FIXTURES_REGEN, remove_file_date=True):
         """
         Check the Resources of the `codebase` Codebase objects are the same
         as the data in the `expected_codebase_json_loc` JSON file location,

@@ -45,6 +45,7 @@ def build_packages(resource_uri, purl=None):
     version = file_name.replace('.tar.gz', '').replace('openssl-', '').replace('.tar.gz', '').replace(
         '.asc', '').replace('.md5', '').replace('.sha1', '').replace('.sha256', '')
     common_data = dict(
+        datasource_id="openssl_metadeta",
         type='generic',
         name=file_name,
         description='The OpenSSL Project is a collaborative effort to develop a robust, commercial-grade, fully featured, and Open Source toolkit implementing the Transport Layer Security (TLS) protocols (including SSLv3) as well as a full-strength general purpose cryptographic library.',
@@ -59,6 +60,9 @@ def build_packages(resource_uri, purl=None):
         code_view_url='https://github.com/openssl/openssl',
         bug_tracking_url='https://github.com/openssl/openssl/issues',
     )
-    package = scan_models.Package(**common_data)
+    package = scan_models.Package.from_package_data(
+        package_data=common_data,
+        datafile_path=uri,
+    )
     package.set_purl(purl)
     yield package

@@ -61,7 +61,9 @@
     "api_data_url":null,
     "package_uid":"pkg:googlecode/apache-extras.org/124799961-qian?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "googlecode_json"
+    ],
     "purl":"pkg:googlecode/apache-extras.org/124799961-qian"
   }
 ]

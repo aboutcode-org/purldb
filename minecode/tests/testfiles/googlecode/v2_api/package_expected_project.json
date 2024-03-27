@@ -68,7 +68,9 @@
     "api_data_url":null,
     "package_uid":"pkg:googlecode/hg4j?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "googlecode_api_json"
+    ],
     "purl":"pkg:googlecode/hg4j"
   }
 ]

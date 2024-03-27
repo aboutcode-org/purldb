@@ -69,7 +69,7 @@
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
-    "datasource_id":null,
+    "datasource_id":"cpan_metadata_json",
     "purl":"pkg:cpan/variable@2009110702"
   }
 ]

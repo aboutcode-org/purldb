@@ -22,7 +22,7 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
@@ -60,8 +60,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.8?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.8"
   },
   {
@@ -87,7 +91,7 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
@@ -125,8 +129,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.7?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.7"
   },
   {
@@ -152,7 +160,7 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
@@ -190,8 +198,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.6?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.6"
   },
   {
@@ -217,7 +229,7 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
@@ -255,8 +267,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.5?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.5"
   },
   {
@@ -282,7 +298,7 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
@@ -320,8 +336,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.4?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.4"
   },
   {
@@ -347,7 +367,7 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
@@ -385,8 +405,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.3?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.3"
   },
   {
@@ -412,7 +436,7 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
@@ -450,8 +474,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.2?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.2"
   },
   {
@@ -477,7 +505,7 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
@@ -515,8 +543,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.1"
   },
   {
@@ -542,7 +574,7 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
@@ -580,8 +612,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.0?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.0"
   },
   {
@@ -607,7 +643,7 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
@@ -645,8 +681,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@1.2.10?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@1.2.10"
   }
 ]
