@@ -7,7 +7,7 @@ from matchcode.models import ExactFileIndex
 from minecode.management.commands import get_error_message
 import logging
 import sys
-from minecode.model_utils import merge_or_create_resource
+from minecode.model_utils import update_or_create_resource
 from packagedcode.utils import combine_expressions
 import traceback
 from minecode.models import ScannableURI
@@ -37,7 +37,7 @@ def index_package_files(package, scan_data, reindex=False):
     try:
         logger.info(f'Indexing Resources and fingerprints related to {package.package_url} from scan data')
         for resource in scan_data.get('files', []):
-            r, _, _ = merge_or_create_resource(package, resource)
+            r, _, _ = update_or_create_resource(package, resource)
             path = r.path
             sha1 = r.sha1
             if sha1:

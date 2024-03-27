@@ -7,15 +7,17 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from datetime import timedelta
 import os
 
-from django.utils import timezone
+from django.test import TransactionTestCase
+from packagedcode.maven import _parse
 
 from minecode.model_utils import merge_or_create_package
-from minecode.utils_test import JsonBasedTesting, MiningTestCase
+from minecode.model_utils import update_or_create_resource
+from minecode.utils_test import JsonBasedTesting
+from minecode.utils_test import MiningTestCase
 from packagedb.models import Package
-from packagedcode.maven import _parse
+from packagedb.models import Resource
 
 
 class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
@@ -95,3 +97,59 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
         updated_fields = data['updated_fields']
         expected_updated_fields_loc = self.get_test_loc('model_utils/expected_updated_fields.json')
         self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=False)
+
+
+class UpdateORCreateResourceTest(TransactionTestCase):
+    def setUp(self):
+        self.package = Package.objects.create(download_url="test-pkg.com")
+        self.resource_path = "root/test.c"
+        self.old_extra_data = {
+            "source_symbols": [
+                "Old-symb1",
+                "Old-symb2",
+            ]
+        }
+
+        self.new_extra_data = {
+            "source_symbols": [
+                "New-symb1",
+                "New-symb2",
+            ]
+        }
+
+        self.resource = Resource.objects.create(
+            package=self.package,
+            path=self.resource_path,
+            extra_data=self.old_extra_data,
+        )
+
+    def test_update_or_create_resource_update(self):
+        self.assertEqual(self.old_extra_data, self.resource.extra_data)
+
+        update_or_create_resource(
+            self.package,
+            {"extra_data": self.new_extra_data, "path": self.resource_path},
+        )
+        self.resource.refresh_from_db()
+
+        self.assertEqual(self.new_extra_data, self.resource.extra_data)
+
+    def test_update_or_create_resource_create(self):
+        update_or_create_resource(
+            self.package,
+            {
+                "type": "file",
+                "name": "test_new",
+                "extension": ".c",
+                "is_binary": False,
+                "is_text": False,
+                "is_archive": False,
+                "is_media": False,
+                "is_key_file": False,
+                "extra_data": self.new_extra_data,
+                "path": "root/test_new.c",
+            },
+        )
+
+        resource = Resource.objects.get(path="root/test_new.c")
+        self.assertEqual(self.new_extra_data, resource.extra_data)

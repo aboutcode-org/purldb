@@ -25,6 +25,7 @@ from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
 from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
+from packagedb.models import PackageWatch
 from packagedb.models import Resource
 
 
@@ -1180,6 +1181,104 @@ class PurlValidateApiTestCase(TestCase):
         }
 
         self.assertAlmostEquals(expected, response1.data)
+
+
+class PackageWatchTestCase(TestCase):
+
+    @mock.patch("packagedb.models.PackageWatch.create_new_job")
+    def setUp(self, mock_create_new_job):
+        mock_create_new_job.return_value = None
+
+        self.watch = PackageWatch.objects.create(package_url="pkg:npm/foobar")
+
+    def test_api_package_watch_get(self):
+        response1 = self.client.get("/api/watch/pkg:npm/foobar/")
+        expected = {
+            "url": "http://testserver/api/watch/pkg:npm/foobar/",
+            "package_url": "pkg:npm/foobar",
+            "is_active": True,
+            "depth": 3,
+            "watch_interval": 7,
+            "creation_date": None,
+            "last_watch_date": None,
+            "watch_error": None,
+            "schedule_work_id": None,
+        }
+        result = response1.json()
+        result["creation_date"] = None
+
+        self.assertDictEqual(expected, result)
+
+    @mock.patch("packagedb.models.PackageWatch.create_new_job")
+    def test_api_package_watch_post(self, mock_create_new_job):
+        mock_create_new_job.return_value = None
+        data = {"package_url": "pkg:npm/foobar2"}
+
+        response1 = self.client.post(
+            "/api/watch/", data=data, content_type="application/json"
+        )
+        expected = {
+            "package_url": "pkg:npm/foobar2",
+            "depth": 3,
+            "watch_interval": 7,
+            "is_active": True,
+        }
+        result = response1.json()
+
+        self.assertDictEqual(expected, result)
+
+    @mock.patch("packagedb.models.PackageWatch.create_new_job")
+    def test_api_package_watch_post_with_duplicate_purl(self, mock_create_new_job):
+        mock_create_new_job.return_value = None
+        data = {"package_url": "pkg:npm/foobar"}
+
+        response1 = self.client.post(
+            "/api/watch/", data=data, content_type="application/json"
+        )
+        expected = {
+            "package_url": ["package watch with this package url already exists."]
+        }
+
+        result = response1.json()
+
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response1.status_code)
+        self.assertDictEqual(expected, result)
+
+    @mock.patch("packagedb.models.PackageWatch.create_new_job")
+    def test_api_package_watch_patch(self, mock_create_new_job):
+        mock_create_new_job.return_value = None
+        data = {"depth": 3, "watch_interval": 1, "is_active": False}
+
+        response1 = self.client.patch(
+            "/api/watch/pkg:npm/foobar/", data=data, content_type="application/json"
+        )
+        self.assertEqual(status.HTTP_200_OK, response1.status_code)
+
+        response2 = self.client.get("/api/watch/pkg:npm/foobar/")
+        expected = {
+            "url": "http://testserver/api/watch/pkg:npm/foobar/",
+            "package_url": "pkg:npm/foobar",
+            "is_active": False,
+            "depth": 3,
+            "watch_interval": 1,
+            "creation_date": None,
+            "last_watch_date": None,
+            "watch_error": None,
+            "schedule_work_id": None,
+        }
+        result = response2.json()
+        result["creation_date"] = None
+
+        self.assertDictEqual(expected, result)
+
+    def test_api_package_watch_put_not_allowed(self):
+        data = {"depth": 3, "watch_interval": 1, "is_active": False}
+
+        response1 = self.client.put(
+            "/api/watch/pkg:npm/foobar/", data=data, content_type="application/json"
+        )
+
+        self.assertEqual(status.HTTP_405_METHOD_NOT_ALLOWED, response1.status_code)
 
 
 class ToGolangPurlTestCase(TestCase):

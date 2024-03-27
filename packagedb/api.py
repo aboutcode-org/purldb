@@ -654,11 +654,12 @@ class PackageWatchViewSet(CreateListRetrieveUpdateViewSetMixin):
     serializer_class = PackageWatchAPISerializer
     lookup_field = 'package_url'
     lookup_value_regex = r'pkg:[a-zA-Z0-9_]+\/[a-zA-Z0-9_.-]+(?:\/[a-zA-Z0-9_.-]+)*'
+    http_method_names = ['get', 'post', 'patch']
 
     def get_serializer_class(self):
         if self.action == 'create':
             return PackageWatchCreateSerializer
-        elif self.action == 'update':
+        elif self.request.method == 'PATCH':
             return PackageWatchUpdateSerializer
         return super().get_serializer_class()
 
