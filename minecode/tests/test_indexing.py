@@ -106,7 +106,7 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         self.assertEqual(64, result.count())
         result = ExactFileIndex.objects.filter(package=self.package1)
         self.assertEqual(45, result.count())
-    
+
     def test_indexing_index_package_dwarf(self):
         scan_data_loc = self.get_test_loc('scancodeio/get_scan_data_dwarf.json')
         with open(scan_data_loc, 'rb') as f:
@@ -140,4 +140,6 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         result = Resource.objects.filter(package=self.package2)
         self.assertEqual(1, result.count())
 
-        self.assertEqual(result.first().extra_data, scan_data["files"][0]["extra_data"])
+        extra_data = result.first().extra_data
+        expected_extra_data = scan_data["files"][0]["extra_data"]
+        self.assertEqual(expected_extra_data, extra_data)
