@@ -20,6 +20,7 @@ from minecode import mappers
 from minecode.mappers.cran import get_download_url
 from minecode.models import ResourceURI
 from minecode.visitors import cran
+from minecode.tests import FIXTURES_REGEN
 
 
 class CranVistorTest(JsonBasedTesting):
@@ -32,7 +33,7 @@ class CranVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = cran.CranPackagesVisitors(uri)
         expected_loc = self.get_test_loc('cran/expected_cran_pacakges.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
 
 class CranMapperTest(JsonBasedTesting, DjangoTestCase):
@@ -45,7 +46,7 @@ class CranMapperTest(JsonBasedTesting, DjangoTestCase):
         packages = mappers.cran.build_packages_from_html(metadata, 'https://cloud.r-project.org/web/packages/ANN2/index.html', 'pkg:cran/ANN2')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cran/mapper_ANN2_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=True)
 
     def test_build_packages_from_directory_listing2(self):
         ResourceURI.objects.create(uri='https://cloud.r-project.org/web/packages/abe/index.html')
@@ -54,7 +55,7 @@ class CranMapperTest(JsonBasedTesting, DjangoTestCase):
         packages = mappers.cran.build_packages_from_html(metadata, 'https://cloud.r-project.org/web/packages/abe/index.htm', 'pkg:cran/abe')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cran/mapper_abe_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=True)
 
     def test_replace_downloadurl(self):
         url = "../../../src/contrib/Archive/ANN2"

@@ -55,7 +55,7 @@ def generate_rpm_objects(package_infos, base_url):
     """
     # FIXME: what does package_infos mean? wheer does it come from?
     for infos in package_infos:
-        package = PackageData(
+        package_data = dict(
             # FIXME: need to add id back? this is id is some hash which is local to the repo.
             # id=infos.get('pkgid'),
             type='rpm',
@@ -68,6 +68,7 @@ def generate_rpm_objects(package_infos, base_url):
                 base_url, infos.get('href')),
             extracted_license_statement = infos.get('license', '')
         )
+        package = PackageData.from_data(package_data)
         if infos.get('source_rpm'):
             src_rpm = PackageData(name=infos.get('source_rpm'))
             package.related_packages = [src_rpm]

@@ -86,7 +86,7 @@ def build_rubygem_packages_from_api_data(metadata, name, purl=None):
                 extracted_license_statement.append(lic)
         if extracted_license_statement:
             package['extracted_license_statement'] = extracted_license_statement
-        package = PackageData(**package)
+        package = PackageData.from_data(package)
         package.set_purl(purl)
         yield package
 
@@ -155,7 +155,7 @@ def build_rubygem_packages_from_metadata(metadata, download_url=None, purl=None)
     version1 = content.get('version') or {}
     version = version1.get('version') or None
     package['version'] = version
-    package = PackageData(**package)
+    package = PackageData.from_data(package)
     package.set_purl(purl)
     yield package
 

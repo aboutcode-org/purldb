@@ -50,6 +50,7 @@ def build_packages_from_release_json(metadata, uri=None):
         extracted_license_statement = [l for l in release.get('license', []) if l and l.strip()]
 
         common_data = dict(
+            datasource_id="cpan_release_json",
             type='cpan',
             name=name,
             description=release.get('abstract'),
@@ -58,7 +59,7 @@ def build_packages_from_release_json(metadata, uri=None):
             extracted_license_statement=extracted_license_statement,
             # the date format passing is like:
             # "2014-04-20T21:30:13"
-            release_date=parse_date(release.get('date'))
+            release_date=parse_date(release.get('date')),
         )
 
         # Get the homepage_url, declared_license and vcs_repository/vcs_tool under resources section.
@@ -101,9 +102,12 @@ def build_packages_from_release_json(metadata, uri=None):
                 type=scan_models.party_person,
                 name=release.get('author'), role='author')
             common_data['parties'] = common_data.get('parties', [])
-            common_data['parties'].append(party)
+            common_data['parties'].append(party.to_dict())
 
-        package = scan_models.Package(**common_data)
+        package = scan_models.Package.from_package_data(
+            package_data=common_data,
+            datafile_path=uri,
+        )
         package_url = PackageURL(type='cpan', name=release.get('name'), version=release.get('version'))
         package.set_purl(package_url.to_string())
         yield package
@@ -173,6 +177,7 @@ def build_packages_from_metafile(metadata, uri=None, purl=None):
             # https://spdx.org/spdx-specification-21-web-version#h.49x2ik5
             vcs_repo = vcs_tool + '+' + vcs_repo
         common_data = dict(
+            datasource_id="cpan_metadata_json",
             type='cpan',
             name=name,
             description=content.get('abstract', name),
@@ -201,9 +206,9 @@ def build_packages_from_metafile(metadata, uri=None, purl=None):
                 email=author_email
             )
 
-            parties.append(party)
+            parties.append(party.to_dict())
 
-        package = scan_models.PackageData(**common_data)
+        package = scan_models.PackageData.from_data(package_data=common_data)
         package.set_purl(purl)
         yield package
 
@@ -260,6 +265,7 @@ def build_packages_from_readmefile(metadata, uri=None, purl=None):
             vcs_repo = vcs_tool + '+' + vcs_repo
         copyr = content.get('COPYRIGHT and LICENSE')
         common_data = dict(
+            datasource_id="cpan_readme",
             type='cpan',
             name=name,
             description=content.get('ABSTRACT', name),
@@ -284,7 +290,7 @@ def build_packages_from_readmefile(metadata, uri=None, purl=None):
             keywords_content = [content.get('KEYWORDS')]
         common_data['keywords'] = keywords_content
 
-        package = scan_models.PackageData(**common_data)
+        package = scan_models.PackageData.from_data(package_data=common_data)
         package.set_purl(purl)
         yield package
 

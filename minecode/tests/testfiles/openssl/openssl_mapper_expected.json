@@ -22,7 +22,7 @@
     "code_view_url":"https://github.com/openssl/openssl",
     "vcs_url":"git+https://github.com/openssl/openssl.git",
     "copyright":"Copyright (c) 1998-2018 The OpenSSL Project\nCopyright (c) 1995-1998 Eric A. Young, Tim J. Hudson\nAll rights reserved.",
-    "holder":null,
+    "holder":"The OpenSSL Project\nEric A. Young, Tim J. Hudson",
     "declared_license_expression":"openssl-ssleay",
     "declared_license_expression_spdx":"OpenSSL",
     "license_detections":[
@@ -60,8 +60,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:generic/openssl-1.0.2-stable-SNAP-20180518.tar.gz@1.0.2-stable-SNAP-20180518?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://ftp.openssl.org/snapshot/openssl-1.0.2-stable-SNAP-20180518.tar.gz"
+    ],
+    "datasource_ids":[
+      "openssl_metadeta"
+    ],
     "purl":"pkg:generic/openssl-1.0.2-stable-SNAP-20180518.tar.gz@1.0.2-stable-SNAP-20180518"
   }
 ]

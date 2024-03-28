@@ -18,6 +18,7 @@ from minecode.utils_test import JsonBasedTesting
 
 from minecode import mappers
 from minecode.visitors import packagist
+from minecode.tests import FIXTURES_REGEN
 
 
 class PackagistVistorTest(JsonBasedTesting):
@@ -42,4 +43,4 @@ class TestPackagistMap(JsonBasedTesting):
         packages = mappers.packagist.build_packages_with_json(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('packagist/packaglist_00f100_cakephp-opauth_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

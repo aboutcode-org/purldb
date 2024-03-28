@@ -22,6 +22,7 @@ from minecode.visitors.repodata import combine_list_of_dicts
 from minecode.visitors.repodata import combine_dicts_using_pkgid
 from minecode.visitors.repomd_parser import generate_rpm_objects
 from minecode.visitors.repomd_parser import collect_rpm_packages_from_repomd
+from minecode.tests import FIXTURES_REGEN
 
 # TODO: add redhat repo test!
 
@@ -61,7 +62,7 @@ class TestRepomdParser(JsonBasedTesting):
             _uris, packages, _error = collect_rpm_packages_from_repomd(uri)
 
         expected_loc = self.get_test_loc('repodata_rpms/repomd_parser/cloudera/expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_rpm_packages_from_repomd_centos(self):
         uri2loc = {
@@ -88,7 +89,7 @@ class TestRepomdParser(JsonBasedTesting):
         self.assertEqual(expected_uris, uris)
 
         expected_loc = self.get_test_loc('repodata_rpms/repomd_parser/centos/expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_rpm_packages_from_repomd_cloudera_2(self):
         uri2loc = {
@@ -108,7 +109,7 @@ class TestRepomdParser(JsonBasedTesting):
             _uris, packages, _error = collect_rpm_packages_from_repomd(uri)
 
         expected_loc = self.get_test_loc('repodata_rpms/repomd_parser/cloudera2/expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_rpm_packages_from_repomd_postgresql(self):
         uri2loc = {
@@ -135,7 +136,7 @@ class TestRepomdParser(JsonBasedTesting):
 
         self.assertEqual(expected_uris, uris)
         expected_loc = self.get_test_loc('repodata_rpms/repomd_parser/postgresql/expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_rpm_packages_from_repomd_opensuse(self):
         uri2loc = {
@@ -155,7 +156,7 @@ class TestRepomdParser(JsonBasedTesting):
             _uris, packages, _error = collect_rpm_packages_from_repomd(uri)
 
         expected_loc = self.get_test_loc('repodata_rpms/repomd_parser/opensuse/expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_rpm_packages_from_repomd_pgpool(self):
         uri2loc = {
@@ -175,7 +176,7 @@ class TestRepomdParser(JsonBasedTesting):
             _uris, packages, _error = collect_rpm_packages_from_repomd(uri)
 
         expected_loc = self.get_test_loc('repodata_rpms/repomd_parser/pgpool/expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_combine_dicts_using_pkgid(self):
         all_dicts = [

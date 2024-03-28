@@ -17,6 +17,7 @@ from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
 from minecode.visitors import gitlab
+from minecode.tests import FIXTURES_REGEN
 from minecode import mappers
 
 
@@ -42,7 +43,7 @@ class GitlabVistorTest(JsonBasedTesting):
             uris, _, _ = gitlab.GitlabAPIVisitor(uri)
         expected_loc = self.get_test_loc(
             'gitlab/expected_projects_visitor.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
 
 class GitlabMapperTest(JsonBasedTesting):
@@ -55,4 +56,4 @@ class GitlabMapperTest(JsonBasedTesting):
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'gitlab/microservice-express-mongo_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

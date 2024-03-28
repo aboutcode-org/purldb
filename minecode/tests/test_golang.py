@@ -22,6 +22,7 @@ from minecode.visitors.golang import GodocIndexVisitor
 from minecode.visitors.golang import GodocSearchVisitor
 from minecode.visitors.golang import parse_package_path
 from minecode.mappers.golang import build_golang_package
+from minecode.tests import FIXTURES_REGEN
 
 
 class GoLangVisitorTest(JsonBasedTesting):
@@ -34,7 +35,7 @@ class GoLangVisitorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = GodocIndexVisitor(uri)
         expected_loc = self.get_test_loc('golang/packages_expected_uris.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_GodocSearchVisitor(self):
         uri = 'https://api.godoc.org/search?q=github.com/golang'
@@ -43,7 +44,7 @@ class GoLangVisitorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = GodocSearchVisitor(uri)
         expected_loc = self.get_test_loc('golang/godoc_search_expected_uris.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_GodocSearchVisitor_with_non_github_urls(self):
         uri = 'https://api.godoc.org/search?q=github.com/golang*'
@@ -52,7 +53,7 @@ class GoLangVisitorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = GodocSearchVisitor(uri)
         expected_loc = self.get_test_loc('golang/godoc_search_off_github_expected_uris.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_parse_package_path(self):
         test_path = 'github.com/lambdasoup/go-netlink/log'
@@ -73,7 +74,7 @@ class GoLangMapperTest(JsonBasedTesting):
         package = build_golang_package(package_data, purl)
         package = package.to_dict()
         expected_loc = self.get_test_loc('golang/glog_expected.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_golang_package_bitbucket(self):
         purl = 'pkg:bitbucket/bitbucket.org/zombiezen/yaml?vcs_repository=https://bitbucket.org/zombiezen/yaml'
@@ -82,7 +83,7 @@ class GoLangMapperTest(JsonBasedTesting):
         package = build_golang_package(package_data, purl)
         package = package.to_dict()
         expected_loc = self.get_test_loc('golang/math3_expected.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_golang_package_non_well_known(self):
         purl = 'pkg:golang/winterdrache.de/bindings/sdl'
@@ -91,4 +92,4 @@ class GoLangMapperTest(JsonBasedTesting):
         package = build_golang_package(package_data, purl)
         package = package.to_dict()
         expected_loc = self.get_test_loc('golang/winter_expected.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)

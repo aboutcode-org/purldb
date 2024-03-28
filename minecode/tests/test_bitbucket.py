@@ -25,6 +25,8 @@ from minecode.visitors.bitbucket import BitbucketDetailsVisitorPaginated
 from minecode.visitors.bitbucket import BitbucketIndexVisitor
 from minecode.visitors.bitbucket import BitbucketSingleRepoVisitor
 
+from minecode.tests import FIXTURES_REGEN
+
 
 class BitbucketVisitorTest(JsonBasedTesting):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
@@ -38,10 +40,10 @@ class BitbucketVisitorTest(JsonBasedTesting):
             uris, data, _ = BitbucketIndexVisitor(uri)
 
         expected_uri_loc = self.get_test_loc('bitbucket/visit/index-repositories_expected_uris.json')
-        self.check_expected_uris(uris, expected_uri_loc, regen=False)
+        self.check_expected_uris(uris, expected_uri_loc, regen=FIXTURES_REGEN)
 
         expected_data_loc = self.get_test_loc('bitbucket/visit/index-repositories_expected_data.json')
-        self.check_expected_results(data, expected_data_loc, regen=False)
+        self.check_expected_results(data, expected_data_loc, regen=FIXTURES_REGEN)
 
     def test_BitbucketSingleRepoVisitor(self):
         uri = 'https://api.bitbucket.org/2.0/repositories/bastiand/mercurialeclipse/'
@@ -52,10 +54,10 @@ class BitbucketVisitorTest(JsonBasedTesting):
             uris, data, _ = BitbucketSingleRepoVisitor(uri)
 
         expected_data_loc = self.get_test_loc('bitbucket/visit/singlerepo_expected_data.json')
-        self.check_expected_results(data, expected_data_loc, regen=False)
+        self.check_expected_results(data, expected_data_loc, regen=FIXTURES_REGEN)
 
         expected_uris_loc = self.get_test_loc('bitbucket/visit/singlerepo_expected_uris.json')
-        self.check_expected_uris(uris, expected_uris_loc, regen=False)
+        self.check_expected_uris(uris, expected_uris_loc, regen=FIXTURES_REGEN)
 
     def test_BitbucketDetailsVisitorPaginated(self):
         uri = 'https://api.bitbucket.org/2.0/repositories/bastiand/mercurialeclipse/refs/tags?pagelen=2'
@@ -66,10 +68,10 @@ class BitbucketVisitorTest(JsonBasedTesting):
             uris, data, _ = BitbucketDetailsVisitorPaginated(uri)
 
         expected_data_loc = self.get_test_loc('bitbucket/visit/paginated_tags_expected_data.json')
-        self.check_expected_results(data, expected_data_loc, regen=False)
+        self.check_expected_results(data, expected_data_loc, regen=FIXTURES_REGEN)
 
         expected_uris_loc = self.get_test_loc('bitbucket/visit/paginated_tags_expected_uris.json')
-        self.check_expected_uris(uris, expected_uris_loc, regen=False)
+        self.check_expected_uris(uris, expected_uris_loc, regen=FIXTURES_REGEN)
 
 
 class BitbucketMapperTest(JsonBasedTesting):
@@ -99,7 +101,7 @@ class BitbucketMapperTest(JsonBasedTesting):
         purl = 'pkg:bitbucket/bastiand/mercurialeclipse'
         package = build_bitbucket_repo_package(repo_data, purl)
         expected_loc = self.get_test_loc('bitbucket/map/repository_expected.json')
-        self.check_expected_results(package.to_dict(), expected_loc, regen=False)
+        self.check_expected_results(package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_bitbucket_repo_package_with_issues(self):
         with open(self.get_test_loc('bitbucket/map/tweakmsg.json')) as pck:
@@ -107,7 +109,7 @@ class BitbucketMapperTest(JsonBasedTesting):
         purl = 'pkg:bitbucket/phlogistonjohn/tweakmsg'
         package = build_bitbucket_repo_package(repo_data, purl)
         expected_loc = self.get_test_loc('bitbucket/map/tweakmsg_expected.json')
-        self.check_expected_results(package.to_dict(), expected_loc, regen=False)
+        self.check_expected_results(package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_bitbucket_download_packages_single(self):
         with open(self.get_test_loc('bitbucket/map/downloads.json')) as pck:
@@ -116,7 +118,7 @@ class BitbucketMapperTest(JsonBasedTesting):
         packages = build_bitbucket_download_packages(dnl_data, purl)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('bitbucket/map/downloads_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_bitbucket_download_packages_many(self):
         with open(self.get_test_loc('bitbucket/map/downloads_many.json')) as pck:
@@ -125,4 +127,4 @@ class BitbucketMapperTest(JsonBasedTesting):
         packages = build_bitbucket_download_packages(dnl_data, purl)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('bitbucket/map/downloads_many_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

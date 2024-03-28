@@ -22,7 +22,9 @@ from minecode.models import ScannableURI
 from minecode.route import Router
 from minecode.utils_test import JsonBasedTesting
 from minecode.utils_test import MiningTestCase
+from minecode.tests import FIXTURES_REGEN
 import packagedb
+
 
 
 class RunMapTest(JsonBasedTesting, MiningTestCase):
@@ -369,7 +371,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         expected_updated_fields_loc = self.get_test_loc(
             'run_map/test_map_uri_does_update_with_same_mining_level_expected_updated_fields.json'
         )
-        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=False)
+        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN)
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
@@ -379,7 +381,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         # check that the Package has been updated correctly
         expected_loc = self.get_test_loc('run_map/test_map_uri_does_update_with_same_mining_level-expected.json')
         result = mapped_package.to_dict()
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
         # Since we manually insert a Package without using `map_uri`, a
         # ScannableURI should not have been created. An update to a package
@@ -470,7 +472,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         # check that the Package has been updated correctly
         expected_loc = self.get_test_loc('run_map/test_map_uri_update_only_empties_with_lesser_new_mining_level-expected.json')
         result = mapped[0].to_dict()
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
         # Since we manually insert a Package without using `map_uri`, a
         # ScannableURI should not have been created. An update to a package
@@ -541,7 +543,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         expected_updated_fields_loc = self.get_test_loc(
             'run_map/test_map_uri_replace_with_new_with_higher_new_mining_level_expected_updated_fields.json'
         )
-        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=False)
+        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN)
 
 
         # check that the ResourceURI status has been updated correctly
@@ -552,7 +554,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         # check that the Package has been updated correctly
         expected_loc = self.get_test_loc('run_map/test_map_uri_replace_with_new_with_higher_new_mining_level-expected.json')
         result = mapped[0].to_dict()
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
         # Since we manually insert a Package without using `map_uri`, a
         # ScannableURI should not have been created. An update to a package
@@ -580,7 +582,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         merge_packages(existing_package, new_package_data, replace=False)
         expected_loc = self.get_test_loc('run_map/test_merge_packages_no_replace-expected.json')
         result = existing_package.to_dict()
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_merge_packages_with_replace(self):
         download_url = 'http://testdomap3.com'
@@ -602,7 +604,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         merge_packages(existing_package, new_package_data, replace=True)
         expected_loc = self.get_test_loc('run_map/test_merge_packages_with_replace-expected.json')
         result = existing_package.to_dict()
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_merge_packages_different_sha1(self):
         download_url = 'http://testdomap3.com'

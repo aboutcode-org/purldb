@@ -23,6 +23,7 @@ from minecode.utils_test import JsonBasedTesting
 
 from minecode import mappers
 from minecode.visitors import github
+from minecode.tests import FIXTURES_REGEN
 
 
 class GithubVisitorTest(JsonBasedTesting):
@@ -87,7 +88,7 @@ class GithubVisitorTest(JsonBasedTesting):
         uri = 'https://api.github.com/repos/mojombo/grit'
         _, data, _ = github.GithubSingleRepoVisitor(uri)
         expected_loc = self.get_test_loc('github/mojombo_grit_expected.json')
-        self.check_expected_results(data, expected_loc, regen=False)
+        self.check_expected_results(data, expected_loc, regen=FIXTURES_REGEN)
 
     @patch('github.MainClass.Github.get_repo')
     def test_GithubRepoVisitor_without_tag_without_download(self, mock_get_repo):
@@ -127,7 +128,7 @@ class GithubVisitorTest(JsonBasedTesting):
         uri = 'https://api.github.com/repos/collectiveidea/calendar_builder'
         _, data, _ = github.GithubSingleRepoVisitor(uri)
         expected_loc = self.get_test_loc('github/calendar_builder-expected.json')
-        self.check_expected_results(data, expected_loc, regen=False)
+        self.check_expected_results(data, expected_loc, regen=FIXTURES_REGEN)
 
     def test_GithubReposVisitor(self):
         uri = 'https://api.github.com/repositories?since=0'
@@ -148,7 +149,7 @@ class GithubMapperTest(JsonBasedTesting):
         packages = mappers.github.build_github_packages(metadata, 'https://api.github.com/repos/collectiveidea/calendar_builder')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('github/mapper_calendar_builder_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_github_repo_mapper2(self):
         with open(self.get_test_loc('github/mojombo_grit_from_visitor_4mapper_input.json')) as json_metadata:
@@ -156,4 +157,4 @@ class GithubMapperTest(JsonBasedTesting):
         packages = mappers.github.build_github_packages(metadata, 'https://api.github.com/repos/mojombo/grit')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('github/mojombo_grit_result_mapper_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

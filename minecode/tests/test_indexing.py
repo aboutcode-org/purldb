@@ -16,6 +16,7 @@ from minecode.management import indexing
 from minecode.models import ScannableURI
 from minecode.utils_test import MiningTestCase
 from minecode.utils_test import JsonBasedTesting
+from minecode.tests import FIXTURES_REGEN
 from packagedb.models import Package
 from packagedb.models import Resource
 
@@ -49,7 +50,7 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         self.assertEqual(64, len(result))
         results = [r.to_dict() for r in result]
         expected_resources_loc = self.get_test_loc('scancodeio/get_scan_data_expected_resources.json')
-        self.check_expected_results(results, expected_resources_loc, regen=False)
+        self.check_expected_results(results, expected_resources_loc, regen=FIXTURES_REGEN)
 
     def test_indexing_index_package(self):
         scan_data_loc = self.get_test_loc('scancodeio/get_scan_data.json')

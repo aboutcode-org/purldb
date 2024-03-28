@@ -88,7 +88,7 @@ def packagedata_from_dict(package_data):
     cleaned_package_data = {
         key: value for key, value in package_data.items() if key in supported
     }
-    return PackageData(**cleaned_package_data)
+    return PackageData.from_data(cleaned_package_data)
 
 
 def map_directory_listed_package(package_url):

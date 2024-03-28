@@ -31,6 +31,7 @@ from commoncode.testcase import FileBasedTesting
 from scancode.cli_test_utils import purl_with_fake_uuid
 
 from minecode.utils import get_temp_dir
+from minecode.tests import FIXTURES_REGEN
 
 
 """
@@ -241,7 +242,7 @@ class JsonBasedTesting(FileBasedTesting):
                     continue
                 data.pop(field)
 
-    def check_expected_results(self, results, expected_loc, fields_to_remove=[], regen=False):
+    def check_expected_results(self, results, expected_loc, fields_to_remove=[], regen=FIXTURES_REGEN):
         """
         Check `results` are  equal to expected data stored in a JSON
         file at `expected_loc`.
@@ -264,7 +265,7 @@ class JsonBasedTesting(FileBasedTesting):
         results = json.loads(json.dumps(results))
         self.assertEqual(expected, results)
 
-    def check_expected_uris(self, uris, expected_loc, data_is_json=False, regen=False):
+    def check_expected_uris(self, uris, expected_loc, data_is_json=False, regen=FIXTURES_REGEN):
         """
         Check a `uris` iterable of URIs matches the data stored in the JSON file
         at `expected_loc`.

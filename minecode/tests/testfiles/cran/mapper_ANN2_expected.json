@@ -90,8 +90,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cran/ANN2@1.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://cloud.r-project.org/web/packages/ANN2/index.html"
+    ],
+    "datasource_ids":[
+      "cran_metadata"
+    ],
     "purl":"pkg:cran/ANN2@1.1"
   },
   {
@@ -185,8 +189,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cran/ANN2@1.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://cloud.r-project.org/web/packages/ANN2/index.html"
+    ],
+    "datasource_ids":[
+      "cran_metadata"
+    ],
     "purl":"pkg:cran/ANN2@1.1"
   },
   {
@@ -280,8 +288,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cran/ANN2@1.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://cloud.r-project.org/web/packages/ANN2/index.html"
+    ],
+    "datasource_ids":[
+      "cran_metadata"
+    ],
     "purl":"pkg:cran/ANN2@1.1"
   },
   {
@@ -375,8 +387,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cran/ANN2@1.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://cloud.r-project.org/web/packages/ANN2/index.html"
+    ],
+    "datasource_ids":[
+      "cran_metadata"
+    ],
     "purl":"pkg:cran/ANN2@1.1"
   },
   {
@@ -470,8 +486,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cran/ANN2@1.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://cloud.r-project.org/web/packages/ANN2/index.html"
+    ],
+    "datasource_ids":[
+      "cran_metadata"
+    ],
     "purl":"pkg:cran/ANN2@1.1"
   },
   {
@@ -565,8 +585,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cran/ANN2@1.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://cloud.r-project.org/web/packages/ANN2/index.html"
+    ],
+    "datasource_ids":[
+      "cran_metadata"
+    ],
     "purl":"pkg:cran/ANN2@1.1"
   },
   {
@@ -660,8 +684,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cran/ANN2@1.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://cloud.r-project.org/web/packages/ANN2/index.html"
+    ],
+    "datasource_ids":[
+      "cran_metadata"
+    ],
     "purl":"pkg:cran/ANN2@1.1"
   }
 ]

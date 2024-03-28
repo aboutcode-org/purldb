@@ -1,1 +1,1 @@
-<generator object get_paragraphs_data at 0x7fa91b6597e0>
+[{'archive': 'jessie-backports', 'origin': 'Debian Backports', 'label': 'Debian Backports', 'notautomatic': 'yes', 'butautomaticupgrades': 'yes', 'component': 'main', 'architecture': 'ppc64el'}]

@@ -27,10 +27,10 @@ class PackagistPackageMapper(Mapper):
         Yield as many Package as there are multiple versions.
         """
         metadata = json.loads(resource_uri.data)
-        return build_packages_with_json(metadata, resource_uri.package_url)
+        return build_packages_with_json(metadata, resource_uri.package_url, uri)
 
 
-def build_packages_with_json(metadata, purl=None):
+def build_packages_with_json(metadata, purl=None, uri=None):
     """
     Yield Package built from Packist package json content.
     metadata: json metadata content
@@ -42,10 +42,12 @@ def build_packages_with_json(metadata, purl=None):
         primary_language = package.get('language')
         for version_content in package.get('versions').values():
             common = dict(
+                datasource_id='composer_json',
                 type='composer',
                 name=version_content.get('name'),
                 description=version_content.get('description'),
-                primary_language=primary_language)
+                primary_language=primary_language,
+            )
             common['version'] = version_content.get('version')
             common['keywords'] = version_content.get('keywords')
             common['homepage_url'] = version_content.get('homepage')
@@ -66,7 +68,9 @@ def build_packages_with_json(metadata, purl=None):
                 parties = common.get('parties')
                 if not parties:
                     common['parties'] = []
-                common['parties'].append(scan_models.Party(name=author.get('name'), role='author', url=author.get('homepage'), email=author.get('email')))
+                common['parties'].append(
+                    scan_models.Party(name=author.get('name'), role='author', url=author.get('homepage'), email=author.get('email')).to_dict()
+                )
 
             extracted_license_statement = set([])
             for lic in version_content.get('license'):
@@ -77,11 +81,14 @@ def build_packages_with_json(metadata, purl=None):
             dependencies = []
             for name, version in version_content.get('require', {}).items():
                 dependencies.append(
-                    DependentPackage(purl=name, extracted_requirement=version, scope='runtime')
+                    DependentPackage(purl=name, extracted_requirement=version, scope='runtime').to_dict()
                 )
             if dependencies:
                 common['dependencies'] = dependencies
             # FIXME: We should create a composer package
-            package = scan_models.Package(**common)
+            package = scan_models.Package.from_package_data(
+                package_data=common,
+                datafile_path=uri,
+            )
             package.set_purl(purl)
             yield package

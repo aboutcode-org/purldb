@@ -19,6 +19,7 @@ from minecode.utils_test import JsonBasedTesting
 
 from minecode import mappers
 from minecode.visitors import nuget
+from minecode.tests import FIXTURES_REGEN
 
 
 class NugetVisitorsTest(JsonBasedTesting):
@@ -32,7 +33,7 @@ class NugetVisitorsTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _data, _errors = nuget.NugetQueryVisitor(uri)
         expected_loc = self.get_test_loc('nuget/nuget_query_expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_PackagesPageVisitor(self):
         uri = 'https://api-v2v3search-0.nuget.org/query?skip=0'
@@ -41,7 +42,7 @@ class NugetVisitorsTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _data, _errors = nuget.PackagesPageVisitor(uri)
         expected_loc = self.get_test_loc('nuget/nuget_page_json_expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_NugetAPIJsonVisitor(self):
         uri = 'https://api.nuget.org/v3/registration1/entityframework/6.1.3.json'
@@ -50,7 +51,7 @@ class NugetVisitorsTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _data, _errors = nuget.NugetAPIJsonVisitor(uri)
         expected_loc = self.get_test_loc('nuget/nuget_downlloadvisitor_json_expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_NugetHTMLPageVisitor(self):
         uri = 'https://www.nuget.org/packages?page=1'
@@ -59,7 +60,7 @@ class NugetVisitorsTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = nuget.NugetHTMLPageVisitor(uri)
         expected_loc = self.get_test_loc('nuget/packages.html.expected.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_NugetHTMLPackageVisitor(self):
         uri = 'https://www.nuget.org/packages/log4net'
@@ -81,7 +82,7 @@ class TestNugetMap(JsonBasedTesting):
         packages = mappers.nuget.build_packages_with_json(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('nuget/nuget_mapper_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_regex_1(self):
         regex = re.compile(r'^https://api.nuget.org/packages/.*\.nupkg$')
@@ -102,4 +103,4 @@ class TestNugetMap(JsonBasedTesting):
             packages = mappers.nuget.build_packages_from_html(data, uri,)
             packages = [p.to_dict() for p in packages]
             expected_loc = self.get_test_loc('nuget/nuget_mapper_log4net_expected.json')
-            self.check_expected_results(packages, expected_loc, regen=False)
+            self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

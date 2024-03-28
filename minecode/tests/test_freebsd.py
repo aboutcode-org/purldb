@@ -19,6 +19,7 @@ from minecode.utils_test import JsonBasedTesting
 
 from minecode import mappers
 from minecode.visitors import freebsd
+from minecode.tests import FIXTURES_REGEN
 
 
 class FreeBSDVistorTest(JsonBasedTesting):
@@ -31,7 +32,7 @@ class FreeBSDVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = freebsd.FreeBSDBaseHTMLVisitors(uri)
         expected_loc = self.get_test_loc('freebsd/FreeBSD.org.html_expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_freebsd_subHTML(self):
         uri = 'https://pkg.freebsd.org/FreeBSD:10:i386/release_0/'
@@ -40,7 +41,7 @@ class FreeBSDVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = freebsd.FreeBSDSubHTMLVisitors(uri)
         expected_loc = self.get_test_loc('freebsd/FreeBSD-10-i386_release_0_.html_expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_freebsd_indexvisitor(self):
         uri = 'https://pkg.freebsd.org/FreeBSD:10:i386/release_0/packagesite.txz'
@@ -49,7 +50,7 @@ class FreeBSDVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = freebsd.FreeBSDIndexVisitors(uri)
         expected_loc = self.get_test_loc('freebsd/indexfile_expected')
-        self.check_expected_results(data, expected_loc, regen=False)
+        self.check_expected_results(data, expected_loc, regen=FIXTURES_REGEN)
 
 
 class FreedesktopMapperTest(JsonBasedTesting):
@@ -62,4 +63,4 @@ class FreedesktopMapperTest(JsonBasedTesting):
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'freebsd/indexfile_expected_mapper.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
