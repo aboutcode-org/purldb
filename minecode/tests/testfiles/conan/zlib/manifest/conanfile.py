@@ -1,3 +1,6 @@
+class ConanFile:
+    pass
+
 required_conan_version = ">=1.53.0"
 
 
