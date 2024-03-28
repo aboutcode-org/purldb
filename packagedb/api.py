@@ -57,6 +57,7 @@ from packagedb.serializers import PackageAPISerializer
 from packagedb.serializers import PackageSetAPISerializer
 from packagedb.serializers import PackageWatchAPISerializer
 from packagedb.serializers import PackageWatchCreateSerializer
+from packagedb.serializers import UpdatePackagesSerializer
 from packagedb.serializers import PackageWatchUpdateSerializer
 from packagedb.serializers import PartySerializer
 from packagedb.serializers import PurlValidateResponseSerializer
@@ -434,10 +435,11 @@ class PackageViewSet(PackagePublicViewSet):
         }
         return Response(data)
 
+
 class PackageUpdateSet(viewsets.ViewSet):
 
     """
-    Take a list of `packages` (where each item is a dictionary containing PURL
+    Take a list of `purls` (where each item is a dictionary containing PURL
     and content_type).
 
     If `uuid` is given then all purls will be added to package set if it exists
@@ -455,7 +457,7 @@ class PackageUpdateSet(viewsets.ViewSet):
         }
     """
 
-    def create (self, request):
+    def create(self, request):
 
         res = []
 
@@ -471,10 +473,10 @@ class PackageUpdateSet(viewsets.ViewSet):
         flag = True
 
         if uuid:
-            pack = PackageSet.objects.filter(uuid=uuid)
+            package_set = PackageSet.objects.filter(uuid=uuid)
 
-            if pack:
-                package_set = pack
+            if package_set:
+                package_set = package_set
                 flag = False
 
         else:
@@ -489,10 +491,10 @@ class PackageUpdateSet(viewsets.ViewSet):
             content_type = items.get('content_type')
             lookups = purl_to_lookups(purl)
 
-            packages = Package.objects.filter(**lookups)
+            filtered_packages = Package.objects.filter(**lookups)
             temp['update_status'] = "Already Exists"
 
-            if not packages:
+            if not filtered_packages:
                 flag = False
                 lookups['package_content'] = content_type
                 cr = Package.objects.create(**lookups)
