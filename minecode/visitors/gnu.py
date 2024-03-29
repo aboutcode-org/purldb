@@ -13,7 +13,7 @@ import logging
 from packageurl import PackageURL
 
 from minecode import priority_router
-from minecode.visitors.generic import map_directory_listed_package
+from minecode.visitors.generic import map_fetchcode_supported_package
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -35,7 +35,7 @@ def process_request(purl_str):
     if not package_url.version:
         return
 
-    error_msg = map_directory_listed_package(package_url)
+    error_msg = map_fetchcode_supported_package(package_url)
 
     if error_msg:
         return error_msg
