@@ -91,7 +91,8 @@ class OpenSSLVisitor(HttpVisitor):
             else:
                 yield URI(uri=url, source_uri=self.uri, date=date, size=size)
 
-
+# Indexing OpenSSL PURLs requires a GitHub API token.
+# Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
 @priority_router.route('pkg:openssl/openssl@.*')
 def process_request_dir_listed(purl_str):
     """

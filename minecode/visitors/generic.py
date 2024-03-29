@@ -153,7 +153,8 @@ GENERIC_FETCHCODE_SUPPORTED_PURLS = [
     "pkg:generic/erofs-utils@.*",
 ]
 
-
+# Indexing some generic PURLs requires a GitHub API token.
+# Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
 @priority_router.route(*GENERIC_FETCHCODE_SUPPORTED_PURLS)
 def process_request_fetchcode_generic(purl_str):
     """

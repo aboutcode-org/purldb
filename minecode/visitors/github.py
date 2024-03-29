@@ -183,6 +183,8 @@ def json_serial_date_obj(obj):
         return obj.isoformat()
 
 
+# Indexing GitHub PURLs requires a GitHub API token.
+# Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
 @priority_router.route('pkg:github/.*')
 def process_request_dir_listed(purl_str):
     """
