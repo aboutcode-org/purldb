@@ -726,7 +726,7 @@ class CollectViewSet(viewsets.ViewSet):
         reindexed_packages = []
         requeued_packages = []
 
-        supported_ecosystems = ['maven', 'npm', 'deb']
+        supported_ecosystems = ['maven', 'npm', 'deb', 'generic', 'gnu', 'openssl', 'github', 'conan']
 
         unique_packages, unsupported_packages, unsupported_vers = get_resolved_packages(packages, supported_ecosystems)
 
