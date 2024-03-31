@@ -6,3 +6,8 @@
 # See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
+
+import os 
+
+
+FIXTURES_REGEN = os.environ.get("MINECODE_TEST_FIXTURES_REGEN", False)

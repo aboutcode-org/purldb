@@ -35,7 +35,7 @@
     "homepage_url":"http://opauth.org",
     "download_url":"https://api.github.com/repos/00F100/cakephp-opauth/zipball/c82879adc50afb5a5e95436ef057dfefffe02607",
     "size":null,
-    "sha1":"",
+    "sha1":null,
     "md5":null,
     "sha256":null,
     "sha512":null,
@@ -82,7 +82,9 @@
     "api_data_url":null,
     "package_uid":"pkg:composer/00f100/cakephp-opauth@dev-master?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "composer_json"
+    ],
     "purl":"pkg:composer/00f100/cakephp-opauth@dev-master"
   }
 ]

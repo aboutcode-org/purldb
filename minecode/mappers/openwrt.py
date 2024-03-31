@@ -38,10 +38,10 @@ class OpenwrtIpkMetadataMapper(Mapper):
         version. Yield as many Package as there are download URLs.
         """
         metadata = json.loads(resource_uri.data)
-        return build_packages(metadata, resource_uri.package_url)
+        return build_packages(metadata, resource_uri.package_url, uri)
 
 
-def build_packages(metadata, purl=None):
+def build_packages(metadata, purl=None, uri=None):
     """
     Yield ScannedPackage built from the passing metadata.
     metadata: metadata mapping
@@ -49,6 +49,7 @@ def build_packages(metadata, purl=None):
     """
     common_data = dict(
         type='openwrt',
+        datasource_id='openwrt_metadata',
         name=metadata.get('Package'),
         version=metadata.get('Version'),
         description=metadata.get('Description'),
@@ -80,6 +81,9 @@ def build_packages(metadata, purl=None):
     architecture = metadata.get('Architecture')
     if architecture:
         common_data['keywords'].append(architecture)
-    package = scan_models.Package(**common_data)
+    package = scan_models.Package.from_package_data(
+        package_data=common_data,
+        datafile_path=uri,
+    )
     package.set_purl(purl)
     yield package

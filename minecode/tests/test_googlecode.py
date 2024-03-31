@@ -20,6 +20,7 @@ from minecode.utils_test import JsonBasedTesting
 from minecode import mappers
 from minecode.visitors import URI
 from minecode.visitors import googlecode
+from minecode.tests import FIXTURES_REGEN
 
 
 class GoogleNewAPIVisitorsTest(JsonBasedTesting):
@@ -67,7 +68,7 @@ class GoogleNewAPIVisitorsTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = googlecode.GoogleDownloadsPageJsonVisitor(uri)
         expected_loc = self.get_test_loc('googlecode/v2_api/hg4j_download_expected.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_googleapi_project_json(self):
         uri = 'https://www.googleapis.com/storage/v1/b/google-code-archive/o/v2%2Fapache-extras.org%2F124799961-qian%2Fproject.json?alt=media'
@@ -88,7 +89,7 @@ class GoogleNewAPIMappersTest(JsonBasedTesting):
         packages = mappers.googlecode.build_packages_from_projectsjson_v2(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('googlecode/v2_api/package_expected_project.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_from_v1_projects_json(self):
         with open(self.get_test_loc('googlecode/v2_apache-extras.org_124799961-qian_project.json')) as projectsjson_meta:
@@ -96,4 +97,4 @@ class GoogleNewAPIMappersTest(JsonBasedTesting):
         packages = mappers.googlecode.build_packages_from_projectsjson_v1(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('googlecode/mapper_expected_v2_apache-extras.org_124799961-qian_project.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

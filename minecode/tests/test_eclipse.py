@@ -21,6 +21,7 @@ from minecode.utils_test import JsonBasedTesting
 from minecode import mappers
 from minecode.visitors import URI
 from minecode.visitors import eclipse
+from minecode.tests import FIXTURES_REGEN
 
 
 class EclipseVistorTest(JsonBasedTesting):
@@ -33,7 +34,7 @@ class EclipseVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = eclipse.EclipseProjectVisitors(uri)
         expected_loc = self.get_test_loc('eclipse/eclipse_projects_expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_eclipse_project(self):
         uri = 'https://projects.eclipse.org/projects/modeling.m2t.acceleo'
@@ -51,7 +52,7 @@ class EclipseVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = eclipse.EclipseGitVisitor(uri)
         expected_loc = self.get_test_loc('eclipse/eclipse_git_repos_expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_eclipse_packages(self):
         uri = 'http://www.eclipse.org/downloads/packages/all'
@@ -60,7 +61,7 @@ class EclipseVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = eclipse.EclipsePackagesVisitor(uri)
         expected_loc = self.get_test_loc('eclipse/eclipse_packages_expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_eclipse_package_releases(self):
         uri = 'http://www.eclipse.org/downloads/packages/release/Neon/R'
@@ -69,7 +70,7 @@ class EclipseVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = eclipse.EclipseReleaseVisitor(uri)
         expected_loc = self.get_test_loc('eclipse/Neon_R-expected.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_eclipse_projects_json(self):
         uri = 'http://projects.eclipse.org/json/projects/all'
@@ -85,7 +86,7 @@ class EclipseVistorTest(JsonBasedTesting):
         self.assertEqual(expected_uris, list(uris))
 
         expected_loc = self.get_test_loc('eclipse/birt-expected.json')
-        self.check_expected_results(data, expected_loc, regen=False)
+        self.check_expected_results(data, expected_loc, regen=FIXTURES_REGEN)
 
     @unittest.skip('This requires a live internet connection to test requests timeouts')
     def test_visitor_eclipse_projects_json_download_timeout_error(self):
@@ -107,7 +108,7 @@ class TestEclipseMap(JsonBasedTesting):
         packages = mappers.eclipse.build_packages_with_json(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('eclipse/eclipse_birt_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_eclipse_html_packages(self):
         with open(self.get_test_loc('eclipse/Acceleo_projects.eclipse.org.html')) as eclipse_metadata:
@@ -115,4 +116,4 @@ class TestEclipseMap(JsonBasedTesting):
         packages = mappers.eclipse.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('eclipse/Acceleo_projects_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

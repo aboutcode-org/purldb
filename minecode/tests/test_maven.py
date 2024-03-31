@@ -25,6 +25,7 @@ from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 from minecode.utils_test import model_to_dict
 from minecode.visitors import maven as maven_visitor
+from minecode.tests import FIXTURES_REGEN
 import packagedb
 
 from packagedcode.maven import _parse
@@ -54,7 +55,7 @@ class MavenMiscTest(JsonBasedTesting, DjangoTestCase):
         fields = set(fields)
         result = list(maven_visitor.get_entries(index, fields=fields))
         expected_loc = self.get_test_loc('maven/index/expected_entries.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_entries_increment(self):
         index = self.get_test_loc('maven/index/increment/nexus-maven-repository-index.445.gz')
@@ -62,7 +63,7 @@ class MavenMiscTest(JsonBasedTesting, DjangoTestCase):
         fields = set(fields)
         result = list(maven_visitor.get_entries(index, fields=fields))
         expected_loc = self.get_test_loc('maven/index/increment/expected_entries.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_entries_buggy(self):
         index = self.get_test_loc('maven/index/buggy/nexus-maven-repository-index.gz')
@@ -70,7 +71,7 @@ class MavenMiscTest(JsonBasedTesting, DjangoTestCase):
         fields = set(fields)
         result = list(maven_visitor.get_entries(index, fields=fields))
         expected_loc = self.get_test_loc('maven/index/buggy/expected_entries.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_artifacts_full(self):
         index = self.get_test_loc('maven/index/nexus-maven-repository-index.gz')
@@ -84,7 +85,7 @@ class MavenMiscTest(JsonBasedTesting, DjangoTestCase):
 
         result = [a.to_dict() for a in maven_visitor.get_artifacts(index, fields, include_all=True)]
         expected_loc = self.get_test_loc('maven/index/expected_artifacts.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_artifacts_increment(self):
         index = self.get_test_loc('maven/index/increment/nexus-maven-repository-index.445.gz')
@@ -92,7 +93,7 @@ class MavenMiscTest(JsonBasedTesting, DjangoTestCase):
         fields = set(fields)
         result = [a.to_dict() for a in maven_visitor.get_artifacts(index, fields, include_all=True)]
         expected_loc = self.get_test_loc('maven/index/increment/expected_artifacts.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_artifacts_buggy(self):
         index = self.get_test_loc('maven/index/buggy/nexus-maven-repository-index.gz')
@@ -100,7 +101,7 @@ class MavenMiscTest(JsonBasedTesting, DjangoTestCase):
         fields = set(fields)
         result = [a.to_dict() for a in maven_visitor.get_artifacts(index, fields, include_all=True)]
         expected_loc = self.get_test_loc('maven/index/buggy/expected_artifacts.json')
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_artifacts_defaults(self):
         index = self.get_test_loc('maven/index/nexus-maven-repository-index.gz')
@@ -205,7 +206,7 @@ class MavenVisitorTest(JsonBasedTesting, DjangoTestCase):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _data, _errors = maven_visitor.MavenNexusIndexVisitor(uri)
         expected_loc = self.get_test_loc('maven/index/expected_uris.json')
-        self.check_expected_uris(uris, expected_loc, data_is_json=True, regen=False)
+        self.check_expected_uris(uris, expected_loc, data_is_json=True, regen=FIXTURES_REGEN)
 
     def test_MavenNexusIndexPropertiesVisitor(self):
         uri = 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties'
@@ -214,7 +215,7 @@ class MavenVisitorTest(JsonBasedTesting, DjangoTestCase):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _data, _errors = maven_visitor.MavenNexusPropertiesVisitor(uri)
         expected_loc = self.get_test_loc('maven/index/increment/expected_properties_uris.json')
-        self.check_expected_uris(uris, expected_loc, data_is_json=True, regen=False)
+        self.check_expected_uris(uris, expected_loc, data_is_json=True, regen=FIXTURES_REGEN)
 
     def test_MavenNexusIndexVisitor_uris_increment(self):
         uri = 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.445.gz'
@@ -223,7 +224,7 @@ class MavenVisitorTest(JsonBasedTesting, DjangoTestCase):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _data, _errors = maven_visitor.MavenNexusIndexVisitor(uri)
         expected_loc = self.get_test_loc('maven/index/increment/expected_uris.json')
-        self.check_expected_uris(uris, expected_loc, data_is_json=True, regen=False)
+        self.check_expected_uris(uris, expected_loc, data_is_json=True, regen=FIXTURES_REGEN)
 
     def test_MavenNexusIndexVisitor_uris_buggy(self):
         uri = 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz'
@@ -232,7 +233,7 @@ class MavenVisitorTest(JsonBasedTesting, DjangoTestCase):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _data, _errors = maven_visitor.MavenNexusIndexVisitor(uri)
         expected_loc = self.get_test_loc('maven/index/buggy/expected_uris.json')
-        self.check_expected_uris(uris, expected_loc, data_is_json=True, regen=False)
+        self.check_expected_uris(uris, expected_loc, data_is_json=True, regen=FIXTURES_REGEN)
 
     def test_visit_uri_does_not_fail_on_incorrect_sha1(self):
         uri = 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz'
@@ -252,7 +253,7 @@ class MavenVisitorTest(JsonBasedTesting, DjangoTestCase):
         results = [model_to_dict(rec, fields=['uri', 'sha1']) for rec in visited]
         results = sorted(results, key=itemgetter('uri'))
         expected_loc = self.get_test_loc('maven/index/buggy/expected_visited_uris.json')
-        self.check_expected_results(results, expected_loc, regen=False)
+        self.check_expected_results(results, expected_loc, regen=FIXTURES_REGEN)
         visited.delete()
 
     def test_MavenPOMVisitor_data(self):
@@ -289,7 +290,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
         results = list(model_to_dict(rec, exclude=['id']) for rec in visited)
         results = sorted(results, key=itemgetter('uri'))
         expected_loc = self.get_test_loc('maven/end2end/expected_visited_uris.json')
-        self.check_expected_results(results, expected_loc, regen=False)
+        self.check_expected_results(results, expected_loc, regen=FIXTURES_REGEN)
 
         pre_visited_uris = ResourceURI.objects.filter(
             uri__contains='maven-index://').exclude(id__in=before)
@@ -313,7 +314,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
         package_results = list(pac.to_dict() for pac in newly_mapped)
         expected_loc = self.get_test_loc('maven/end2end/expected_mapped_packages.json')
-        self.check_expected_results(package_results, expected_loc, fields_to_remove=['package_sets'], regen=False)
+        self.check_expected_results(package_results, expected_loc, fields_to_remove=['package_sets'], regen=FIXTURES_REGEN)
 
         # check that the map status has been updated correctly
         visited_then_mapped = ResourceURI.objects.filter(uri__contains='maven-index://')
@@ -341,7 +342,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
         uri_results = sorted(model_to_dict(rec, exclude=['id']) for rec in visited)
         expected_loc = self.get_test_loc('maven/end2end_unicode/expected_visited_commons-jaxrs-1.22.json')
-        self.check_expected_results(uri_results, expected_loc, regen=False)
+        self.check_expected_results(uri_results, expected_loc, regen=FIXTURES_REGEN)
 
         if before_pkg:
             mapped = packagedb.models.Package.objects.exclude(id__in=before_pkg)
@@ -350,7 +351,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
         package_results = sorted(pac.to_dict() for pac in mapped)
         expected_loc = self.get_test_loc('maven/end2end_unicode/expected_mapped_commons-jaxrs-1.22.json')
-        self.check_expected_results(package_results, expected_loc, regen=False)
+        self.check_expected_results(package_results, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_and_map_using_pom_with_unicode_multisteps(self):
         # this test deals with a single POM and the results from
@@ -373,7 +374,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
         package_results = sorted((pac.to_dict() for pac in mapped), key=lambda d: list(d.keys()))
         expected_loc = self.get_test_loc('maven/end2end_multisteps/expected_mapped_commons-jaxrs-1.21-from-index.json')
-        self.check_expected_results(package_results, expected_loc, fields_to_remove=['package_sets'], regen=False)
+        self.check_expected_results(package_results, expected_loc, fields_to_remove=['package_sets'], regen=FIXTURES_REGEN)
 
         # Step 2: map a POM
 
@@ -390,7 +391,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
         package_results = sorted((pac.to_dict() for pac in mapped), key=lambda d: list(d.keys()))
         expected_loc = self.get_test_loc('maven/end2end_multisteps/expected_mapped_commons-jaxrs-1.21-from-pom.json')
-        self.check_expected_results(package_results, expected_loc, fields_to_remove=['package_sets'], regen=False)
+        self.check_expected_results(package_results, expected_loc, fields_to_remove=['package_sets'], regen=FIXTURES_REGEN)
 
     def test_visit_and_map_with_index(self):
         uri = 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties'
@@ -413,7 +414,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
         uri_results = list(model_to_dict(rec, exclude=['id']) for rec in visited)
         expected_loc = self.get_test_loc('maven/end2end_index/expected_visited_index.json')
-        self.check_expected_results(uri_results, expected_loc, regen=False)
+        self.check_expected_results(uri_results, expected_loc, regen=FIXTURES_REGEN)
 
         uri = 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.543.gz'
         # Use a small index file for test cases
@@ -432,7 +433,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
         uri_results = list(model_to_dict(rec, exclude=['id']) for rec in visited)
         expected_loc = self.get_test_loc('maven/end2end_index/expected_visited_increment_index.json')
-        self.check_expected_results(uri_results, expected_loc, regen=False)
+        self.check_expected_results(uri_results, expected_loc, regen=FIXTURES_REGEN)
 
 
 class MavenXmlMetadataVisitorTest(JsonBasedTesting):
@@ -491,7 +492,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
             _, data, _ = maven_visitor.MavenPOMVisitor(uri)
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/mapper/axis-1.4.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_and_build_package_from_pom_commons_pool(self):
         uri = 'https://repo1.maven.org/maven2/commons-pool/commons-pool/1.5.7/commons-pool-1.5.7.pom'
@@ -501,7 +502,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
             _, data, _ = maven_visitor.MavenPOMVisitor(uri)
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/mapper/commons-pool-1.5.7.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_and_build_package_from_pom_struts(self):
         uri = 'https://repo1.maven.org/maven2/struts-menu/struts-menu/2.4.2/struts-menu-2.4.2.pom'
@@ -511,7 +512,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
             _, data, _ = maven_visitor.MavenPOMVisitor(uri)
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/mapper/struts-menu-2.4.2.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_and_build_package_from_pom_mysql(self):
         uri = 'https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.27/mysql-connector-java-5.1.27.pom'
@@ -521,7 +522,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
             _, data, _ = maven_visitor.MavenPOMVisitor(uri)
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/mapper/mysql-connector-java-5.1.27.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_and_build_package_from_pom_xbean(self):
         uri = 'https://repo1.maven.org/maven2/xbean/xbean-jmx/2.0/xbean-jmx-2.0.pom'
@@ -531,7 +532,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
             _, data, _ = maven_visitor.MavenPOMVisitor(uri)
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/mapper/xbean-jmx-2.0.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_and_build_package_from_pom_maven_all(self):
         uri = 'https://repo1.maven.org/maven2/date/yetao/maven/maven-all/1.0-RELEASE/maven-all-1.0-RELEASE.pom'
@@ -541,7 +542,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
             _, data, _ = maven_visitor.MavenPOMVisitor(uri)
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/mapper/maven-all-1.0-RELEASE.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_and_build_package_from_pom_with_unicode(self):
         uri = 'https://repo1.maven.org/maven2/edu/psu/swe/commons/commons-jaxrs/1.21/commons-jaxrs-1.21.pom'
@@ -551,7 +552,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
             _, data, _ = maven_visitor.MavenPOMVisitor(uri)
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/mapper/commons-jaxrs-1.21.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
 
 class MavenMapperGetPackageTest(JsonBasedTesting, DjangoTestCase):
@@ -562,91 +563,91 @@ class MavenMapperGetPackageTest(JsonBasedTesting, DjangoTestCase):
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/parse/jds-3.0.1.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_2(self):
         test_loc = self.get_test_loc('maven/parsing/parse/springmvc-rest-docs-maven-plugin-1.0-RC1.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/parse/springmvc-rest-docs-maven-plugin-1.0-RC1.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_3(self):
         test_loc = self.get_test_loc('maven/parsing/parse/jds-2.17.0718b.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/parse/jds-2.17.0718b.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_4(self):
         test_loc = self.get_test_loc('maven/parsing/parse/maven-javanet-plugin-1.7.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/parse/maven-javanet-plugin-1.7.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_5(self):
         test_loc = self.get_test_loc('maven/parsing/loop/coreplugin-1.0.0.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/loop/coreplugin-1.0.0.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_6(self):
         test_loc = self.get_test_loc('maven/parsing/loop/argus-webservices-2.7.0.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/loop/argus-webservices-2.7.0.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_7(self):
         test_loc = self.get_test_loc('maven/parsing/loop/pkg-2.0.13.1005.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/loop/pkg-2.0.13.1005.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_8(self):
         test_loc = self.get_test_loc('maven/parsing/loop/ojcms-beans-0.1-beta.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/loop/ojcms-beans-0.1-beta.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_9(self):
         test_loc = self.get_test_loc('maven/parsing/loop/jacuzzi-annotations-0.2.1.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/loop/jacuzzi-annotations-0.2.1.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_10(self):
         test_loc = self.get_test_loc('maven/parsing/loop/argus-webservices-2.8.0.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/loop/argus-webservices-2.8.0.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_11(self):
         test_loc = self.get_test_loc('maven/parsing/loop/jacuzzi-database-0.2.1.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/loop/jacuzzi-database-0.2.1.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_12(self):
         test_loc = self.get_test_loc('maven/parsing/empty/common-object-1.0.2.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/empty/common-object-1.0.2.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_13(self):
         test_loc = self.get_test_loc('maven/parsing/empty/osgl-http-1.1.2.pom')
         data = open(test_loc).read()
         package = maven_mapper.get_package(data).to_dict()
         expected_loc = self.get_test_loc('maven/parsing/empty/osgl-http-1.1.2.pom.package.json')
-        self.check_expected_results(package, expected_loc, regen=False)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_regex_maven_pom_mapper_1(self):
         regex = re.compile(r'^https?://repo1.maven.org/maven2/.*\.pom$')
@@ -661,7 +662,7 @@ class MavenMapperGetPackageTest(JsonBasedTesting, DjangoTestCase):
             uris, _data, _errors = maven_visitor.MavenNexusIndexVisitor(uri)
         uris = [u for i, u in enumerate(uris) if i % 500 == 0]
         expected_loc = self.get_test_loc('maven/index/increment2/expected_uris.json')
-        self.check_expected_uris(uris, expected_loc, data_is_json=True, regen=False)
+        self.check_expected_uris(uris, expected_loc, data_is_json=True, regen=FIXTURES_REGEN)
 
     def test_MavenNexusIndexVisitor_then_get_mini_package_from_index_data(self):
         uri = 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.457.gz'
@@ -676,7 +677,7 @@ class MavenMapperGetPackageTest(JsonBasedTesting, DjangoTestCase):
                 minip = maven_mapper.get_mini_package(u.data, u.uri, u.package_url)
                 results.append(minip and minip.to_dict() or minip)
         expected_loc = self.get_test_loc('maven/index/increment2/expected_mini_package.json')
-        self.check_expected_results(results, expected_loc, regen=False)
+        self.check_expected_results(results, expected_loc, regen=FIXTURES_REGEN)
 
     def test_get_package_from_pom_does_create_a_correct_qualifier(self):
         'https://repo1.maven.org/maven2/org/hspconsortium/reference/hspc-reference-auth-server-webapp/1.9.1/hspc-reference-auth-server-webapp-1.9.1.pom'
@@ -688,8 +689,8 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     def setUp(self):
         super(MavenPriorityQueueTests, self).setUp()
 
-        expected_pom_loc = self.get_test_loc('maven/pom/classworlds-1.1.pom')
-        with open(expected_pom_loc) as f:
+        self.expected_pom_loc = self.get_test_loc('maven/pom/classworlds-1.1.pom')
+        with open(self.expected_pom_loc) as f:
             self.expected_pom_contents = f.read()
 
         self.scan_package = _parse(
@@ -699,7 +700,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             text=self.expected_pom_contents,
         )
 
-    def test_get_pom_text(self, regen=False):
+    def test_get_pom_text(self, regen=FIXTURES_REGEN):
         pom_contents = maven_visitor.get_pom_text(
             namespace=self.scan_package.namespace,
             name=self.scan_package.name,
@@ -760,7 +761,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             (purl_sources_str, sources_download_url), purls
         )
 
-    def test_fetch_parent(self, regen=False):
+    def test_fetch_parent(self, regen=FIXTURES_REGEN):
         pom_loc = self.get_test_loc('maven/pom/ant-antlr-1.10.1.pom')
         with open(pom_loc) as f:
             pom_text = f.read()
@@ -791,7 +792,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             expected_ancestor_pom_texts.append(expected_pom_text)
         self.assertEqual(expected_ancestor_pom_texts, ancestor_pom_texts)
 
-    def test_merge_parent(self, regen=False):
+    def test_merge_parent(self, regen=FIXTURES_REGEN):
         pom_loc = self.get_test_loc('maven/pom/ant-antlr-1.10.1.pom')
         with open(pom_loc) as f:
             pom_text = f.read()
@@ -817,7 +818,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         expected_after_loc = self.get_test_loc('maven/pom/ant-antlr-1.10.1-package_after.json')
         self.check_expected_results(package.to_dict(), expected_after_loc, regen=regen)
 
-    def test_merge_ancestors(self, regen=False):
+    def test_merge_ancestors(self, regen=FIXTURES_REGEN):
         pom_loc = self.get_test_loc('maven/pom/pulsar-client-1x-2.5.1.pom')
         with open(pom_loc) as f:
             pom_text = f.read()
@@ -845,7 +846,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         self.check_expected_results(package.to_dict(), expected_after_loc, regen=regen)
 
     @mock.patch("minecode.visitors.maven.get_pom_text")
-    def test_get_merged_ancestor_package_from_maven_package(self, get_pom_text_mock, regen=False):
+    def test_get_merged_ancestor_package_from_maven_package(self, get_pom_text_mock, regen=FIXTURES_REGEN):
         get_pom_text_mock.return_value = ""
         ancestor_pom_texts = []
         with patch("minecode.visitors.maven.get_ancestry") as mock_get_ancestry:

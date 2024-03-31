@@ -18,6 +18,7 @@ from minecode.utils_test import JsonBasedTesting
 from minecode.mappers import fdroid as fdroid_mapper
 from minecode.visitors import fdroid as fdroid_visitor
 from minecode.visitors import URI
+from minecode.tests import FIXTURES_REGEN
 
 
 class TestFdroidVisitor(JsonBasedTesting):
@@ -33,7 +34,7 @@ class TestFdroidVisitor(JsonBasedTesting):
         # this is a non-persistent visitor, lets make sure we dont return any data
         assert not data
         expected_loc = self.get_test_loc('fdroid/index-v2-expected-visit.json',)
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
 
 class TestFdroidMapper(JsonBasedTesting):
@@ -52,4 +53,4 @@ class TestFdroidMapper(JsonBasedTesting):
 
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('fdroid/index-v2-visited-expected-mapped.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

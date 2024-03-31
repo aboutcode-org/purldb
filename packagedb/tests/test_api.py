@@ -22,6 +22,7 @@ from univers.versions import MavenVersion
 from minecode.models import PriorityResourceURI
 from minecode.models import ScannableURI
 from minecode.utils_test import JsonBasedTesting
+from minecode.tests import FIXTURES_REGEN
 from packagedb.models import Package
 from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
@@ -208,7 +209,7 @@ class ResourceAPITestCase(JsonBasedTesting, TestCase):
         response = self.client.post('/api/resources/filter_by_checksums/', data=data)
         self.assertEqual(2, response.data['count'])
         expected = self.get_test_loc('api/resource-filter_by_checksums-expected.json')
-        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "package"], regen=False)
+        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "package"], regen=FIXTURES_REGEN)
 
 class PackageApiTestCase(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
@@ -475,12 +476,12 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         response = self.client.post('/api/packages/filter_by_checksums/', data=data)
         self.assertEqual(5, response.data['count'])
         expected = self.get_test_loc('api/package-filter_by_checksums-expected.json')
-        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=False)
+        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=FIXTURES_REGEN)
         data["enhance_package_data"] = True
         enhanced_response = self.client.post('/api/packages/filter_by_checksums/', data=data)
         self.assertEqual(5, len(enhanced_response.data['results']))
         expected = self.get_test_loc('api/package-filter_by_checksums-enhanced-package-data-expected.json')
-        self.check_expected_results(enhanced_response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=False)
+        self.check_expected_results(enhanced_response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=FIXTURES_REGEN)
 
 
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
@@ -721,7 +722,7 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         response = self.client.get(reverse('api:package-get-enhanced-package-data', args=[self.package3.uuid]))
         result = response.data
         expected = self.get_test_loc('api/enhanced_package.json')
-        self.check_expected_results(result, expected, fields_to_remove=['package_sets'], regen=False)
+        self.check_expected_results(result, expected, fields_to_remove=['package_sets'], regen=FIXTURES_REGEN)
 
 class CollectApiTestCase(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
@@ -807,7 +808,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             'package_sets',
         ]
 
-        self.check_expected_results(result, expected, fields_to_remove=fields_to_remove, regen=False)
+        self.check_expected_results(result, expected, fields_to_remove=fields_to_remove, regen=FIXTURES_REGEN)
 
     def test_package_api_index_packages_endpoint(self):
         priority_resource_uris_count = PriorityResourceURI.objects.all().count()

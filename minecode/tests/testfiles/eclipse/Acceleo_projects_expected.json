@@ -61,7 +61,9 @@
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo"
   },
   {
@@ -126,7 +128,9 @@
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.6.4?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.6.4"
   },
   {
@@ -191,7 +195,9 @@
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.6.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.6.0"
   },
   {
@@ -256,7 +262,9 @@
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.5.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.5.0"
   },
   {
@@ -321,7 +329,9 @@
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.4.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.4.0"
   },
   {
@@ -386,7 +396,9 @@
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.3.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.3.0"
   },
   {
@@ -451,7 +463,9 @@
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.2.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.2.0"
   },
   {
@@ -516,7 +530,9 @@
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.1.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.1.0"
   },
   {
@@ -581,7 +597,9 @@
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.0.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.0.0"
   },
   {
@@ -646,7 +664,9 @@
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@0.8.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@0.8.0"
   }
 ]

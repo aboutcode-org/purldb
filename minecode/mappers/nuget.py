@@ -57,7 +57,7 @@ def build_packages_with_json(metadata, purl=None):
             long_desc = None
         descriptions = [d for d in (short_desc, long_desc) if d and d.strip()]
         description = '\n'.join(descriptions)
-        package = scan_models.PackageData(
+        package_mapping = dict(
             type='nuget',
             name=metadata['id'],
             version=metadata['version'],
@@ -68,6 +68,7 @@ def build_packages_with_json(metadata, purl=None):
             parties=authors,
             keywords=keywords,
         )
+        package = scan_models.PackageData.from_data(package_data=package_mapping)
         package.set_purl(purl)
         yield package
 
@@ -158,7 +159,8 @@ def build_packages_from_html(metadata, uri, purl=None):
                         continue
                     version = version.strip()
                     download_url = download_url_format.format(name=name, version=version)
-                    package = scan_models.Package(
+                    package_mapping = dict(
+                        datasource_id="nuget_metadata_json",
                         name=name,
                         type='nuget',
                         version=version,
@@ -167,6 +169,10 @@ def build_packages_from_html(metadata, uri, purl=None):
                         download_url=download_url,
                         extracted_license_statement=license_value,
                         copyright=copyright_value
+                    )
+                    package = scan_models.Package.from_package_data(
+                        package_data=package_mapping,
+                        datafile_path=uri,
                     )
                     package.set_purl(purl)
                     yield package

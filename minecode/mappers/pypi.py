@@ -108,13 +108,13 @@ def build_packages(metadata, purl=None):
     # FIXME: do not prioritize the download_url outside Pypi over actual exact Pypi donwload URL
     download_url = info.get('download_url')
     if download_url and download_url != 'UNKNOWN':
-        download_data = dict(download_url=download_url)
-        download_data.update(common_data)
-        package = scan_models.PackageData(
+        download_data = dict(
             datasource_id='pypi_sdist_pkginfo',
             type='pypi',
-            **download_data
+            download_url=download_url,
         )
+        download_data.update(common_data)
+        package = scan_models.PackageData.from_data(download_data)
         # TODO: Consider creating a DatafileHandler for PyPI API metadata
         package.datasource_id = 'pypi_api_metadata'
         package.set_purl(purl)
@@ -130,15 +130,13 @@ def build_packages(metadata, purl=None):
             download_url=url,
             size=download.get('size'),
             release_date=parse_date(download.get('upload_time')),
+            datasource_id='pypi_sdist_pkginfo',
+            type='pypi',
         )
         # TODO: Check for other checksums
         download_data['md5'] = download.get('md5_digest')
         download_data.update(common_data)
-        package = scan_models.PackageData(
-            datasource_id='pypi_sdist_pkginfo',
-            type='pypi',
-            **download_data
-        )
+        package = scan_models.PackageData.from_data(download_data)
         package.datasource_id = 'pypi_api_metadata'
         package.set_purl(purl)
         yield package

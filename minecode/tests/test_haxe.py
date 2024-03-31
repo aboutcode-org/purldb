@@ -18,6 +18,7 @@ from minecode.utils_test import JsonBasedTesting
 
 from minecode import mappers
 from minecode.visitors import haxe
+from minecode.tests import FIXTURES_REGEN
 
 
 class HaxeVistorTest(JsonBasedTesting):
@@ -30,7 +31,7 @@ class HaxeVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = haxe.HaxeProjectsVisitor(uri)
         expected_loc = self.get_test_loc('haxe/all_haxelibs.html-expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_haxe_versions(self):
         uri = 'https://lib.haxe.org/p/openfl/versions'
@@ -39,7 +40,7 @@ class HaxeVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = haxe.HaxeVersionsVisitor(uri)
         expected_loc = self.get_test_loc('haxe/all_versions_openfl.html-expected')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_haxe_package_json(self):
         uri = 'https://lib.haxe.org/p/openfl/8.5.1/raw-files/openfl/package.json'
@@ -48,7 +49,7 @@ class HaxeVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = haxe.HaxePackageJsonVisitor(uri)
         expected_loc = self.get_test_loc('haxe/openfl-8.5.1-package.json-expected')
-        self.check_expected_results(data, expected_loc, regen=False)
+        self.check_expected_results(data, expected_loc, regen=FIXTURES_REGEN)
 
 
 class HaxeMappersTest(JsonBasedTesting):
@@ -60,4 +61,4 @@ class HaxeMappersTest(JsonBasedTesting):
         packages = mappers.haxe.build_packages_with_json(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('haxe/project_package.json-expected')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

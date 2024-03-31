@@ -21,6 +21,7 @@ from minecode.utils_test import JsonBasedTesting
 from minecode.mappers.openssl import build_packages
 from minecode.models import ResourceURI
 from minecode.visitors import openssl
+from minecode.tests import FIXTURES_REGEN
 
 
 class OpenSSLVisitorsTest(JsonBasedTesting):
@@ -35,7 +36,7 @@ class OpenSSLVisitorsTest(JsonBasedTesting):
             uris, _data, _errors = openssl.OpenSSLVisitor(uri)
         expected_loc = self.get_test_loc(
             'openssl/expected_uri_openssl_index.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_OpenSSLVisitor_sub_folder(self):
         uri = 'https://ftp.openssl.org/source/'
@@ -45,7 +46,7 @@ class OpenSSLVisitorsTest(JsonBasedTesting):
             uris, _data, _errors = openssl.OpenSSLVisitor(uri)
         expected_loc = self.get_test_loc(
             'openssl/expected_uri_openssl_sourceindex.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
 
 class OpenSSLTest(JsonBasedTesting, DjangoTestCase):
@@ -63,4 +64,4 @@ class OpenSSLTest(JsonBasedTesting, DjangoTestCase):
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'openssl/openssl_mapper_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

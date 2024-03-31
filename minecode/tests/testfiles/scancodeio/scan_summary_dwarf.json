@@ -1,0 +1,25 @@
+{
+    "declared_license_expression": null,
+    "license_clarity_score": {
+      "score": 0,
+      "declared_license": false,
+      "identification_precision": false,
+      "has_license_text": false,
+      "declared_copyrights": false,
+      "conflicting_license_categories": false,
+      "ambiguous_compound_licensing": true
+    },
+    "declared_holder": "",
+    "primary_language": null,
+    "other_license_expressions": [],
+    "other_holders": [
+      {
+        "value": null,
+        "count": 1
+      }
+    ],
+    "other_languages": [],
+    "license_matches": {},
+    "key_files": [],
+    "key_files_packages": []
+}

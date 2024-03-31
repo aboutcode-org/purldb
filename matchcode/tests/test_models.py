@@ -25,6 +25,7 @@ from matchcode.utils import index_packages_sha1
 from matchcode.utils import index_package_files_sha1
 from matchcode.utils import load_resources_from_scan
 from matchcode.utils import MatchcodeTestCase
+from matchcode.tests import FIXTURES_REGEN
 
 
 EXACT_PACKAGE_ARCHIVE_MATCH = 0
@@ -127,7 +128,7 @@ class ExactFileIndexModelTestCase(BaseModelTest):
             resource.save(codebase)
 
         expected = self.get_test_loc('models/exact-file-matching-standalone-test-results.json')
-        self.check_codebase(codebase, expected, regen=False)
+        self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
 
 
 class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
@@ -184,7 +185,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
                 resource.save(codebase)
 
         expected = self.get_test_loc('models/directory-matching/async-0.2.9-i-expected-structure.json')
-        self.check_codebase(codebase, expected, regen=False)
+        self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
 
     def test_ApproximateDirectoryContentIndex_match_subdir(self):
         scan_location = self.get_test_loc('models/directory-matching/async-0.2.9-i.json')
@@ -207,7 +208,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
                 resource.save(codebase)
 
         expected = self.get_test_loc('models/directory-matching/async-0.2.9-i-expected-content.json')
-        self.check_codebase(codebase, expected, regen=False)
+        self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
 
 
 class MatchcodeModelUtilsTestCase(MatchcodeTestCase):

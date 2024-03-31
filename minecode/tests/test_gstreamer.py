@@ -17,6 +17,7 @@ from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
 from minecode.visitors import gstreamer
+from minecode.tests import FIXTURES_REGEN
 from minecode import mappers
 
 
@@ -54,4 +55,4 @@ class GstreamerMappersTest(JsonBasedTesting):
         packages = mappers.gstreamer.build_package_from_url('https://gstreamer.freedesktop.org/src/gst-openmax/pre/gst-openmax-0.10.0.2.tar.bz2')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('gstreamer/mapper_build_from_url-expected')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

@@ -27,6 +27,7 @@ from minecode import visitors
 from minecode.visitors import URI
 from minecode.models import ResourceURI
 from minecode.route import Router
+from minecode.tests import FIXTURES_REGEN
 from minecode.management.commands.run_map import map_uri
 
 
@@ -148,7 +149,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-lxml-3.2.0.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_boolean(self):
         with open(self.get_test_loc('pypi/boolean.py-2.0.dev3.json')) as pypi_meta:
@@ -156,7 +157,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-boolean.py-2.0.dev3.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_cage13(self):
         with open(self.get_test_loc('pypi/cage_1.1.3.json')) as pypi_meta:
@@ -164,7 +165,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-CAGE-1.1.3.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_cage12(self):
         with open(self.get_test_loc('pypi/cage_1.1.2.json')) as pypi_meta:
@@ -172,7 +173,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-CAGE-1.1.2.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_PypiPackageMapper_cage(self):
         data = open(self.get_test_loc('pypi/cage_1.1.2.json')).read()
@@ -181,7 +182,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.PypiPackageMapper(uri, resuri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-CAGE-1.1.2.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_PypiPackageMapper_lxml(self):
         data = open(self.get_test_loc('pypi/lxml-3.2.0.json')).read()
@@ -190,7 +191,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.PypiPackageMapper(uri, resuri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-lxml-3.2.0.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_pypi_map(self):
         # setup: add a mappable URI
@@ -202,7 +203,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.PypiPackageMapper(resuri.uri, resuri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/map/expected-3to2-1.1.1.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
         # build a mock router
         router = Router()

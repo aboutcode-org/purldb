@@ -18,6 +18,7 @@ from minecode.utils_test import JsonBasedTesting
 
 from minecode import mappers
 from minecode.visitors import openwrt
+from minecode.tests import FIXTURES_REGEN
 
 
 class OpenWRTVistorTest(JsonBasedTesting):
@@ -62,7 +63,7 @@ class OpenWRTVistorTest(JsonBasedTesting):
 
         result = json.loads(data)
         json_file = self.get_test_loc('openwrt/6to4_12-2_all_ipk_expected')
-        self.check_expected_results(result, json_file, regen=False)
+        self.check_expected_results(result, json_file, regen=FIXTURES_REGEN)
 
     @expectedFailure
     def test_visitor_openwrt_ipk2(self):

@@ -38,7 +38,7 @@
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
-    "datasource_id":null,
+    "datasource_id":"cpan_readme",
     "purl":"pkg:cpan/Algorithms::Graphs::TransitiveClosure%20-%20Calculate%20the%20transitive%0Aclosure."
   }
 ]

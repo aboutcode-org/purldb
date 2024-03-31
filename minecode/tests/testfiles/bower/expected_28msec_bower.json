@@ -45,8 +45,12 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:bower/28.io-angularjs@0.1.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://raw.githubusercontent.com/28msec/28.io-angularjs/master/bower.json"
+    ],
+    "datasource_ids":[
+      "bower_json"
+    ],
     "purl":"pkg:bower/28.io-angularjs@0.1.1"
   }
 ]

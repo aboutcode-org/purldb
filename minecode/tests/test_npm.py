@@ -26,6 +26,7 @@ from minecode.models import ResourceURI
 from minecode.utils_test import JsonBasedTesting
 from minecode.utils_test import mocked_requests_get
 from minecode.visitors import npm
+from minecode.tests import FIXTURES_REGEN
 
 
 class TestNPMVisit(JsonBasedTesting):
@@ -41,7 +42,7 @@ class TestNPMVisit(JsonBasedTesting):
         # this is a non-persistent visitor, lets make sure we dont return any data
         assert not data
         expected_loc = self.get_test_loc('npm/expected_doclimit_visitor.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_NpmRegistryVisitor_OverLimit(self):
         uri = 'https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=2300000'
@@ -50,7 +51,7 @@ class TestNPMVisit(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _data, _errors = npm.NpmRegistryVisitor(uri)
         expected_loc = self.get_test_loc('npm/expected_over_limit.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_NpmRegistryVisitor_1000records(self):
         uri = 'https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=77777'
@@ -59,7 +60,7 @@ class TestNPMVisit(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _data, _errors = npm.NpmRegistryVisitor(uri)
         expected_loc = self.get_test_loc('npm/expected_1000_records.json')
-        self.check_expected_uris(uris, expected_loc, regen=False)
+        self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
 
 class TestNPMMapper(JsonBasedTesting):
@@ -71,7 +72,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/0flux_npm_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package2(self):
         with open(self.get_test_loc('npm/2112.json')) as npm_metadata:
@@ -79,7 +80,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/npm_2112_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package3(self):
         with open(self.get_test_loc('npm/microdata.json')) as npm_metadata:
@@ -87,7 +88,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/microdata-node_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_with_visitor_data(self):
         uri = 'https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=77777'
@@ -102,14 +103,14 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/29_record_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
         # Randomly pick a record from 0-1000
         metadata = uris_list[554].data
         packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/554_record_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_with_ticket_439(self):
         uri = 'https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=10&since=7333426'
@@ -125,7 +126,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/expected_ticket_439.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_verify_ticket_440(self):
         uri = 'https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=10&since=7632607'
@@ -141,7 +142,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/expected_ticket_440.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_npm_mapper(self):
         test_uri = 'https://registry.npmjs.org/angular-compare-validator'
@@ -155,7 +156,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.NpmPackageMapper(test_uri, test_res_uri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/mapper/index.expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_for_jsonp_filter(self):
         with open(self.get_test_loc('npm/jsonp-filter.json')) as npm_metadata:
@@ -163,7 +164,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/jsonp-filter-expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_regex_npm_mapper(self):
         regex = re.compile(r'^https://registry.npmjs.org/[^\/]+$')
@@ -175,23 +176,23 @@ class NpmPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
 
     def setUp(self):
         super(NpmPriorityQueueTests, self).setUp()
-        expected_json_loc = self.get_test_loc('npm/lodash_package-expected.json')
-        with open(expected_json_loc) as f:
+        self.expected_json_loc = self.get_test_loc('npm/lodash_package-expected.json')
+        with open(self.expected_json_loc) as f:
             self.expected_json_contents = json.load(f)
 
         self.scan_package = NpmPackageJsonHandler._parse(
             json_data=self.expected_json_contents,
         )
 
-    def test_get_package_json(self, regen=False):
+    def test_get_package_json(self, regen=FIXTURES_REGEN):
         json_contents = npm.get_package_json(
             namespace=self.scan_package.namespace,
             name=self.scan_package.name,
             version=self.scan_package.version
         )
         if regen:
-            with open(self.expected_pom_loc, 'w') as f:
-                f.write(json_contents)
+            with open(self.expected_json_loc, 'w') as f:
+                json.dump(json_contents, f, indent=3, separators=(',', ':'))
         self.assertEqual(self.expected_json_contents, json_contents)
 
     def test_map_npm_package(self):

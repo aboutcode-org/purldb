@@ -23,12 +23,13 @@ from minecode.utils_test import JsonBasedTesting
 from minecode import debutils
 from minecode.mappers import debian as debian_mapper
 from minecode.visitors import debian as debian_visitor
+from minecode.tests import FIXTURES_REGEN
 
 
 class BaseDebianTest(JsonBasedTesting):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
 
-    def check_objects_expected(self, results, expected_loc, regen=False):
+    def check_objects_expected(self, results, expected_loc, regen=FIXTURES_REGEN):
         """
         Check that an iterable of `results` against the expected results in the
         file at `expected_loc` location.
@@ -54,7 +55,7 @@ class BaseDebianTest(JsonBasedTesting):
             expected = expect.read()
             self.assertEqual(expected, result)
 
-    def check_expected_deb822(self, deb_object, expected_loc, regen=False):
+    def check_expected_deb822(self, deb_object, expected_loc, regen=FIXTURES_REGEN):
         """
         Check and compare the Debian `object` with the file at `expected_loc`.
         """
@@ -113,7 +114,7 @@ class DebutilsTest(BaseDebianTest):
         dsc_file = self.get_test_loc('debian/debutils/3dldf_2.0.3+dfsg-2.dsc')
         result = debcon.get_paragraph_data_from_file(dsc_file)
         expected_loc = self.get_test_loc('debian/debutils/3dldf_2.0.3+dfsg-2.dsc-expected')
-        self.check_expected_deb822(result, expected_loc, regen=False)
+        self.check_expected_deb822(result, expected_loc, regen=FIXTURES_REGEN)
 
     #################################################################
 
@@ -145,17 +146,15 @@ class DebutilsTest(BaseDebianTest):
 
 class DebianReleaseTest(BaseDebianTest):
 
-    @expectedFailure
     def test_parse_release(self):
         release_file = self.get_test_loc('debian/release/Release')
-        result = debian_visitor.parse_release(release_file)
+        result = list(debian_visitor.parse_release(release_file))
         expected_loc = self.get_test_loc('debian/release/Release_expected')
         self.check_expected_deb822(result, expected_loc)
 
-    @expectedFailure
     def test_parse_release_with_md5(self):
         release_file = self.get_test_loc('debian/release/Release_with_md5')
-        result = debian_visitor.parse_release(release_file)
+        result = list(debian_visitor.parse_release(release_file))
         expected_loc = self.get_test_loc('debian/release/Release_with_md5_expected')
         self.check_expected_deb822(result, expected_loc)
 
@@ -273,13 +272,13 @@ class DebianSourcesTest(BaseDebianTest):
         index_file = self.get_test_loc('debian/sources/debian_Sources')
         source_info = [info for info in debian_visitor.collect_source_packages(index_file)]
         expected_loc = self.get_test_loc('debian/sources/debian_Sources_visit_expected')
-        self.check_objects_expected(source_info, expected_loc, regen=False)
+        self.check_objects_expected(source_info, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_source_packages_ubuntu(self):
         index_file = self.get_test_loc('debian/sources/ubuntu_Sources')
         source_info = [info for info in debian_visitor.collect_source_packages(index_file)]
         expected_loc = self.get_test_loc('debian/sources/ubuntu_Sources_visit_expected')
-        self.check_objects_expected(source_info, expected_loc, regen=False)
+        self.check_objects_expected(source_info, expected_loc, regen=FIXTURES_REGEN)
 
     @expectedFailure
     def test_DebianSourcesVisitor(self):
@@ -315,7 +314,7 @@ class DebianPackagesTest(BaseDebianTest):
         index_file = self.get_test_loc('debian/packages/debian_Packages')
         package_info = [info for info in debian_visitor.parse_packages_index(index_file)]
         expected_loc = self.get_test_loc('debian/packages/debian_Packages-visit-expected.json')
-        self.check_objects_expected(package_info, expected_loc, regen=False)
+        self.check_objects_expected(package_info, expected_loc, regen=FIXTURES_REGEN)
 
     @expectedFailure
     def test_parse_packages_from_debian_Packages(self):
@@ -323,7 +322,7 @@ class DebianPackagesTest(BaseDebianTest):
             packages = debian_mapper.parse_packages(packs.read())
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('debian/packages/debian_Packages-expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     @expectedFailure
     def test_parse_packages_from_ubuntu_Packages(self):
@@ -331,7 +330,7 @@ class DebianPackagesTest(BaseDebianTest):
             packages = debian_mapper.parse_packages(packs.read())
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('debian/packages/ubuntu_Packages-expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     @expectedFailure
     def test_parse_packages_from_installed_status(self):
@@ -339,7 +338,7 @@ class DebianPackagesTest(BaseDebianTest):
             packages = debian_mapper.parse_packages(packs.read())
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('debian/packages/ubuntu_Packages-expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
 
 class DebianLSLRTest(BaseDebianTest):

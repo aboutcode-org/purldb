@@ -26,10 +26,10 @@ class SourceforgeProjectJsonAPIMapper(Mapper):
         Yield as many Package as there are download URLs.
         """
         metadata = json.loads(resource_uri.data)
-        return build_packages_from_metafile(metadata, resource_uri.package_url)
+        return build_packages_from_metafile(metadata, resource_uri.package_url, uri)
 
 
-def build_packages_from_metafile(metadata, purl=None):
+def build_packages_from_metafile(metadata, purl=None, uri=None):
     """
     Yield Package built from package a `metadata` content
     metadata: json metadata content
@@ -46,6 +46,7 @@ def build_packages_from_metafile(metadata, purl=None):
         name = metadata.get('name')
     if name:
         common_data = dict(
+            datasource_id='sourceforge_metadata',
             type='sourceforge',
             name=metadata.get('shortname', metadata.get('name')),
             description=description,
@@ -59,7 +60,8 @@ def build_packages_from_metafile(metadata, purl=None):
                 common_data['parties'] = []
             if dev.get('name'):
                 common_data['parties'].append(
-                    scan_models.Party(name=dev.get('name'), role='contributor', url=dev.get('url')))
+                    scan_models.Party(name=dev.get('name'), role='contributor', url=dev.get('url')).to_dict()
+                )
 
         categories = metadata.get('categories', {})
         languages = categories.get('language', [])
@@ -88,6 +90,9 @@ def build_packages_from_metafile(metadata, purl=None):
         for topic in topics:
             keywords.append(topic.get('shortname'))
         common_data['keywords'] = keywords or None
-        package = scan_models.Package(**common_data)
+        package = scan_models.Package.from_package_data(
+            package_data=common_data,
+            datafile_path=uri,
+        )
         package.set_purl(purl)
         yield package

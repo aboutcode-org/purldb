@@ -377,6 +377,7 @@ def build_packages_from_dist_archive(metadata, uri):
     # version by analysing the uri
     version = uri[folder_length:uri.index('/', folder_length)]
     common_data = dict(
+        datasource_id="debian_archive_file",
         name=name,
         version=version,
     )
@@ -415,12 +416,18 @@ def build_packages_from_dist_archive(metadata, uri):
 
     if download_urls:
         for download_url in download_urls:
-            package = scan_models.Package(**common_data)
+            package = scan_models.Package.from_package_data(
+                package_data=common_data,
+                datafile_path=uri,
+            )
             package['download_url'] = download_url
             yield package
     else:
         # yield package without a download_url value
-        package = scan_models.DebianPackage(**common_data)
+        package = scan_models.Package.from_package_data(
+                package_data=common_data,
+                datafile_path=uri,
+            )
         # FIXME: this is NOT RIGHT: purl is not defined
-        package.set_purl(purl)
+        package.set_purl(package.purl)
         yield package

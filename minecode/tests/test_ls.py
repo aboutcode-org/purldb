@@ -13,6 +13,7 @@
 import os
 
 from minecode.utils_test import JsonBasedTesting
+from minecode.tests import FIXTURES_REGEN
 from minecode import ls
 
 
@@ -30,7 +31,7 @@ class ParseDirectoryListingTest(JsonBasedTesting):
         expected = u'drwxrwxr-x   4 svnwc    svnwc        4096 May  4 15:57 ./perl'
         self.assertEqual(expected, ls.remove_inode(test))
 
-    def check_listing(self, test_file, expected_file, from_find=True, regen=False):
+    def check_listing(self, test_file, expected_file, from_find=True, regen=FIXTURES_REGEN):
         test_file = self.get_test_loc(test_file)
         test_text = open(test_file).read()
         results = list(ls.parse_directory_listing(test_text, from_find=from_find))
@@ -47,20 +48,20 @@ class ParseDirectoryListingTest(JsonBasedTesting):
     def test_parse_listing_from_findls(self):
         test_file = 'directories/find-ls'
         expected_file = 'directories/find-ls-expected.json'
-        self.check_listing(test_file, expected_file, from_find=True, regen=False)
+        self.check_listing(test_file, expected_file, from_find=True, regen=FIXTURES_REGEN)
 
     def test_parse_listing_from_findls_from_apache_does_not_fail_on_first_line(self):
         test_file = 'directories/find-ls-apache-start'
         expected_file = 'directories/find-ls-apache-start-expected.json'
-        self.check_listing(test_file, expected_file, from_find=True, regen=False)
+        self.check_listing(test_file, expected_file, from_find=True, regen=FIXTURES_REGEN)
 
     def test_parse_listing_from_lslr(self):
         test_file = 'directories/ls-lr'
         expected_file = 'directories/ls-lr-expected.json'
-        self.check_listing(test_file, expected_file, from_find=False, regen=False)
+        self.check_listing(test_file, expected_file, from_find=False, regen=FIXTURES_REGEN)
 
     def test_parse_listing_from_lslr_at_ubuntu(self):
         test_file = 'directories/ls-lr-ubuntu'
         expected_file = 'directories/ls-lr-ubuntu-expected.json'
         self.maxDiff = None
-        self.check_listing(test_file, expected_file, from_find=False, regen=False)
+        self.check_listing(test_file, expected_file, from_find=False, regen=FIXTURES_REGEN)
