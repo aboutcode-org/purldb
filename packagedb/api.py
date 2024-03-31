@@ -469,13 +469,11 @@ class PackageUpdateSet(viewsets.ViewSet):
         validated_data = serializer.validated_data
         packages = validated_data.get('purls', [])
         uuid = validated_data.get('uuid', None)
-
-        # flag = True
         package_set = None
 
         if uuid:
             try:
-                package_set = PackageSet.objects.filter(uuid=uuid)
+                package_set = PackageSet.objects.get(uuid=uuid)
 
                 if package_set:
                     package_set = package_set
@@ -503,6 +501,8 @@ class PackageUpdateSet(viewsets.ViewSet):
                     package_set = PackageSet.objects.create()
 
                 lookups['package_content'] = content_type
+                lookups['download_url'] = " "
+
                 cr = Package.objects.create(**lookups)
                 package_set.add_to_package_set(cr)
                 res_data['update_status'] = "Updated"

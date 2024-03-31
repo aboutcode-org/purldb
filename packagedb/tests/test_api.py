@@ -1111,6 +1111,84 @@ class ResourceApiTestCase(TestCase):
         ])
         self.assertEqual(expected_names, names)
 
+class PackageUpdateSetTestCase(TestCase):
+
+    def setUp(self):
+        self.package_data = {
+            'type': 'npm',
+            'namespace': '',
+            'name': 'foobar',
+            'version': '1.1.0',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': '',
+            'filename': 'Foo.zip',
+            'sha1': 'testsha1',
+            'md5': 'testmd5',
+            'size': 101,
+            'package_content' : 1
+        }
+        self.package = Package.objects.create(**self.package_data)
+        self.package.refresh_from_db()
+        self.package_set = PackageSet.objects.create()
+        self.new_package_set_uuid = self.package_set.uuid
+
+    def test_api_purl_updation(self):
+        data = {
+          "purls": [
+            {"purl": "pkg:npm/hologram@1.1.0", "content_type": 1}]
+          ,
+          "uuid": str(self.new_package_set_uuid)
+        }
+
+        response = self.client.post(f"/api/update_packages/", data=data, content_type="application/json")
+
+        expected = [{"purl": "pkg:npm/hologram@1.1.0", "update_status": "Updated"}]
+
+        self.assertEqual(expected, response.data)
+
+    def test_api_purl_updation_existing_package(self):
+        data = {
+          "purls": [
+            {"purl": "pkg:npm/foobar@1.1.0", "content_type": 1}
+          ],
+          "uuid" : str(self.new_package_set_uuid)
+        }
+
+        expected = [{"purl": "pkg:npm/foobar@1.1.0", "update_status": "Already Exists"}]
+
+        response = self.client.post(f"/api/update_packages/", data=data, content_type="application/json")
+
+        self.assertEqual(expected, response.data)
+
+    def test_api_purl_updation_without_uuid(self):
+        data = {
+          "purls": [
+            {"purl": "pkg:npm/jammy@1.1.9", "content_type": 1}
+          ]
+        }
+
+        expected = [{"purl": "pkg:npm/jammy@1.1.9", "update_status": "Updated"}]
+
+        response = self.client.post(f"/api/update_packages/", data=data, content_type="application/json")
+
+        self.assertEqual(expected, response.data)
+
+
+    def test_api_purl_validation_empty_request(self):
+        data = {}
+        response = self.client.post(f"/api/update_packages/", data=data, content_type="application/json")
+
+        expected = {
+            "errors": {
+                "purls": [
+                    "This field is required."
+                ]
+            }
+        }
+
+        self.assertAlmostEquals(expected, response.data)
+
 class PurlValidateApiTestCase(TestCase):
 
     def setUp(self):
