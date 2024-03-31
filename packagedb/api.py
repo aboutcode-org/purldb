@@ -470,41 +470,44 @@ class PackageUpdateSet(viewsets.ViewSet):
         packages = validated_data.get('purls', [])
         uuid = validated_data.get('uuid', None)
 
-        flag = True
+        # flag = True
+        package_set = None
 
         if uuid:
-            package_set = PackageSet.objects.filter(uuid=uuid)
+            try:
+                package_set = PackageSet.objects.filter(uuid=uuid)
 
-            if package_set:
-                package_set = package_set
-                flag = False
+                if package_set:
+                    package_set = package_set
 
-        else:
-            # Create Package Set and set package_set as the same object
-            package_set = PackageSet.objects.create()
+            except:
+                message = {
+                    'status': f'No Package Set found for {uuid}'
+                }
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
         for items in packages or []:
-            temp = {}
+
+            res_data = {}
             purl = items.get('purl')
 
-            temp['purl'] = purl
+            res_data['purl'] = purl
             content_type = items.get('content_type')
             lookups = purl_to_lookups(purl)
 
             filtered_packages = Package.objects.filter(**lookups)
-            temp['update_status'] = "Already Exists"
+            res_data['update_status'] = "Already Exists"
 
             if not filtered_packages:
-                flag = False
+                if package_set is None:
+                    package_set = PackageSet.objects.create()
+
                 lookups['package_content'] = content_type
                 cr = Package.objects.create(**lookups)
                 package_set.add_to_package_set(cr)
-                temp['update_status'] = "Updated"
+                res_data['update_status'] = "Updated"
 
-            res.append(temp)
-
-        if flag:
-            package_set.delete()
+            res.append(res_data)
 
         serializer = PurlUpdateResponseSerializer(res, many=True)
 
