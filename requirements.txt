@@ -42,7 +42,7 @@ extractcode==31.0.0
 extractcode-7z==16.5.210531
 extractcode-libarchive==3.5.1.210531
 fasteners==0.19
-fetchcode==0.5.0
+fetchcode==0.5.1
 fetchcode-container==1.2.3.210512
 fingerprints==1.2.3
 fontawesomefree==6.5.1

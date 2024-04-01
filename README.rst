@@ -42,6 +42,12 @@ Once the prerequisites have been installed, set up PurlDB with the following com
     make postgres
     make postgres_matchcodeio
 
+Indexing some PURLs requires a GitHub API token. Please add your GitHub API key to the `.env` file
+::
+
+    GH_TOKEN=your-github-api
+
+
 Once PurlDB and the database has been set up, run tests to ensure functionality:
 ::
 
