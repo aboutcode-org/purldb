@@ -18,9 +18,11 @@ from github.Repository import Repository
 from github.Download import Download
 from packageurl import PackageURL
 
+from minecode import priority_router
 from minecode import visit_router, seed
 from minecode.visitors import HttpJsonVisitor
 from minecode.visitors import URI
+from minecode.visitors.generic import map_fetchcode_supported_package
 
 
 logger = logging.getLogger(__name__)
@@ -179,3 +181,26 @@ def json_serial_date_obj(obj):
     """JSON serializer for date object"""
     if obj and isinstance(obj, (datetime, date)):
         return obj.isoformat()
+
+
+# Indexing GitHub PURLs requires a GitHub API token.
+# Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
+@priority_router.route('pkg:github/.*')
+def process_request_dir_listed(purl_str):
+    """
+    Process `priority_resource_uri` containing a GitHub Package URL (PURL).
+
+    This involves obtaining Package information for the PURL using
+    https://github.com/nexB/fetchcode and using it to create a new
+    PackageDB entry. The package is then added to the scan queue afterwards.
+    """
+    try:
+        package_url = PackageURL.from_string(purl_str)
+    except ValueError as e:
+        error = f"error occurred when parsing {purl_str}: {e}"
+        return error
+
+    error_msg = map_fetchcode_supported_package(package_url)
+
+    if error_msg:
+        return error_msg

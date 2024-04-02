@@ -91,9 +91,9 @@ def packagedata_from_dict(package_data):
     return PackageData.from_data(cleaned_package_data)
 
 
-def map_directory_listed_package(package_url):
+def map_fetchcode_supported_package(package_url):
     """
-    Add a directory listed `package_url` to the PackageDB.
+    Add a `package_url` supported by fetchcode to the PackageDB.
 
     Return an error string if any errors are encountered during the process
     """
@@ -121,7 +121,7 @@ def map_directory_listed_package(package_url):
     return error
 
 
-DIR_SUPPORTED_PURLS = [
+GENERIC_FETCHCODE_SUPPORTED_PURLS = [
     "pkg:generic/busybox@.*",
     "pkg:generic/bzip2@.*",
     "pkg:generic/dnsmasq@.*",
@@ -137,16 +137,26 @@ DIR_SUPPORTED_PURLS = [
     "pkg:generic/samba@.*",
     "pkg:generic/syslinux@.*",
     "pkg:generic/toybox@.*",
-    "pkg:generic/uclibc@@.*",
+    "pkg:generic/uclibc@.*",
     "pkg:generic/uclibc-ng@.*",
     "pkg:generic/util-linux@.*",
     "pkg:generic/wpa_supplicant@.*",
     "pkg:generic/ipkg@.*",
+    "pkg:generic/linux@.*",
+    "pkg:generic/mtd-utils@.*",
+    "pkg:generic/barebox@.*",
+    "pkg:generic/e2fsprogs@.*",
+    "pkg:generic/udhcp@.*",
+    "pkg:generic/miniupnpc@.*",
+    "pkg:generic/miniupnpd@.*",
+    "pkg:generic/minissdpd@.*",
+    "pkg:generic/erofs-utils@.*",
 ]
 
-
-@priority_router.route(*DIR_SUPPORTED_PURLS)
-def process_request_dir_listed(purl_str):
+# Indexing some generic PURLs requires a GitHub API token.
+# Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
+@priority_router.route(*GENERIC_FETCHCODE_SUPPORTED_PURLS)
+def process_request_fetchcode_generic(purl_str):
     """
     Process `priority_resource_uri` containing a generic Package URL (PURL)
     supported by fetchcode.
@@ -161,7 +171,7 @@ def process_request_dir_listed(purl_str):
         error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
-    error_msg = map_directory_listed_package(package_url)
+    error_msg = map_fetchcode_supported_package(package_url)
 
     if error_msg:
         return error_msg

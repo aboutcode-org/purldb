@@ -11,11 +11,13 @@ from datetime import datetime
 from commoncode import fileutils
 from packageurl import PackageURL
 
+from minecode import priority_router
 from minecode import seed
 from minecode import visit_router
 from minecode.utils import is_int
 from minecode.visitors import HttpVisitor
 from minecode.visitors import URI
+from minecode.visitors.generic import map_fetchcode_supported_package
 
 
 class OpenSSLSeed(seed.Seeder):
@@ -88,3 +90,26 @@ class OpenSSLVisitor(HttpVisitor):
                 yield URI(uri=url, source_uri=self.uri, package_url=package_url, date=date, file_name=file_name, size=size)
             else:
                 yield URI(uri=url, source_uri=self.uri, date=date, size=size)
+
+# Indexing OpenSSL PURLs requires a GitHub API token.
+# Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
+@priority_router.route('pkg:openssl/openssl@.*')
+def process_request_dir_listed(purl_str):
+    """
+    Process `priority_resource_uri` containing a OpenSSL Package URL (PURL)
+    supported by fetchcode.
+
+    This involves obtaining Package information for the PURL using
+    https://github.com/nexB/fetchcode and using it to create a new
+    PackageDB entry. The package is then added to the scan queue afterwards.
+    """
+    try:
+        package_url = PackageURL.from_string(purl_str)
+    except ValueError as e:
+        error = f"error occurred when parsing {purl_str}: {e}"
+        return error
+
+    error_msg = map_fetchcode_supported_package(package_url)
+
+    if error_msg:
+        return error_msg
