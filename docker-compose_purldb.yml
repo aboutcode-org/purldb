@@ -28,6 +28,7 @@ services:
     volumes:
       - /etc/purldb/:/etc/purldb/
       - static:/var/purldb/static/
+      - temp_data:/tmp/minecode/
     depends_on:
       - db
 
@@ -113,6 +114,7 @@ services:
       - docker_purldb.env
     volumes:
       - /etc/purldb/:/etc/purldb/
+      - temp_data:/tmp/minecode/
     depends_on:
       - redis
       - db
@@ -141,3 +143,4 @@ volumes:
   db_data:
   static:
   redis_data:
+  temp_data:

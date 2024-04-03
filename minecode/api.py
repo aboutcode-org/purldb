@@ -25,6 +25,7 @@ from minecode.management.indexing import index_package
 from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 from minecode.permissions import IsScanQueueWorkerAPIUser
 from minecode.utils import validate_uuid
+from minecode.utils import get_temp_file
 
 
 class ResourceURISerializer(serializers.ModelSerializer):
@@ -202,9 +203,24 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             scan_results_file = request.data.get('scan_results_file')
             scan_summary_file = request.data.get('scan_summary_file')
             project_extra_data = request.data.get('project_extra_data')
-            job = scannable_uri.process_scan_results(
-                scan_results_file=scan_results_file,
-                scan_summary_file=scan_summary_file,
+
+            # Save results to temporary files
+            scan_results_location = get_temp_file(
+                file_name='scan_results',
+                extension='.json'
+            )
+            scan_summary_location = get_temp_file(
+                file_name='scan_summary',
+                extension='.json'
+            )
+            with open(scan_results_location, 'wb') as f:
+                f.write(scan_results_file.read())
+            with open(scan_summary_location, 'wb') as f:
+                f.write(scan_summary_file.read())
+
+            _ = scannable_uri.process_scan_results(
+                scan_results_location=scan_results_location,
+                scan_summary_location=scan_summary_location,
                 project_extra_data=project_extra_data
             )
             msg = {

@@ -760,7 +760,12 @@ class ScannableURI(BaseURI):
         self.normalize_fields()
         super(ScannableURI, self).save(*args, **kwargs)
 
-    def process_scan_results(self, scan_results_file, scan_summary_file, project_extra_data):
+    def process_scan_results(
+        self,
+        scan_results_location,
+        scan_summary_location,
+        project_extra_data
+    ):
         from minecode import tasks
 
         self.scan_status = self.SCAN_COMPLETED
@@ -768,8 +773,8 @@ class ScannableURI(BaseURI):
         job = django_rq.enqueue(
             tasks.process_scan_results,
             scannable_uri=self,
-            scan_results_file=scan_results_file,
-            scan_summary_file=scan_summary_file,
+            scan_results_location=scan_results_location,
+            scan_summary_location=scan_summary_location,
             project_extra_data=project_extra_data,
         )
         return job

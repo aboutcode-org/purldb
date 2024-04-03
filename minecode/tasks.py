@@ -9,14 +9,16 @@
 
 import json
 
+from commoncode.fileutils import delete
+
 from minecode.management.indexing import index_package
 from minecode.models import ScannableURI
 
 
 def process_scan_results(
     scannable_uri,
-    scan_results_file,
-    scan_summary_file,
+    scan_results_location,
+    scan_summary_location,
     project_extra_data,
 ):
     """
@@ -24,8 +26,10 @@ def process_scan_results(
     `project_extra_data` for the Package related to `scannable_uri`
     """
 
-    scan_data = json.load(scan_results_file)
-    summary_data = json.load(scan_summary_file)
+    with open(scan_results_location) as f:
+        scan_data = json.load(f)
+    with open(scan_summary_location) as f:
+        summary_data = json.load(f)
     project_extra_data = json.loads(project_extra_data)
 
     indexing_errors = index_package(
@@ -44,3 +48,7 @@ def process_scan_results(
         scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
     scannable_uri.wip_date = None
     scannable_uri.save()
+
+    # Clean up after indexing has ended
+    delete(scan_results_location)
+    delete(scan_summary_location)
