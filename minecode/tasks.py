@@ -1,0 +1,46 @@
+#
+# Copyright (c) nexB Inc. and others. All rights reserved.
+# purldb is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/purldb for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
+#
+
+import json
+
+from minecode.management.indexing import index_package
+from minecode.models import ScannableURI
+
+
+def process_scan_results(
+    scannable_uri,
+    scan_results_file,
+    scan_summary_file,
+    project_extra_data,
+):
+    """
+    Indexes the scan results from `scan_results_file`, `scan_summary_file`, and
+    `project_extra_data` for the Package related to `scannable_uri`
+    """
+
+    scan_data = json.load(scan_results_file)
+    summary_data = json.load(scan_summary_file)
+    project_extra_data = json.loads(project_extra_data)
+
+    indexing_errors = index_package(
+        scannable_uri,
+        scannable_uri.package,
+        scan_data,
+        summary_data,
+        project_extra_data,
+        reindex=scannable_uri.reindex_uri,
+    )
+
+    if indexing_errors:
+        scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
+        scannable_uri.index_error = indexing_errors
+    else:
+        scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
+    scannable_uri.wip_date = None
+    scannable_uri.save()

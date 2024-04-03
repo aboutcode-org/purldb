@@ -14,7 +14,7 @@ import sys
 
 from django.db import models
 from django.utils import timezone
-
+import django_rq
 
 from minecode import map_router
 from minecode import visit_router
@@ -759,6 +759,20 @@ class ScannableURI(BaseURI):
             self.canonical = get_canonical(self.uri)
         self.normalize_fields()
         super(ScannableURI, self).save(*args, **kwargs)
+
+    def process_scan_results(self, scan_results_file, scan_summary_file, project_extra_data):
+        from minecode import tasks
+
+        self.scan_status = self.SCAN_COMPLETED
+        self.save()
+        job = django_rq.enqueue(
+            tasks.process_scan_results,
+            scannable_uri=self,
+            scan_results_file=scan_results_file,
+            scan_summary_file=scan_summary_file,
+            project_extra_data=project_extra_data,
+        )
+        return job
 
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.

@@ -202,33 +202,14 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             scan_results_file = request.data.get('scan_results_file')
             scan_summary_file = request.data.get('scan_summary_file')
             project_extra_data = request.data.get('project_extra_data')
-            scan_data = json.load(scan_results_file)
-            summary_data = json.load(scan_summary_file)
-            project_extra_data = json.loads(project_extra_data)
-
-            scannable_uri.scan_status = ScannableURI.SCAN_COMPLETED
-
-            indexing_errors = index_package(
-                scannable_uri,
-                scannable_uri.package,
-                scan_data,
-                summary_data,
-                project_extra_data,
-                reindex=scannable_uri.reindex_uri,
+            job = scannable_uri.process_scan_results(
+                scan_results_file=scan_results_file,
+                scan_summary_file=scan_summary_file,
+                project_extra_data=project_extra_data
             )
-            if indexing_errors:
-                scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
-                scannable_uri.index_error = indexing_errors
-                msg = {
-                    'error': f'scan index failed for scannable_uri {scannable_uri_uuid}'
-                }
-                return Response(msg, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
-                msg = {
-                    'status': f'scan indexed for scannable_uri {scannable_uri_uuid}'
-                }
-            scannable_uri.wip_date = None
-            scannable_uri.save()
+            msg = {
+                'status': f'scan results for scannable_uri {scannable_uri_uuid} '
+                           'have been queued for indexing'
+            }
 
         return Response(msg)
