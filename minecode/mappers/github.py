@@ -25,7 +25,7 @@ from minecode.utils import parse_date
 logger = logging.getLogger(__name__)
 
 
-@map_router.route('https://api.github.com/repos/[\w\-\.]/[\w\-\.]')
+@map_router.route('https://api\.github\.com/repos/([^/]+)/([^/]+)')
 class GithubMetaFileMapper(Mapper):
 
     def get_packages(self, uri, resource_uri):
