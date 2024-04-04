@@ -1136,7 +1136,7 @@ class PackageUpdateSetTestCase(TestCase):
     def test_api_purl_updation(self):
         data = {
           "purls": [
-            {"purl": "pkg:npm/hologram@1.1.0", "content_type": 1}]
+            {"purl": "pkg:npm/hologram@1.1.0", "content_type": "CURATION"}]
           ,
           "uuid": str(self.new_package_set_uuid)
         }
@@ -1150,7 +1150,7 @@ class PackageUpdateSetTestCase(TestCase):
     def test_api_purl_updation_existing_package(self):
         data = {
           "purls": [
-            {"purl": "pkg:npm/foobar@1.1.0", "content_type": 1}
+            {"purl": "pkg:npm/foobar@1.1.0", "content_type": "PATCH"}
           ],
           "uuid" : str(self.new_package_set_uuid)
         }
@@ -1161,10 +1161,24 @@ class PackageUpdateSetTestCase(TestCase):
 
         self.assertEqual(expected, response.data)
 
+    def test_api_purl_updation_non_existing_uuid(self):
+        data = {
+          "purls": [
+            {"purl": "pkg:npm/foobar@1.1.0", "content_type": "SOURCE_REPO"}
+          ],
+          "uuid" : "ac9c36f4-a1ed-4824-8448-c6ed8f1da71d"
+        }
+
+        expected = {"update_status": "No Package Set found for ac9c36f4-a1ed-4824-8448-c6ed8f1da71d"}
+
+        response = self.client.post(f"/api/update_packages/", data=data, content_type="application/json")
+
+        self.assertEqual(expected, response.data)
+
     def test_api_purl_updation_without_uuid(self):
         data = {
           "purls": [
-            {"purl": "pkg:npm/jammy@1.1.9", "content_type": 1}
+            {"purl": "pkg:npm/jammy@1.1.9", "content_type": "BINARY"}
           ]
         }
 

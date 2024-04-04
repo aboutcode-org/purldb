@@ -378,7 +378,7 @@ class PackageVersSerializer(Serializer):
 
 class PackageUpdateSerializer(Serializer):
     purl = CharField(required=True)
-    content_type = IntegerField(required=True)
+    content_type = CharField(required=True)
 
 
 class UpdatePackagesSerializer(Serializer):

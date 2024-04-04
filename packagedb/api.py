@@ -480,7 +480,7 @@ class PackageUpdateSet(viewsets.ViewSet):
 
             except:
                 message = {
-                    'status': f'No Package Set found for {uuid}'
+                    'update_status': f'No Package Set found for {uuid}'
                 }
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
@@ -491,6 +491,7 @@ class PackageUpdateSet(viewsets.ViewSet):
 
             res_data['purl'] = purl
             content_type = items.get('content_type')
+            content_type_val = PackageContentType.__getitem__(content_type)
             lookups = purl_to_lookups(purl)
 
             filtered_packages = Package.objects.filter(**lookups)
@@ -500,7 +501,7 @@ class PackageUpdateSet(viewsets.ViewSet):
                 if package_set is None:
                     package_set = PackageSet.objects.create()
 
-                lookups['package_content'] = content_type
+                lookups['package_content'] = content_type_val
                 lookups['download_url'] = " "
 
                 cr = Package.objects.create(**lookups)
