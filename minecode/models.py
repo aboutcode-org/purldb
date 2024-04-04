@@ -12,6 +12,7 @@ from datetime import timedelta
 import logging
 import sys
 
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 import django_rq
@@ -770,6 +771,16 @@ class ScannableURI(BaseURI):
 
         self.scan_status = self.SCAN_COMPLETED
         self.save()
+
+        if not settings.PURLDB_ASYNC:
+            tasks.process_scan_results(
+                scannable_uri=self,
+                scan_results_location=scan_results_location,
+                scan_summary_location=scan_summary_location,
+                project_extra_data=project_extra_data,
+            )
+            return
+
         job = django_rq.enqueue(
             tasks.process_scan_results,
             scannable_uri=self,

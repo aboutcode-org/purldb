@@ -218,7 +218,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             with open(scan_summary_location, 'wb') as f:
                 f.write(scan_summary_file.read())
 
-            _ = scannable_uri.process_scan_results(
+            scannable_uri.process_scan_results(
                 scan_results_location=scan_results_location,
                 scan_summary_location=scan_summary_location,
                 project_extra_data=project_extra_data

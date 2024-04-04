@@ -22,8 +22,12 @@ def process_scan_results(
     project_extra_data,
 ):
     """
-    Indexes the scan results from `scan_results_file`, `scan_summary_file`, and
-    `project_extra_data` for the Package related to `scannable_uri`
+    Indexes the scan results from `scan_results_location`,
+    `scan_summary_location`, and `project_extra_data` for the Package related to
+    `scannable_uri`
+
+    `scan_results_location` and `scan_summary_location` are deleted after the
+    indexing process has finished.
     """
 
     with open(scan_results_location) as f:
@@ -46,6 +50,7 @@ def process_scan_results(
         scannable_uri.index_error = indexing_errors
     else:
         scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
+
     scannable_uri.wip_date = None
     scannable_uri.save()
 
