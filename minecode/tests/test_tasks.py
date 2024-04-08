@@ -57,7 +57,7 @@ class MinecodeTasksTestCase(JsonBasedTesting, TestCase):
         summary_file_location = self.get_test_loc('scancodeio/scan_summary_response.json')
         project_extra_data = json.dumps(self.project_extra_data1)
         tasks.process_scan_results(
-            self.scannable_uri1,
+            self.scannable_uri1.uuid,
             scan_results_location=scan_file_location,
             scan_summary_location=summary_file_location,
             project_extra_data=project_extra_data,

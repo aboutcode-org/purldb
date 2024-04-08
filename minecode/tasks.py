@@ -16,7 +16,7 @@ from minecode.models import ScannableURI
 
 
 def process_scan_results(
-    scannable_uri,
+    scannable_uri_uuid,
     scan_results_location,
     scan_summary_location,
     project_extra_data,
@@ -24,7 +24,7 @@ def process_scan_results(
     """
     Indexes the scan results from `scan_results_location`,
     `scan_summary_location`, and `project_extra_data` for the Package related to
-    `scannable_uri`
+    ScannableURI with UUID `scannable_uri_uuid`.
 
     `scan_results_location` and `scan_summary_location` are deleted after the
     indexing process has finished.
@@ -35,6 +35,11 @@ def process_scan_results(
     with open(scan_summary_location) as f:
         summary_data = json.load(f)
     project_extra_data = json.loads(project_extra_data)
+
+    try:
+        scannable_uri = ScannableURI.objects.get(uuid=scannable_uri_uuid)
+    except ScannableURI.DoesNotExist:
+        raise Exception(f'ScannableURI {scannable_uri_uuid} does not exist!')
 
     indexing_errors = index_package(
         scannable_uri,

@@ -774,7 +774,7 @@ class ScannableURI(BaseURI):
 
         if not settings.PURLDB_ASYNC:
             tasks.process_scan_results(
-                scannable_uri=self,
+                scannable_uri_uuid=self.uuid,
                 scan_results_location=scan_results_location,
                 scan_summary_location=scan_summary_location,
                 project_extra_data=project_extra_data,
@@ -783,7 +783,7 @@ class ScannableURI(BaseURI):
 
         job = django_rq.enqueue(
             tasks.process_scan_results,
-            scannable_uri=self,
+            scannable_uri_uuid=self.uuid,
             scan_results_location=scan_results_location,
             scan_summary_location=scan_summary_location,
             project_extra_data=project_extra_data,
