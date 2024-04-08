@@ -72,3 +72,19 @@ class MinecodeTasksTestCase(JsonBasedTesting, TestCase):
         self.assertEqual('Copyright (c) Apache Software Foundation', self.package1.copyright)
         self.assertFalse(self.scannable_uri1.scan_error)
         self.assertEqual(64, self.package1.resources.count())
+
+    def test_minecode_tasks_process_scan_results_scannableuri_does_not_exist(self):
+        nonexisting_uuid = '420db78a-625f-4622-b1a0-93d1ea853194'
+        scan_file_location = self.get_test_loc('scancodeio/get_scan_data.json')
+        summary_file_location = self.get_test_loc('scancodeio/scan_summary_response.json')
+        project_extra_data = json.dumps(self.project_extra_data1)
+
+        with self.assertRaises(Exception) as context:
+            tasks.process_scan_results(
+                nonexisting_uuid,
+                scan_results_location=scan_file_location,
+                scan_summary_location=summary_file_location,
+                project_extra_data=project_extra_data,
+            )
+        expected_message = f'ScannableURI {nonexisting_uuid} does not exist!'
+        self.assertIn(expected_message, str(context.exception))
