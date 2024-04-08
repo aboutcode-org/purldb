@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     strategy:
       max-parallel: 4
@@ -19,9 +19,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-
-      - name: Give permission to run scripts
-        run: chmod +x ./docs/scripts/doc8_style_check.sh
 
       - name: Install Dependencies
         working-directory: .
