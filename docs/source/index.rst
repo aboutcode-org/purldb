@@ -43,7 +43,7 @@ Matchcode
 
 Matchcode has the functionalities to index archives, files and directories for purldb
 packages and API endpoints to make matching available. A ScanCode.io pipeline for
-matching is also present to match scanned codebases. 
+matching is also present to match scanned codebases.
 
 .. toctree::
    :maxdepth: 2
@@ -65,11 +65,6 @@ How-To documents explain how to accomplish specific tasks.
 
 ----
 
-.. toctree::
-    :maxdepth: 2
-    :caption: Purl2Sym
-
-    purl2sym
 
 Indices and tables
 ==================

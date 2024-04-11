@@ -1,4 +1,4 @@
 How to use Matchcode
 =====================
 
-Instructions on settin gup the matchcode server
+Instructions on setting up the matchcode server.
