@@ -41,6 +41,8 @@ conf:
 dev:
 	@echo "-> Configure and install development dependencies"
 	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --dev
+	@echo "-> Configure and install documentation dependencies"
+	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --docs
 
 envfile:
 	@echo "-> Create the .env file and generate a secret key"
@@ -150,7 +152,7 @@ bump:
 
 docs:
 	rm -rf docs/_build/
-	@${ACTIVATE} sphinx-build docs/ docs/_build/
+	@${ACTIVATE} sphinx-build docs/source docs/_build/
 
 docker-images:
 	@echo "-> Build Docker services"

@@ -65,6 +65,12 @@ How-To documents explain how to accomplish specific tasks.
 
 ----
 
+.. toctree::
+    :maxdepth: 2
+    :caption: Purl2Sym
+
+    purl2sym
+
 Indices and tables
 ==================
 

@@ -308,6 +308,7 @@ SPECTACULAR_SETTINGS = {
     'VERSION': PURLDB_VERSION,
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
 RQ_QUEUES = {
     'default': {
         "HOST": env.str("PURLDB_REDIS_HOST", default="localhost"),
@@ -316,3 +317,8 @@ RQ_QUEUES = {
         "DEFAULT_TIMEOUT": env.int("PURLDB_REDIS_DEFAULT_TIMEOUT", default=360),
     }
 }
+
+PURLDB_ASYNC = env.bool("PURLDB_ASYNC", default=False)
+if not PURLDB_ASYNC:
+    for queue_config in RQ_QUEUES.values():
+        queue_config["ASYNC"] = False
