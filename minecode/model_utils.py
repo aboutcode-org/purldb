@@ -31,6 +31,7 @@ DEFAULT_PIPELINES = (
     'scan_single_package',
     'fingerprint_codebase',
     'collect_symbols',
+    'collect_source_strings',
     'inspect_elf_binaries',
 )
 
