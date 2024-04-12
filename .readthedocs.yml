@@ -5,6 +5,7 @@
 # Required
 version: 2
 
+# Build in latest ubuntu/python
 build:
   os: ubuntu-22.04
   tools:
