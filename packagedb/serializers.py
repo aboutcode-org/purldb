@@ -167,6 +167,7 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
     dependencies = DependentPackageSerializer(many=True)
     parties = PartySerializer(many=True)
     resources = HyperlinkedIdentityField(view_name='api:package-resources', lookup_field='uuid')
+    history = HyperlinkedIdentityField(view_name='api:package-history', lookup_field='uuid')
     url = HyperlinkedIdentityField(view_name='api:package-detail', lookup_field='uuid')
     package_sets = PackageSetAPISerializer(many=True)
     package_content = SerializerMethodField()
@@ -223,6 +224,7 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
             'file_references',
             'dependencies',
             'resources',
+            'history',
         )
         read_only_fields = fields
 

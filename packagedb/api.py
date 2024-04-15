@@ -315,6 +315,14 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         return Response({})
 
     @action(detail=True, methods=['get'])
+    def history(self, request, *args, **kwargs):
+        """
+        Return the History field associated with the current Package.
+        """
+        package = self.get_object()
+        return Response({"history" : package.history})
+
+    @action(detail=True, methods=['get'])
     def resources(self, request, *args, **kwargs):
         """
         Return the Resources associated with the current Package.
