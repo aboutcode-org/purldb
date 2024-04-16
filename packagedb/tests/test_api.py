@@ -809,6 +809,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             'uuid',
             'resources',
             'package_sets',
+            'history'
         ]
 
         self.check_expected_results(result, expected, fields_to_remove=fields_to_remove, regen=FIXTURES_REGEN)
