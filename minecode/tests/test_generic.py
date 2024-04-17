@@ -49,7 +49,7 @@ class GenericPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
 
         purl = 'pkg:generic/test@1.0.0?download_url=http://example.com/test.tar.gz'
         package_url = PackageURL.from_string(purl)
-        error_msg = generic.map_generic_package(package_url)
+        error_msg = generic.map_generic_package(package_url, ('test_pipeline'))
 
         self.assertEqual('', error_msg)
         package_count = Package.objects.all().count()
@@ -65,7 +65,7 @@ class GenericPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         self.assertEqual(0, package_count)
 
         purl = PackageURL.from_string("pkg:generic/udhcp@0.9.1")
-        error_msg = generic.map_fetchcode_supported_package(purl)
+        error_msg = generic.map_fetchcode_supported_package(purl, ('test_pipeline'))
 
         self.assertEqual('', error_msg)
         package_count = Package.objects.all().count()
