@@ -15,6 +15,8 @@ from packagedb.models import PackageSet
 from packagedb.models import PackageWatch
 from packagedb.models import Party
 from packagedb.models import Resource
+from packageurl import PackageURL
+from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import HyperlinkedIdentityField
@@ -369,11 +371,44 @@ class PackageWatchUpdateSerializer(ModelSerializer):
         fields = ['depth', 'watch_interval', 'is_active']
 
 
+class CollectPackageSerializer(Serializer):
+    purl = CharField(help_text="PackageURL strings in canonical form.")
+    source_purl = CharField(
+        required=False, 
+        help_text="Source PackageURL.",
+        )
+
+    addon_pipelines = ListField(
+        required=False,
+        allow_empty=True,
+        help_text="Addon pipelines to run on the package.",
+        )
+    
+    def validate_purl(self, value):
+        try:
+            PackageURL.from_string(value)
+        except ValueError as e:
+            raise ValidationError(f'purl validation error: {e}')
+        return value
+    
+    def validate_source_purl(self, value):
+        if value:
+            try:
+                PackageURL.from_string(value)
+            except ValueError as e:
+                raise ValidationError(f'purl validation error: {e}')
+        return value
+
 class PackageVersSerializer(Serializer):
     purl = CharField()
     vers = CharField(required=False)
 
     source_purl = CharField(required=False)
+    addon_pipelines = ListField(
+        required=False,
+        allow_empty=True,
+        help_text="Addon pipelines to run on the package.",
+        )
 
 
 class PackageUpdateSerializer(Serializer):
