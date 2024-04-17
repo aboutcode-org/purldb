@@ -22,7 +22,7 @@ logger.setLevel(logging.INFO)
 
 
 @priority_router.route("pkg:gnu/.*")
-def process_request(purl_str):
+def process_request(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a GNU Package URL (PURL) as a
     URI.
@@ -31,11 +31,16 @@ def process_request(purl_str):
     https://github.com/nexB/fetchcode and using it to create a new
     PackageDB entry. The package is then added to the scan queue afterwards.
     """
+    from minecode.model_utils import DEFAULT_PIPELINES
+
+    addon_pipelines = kwargs.get('addon_pipelines', [])
+    pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+
     package_url = PackageURL.from_string(purl_str)
     if not package_url.version:
         return
 
-    error_msg = map_fetchcode_supported_package(package_url)
+    error_msg = map_fetchcode_supported_package(package_url, pipelines)
 
     if error_msg:
         return error_msg

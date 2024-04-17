@@ -99,7 +99,7 @@ def get_download_info(conandata, version):
     return download_url, sha256
 
 
-def map_conan_package(package_url):
+def map_conan_package(package_url, pipelines):
     """
     Add a conan `package_url` to the PackageDB.
 
@@ -134,13 +134,13 @@ def map_conan_package(package_url):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package)
+        add_package_to_scan_queue(db_package, pipelines)
 
     return error
 
 
 @priority_router.route("pkg:conan/.*")
-def process_request(purl_str):
+def process_request(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a conan Package URL (PURL) as a
     URI.
@@ -149,11 +149,16 @@ def process_request(purl_str):
     https://github.com/conan-io/conan-center-index and using it to create a new
     PackageDB entry. The package is then added to the scan queue afterwards.
     """
+    from minecode.model_utils import DEFAULT_PIPELINES
+
     package_url = PackageURL.from_string(purl_str)
+    addon_pipelines = kwargs.get('addon_pipelines', [])
+    pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+
     if not package_url.version:
         return
 
-    error_msg = map_conan_package(package_url)
+    error_msg = map_conan_package(package_url, pipelines)
 
     if error_msg:
         return error_msg

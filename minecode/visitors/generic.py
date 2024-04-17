@@ -26,7 +26,7 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 
-def map_generic_package(package_url):
+def map_generic_package(package_url, pipelines):
     """
     Add a npm `package_url` to the PackageDB.
 
@@ -51,17 +51,22 @@ def map_generic_package(package_url):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package)
+        add_package_to_scan_queue(db_package, pipelines)
 
     return error
 
 
 @priority_router.route("pkg:generic/.*?download_url=.*")
-def process_request(purl_str):
+def process_request(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a generic Package URL (PURL) with
     download_url as a qualifier
     """
+    from minecode.model_utils import DEFAULT_PIPELINES
+
+    addon_pipelines = kwargs.get('addon_pipelines', [])
+    pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+
     try:
         package_url = PackageURL.from_string(purl_str)
     except ValueError as e:
@@ -73,7 +78,7 @@ def process_request(purl_str):
         error = f'package_url {purl_str} does not contain a download_url qualifier'
         return error
 
-    error_msg = map_generic_package(package_url)
+    error_msg = map_generic_package(package_url, pipelines)
 
     if error_msg:
         return error_msg
@@ -91,7 +96,7 @@ def packagedata_from_dict(package_data):
     return PackageData.from_data(cleaned_package_data)
 
 
-def map_fetchcode_supported_package(package_url):
+def map_fetchcode_supported_package(package_url, pipelines):
     """
     Add a `package_url` supported by fetchcode to the PackageDB.
 
@@ -116,7 +121,7 @@ def map_fetchcode_supported_package(package_url):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package)
+        add_package_to_scan_queue(db_package, pipelines)
 
     return error
 
@@ -156,7 +161,7 @@ GENERIC_FETCHCODE_SUPPORTED_PURLS = [
 # Indexing some generic PURLs requires a GitHub API token.
 # Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
 @priority_router.route(*GENERIC_FETCHCODE_SUPPORTED_PURLS)
-def process_request_fetchcode_generic(purl_str):
+def process_request_fetchcode_generic(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a generic Package URL (PURL)
     supported by fetchcode.
@@ -165,13 +170,18 @@ def process_request_fetchcode_generic(purl_str):
     https://github.com/nexB/fetchcode and using it to create a new
     PackageDB entry. The package is then added to the scan queue afterwards.
     """
+    from minecode.model_utils import DEFAULT_PIPELINES
+
+    addon_pipelines = kwargs.get('addon_pipelines', [])
+    pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+
     try:
         package_url = PackageURL.from_string(purl_str)
     except ValueError as e:
         error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
-    error_msg = map_fetchcode_supported_package(package_url)
+    error_msg = map_fetchcode_supported_package(package_url, pipelines)
 
     if error_msg:
         return error_msg
