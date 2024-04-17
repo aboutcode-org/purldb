@@ -679,7 +679,14 @@ class CollectViewSet(viewsets.ViewSet):
     Return Package data for the purl passed in the `purl` query parameter.
 
     If the package does not exist, we will fetch the Package data and return
-    it in the same request.
+    it in the same request.  
+    Optionally, provide the list of addon_pipelines
+    to run on the package. Find all addon pipelines [here.](https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html)
+
+    **Example:**
+
+            /api/collect/?purl=pkg:npm/foo@1.2.3&addon_pipelines=collect_symbols&addon_pipelines=inspect_elf_binaries
+
 
     **Note:** Use `Index packages` for bulk indexing/reindexing of packages.
     """
@@ -752,7 +759,10 @@ class CollectViewSet(viewsets.ViewSet):
         """
         Take a list of `packages` (where each item is a dictionary containing either PURL
         or versionless PURL along with vers range, optionally with source package PURL)
-        and index it.
+        and index it.  
+        Also each package can have list of `addon_pipelines` to run on the package.  
+        Find all addon pipelines [here.](https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html)
+
 
         If `reindex` flag is True then existing package will be rescanned, if `reindex_set`
         is True then all the package in the same set will be rescanned.
@@ -768,17 +778,20 @@ class CollectViewSet(viewsets.ViewSet):
                         {
                             "purl": "pkg:npm/less@1.0.32",
                             "vers": null,
-                            "source_purl": None
+                            "source_purl": None,
+                            "addon_pipelines": ['collect_symbols']
                         },
                         {
                             "purl": "pkg:npm/less",
                             "vers": "vers:npm/>=1.1.0|<=1.1.4",
-                            "source_purl": None
+                            "source_purl": None,
+                            "addon_pipelines": None
                         },
                         {
                             "purl": "pkg:npm/foobar",
                             "vers": null,
-                            "source_purl": None
+                            "source_purl": None,
+                            "addon_pipelines": ['inspect_elf_binaries', 'collect_symbols']
                         }
                     ]
                     "reindex": true,
