@@ -379,6 +379,7 @@ class CollectPackageSerializer(Serializer):
         )
 
     addon_pipelines = ListField(
+        child = CharField(),
         required=False,
         allow_empty=True,
         help_text="Addon pipelines to run on the package.",
@@ -398,6 +399,14 @@ class CollectPackageSerializer(Serializer):
             except ValueError as e:
                 raise ValidationError(f'purl validation error: {e}')
         return value
+
+    def validate_addon_pipelines(self, value):
+        invalid_pipelines = [pipe for pipe in value if not is_supported_addon_pipeline(pipe)]
+        if invalid_pipelines:
+            raise ValidationError(f'Error unsupported addon pipelines: {",".join(invalid_pipelines)}')
+
+        return value
+
 
 class PackageVersSerializer(Serializer):
     purl = CharField()
@@ -486,3 +495,8 @@ class PurltoGitRepoSerializer(Serializer):
 
 class PurltoGitRepoResponseSerializer(Serializer):
     git_repo = CharField(required=True)
+
+
+def is_supported_addon_pipeline(addon_pipeline):
+    from minecode.model_utils import SUPPORTED_ADDON_PIPELINES
+    return addon_pipeline in SUPPORTED_ADDON_PIPELINES

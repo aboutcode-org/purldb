@@ -53,7 +53,7 @@ from packagedb.models import Resource
 from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
 from packagedb.package_managers import get_api_package_name
 from packagedb.package_managers import get_version_fetcher
-from packagedb.serializers import CollectPackageSerializer
+from packagedb.serializers import CollectPackageSerializer, is_supported_addon_pipeline
 from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import IndexPackagesResponseSerializer
 from packagedb.serializers import IndexPackagesSerializer
@@ -856,7 +856,7 @@ class CollectViewSet(viewsets.ViewSet):
                 purl = package['purl']
                 kwargs = dict()
                 if addon_pipelines := package.get('source_purl'):
-                    kwargs["addon_pipelines"] = addon_pipelines
+                    kwargs["addon_pipelines"] = [pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)]
                 lookups = purl_to_lookups(purl)
                 packages = Package.objects.filter(**lookups)
                 if packages.count() > 0:
@@ -883,7 +883,7 @@ class CollectViewSet(viewsets.ViewSet):
                     if source_purl := package.get('source_purl'):
                         extra_fields["source_uri"] = source_purl
                     if addon_pipelines := package.get('addon_pipelines'):
-                        extra_fields["addon_pipelines"] = addon_pipelines
+                        extra_fields["addon_pipelines"] = [pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)]
                     priority_resource_uri = PriorityResourceURI.objects.insert(purl, **extra_fields)
                     if priority_resource_uri:
                         queued_packages.append(purl)

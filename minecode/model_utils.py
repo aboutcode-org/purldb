@@ -32,6 +32,14 @@ DEFAULT_PIPELINES = (
     'fingerprint_codebase',
 )
 
+# These are the list of supported addon pipelines to run when we scan a Package for
+# indexing.
+SUPPORTED_ADDON_PIPELINES = (
+    'collect_symbols',
+    'collect_source_strings',
+    'inspect_elf_binaries',
+)
+
 
 def add_package_to_scan_queue(package, pipelines=DEFAULT_PIPELINES, reindex_uri=False, priority=0):
     """

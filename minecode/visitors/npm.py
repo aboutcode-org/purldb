@@ -162,7 +162,7 @@ def map_npm_package(package_url, pipelines):
 
 
 @priority_router.route('pkg:npm/.*')
-def process_request(purl_str, *kwargs):
+def process_request(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a npm Package URL (PURL) as a
     URI.
