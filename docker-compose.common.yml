@@ -76,6 +76,8 @@ services:
   clearindex:
     build: .
     command: wait-for-it web:8000 -- python manage_purldb.py run_clearindex
+    env_file:
+      - docker_purldb.env
     profiles:
       - clearsync
     depends_on:

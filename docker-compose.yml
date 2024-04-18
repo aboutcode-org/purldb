@@ -4,17 +4,6 @@ include:
   - docker-compose.common.yml
 
 services:
-  traefik:
-    image: "traefik:v2.10"
-    container_name: "traefik"
-    hostname: "traefik"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./traefik.yml:/traefik.yml:ro"
-
   nginx:
     image: nginx
     labels:
@@ -28,6 +17,17 @@ services:
       - static:/var/purldb/static/
     depends_on:
       - web
+
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    hostname: "traefik"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik.yml:/traefik.yml:ro"
 
 networks:
   default:
