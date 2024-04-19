@@ -24,7 +24,7 @@ Installation
 Requirements
 ############
 * Debian-based Linux distribution
-* Python 3.8 or later
+* Python 3.11 or later
 * Postgres 13
 * git
 * scancode-toolkit runtime dependencies (https://scancode-toolkit.readthedocs.io/en/stable/getting-started/install.html#install-prerequisites)
@@ -88,23 +88,6 @@ variables will have to be set for the scan queue commands to work:
 
     SCANCODEIO_URL=<ScanCode.io API URL>
     SCANCODEIO_API_KEY=<ScanCode.io API Key>
-
-The scan queue is run using two commands:
-::
-
-    make request_scans
-
-``request_scans`` will send a Package scan request to a configured ScanCode.io
-instance. ScanCode.io will download, extract, and scan the files of the
-requested Package.
-::
-
-    make process_scans
-
-``process_scans`` will poll ScanCode.io for the status of the Package scans
-requested by ``request_scans``. When a Package scan on ScanCode.io is ready,
-``process_scans`` will use that data to create Resources and populate the
-MatchCode directory fingerprint indices.
 
 Package Resource data can also be gathered by running ClearCode, where Package
 scan data from clearlydefined is collected and its results are used to create
@@ -206,9 +189,8 @@ All requests to the host go to the PurlDB service, but requests that go to the
 To run PurlDB and Matchcode.io with Docker:
 ::
 
-  docker compose -f docker-compose_traefik.yml up -d
-  docker compose -f docker-compose_purldb.yml up -d
-  docker compose -f docker-compose_matchcodeio.yml up -d
+  docker compose -f docker-compose.yml up -d
+  docker compose -f docker-compose.matchcodeio.yml up -d
 
 Funding
 -------

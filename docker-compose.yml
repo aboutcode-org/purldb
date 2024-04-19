@@ -1,0 +1,35 @@
+version: "3.7"
+
+include:
+  - docker-compose.common.yml
+
+services:
+  nginx:
+    image: nginx
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=
+        Host(`127.0.0.1`)
+        || Host(`localhost`)"
+      - "traefik.http.routers.web.entrypoints=web"
+    volumes:
+      - ./etc/nginx/conf.d/:/etc/nginx/conf.d/
+      - static:/var/purldb/static/
+    depends_on:
+      - web
+
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    hostname: "traefik"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik.yml:/traefik.yml:ro"
+
+networks:
+  default:
+    name: purldb
+    external: true
