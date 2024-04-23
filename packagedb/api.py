@@ -315,6 +315,14 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         return Response({})
 
     @action(detail=True, methods=['get'])
+    def history(self, request, *args, **kwargs):
+        """
+        Return the History field associated with the current Package.
+        """
+        package = self.get_object()
+        return Response({"history" : package.history})
+
+    @action(detail=True, methods=['get'])
     def resources(self, request, *args, **kwargs):
         """
         Return the Resources associated with the current Package.
@@ -451,7 +459,7 @@ class PackageUpdateSet(viewsets.ViewSet):
     **Request example:**
         {
           "purls": [
-            {"purl": "pkg:npm/less@1.0.32", "content_type": 1}
+            {"purl": "pkg:npm/less@1.0.32", "content_type": "CURATION"}
           ],
           "uuid" : "b67ceb49-1538-481f-a572-431062f382gg"
         }
@@ -513,20 +521,6 @@ class PackageUpdateSet(viewsets.ViewSet):
         serializer = PurlUpdateResponseSerializer(res, many=True)
 
         return Response(serializer.data)
-
-
-class PackageViewSet(PackagePublicViewSet):
-    @action(detail=True)
-    def reindex_package(self, request, *args, **kwargs):
-        """
-        Reindex this package instance
-        """
-        package = self.get_object()
-        package.reindex()
-        data = {
-            'status': f'{package.package_url} has been queued for reindexing'
-        }
-        return Response(data)
 
 
 UPDATEABLE_FIELDS = [
