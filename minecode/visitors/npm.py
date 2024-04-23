@@ -127,7 +127,7 @@ def get_package_json(namespace, name, version):
         logger.error(f"HTTP error occurred: {err}")
 
 
-def map_npm_package(package_url):
+def map_npm_package(package_url, pipelines):
     """
     Add a npm `package_url` to the PackageDB.
 
@@ -156,13 +156,13 @@ def map_npm_package(package_url):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package)
+        add_package_to_scan_queue(db_package, pipelines)
 
     return error
 
 
 @priority_router.route('pkg:npm/.*')
-def process_request(purl_str):
+def process_request(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a npm Package URL (PURL) as a
     URI.
@@ -171,11 +171,16 @@ def process_request(purl_str):
     using it to create a new PackageDB entry. The package is then added to the
     scan queue afterwards.
     """
+    from minecode.model_utils import DEFAULT_PIPELINES
+    
+    addon_pipelines = kwargs.get('addon_pipelines', [])
+    pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+
     package_url = PackageURL.from_string(purl_str)
     if not package_url.version:
         return
 
-    error_msg = map_npm_package(package_url)
+    error_msg = map_npm_package(package_url, pipelines)
 
     if error_msg:
         return error_msg

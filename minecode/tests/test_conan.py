@@ -98,7 +98,7 @@ class ConanPriorityQueueTests(JsonBasedTesting, TestCase):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(package_count, 0)
 
-        conan.map_conan_package(self.package_url1)
+        conan.map_conan_package(self.package_url1, ('test_pipelines'))
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(package_count, 1)
         package = packagedb.models.Package.objects.all().first()

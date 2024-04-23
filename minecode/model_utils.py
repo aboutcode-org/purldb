@@ -30,6 +30,11 @@ logger.setLevel(logging.INFO)
 DEFAULT_PIPELINES = (
     'scan_single_package',
     'fingerprint_codebase',
+)
+
+# These are the list of supported addon pipelines to run when we scan a Package for
+# indexing.
+SUPPORTED_ADDON_PIPELINES = (
     'collect_symbols',
     'collect_source_strings',
     'inspect_elf_binaries',

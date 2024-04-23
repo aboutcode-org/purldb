@@ -15,6 +15,8 @@ from packagedb.models import PackageSet
 from packagedb.models import PackageWatch
 from packagedb.models import Party
 from packagedb.models import Resource
+from packageurl import PackageURL
+from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import HyperlinkedIdentityField
@@ -371,11 +373,53 @@ class PackageWatchUpdateSerializer(ModelSerializer):
         fields = ['depth', 'watch_interval', 'is_active']
 
 
+class CollectPackageSerializer(Serializer):
+    purl = CharField(help_text="PackageURL strings in canonical form.")
+    source_purl = CharField(
+        required=False, 
+        help_text="Source PackageURL.",
+        )
+
+    addon_pipelines = ListField(
+        child = CharField(),
+        required=False,
+        allow_empty=True,
+        help_text="Addon pipelines to run on the package.",
+        )
+    
+    def validate_purl(self, value):
+        try:
+            PackageURL.from_string(value)
+        except ValueError as e:
+            raise ValidationError(f'purl validation error: {e}')
+        return value
+    
+    def validate_source_purl(self, value):
+        if value:
+            try:
+                PackageURL.from_string(value)
+            except ValueError as e:
+                raise ValidationError(f'purl validation error: {e}')
+        return value
+
+    def validate_addon_pipelines(self, value):
+        invalid_pipelines = [pipe for pipe in value if not is_supported_addon_pipeline(pipe)]
+        if invalid_pipelines:
+            raise ValidationError(f'Error unsupported addon pipelines: {",".join(invalid_pipelines)}')
+
+        return value
+
+
 class PackageVersSerializer(Serializer):
     purl = CharField()
     vers = CharField(required=False)
 
     source_purl = CharField(required=False)
+    addon_pipelines = ListField(
+        required=False,
+        allow_empty=True,
+        help_text="Addon pipelines to run on the package.",
+        )
 
 
 class PackageUpdateSerializer(Serializer):
@@ -453,3 +497,8 @@ class PurltoGitRepoSerializer(Serializer):
 
 class PurltoGitRepoResponseSerializer(Serializer):
     git_repo = CharField(required=True)
+
+
+def is_supported_addon_pipeline(addon_pipeline):
+    from minecode.model_utils import SUPPORTED_ADDON_PIPELINES
+    return addon_pipeline in SUPPORTED_ADDON_PIPELINES

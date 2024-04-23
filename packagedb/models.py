@@ -620,15 +620,19 @@ class Package(
         if sorted_versions:
             return sorted_versions[-1]
 
-    def reindex(self):
+    def reindex(self, **kwargs):
         """
         Trigger another scan of this Package, where a new ScannableURI is
         created for this Package. The fingerprints and Resources associated with
         this Package are deleted and recreated from the updated scan data.
         """
         from minecode.model_utils import add_package_to_scan_queue
+        from minecode.model_utils import DEFAULT_PIPELINES
 
-        add_package_to_scan_queue(self, reindex_uri=True, priority=100)
+        addon_pipelines = kwargs.get('addon_pipelines', [])
+        pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+
+        add_package_to_scan_queue(self, pipelines=pipelines, reindex_uri=True, priority=100)
 
     def update_fields(self, save=False, **values_by_fields):
         """

@@ -332,7 +332,12 @@ def process_request(purl_str, **kwargs):
 
     Return an error string for errors that occur, or empty string if there is no error.
     """
+    from minecode.model_utils import DEFAULT_PIPELINES
+
     source_purl = kwargs.get("source_purl", None)
+    addon_pipelines = kwargs.get('addon_pipelines', [])
+    pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+
     try:
         package_url = PackageURL.from_string(purl_str)
         source_package_url = None
@@ -348,12 +353,13 @@ def process_request(purl_str, **kwargs):
         error = map_debian_metadata_binary_and_source(
             package_url=package_url, 
             source_package_url=source_package_url,
+            pipelines=pipelines,
         )
 
     return error
 
 
-def map_debian_package(debian_package, package_content):
+def map_debian_package(debian_package, package_content, pipelines):
     """
     Add a debian `package_url` to the PackageDB.
 
@@ -421,7 +427,7 @@ def map_debian_package(debian_package, package_content):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package)
+        add_package_to_scan_queue(db_package, pipelines)
 
     return db_package, error
 
@@ -501,13 +507,13 @@ def update_license_copyright_fields(package_from, package_to, replace=True):
             setattr(package_to, field, value)
 
 
-def map_debian_metadata_binary_and_source(package_url, source_package_url):
+def map_debian_metadata_binary_and_source(package_url, source_package_url, pipelines):
     """
     Get metadata for the binary and source release of the Debian package
     `package_url` and save it to the PackageDB.
 
     Return an error string for errors that occur, or empty string if there is no error.
-    """
+    """    
     error = ''
 
     if "repository_url" in package_url.qualifiers:
@@ -537,6 +543,7 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url):
     binary_package, emsg = map_debian_package(
         debian_package,
         PackageContentType.BINARY,
+        pipelines,
     )
     if emsg:
         error += emsg
@@ -545,6 +552,7 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url):
     source_package, emsg = map_debian_package(
         debian_package,
         PackageContentType.SOURCE_ARCHIVE,
+       pipelines,
     )
     if emsg:
         error += emsg
