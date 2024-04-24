@@ -3,6 +3,7 @@
 #
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
+from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import ExactFileIndex
 from minecode.management.commands import get_error_message
 import logging
@@ -30,6 +31,7 @@ def index_package_files(package, scan_data, reindex=False):
         logger.info(f'Deleting fingerprints and Resources related to {package.package_url}')
         package.approximatedirectorycontentindex_set.all().delete()
         package.approximatedirectorystructureindex_set.all().delete()
+        package.approximateresourcecontentindex_set.all().delete()
         package.exactfileindex_set.all().delete()
         package.resources.all().delete()
 
@@ -49,16 +51,25 @@ def index_package_files(package, scan_data, reindex=False):
             resource_extra_data = resource.get('extra_data', {})
             directory_content_fingerprint = resource_extra_data.get('directory_content', '')
             directory_structure_fingerprint = resource_extra_data.get('directory_structure', '')
+            halo1 = resource_extra_data.get('halo1', '')
 
             if directory_content_fingerprint:
                 _, _ = ApproximateDirectoryContentIndex.index(
-                    directory_fingerprint=directory_content_fingerprint,
+                    fingerprint=directory_content_fingerprint,
                     resource_path=path,
                     package=package,
                 )
+
             if directory_structure_fingerprint:
                 _, _ = ApproximateDirectoryStructureIndex.index(
-                    directory_fingerprint=directory_structure_fingerprint,
+                    fingerprint=directory_structure_fingerprint,
+                    resource_path=path,
+                    package=package,
+                )
+
+            if halo1:
+                _, _ = ApproximateResourceContentIndex.index(
+                    fingerprint=halo1,
                     resource_path=path,
                     package=package,
                 )
