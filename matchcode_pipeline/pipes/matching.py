@@ -323,8 +323,8 @@ def match_purldb_resources_approximately(project, logger=None):
         )
 
     matched_count = (
-        project.codebaseresources.directories()
-        .filter(status=flag.MATCHED_TO_PURLDB_DIRECTORY)
+        project.codebaseresources
+        .filter(status=flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE)
         .count()
     )
     logger(

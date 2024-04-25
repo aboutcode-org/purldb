@@ -115,7 +115,7 @@ def index_directory_fingerprints(codebase, package):
 
         if directory_content_fingerprint:
             _, adci_created = ApproximateDirectoryContentIndex.index(
-                directory_fingerprint=directory_content_fingerprint,
+                fingerprint=directory_content_fingerprint,
                 resource_path=resource.path,
                 package=package,
             )
@@ -124,7 +124,7 @@ def index_directory_fingerprints(codebase, package):
 
         if directory_structure_fingerprint:
             _, adsi_created = ApproximateDirectoryStructureIndex.index(
-                directory_fingerprint=directory_structure_fingerprint,
+                fingerprint=directory_structure_fingerprint,
                 resource_path=resource.path,
                 package=package,
             )

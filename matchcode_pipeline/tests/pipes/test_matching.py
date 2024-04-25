@@ -32,7 +32,7 @@ class MatchingPipesTest(TestCase):
             sha1="abcdef"
         )
         self.directory_content_fingerprint1 = ApproximateDirectoryContentIndex.index(
-            directory_fingerprint="00000003238f6ed2c218090d4da80b3b42160e69",
+            fingerprint="00000003238f6ed2c218090d4da80b3b42160e69",
             resource_path="test",
             package=self.package1,
         )
