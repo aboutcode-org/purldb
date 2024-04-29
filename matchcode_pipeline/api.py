@@ -185,9 +185,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         fields = (
             'url',
             'uuid',
-            "upload_file",
             "input_urls",
-            "webhook_url",
             "created_date",
             "input_sources",
             "runs",
@@ -195,20 +193,12 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "package_count",
             "dependency_count",
             "relation_count",
-            "codebase_resources_summary",
-            "discovered_packages_summary",
-            "discovered_dependencies_summary",
-            "codebase_relations_summary",
         )
         exclude_from_list_view = [
             "resource_count",
             "package_count",
             "dependency_count",
             "relation_count",
-            "codebase_resources_summary",
-            "discovered_packages_summary",
-            "discovered_dependencies_summary",
-            "codebase_relations_summary",
         ]
         extra_kwargs = {
             'url': {
@@ -249,6 +239,36 @@ class MatchingViewSet(
 ):
     queryset = Project.objects.all()
     serializer_class = MatchingSerializer
+    filterset_class = ProjectFilterSet
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .prefetch_related(
+                "runs",
+            )
+        )
+
+    @action(detail=True, renderer_classes=[renderers.JSONRenderer])
+    def results(self, request, *args, **kwargs):
+        """
+        Return the results compatible with ScanCode data format.
+        The content is returned as a stream of JSON content using the
+        JSONResultsGenerator class.
+        """
+        return project_results_json_response(self.get_object())
+
+
+class D2DViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = Project.objects.all()
+    serializer_class = D2DSerializer
     filterset_class = ProjectFilterSet
 
     def get_queryset(self):
