@@ -23,6 +23,7 @@ from scanpipe.api.views import RunViewSet
 from scanpipe.models import Project
 from scanpipe.models import Run
 from scanpipe.pipes import count_group_by
+from scanpipe.pipes.fetch import check_urls_availability
 from scanpipe.pipes.fetch import fetch_urls
 from scanpipe.views import project_results_json_response
 
@@ -166,6 +167,73 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
 
         if webhook_url:
             project.add_webhook_subscription(webhook_url)
+
+        project.add_pipeline(matching_pipeline_name, execute_now)
+
+        return project
+
+
+class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
+    input_urls = StrListField(
+        write_only=True,
+        required=False,
+        style={"base_template": "textarea.html"},
+    )
+
+    class Meta:
+        model = Project
+        fields = (
+            'url',
+            'uuid',
+            "upload_file",
+            "input_urls",
+            "webhook_url",
+            "created_date",
+            "input_sources",
+            "runs",
+            "resource_count",
+            "package_count",
+            "dependency_count",
+            "relation_count",
+            "codebase_resources_summary",
+            "discovered_packages_summary",
+            "discovered_dependencies_summary",
+            "codebase_relations_summary",
+        )
+        exclude_from_list_view = [
+            "resource_count",
+            "package_count",
+            "dependency_count",
+            "relation_count",
+            "codebase_resources_summary",
+            "discovered_packages_summary",
+            "discovered_dependencies_summary",
+            "codebase_relations_summary",
+        ]
+        extra_kwargs = {
+            'url': {
+                'view_name': 'matching-detail',
+                'lookup_field': 'pk',
+            },
+        }
+
+    def create(self, validated_data, matching_pipeline_name='d2d'):
+        """
+        Create a new `project` with `upload_file`, using the `matching` pipeline
+        """
+        execute_now = True
+        validated_data['name'] = uuid4()
+        input_urls = validated_data.pop("input_urls", [])
+
+        errors = check_urls_availability(input_urls)
+
+        if errors:
+            raise serializers.ValidationError("Could not fetch: " + "\n".join(errors))
+
+        project = super().create(validated_data)
+
+        for url in input_urls:
+            project.add_input_source(download_url=url)
 
         project.add_pipeline(matching_pipeline_name, execute_now)
 
