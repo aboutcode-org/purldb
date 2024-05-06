@@ -176,7 +176,7 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
 class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
     input_urls = StrListField(
         write_only=True,
-        required=False,
+        required=True,
         style={"base_template": "textarea.html"},
     )
 
@@ -214,7 +214,6 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         execute_now = True
         validated_data['name'] = uuid4()
         input_urls = validated_data.pop("input_urls", [])
-
         errors = check_urls_availability(input_urls)
 
         if errors:
@@ -222,10 +221,24 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
 
         project = super().create(validated_data)
 
-        for url in input_urls:
+        urls = []
+
+        for url in input_urls: 
+            value = url
+            if "\n" in value:
+                input_urls = input_urls[0].split("\n")
+                input_urls = [x.strip() for x in input_urls]
+                input_urls = list(filter(None, input_urls))
+                urls.extend(input_urls)
+            else:
+                value = value.strip()
+                if value:
+                    urls.append(value)
+
+        for url in urls:
             project.add_input_source(download_url=url)
 
-        project.add_pipeline(matching_pipeline_name, execute_now)
+        project.add_pipeline(matching_pipeline_name, selected_groups=["Java", "Javascript", "Elf", "Go"], execute_now=execute_now)
 
         return project
 
