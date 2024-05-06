@@ -15,18 +15,18 @@ from unittest.mock import patch
 from django.test import TestCase
 from packageurl import PackageURL
 
-from purl2vcs.find_source_repo import convert_repo_urls_to_purls
-from purl2vcs.find_source_repo import fetch_response
-from purl2vcs.find_source_repo import get_repo_urls
-from purl2vcs.find_source_repo import get_source_repo
-from purl2vcs.find_source_repo import get_source_urls_from_package_data_and_resources
-from purl2vcs.find_source_repo import get_tag_and_commit
-from purl2vcs.find_source_repo import get_tags_and_commits
-from purl2vcs.find_source_repo import get_urls_from_package_data
-from purl2vcs.find_source_repo import get_urls_from_package_resources
-from packagedb.models import Package
-from packagedb.models import PackageContentType
-from packagedb.models import Resource
+from packagedb.models import Package, PackageContentType, Resource
+from purl2vcs.find_source_repo import (
+    convert_repo_urls_to_purls,
+    fetch_response,
+    get_repo_urls,
+    get_source_repo,
+    get_source_urls_from_package_data_and_resources,
+    get_tag_and_commit,
+    get_tags_and_commits,
+    get_urls_from_package_data,
+    get_urls_from_package_resources,
+)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEST_DATA = os.path.join(BASE_DIR, "testfiles", "find_source_repo", "tags_commits.txt")

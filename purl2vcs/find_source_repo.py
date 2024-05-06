@@ -9,22 +9,18 @@
 
 import logging
 import subprocess
-from typing import Generator
-from typing import List
+from typing import Generator, List
 from urllib.parse import urlparse
 
 import requests
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
-from packageurl.contrib.purl2url import get_download_url
-from packageurl.contrib.purl2url import purl2url
+from packageurl.contrib.purl2url import get_download_url, purl2url
 from scancode.api import get_urls as get_urls_from_location
 
 from minecode.model_utils import add_package_to_scan_queue
 from minecode.visitors.maven import get_merged_ancestor_package_from_maven_package
-from packagedb.models import Package
-from packagedb.models import PackageContentType
-from packagedb.models import PackageSet
+from packagedb.models import Package, PackageContentType, PackageSet
 
 logger = logging.getLogger(__name__)
 
@@ -248,53 +244,67 @@ def get_source_urls_from_package_data_and_resources(package: Package) -> List[st
 
 def convert_repo_urls_to_purls(source_urls):
     """
-    Convert a source URL to a purl
+    Yield PURLs from a list from a list of source repository URLs.
+    """
+    for source_url in source_urls or []:
+        yield from convert_repo_url_to_purls(source_url)
+
+
+def convert_repo_url_to_purls(source_url):
+    """
+    Yield PURLs from a single source repository URL.
     """
     url_hints = [
         "github",
         "gitlab",
         "bitbucket",
     ]
-    if not source_urls:
-        return
-    for source_url in source_urls:
-        # git@github.com+https://github.com/graphql-java/java-dataloader.git
-        if source_url.startswith("git@github.com+"):
-            _, _, source_url = source_url.partition("+")
-        # https+//github.com/graphql-java-kickstart/graphql-java-servlet.git
-        if source_url.startswith("https+//"):
-            # convert https+// to https://
-            source_url = source_url.replace("https+//", "https://")
-        if (
-            source_url.startswith("git+https://") or source_url.startswith("git://")
-        ) and "@" in source_url:
-            # remove the commit from the end of the URL
-            source_url, _, _ = source_url.rpartition("@")
-        # remove .git from the end of the URL
-        if source_url.endswith(".git"):
-            source_url, _, _ = source_url.rpartition(".git")
-        if source_url.startswith("git://"):
-            # remove git:// from the beginning of the URL
-            _, _, source_url = source_url.partition("git://")
-            if ":" in source_url:
-                # convert : to /
-                source_url = source_url.replace(":", "/")
-            source_url = f"https://{source_url}"
-        urlparse_result = urlparse(source_url)
-        path_segments = urlparse_result.path.split("/")
-        if not len(path_segments) > 2:
-            continue
-        namespace = path_segments[1]
-        name = path_segments[2]
-        if not name:
-            continue
-        for url_hint in url_hints:
-            if url_hint in urlparse_result.netloc:
-                yield PackageURL(
-                    type=url_hint,
-                    namespace=namespace,
-                    name=name,
-                )
+    # URL like: git@github.com+https://github.com/graphql-java/java-dataloader.git
+    if source_url.startswith("git@github.com+"):
+        _, _, source_url = source_url.partition("+")
+
+    # VCS URL like: https+//github.com/graphql-java-kickstart/graphql-java-servlet.git
+    if source_url.startswith("https+//"):
+        # convert https+// to https://
+        source_url = source_url.replace("https+//", "https://")
+
+    if (
+        source_url.startswith("git+https://") or source_url.startswith("git://")
+    ) and "@" in source_url:
+        # remove the commit from the end of the URL
+        source_url, _, _ = source_url.rpartition("@")
+
+    # remove .git from the end of the URL
+    if source_url.endswith(".git"):
+        source_url, _, _ = source_url.rpartition(".git")
+
+    # git:: URLs
+    if source_url.startswith("git://"):
+        # remove git:// from the beginning of the URL
+        _, _, source_url = source_url.partition("git://")
+        if ":" in source_url:
+            # convert : to /
+            source_url = source_url.replace(":", "/")
+        source_url = f"https://{source_url}"
+
+    urlparse_result = urlparse(source_url)
+
+    path_segments = urlparse_result.path.split("/")
+    if not len(path_segments) > 2:
+        continue
+
+    namespace = path_segments[1]
+    name = path_segments[2]
+    if not name:
+        continue
+
+    for url_hint in url_hints:
+        if url_hint in urlparse_result.netloc:
+            yield PackageURL(
+                type=url_hint,
+                namespace=namespace,
+                name=name,
+            )
 
 
 def get_urls_from_package_resources(package):

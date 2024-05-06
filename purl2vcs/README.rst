@@ -8,6 +8,24 @@ In the future, it will also find paths and branches, which is useful for monorep
 Usage
 -------
 
+- First, import the main module: ``from purl2vcs import find_source_repo``
+
+- To use the functions you first need to acquire some Package objects:
+  Use the ``get_package_object_from_purl(package_url)`` passing a PURL string to get an object from the database
+
+- To find the source repository of a Package, call `get_source_repo(package)`
+  to will get a PackageURL object back.
+
+- To generate all the source repository URLs of a Package, call `get_repo_urls(package)`.
+
+- To convert a single source repo URLs to PURLs, call  ``convert_repo_url_to_purls``
+- To convert a list of source repo URLs to PURLs, call  ``convert_repo_urls_to_purls``
+
+- To find the commit or tags from a source repo PURL use ``get_tags_and_commits``
+
+- The low level ``get_tags_and_commits`` is used in ``find_package_version_tag_and_commit`` to find the tag and commit of a given package ``version`` in a source repo PURL.
+
+
 Installation
 ------------
 
