@@ -5,7 +5,7 @@ build-backend = "flot.buildapi"
 [project]
 name = "purl2vcs"
 # keep version same as purldb for now
-version = "2.0.0"
+version = "1.0.0"
 description = "purl2vcs is an add-on library working with the PurlDB to find the version control system (VCS) URL of a package and detect the commit, tags and path for a given version."
 readme = "purl2vcs/README.rst"
 license = { text = "Apache-2.0" }
@@ -47,7 +47,6 @@ classifiers = [    "SBOM",
 ]
 
 
-
 dependencies = [
     # get packagedb, purldb, minecode and related module for now from this single package
     "purldb >= 2.0.0",
@@ -60,9 +59,23 @@ dependencies = [
 Homepage = "https://github.com/nexB/purldb"
 
 
+[project.optional-dependencies]
+
+testing = [
+    "flot",
+    "pytest >= 6, != 7.0.0",
+    "pytest-xdist >= 2",
+    "aboutcode-toolkit >= 7.0.2",
+    "pycodestyle >= 2.8.0",
+    "twine",
+    "black",
+    "isort",
+    "pytest-rerunfailures",
+    "bump-my-version",
+]
 
 [tool.bumpversion]
-current_version = "2.0.0"
+current_version = "1.0.0"
 allow_dirty = true
 
 files = [
@@ -106,136 +119,4 @@ sdist_extra_includes = [
     ".gitignore",
     "NOTICE",
     "configure*",
-]
-
-
-[tool.isort]
-force_single_line = "True"
-line_length = 88
-sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
-skip = "doc,venv,tmp,thirdparty,build,dist"
-
-
-[project.scripts]
-scancode = "scancode.cli:scancode"
-scancode-reindex-licenses = "licensedcode.reindex:reindex_licenses"
-scancode-license-data = "licensedcode.license_db:dump_scancode_license_data"
-regen-package-docs = "packagedcode.regen_package_docs:regen_package_docs"
-
-
-# These are configurations for ScanCode plugins as entry points.
-# Each plugin entry hast this form:
-#   plugin-name = f"ully.qualified.module:PluginClass"
-# where plugin-name must be a unique arbitrary name for this entrypoint.
-
-# scancode_pre_scan is the entry point for pre_scan plugins executed before the
-# scans. See also plugincode.pre_scan module for details and doc.
-[project.entry-points.scancode_pre_scan]
-ignore = "scancode.plugin_ignore:ProcessIgnore"
-facet = "summarycode.facet:AddFacet"
-
-
-# scancode_scan is the entry point for scan plugins that run a scan after the
-# pre_scan plugins and before the post_scan plugins. See also plugincode.scan
-# module for details and doc.
-[project.entry-points.scancode_scan]
-info = "scancode.plugin_info:InfoScanner"
-licenses = "licensedcode.plugin_license:LicenseScanner"
-copyrights = "cluecode.plugin_copyright:CopyrightScanner"
-packages = "packagedcode.plugin_package:PackageScanner"
-emails = "cluecode.plugin_email:EmailScanner"
-urls = "cluecode.plugin_url:UrlScanner"
-generated = "summarycode.generated:GeneratedCodeDetector"
-
-
-# scancode_post_scan is the entry point for post_scan plugins executed after the
-# scan plugins and before the output plugins. See also plugincode.post_scan
-# module for details and doc.
-[project.entry-points.scancode_post_scan]
-summary = "summarycode.summarizer:ScanSummary"
-tallies = "summarycode.tallies:Tallies"
-tallies-with-details = "summarycode.tallies:TalliesWithDetails"
-tallies-key-files = "summarycode.tallies:KeyFilesTallies"
-tallies-by-facet = "summarycode.tallies:FacetTallies"
-license-clarity-score = "summarycode.score:LicenseClarityScore"
-license-policy = "licensedcode.plugin_license_policy:LicensePolicy"
-mark-source = "scancode.plugin_mark_source:MarkSource"
-filter-clues = "cluecode.plugin_filter_clues:RedundantCluesFilter"
-consolidate = "summarycode.plugin_consolidate:Consolidator"
-license-references = "licensedcode.licenses_reference:LicenseReference"
-todo = "summarycode.todo:AmbiguousDetectionsToDoPlugin"
-classify = "summarycode.classify_plugin:FileClassifier"
-
-
-# scancode_output_filter is the entry point for filter plugins executed after
-# the post-scan plugins and used by the output plugins to exclude/filter certain
-# files or directories from the codebase. See also plugincode.post_scan module
-# for details and doc.
-[project.entry-points.scancode_output_filter]
-only-findings = "scancode.plugin_only_findings:OnlyFindings"
-ignore-copyrights = "cluecode.plugin_ignore_copyrights:IgnoreCopyrights"
-
-
-# scancode_output is the entry point for output plugins that write a scan output
-# in a given format at the end of a scan. See also plugincode._output module for
-# details and doc.
-[project.entry-points.scancode_output]
-html = "formattedcode.output_html:HtmlOutput"
-html-app = "formattedcode.output_html:HtmlAppOutput"
-json = "formattedcode.output_json:JsonCompactOutput"
-json-pp = "formattedcode.output_json:JsonPrettyOutput"
-spdx-tv = "formattedcode.output_spdx:SpdxTvOutput"
-spdx-rdf = "formattedcode.output_spdx:SpdxRdfOutput"
-csv = "formattedcode.output_csv:CsvOutput"
-jsonlines = "formattedcode.output_jsonlines:JsonLinesOutput"
-template = "formattedcode.output_html:CustomTemplateOutput"
-debian = "formattedcode.output_debian:DebianCopyrightOutput"
-yaml = "formattedcode.output_yaml:YamlOutput"
-cyclonedx = "formattedcode.output_cyclonedx:CycloneDxJsonOutput"
-cyclonedx-xml = "formattedcode.output_cyclonedx:CycloneDxXmlOutput"
-
-
-[tool.pytest.ini_options]
-norecursedirs = [
-   ".git",
-   "bin",
-   "dist",
-   "build",
-   "_build",
-   "dist",
-   "etc",
-   "local",
-   "ci",
-   "docs",
-   "man",
-   "share",
-   "samples",
-   ".cache",
-   ".settings",
-   "Include",
-   "include",
-   "Lib",
-   "lib",
-   "lib64",
-   "Lib64",
-   "Scripts",
-   "thirdparty",
-   "tmp",
-   "venv",
-   "tests/data",
-   ".eggs",
-   "src/*/data",
-   "tests/*/data",
-   "src/licensedcode/_vendor"
-]
-
-python_files = "*.py"
-
-python_classes = "Test"
-python_functions = "test"
-
-addopts = [
-    "-rfExXw",
-    "--strict-markers",
-    "--doctest-modules"
 ]
