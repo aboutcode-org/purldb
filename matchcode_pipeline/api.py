@@ -173,7 +173,7 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         return project
 
 
-class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
+class D2DSerializer(MatchingSerializer):
     input_urls = StrListField(
         write_only=True,
         required=True,
@@ -193,16 +193,24 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "package_count",
             "dependency_count",
             "relation_count",
+            "codebase_resources_summary",
+            "discovered_packages_summary",
+            "discovered_dependencies_summary",
+            "codebase_relations_summary",
         )
         exclude_from_list_view = [
             "resource_count",
             "package_count",
             "dependency_count",
             "relation_count",
+            "codebase_resources_summary",
+            "discovered_packages_summary",
+            "discovered_dependencies_summary",
+            "codebase_relations_summary",
         ]
         extra_kwargs = {
             'url': {
-                'view_name': 'matching-detail',
+                'view_name': 'd2d-detail',
                 'lookup_field': 'pk',
             },
         }
