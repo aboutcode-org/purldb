@@ -156,6 +156,7 @@ def get_source_repo_and_add_to_package_set():
         source_package = Package.objects.for_package_url(
             purl_str=str(source_purl)
         ).get_or_none()
+
         if not source_package:
             source_package, _created = Package.objects.get_or_create(
                 type=source_purl.type,
@@ -291,12 +292,12 @@ def convert_repo_url_to_purls(source_url):
 
     path_segments = urlparse_result.path.split("/")
     if not len(path_segments) > 2:
-        continue
+        return
 
     namespace = path_segments[1]
     name = path_segments[2]
     if not name:
-        continue
+        return
 
     for url_hint in url_hints:
         if url_hint in urlparse_result.netloc:
