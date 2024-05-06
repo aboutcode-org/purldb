@@ -11,7 +11,7 @@ import logging
 import sys
 
 from minecode.management.commands import VerboseCommand
-from packagedb.find_source_repo import get_source_repo_and_add_to_package_set
+from purl2vcs.find_source_repo import get_source_repo_and_add_to_package_set
 
 TRACE = False
 

@@ -14,8 +14,8 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from packagedb.find_source_repo import get_package_object_from_purl
-from packagedb.find_source_repo import get_source_repo
+from purl2vcs.find_source_repo import get_package_object_from_purl
+from purl2vcs.find_source_repo import get_source_repo
 from packagedb.serializers import PurltoGitRepoResponseSerializer
 from packagedb.serializers import PurltoGitRepoSerializer
 
