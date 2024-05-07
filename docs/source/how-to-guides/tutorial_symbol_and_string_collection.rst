@@ -217,7 +217,7 @@ Ctags Symbols
 -------------
 
 - Send GET request to PurlDB with::
-    
+
     /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_symbols
 
 .. warning::
@@ -290,7 +290,7 @@ Xgettext Strings
 ----------------
 
 - Send GET request to PurlDB with::
-    
+
     /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_source_strings
 
 .. warning::
@@ -362,7 +362,7 @@ Tree-Sitter Symbols and Strings
 -------------------------------
 
 - Send GET request to PurlDB with::
-    
+
     /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_tree_sitter_symbols
 
 - Once the indexing has completed visit ``/api/resources/?purl=pkg:github/llvm/llvm-project@10.0.0``
@@ -717,7 +717,7 @@ Pygments Symbols and Strings
 -------------------------------
 
 - Send GET request to PurlDB with::
-    
+
     /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_pygments_symbols
 
 - Once the indexing has completed visit ``/api/resources/?purl=pkg:github/llvm/llvm-project@10.0.0``
