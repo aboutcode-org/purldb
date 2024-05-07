@@ -138,6 +138,10 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         queryset = project.codebaserelations.all()
         return count_group_by(queryset, "map_type")
 
+    def validate_input_urls(self, value):
+        """Add support for providing multiple URLs in a single string."""
+        return [url for entry in value for url in entry.split()]
+
     def create(self, validated_data, matching_pipeline_name='matching'):
         """
         Create a new `project` with `upload_file`, using the `matching` pipeline

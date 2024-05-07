@@ -127,9 +127,31 @@ class MatchCodePipelineAPITest(TransactionTestCase):
     def test_matching_pipeline_api_matching_create(self, mock_execute_pipeline_task):
         # load upload_file contents
         test_out_loc = self.data_location / 'test-out.json'
-        content = open(test_out_loc, 'r')
+
+        with open(test_out_loc) as f:
+            data = {
+                'upload_file': f,
+            }
+            # Send match request
+            response = self.csrf_client.post(self.matching_list_url, data)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(1, len(response.data['runs']))
+        self.assertEqual('matching', response.data['runs'][0]['pipeline_name'])
+        mock_execute_pipeline_task.assert_called_once()
+
+        created_matching_project_detail_url = response.data['url']
+        matching_project_uuid = response.data['uuid']
+        results_url = reverse('matching-results', args=[matching_project_uuid])
+
+        # Check that the file was uploaded
+        response = self.csrf_client.get(created_matching_project_detail_url)
+        self.assertEqual('test-out.json', response.data['input_sources'][0]['filename'])
+
+    @mock.patch('scanpipe.models.Run.execute_task_async')
+    def test_matching_pipeline_api_matching_create_multiple_input_urls(self, mock_execute_pipeline_task):
+        # load input_urls
         data = {
-            'upload_file': content,
+            'input_urls': 'https://registry.npmjs.org/asdf/-/asdf-1.2.2.tgz\r\nhttps://registry.npmjs.org/asdf/-/asdf-1.2.1.tgz',
         }
 
         # Send match request
@@ -145,7 +167,10 @@ class MatchCodePipelineAPITest(TransactionTestCase):
 
         # Check that the file was uploaded
         response = self.csrf_client.get(created_matching_project_detail_url)
-        self.assertEqual('test-out.json', response.data['input_sources'][0]['filename'])
+        input_sources = response.data['input_sources']
+        self.assertEqual(2, len(input_sources))
+        self.assertEqual('asdf-1.2.2.tgz', input_sources[0]['filename'])
+        self.assertEqual('asdf-1.2.1.tgz', input_sources[1]['filename'])
 
     def test_matchcode_pipeline_api_run_detail(self):
         run1 = self.project1.add_pipeline('matching')
