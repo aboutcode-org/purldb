@@ -12,12 +12,14 @@ from django.urls import path
 from django.views.generic import RedirectView
 from rest_framework import routers
 
+from matchcode_pipeline.api import D2DViewSet 
 from matchcode_pipeline.api import MatchingViewSet
 from matchcode_pipeline.api import RunViewSet
 
 
 api_router = routers.DefaultRouter()
 api_router.register('matching', MatchingViewSet, basename='matching')
+api_router.register('d2d', D2DViewSet, basename='d2d')
 api_router.register('runs', RunViewSet)
 
 urlpatterns = [

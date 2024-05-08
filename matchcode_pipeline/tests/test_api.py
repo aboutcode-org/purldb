@@ -175,11 +175,73 @@ class MatchCodePipelineAPITest(TransactionTestCase):
     def test_matchcode_pipeline_api_run_detail(self):
         run1 = self.project1.add_pipeline('matching')
         url = reverse('run-detail', args=[run1.uuid])
+        project1_detail_url = reverse('run-detail', args=[self.project1.uuid])
         response = self.csrf_client.get(url)
         self.assertEqual(str(run1.uuid), response.data['uuid'])
-        self.assertIn(self.project1_detail_url, response.data['project'])
+        self.assertIn(project1_detail_url, response.data['project'])
         self.assertEqual('matching', response.data['pipeline_name'])
         self.assertEqual('', response.data['description'])
+        self.assertEqual('', response.data['scancodeio_version'])
+        self.assertIsNone(response.data['task_id'])
+        self.assertIsNone(response.data['task_start_date'])
+        self.assertIsNone(response.data['task_end_date'])
+        self.assertEqual('', response.data['task_output'])
+        self.assertIsNone(response.data['execution_time'])
+        self.assertEqual(Run.Status.NOT_STARTED, response.data['status'])
+
+
+# Write tests for the following API views:
+# D2DViewSet
+
+class D2DPipelineAPITest(TransactionTestCase):
+    databases = {'default', 'packagedb'}
+    data_location = Path(__file__).parent / 'data'
+
+    def setUp(self):
+        self.project1 = Project.objects.create(name='Analysis')
+        self.d2d_list_url = reverse('d2d-list')
+        self.project1_detail_url = reverse('d2d-detail', args=[self.project1.uuid])
+
+        self.user = User.objects.create_user('username', 'a@mail.com', 'secret')
+        self.auth = f'Token {self.user.auth_token.key}'
+        self.csrf_client = APIClient(enforce_csrf_checks=True)
+        self.csrf_client.credentials(HTTP_AUTHORIZATION=self.auth)
+    
+    def test_d2d_pipeline_api_d2d_list(self):
+        response = self.csrf_client.get(self.d2d_list_url)
+
+        self.assertContains(response, self.project1_detail_url)
+        self.assertEqual(1, response.data['count'])
+        self.assertNotContains(response, 'input_root')
+        self.assertNotContains(response, 'extra_data')
+        self.assertNotContains(response, 'message_count')
+        self.assertNotContains(response, 'resource_count')
+        self.assertNotContains(response, 'package_count')
+        self.assertNotContains(response, 'dependency_count')
+    
+    @mock.patch('scanpipe.models.Run.execute_task_async')
+    def test_d2d_pipeline_api_d2d_create(self, mock_execute_pipeline_task):
+        # load upload_file contents
+        data = {
+            'input_urls': ['https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/from-data.zip#from', 
+                           'https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/to-data.zip#to'],
+        }
+
+        # Send match request
+        response = self.csrf_client.post(self.d2d_list_url, data)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(1, len(response.data['runs']))
+        mock_execute_pipeline_task.assert_called_once()
+    
+    def test_d2d_pipeline_api_run_detail(self):
+        run1 = self.project1.add_pipeline('d2d')
+        url = reverse('run-detail', args=[run1.uuid])
+        project1_detail_url = reverse('run-detail', args=[self.project1.uuid])
+        response = self.csrf_client.get(url)
+        self.assertEqual(str(run1.uuid), response.data['uuid'])
+        self.assertIn(project1_detail_url, response.data['project'])
+        self.assertEqual('d2d', response.data['pipeline_name'])
+        self.assertEqual('Establish relationships between two code trees: deployment and development.', response.data['description'])
         self.assertEqual('', response.data['scancodeio_version'])
         self.assertIsNone(response.data['task_id'])
         self.assertIsNone(response.data['task_start_date'])
