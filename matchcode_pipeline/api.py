@@ -30,7 +30,7 @@ from scanpipe.views import project_results_json_response
 
 class RunSerializer(SerializerExcludeFieldsMixin, serializers.ModelSerializer):
     project = serializers.HyperlinkedRelatedField(
-        view_name="matching-detail", read_only=True
+        view_name="run-detail", read_only=True
     )
 
     class Meta:
@@ -173,12 +173,17 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         return project
 
 
-class D2DSerializer(MatchingSerializer):
+class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
     input_urls = StrListField(
         write_only=True,
         required=True,
         style={"base_template": "textarea.html"},
     )
+
+    codebase_resources_summary = serializers.SerializerMethodField()
+    discovered_packages_summary = serializers.SerializerMethodField()
+    discovered_dependencies_summary = serializers.SerializerMethodField()
+    codebase_relations_summary = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
@@ -215,9 +220,34 @@ class D2DSerializer(MatchingSerializer):
             },
         }
 
+    def get_codebase_resources_summary(self, project):
+        queryset = project.codebaseresources.all()
+        return count_group_by(queryset, "status")
+
+    def get_discovered_packages_summary(self, project):
+        base_qs = project.discoveredpackages
+        return {
+            "total": base_qs.count(),
+            "with_missing_resources": base_qs.exclude(missing_resources=[]).count(),
+            "with_modified_resources": base_qs.exclude(modified_resources=[]).count(),
+        }
+
+    def get_discovered_dependencies_summary(self, project):
+        base_qs = project.discovereddependencies
+        return {
+            "total": base_qs.count(),
+            "is_runtime": base_qs.filter(is_runtime=True).count(),
+            "is_optional": base_qs.filter(is_optional=True).count(),
+            "is_resolved": base_qs.filter(is_resolved=True).count(),
+        }
+
+    def get_codebase_relations_summary(self, project):
+        queryset = project.codebaserelations.all()
+        return count_group_by(queryset, "map_type")
+
     def create(self, validated_data, matching_pipeline_name='d2d'):
         """
-        Create a new `project` with `upload_file`, using the `matching` pipeline
+        Create a new `project` with `upload_file`, using the `d2d` pipeline
         """
         execute_now = True
         validated_data['name'] = uuid4()

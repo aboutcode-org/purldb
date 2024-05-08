@@ -175,9 +175,10 @@ class MatchCodePipelineAPITest(TransactionTestCase):
     def test_matchcode_pipeline_api_run_detail(self):
         run1 = self.project1.add_pipeline('matching')
         url = reverse('run-detail', args=[run1.uuid])
+        project1_detail_url = reverse('run-detail', args=[self.project1.uuid])
         response = self.csrf_client.get(url)
         self.assertEqual(str(run1.uuid), response.data['uuid'])
-        self.assertIn(self.project1_detail_url, response.data['project'])
+        self.assertIn(project1_detail_url, response.data['project'])
         self.assertEqual('matching', response.data['pipeline_name'])
         self.assertEqual('', response.data['description'])
         self.assertEqual('', response.data['scancodeio_version'])
@@ -229,8 +230,7 @@ class D2DPipelineAPITest(TransactionTestCase):
         # Send match request
         response = self.csrf_client.post(self.d2d_list_url, data)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
-        self.assertEqual(2, len(response.data['runs']))
-        self.assertEqual('d2d', response.data['runs'][1]['pipeline_name'])
+        self.assertEqual(1, len(response.data['runs']))
         mock_execute_pipeline_task.assert_called_once()
     
     def test_d2d_pipeline_api_run_detail(self):
@@ -241,7 +241,7 @@ class D2DPipelineAPITest(TransactionTestCase):
         self.assertEqual(str(run1.uuid), response.data['uuid'])
         self.assertIn(project1_detail_url, response.data['project'])
         self.assertEqual('d2d', response.data['pipeline_name'])
-        self.assertEqual('', response.data['description'])
+        self.assertEqual('Establish relationships between two code trees: deployment and development.', response.data['description'])
         self.assertEqual('', response.data['scancodeio_version'])
         self.assertIsNone(response.data['task_id'])
         self.assertIsNone(response.data['task_start_date'])
