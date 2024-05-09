@@ -885,5 +885,65 @@ def clear_log_file():
         os.remove(log_file)
 
 
+@purlcli.command(name="d2d")
+@click.option(
+    "--purl",
+    "purl",
+    multiple=False,
+    required=True,
+    help="PackageURL or PURL.",
+)
+@click.option(
+    "--output",
+    type=click.File(mode="w", encoding="utf-8"),
+    required=True,
+    default="-",
+    help="Write meta output as JSON to FILE.",
+)
+def d2d(purl, output):
+    """
+    Given one or more PURLs, for each PURL, return a mapping of metadata
+    fetched from the fetchcode package.py info() function.
+    """
+    context = click.get_current_context()
+    command_name = context.command.name
+
+    from_url, to_url = collect_purl_from_purldb(purl)
+
+    from_url = f"{from_url}#from"
+    to_url = f"{from_url}#to"
+
+    input_urls = [from_url, to_url]
+
+    response = requests.post(data=json.dumps(input_urls))
+    data = response.json()
+    project_url = data.get("url")
+
+    json.dump(requests.get(project_url).json(), output, indent=4)    
+
+
+def collect_purl_from_purldb(purl):
+    """
+    Collect package details from purldb.
+    """
+    response = requests.get(f"https://public.purldb.io/api/collect/?purl={purl}")
+    data = response.json()
+
+    package_sets = data.get("package_sets", [])
+    packages = package_sets.get("packages", [])
+
+    from_url = ""
+    to_url = ""
+
+    for package in packages:
+        package_response = requests.get(package)
+        package_data = package_response.json()
+        if package_data.get("type") == "source_repo":
+            from_url = package_data.get("download_url")
+        if package_data.get("type") == "binary":
+            to_url = package_data.get("download_url")
+    
+    return from_url, to_url
+
 if __name__ == "__main__":
     purlcli()
