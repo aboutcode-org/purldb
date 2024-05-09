@@ -46,7 +46,7 @@ classifiers = [
 
 dependencies = [
     # get packagedb, purldb, minecode and related module for now from this single package
-    "purldb >= 2.0.0",
+    "purldb",
     "requests >= 2.7.0",
     "scancode-toolkit >= 32.0.0",
     "packageurl_python >= 0.9.0",
