@@ -679,7 +679,7 @@ class CollectViewSet(viewsets.ViewSet):
 
     **Example:**
 
-            /api/collect/?purl=pkg:npm/foo@1.2.3&addon_pipelines=collect_symbols&addon_pipelines=inspect_elf_binaries
+            /api/collect/?purl=pkg:npm/foo@1.2.3&addon_pipelines=collect_symbols_ctags&addon_pipelines=inspect_elf_binaries
 
 
     **Note:** Use `Index packages` for bulk indexing/reindexing of packages.
@@ -773,7 +773,7 @@ class CollectViewSet(viewsets.ViewSet):
                             "purl": "pkg:npm/less@1.0.32",
                             "vers": null,
                             "source_purl": None,
-                            "addon_pipelines": ['collect_symbols']
+                            "addon_pipelines": ['collect_symbols_ctags']
                         },
                         {
                             "purl": "pkg:npm/less",
@@ -785,7 +785,7 @@ class CollectViewSet(viewsets.ViewSet):
                             "purl": "pkg:npm/foobar",
                             "vers": null,
                             "source_purl": None,
-                            "addon_pipelines": ['inspect_elf_binaries', 'collect_symbols']
+                            "addon_pipelines": ['inspect_elf_binaries', 'collect_symbols_ctags']
                         }
                     ]
                     "reindex": true,

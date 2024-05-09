@@ -78,16 +78,15 @@ resource.
    </br>
 
 
-
 Ctags Symbols
 -------------
 
 - Send GET request to PurlDB with::
 
-    /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_symbols
+    /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_symbols_ctags
 
 .. warning::
-    The ``collect_symbols`` pipeline requires ``universal-ctags``.
+    The ``collect_symbols_ctags`` pipeline requires ``universal-ctags``.
 
 - Once the indexing has completed visit ``/api/resources/?purl=pkg:github/llvm/llvm-project@10.0.0``
   to get the ``source_symbols`` for resources.
@@ -147,10 +146,10 @@ Xgettext Strings
 
 - Send GET request to PurlDB with::
 
-    /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_source_strings
+    /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_strings_gettext
 
 .. warning::
-    The ``collect_source_strings`` pipeline requires ``gettext``.
+    The ``collect_strings_gettext`` pipeline requires ``gettext``.
 
 - Once the indexing has completed visit ``/api/resources/?purl=pkg:github/llvm/llvm-project@10.0.0``
   to get the ``source_strings`` for resources.
@@ -209,7 +208,7 @@ Tree-Sitter Symbols and Strings
 
 - Send GET request to PurlDB with::
 
-    /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_tree_sitter_symbols
+    /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_symbols_tree_sitter
 
 - Once the indexing has completed visit ``/api/resources/?purl=pkg:github/llvm/llvm-project@10.0.0``
   to get the ``source_symbols`` and ``source_strings`` for resources.
@@ -311,7 +310,7 @@ Pygments Symbols and Strings
 
 - Send GET request to PurlDB with::
 
-    /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_pygments_symbols
+    /api/collect/?purl=pkg:github/llvm/llvm-project@10.0.0&addon_pipelines=collect_symbols_pygments
 
 - Once the indexing has completed visit ``/api/resources/?purl=pkg:github/llvm/llvm-project@10.0.0``
   to get the ``source_symbols`` and ``source_strings`` for resources.
