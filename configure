@@ -30,8 +30,8 @@ CLI_ARGS=$1
 CUSTOM_PACKAGES=""
 
 # Requirement arguments passed to pip and used by default or with --dev.
-REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/ --editable . --constraint requirements.txt"
-DEV_REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/[testing] --editable .[testing] --constraint requirements.txt --constraint requirements-dev.txt"
+REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/ --editable purl2vcs/ --editable . --constraint requirements.txt"
+DEV_REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/[testing] --editable .[testing] --editable purl2vcs/[testing] --constraint requirements.txt --constraint requirements-dev.txt"
 DOCS_REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/ --editable .[docs] --constraint requirements.txt"
 
 # where we create a virtualenv

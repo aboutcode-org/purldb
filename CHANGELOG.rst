@@ -9,9 +9,10 @@ Next Release
 
 
 v4.0.0
-------------
+---------
 
 - Add `/api/docs` Swagger API documentation for API endpoints.
+
 
 v3.0.0
 -------
@@ -26,7 +27,6 @@ This is a major release with major API changes
 - Add new and improved scan queue
 - Add a new matchcode-toolkit for matching packaged as a ScanCode plugin
 - This is now using the latest version of ScanCode toolkit
-
 
 
 v2.0.0
