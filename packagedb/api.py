@@ -24,7 +24,6 @@ from drf_spectacular.utils import OpenApiParameter
 from drf_spectacular.utils import extend_schema
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
-from purl2vcs.src.purl2vcs.find_source_repo import process_package
 from rest_framework import mixins
 from rest_framework import status
 from rest_framework import viewsets
@@ -70,6 +69,7 @@ from packagedb.serializers import PurlUpdateResponseSerializer
 from packagedb.serializers import PurlValidateSerializer
 from packagedb.serializers import ResourceAPISerializer
 from packagedb.throttling import StaffUserRateThrottle
+from purl2vcs.find_source_repo import process_package
 
 logger = logging.getLogger(__name__)
 
