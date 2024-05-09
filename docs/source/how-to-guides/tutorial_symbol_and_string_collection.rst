@@ -15,8 +15,13 @@ Through out this tutorial we will use ``pkg:github/llvm/llvm-project@10.0.0`` an
 the symbol and string for `llvm-project/clang/lib/Basic/Targets/BPF.cpp <https://github.com/llvm/llvm-project/blob/llvmorg-10.0.0/clang/lib/Basic/Targets/BPF.cpp>`_
 resource.
 
+.. raw:: html
+
+   <details>
+   <summary><a>BPF.cpp</a></summary>
+   </br>
+
 .. code-block:: cpp
-    :caption: BPF.cpp
 
     //===--- BPF.cpp - Implement BPF target feature support -------------------===//
     //
@@ -66,6 +71,12 @@ resource.
       return llvm::makeArrayRef(BuiltinInfo, clang::BPF::LastTSBuiltin -
                                                 Builtin::FirstTSBuiltin);
     }
+
+.. raw:: html
+
+   </details>
+   </br>
+
 
 
 Ctags Symbols
