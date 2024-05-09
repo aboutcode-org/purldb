@@ -24,6 +24,7 @@ from drf_spectacular.utils import OpenApiParameter
 from drf_spectacular.utils import extend_schema
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
+from purl2vcs.src.purl2vcs.find_source_repo import process_package
 from rest_framework import mixins
 from rest_framework import status
 from rest_framework import viewsets
@@ -738,6 +739,8 @@ class CollectViewSet(viewsets.ViewSet):
                         'status': f'error(s) occurred when fetching metadata for {purl}: {errors}'
                     }
                 return Response(message)
+        for package in packages:
+            process_package(package)
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
