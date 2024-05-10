@@ -12,6 +12,10 @@ from operator import or_
 
 from django.db.models import Q
 
+from commoncode.resource import VirtualCodebase
+from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
+import attr
+
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ExactFileIndex
@@ -48,6 +52,21 @@ def do_match(codebase, match_type):
         raise Exception('Unknown match type: {}'.format(match_type))
     match_count = matcher(codebase)
     return match_count
+
+
+def run_do_match_from_scan(scan_file_location, match_type):
+    vc = VirtualCodebase(
+        location=scan_file_location,
+        codebase_attributes=dict(
+            matches=attr.ib(default=attr.Factory(list))
+        ),
+        resource_attributes=dict(
+            matched_to=attr.ib(default=attr.Factory(list))
+        )
+    )
+    vc = compute_codebase_directory_fingerprints(vc)
+    do_match(vc, match_type)
+    return vc
 
 
 def package_archive_match(codebase):

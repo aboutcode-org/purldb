@@ -9,38 +9,20 @@
 
 import os
 
-import attr
-from commoncode.resource import VirtualCodebase
 from packagedb.models import Package
 
-from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
-from matchcode.management.commands.index_packages import index_package_directories
-from matchcode.match import EXACT_PACKAGE_ARCHIVE_MATCH
-from matchcode.match import APPROXIMATE_DIRECTORY_STRUCTURE_MATCH
-from matchcode.match import APPROXIMATE_DIRECTORY_CONTENT_MATCH
-from matchcode.match import EXACT_FILE_MATCH
-from matchcode.match import do_match
-from matchcode.match import path_suffixes
+from matchcode.match_test_utils import EXACT_PACKAGE_ARCHIVE_MATCH
+from matchcode.match_test_utils import APPROXIMATE_DIRECTORY_STRUCTURE_MATCH
+from matchcode.match_test_utils import APPROXIMATE_DIRECTORY_CONTENT_MATCH
+from matchcode.match_test_utils import EXACT_FILE_MATCH
+from matchcode.match_test_utils import path_suffixes
+from matchcode.match_test_utils import run_do_match_from_scan
+from matchcode.utils import index_package_directories
 from matchcode.utils import index_package_files_sha1
 from matchcode.utils import index_packages_sha1
 from matchcode.utils import load_resources_from_scan
 from matchcode.utils import MatchcodeTestCase
 from matchcode.tests import FIXTURES_REGEN
-
-
-def run_do_match_from_scan(scan_file_location, match_type):
-    vc = VirtualCodebase(
-        location=scan_file_location,
-        codebase_attributes=dict(
-            matches=attr.ib(default=attr.Factory(list))
-        ),
-        resource_attributes=dict(
-            matched_to=attr.ib(default=attr.Factory(list))
-        )
-    )
-    vc = compute_codebase_directory_fingerprints(vc)
-    do_match(vc, match_type)
-    return vc
 
 
 class MatchPackagesTestCase(MatchcodeTestCase):

@@ -19,6 +19,7 @@ from django.test import TestCase as DjangoTestCase
 from commoncode.resource import VirtualCodebase
 from scancode.cli_test_utils import purl_with_fake_uuid
 
+from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 
 from matchcode.tests import FIXTURES_REGEN
@@ -156,3 +157,119 @@ def index_package_files_sha1(package, scan_location):
             sha1=sha1_in_bin,
             package=package,
         )
+
+
+def _create_virtual_codebase_from_package_resources(package):
+    """
+    Return a VirtualCodebase from the resources of `package`
+    """
+    # Create something that looks like a scancode scan so we can import it into
+    # a VirtualCodebase
+    package_resources = package.resources.order_by('path')
+    if not package_resources:
+        return
+
+    files = []
+    for resource in package_resources:
+        files.append(
+            {
+                'path': resource.path,
+                'size': resource.size,
+                'sha1': resource.sha1,
+                'md5': resource.md5,
+                'type': resource.type,
+            }
+        )
+
+    make_new_root = False
+    sample_file_path = files[0].get('path', '')
+    root_dir = sample_file_path.split('/')[0]
+    for f in files:
+        file_path = f.get('path', '')
+        if not file_path.startswith(root_dir):
+            make_new_root = True
+            break
+
+    if make_new_root:
+        new_root = '{}-{}'.format(package.name, package.version)
+        for f in files:
+            new_path = os.path.join(new_root, f.get('path', ''))
+            f['path'] = new_path
+
+    # Create VirtualCodebase
+    mock_scan = dict(files=files)
+    return VirtualCodebase(location=mock_scan)
+
+
+def index_resource_fingerprints(codebase, package):
+    """
+    Index fingerprints for directories and resources from `codebase` into the
+    ApproximateDirectoryContentIndex, ApproximateDirectoryStructureIndex, and
+    ApproximateResourceContentIndex models.
+
+    Return a tuple of integers, `indexed_adci`, `indexed_adsi`, and
+    `indexed_arci` that represent the number of indexed
+    ApproximateDirectoryContentIndex, ApproximateDirectoryStructureIndex, and
+    ApproximateResourceContentIndex created, respectivly.
+    """
+    from matchcode.models import ApproximateDirectoryContentIndex
+    from matchcode.models import ApproximateDirectoryStructureIndex
+    from matchcode.models import ApproximateResourceContentIndex
+
+    indexed_adci = 0
+    indexed_adsi = 0
+    indexed_arci = 0
+    for resource in codebase.walk(topdown=False):
+        directory_content_fingerprint = resource.extra_data.get('directory_content', '')
+        directory_structure_fingerprint = resource.extra_data.get('directory_structure', '')
+        resource_content_fingerprint = resource.extra_data.get('halo1', '')
+
+        if directory_content_fingerprint:
+            _, adci_created = ApproximateDirectoryContentIndex.index(
+                fingerprint=directory_content_fingerprint,
+                resource_path=resource.path,
+                package=package,
+            )
+            if adci_created:
+                indexed_adci += 1
+
+        if directory_structure_fingerprint:
+            _, adsi_created = ApproximateDirectoryStructureIndex.index(
+                fingerprint=directory_structure_fingerprint,
+                resource_path=resource.path,
+                package=package,
+            )
+            if adsi_created:
+                indexed_adsi += 1
+
+        if resource_content_fingerprint:
+            _, arci_created = ApproximateResourceContentIndex.index(
+                fingerprint=directory_structure_fingerprint,
+                resource_path=resource.path,
+                package=package,
+            )
+            if arci_created:
+                indexed_arci += 1
+
+    return indexed_adci, indexed_adsi, indexed_arci
+
+
+def index_package_directories(package):
+    """
+    Index the directories of `package` to ApproximateDirectoryContentIndex and
+    ApproximateDirectoryStructureIndex.
+
+    Return a tuple of integers, `indexed_adci`, `indexed_adsi`, and
+    `indexed_arci` that represent the number of indexed
+    ApproximateDirectoryContentIndex, ApproximateDirectoryStructureIndex, and
+    ApproximateResourceContentIndex created, respectivly.
+
+    Return 0, 0, 0 if a VirtualCodebase cannot be created from the Resources of
+    a Package.
+    """
+    vc = _create_virtual_codebase_from_package_resources(package)
+    if not vc:
+        return 0, 0, 0
+
+    vc = compute_codebase_directory_fingerprints(vc)
+    return index_resource_fingerprints(vc, package)

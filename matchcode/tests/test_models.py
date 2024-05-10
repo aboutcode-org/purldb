@@ -15,12 +15,12 @@ import attr
 
 from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
-from matchcode.management.commands.index_packages import index_package_directories
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import create_halohash_chunks
 from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ExactFileIndex
+from matchcode.utils import index_package_directories
 from matchcode.utils import index_packages_sha1
 from matchcode.utils import index_package_files_sha1
 from matchcode.utils import load_resources_from_scan
