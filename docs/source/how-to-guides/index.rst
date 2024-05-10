@@ -11,4 +11,4 @@ thourgh specifica use cases:
    :maxdepth: 2
 
    matchcode
-   purl2sym
+   tutorial_symbol_and_string_collection
