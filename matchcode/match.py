@@ -18,16 +18,22 @@ import attr
 
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
+from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import ExactFileIndex
 from matchcode.models import ExactPackageArchiveIndex
 
 
-# TODO: Refactor this file into functions/utilities used in
-# a scanpipe pipeline.
+"""
+These functions are convenience functions to run matching on a Codebase or
+VirtualCodebase for the purpose of testing. The functions that are used for
+matching are in `matchcode_pipeline/pipes/matching.py`.
+"""
+
 EXACT_PACKAGE_ARCHIVE_MATCH = 0
 APPROXIMATE_DIRECTORY_STRUCTURE_MATCH = 1
 APPROXIMATE_DIRECTORY_CONTENT_MATCH = 2
 EXACT_FILE_MATCH = 3
+APPROXIMATE_FILE_MATCH = 4
 
 
 def get_matchers():
@@ -36,15 +42,17 @@ def get_matchers():
         APPROXIMATE_DIRECTORY_CONTENT_MATCH: approximate_directory_content_match,
         APPROXIMATE_DIRECTORY_STRUCTURE_MATCH: approximate_directory_structure_match,
         EXACT_FILE_MATCH: individual_file_match,
+        APPROXIMATE_FILE_MATCH: approximate_file_match,
     }
     return MATCHERS_BY_MATCH_TYPE
 
 
 def do_match(codebase, match_type):
     """
-    Perform Package matching on `codebase` by running matching functions of `match_type` on `codebase`
+    Perform Package matching on `codebase` by running matching functions of
+    `match_type` on `codebase`.
 
-    The total number of matches found is returned
+    The total number of matches found is returned.
     """
 
     matcher = get_matchers().get(match_type)
@@ -135,9 +143,9 @@ def approximate_directory_structure_match(codebase):
 
 def individual_file_match(codebase):
     """
-    Update Matches from detected Package files in `codebase`
+    Update Matches from detected Package files in `codebase`.
 
-    Return the number of matches found in `codebase`
+    Return the number of matches found in `codebase`.
     """
     match_count = 0
     for resource in codebase.walk(topdown=True):
@@ -145,6 +153,25 @@ def individual_file_match(codebase):
             continue
 
         file_matches, match_type = get_file_match(resource)
+        if not file_matches:
+            continue
+
+        match_count += len(file_matches)
+        tag_matched_resources(resource, codebase, file_matches, match_type)
+    return match_count
+
+
+def approximate_file_match(codebase):
+    """
+    Update Matches from approximatly matched Package files in `codebase`.
+
+    Return  the number of approximate matches found in `codebase`.
+    """
+    match_count = 0
+    for resource in codebase.walk(topdown=True):
+        if resource.is_dir or resource.extra_data.get('matched', False):
+            continue
+        file_matches, match_type = get_approximate_file_match(resource)
         if not file_matches:
             continue
 
@@ -196,6 +223,18 @@ def get_file_match(resource):
     """
     file_matches = ExactFileIndex.match(resource.sha1)
     return file_matches, 'exact-file'
+
+
+def get_approximate_file_match(resource):
+    """
+    Approximately match an individual file back to the Package it is from
+    """
+    if hasattr(resource, 'halo1'):
+        resource_content_fingerprint = resource.halo1
+    else:
+        resource_content_fingerprint = resource.extra_data.get('halo1', '')
+    file_matches = ApproximateResourceContentIndex.match(resource_content_fingerprint)
+    return file_matches, 'approximate-file'
 
 
 def tag_matched_resource(resource, codebase, purl):

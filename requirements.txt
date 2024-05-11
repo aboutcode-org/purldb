@@ -74,7 +74,7 @@ lxml==5.2.1
 Markdown==3.5.1
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
-matchcode-toolkit==5.0.0
+matchcode-toolkit==5.1.0
 mdurl==0.1.2
 mock==5.1.0
 more-itertools==10.2.0
@@ -128,7 +128,7 @@ rq-scheduler==0.13.1
 rubymarshal==1.0.3
 saneyaml==0.6.0
 scancode-toolkit @ git+https://github.com/nexB/scancode-toolkit.git@684360f2ca01bc676368bc8621eed65065bf0f11
-scancodeio @ git+https://github.com/nexB/scancode.io.git@fd0e03245681ca10ab8ab51012c6e0e7f5d6a463
+scancodeio @ git+https://github.com/nexB/scancode.io.git@96323a57c49a39fc2a775ea0a00ae04710f1d1da
 semantic-version==2.10.0
 semver==3.0.2
 setuptools==69.5.1
