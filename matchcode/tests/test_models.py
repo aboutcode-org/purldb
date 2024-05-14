@@ -11,12 +11,14 @@ import os
 
 from commoncode.resource import VirtualCodebase
 from packagedb.models import Package
+from packagedb.models import Resource
 import attr
 
 from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
+from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import create_halohash_chunks
 from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ExactFileIndex
@@ -208,6 +210,54 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
                 resource.save(codebase)
 
         expected = self.get_test_loc('models/directory-matching/async-0.2.9-i-expected-content.json')
+        self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
+
+
+class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
+    BASE_DIR = os.path.join(os.path.dirname(__file__), 'testfiles')
+
+    def setUp(self):
+        super(MatchcodeTestCase, self).setUp()
+
+        # Add approximate file resource
+        self.test_package, _ = Package.objects.get_or_create(
+            filename='inflate.tar.gz',
+            sha1='deadfeed',
+            type='generic',
+            name='inflate',
+            version='1.0.0',
+            download_url='inflate.com/inflate.tar.gz',
+        )
+        self.test_resource, _ = Resource.objects.get_or_create(
+            path='inflate.c',
+            package=self.test_package
+        )
+        self.test_resource_fingerprint = '000018fba23a49e4cd40718d1297be719e6564a4'
+        ApproximateResourceContentIndex.index(
+            self.test_resource_fingerprint,
+            self.test_resource.path,
+            self.test_package
+        )
+
+    def test_ApproximateResourceContentIndex_match(self):
+        scan_location = self.get_test_loc('match/approximate-file-matching/approximate-match-test.json')
+        codebase = VirtualCodebase(
+            location=scan_location,
+            resource_attributes=dict(packages=attr.ib(default=attr.Factory(list)))
+        )
+
+        # populate codebase with match results
+        for resource in codebase.walk(topdown=True):
+            if not (fp := resource.halo1):
+                continue
+            matches = ApproximateResourceContentIndex.match(fp)
+            for match in matches:
+                p = match.package.to_dict()
+                p['match_type'] = 'approximate-resource-content'
+                resource.packages.append(p)
+                resource.save(codebase)
+
+        expected = self.get_test_loc('match/approximate-file-matching/approximate-match-model-test-results.json')
         self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
 
 
