@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import binascii
 import os
 
 from commoncode.resource import VirtualCodebase
@@ -99,6 +100,25 @@ class BaseModelTest(MatchcodeTestCase):
 
 
 class ExactPackageArchiveIndexModelTestCase(BaseModelTest):
+    def test_ExactPackageArchiveIndex_index(self):
+        # Test index
+        sha1 = 'b6bbe0b067469d719708ca38de5c237cb526c3d2'
+        epai, created = ExactPackageArchiveIndex.index(sha1, self.test_package1)
+        self.assertTrue(created)
+        self.assertEqual(sha1, epai.fingerprint())
+
+        # Test index of existing sha1
+        epai, created = ExactPackageArchiveIndex.index(sha1, self.test_package1)
+        self.assertFalse(created)
+        self.assertEqual(sha1, epai.fingerprint())
+
+        # Test index of invalid sha1
+        ExactPackageArchiveIndex.index('not a sha1', self.test_package1)
+        self.assertTrue(
+            "Error('Non-hexadecimal digit found')"
+            in self.test_package1.index_error
+        )
+
     def test_ExactPackageArchiveIndex_single_sha1_single_match(self):
         result = ExactPackageArchiveIndex.match('51d28a27d919ce8690a40f4f335b9d591ceb16e9')
         result = [r.package.to_dict() for r in result]
@@ -107,6 +127,25 @@ class ExactPackageArchiveIndexModelTestCase(BaseModelTest):
 
 
 class ExactFileIndexModelTestCase(BaseModelTest):
+    def test_ExactFileIndex_index(self):
+        # Test index
+        sha1 = 'b6bbe0b067469d719708ca38de5c237cb526c3d2'
+        efi, created = ExactFileIndex.index(sha1, self.test_package1)
+        self.assertTrue(created)
+        self.assertEqual(sha1, efi.fingerprint())
+
+        # Test index of existing sha1
+        efi, created = ExactFileIndex.index(sha1, self.test_package1)
+        self.assertFalse(created)
+        self.assertEqual(sha1, efi.fingerprint())
+
+        # Test index of invalid sha1
+        ExactFileIndex.index('not a sha1', self.test_package1)
+        self.assertTrue(
+            "Error('Non-hexadecimal digit found')"
+            in self.test_package1.index_error
+        )
+
     def test_ExactFileIndex_match(self):
         scan_location = self.get_test_loc('models/match-test.json')
         codebase = VirtualCodebase(
@@ -166,6 +205,38 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
         load_resources_from_scan(self.get_test_loc('models/directory-matching/async-0.2.9-i.json'), self.test_package2)
         index_package_directories(self.test_package2)
 
+    def test_ApproximateDirectoryStructureIndex_index(self):
+        # Test index
+        fingerprint = '000018fad23a49e4cd40718d1297be719e6564a4'
+        resource_path = 'foo/bar'
+        adsi, created = ApproximateResourceContentIndex.index(
+            fingerprint,
+            resource_path,
+            self.test_package1
+        )
+        self.assertTrue(created)
+        self.assertEqual(fingerprint, adsi.fingerprint())
+
+        # Test index of existing fingerprint
+        adsi, created = ApproximateResourceContentIndex.index(
+            fingerprint,
+            resource_path,
+            self.test_package1
+        )
+        self.assertFalse(created)
+        self.assertEqual(fingerprint, adsi.fingerprint())
+
+        # Test index of invalid fingerprint
+        ApproximateResourceContentIndex.index(
+            'not a fingerprint',
+            resource_path,
+            self.test_package1
+        )
+        self.assertTrue(
+            "ValueError: invalid literal for int() with base 16: 'not a fi'"
+            in self.test_package1.index_error
+        )
+
     def test_ApproximateDirectoryStructureIndex_match_subdir(self):
         scan_location = self.get_test_loc('models/directory-matching/async-0.2.9-i.json')
         vc = VirtualCodebase(
@@ -188,6 +259,38 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
 
         expected = self.get_test_loc('models/directory-matching/async-0.2.9-i-expected-structure.json')
         self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
+
+    def test_ApproximateDirectoryContentIndex_index(self):
+        # Test index
+        fingerprint = '000018fad23a49e4cd40718d1297be719e6564a4'
+        resource_path = 'foo/bar'
+        adci, created = ApproximateResourceContentIndex.index(
+            fingerprint,
+            resource_path,
+            self.test_package1
+        )
+        self.assertTrue(created)
+        self.assertEqual(fingerprint, adci.fingerprint())
+
+        # Test index of existing fingerprint
+        adci, created = ApproximateResourceContentIndex.index(
+            fingerprint,
+            resource_path,
+            self.test_package1
+        )
+        self.assertFalse(created)
+        self.assertEqual(fingerprint, adci.fingerprint())
+
+        # Test index of invalid fingerprint
+        ApproximateResourceContentIndex.index(
+            'not a fingerprint',
+            resource_path,
+            self.test_package1
+        )
+        self.assertTrue(
+            "ValueError: invalid literal for int() with base 16: 'not a fi'"
+            in self.test_package1.index_error
+        )
 
     def test_ApproximateDirectoryContentIndex_match_subdir(self):
         scan_location = self.get_test_loc('models/directory-matching/async-0.2.9-i.json')
@@ -237,6 +340,38 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
             self.test_resource_fingerprint,
             self.test_resource.path,
             self.test_package
+        )
+
+    def test_ApproximateResourceContentIndex_index(self):
+        # Test index
+        fingerprint = '000018fba23a39e4cd40718d1297be719e6564a4'
+        resource_path = 'foo/bar'
+        adci, created = ApproximateResourceContentIndex.index(
+            fingerprint,
+            resource_path,
+            self.test_package
+        )
+        self.assertTrue(created)
+        self.assertEqual(fingerprint, adci.fingerprint())
+
+        # Test index of existing fingerprint
+        adci, created = ApproximateResourceContentIndex.index(
+            fingerprint,
+            resource_path,
+            self.test_package
+        )
+        self.assertFalse(created)
+        self.assertEqual(fingerprint, adci.fingerprint())
+
+        # Test index of invalid fingerprint
+        ApproximateResourceContentIndex.index(
+            'not a fingerprint',
+            resource_path,
+            self.test_package
+        )
+        self.assertTrue(
+            "ValueError: invalid literal for int() with base 16: 'not a fi'"
+            in self.test_package.index_error
         )
 
     def test_ApproximateResourceContentIndex_match(self):

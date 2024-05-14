@@ -82,7 +82,7 @@ class BaseFileIndex(models.Model):
                 )
             return bfi, created
         except Exception as e:
-            msg = f'Error creating {bfi.__class__.__name__}:\n'
+            msg = f'Error creating FileIndex:\n'
             msg += get_error_message(e)
             package.index_error = msg
             package.save()
@@ -227,7 +227,7 @@ class ApproximateMatchingHashMixin(models.Model):
                 )
             return bdi, created
         except Exception as e:
-            msg = f'Error creating {bdi.__class__.__name__}:\n'
+            msg = f'Error creating ApproximateMatchingHashMixin:\n'
             msg += get_error_message(e)
             package.index_error = msg
             package.save()
