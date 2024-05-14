@@ -1,5 +1,5 @@
 {
-  "declared_license_expression": null,
+  "declared_license_expression": "apache-2.0",
   "license_clarity_score": {
     "score": 0,
     "declared_license": false,
@@ -9,21 +9,27 @@
     "conflicting_license_categories": false,
     "ambiguous_compound_licensing": true
   },
-  "declared_holder": "",
+  "declared_holder": "Apache Software Foundation",
   "primary_language": null,
-  "other_license_expressions": [],
+  "other_license_expressions": [
+
+  ],
   "other_holders": [
     {
       "value": null,
-      "count": 492
-    },
-    {
-      "value": "Timothy Wall",
-      "count": 3
+      "count": 45
     }
   ],
-  "other_languages": [],
-  "license_matches": {},
-  "key_files": [],
-  "key_files_packages": []
+  "other_languages": [
+
+  ],
+  "license_matches": {
+
+  },
+  "key_files": [
+
+  ],
+  "key_files_packages": [
+
+  ]
 }

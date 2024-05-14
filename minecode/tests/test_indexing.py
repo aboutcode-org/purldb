@@ -30,11 +30,11 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
 
     def setUp(self):
         self.package1 = Package.objects.create(
-            download_url='https://repo1.maven.org/maven2/abbot/abbot/0.12.3/abbot-0.12.3.jar',
+            download_url='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
             type='maven',
-            namespace='abbot',
-            name='abbot',
-            version='0.12.3'
+            namespace='',
+            name='wagon-api',
+            version='20040705.181715'
         )
 
         self.package2 = Package.objects.create(
@@ -54,30 +54,30 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         self.assertEqual(0, ExactFileIndex.objects.count())
         self.assertEqual(0, Resource.objects.count())
 
-        scan_data_loc = self.get_test_loc('indexing/scancodeio_abbot-0.12.3.json')
+        scan_data_loc = self.get_test_loc('indexing/scancodeio_wagon-api-20040705.181715.json')
         with open(scan_data_loc, 'rb') as f:
             scan_data = json.loads(f.read())
 
         indexing_errors = indexing.index_package_files(self.package1, scan_data)
         self.assertEqual(0, len(indexing_errors))
 
-        self.assertEqual(18, ApproximateDirectoryContentIndex.objects.count())
-        self.assertEqual(18, ApproximateDirectoryStructureIndex.objects.count())
-        self.assertEqual(11, ApproximateResourceContentIndex.objects.count())
-        self.assertEqual(491, ExactFileIndex.objects.count())
+        self.assertEqual(11, ApproximateDirectoryContentIndex.objects.count())
+        self.assertEqual(11, ApproximateDirectoryStructureIndex.objects.count())
+        self.assertEqual(2, ApproximateResourceContentIndex.objects.count())
+        self.assertEqual(45, ExactFileIndex.objects.count())
 
         resources = Resource.objects.filter(package=self.package1)
-        self.assertEqual(515, len(resources))
+        self.assertEqual(64, len(resources))
         resource_data = [r.to_dict() for r in resources]
-        expected_resources_loc = self.get_test_loc('indexing/scancodeio_abbot-0.12.3-expected.json')
+        expected_resources_loc = self.get_test_loc('indexing/scancodeio_wagon-api-20040705.181715-expected.json')
         self.check_expected_results(resource_data, expected_resources_loc, regen=FIXTURES_REGEN)
 
     def test_indexing_index_package(self):
-        scan_data_loc = self.get_test_loc('indexing/scancodeio_abbot-0.12.3.json')
+        scan_data_loc = self.get_test_loc('indexing/scancodeio_wagon-api-20040705.181715.json')
         with open(scan_data_loc, 'rb') as f:
             scan_data = json.load(f)
 
-        scan_summary_loc = self.get_test_loc('indexing/scancodeio_abbot-0.12.3-summary.json')
+        scan_summary_loc = self.get_test_loc('indexing/scancodeio_wagon-api-20040705.181715-summary.json')
         with open(scan_summary_loc, 'rb') as f:
             scan_summary = json.load(f)
 
@@ -91,7 +91,7 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
 
         # Set up ScannableURI
         scannable_uri = ScannableURI.objects.create(
-            uri='https://repo1.maven.org/maven2/abbot/abbot/0.12.3/abbot-0.12.3.jar',
+            uri='https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar',
             scan_status=ScannableURI.SCAN_COMPLETED,
             package=self.package1
         )
@@ -129,10 +129,10 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         self.assertEqual(100, self.package1.size)
 
         for expected_count, model in [
-            (18, ApproximateDirectoryContentIndex),
-            (11, ApproximateResourceContentIndex),
-            (515, Resource),
-            (491, ExactFileIndex),
+            (11, ApproximateDirectoryContentIndex),
+            (2, ApproximateResourceContentIndex),
+            (64, Resource),
+            (45, ExactFileIndex),
         ]:
             self.assertEqual(
                 expected_count,
@@ -140,11 +140,11 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
             )
 
     def test_indexing_index_package_dwarf(self):
-        scan_data_loc = self.get_test_loc('scancodeio/get_scan_data_dwarf.json')
+        scan_data_loc = self.get_test_loc('indexing/get_scan_data_dwarf.json')
         with open(scan_data_loc, 'rb') as f:
             scan_data = json.load(f)
 
-        scan_summary_loc = self.get_test_loc('scancodeio/scan_summary_dwarf.json')
+        scan_summary_loc = self.get_test_loc('indexing/scan_summary_dwarf.json')
         with open(scan_summary_loc, 'rb') as f:
             scan_summary = json.load(f)
 
