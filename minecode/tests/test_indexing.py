@@ -10,17 +10,15 @@
 import json
 import os
 
-from matchcode.models import ExactFileIndex
-
-from minecode import indexing
-from minecode.models import ScannableURI
-from minecode.utils_test import MiningTestCase
-from minecode.utils_test import JsonBasedTesting
-from minecode.tests import FIXTURES_REGEN
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import ExactFileIndex
+from minecode import indexing
+from minecode.models import ScannableURI
+from minecode.tests import FIXTURES_REGEN
+from minecode.utils_test import JsonBasedTesting
+from minecode.utils_test import MiningTestCase
 from packagedb.models import Package
 from packagedb.models import Resource
 

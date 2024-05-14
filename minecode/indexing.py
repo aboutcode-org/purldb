@@ -1,16 +1,19 @@
 #
 # Copyright (c) 2018 by nexB, Inc. http://www.nexb.com/ - All rights reserved.
 #
+
+import logging
+import sys
+import traceback
+
+from packagedcode.utils import combine_expressions
+
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import ExactFileIndex
 from minecode.management.commands import get_error_message
-import logging
-import sys
 from minecode.model_utils import update_or_create_resource
-from packagedcode.utils import combine_expressions
-import traceback
 from minecode.models import ScannableURI
 
 logger = logging.getLogger(__name__)
