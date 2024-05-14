@@ -12,7 +12,7 @@ import os
 
 from matchcode.models import ExactFileIndex
 
-from minecode.management import indexing
+from minecode import indexing
 from minecode.models import ScannableURI
 from minecode.utils_test import MiningTestCase
 from minecode.utils_test import JsonBasedTesting
