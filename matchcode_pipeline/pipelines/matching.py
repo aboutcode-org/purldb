@@ -52,9 +52,9 @@ class Matching(ScanCodebase, LoadInventory):
             cls.match_archives_to_purldb_resources,
             cls.fingerprint_codebase_directories,
             cls.match_directories_exact_to_purldb,
+            cls.match_directories_to_purldb,
             cls.match_resources_to_purldb,
             cls.match_resources_approximately,
-            cls.match_directories_to_purldb,
             cls.match_purldb_resources_post_process,
             cls.remove_packages_without_resources,
         )
