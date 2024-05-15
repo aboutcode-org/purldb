@@ -4,6 +4,11 @@ Changelog
 Next Release
 ----------------
 
+
+v5.0.0
+---------
+
+- Add `/api/docs` Swagger API documentation for API endpoints.
 - Add `/api/from_purl/purl2git` endpoint to get a git repo for a purl.
 - Add `/api/to_purl/go` endpoint to get a purl from a golang import string or a package string in go.mod.
 - Support indexing of PURLs listed in https://github.com/nexB/purldb/issues/326,
@@ -11,12 +16,6 @@ Next Release
   https://github.com/nexB/purldb/issues/329 and https://github.com/nexB/purldb/issues/356.
 - Support ``addon_pipelines`` for symbol and string collection in ``/api/collect`` endpoint. https://github.com/nexB/purldb/pull/393 
 - Store ``source_symbols`` and ``source_strings`` in ``extra_data`` field. https://github.com/nexB/purldb/pull/351
-
-
-v4.0.0
----------
-
-- Add `/api/docs` Swagger API documentation for API endpoints.
 
 
 v3.0.0
