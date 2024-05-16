@@ -202,6 +202,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "discovered_packages_summary",
             "discovered_dependencies_summary",
             "codebase_relations_summary",
+            "codebase_resources_requires_review",
         )
         exclude_from_list_view = [
             "resource_count",
@@ -212,6 +213,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "discovered_packages_summary",
             "discovered_dependencies_summary",
             "codebase_relations_summary",
+            "codebase_resources_requires_review",
         ]
         extra_kwargs = {
             'url': {
@@ -223,6 +225,12 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
     def get_codebase_resources_summary(self, project):
         queryset = project.codebaseresources.all()
         return count_group_by(queryset, "status")
+    
+    def get_codebase_resources_requires_review(self, project):
+        queryset = project.codebaseresources.filter(status="requires-review")
+        return {
+            "total": queryset.count(),
+        }
 
     def get_discovered_packages_summary(self, project):
         base_qs = project.discoveredpackages
