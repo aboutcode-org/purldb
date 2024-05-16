@@ -858,6 +858,7 @@ class CollectViewSet(viewsets.ViewSet):
                 packages = Package.objects.filter(**lookups)
                 if packages.count() > 0:
                     for package in packages:
+                        get_source_package_and_add_to_package_set(package)
                         _reindex_package(package, reindexed_packages, **kwargs)
                         if reindex_set:
                             for package_set in package.package_sets.all():
