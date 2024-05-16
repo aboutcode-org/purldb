@@ -134,7 +134,7 @@ def add_source_package_to_package_set(
         )
 
 
-def process_package(package):
+def get_source_package_and_add_to_package_set(package):
     """
     Process a package and add the source repository to the package set
     """
@@ -180,13 +180,13 @@ def process_package(package):
     )
 
 
-def get_source_repo_and_add_to_package_set():
+def get_source_package_for_all_packages():
     """
     Add the PackageURL of the source repository of a Package
     if found
     """
     for package in Package.objects.all().paginated():
-        process_package(package)
+        get_source_package_and_add_to_package_set(package)
 
 
 def get_source_repo(package: Package) -> PackageURL:

@@ -69,7 +69,7 @@ from packagedb.serializers import PurlUpdateResponseSerializer
 from packagedb.serializers import PurlValidateSerializer
 from packagedb.serializers import ResourceAPISerializer
 from packagedb.throttling import StaffUserRateThrottle
-from purl2vcs.find_source_repo import process_package
+from purl2vcs.find_source_repo import get_source_package_and_add_to_package_set
 
 logger = logging.getLogger(__name__)
 
@@ -740,7 +740,7 @@ class CollectViewSet(viewsets.ViewSet):
                     }
                 return Response(message)
         for package in packages:
-            process_package(package)
+            get_source_package_and_add_to_package_set(package)
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
