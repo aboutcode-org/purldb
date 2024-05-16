@@ -69,6 +69,7 @@ from packagedb.serializers import PurlUpdateResponseSerializer
 from packagedb.serializers import PurlValidateSerializer
 from packagedb.serializers import ResourceAPISerializer
 from packagedb.throttling import StaffUserRateThrottle
+from purl2vcs.find_source_repo import get_source_package_and_add_to_package_set
 
 logger = logging.getLogger(__name__)
 
@@ -738,6 +739,8 @@ class CollectViewSet(viewsets.ViewSet):
                         'status': f'error(s) occurred when fetching metadata for {purl}: {errors}'
                     }
                 return Response(message)
+        for package in packages:
+            get_source_package_and_add_to_package_set(package)
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
@@ -855,6 +858,7 @@ class CollectViewSet(viewsets.ViewSet):
                 packages = Package.objects.filter(**lookups)
                 if packages.count() > 0:
                     for package in packages:
+                        get_source_package_and_add_to_package_set(package)
                         _reindex_package(package, reindexed_packages, **kwargs)
                         if reindex_set:
                             for package_set in package.package_sets.all():

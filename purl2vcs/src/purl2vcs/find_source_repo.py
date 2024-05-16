@@ -134,52 +134,59 @@ def add_source_package_to_package_set(
         )
 
 
-def get_source_repo_and_add_to_package_set():
+def get_source_package_and_add_to_package_set(package):
+    """
+    Process a package and add the source repository to the package set
+    """
+    source_purl = get_source_repo(package=package)
+
+    if not source_purl:
+        return
+
+    try:
+        download_url = get_download_url(str(source_purl))
+        if not download_url:
+            return
+    except:
+        logger.error(f"Error getting download_url for {source_purl}")
+        return
+
+    source_package = Package.objects.for_package_url(
+        purl_str=str(source_purl)
+    ).get_or_none()
+
+    if not source_package:
+        source_package, _created = Package.objects.get_or_create(
+            type=source_purl.type,
+            namespace=source_purl.namespace,
+            name=source_purl.name,
+            version=source_purl.version,
+            download_url=download_url,
+            package_content=PackageContentType.SOURCE_REPO,
+        )
+        add_package_to_scan_queue(source_package)
+        logger.info(f"Created source repo package {source_purl} for {package.purl}")
+
+    package_set_ids = set(package.package_sets.all().values("uuid"))
+    source_package_set_ids = set(source_package.package_sets.all().values("uuid"))
+
+    # If the package exists and already in the set then there is nothing left to do
+    if package_set_ids.intersection(source_package_set_ids):
+        return
+
+    add_source_package_to_package_set(
+        source_package=source_package,
+        package=package,
+    )
+
+
+def get_source_package_for_all_packages():
     """
     Add the PackageURL of the source repository of a Package
     if found
     """
     for package in Package.objects.all().paginated():
-        source_purl = get_source_repo(package=package)
-
-        if not source_purl:
-            continue
-
-        try:
-            download_url = get_download_url(str(source_purl))
-            if not download_url:
-                continue
-        except:
-            logger.error(f"Error getting download_url for {source_purl}")
-            continue
-
-        source_package = Package.objects.for_package_url(
-            purl_str=str(source_purl)
-        ).get_or_none()
-
-        if not source_package:
-            source_package, _created = Package.objects.get_or_create(
-                type=source_purl.type,
-                namespace=source_purl.namespace,
-                name=source_purl.name,
-                version=source_purl.version,
-                download_url=download_url,
-                package_content=PackageContentType.SOURCE_REPO,
-            )
-            add_package_to_scan_queue(source_package)
-            logger.info(f"Created source repo package {source_purl} for {package.purl}")
-
-        package_set_ids = set(package.package_sets.all().values("uuid"))
-        source_package_set_ids = set(source_package.package_sets.all().values("uuid"))
-
-        # If the package exists and already in the set then there is nothing left to do
-        if package_set_ids.intersection(source_package_set_ids):
-            continue
-
-        add_source_package_to_package_set(
-            source_package=source_package,
-            package=package,
-        )
+        get_source_package_and_add_to_package_set(package)
 
 
 def get_source_repo(package: Package) -> PackageURL:
