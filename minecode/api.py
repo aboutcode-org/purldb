@@ -7,8 +7,6 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import json
-
 from django.db import transaction
 from django.utils import timezone
 from packageurl import PackageURL
@@ -21,7 +19,6 @@ from rest_framework.response import Response
 # But importing the mappers and visitors module triggers routes registration
 from minecode import visitors  # NOQA
 from minecode import priority_router
-from minecode.management.indexing import index_package
 from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 from minecode.permissions import IsScanQueueWorkerAPIUser
 from minecode.utils import validate_uuid

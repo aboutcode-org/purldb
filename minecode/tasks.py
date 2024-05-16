@@ -11,7 +11,7 @@ import json
 
 from commoncode.fileutils import delete
 
-from minecode.management.indexing import index_package
+from minecode.indexing import index_package
 from minecode.models import ScannableURI
 
 

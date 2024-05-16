@@ -52,8 +52,9 @@ class Matching(ScanCodebase, LoadInventory):
             cls.match_archives_to_purldb_resources,
             cls.fingerprint_codebase_directories,
             cls.match_directories_exact_to_purldb,
-            cls.match_resources_to_purldb,
             cls.match_directories_to_purldb,
+            cls.match_resources_to_purldb,
+            cls.match_resources_approximately,
             cls.match_purldb_resources_post_process,
             cls.remove_packages_without_resources,
         )
@@ -100,6 +101,13 @@ class Matching(ScanCodebase, LoadInventory):
         matching.match_purldb_resources(
             project=self.project,
             matcher_func=matching.match_purldb_resource,
+            logger=self.log,
+        )
+
+    def match_resources_approximately(self):
+        """Match selected text files approximately in PurlDB"""
+        matching.match_purldb_resources_approximately(
+            project=self.project,
             logger=self.log,
         )
 
