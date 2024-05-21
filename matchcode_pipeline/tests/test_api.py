@@ -190,9 +190,6 @@ class MatchCodePipelineAPITest(TransactionTestCase):
         self.assertEqual(Run.Status.NOT_STARTED, response.data['status'])
 
 
-# Write tests for the following API views:
-# D2DViewSet
-
 class D2DPipelineAPITest(TransactionTestCase):
     databases = {'default', 'packagedb'}
     data_location = Path(__file__).parent / 'data'
@@ -232,6 +229,8 @@ class D2DPipelineAPITest(TransactionTestCase):
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.assertEqual(1, len(response.data['runs']))
         mock_execute_pipeline_task.assert_called_once()
+        response = self.csrf_client.get(response.data['url'])
+        self.assertIn('codebase_resources_discrepancies', response.data)
     
     def test_d2d_pipeline_api_run_detail(self):
         run1 = self.project1.add_pipeline('d2d')
