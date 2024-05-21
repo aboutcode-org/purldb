@@ -7,23 +7,25 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from collections import defaultdict
-from datetime import datetime
 import binascii
 import logging
 import sys
+from collections import defaultdict
+from datetime import datetime
+from difflib import SequenceMatcher
 
 from django.db import models
 from django.forms.models import model_to_dict
 from django.utils.translation import gettext_lazy as _
 
-from minecode.management.commands import get_error_message
 from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode_toolkit.fingerprinting import split_fingerprint
 from matchcode_toolkit.halohash import byte_hamming_distance
-from packagedb.models import Package
 
+from minecode.management.commands import get_error_message
+from packagedb.models import Package
+from packagedb.models import Resource
 
 TRACE = False
 
@@ -234,12 +236,19 @@ class ApproximateMatchingHashMixin(models.Model):
             logger.error(msg)
 
     @classmethod
-    def match(cls, fingerprint, exact_match=False):
+    def match(cls, fingerprint, resource, exact_match=False):
         """
         Return a list of matched Packages
         """
         if TRACE:
-            logger_debug(cls.__name__, 'match:', 'fingerprint:', fingerprint)
+            logger_debug(
+                cls.__name__,
+                'match:',
+                'fingerprint:',
+                fingerprint,
+                'resource:',
+                resource
+            )
 
         if not fingerprint:
             return cls.objects.none()
@@ -307,22 +316,59 @@ class ApproximateMatchingHashMixin(models.Model):
 
         # Step 3: order matches from lowest Hamming distance to highest Hamming distance
         # TODO: consider limiting matches for brevity
-        good_matches = cls.objects.none()
+        matches = cls.objects.none()
         for hamming_distance, match in sorted(matches_by_hamming_distance.items()):
             if hamming_distance == 0:
                 # If we have an exact match, return and disregard others
-                good_matches |= match
-                break
+                matches |= match
+                return matches
             else:
                 # If we don't have an exact match, add all close matches we have
-                good_matches |= match
+                matches |= match
 
         if TRACE:
-            for match in good_matches:
+            for match in matches:
                 dct = model_to_dict(match)
-                logger_debug(cls.__name__, 'match:', 'good_matched_package:', dct)
+                logger_debug(cls.__name__, 'match:', 'step_3_matched_package:', dct)
 
-        return good_matches
+        # Step 4: use file heuristics to rank matches from step 3
+        resource_size = resource.size
+        matches_by_size_distance = defaultdict(list)
+        matches_by_name_distance = defaultdict(list)
+        for match in matches:
+            matched_resource = Resource.objects.get(path=match.path)
+
+            # Compare size-distance
+            size_distance = 1 - (resource_size / matched_resource.size)
+            matches_by_size_distance[size_distance].append(match)
+
+            # Compare file name similarity
+            name_sequence_matcher = SequenceMatcher(a=resource.name, b=matched_resource.name)
+            name_distance = 1 - name_sequence_matcher.ratio()
+            matches_by_name_distance[name_distance].append(match)
+
+        matches_by_size_distance = sorted(matches_by_size_distance)
+        matches_by_name_distance = sorted(matches_by_name_distance)
+
+        # Go through results and see which matches exist in the top of both mappings
+        closest_size_distance = next(iter(matches_by_size_distance))
+        closest_name_distance = next(iter(matches_by_name_distance))
+
+        closest_size_distance_matches = matches_by_size_distance[closest_size_distance]
+        closest_name_distance_matches = matches_by_name_distance[closest_name_distance]
+
+        matches = cls.objects.none()
+        if resource.is_file:
+            for match in closest_size_distance_matches:
+                if match in closest_name_distance_matches:
+                    matches |= match
+        else:
+            # If `resource` is a directory, then we prefer the matches to
+            # directories of similar name
+            for match in closest_name_distance_matches:
+                matches |= match
+
+        return matches
 
     def get_chunks(self):
         chunk1 = binascii.hexlify(self.chunk1)
