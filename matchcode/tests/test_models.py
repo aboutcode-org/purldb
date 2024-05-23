@@ -251,7 +251,10 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             if resource.is_file:
                 continue
             fp = resource.extra_data.get('directory_structure', '')
-            matches = ApproximateDirectoryStructureIndex.match(fp)
+            matches = ApproximateDirectoryStructureIndex.match(
+                fingerprint=fp,
+                resource=resource
+            )
             for match in matches:
                 p = match.package.to_dict()
                 p['match_type'] = 'approximate-directory-structure'
@@ -306,7 +309,10 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             if resource.is_file:
                 continue
             fp = resource.extra_data.get('directory_content', '')
-            matches = ApproximateDirectoryContentIndex.match(fp)
+            matches = ApproximateDirectoryContentIndex.match(
+                fingerprint=fp,
+                resource=resource
+            )
             for match in matches:
                 p = match.package.to_dict()
                 p['match_type'] = 'approximate-directory-content'
@@ -411,7 +417,10 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
         for resource in codebase.walk(topdown=True):
             if not (fp := resource.halo1):
                 continue
-            matches = ApproximateResourceContentIndex.match(fp)
+            matches = ApproximateResourceContentIndex.match(
+                fingerprint=fp,
+                resource=resource
+            )
             for match in matches:
                 p = match.package.to_dict()
                 p['match_type'] = 'approximate-resource-content'

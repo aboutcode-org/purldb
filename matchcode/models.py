@@ -17,7 +17,6 @@ from difflib import SequenceMatcher
 from django.db import models
 from django.forms.models import model_to_dict
 from django.utils.translation import gettext_lazy as _
-
 from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode_toolkit.fingerprinting import split_fingerprint
@@ -236,7 +235,7 @@ class ApproximateMatchingHashMixin(models.Model):
             logger.error(msg)
 
     @classmethod
-    def match(cls, fingerprint, resource, exact_match=False):
+    def match(cls, fingerprint, resource=None, exact_match=False):
         """
         Return a list of matched Packages
         """
@@ -316,58 +315,72 @@ class ApproximateMatchingHashMixin(models.Model):
 
         # Step 3: order matches from lowest Hamming distance to highest Hamming distance
         # TODO: consider limiting matches for brevity
-        matches = cls.objects.none()
+        good_matches = cls.objects.none()
         for hamming_distance, match in sorted(matches_by_hamming_distance.items()):
             if hamming_distance == 0:
                 # If we have an exact match, return and disregard others
-                matches |= match
-                return matches
+                good_matches |= match
+                return good_matches
             else:
                 # If we don't have an exact match, add all close matches we have
-                matches |= match
+                good_matches |= match
 
         if TRACE:
-            for match in matches:
+            for match in good_matches:
                 dct = model_to_dict(match)
                 logger_debug(cls.__name__, 'match:', 'step_3_matched_package:', dct)
 
         # Step 4: use file heuristics to rank matches from step 3
+
+        # If we are not given resource data, we return the matches we have.
+        if not resource:
+            return good_matches
+
         resource_size = resource.size
-        matches_by_size_distance = defaultdict(list)
-        matches_by_name_distance = defaultdict(list)
-        for match in matches:
+        ranked_matches = []
+        for match in good_matches:
             matched_resource = Resource.objects.get(path=match.path)
 
-            # Compare size-distance
-            size_distance = 1 - (resource_size / matched_resource.size)
-            matches_by_size_distance[size_distance].append(match)
+            if TRACE:
+                logger_debug(
+                    cls.__name__,
+                    'match:',
+                    'step_4_matched_resource:',
+                    matched_resource
+                )
 
-            # Compare file name similarity
+            # Compute size and name distance (similarity)
+            size_distance = 1 - (resource_size / matched_resource.size)
             name_sequence_matcher = SequenceMatcher(a=resource.name, b=matched_resource.name)
             name_distance = 1 - name_sequence_matcher.ratio()
-            matches_by_name_distance[name_distance].append(match)
+            ranked_matches.append(
+                (size_distance, name_distance, match)
+            )
 
-        matches_by_size_distance = sorted(matches_by_size_distance)
-        matches_by_name_distance = sorted(matches_by_name_distance)
+            if TRACE:
+                logger_debug(
+                    cls.__name__,
+                    'match:',
+                    'step_4_size_distance:',
+                    size_distance,
+                    'step_4_name_distance:',
+                    name_distance
+                )
 
-        # Go through results and see which matches exist in the top of both mappings
-        closest_size_distance = next(iter(matches_by_size_distance))
-        closest_name_distance = next(iter(matches_by_name_distance))
+        # order these from low to high (low being very similar, 0 meaning 0 change)
+        ranked_matches = sorted(ranked_matches)
+        _, _, best_match = ranked_matches[0]
 
-        closest_size_distance_matches = matches_by_size_distance[closest_size_distance]
-        closest_name_distance_matches = matches_by_name_distance[closest_name_distance]
+        if TRACE:
+            dct = model_to_dict(match)
+            logger_debug(
+                cls.__name__,
+                'match:',
+                'step_4_best_match:',
+                dct
+            )
 
-        matches = cls.objects.none()
-        if resource.is_file:
-            for match in closest_size_distance_matches:
-                if match in closest_name_distance_matches:
-                    matches |= match
-        else:
-            # If `resource` is a directory, then we prefer the matches to
-            # directories of similar name
-            for match in closest_name_distance_matches:
-                matches |= match
-
+        matches = cls.objects.filter(pk=best_match.pk)
         return matches
 
     def get_chunks(self):

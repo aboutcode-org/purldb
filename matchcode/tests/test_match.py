@@ -101,6 +101,7 @@ class MatchPackagesTestCase(MatchcodeTestCase):
         )
         self.test_resource5, _ = Resource.objects.get_or_create(
             path='inflate.c',
+            size=55466,
             package=self.test_package5
         )
         self.test_resource5_fingerprint = '000018fba23a49e4cd40718d1297be719e6564a4'
