@@ -12,9 +12,6 @@
                 "--head": true,
                 "--output": "<stdout>"
             },
-            "purls": [
-                "pkg:pypi/fetchcode"
-            ],
             "errors": [],
             "warnings": [
                 "'pkg:pypi/fetchcode' not fully supported with `urls` command"
@@ -47,11 +44,6 @@
                 "head_request_status_code": "N/A"
             },
             "repo_url": {
-                "url": "https://pypi.org/project/fetchcode/",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
-            },
-            "url": {
                 "url": "https://pypi.org/project/fetchcode/",
                 "get_request_status_code": 200,
                 "head_request_status_code": 200

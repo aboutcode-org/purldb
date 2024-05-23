@@ -10,15 +10,14 @@
 import json
 import os
 from collections import OrderedDict
-from contextlib import redirect_stdout
-from io import StringIO
 from unittest import mock
 
 import pytest
 import requests
 from click.testing import CliRunner
 from commoncode.testcase import FileDrivenTesting
-from purldb_toolkit import cli_test_utils, purlcli
+from purldb_toolkit import cli_test_utils
+from purldb_toolkit import purlcli
 
 test_env = FileDrivenTesting()
 test_env.test_data_dir = os.path.join(os.path.dirname(__file__), "data")
@@ -236,193 +235,184 @@ class TestPURLCLI_metadata(object):
                         "--file": None,
                         "--output": "",
                     },
-                    "purls": ["pkg:pypi/fetchcode"],
                     "errors": [],
                     "warnings": [],
                 }
             ],
             "packages": [
-                {
-                    "purl": "pkg:pypi/fetchcode",
-                    "metadata": [
-                        OrderedDict(
-                            [
-                                ("purl", "pkg:pypi/fetchcode"),
-                                ("type", "pypi"),
-                                ("namespace", None),
-                                ("name", "fetchcode"),
-                                ("version", None),
-                                ("qualifiers", OrderedDict()),
-                                ("subpath", None),
-                                ("primary_language", None),
-                                ("description", None),
-                                ("release_date", None),
-                                ("parties", []),
-                                ("keywords", []),
-                                ("homepage_url", "https://github.com/nexB/fetchcode"),
-                                ("download_url", None),
-                                ("api_url", "https://pypi.org/pypi/fetchcode/json"),
-                                ("size", None),
-                                ("sha1", None),
-                                ("md5", None),
-                                ("sha256", None),
-                                ("sha512", None),
-                                ("bug_tracking_url", None),
-                                ("code_view_url", None),
-                                ("vcs_url", None),
-                                ("copyright", None),
-                                ("license_expression", None),
-                                ("declared_license", "Apache-2.0"),
-                                ("notice_text", None),
-                                ("root_path", None),
-                                ("dependencies", []),
-                                ("contains_source_code", None),
-                                ("source_packages", []),
-                                ("repository_homepage_url", None),
-                                ("repository_download_url", None),
-                                ("api_data_url", None),
-                            ]
+                OrderedDict(
+                    [
+                        ("purl", "pkg:pypi/fetchcode"),
+                        ("type", "pypi"),
+                        ("namespace", None),
+                        ("name", "fetchcode"),
+                        ("version", None),
+                        ("qualifiers", OrderedDict()),
+                        ("subpath", None),
+                        ("primary_language", None),
+                        ("description", None),
+                        ("release_date", None),
+                        ("parties", []),
+                        ("keywords", []),
+                        ("homepage_url", "https://github.com/nexB/fetchcode"),
+                        ("download_url", None),
+                        ("api_url", "https://pypi.org/pypi/fetchcode/json"),
+                        ("size", None),
+                        ("sha1", None),
+                        ("md5", None),
+                        ("sha256", None),
+                        ("sha512", None),
+                        ("bug_tracking_url", None),
+                        ("code_view_url", None),
+                        ("vcs_url", None),
+                        ("copyright", None),
+                        ("license_expression", None),
+                        ("declared_license", "Apache-2.0"),
+                        ("notice_text", None),
+                        ("root_path", None),
+                        ("dependencies", []),
+                        ("contains_source_code", None),
+                        ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
+                    ]
+                ),
+                OrderedDict(
+                    [
+                        ("purl", "pkg:pypi/fetchcode@0.1.0"),
+                        ("type", "pypi"),
+                        ("namespace", None),
+                        ("name", "fetchcode"),
+                        ("version", "0.1.0"),
+                        ("qualifiers", OrderedDict()),
+                        ("subpath", None),
+                        ("primary_language", None),
+                        ("description", None),
+                        ("release_date", None),
+                        ("parties", []),
+                        ("keywords", []),
+                        ("homepage_url", "https://github.com/nexB/fetchcode"),
+                        (
+                            "download_url",
+                            "https://files.pythonhosted.org/packages/19/a0/c90e5ba4d71ea1a1a89784f6d839ffb0dbf32d270cba04d5602188cb3713/fetchcode-0.1.0-py3-none-any.whl",
                         ),
-                        OrderedDict(
-                            [
-                                ("purl", "pkg:pypi/fetchcode@0.1.0"),
-                                ("type", "pypi"),
-                                ("namespace", None),
-                                ("name", "fetchcode"),
-                                ("version", "0.1.0"),
-                                ("qualifiers", OrderedDict()),
-                                ("subpath", None),
-                                ("primary_language", None),
-                                ("description", None),
-                                ("release_date", None),
-                                ("parties", []),
-                                ("keywords", []),
-                                ("homepage_url", "https://github.com/nexB/fetchcode"),
-                                (
-                                    "download_url",
-                                    "https://files.pythonhosted.org/packages/19/a0/c90e5ba4d71ea1a1a89784f6d839ffb0dbf32d270cba04d5602188cb3713/fetchcode-0.1.0-py3-none-any.whl",
-                                ),
-                                ("api_url", "https://pypi.org/pypi/fetchcode/json"),
-                                ("size", None),
-                                ("sha1", None),
-                                ("md5", None),
-                                ("sha256", None),
-                                ("sha512", None),
-                                ("bug_tracking_url", None),
-                                ("code_view_url", None),
-                                ("vcs_url", None),
-                                ("copyright", None),
-                                ("license_expression", None),
-                                ("declared_license", "Apache-2.0"),
-                                ("notice_text", None),
-                                ("root_path", None),
-                                ("dependencies", []),
-                                ("contains_source_code", None),
-                                ("source_packages", []),
-                                ("repository_homepage_url", None),
-                                ("repository_download_url", None),
-                                ("api_data_url", None),
-                            ]
+                        ("api_url", "https://pypi.org/pypi/fetchcode/json"),
+                        ("size", None),
+                        ("sha1", None),
+                        ("md5", None),
+                        ("sha256", None),
+                        ("sha512", None),
+                        ("bug_tracking_url", None),
+                        ("code_view_url", None),
+                        ("vcs_url", None),
+                        ("copyright", None),
+                        ("license_expression", None),
+                        ("declared_license", "Apache-2.0"),
+                        ("notice_text", None),
+                        ("root_path", None),
+                        ("dependencies", []),
+                        ("contains_source_code", None),
+                        ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
+                    ]
+                ),
+                OrderedDict(
+                    [
+                        ("purl", "pkg:pypi/fetchcode@0.2.0"),
+                        ("type", "pypi"),
+                        ("namespace", None),
+                        ("name", "fetchcode"),
+                        ("version", "0.2.0"),
+                        ("qualifiers", OrderedDict()),
+                        ("subpath", None),
+                        ("primary_language", None),
+                        ("description", None),
+                        ("release_date", None),
+                        ("parties", []),
+                        ("keywords", []),
+                        ("homepage_url", "https://github.com/nexB/fetchcode"),
+                        (
+                            "download_url",
+                            "https://files.pythonhosted.org/packages/d7/e9/96e9302e84e326b3c10a40c1723f21f4db96b557a17c6871e7a4c6336906/fetchcode-0.2.0-py3-none-any.whl",
                         ),
-                        OrderedDict(
-                            [
-                                ("purl", "pkg:pypi/fetchcode@0.2.0"),
-                                ("type", "pypi"),
-                                ("namespace", None),
-                                ("name", "fetchcode"),
-                                ("version", "0.2.0"),
-                                ("qualifiers", OrderedDict()),
-                                ("subpath", None),
-                                ("primary_language", None),
-                                ("description", None),
-                                ("release_date", None),
-                                ("parties", []),
-                                ("keywords", []),
-                                ("homepage_url", "https://github.com/nexB/fetchcode"),
-                                (
-                                    "download_url",
-                                    "https://files.pythonhosted.org/packages/d7/e9/96e9302e84e326b3c10a40c1723f21f4db96b557a17c6871e7a4c6336906/fetchcode-0.2.0-py3-none-any.whl",
-                                ),
-                                ("api_url", "https://pypi.org/pypi/fetchcode/json"),
-                                ("size", None),
-                                ("sha1", None),
-                                ("md5", None),
-                                ("sha256", None),
-                                ("sha512", None),
-                                ("bug_tracking_url", None),
-                                ("code_view_url", None),
-                                ("vcs_url", None),
-                                ("copyright", None),
-                                ("license_expression", None),
-                                ("declared_license", "Apache-2.0"),
-                                ("notice_text", None),
-                                ("root_path", None),
-                                ("dependencies", []),
-                                ("contains_source_code", None),
-                                ("source_packages", []),
-                                ("repository_homepage_url", None),
-                                ("repository_download_url", None),
-                                ("api_data_url", None),
-                            ]
+                        ("api_url", "https://pypi.org/pypi/fetchcode/json"),
+                        ("size", None),
+                        ("sha1", None),
+                        ("md5", None),
+                        ("sha256", None),
+                        ("sha512", None),
+                        ("bug_tracking_url", None),
+                        ("code_view_url", None),
+                        ("vcs_url", None),
+                        ("copyright", None),
+                        ("license_expression", None),
+                        ("declared_license", "Apache-2.0"),
+                        ("notice_text", None),
+                        ("root_path", None),
+                        ("dependencies", []),
+                        ("contains_source_code", None),
+                        ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
+                    ]
+                ),
+                OrderedDict(
+                    [
+                        ("purl", "pkg:pypi/fetchcode@0.3.0"),
+                        ("type", "pypi"),
+                        ("namespace", None),
+                        ("name", "fetchcode"),
+                        ("version", "0.3.0"),
+                        ("qualifiers", OrderedDict()),
+                        ("subpath", None),
+                        ("primary_language", None),
+                        ("description", None),
+                        ("release_date", None),
+                        ("parties", []),
+                        ("keywords", []),
+                        ("homepage_url", "https://github.com/nexB/fetchcode"),
+                        (
+                            "download_url",
+                            "https://files.pythonhosted.org/packages/8d/fb/e45da0abf63504c3f88ad02537dc9dc64ea5206b09ce29cfb8191420d678/fetchcode-0.3.0-py3-none-any.whl",
                         ),
-                        OrderedDict(
-                            [
-                                ("purl", "pkg:pypi/fetchcode@0.3.0"),
-                                ("type", "pypi"),
-                                ("namespace", None),
-                                ("name", "fetchcode"),
-                                ("version", "0.3.0"),
-                                ("qualifiers", OrderedDict()),
-                                ("subpath", None),
-                                ("primary_language", None),
-                                ("description", None),
-                                ("release_date", None),
-                                ("parties", []),
-                                ("keywords", []),
-                                ("homepage_url", "https://github.com/nexB/fetchcode"),
-                                (
-                                    "download_url",
-                                    "https://files.pythonhosted.org/packages/8d/fb/e45da0abf63504c3f88ad02537dc9dc64ea5206b09ce29cfb8191420d678/fetchcode-0.3.0-py3-none-any.whl",
-                                ),
-                                ("api_url", "https://pypi.org/pypi/fetchcode/json"),
-                                ("size", None),
-                                ("sha1", None),
-                                ("md5", None),
-                                ("sha256", None),
-                                ("sha512", None),
-                                ("bug_tracking_url", None),
-                                ("code_view_url", None),
-                                ("vcs_url", None),
-                                ("copyright", None),
-                                ("license_expression", None),
-                                ("declared_license", "Apache-2.0"),
-                                ("notice_text", None),
-                                ("root_path", None),
-                                ("dependencies", []),
-                                ("contains_source_code", None),
-                                ("source_packages", []),
-                                ("repository_homepage_url", None),
-                                ("repository_download_url", None),
-                                ("api_data_url", None),
-                            ]
-                        ),
-                    ],
-                }
+                        ("api_url", "https://pypi.org/pypi/fetchcode/json"),
+                        ("size", None),
+                        ("sha1", None),
+                        ("md5", None),
+                        ("sha256", None),
+                        ("sha512", None),
+                        ("bug_tracking_url", None),
+                        ("code_view_url", None),
+                        ("vcs_url", None),
+                        ("copyright", None),
+                        ("license_expression", None),
+                        ("declared_license", "Apache-2.0"),
+                        ("notice_text", None),
+                        ("root_path", None),
+                        ("dependencies", []),
+                        ("contains_source_code", None),
+                        ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
+                    ]
+                ),
             ],
         }
 
         input_purls = ["pkg:pypi/fetchcode"]
-
         output = ""
         file = ""
         command_name = "metadata"
-        unique = False
 
         purl_metadata_data = purlcli.get_metadata_details(
             input_purls,
             output,
             file,
-            unique,
             command_name,
         )
 
@@ -513,104 +503,98 @@ class TestPURLCLI_metadata(object):
             purl_metadata = purlcli.check_metadata_purl(input_purl)
             assert purl_metadata == expected_state
 
+    def test_deduplicate_purls(self):
+        input_purls = [
+            "pkg:pypi/fetchcode@0.1.0",
+            "pkg:pypi/fetchcode@0.1.0",
+            "pkg:pypi/fetchcode@0.1.0",
+            "pkg:pypi/fetchcode@0.1.0",
+            "pkg:pypi/fetchcode@0.1.0",
+            "pkg:pypi/fetchcode@0.2.0",
+            "pkg:pypi/fetchcode@0.2.0",
+        ]
+        actual_output = purlcli.deduplicate_purls(input_purls)
+        expected_output = (
+            ["pkg:pypi/fetchcode@0.1.0", "pkg:pypi/fetchcode@0.2.0"],
+            [
+                "pkg:pypi/fetchcode@0.1.0",
+                "pkg:pypi/fetchcode@0.1.0",
+                "pkg:pypi/fetchcode@0.1.0",
+                "pkg:pypi/fetchcode@0.1.0",
+                "pkg:pypi/fetchcode@0.2.0",
+            ],
+        )
+        assert actual_output == expected_output
+
     @pytest.mark.parametrize(
-        "test_input,expected_input_purls,expected_normalized_purls",
+        "test_input,expected",
         [
             (
-                [["pkg:pypi/fetchcode"]],
-                (["pkg:pypi/fetchcode"]),
-                ([("pkg:pypi/fetchcode", "pkg:pypi/fetchcode")]),
-            ),
-            (
-                [["pkg:pypi/fetchcode@1.2.3"]],
-                (["pkg:pypi/fetchcode"]),
-                ([("pkg:pypi/fetchcode@1.2.3", "pkg:pypi/fetchcode")]),
-            ),
-            (
-                [["pkg:pypi/fetchcode@1.2.3?howistheweather=rainy"]],
-                (["pkg:pypi/fetchcode"]),
-                (
-                    [
-                        (
-                            "pkg:pypi/fetchcode@1.2.3?howistheweather=rainy",
-                            "pkg:pypi/fetchcode",
-                        )
-                    ]
-                ),
-            ),
-            (
-                [["pkg:pypi/fetchcode?howistheweather=rainy"]],
-                (["pkg:pypi/fetchcode"]),
-                ([("pkg:pypi/fetchcode?howistheweather=rainy", "pkg:pypi/fetchcode")]),
-            ),
-            (
-                [["pkg:pypi/fetchcode#this/is/a/path"]],
-                (["pkg:pypi/fetchcode"]),
-                ([("pkg:pypi/fetchcode#this/is/a/path", "pkg:pypi/fetchcode")]),
-            ),
-            (
-                [["pkg:pypi/?fetchcode"]],
-                (["pkg:pypi/"]),
-                ([("pkg:pypi/?fetchcode", "pkg:pypi/")]),
-            ),
-            (
                 [
-                    [
-                        "pkg:pypi/fetchcode@0.3.0",
-                        "pkg:pypi/fetchcode@5.0.0",
-                        "pkg:pypi/dejacode",
-                        "pkg:pypi/dejacode@5.0.0",
-                        "pkg:pypi/dejacode@5.0.0?os=windows",
-                        "pkg:pypi/dejacode@5.0.0os=windows",
-                        "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
-                        "pkg:pypi/dejacode@5.0.0#how/are/you",
-                        "pkg:pypi/dejacode@10.0.0",
-                        "pkg:cargo/banquo",
-                        "pkg:cargo/socksprox",
-                        "pkg:nginx/nginx",
-                        "pkg:nginx/nginx@0.8.9?os=windows",
-                    ]
+                    "pkg:pypi/fetchcode@0.1.0",
+                    "pkg:pypi/fetchcode@0.1.0",
+                    "pkg:pypi/fetchcode@0.1.0",
+                    "pkg:pypi/fetchcode@0.1.0",
+                    "pkg:pypi/fetchcode@0.1.0",
+                    "pkg:pypi/fetchcode@0.2.0",
+                    "pkg:pypi/fetchcode@0.2.0",
                 ],
-                (
-                    [
-                        "pkg:pypi/fetchcode",
-                        "pkg:pypi/dejacode",
-                        "pkg:cargo/banquo",
-                        "pkg:cargo/socksprox",
-                        "pkg:nginx/nginx",
-                    ]
-                ),
-                (
-                    [
-                        ("pkg:pypi/fetchcode@0.3.0", "pkg:pypi/fetchcode"),
-                        ("pkg:pypi/fetchcode@5.0.0", "pkg:pypi/fetchcode"),
-                        ("pkg:pypi/dejacode", "pkg:pypi/dejacode"),
-                        ("pkg:pypi/dejacode@5.0.0", "pkg:pypi/dejacode"),
-                        ("pkg:pypi/dejacode@5.0.0?os=windows", "pkg:pypi/dejacode"),
-                        ("pkg:pypi/dejacode@5.0.0os=windows", "pkg:pypi/dejacode"),
-                        (
-                            "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
-                            "pkg:pypi/dejacode",
-                        ),
-                        ("pkg:pypi/dejacode@5.0.0#how/are/you", "pkg:pypi/dejacode"),
-                        ("pkg:pypi/dejacode@10.0.0", "pkg:pypi/dejacode"),
-                        ("pkg:cargo/banquo", "pkg:cargo/banquo"),
-                        ("pkg:cargo/socksprox", "pkg:cargo/socksprox"),
-                        ("pkg:nginx/nginx", "pkg:nginx/nginx"),
-                        ("pkg:nginx/nginx@0.8.9?os=windows", "pkg:nginx/nginx"),
-                    ]
-                ),
+                [
+                    {
+                        "errors": [],
+                        "options": {
+                            "--file": None,
+                            "--output": "",
+                            "--purl": [
+                                "pkg:pypi/fetchcode@0.1.0",
+                                "pkg:pypi/fetchcode@0.1.0",
+                                "pkg:pypi/fetchcode@0.1.0",
+                                "pkg:pypi/fetchcode@0.1.0",
+                                "pkg:pypi/fetchcode@0.1.0",
+                                "pkg:pypi/fetchcode@0.2.0",
+                                "pkg:pypi/fetchcode@0.2.0",
+                            ],
+                            "command": "metadata",
+                        },
+                        "tool_name": "purlcli",
+                        "tool_version": "0.1.0",
+                        "warnings": [
+                            "Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0",
+                            "Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0",
+                            "Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0",
+                            "Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0",
+                            "Duplicate input PURL removed: pkg:pypi/fetchcode@0.2.0",
+                        ],
+                    }
+                ],
             ),
         ],
     )
-    def test_normalize_purls(
-        self, test_input, expected_input_purls, expected_normalized_purls
+    @mock.patch("purldb_toolkit.purlcli.read_log_file")
+    def test_deduplicate_purls_construct_headers(
+        self, mock_read_log_file, test_input, expected
     ):
-        unique = True
-        input_purls, normalized_purls = purlcli.normalize_purls(test_input[0], unique)
+        mock_read_log_file.return_value = [
+            "WARNING - Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0\n",
+            "WARNING - Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0\n",
+            "WARNING - Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0\n",
+            "WARNING - Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0\n",
+            "WARNING - Duplicate input PURL removed: pkg:pypi/fetchcode@0.2.0\n",
+        ]
 
-        assert input_purls == expected_input_purls
-        assert normalized_purls == expected_normalized_purls
+        metadata_headers = purlcli.construct_headers(
+            test_input,
+            output="",
+            file="",
+            command_name="metadata",
+            head=None,
+            purl_warnings={},
+        )
+
+        cli_test_utils.streamline_headers(expected)
+        cli_test_utils.streamline_headers(metadata_headers)
+
+        assert metadata_headers == expected
 
     @pytest.mark.parametrize(
         "test_input,expected",
@@ -636,12 +620,6 @@ class TestPURLCLI_metadata(object):
                             ],
                             "command": "metadata",
                         },
-                        "purls": [
-                            "pkg:gem/bundler-sass",
-                            "pkg:pypi/fetchcode",
-                            "pkg:pypi/fetchcode@0.1.0",
-                            "pkg:pypi/fetchcode@0.2.0",
-                        ],
                         "tool_name": "purlcli",
                         "tool_version": "0.1.0",
                         "warnings": [
@@ -652,81 +630,21 @@ class TestPURLCLI_metadata(object):
             ),
         ],
     )
-    def test_construct_headers(self, test_input, expected):
+    @mock.patch("purldb_toolkit.purlcli.read_log_file")
+    def test_construct_headers(self, mock_read_log_file, test_input, expected):
+        mock_read_log_file.return_value = [
+            "WARNING - 'pkg:gem/bundler-sass' not supported with `metadata` command\n",
+        ]
+
         metadata_headers = purlcli.construct_headers(
             test_input,
             output="",
             file="",
             command_name="metadata",
             head=None,
-            normalized_purls=None,
-            unique=None,
             purl_warnings={"pkg:gem/bundler-sass": "valid_but_not_supported"},
         )
-        cli_test_utils.streamline_headers(expected)
-        cli_test_utils.streamline_headers(metadata_headers)
 
-        assert metadata_headers == expected
-
-    @pytest.mark.parametrize(
-        "test_input,expected",
-        [
-            (
-                [
-                    "pkg:gem/bundler-sass",
-                    "pkg:pypi/fetchcode",
-                    "pkg:pypi/fetchcode@0.1.0",
-                    "pkg:pypi/fetchcode@0.2.0",
-                ],
-                [
-                    {
-                        "errors": [],
-                        "options": {
-                            "--file": None,
-                            "--output": "",
-                            "--purl": [
-                                "pkg:gem/bundler-sass",
-                                "pkg:pypi/fetchcode",
-                                "pkg:pypi/fetchcode@0.1.0",
-                                "pkg:pypi/fetchcode@0.2.0",
-                            ],
-                            "--unique": True,
-                            "command": "metadata",
-                        },
-                        "purls": [
-                            "pkg:gem/bundler-sass",
-                            "pkg:pypi/fetchcode",
-                            "pkg:pypi/fetchcode@0.1.0",
-                            "pkg:pypi/fetchcode@0.2.0",
-                        ],
-                        "tool_name": "purlcli",
-                        "tool_version": "0.1.0",
-                        "warnings": [
-                            "input PURL: 'pkg:pypi/fetchcode@0.1.0' normalized to 'pkg:pypi/fetchcode'",
-                            "input PURL: 'pkg:pypi/fetchcode@0.2.0' normalized to 'pkg:pypi/fetchcode'",
-                            "'pkg:gem/bundler-sass' not supported with `metadata` command",
-                        ],
-                    }
-                ],
-            ),
-        ],
-    )
-    def test_construct_headers_unique(self, test_input, expected):
-        metadata_headers = purlcli.construct_headers(
-            test_input,
-            output="",
-            file="",
-            command_name="metadata",
-            head=None,
-            normalized_purls=[
-                ("pkg:gem/bundler-sass", "pkg:gem/bundler-sass"),
-                ("pkg:pypi/fetchcode", "pkg:pypi/fetchcode"),
-                ("pkg:pypi/fetchcode@0.1.0", "pkg:pypi/fetchcode"),
-                ("pkg:pypi/fetchcode@0.2.0", "pkg:pypi/fetchcode"),
-            ],
-            unique=True,
-            purl_warnings={"pkg:gem/bundler-sass": "valid_but_not_supported"},
-        )
         cli_test_utils.streamline_headers(expected)
         cli_test_utils.streamline_headers(metadata_headers)
 
@@ -734,8 +652,9 @@ class TestPURLCLI_metadata(object):
 
 
 class TestPURLCLI_urls(object):
+    @mock.patch("purldb_toolkit.purlcli.read_log_file")
     @mock.patch("purldb_toolkit.purlcli.make_head_request")
-    def test_urls_cli_head(self, mock_make_head_request):
+    def test_urls_cli_head(self, mock_make_head_request, mock_read_log_file):
         """
         Test the `urls` command with actual and expected JSON output files.
         """
@@ -753,6 +672,11 @@ class TestPURLCLI_urls(object):
             {"get_request": 200},
             {"head_request": 200},
         ]
+
+        mock_read_log_file.return_value = [
+            "WARNING - 'pkg:pypi/fetchcode' not fully supported with `urls` command\n",
+        ]
+
         expected_result_file = test_env.get_test_loc(
             "purlcli/expected_urls_output_head_mock.json"
         )
@@ -781,7 +705,6 @@ class TestPURLCLI_urls(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -842,9 +765,14 @@ class TestPURLCLI_urls(object):
         assert "Use either purls or file." in result.output
         assert result.exit_code == 2
 
+    @mock.patch("purldb_toolkit.purlcli.read_log_file")
     @mock.patch("purldb_toolkit.purlcli.check_urls_purl")
-    def test_urls_details(self, mock_check_urls_purl):
+    def test_urls_details(self, mock_check_urls_purl, mock_read_log_file):
         mock_check_urls_purl.return_value = "valid_but_not_fully_supported"
+
+        mock_read_log_file.return_value = [
+            "WARNING = 'pkg:pypi/fetchcode' not fully supported with `urls` command\n",
+        ]
 
         expected_data = {
             "headers": [
@@ -857,7 +785,6 @@ class TestPURLCLI_urls(object):
                         "--file": None,
                         "--output": "",
                     },
-                    "purls": ["pkg:pypi/fetchcode"],
                     "errors": [],
                     "warnings": [
                         "'pkg:pypi/fetchcode' not fully supported with `urls` command"
@@ -884,9 +811,6 @@ class TestPURLCLI_urls(object):
                     "repo_url": {
                         "url": "https://pypi.org/project/fetchcode/",
                     },
-                    "url": {
-                        "url": "https://pypi.org/project/fetchcode/",
-                    },
                 },
             ],
         }
@@ -899,7 +823,6 @@ class TestPURLCLI_urls(object):
             file="",
             command_name="urls",
             head=False,
-            unique=False,
         )
         cli_test_utils.streamline_headers(expected_data["headers"])
         cli_test_utils.streamline_headers(purl_urls["headers"])
@@ -961,59 +884,13 @@ class TestPURLCLI_validate(object):
         results = purlcli.validate_purl(input_purl)
         assert mock_request_response == results
 
-    @mock.patch("requests.get")
-    def test_validate_purl_mock_requests_get_jsondecodeerror(self, mock_requests_get):
-        def json_decode_failure_exception(**kwargs):
-            raise json.decoder.JSONDecodeError("test", "[{}]", 0)
-
-        mock_requests_get.return_value.json = json_decode_failure_exception
-        input_purl = "pkg:pypi/fetchcode"
-        out = StringIO()
-        with mock.patch("requests.Response.json", json_decode_failure_exception):
-            with redirect_stdout(out):
-                purlcli.validate_purl(input_purl)
-        results = out.getvalue()
-        assert (
-            "json.decoder.JSONDecodeError for 'pkg:pypi/fetchcode': test: line 1 column 1 (char 0)"
-            in results
-        )
-
-    @mock.patch("requests.get")
-    def test_validate_purl_mock_requests_get_exception(self, mock_requests_get):
-        def raise_exception(**kwargs):
-            raise Exception
-
-        mock_requests_get.return_value.json = raise_exception
-        input_purl = "pkg:pypi/fetchcode"
-        out = StringIO()
-        with mock.patch("requests.Response.json", raise_exception):
-            with redirect_stdout(out):
-                purlcli.validate_purl(input_purl)
-        results = out.getvalue()
-        assert "'validate' endpoint error for 'pkg:pypi/fetchcode': \n" in results
-
-    @mock.patch("requests.get")
-    def test_validate_purl_mock_requests_none(self, mock_requests_get):
-        def raise_exception(**kwargs):
-            raise Exception
-
-        mock_requests_get.return_value.json = raise_exception
-        input_purl = None
-        out = StringIO()
-        with mock.patch("requests.Response.json", raise_exception):
-            with redirect_stdout(out):
-                purlcli.validate_purl(input_purl)
-        results = out.getvalue()
-        assert "'validate' endpoint error for 'None': \n" in results
-
 
 class TestPURLCLI_versions(object):
+    @mock.patch("purldb_toolkit.purlcli.read_log_file")
     @mock.patch("purldb_toolkit.purlcli.collect_versions")
     @mock.patch("purldb_toolkit.purlcli.check_versions_purl")
     def test_versions_details_multiple(
-        self,
-        mock_check_versions_purl,
-        mock_collect_versions,
+        self, mock_check_versions_purl, mock_collect_versions, mock_read_log_file
     ):
 
         mock_check_versions_purl.side_effect = [
@@ -1030,38 +907,49 @@ class TestPURLCLI_versions(object):
                 {
                     "purl": "pkg:pypi/fetchcode@0.1.0",
                     "version": "0.1.0",
-                    "release_date": "2021-08-25 15:15:15.265015+00:00",
+                    "release_date": "2021-08-25",
                 },
                 {
                     "purl": "pkg:pypi/fetchcode@0.2.0",
                     "version": "0.2.0",
-                    "release_date": "2022-09-14 16:36:02.242182+00:00",
+                    "release_date": "2022-09-14",
                 },
                 {
                     "purl": "pkg:pypi/fetchcode@0.3.0",
                     "version": "0.3.0",
-                    "release_date": "2023-12-18 20:49:45.840364+00:00",
+                    "release_date": "2023-12-18",
                 },
             ],
             [
                 {
                     "purl": "pkg:gem/bundler-sass@0.1.2",
                     "version": "0.1.2",
-                    "release_date": "2013-12-11 00:27:10.097000+00:00",
+                    "release_date": "2013-12-11",
                 }
             ],
             [
                 {
                     "purl": "pkg:cargo/socksprox@0.1.1",
-                    "release_date": "2024-02-07 23:29:58.801293+00:00",
+                    "release_date": "2024-02-07",
                     "version": "0.1.1",
                 },
                 {
                     "purl": "pkg:cargo/socksprox@0.1.0",
-                    "release_date": "2024-02-07 23:21:05.242366+00:00",
+                    "release_date": "2024-02-07",
                     "version": "0.1.0",
                 },
             ],
+        ]
+
+        mock_read_log_file.side_effect = [
+            [],
+            [],
+            [
+                "WARNING - 'pkg:rubygems/bundler-sass' not supported with `versions` command\n",
+            ],
+            ["WARNING - 'pkg:nginx/nginx' not supported with `versions` command\n"],
+            [],
+            ["WARNING - 'pkg:pypi/?fetchcode' not valid\n"],
         ]
 
         input_purls_and_expected_purl_data = [
@@ -1078,32 +966,26 @@ class TestPURLCLI_versions(object):
                                 "--file": None,
                                 "--output": "",
                             },
-                            "purls": ["pkg:pypi/fetchcode"],
                             "errors": [],
                             "warnings": [],
                         }
                     ],
                     "packages": [
                         {
-                            "purl": "pkg:pypi/fetchcode",
-                            "versions": [
-                                {
-                                    "purl": "pkg:pypi/fetchcode@0.1.0",
-                                    "version": "0.1.0",
-                                    "release_date": "2021-08-25 15:15:15.265015+00:00",
-                                },
-                                {
-                                    "purl": "pkg:pypi/fetchcode@0.2.0",
-                                    "version": "0.2.0",
-                                    "release_date": "2022-09-14 16:36:02.242182+00:00",
-                                },
-                                {
-                                    "purl": "pkg:pypi/fetchcode@0.3.0",
-                                    "version": "0.3.0",
-                                    "release_date": "2023-12-18 20:49:45.840364+00:00",
-                                },
-                            ],
-                        }
+                            "purl": "pkg:pypi/fetchcode@0.1.0",
+                            "version": "0.1.0",
+                            "release_date": "2021-08-25",
+                        },
+                        {
+                            "purl": "pkg:pypi/fetchcode@0.2.0",
+                            "version": "0.2.0",
+                            "release_date": "2022-09-14",
+                        },
+                        {
+                            "purl": "pkg:pypi/fetchcode@0.3.0",
+                            "version": "0.3.0",
+                            "release_date": "2023-12-18",
+                        },
                     ],
                 },
             ],
@@ -1120,21 +1002,15 @@ class TestPURLCLI_versions(object):
                                 "--file": None,
                                 "--output": "",
                             },
-                            "purls": ["pkg:gem/bundler-sass"],
                             "errors": [],
                             "warnings": [],
                         }
                     ],
                     "packages": [
                         {
-                            "purl": "pkg:gem/bundler-sass",
-                            "versions": [
-                                {
-                                    "purl": "pkg:gem/bundler-sass@0.1.2",
-                                    "version": "0.1.2",
-                                    "release_date": "2013-12-11 00:27:10.097000+00:00",
-                                }
-                            ],
+                            "purl": "pkg:gem/bundler-sass@0.1.2",
+                            "version": "0.1.2",
+                            "release_date": "2013-12-11",
                         }
                     ],
                 },
@@ -1152,7 +1028,6 @@ class TestPURLCLI_versions(object):
                                 "--file": None,
                                 "--output": "",
                             },
-                            "purls": ["pkg:rubygems/bundler-sass"],
                             "errors": [],
                             "warnings": [
                                 "'pkg:rubygems/bundler-sass' not supported with `versions` command"
@@ -1175,7 +1050,6 @@ class TestPURLCLI_versions(object):
                                 "--file": None,
                                 "--output": "",
                             },
-                            "purls": ["pkg:nginx/nginx"],
                             "errors": [],
                             "warnings": [
                                 "'pkg:nginx/nginx' not supported with `versions` command"
@@ -1198,27 +1072,21 @@ class TestPURLCLI_versions(object):
                                 "--file": None,
                                 "--output": "",
                             },
-                            "purls": ["pkg:cargo/socksprox"],
                             "errors": [],
                             "warnings": [],
                         }
                     ],
                     "packages": [
                         {
-                            "purl": "pkg:cargo/socksprox",
-                            "versions": [
-                                {
-                                    "purl": "pkg:cargo/socksprox@0.1.1",
-                                    "version": "0.1.1",
-                                    "release_date": "2024-02-07 23:29:58.801293+00:00",
-                                },
-                                {
-                                    "purl": "pkg:cargo/socksprox@0.1.0",
-                                    "version": "0.1.0",
-                                    "release_date": "2024-02-07 23:21:05.242366+00:00",
-                                },
-                            ],
-                        }
+                            "purl": "pkg:cargo/socksprox@0.1.1",
+                            "version": "0.1.1",
+                            "release_date": "2024-02-07",
+                        },
+                        {
+                            "purl": "pkg:cargo/socksprox@0.1.0",
+                            "version": "0.1.0",
+                            "release_date": "2024-02-07",
+                        },
                     ],
                 },
             ],
@@ -1235,7 +1103,6 @@ class TestPURLCLI_versions(object):
                                 "--file": None,
                                 "--output": "",
                             },
-                            "purls": ["pkg:pypi/?fetchcode"],
                             "errors": [],
                             "warnings": ["'pkg:pypi/?fetchcode' not valid"],
                         }
@@ -1248,11 +1115,13 @@ class TestPURLCLI_versions(object):
         output = ""
         file = ""
         command_name = "versions"
-        unique = False
 
         for input_purl, expected_data in input_purls_and_expected_purl_data:
             purl_versions_data = purlcli.get_versions_details(
-                input_purl, output, file, unique, command_name
+                input_purl,
+                output,
+                file,
+                command_name,
             )
 
             assert purl_versions_data == expected_data
@@ -1269,17 +1138,17 @@ class TestPURLCLI_versions(object):
             {
                 "purl": "pkg:pypi/fetchcode@0.1.0",
                 "version": "0.1.0",
-                "release_date": "2021-08-25 15:15:15.265015+00:00",
+                "release_date": "2021-08-25",
             },
             {
                 "purl": "pkg:pypi/fetchcode@0.2.0",
                 "version": "0.2.0",
-                "release_date": "2022-09-14 16:36:02.242182+00:00",
+                "release_date": "2022-09-14",
             },
             {
                 "purl": "pkg:pypi/fetchcode@0.3.0",
                 "version": "0.3.0",
-                "release_date": "2023-12-18 20:49:45.840364+00:00",
+                "release_date": "2023-12-18",
             },
         ]
 
@@ -1296,32 +1165,26 @@ class TestPURLCLI_versions(object):
                         "--file": None,
                         "--output": "",
                     },
-                    "purls": ["pkg:pypi/fetchcode"],
                     "errors": [],
                     "warnings": [],
                 }
             ],
             "packages": [
                 {
-                    "purl": "pkg:pypi/fetchcode",
-                    "versions": [
-                        {
-                            "purl": "pkg:pypi/fetchcode@0.1.0",
-                            "version": "0.1.0",
-                            "release_date": "2021-08-25 15:15:15.265015+00:00",
-                        },
-                        {
-                            "purl": "pkg:pypi/fetchcode@0.2.0",
-                            "version": "0.2.0",
-                            "release_date": "2022-09-14 16:36:02.242182+00:00",
-                        },
-                        {
-                            "purl": "pkg:pypi/fetchcode@0.3.0",
-                            "version": "0.3.0",
-                            "release_date": "2023-12-18 20:49:45.840364+00:00",
-                        },
-                    ],
-                }
+                    "purl": "pkg:pypi/fetchcode@0.1.0",
+                    "version": "0.1.0",
+                    "release_date": "2021-08-25",
+                },
+                {
+                    "purl": "pkg:pypi/fetchcode@0.2.0",
+                    "version": "0.2.0",
+                    "release_date": "2022-09-14",
+                },
+                {
+                    "purl": "pkg:pypi/fetchcode@0.3.0",
+                    "version": "0.3.0",
+                    "release_date": "2023-12-18",
+                },
             ],
         }
 
@@ -1330,13 +1193,11 @@ class TestPURLCLI_versions(object):
         output = ""
         file = ""
         command_name = "versions"
-        unique = False
 
         purl_versions_data = purlcli.get_versions_details(
             input_purls,
             output,
             file,
-            unique,
             command_name,
         )
         assert purl_versions_data == expected_data

@@ -19,17 +19,6 @@
                 "--file": null,
                 "--output": "<stdout>"
             },
-            "purls": [
-                "pkg:pypi/fetchcode",
-                "pkg:pypi/fetchcode@0.3.0",
-                "pkg:pypi/fetchcode@0.3.0?os=windows",
-                "pkg:pypi/fetchcode@0.3.0os=windows",
-                "pkg:pypi/fetchcode@5.0.0",
-                "pkg:cargo/banquo",
-                "pkg:nginx/nginx",
-                "pkg:gem/rails",
-                "pkg:rubygems/rails"
-            ],
             "errors": [],
             "warnings": [
                 "'pkg:pypi/fetchcode@0.3.0os=windows' does not exist in the upstream repo",

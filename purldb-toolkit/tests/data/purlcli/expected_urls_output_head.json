@@ -31,28 +31,6 @@
                 "--head": true,
                 "--output": "<stdout>"
             },
-            "purls": [
-                "pkg:pypi/fetchcode",
-                "pkg:pypi/fetchcode@0.3.0",
-                "pkg:pypi/fetchcode@5.0.0",
-                "pkg:pypi/dejacode",
-                "pkg:pypi/dejacode@5.0.0",
-                "pkg:pypi/dejacode@5.0.0?os=windows",
-                "pkg:pypi/dejacode@5.0.0os=windows",
-                "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
-                "pkg:pypi/dejacode@5.0.0#how/are/you",
-                "pkg:pypi/dejacode@10.0.0",
-                "pkg:cargo/banquo",
-                "pkg:cargo/socksprox",
-                "pkg:nginx/nginx",
-                "pkg:nginx/nginx@0.8.9?os=windows",
-                "pkg:gem/bundler-sass",
-                "pkg:rubygems/bundler-sass",
-                "pkg:pypi/matchcode",
-                "abcdefg",
-                "pkg/abc",
-                "pkg:nuget/auth0-aspnet@1.1.0"
-            ],
             "errors": [],
             "warnings": [
                 "'pkg:pypi/fetchcode' not fully supported with `urls` command",
@@ -67,6 +45,7 @@
                 "'pkg:pypi/dejacode@10.0.0' does not exist in the upstream repo",
                 "'pkg:nginx/nginx' not supported with `urls` command",
                 "'pkg:nginx/nginx@0.8.9?os=windows' not supported with `urls` command",
+                "'check_existence' is not supported for 'pkg:rubygems/bundler-sass'",
                 "'pkg:pypi/matchcode' does not exist in the upstream repo",
                 "'abcdefg' not valid",
                 "'pkg/abc' not valid"
@@ -102,11 +81,6 @@
                 "url": "https://pypi.org/project/fetchcode/",
                 "get_request_status_code": 200,
                 "head_request_status_code": 200
-            },
-            "url": {
-                "url": "https://pypi.org/project/fetchcode/",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
             }
         },
         {
@@ -134,11 +108,6 @@
                 "head_request_status_code": "N/A"
             },
             "repo_url": {
-                "url": "https://pypi.org/project/fetchcode/0.3.0/",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
-            },
-            "url": {
                 "url": "https://pypi.org/project/fetchcode/0.3.0/",
                 "get_request_status_code": 200,
                 "head_request_status_code": 200
@@ -172,11 +141,6 @@
                 "url": "https://pypi.org/project/dejacode/",
                 "get_request_status_code": 200,
                 "head_request_status_code": 200
-            },
-            "url": {
-                "url": "https://pypi.org/project/dejacode/",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
             }
         },
         {
@@ -204,11 +168,6 @@
                 "head_request_status_code": "N/A"
             },
             "repo_url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
-            },
-            "url": {
                 "url": "https://pypi.org/project/dejacode/5.0.0/",
                 "get_request_status_code": 200,
                 "head_request_status_code": 200
@@ -242,11 +201,6 @@
                 "url": "https://pypi.org/project/dejacode/5.0.0/",
                 "get_request_status_code": 200,
                 "head_request_status_code": 200
-            },
-            "url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
             }
         },
         {
@@ -274,11 +228,6 @@
                 "head_request_status_code": "N/A"
             },
             "repo_url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
-            },
-            "url": {
                 "url": "https://pypi.org/project/dejacode/5.0.0/",
                 "get_request_status_code": 200,
                 "head_request_status_code": 200
@@ -312,11 +261,6 @@
                 "url": "https://pypi.org/project/dejacode/5.0.0/",
                 "get_request_status_code": 200,
                 "head_request_status_code": 200
-            },
-            "url": {
-                "url": "https://pypi.org/project/dejacode/5.0.0/",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
             }
         },
         {
@@ -344,11 +288,6 @@
                 "head_request_status_code": "N/A"
             },
             "repo_url": {
-                "url": "https://crates.io/crates/banquo",
-                "get_request_status_code": 404,
-                "head_request_status_code": 404
-            },
-            "url": {
                 "url": "https://crates.io/crates/banquo",
                 "get_request_status_code": 404,
                 "head_request_status_code": 404
@@ -382,11 +321,6 @@
                 "url": "https://crates.io/crates/socksprox",
                 "get_request_status_code": 404,
                 "head_request_status_code": 404
-            },
-            "url": {
-                "url": "https://crates.io/crates/socksprox",
-                "get_request_status_code": 404,
-                "head_request_status_code": 404
             }
         },
         {
@@ -417,11 +351,6 @@
                 "url": "https://rubygems.org/gems/bundler-sass",
                 "get_request_status_code": 200,
                 "head_request_status_code": 200
-            },
-            "url": {
-                "url": "https://rubygems.org/gems/bundler-sass",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
             }
         },
         {
@@ -449,11 +378,6 @@
                 "head_request_status_code": "N/A"
             },
             "repo_url": {
-                "url": "https://rubygems.org/gems/bundler-sass",
-                "get_request_status_code": 200,
-                "head_request_status_code": 200
-            },
-            "url": {
                 "url": "https://rubygems.org/gems/bundler-sass",
                 "get_request_status_code": 200,
                 "head_request_status_code": 200
@@ -489,11 +413,6 @@
                 "head_request_status_code": "N/A"
             },
             "repo_url": {
-                "url": "https://www.nuget.org/packages/auth0-aspnet/1.1.0",
-                "get_request_status_code": 200,
-                "head_request_status_code": 404
-            },
-            "url": {
                 "url": "https://www.nuget.org/packages/auth0-aspnet/1.1.0",
                 "get_request_status_code": 200,
                 "head_request_status_code": 404
