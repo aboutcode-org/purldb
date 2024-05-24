@@ -339,6 +339,7 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
         )
         self.test_resource, _ = Resource.objects.get_or_create(
             path='inflate.c',
+            name='inflate.c',
             size=55466,
             package=self.test_package
         )
@@ -372,7 +373,6 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
             self.test_resource1.path,
             self.test_package1
         )
-
 
     def test_ApproximateResourceContentIndex_index(self):
         # Test index

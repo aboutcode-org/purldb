@@ -315,62 +315,75 @@ class ApproximateMatchingHashMixin(models.Model):
 
         # Step 3: order matches from lowest Hamming distance to highest Hamming distance
         # TODO: consider limiting matches for brevity
-        good_matches = cls.objects.none()
-        for hamming_distance, match in sorted(matches_by_hamming_distance.items()):
-            if hamming_distance == 0:
-                # If we have an exact match, return and disregard others
-                good_matches |= match
-                return good_matches
-            else:
-                # If we don't have an exact match, add all close matches we have
-                good_matches |= match
+        hamming_distances_and_matches = []
+        for hamming_distance, matches in sorted(matches_by_hamming_distance.items()):
+            hamming_distances_and_matches.append(
+                (hamming_distance, matches)
+            )
 
         if TRACE:
-            for match in good_matches:
-                dct = model_to_dict(match)
-                logger_debug(cls.__name__, 'match:', 'step_3_matched_package:', dct)
+            for hamming_distance, matches in hamming_distances_and_matches:
+                for match in matches:
+                    dct = model_to_dict(match)
+                    logger_debug(
+                        cls.__name__,
+                        'match:',
+                        'step_3_hamming_distance:',
+                        hamming_distance,
+                        'step_3_matched_package:',
+                        dct
+                    )
 
         # Step 4: use file heuristics to rank matches from step 3
 
-        # If we are not given resource data, or if we did not match anything, we
-        # return the matches we have.
-        if not (resource and good_matches.exists()):
-            return good_matches
+        # If we are not given resource data, return the matches we have
+        if not (resource and hamming_distances_and_matches):
+            remaining_matches = cls.objects.none()
+            if hamming_distances_and_matches:
+                for _, matches in hamming_distances_and_matches:
+                    remaining_matches |= matches
+            return remaining_matches
 
         resource_size = resource.size
-        ranked_matches = []
-        for match in good_matches:
-            matched_resource = Resource.objects.get(path=match.path)
+        matches_by_rank_attributes = defaultdict(list)
+        for hamming_distance, matches in hamming_distances_and_matches:
+            for match in matches:
+                matched_resource = match.package.resources.get(path=match.path)
 
-            if TRACE:
-                logger_debug(
-                    cls.__name__,
-                    'match:',
-                    'step_4_matched_resource:',
-                    matched_resource
-                )
+                if TRACE:
+                    logger_debug(
+                        cls.__name__,
+                        'match:',
+                        'step_4_matched_resource:',
+                        matched_resource
+                    )
 
-            # Compute size and name distance (similarity)
-            size_distance = 1 - (resource_size / matched_resource.size)
-            name_sequence_matcher = SequenceMatcher(a=resource.name, b=matched_resource.name)
-            name_distance = 1 - name_sequence_matcher.ratio()
-            ranked_matches.append(
-                (size_distance, name_distance, match)
-            )
+                # Compute size and name distance (similarity)
+                if matched_resource.is_file:
+                    size_distance = 1 - (resource_size / matched_resource.size)
+                else:
+                    # Directories do not have size, so we are removing this as a
+                    # determining factor
+                    size_distance = 0
+                name_sequence_matcher = SequenceMatcher(a=resource.name, b=matched_resource.name)
+                name_distance = 1 - name_sequence_matcher.ratio()
+                rank_attributes = (hamming_distance, size_distance, name_distance)
+                matches_by_rank_attributes[rank_attributes].append(match)
 
-            if TRACE:
-                logger_debug(
-                    cls.__name__,
-                    'match:',
-                    'step_4_size_distance:',
-                    size_distance,
-                    'step_4_name_distance:',
-                    name_distance
-                )
+                if TRACE:
+                    logger_debug(
+                        cls.__name__,
+                        'match:',
+                        'step_4_size_distance:',
+                        size_distance,
+                        'step_4_name_distance:',
+                        name_distance
+                    )
 
-        # order these from low to high (low being very similar, 0 meaning 0 change)
-        ranked_matches = sorted(ranked_matches)
-        _, _, best_match = ranked_matches[0]
+        # order these from low to high (low being very similar, 0 meaning 0 change))
+        ranked_attributes = sorted(matches_by_rank_attributes)
+        best_ranked_attributes = ranked_attributes[0]
+        ranked_matches = matches_by_rank_attributes[best_ranked_attributes]
 
         if TRACE:
             dct = model_to_dict(match)
@@ -381,7 +394,7 @@ class ApproximateMatchingHashMixin(models.Model):
                 dct
             )
 
-        matches = cls.objects.filter(pk=best_match.pk)
+        matches = cls.objects.filter(pk__in=[match.pk for match in ranked_matches])
         return matches
 
     def get_chunks(self):
