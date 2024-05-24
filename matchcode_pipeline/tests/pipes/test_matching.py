@@ -1,21 +1,22 @@
-from pathlib import Path
 import io
 import uuid
+from pathlib import Path
 
 from django.test import TestCase
-
+from scanpipe import pipes
 from scanpipe.models import Project
 from scanpipe.pipes import flag
+from scanpipe.pipes.input import copy_inputs
 from scanpipe.tests import make_resource_directory
 from scanpipe.tests import make_resource_file
 from scanpipe.tests import package_data1
 from scanpipe.tests import package_data2
 
 from matchcode.models import ApproximateDirectoryContentIndex
+from matchcode.models import ApproximateResourceContentIndex
 from matchcode_pipeline.pipes import matching
 from packagedb.models import Package
-from scanpipe import pipes
-from scanpipe.pipes.input import copy_inputs
+from packagedb.models import Resource
 
 
 class MatchingPipesTest(TestCase):
@@ -34,6 +35,16 @@ class MatchingPipesTest(TestCase):
         self.directory_content_fingerprint1 = ApproximateDirectoryContentIndex.index(
             fingerprint="00000003238f6ed2c218090d4da80b3b42160e69",
             resource_path="test",
+            package=self.package1,
+        )
+        self.resource1 = Resource.objects.create(
+            path="inflate.c",
+            size=55466,
+            package=self.package1
+        )
+        self.resource_content_fingerprint1 = ApproximateResourceContentIndex.index(
+            fingerprint="000018fba23a49e4cd40718d1297be719e6564a4",
+            resource_path="inflate.c",
             package=self.package1,
         )
 
@@ -186,3 +197,29 @@ class MatchingPipesTest(TestCase):
 
         self.assertEqual(2, package1_resource_count)
         self.assertEqual(0, package2_resource_count)
+
+    def test_matchcode_pipeline_pipes_matching_match_purldb_resource_approximately(self):
+        resource = make_resource_file(
+            self.project1,
+            "inflate.c",
+            size=55466,
+            extra_data={"halo1": "000018f4aa3a49e4cd40718d1297be519e6564a4"},
+        )
+
+        buffer = io.StringIO()
+        matching.match_purldb_resources_approximately(
+            self.project1,
+            logger=buffer.write,
+        )
+
+        expected = (
+            "Approximate matching 1 resource against PurlDB" "1 resource approximately matched in PurlDB"
+        )
+        self.assertEqual(expected, buffer.getvalue())
+
+        package = self.project1.discoveredpackages.get()
+        self.assertEqual(package_data1["name"], package.name)
+
+        resource.refresh_from_db()
+        self.assertEqual("matched-to-purldb-resource", resource.status)
+        self.assertEqual(package, resource.discovered_packages.get())

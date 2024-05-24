@@ -332,8 +332,9 @@ class ApproximateMatchingHashMixin(models.Model):
 
         # Step 4: use file heuristics to rank matches from step 3
 
-        # If we are not given resource data, we return the matches we have.
-        if not resource:
+        # If we are not given resource data, or if we did not match anything, we
+        # return the matches we have.
+        if not (resource and good_matches.exists()):
             return good_matches
 
         resource_size = resource.size

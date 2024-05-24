@@ -9,23 +9,22 @@
 
 import os
 
-from packagedb.models import Package
-from packagedb.models import Resource
-
-from matchcode.match import APPROXIMATE_DIRECTORY_STRUCTURE_MATCH
 from matchcode.match import APPROXIMATE_DIRECTORY_CONTENT_MATCH
+from matchcode.match import APPROXIMATE_DIRECTORY_STRUCTURE_MATCH
 from matchcode.match import APPROXIMATE_FILE_MATCH
 from matchcode.match import EXACT_FILE_MATCH
 from matchcode.match import EXACT_PACKAGE_ARCHIVE_MATCH
 from matchcode.match import path_suffixes
 from matchcode.match import run_do_match_from_scan
 from matchcode.models import ApproximateResourceContentIndex
+from matchcode.tests import FIXTURES_REGEN
+from matchcode.utils import MatchcodeTestCase
 from matchcode.utils import index_package_directories
 from matchcode.utils import index_package_files_sha1
 from matchcode.utils import index_packages_sha1
 from matchcode.utils import load_resources_from_scan
-from matchcode.utils import MatchcodeTestCase
-from matchcode.tests import FIXTURES_REGEN
+from packagedb.models import Package
+from packagedb.models import Resource
 
 
 class MatchPackagesTestCase(MatchcodeTestCase):
@@ -178,7 +177,13 @@ class MatchNestedPackagesTestCase(MatchcodeTestCase):
     def test_do_match_approximate_directory_structure_match(self):
         input_file = self.get_test_loc('match/nested/nested.json')
         vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_STRUCTURE_MATCH)
-        expected = self.get_test_loc('match/nested/nested-expected.json')
+        expected = self.get_test_loc('match/nested/nested-directory-structure-match-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_do_match_approximate_directory_content_match(self):
+        input_file = self.get_test_loc('match/nested/nested.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/nested/nested-directory-content-match-expected.json')
         self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
 
 
