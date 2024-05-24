@@ -342,3 +342,57 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
         vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_STRUCTURE_MATCH)
         expected = self.get_test_loc('match/directory-matching/get-stdin-3.0.2-i-expected.json')
         self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_3(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.3-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.3-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_4(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.4-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.4-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_5(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.5-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.5-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_6(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.6-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.6-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_7(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.7-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.7-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_9(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.9-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.9-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_1_0(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.1.0-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.1.0-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_1_1(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.1.1-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.1.1-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_get_stdin_3_0_2(self):
+        input_file = self.get_test_loc('match/directory-matching/get-stdin-3.0.2-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/get-stdin-3.0.2-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
