@@ -7,8 +7,6 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import json
-
 from django.db import transaction
 from django.utils import timezone
 from packageurl import PackageURL
@@ -21,10 +19,10 @@ from rest_framework.response import Response
 # But importing the mappers and visitors module triggers routes registration
 from minecode import visitors  # NOQA
 from minecode import priority_router
-from minecode.management.indexing import index_package
 from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 from minecode.permissions import IsScanQueueWorkerAPIUser
 from minecode.utils import validate_uuid
+from minecode.utils import get_temp_file
 
 
 class ResourceURISerializer(serializers.ModelSerializer):
@@ -202,33 +200,29 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             scan_results_file = request.data.get('scan_results_file')
             scan_summary_file = request.data.get('scan_summary_file')
             project_extra_data = request.data.get('project_extra_data')
-            scan_data = json.load(scan_results_file)
-            summary_data = json.load(scan_summary_file)
-            project_extra_data = json.loads(project_extra_data)
 
-            scannable_uri.scan_status = ScannableURI.SCAN_COMPLETED
-
-            indexing_errors = index_package(
-                scannable_uri,
-                scannable_uri.package,
-                scan_data,
-                summary_data,
-                project_extra_data,
-                reindex=scannable_uri.reindex_uri,
+            # Save results to temporary files
+            scan_results_location = get_temp_file(
+                file_name='scan_results',
+                extension='.json'
             )
-            if indexing_errors:
-                scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
-                scannable_uri.index_error = indexing_errors
-                msg = {
-                    'error': f'scan index failed for scannable_uri {scannable_uri_uuid}'
-                }
-                return Response(msg, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
-                msg = {
-                    'status': f'scan indexed for scannable_uri {scannable_uri_uuid}'
-                }
-            scannable_uri.wip_date = None
-            scannable_uri.save()
+            scan_summary_location = get_temp_file(
+                file_name='scan_summary',
+                extension='.json'
+            )
+            with open(scan_results_location, 'wb') as f:
+                f.write(scan_results_file.read())
+            with open(scan_summary_location, 'wb') as f:
+                f.write(scan_summary_file.read())
+
+            scannable_uri.process_scan_results(
+                scan_results_location=scan_results_location,
+                scan_summary_location=scan_summary_location,
+                project_extra_data=project_extra_data
+            )
+            msg = {
+                'status': f'scan results for scannable_uri {scannable_uri_uuid} '
+                           'have been queued for indexing'
+            }
 
         return Response(msg)

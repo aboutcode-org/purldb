@@ -12,9 +12,10 @@ from datetime import timedelta
 import logging
 import sys
 
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
-
+import django_rq
 
 from minecode import map_router
 from minecode import visit_router
@@ -759,6 +760,36 @@ class ScannableURI(BaseURI):
             self.canonical = get_canonical(self.uri)
         self.normalize_fields()
         super(ScannableURI, self).save(*args, **kwargs)
+
+    def process_scan_results(
+        self,
+        scan_results_location,
+        scan_summary_location,
+        project_extra_data
+    ):
+        from minecode import tasks
+
+        self.scan_status = self.SCAN_COMPLETED
+        self.save()
+
+        if not settings.PURLDB_ASYNC:
+            tasks.process_scan_results(
+                scannable_uri_uuid=self.uuid,
+                scan_results_location=scan_results_location,
+                scan_summary_location=scan_summary_location,
+                project_extra_data=project_extra_data,
+            )
+            return
+
+        job = django_rq.enqueue(
+            tasks.process_scan_results,
+            scannable_uri_uuid=self.uuid,
+            scan_results_location=scan_results_location,
+            scan_summary_location=scan_summary_location,
+            project_extra_data=project_extra_data,
+            job_timeout=1200,
+        )
+        return job
 
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.

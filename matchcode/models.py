@@ -82,7 +82,7 @@ class BaseFileIndex(models.Model):
                 )
             return bfi, created
         except Exception as e:
-            msg = f'Error creating {bfi.__class__.__name__}:\n'
+            msg = f'Error creating FileIndex:\n'
             msg += get_error_message(e)
             package.index_error = msg
             package.save()
@@ -138,7 +138,7 @@ def bah128_ranges(indexed_elements_count, range_ratio=0.05):
     )
 
 
-class BaseDirectoryIndex(models.Model):
+class ApproximateMatchingHashMixin(models.Model):
     indexed_elements_count = models.IntegerField(
         help_text='Number of elements that went into the fingerprint',
     )
@@ -177,14 +177,14 @@ class BaseDirectoryIndex(models.Model):
 
     package = models.ForeignKey(
         Package,
-        help_text='The Package that this directory is a part of',
+        help_text='The Package that this resource is a part of',
         null=False,
         on_delete=models.CASCADE,
     )
 
     path = models.CharField(
         max_length=2000,
-        help_text=_('The full path value of this directory'),
+        help_text=_('The full path value of this resource'),
     )
 
     class Meta:
@@ -195,16 +195,17 @@ class BaseDirectoryIndex(models.Model):
         return self.fingerprint()
 
     @classmethod
-    def index(cls, directory_fingerprint, resource_path, package):
+    def index(cls, fingerprint, resource_path, package):
         """
-        Index the string `directory_fingerprint` into the BaseDirectoryIndex model
+        Index the string `fingerprint` into the ApproximateMatchingHashMixin
+        model
 
-        Return a 2-tuple of the corresponding BaseDirectoryIndex created from
-        `directory_fingerprint` and a boolean, which represents whether the
+        Return a 2-tuple of the corresponding ApproximateMatchingHashMixin
+        created from `fingerprint` and a boolean, which represents whether the
         fingerprint was created or not.
         """
         try:
-            indexed_elements_count, fp = split_fingerprint(directory_fingerprint)
+            indexed_elements_count, fp = split_fingerprint(fingerprint)
             fp_chunk1, fp_chunk2, fp_chunk3, fp_chunk4 = create_halohash_chunks(fp)
             bdi, created = cls.objects.get_or_create(
                 indexed_elements_count=indexed_elements_count,
@@ -221,33 +222,33 @@ class BaseDirectoryIndex(models.Model):
                         datetime.utcnow().isoformat(),
                         bdi.__class__.__name__,
                         package.download_url,
-                        directory_fingerprint
+                        fingerprint
                     )
                 )
             return bdi, created
         except Exception as e:
-            msg = f'Error creating {bdi.__class__.__name__}:\n'
+            msg = f'Error creating ApproximateMatchingHashMixin:\n'
             msg += get_error_message(e)
             package.index_error = msg
             package.save()
             logger.error(msg)
 
     @classmethod
-    def match(cls, directory_fingerprint, exact_directory_match=False):
+    def match(cls, fingerprint, exact_match=False):
         """
         Return a list of matched Packages
         """
         if TRACE:
-            logger_debug(cls.__name__, 'match:', 'directory_fingerprint:', directory_fingerprint)
+            logger_debug(cls.__name__, 'match:', 'fingerprint:', fingerprint)
 
-        if not directory_fingerprint:
+        if not fingerprint:
             return cls.objects.none()
 
-        indexed_elements_count, bah128 = split_fingerprint(directory_fingerprint)
+        indexed_elements_count, bah128 = split_fingerprint(fingerprint)
         chunk1, chunk2, chunk3, chunk4 = create_halohash_chunks(bah128)
 
         # Step 0: if exact only, then return a filter
-        if exact_directory_match:
+        if exact_match:
             matches = cls.objects.filter(
                 indexed_elements_count=indexed_elements_count,
                 chunk1=chunk1,
@@ -337,9 +338,13 @@ class BaseDirectoryIndex(models.Model):
         return fingerprint.decode('utf-8')
 
 
-class ApproximateDirectoryStructureIndex(BaseDirectoryIndex):
+class ApproximateDirectoryStructureIndex(ApproximateMatchingHashMixin):
     pass
 
 
-class ApproximateDirectoryContentIndex(BaseDirectoryIndex):
+class ApproximateDirectoryContentIndex(ApproximateMatchingHashMixin):
+    pass
+
+
+class ApproximateResourceContentIndex(ApproximateMatchingHashMixin):
     pass

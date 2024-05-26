@@ -199,7 +199,7 @@ class NpmPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(0, package_count)
         package_url = PackageURL.from_string(self.scan_package.purl)
-        npm.map_npm_package(package_url)
+        npm.map_npm_package(package_url, ('test_pipeline'))
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(1, package_count)
         package = packagedb.models.Package.objects.all().first()

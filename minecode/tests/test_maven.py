@@ -720,7 +720,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(0, package_count)
         package_url = PackageURL.from_string(self.scan_package.purl)
-        maven_visitor.map_maven_package(package_url, packagedb.models.PackageContentType.BINARY)
+        maven_visitor.map_maven_package(package_url, packagedb.models.PackageContentType.BINARY, ('test_pipeline'))
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(1, package_count)
         package = packagedb.models.Package.objects.all().first()
@@ -732,7 +732,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         self.assertEqual(0, package_count)
         custom_repo_purl = "pkg:maven/org.eclipse.core/runtime@20070801?repository_url=https://packages.atlassian.com/mvn/maven-atlassian-external/"
         package_url = PackageURL.from_string(custom_repo_purl)
-        maven_visitor.map_maven_package(package_url, packagedb.models.PackageContentType.BINARY)
+        maven_visitor.map_maven_package(package_url, packagedb.models.PackageContentType.BINARY, ('test_pipeline'))
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(1, package_count)
         package = packagedb.models.Package.objects.all().first()

@@ -243,7 +243,7 @@ def merge_ancestors(ancestor_pom_texts, package):
     return package
 
 
-def map_maven_package(package_url, package_content):
+def map_maven_package(package_url, package_content, pipelines):
     """
     Add a maven `package_url` to the PackageDB.
 
@@ -316,12 +316,12 @@ def map_maven_package(package_url, package_content):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package)
+        add_package_to_scan_queue(db_package, pipelines)
 
     return db_package, error
 
 
-def map_maven_binary_and_source(package_url):
+def map_maven_binary_and_source(package_url, pipelines):
     """
     Get metadata for the binary and source release of the Maven package
     `package_url` and save it to the PackageDB.
@@ -329,14 +329,14 @@ def map_maven_binary_and_source(package_url):
     Return an error string for errors that occur, or empty string if there is no error.
     """
     error = ''
-    package, emsg = map_maven_package(package_url, PackageContentType.BINARY)
+    package, emsg = map_maven_package(package_url, PackageContentType.BINARY, pipelines)
     if emsg:
         error += emsg
 
     source_package_url = package_url
     source_package_url.qualifiers['classifier'] = 'sources'
     source_package, emsg = map_maven_package(
-        source_package_url, PackageContentType.SOURCE_ARCHIVE
+        source_package_url, PackageContentType.SOURCE_ARCHIVE, pipelines
     )
     if emsg:
         error += emsg
@@ -351,7 +351,7 @@ def map_maven_binary_and_source(package_url):
     return error
 
 
-def map_maven_packages(package_url):
+def map_maven_packages(package_url, pipelines):
     """
     Given a valid `package_url` with no version, get metadata for the binary and
     source release for each version of the Maven package `package_url` and save
@@ -375,7 +375,7 @@ def map_maven_packages(package_url):
             name=listing.get('a'),
             version=listing.get('v'),
         )
-        emsg = map_maven_binary_and_source(purl)
+        emsg = map_maven_binary_and_source(purl, pipelines)
         if emsg:
             error += emsg
     return error
@@ -405,7 +405,7 @@ def get_package_sha1(package):
 
 
 @priority_router.route('pkg:maven/.*')
-def process_request(purl_str):
+def process_request(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a maven Package URL (PURL) as a
     URI.
@@ -418,6 +418,11 @@ def process_request(purl_str):
 
     Return an error string for errors that occur, or empty string if there is no error.
     """
+    from minecode.model_utils import DEFAULT_PIPELINES
+    
+    addon_pipelines = kwargs.get('addon_pipelines', [])
+    pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+
     try:
         package_url = PackageURL.from_string(purl_str)
     except ValueError as e:
@@ -426,9 +431,9 @@ def process_request(purl_str):
 
     has_version = bool(package_url.version)
     if has_version:
-        error = map_maven_binary_and_source(package_url)
+        error = map_maven_binary_and_source(package_url, pipelines)
     else:
-        error = map_maven_packages(package_url)
+        error = map_maven_packages(package_url, pipelines)
 
     return error
 

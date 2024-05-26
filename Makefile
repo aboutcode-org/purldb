@@ -41,6 +41,8 @@ conf:
 dev:
 	@echo "-> Configure and install development dependencies"
 	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --dev
+	@echo "-> Configure and install documentation dependencies"
+	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --docs
 
 envfile:
 	@echo "-> Create the .env file and generate a secret key"
@@ -128,6 +130,7 @@ test:
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=matchcode_project.settings ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline
 	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs purldb-toolkit/
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs purl2vcs
 
 shell:
 	${MANAGE} shell
@@ -150,7 +153,7 @@ bump:
 
 docs:
 	rm -rf docs/_build/
-	@${ACTIVATE} sphinx-build docs/ docs/_build/
+	@${ACTIVATE} sphinx-build docs/source docs/_build/
 
 docker-images:
 	@echo "-> Build Docker services"

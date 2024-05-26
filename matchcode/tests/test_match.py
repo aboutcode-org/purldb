@@ -9,38 +9,23 @@
 
 import os
 
-import attr
-from commoncode.resource import VirtualCodebase
 from packagedb.models import Package
+from packagedb.models import Resource
 
-from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
-from matchcode.management.commands.index_packages import index_package_directories
-from matchcode.match import EXACT_PACKAGE_ARCHIVE_MATCH
 from matchcode.match import APPROXIMATE_DIRECTORY_STRUCTURE_MATCH
 from matchcode.match import APPROXIMATE_DIRECTORY_CONTENT_MATCH
+from matchcode.match import APPROXIMATE_FILE_MATCH
 from matchcode.match import EXACT_FILE_MATCH
-from matchcode.match import do_match
+from matchcode.match import EXACT_PACKAGE_ARCHIVE_MATCH
 from matchcode.match import path_suffixes
+from matchcode.match import run_do_match_from_scan
+from matchcode.models import ApproximateResourceContentIndex
+from matchcode.utils import index_package_directories
 from matchcode.utils import index_package_files_sha1
 from matchcode.utils import index_packages_sha1
 from matchcode.utils import load_resources_from_scan
 from matchcode.utils import MatchcodeTestCase
 from matchcode.tests import FIXTURES_REGEN
-
-
-def run_do_match_from_scan(scan_file_location, match_type):
-    vc = VirtualCodebase(
-        location=scan_file_location,
-        codebase_attributes=dict(
-            matches=attr.ib(default=attr.Factory(list))
-        ),
-        resource_attributes=dict(
-            matched_to=attr.ib(default=attr.Factory(list))
-        )
-    )
-    vc = compute_codebase_directory_fingerprints(vc)
-    do_match(vc, match_type)
-    return vc
 
 
 class MatchPackagesTestCase(MatchcodeTestCase):
@@ -105,6 +90,26 @@ class MatchPackagesTestCase(MatchcodeTestCase):
         index_package_directories(self.test_package4)
         index_package_files_sha1(self.test_package4, self.get_test_loc('models/match-test.json'))
 
+        # Add approximate file resource
+        self.test_package5, _ = Package.objects.get_or_create(
+            filename='inflate.tar.gz',
+            sha1='deadfeed',
+            type='generic',
+            name='inflate',
+            version='1.0.0',
+            download_url='inflate.com/inflate.tar.gz',
+        )
+        self.test_resource5, _ = Resource.objects.get_or_create(
+            path='inflate.c',
+            package=self.test_package5
+        )
+        self.test_resource5_fingerprint = '000018fba23a49e4cd40718d1297be719e6564a4'
+        ApproximateResourceContentIndex.index(
+            self.test_resource5_fingerprint,
+            self.test_resource5.path,
+            self.test_package5
+        )
+
     def test_do_match_package_archive_match(self):
         input_file = self.get_test_loc('models/match-test.json')
         vc = run_do_match_from_scan(input_file, EXACT_PACKAGE_ARCHIVE_MATCH)
@@ -127,6 +132,12 @@ class MatchPackagesTestCase(MatchcodeTestCase):
         input_file = self.get_test_loc('models/match-test.json')
         vc = run_do_match_from_scan(input_file, EXACT_FILE_MATCH)
         expected = self.get_test_loc('models/match-test-exact-file-results.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_do_match_approximate_package_file_match(self):
+        input_file = self.get_test_loc('match/approximate-file-matching/approximate-match-test.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_FILE_MATCH)
+        expected = self.get_test_loc('match/approximate-file-matching/approximate-match-test-results.json')
         self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
 
 

@@ -211,6 +211,7 @@ class ResourceAPITestCase(JsonBasedTesting, TestCase):
         expected = self.get_test_loc('api/resource-filter_by_checksums-expected.json')
         self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "package"], regen=FIXTURES_REGEN)
 
+
 class PackageApiTestCase(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
 
@@ -411,7 +412,8 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
                 continue
 
             if key == 'history':
-                self.assertIn('test-message', value)
+                url = reverse('api:package-history', args=[self.package.uuid])
+                self.assertIn(url, value)
 
             self.assertTrue(hasattr(self.package, key))
             if key in self.package_data.keys():
@@ -476,12 +478,12 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         response = self.client.post('/api/packages/filter_by_checksums/', data=data)
         self.assertEqual(5, response.data['count'])
         expected = self.get_test_loc('api/package-filter_by_checksums-expected.json')
-        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=FIXTURES_REGEN)
+        self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets", "history"], regen=FIXTURES_REGEN)
         data["enhance_package_data"] = True
         enhanced_response = self.client.post('/api/packages/filter_by_checksums/', data=data)
         self.assertEqual(5, len(enhanced_response.data['results']))
         expected = self.get_test_loc('api/package-filter_by_checksums-enhanced-package-data-expected.json')
-        self.check_expected_results(enhanced_response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets",], regen=FIXTURES_REGEN)
+        self.check_expected_results(enhanced_response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets", "history"], regen=FIXTURES_REGEN)
 
 
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
@@ -724,6 +726,7 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         expected = self.get_test_loc('api/enhanced_package.json')
         self.check_expected_results(result, expected, fields_to_remove=['package_sets'], regen=FIXTURES_REGEN)
 
+
 class CollectApiTestCase(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
 
@@ -806,6 +809,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             'uuid',
             'resources',
             'package_sets',
+            'history'
         ]
 
         self.check_expected_results(result, expected, fields_to_remove=fields_to_remove, regen=FIXTURES_REGEN)
@@ -1110,6 +1114,100 @@ class ResourceApiTestCase(TestCase):
             self.resource2.name,
         ])
         self.assertEqual(expected_names, names)
+
+
+class PackageUpdateSetTestCase(TestCase):
+
+    def setUp(self):
+        self.package_data = {
+            'type': 'npm',
+            'namespace': '',
+            'name': 'foobar',
+            'version': '1.1.0',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': '',
+            'filename': 'Foo.zip',
+            'sha1': 'testsha1',
+            'md5': 'testmd5',
+            'size': 101,
+            'package_content' : 1
+        }
+        self.package = Package.objects.create(**self.package_data)
+        self.package.refresh_from_db()
+        self.package_set = PackageSet.objects.create()
+        self.new_package_set_uuid = self.package_set.uuid
+
+    def test_api_purl_updation(self):
+        data = {
+          "purls": [
+            {"purl": "pkg:npm/hologram@1.1.0", "content_type": "CURATION"}]
+          ,
+          "uuid": str(self.new_package_set_uuid)
+        }
+
+        response = self.client.post(f"/api/update_packages/", data=data, content_type="application/json")
+
+        expected = [{"purl": "pkg:npm/hologram@1.1.0", "update_status": "Updated"}]
+
+        self.assertEqual(expected, response.data)
+
+    def test_api_purl_updation_existing_package(self):
+        data = {
+          "purls": [
+            {"purl": "pkg:npm/foobar@1.1.0", "content_type": "PATCH"}
+          ],
+          "uuid" : str(self.new_package_set_uuid)
+        }
+
+        expected = [{"purl": "pkg:npm/foobar@1.1.0", "update_status": "Already Exists"}]
+
+        response = self.client.post(f"/api/update_packages/", data=data, content_type="application/json")
+
+        self.assertEqual(expected, response.data)
+
+    def test_api_purl_updation_non_existing_uuid(self):
+        data = {
+          "purls": [
+            {"purl": "pkg:npm/foobar@1.1.0", "content_type": "SOURCE_REPO"}
+          ],
+          "uuid" : "ac9c36f4-a1ed-4824-8448-c6ed8f1da71d"
+        }
+
+        expected = {"update_status": "No Package Set found for ac9c36f4-a1ed-4824-8448-c6ed8f1da71d"}
+
+        response = self.client.post(f"/api/update_packages/", data=data, content_type="application/json")
+
+        self.assertEqual(expected, response.data)
+
+    def test_api_purl_updation_without_uuid(self):
+        data = {
+          "purls": [
+            {"purl": "pkg:npm/jammy@1.1.9", "content_type": "BINARY"}
+          ]
+        }
+
+        expected = [{"purl": "pkg:npm/jammy@1.1.9", "update_status": "Updated"}]
+
+        response = self.client.post(f"/api/update_packages/", data=data, content_type="application/json")
+
+        self.assertEqual(expected, response.data)
+
+
+    def test_api_purl_validation_empty_request(self):
+        data = {}
+        response = self.client.post(f"/api/update_packages/", data=data, content_type="application/json")
+
+        expected = {
+            "errors": {
+                "purls": [
+                    "This field is required."
+                ]
+            }
+        }
+
+        self.assertAlmostEquals(expected, response.data)
+
 
 class PurlValidateApiTestCase(TestCase):
 

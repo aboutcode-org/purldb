@@ -17,6 +17,9 @@ from django.db.models import Subquery
 from django_filters.filters import Filter
 from django_filters.filters import OrderingFilter
 from django_filters.rest_framework import FilterSet
+from drf_spectacular.plumbing import build_array_type
+from drf_spectacular.plumbing import build_basic_type
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter
 from drf_spectacular.utils import extend_schema
 from packageurl import PackageURL
@@ -50,6 +53,7 @@ from packagedb.models import Resource
 from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
 from packagedb.package_managers import get_api_package_name
 from packagedb.package_managers import get_version_fetcher
+from packagedb.serializers import CollectPackageSerializer, is_supported_addon_pipeline
 from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import IndexPackagesResponseSerializer
 from packagedb.serializers import IndexPackagesSerializer
@@ -57,12 +61,15 @@ from packagedb.serializers import PackageAPISerializer
 from packagedb.serializers import PackageSetAPISerializer
 from packagedb.serializers import PackageWatchAPISerializer
 from packagedb.serializers import PackageWatchCreateSerializer
+from packagedb.serializers import UpdatePackagesSerializer
 from packagedb.serializers import PackageWatchUpdateSerializer
 from packagedb.serializers import PartySerializer
 from packagedb.serializers import PurlValidateResponseSerializer
+from packagedb.serializers import PurlUpdateResponseSerializer
 from packagedb.serializers import PurlValidateSerializer
 from packagedb.serializers import ResourceAPISerializer
 from packagedb.throttling import StaffUserRateThrottle
+from purl2vcs.find_source_repo import get_source_package_and_add_to_package_set
 
 logger = logging.getLogger(__name__)
 
@@ -313,6 +320,14 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         return Response({})
 
     @action(detail=True, methods=['get'])
+    def history(self, request, *args, **kwargs):
+        """
+        Return the History field associated with the current Package.
+        """
+        package = self.get_object()
+        return Response({"history" : package.history})
+
+    @action(detail=True, methods=['get'])
     def resources(self, request, *args, **kwargs):
         """
         Return the Resources associated with the current Package.
@@ -422,6 +437,7 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
 class PackageViewSet(PackagePublicViewSet):
     @action(detail=True)
     def reindex_package(self, request, *args, **kwargs):
+
         """
         Reindex this package instance
         """
@@ -431,6 +447,85 @@ class PackageViewSet(PackagePublicViewSet):
             'status': f'{package.package_url} has been queued for reindexing'
         }
         return Response(data)
+
+
+class PackageUpdateSet(viewsets.ViewSet):
+
+    """
+    Take a list of `purls` (where each item is a dictionary containing PURL
+    and content_type).
+
+    If `uuid` is given then all purls will be added to package set if it exists
+    else a new set would be created and all the purls will be added to that new set.
+
+    **Note:** There is also a slight addition to the logic where a purl already exists in the database
+    and so there are no changes done to the purl entry it is passed as it is.
+
+    **Request example:**
+        {
+          "purls": [
+            {"purl": "pkg:npm/less@1.0.32", "content_type": "CURATION"}
+          ],
+          "uuid" : "b67ceb49-1538-481f-a572-431062f382gg"
+        }
+    """
+
+    def create(self, request):
+
+        res = []
+
+        serializer = UpdatePackagesSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response({'errors': serializer.errors}, status=400)
+
+        validated_data = serializer.validated_data
+        packages = validated_data.get('purls', [])
+        uuid = validated_data.get('uuid', None)
+        package_set = None
+
+        if uuid:
+            try:
+                package_set = PackageSet.objects.get(uuid=uuid)
+
+                if package_set:
+                    package_set = package_set
+
+            except:
+                message = {
+                    'update_status': f'No Package Set found for {uuid}'
+                }
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+        for items in packages or []:
+
+            res_data = {}
+            purl = items.get('purl')
+
+            res_data['purl'] = purl
+            content_type = items.get('content_type')
+            content_type_val = PackageContentType.__getitem__(content_type)
+            lookups = purl_to_lookups(purl)
+
+            filtered_packages = Package.objects.filter(**lookups)
+            res_data['update_status'] = "Already Exists"
+
+            if not filtered_packages:
+                if package_set is None:
+                    package_set = PackageSet.objects.create()
+
+                lookups['package_content'] = content_type_val
+                lookups['download_url'] = " "
+
+                cr = Package.objects.create(**lookups)
+                package_set.add_to_package_set(cr)
+                res_data['update_status'] = "Updated"
+
+            res.append(res_data)
+
+        serializer = PurlUpdateResponseSerializer(res, many=True)
+
+        return Response(serializer.data)
 
 
 UPDATEABLE_FIELDS = [
@@ -579,40 +674,55 @@ class CollectViewSet(viewsets.ViewSet):
     Return Package data for the purl passed in the `purl` query parameter.
 
     If the package does not exist, we will fetch the Package data and return
-    it in the same request.
+    it in the same request.  
+    Optionally, provide the list of addon_pipelines
+    to run on the package. Find all addon pipelines [here.](https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html)
+
+    **Example:**
+
+            /api/collect/?purl=pkg:npm/foo@1.2.3&addon_pipelines=collect_symbols_ctags&addon_pipelines=inspect_elf_binaries
+
 
     **Note:** Use `Index packages` for bulk indexing/reindexing of packages.
     """
-    serializer_class=None
+    serializer_class=CollectPackageSerializer
     @extend_schema(
             parameters=[
-                OpenApiParameter('purl', str, 'query', description='PackageURL'),
-                OpenApiParameter('source_purl', str, 'query', description='Source PackageURL', default=False),
+                OpenApiParameter('purl', str, 'query', description='PackageURL', required=True),
+                OpenApiParameter('source_purl', str, 'query', description='Source PackageURL'),
+
+                # There is no OpenApiTypes.LIST https://github.com/tfranzel/drf-spectacular/issues/341
+                OpenApiParameter(
+                    'addon_pipelines', 
+                    build_array_type(build_basic_type(OpenApiTypes.STR)),
+                    'query', description='Addon pipelines',
+                    ),
             ],
             responses={200:PackageAPISerializer()},
     )
     def list(self, request, format=None):
-        purl = request.query_params.get('purl')
-        source_purl = request.query_params.get('source_purl', None)
+        serializer = self.serializer_class(data=request.query_params)
+        if not serializer.is_valid():
+            return Response(
+                {'errors': serializer.errors}, 
+                status=status.HTTP_400_BAD_REQUEST,
+                )
 
-        # validate purl
-        try:
-            package_url = PackageURL.from_string(purl)
-            if source_purl:
-                source_package_url = PackageURL.from_string(source_purl)
-        except ValueError as e:
-            message = {
-                'status': f'purl validation error: {e}'
-            }
-            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+        validated_data = serializer.validated_data
+        purl = validated_data.get('purl')
+        
+        kwargs = dict()
+        if source_purl := validated_data.get('source_purl', None):
+            kwargs["source_purl"] = source_purl
+        
+        if addon_pipelines := validated_data.get('addon_pipelines', []):
+            kwargs["pipelines"] = addon_pipelines
+
 
         lookups = purl_to_lookups(purl)
         packages = Package.objects.filter(**lookups)
         if packages.count() == 0:
             try:
-                kwargs = dict()
-                if source_purl:
-                    kwargs["source_purl"] = source_purl
                 errors = priority_router.process(purl, **kwargs)
             except NoRouteAvailable:
                 message = {
@@ -629,6 +739,8 @@ class CollectViewSet(viewsets.ViewSet):
                         'status': f'error(s) occurred when fetching metadata for {purl}: {errors}'
                     }
                 return Response(message)
+        for package in packages:
+            get_source_package_and_add_to_package_set(package)
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
@@ -644,7 +756,10 @@ class CollectViewSet(viewsets.ViewSet):
         """
         Take a list of `packages` (where each item is a dictionary containing either PURL
         or versionless PURL along with vers range, optionally with source package PURL)
-        and index it.
+        and index it.  
+        Also each package can have list of `addon_pipelines` to run on the package.  
+        Find all addon pipelines [here.](https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html)
+
 
         If `reindex` flag is True then existing package will be rescanned, if `reindex_set`
         is True then all the package in the same set will be rescanned.
@@ -660,17 +775,20 @@ class CollectViewSet(viewsets.ViewSet):
                         {
                             "purl": "pkg:npm/less@1.0.32",
                             "vers": null,
-                            "source_purl": None
+                            "source_purl": None,
+                            "addon_pipelines": ['collect_symbols_ctags']
                         },
                         {
                             "purl": "pkg:npm/less",
                             "vers": "vers:npm/>=1.1.0|<=1.1.4",
-                            "source_purl": None
+                            "source_purl": None,
+                            "addon_pipelines": None
                         },
                         {
                             "purl": "pkg:npm/foobar",
                             "vers": null,
-                            "source_purl": None
+                            "source_purl": None,
+                            "addon_pipelines": ['inspect_elf_binaries', 'collect_symbols_ctags']
                         }
                     ]
                     "reindex": true,
@@ -703,10 +821,10 @@ class CollectViewSet(viewsets.ViewSet):
         - unsupported_vers
             - A list of vers range that are not supported by the univers or package_manager.
         """
-        def _reindex_package(package, reindexed_packages):
+        def _reindex_package(package, reindexed_packages, **kwargs):
             if package in reindexed_packages:
                 return
-            package.reindex()
+            package.reindex(**kwargs)
             reindexed_packages.append(package)
 
         serializer = self.serializer_class(data=request.data)
@@ -733,15 +851,19 @@ class CollectViewSet(viewsets.ViewSet):
         if reindex:
             for package in unique_packages:
                 purl = package['purl']
+                kwargs = dict()
+                if addon_pipelines := package.get('source_purl'):
+                    kwargs["addon_pipelines"] = [pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)]
                 lookups = purl_to_lookups(purl)
                 packages = Package.objects.filter(**lookups)
                 if packages.count() > 0:
                     for package in packages:
-                        _reindex_package(package, reindexed_packages)
+                        get_source_package_and_add_to_package_set(package)
+                        _reindex_package(package, reindexed_packages, **kwargs)
                         if reindex_set:
                             for package_set in package.package_sets.all():
                                 for p in package_set.packages.all():
-                                    _reindex_package(p, reindexed_packages)
+                                    _reindex_package(p, reindexed_packages, **kwargs)
                 else:
                     nonexistent_packages.append(package)
             requeued_packages.extend([p.package_url for p in reindexed_packages])
@@ -758,6 +880,8 @@ class CollectViewSet(viewsets.ViewSet):
                     extra_fields = dict()
                     if source_purl := package.get('source_purl'):
                         extra_fields["source_uri"] = source_purl
+                    if addon_pipelines := package.get('addon_pipelines'):
+                        extra_fields["addon_pipelines"] = [pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)]
                     priority_resource_uri = PriorityResourceURI.objects.insert(purl, **extra_fields)
                     if priority_resource_uri:
                         queued_packages.append(purl)
