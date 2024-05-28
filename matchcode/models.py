@@ -24,7 +24,6 @@ from matchcode_toolkit.halohash import byte_hamming_distance
 
 from minecode.management.commands import get_error_message
 from packagedb.models import Package
-from packagedb.models import Resource
 
 TRACE = False
 
@@ -344,7 +343,11 @@ class ApproximateMatchingHashMixin(models.Model):
                     remaining_matches |= matches
             return remaining_matches
 
-        resource_size = resource.size
+        if resource.is_file:
+            resource_size = resource.size
+        else:
+            resource_size = resource.files_count
+
         matches_by_rank_attributes = defaultdict(list)
         for hamming_distance, matches in hamming_distances_and_matches:
             for match in matches:
@@ -358,29 +361,30 @@ class ApproximateMatchingHashMixin(models.Model):
                         matched_resource
                     )
 
-                # Compute size and name distance (similarity)
+                # Compute size and name difference
                 if matched_resource.is_file:
-                    size_distance = 1 - (resource_size / matched_resource.size)
+                    size_difference = abs(resource_size - matched_resource.size)
                 else:
-                    # Directories do not have size, so we are removing this as a
-                    # determining factor
-                    size_distance = 0
+                    # TODO: index number of files in a directory so we can use
+                    # that for size comparison. For now, we are going to
+                    # disregard size as a factor.
+                    size_difference = 0
                 name_sequence_matcher = SequenceMatcher(a=resource.name, b=matched_resource.name)
-                name_distance = 1 - name_sequence_matcher.ratio()
-                rank_attributes = (hamming_distance, size_distance, name_distance)
+                name_difference = 1 - name_sequence_matcher.ratio()
+                rank_attributes = (hamming_distance, size_difference, name_difference)
                 matches_by_rank_attributes[rank_attributes].append(match)
 
                 if TRACE:
                     logger_debug(
                         cls.__name__,
                         'match:',
-                        'step_4_size_distance:',
-                        size_distance,
-                        'step_4_name_distance:',
-                        name_distance
+                        'step_4_size_difference:',
+                        size_difference,
+                        'step_4_name_difference:',
+                        name_difference
                     )
 
-        # order these from low to high (low being very similar, 0 meaning 0 change))
+        # Order these from low to high (low being low difference/very similar))
         ranked_attributes = sorted(matches_by_rank_attributes)
         best_ranked_attributes = ranked_attributes[0]
         ranked_matches = matches_by_rank_attributes[best_ranked_attributes]
