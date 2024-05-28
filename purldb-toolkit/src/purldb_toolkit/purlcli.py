@@ -101,7 +101,7 @@ def get_metadata_details(purls, output, file, command_name):
         metadata_collection = collect_metadata(purl)
         metadata_details["packages"].extend(metadata_collection)
 
-        print(f"\nmetadata_warnings = {metadata_warnings}")
+        # print(f"\nmetadata_warnings = {metadata_warnings}")
 
     metadata_details["headers"] = construct_headers(
         deduplicated_purls=deduplicated_purls,
@@ -349,26 +349,64 @@ def get_urls_details(purls, output, file, head, command_name):
 
         url_purl = PackageURL.from_string(purl)
 
-        url_detail["download_url"] = {"url": purl2url.get_download_url(purl)}
+        url_detail["download_url"] = purl2url.get_download_url(purl)
+        if head:
+            url_detail["download_url"] = {"url": purl2url.get_download_url(purl)}
+
         url_detail["inferred_urls"] = [
-            {"url": inferred} for inferred in purl2url.get_inferred_urls(purl)
+            inferred for inferred in purl2url.get_inferred_urls(purl)
         ]
-        url_detail["repo_download_url"] = {"url": purl2url.get_repo_download_url(purl)}
-        url_detail["repo_download_url_by_package_type"] = {"url": None}
-        if url_purl.version:
-            url_detail["repo_download_url_by_package_type"] = {
-                "url": purl2url.get_repo_download_url_by_package_type(
-                    url_purl.type, url_purl.namespace, url_purl.name, url_purl.version
-                )
+        if head:
+            url_detail["inferred_urls"] = [
+                {"url": inferred} for inferred in purl2url.get_inferred_urls(purl)
+            ]
+
+        # url_detail["repo_download_url"] = purl2url.get_repo_download_url(purl)
+        url_detail["repository_download_url"] = purl2url.get_repo_download_url(purl)
+        if head:
+            # url_detail["repo_download_url"] = {
+            url_detail["repository_download_url"] = {
+                "url": purl2url.get_repo_download_url(purl)
             }
-        url_detail["repo_url"] = {"url": purl2url.get_repo_url(purl)}
+
+        # TODO delete this -- seems always same as the renamed repository_download_url
+        # package_type_url = None
+        # # url_detail["repo_download_url_by_package_type"] = {"url": None}
+        # url_detail["repo_download_url_by_package_type"] = package_type_url
+        # if head:
+        #     url_detail["repo_download_url_by_package_type"] = {"url": package_type_url}
+
+        # if url_purl.version:
+        #     package_type_url = purl2url.get_repo_download_url_by_package_type(
+        #         url_purl.type, url_purl.namespace, url_purl.name, url_purl.version
+        #     )
+        #     url_detail["repo_download_url_by_package_type"] = package_type_url
+        #     # url_detail["repo_download_url_by_package_type"] = {
+        #     #     "url": purl2url.get_repo_download_url_by_package_type(
+        #     #         url_purl.type, url_purl.namespace, url_purl.name, url_purl.version
+        #     #     )
+        #     # }
+        #     if head:
+        #         url_detail["repo_download_url_by_package_type"] = {
+        #             "url": package_type_url
+        #         }
+
+        # url_detail["repo_url"] = purl2url.get_repo_url(purl)
+        # if head:
+        #     url_detail["repo_url"] = {"url": purl2url.get_repo_url(purl)}
+        url_detail["repository_homepage_url"] = purl2url.get_repo_url(purl)
+        if head:
+            url_detail["repository_homepage_url"] = {"url": purl2url.get_repo_url(purl)}
 
         url_list = [
             "download_url",
             # "inferred_urls" has to be handled separately because it has a nested list
-            "repo_download_url",
-            "repo_download_url_by_package_type",
-            "repo_url",
+            # "repo_download_url",
+            "repository_download_url",
+            # TODO delete this -- seems always same as the renamed repository_download_url
+            # "repo_download_url_by_package_type",
+            # "repo_url",
+            "repository_homepage_url",
         ]
         if head:
             for purlcli_url in url_list:
@@ -543,7 +581,33 @@ def get_validate_details(purls, output, file, command_name):
         ]:
             validate_warnings[purl] = validated_purl_status
         if validated_purl_status:
-            validate_details["packages"].append(validate_purl(purl))
+            # TODO: move the `purl` key to the top.  xxx
+            original_validate_purl = validate_purl(purl)
+            print(f"\noriginal_validate_purl = {original_validate_purl}")
+
+            # ===
+            # # print(f"\nresponse = {response}")
+            # # Create a new dict with `purl` at the top.
+            # # response = {"purl": response.pop("purl"), **response}
+
+            reordered_validate_purl = {
+                "purl": original_validate_purl.pop("purl"),
+                **original_validate_purl,
+            }
+            print(f"\nreordered_validate_purl = {reordered_validate_purl}")
+
+            # # print(f"\nupdated response = {response}")
+            # # or
+            # ordered_response = OrderedDict(response)
+            # purl_value = ordered_response.pop("purl")
+            # ordered_response = OrderedDict({"purl": purl_value}, **ordered_response)
+            # response = dict(ordered_response)
+            # # print(f"updated response = {response}")
+            # ===
+
+            # validate_details["packages"].append(validate_purl(purl))
+            # validate_details["packages"].append(validate_purl(purl))
+            validate_details["packages"].append(reordered_validate_purl)
 
     validate_details["headers"] = construct_headers(
         deduplicated_purls=deduplicated_purls,
@@ -607,6 +671,20 @@ def validate_purl(purl):
 
     try:
         response = requests.get(api_query, params=request_body).json()
+        # ZAP 2024-05-27 Monday 19:41:16.  Getting a test error: AssertionError: assert None == {'errors': {'purl': ['This field is required.']}}
+        # ZAP so maybe do the move-purl-key process after the return below?
+        # # TODO: move the `purl` key to the top of the dict.
+        # # print(f"\nresponse = {response}")
+        # # Create a new dict with `purl` at the top.
+        # # response = {"purl": response.pop("purl"), **response}
+        # # print(f"\nupdated response = {response}")
+        # # or
+        # ordered_response = OrderedDict(response)
+        # purl_value = ordered_response.pop("purl")
+        # ordered_response = OrderedDict({"purl": purl_value}, **ordered_response)
+        # response = dict(ordered_response)
+        # # print(f"updated response = {response}")
+
     except json.decoder.JSONDecodeError as e:
         logger.error(f"validate_purl(): json.decoder.JSONDecodeError for '{purl}': {e}")
     except Exception as e:

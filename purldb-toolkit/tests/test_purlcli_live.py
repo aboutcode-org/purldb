@@ -175,9 +175,6 @@ class TestPURLCLI_metadata(object):
                         ("version", None),
                         ("qualifiers", OrderedDict()),
                         ("subpath", None),
-                        ("repository_homepage_url", None),
-                        ("repository_download_url", None),
-                        ("api_data_url", None),
                         ("primary_language", None),
                         ("description", None),
                         ("release_date", None),
@@ -200,6 +197,9 @@ class TestPURLCLI_metadata(object):
                         ("dependencies", []),
                         ("contains_source_code", None),
                         ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
                     ]
                 ),
                 OrderedDict(
@@ -211,9 +211,6 @@ class TestPURLCLI_metadata(object):
                         ("version", "0.1.0"),
                         ("qualifiers", OrderedDict()),
                         ("subpath", None),
-                        ("repository_homepage_url", None),
-                        ("repository_download_url", None),
-                        ("api_data_url", None),
                         ("primary_language", None),
                         ("description", None),
                         ("release_date", None),
@@ -236,6 +233,9 @@ class TestPURLCLI_metadata(object):
                         ("dependencies", []),
                         ("contains_source_code", None),
                         ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
                     ]
                 ),
                 OrderedDict(
@@ -247,9 +247,6 @@ class TestPURLCLI_metadata(object):
                         ("version", "0.2.0"),
                         ("qualifiers", OrderedDict()),
                         ("subpath", None),
-                        ("repository_homepage_url", None),
-                        ("repository_download_url", None),
-                        ("api_data_url", None),
                         ("primary_language", None),
                         ("description", None),
                         ("release_date", None),
@@ -272,6 +269,9 @@ class TestPURLCLI_metadata(object):
                         ("dependencies", []),
                         ("contains_source_code", None),
                         ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
                     ]
                 ),
                 OrderedDict(
@@ -283,9 +283,6 @@ class TestPURLCLI_metadata(object):
                         ("version", "0.3.0"),
                         ("qualifiers", OrderedDict()),
                         ("subpath", None),
-                        ("repository_homepage_url", None),
-                        ("repository_download_url", None),
-                        ("api_data_url", None),
                         ("primary_language", None),
                         ("description", None),
                         ("release_date", None),
@@ -308,6 +305,9 @@ class TestPURLCLI_metadata(object):
                         ("dependencies", []),
                         ("contains_source_code", None),
                         ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
                     ]
                 ),
             ],
@@ -741,47 +741,32 @@ class TestPURLCLI_urls(object):
             "packages": [
                 {
                     "purl": "pkg:pypi/fetchcode@0.3.0",
-                    "download_url": {"url": None},
+                    "download_url": None,
                     "inferred_urls": [
-                        {"url": "https://pypi.org/project/fetchcode/0.3.0/"}
+                        "https://pypi.org/project/fetchcode/0.3.0/",
                     ],
-                    "repo_download_url": {"url": None},
-                    "repo_download_url_by_package_type": {"url": None},
-                    "repo_url": {"url": "https://pypi.org/project/fetchcode/0.3.0/"},
+                    "repository_download_url": None,
+                    "repository_homepage_url": "https://pypi.org/project/fetchcode/0.3.0/",
                 },
                 {
                     "purl": "pkg:gem/bundler@2.3.23",
-                    "download_url": {
-                        "url": "https://rubygems.org/downloads/bundler-2.3.23.gem"
-                    },
+                    "download_url": "https://rubygems.org/downloads/bundler-2.3.23.gem",
                     "inferred_urls": [
-                        {"url": "https://rubygems.org/gems/bundler/versions/2.3.23"},
-                        {"url": "https://rubygems.org/downloads/bundler-2.3.23.gem"},
+                        "https://rubygems.org/gems/bundler/versions/2.3.23",
+                        "https://rubygems.org/downloads/bundler-2.3.23.gem",
                     ],
-                    "repo_download_url": {"url": None},
-                    "repo_download_url_by_package_type": {"url": None},
-                    "repo_url": {
-                        "url": "https://rubygems.org/gems/bundler/versions/2.3.23"
-                    },
+                    "repository_download_url": None,
+                    "repository_homepage_url": "https://rubygems.org/gems/bundler/versions/2.3.23",
                 },
                 {
                     "purl": "pkg:github/istio/istio@1.20.2",
-                    "download_url": {
-                        "url": "https://github.com/istio/istio/archive/refs/tags/1.20.2.tar.gz"
-                    },
+                    "download_url": "https://github.com/istio/istio/archive/refs/tags/1.20.2.tar.gz",
                     "inferred_urls": [
-                        {"url": "https://github.com/istio/istio/tree/1.20.2"},
-                        {
-                            "url": "https://github.com/istio/istio/archive/refs/tags/1.20.2.tar.gz"
-                        },
+                        "https://github.com/istio/istio/tree/1.20.2",
+                        "https://github.com/istio/istio/archive/refs/tags/1.20.2.tar.gz",
                     ],
-                    "repo_download_url": {
-                        "url": "https://github.com/istio/istio/archive/refs/tags/1.20.2.tar.gz"
-                    },
-                    "repo_download_url_by_package_type": {
-                        "url": "https://github.com/istio/istio/archive/refs/tags/1.20.2.tar.gz"
-                    },
-                    "repo_url": {"url": "https://github.com/istio/istio/tree/1.20.2"},
+                    "repository_download_url": "https://github.com/istio/istio/archive/refs/tags/1.20.2.tar.gz",
+                    "repository_homepage_url": "https://github.com/istio/istio/tree/1.20.2",
                 },
             ],
         }

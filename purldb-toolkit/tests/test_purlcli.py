@@ -663,8 +663,6 @@ class TestPURLCLI_urls(object):
             {"head_request": "N/A"},
             {"get_request": "N/A"},
             {"head_request": "N/A"},
-            {"get_request": "N/A"},
-            {"head_request": "N/A"},
             {"get_request": 200},
             {"head_request": 200},
             {"get_request": 200},
@@ -794,23 +792,12 @@ class TestPURLCLI_urls(object):
             "packages": [
                 {
                     "purl": "pkg:pypi/fetchcode",
-                    "download_url": {
-                        "url": None,
-                    },
+                    "download_url": None,
                     "inferred_urls": [
-                        {
-                            "url": "https://pypi.org/project/fetchcode/",
-                        }
+                        "https://pypi.org/project/fetchcode/",
                     ],
-                    "repo_download_url": {
-                        "url": None,
-                    },
-                    "repo_download_url_by_package_type": {
-                        "url": None,
-                    },
-                    "repo_url": {
-                        "url": "https://pypi.org/project/fetchcode/",
-                    },
+                    "repository_download_url": None,
+                    "repository_homepage_url": "https://pypi.org/project/fetchcode/",
                 },
             ],
         }

@@ -33,17 +33,12 @@
                     "head_request_status_code": 200
                 }
             ],
-            "repo_download_url": {
+            "repository_download_url": {
                 "url": null,
                 "get_request_status_code": "N/A",
                 "head_request_status_code": "N/A"
             },
-            "repo_download_url_by_package_type": {
-                "url": null,
-                "get_request_status_code": "N/A",
-                "head_request_status_code": "N/A"
-            },
-            "repo_url": {
+            "repository_homepage_url": {
                 "url": "https://pypi.org/project/fetchcode/",
                 "get_request_status_code": 200,
                 "head_request_status_code": 200
