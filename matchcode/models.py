@@ -343,11 +343,7 @@ class ApproximateMatchingHashMixin(models.Model):
                     remaining_matches |= matches
             return remaining_matches
 
-        if resource.is_file:
-            resource_size = resource.size
-        else:
-            resource_size = resource.files_count
-
+        resource_size = resource.size
         matches_by_rank_attributes = defaultdict(list)
         for hamming_distance, matches in hamming_distances_and_matches:
             for match in matches:
