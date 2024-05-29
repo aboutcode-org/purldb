@@ -34,7 +34,11 @@ class MatchingPipesTest(TestCase):
         )
         self.directory_content_fingerprint1 = ApproximateDirectoryContentIndex.index(
             fingerprint="00000003238f6ed2c218090d4da80b3b42160e69",
-            resource_path="test",
+            resource_path="package.jar-extract",
+            package=self.package1,
+        )
+        self.directory1 = Resource.objects.create(
+            path="package.jar-extract",
             package=self.package1,
         )
         self.resource1 = Resource.objects.create(
@@ -221,5 +225,5 @@ class MatchingPipesTest(TestCase):
         self.assertEqual(package_data1["name"], package.name)
 
         resource.refresh_from_db()
-        self.assertEqual("matched-to-purldb-resource", resource.status)
+        self.assertEqual("approximate-matched-to-purldb-resource", resource.status)
         self.assertEqual(package, resource.discovered_packages.get())
