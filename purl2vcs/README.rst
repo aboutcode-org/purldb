@@ -1,7 +1,8 @@
 purl2vcs
 ==========
 
-purl2vcs is an add-on library working with the PurlDB to find the version control system (VCS) URL of a package and detect the commit, and tags for a given version.
+purl2vcs is an add-on library working with the PurlDB to find the version control system (VCS) URL
+of a package and detect the commit, and tags for a given version.
 
 In the future, it will also find paths and branches, which is useful for monorepos.
 
@@ -11,7 +12,8 @@ Usage
 - First, import the main module: ``from purl2vcs import find_source_repo``
 
 - To use the functions you first need to acquire some Package objects:
-  Use the ``get_package_object_from_purl(package_url)`` passing a PURL string to get an object from the database
+  Use the ``get_package_object_from_purl(package_url)`` passing a PURL string to get an object from
+  the database
 
 - To find the source repository of a Package, call `get_source_repo(package)`
   to will get a PackageURL object back.
@@ -23,7 +25,8 @@ Usage
 
 - To find the commit or tags from a source repo PURL use ``get_tags_and_commits``
 
-- The low level ``get_tags_and_commits`` is used in ``find_package_version_tag_and_commit`` to find the tag and commit of a given package ``version`` in a source repo PURL.
+- The low level ``get_tags_and_commits`` is used in ``find_package_version_tag_and_commit`` to find
+  the tag and commit of a given package ``version`` in a source repo PURL.
 
 
 Installation
