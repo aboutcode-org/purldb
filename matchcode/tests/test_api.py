@@ -13,7 +13,7 @@ from django.urls import reverse
 
 from packagedb.models import Package
 
-from matchcode.indexing import index_package_directories
+from matchcode.utils import index_package_directories
 from matchcode.utils import load_resources_from_scan
 from matchcode.utils import MatchcodeTestCase
 from matchcode.tests import FIXTURES_REGEN

@@ -31,6 +31,7 @@ from scanpipe.pipes import flag
 from scanpipe.pipes import js
 
 from matchcode.models import ApproximateDirectoryContentIndex
+from matchcode.models import ApproximateResourceContentIndex
 from packagedb.models import Package
 from packagedb.models import Resource
 
@@ -165,12 +166,25 @@ def match_purldb_resource(
     return match_count
 
 
-def match_purldb_directory(project, resource, exact_directory_match=False):
+def match_purldb_resource_approximately(project, resource):
+    """Match by approximation a single resource in the PurlDB."""
+    fingerprint = resource.extra_data.get("halo1", "")
+    results = ApproximateResourceContentIndex.match(
+        fingerprint=fingerprint
+    )
+    for result in results:
+        package_data = result.package.to_dict()
+        return create_package_from_purldb_data(
+            project, [resource], package_data, flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE
+        )
+
+
+def match_purldb_directory(project, resource, exact_match=False):
     """Match a single directory resource in the PurlDB."""
     fingerprint = resource.extra_data.get("directory_content", "")
     results = ApproximateDirectoryContentIndex.match(
-        directory_fingerprint=fingerprint,
-        exact_directory_match=exact_directory_match
+        fingerprint=fingerprint,
+        exact_match=exact_match
     )
     for result in results:
         package_data = result.package.to_dict()
@@ -280,6 +294,42 @@ def _match_purldb_resources(
     logger(
         f"{total_matched_count:,d} resources matched in PurlDB "
         f"using {total_sha1_count:,d} SHA1s"
+    )
+
+
+def match_purldb_resources_approximately(project, logger=None):
+    # Get table of resources to match on
+    resources = (
+        project.codebaseresources.filter(is_text=True)
+        .no_status(status=flag.MATCHED_TO_PURLDB_PACKAGE)
+        .no_status(status=flag.MATCHED_TO_PURLDB_RESOURCE)
+        .no_status(status=flag.MATCHED_TO_PURLDB_DIRECTORY)
+    )
+    resource_count = resources.count()
+
+    if logger:
+        logger(
+            f"Approximate matching {resource_count:,d} "
+            f"resource{pluralize(resource_count, 's')} against PurlDB"
+        )
+
+    resource_iterator = resources.iterator(chunk_size=2000)
+    progress = LoopProgress(resource_count, logger)
+
+    for resource in progress.iter(resource_iterator):
+        match_purldb_resource_approximately(
+            project,
+            resource,
+        )
+
+    matched_count = (
+        project.codebaseresources
+        .filter(status=flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE)
+        .count()
+    )
+    logger(
+        f"{matched_count:,d} resource{pluralize(matched_count, 's')} "
+        f"approximately matched in PurlDB"
     )
 
 

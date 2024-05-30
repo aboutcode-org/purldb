@@ -35,8 +35,10 @@ DEFAULT_PIPELINES = (
 # These are the list of supported addon pipelines to run when we scan a Package for
 # indexing.
 SUPPORTED_ADDON_PIPELINES = (
-    'collect_symbols',
-    'collect_source_strings',
+    'collect_strings_gettext',
+    'collect_symbols_ctags',
+    'collect_symbols_pygments',
+    'collect_symbols_tree_sitter',
     'inspect_elf_binaries',
 )
 

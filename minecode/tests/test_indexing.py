@@ -10,13 +10,15 @@
 import json
 import os
 
+from matchcode.models import ApproximateDirectoryContentIndex
+from matchcode.models import ApproximateDirectoryStructureIndex
+from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import ExactFileIndex
-
-from minecode.management import indexing
+from minecode import indexing
 from minecode.models import ScannableURI
-from minecode.utils_test import MiningTestCase
-from minecode.utils_test import JsonBasedTesting
 from minecode.tests import FIXTURES_REGEN
+from minecode.utils_test import JsonBasedTesting
+from minecode.utils_test import MiningTestCase
 from packagedb.models import Package
 from packagedb.models import Resource
 
@@ -42,22 +44,38 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         )
 
     def test_indexing_index_package_files(self):
-        scan_data_loc = self.get_test_loc('scancodeio/get_scan_data.json')
+        # Ensure ApproximateDirectoryStructureIndex, ExactPackageArchiveIndex,
+        # and ExactFileIndex tables are empty
+        self.assertEqual(0, ApproximateDirectoryContentIndex.objects.count())
+        self.assertEqual(0, ApproximateDirectoryStructureIndex.objects.count())
+        self.assertEqual(0, ApproximateResourceContentIndex.objects.count())
+        self.assertEqual(0, ExactFileIndex.objects.count())
+        self.assertEqual(0, Resource.objects.count())
+
+        scan_data_loc = self.get_test_loc('indexing/scancodeio_wagon-api-20040705.181715.json')
         with open(scan_data_loc, 'rb') as f:
             scan_data = json.loads(f.read())
-        self.assertEqual(0, len(indexing.index_package_files(self.package1, scan_data)))
-        result = Resource.objects.filter(package=self.package1)
-        self.assertEqual(64, len(result))
-        results = [r.to_dict() for r in result]
-        expected_resources_loc = self.get_test_loc('scancodeio/get_scan_data_expected_resources.json')
-        self.check_expected_results(results, expected_resources_loc, regen=FIXTURES_REGEN)
+
+        indexing_errors = indexing.index_package_files(self.package1, scan_data)
+        self.assertEqual(0, len(indexing_errors))
+
+        self.assertEqual(11, ApproximateDirectoryContentIndex.objects.count())
+        self.assertEqual(11, ApproximateDirectoryStructureIndex.objects.count())
+        self.assertEqual(2, ApproximateResourceContentIndex.objects.count())
+        self.assertEqual(45, ExactFileIndex.objects.count())
+
+        resources = Resource.objects.filter(package=self.package1)
+        self.assertEqual(64, len(resources))
+        resource_data = [r.to_dict() for r in resources]
+        expected_resources_loc = self.get_test_loc('indexing/scancodeio_wagon-api-20040705.181715-expected.json')
+        self.check_expected_results(resource_data, expected_resources_loc, regen=FIXTURES_REGEN)
 
     def test_indexing_index_package(self):
-        scan_data_loc = self.get_test_loc('scancodeio/get_scan_data.json')
+        scan_data_loc = self.get_test_loc('indexing/scancodeio_wagon-api-20040705.181715.json')
         with open(scan_data_loc, 'rb') as f:
             scan_data = json.load(f)
 
-        scan_summary_loc = self.get_test_loc('scancodeio/scan_summary_response.json')
+        scan_summary_loc = self.get_test_loc('indexing/scancodeio_wagon-api-20040705.181715-summary.json')
         with open(scan_summary_loc, 'rb') as f:
             scan_summary = json.load(f)
 
@@ -76,6 +94,7 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
             package=self.package1
         )
 
+        # Ensure that we do not have any Package data updated, Resources, and fingerprints
         self.assertFalse(self.package1.md5)
         self.assertFalse(self.package1.sha1)
         self.assertFalse(self.package1.sha256)
@@ -83,7 +102,11 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         self.assertFalse(self.package1.size)
         self.assertFalse(self.package1.declared_license_expression)
         self.assertFalse(self.package1.copyright)
-        self.assertEqual(0, Resource.objects.all().count())
+        self.assertEqual(0, ApproximateDirectoryContentIndex.objects.count())
+        self.assertEqual(0, ApproximateDirectoryStructureIndex.objects.count())
+        self.assertEqual(0, ApproximateResourceContentIndex.objects.count())
+        self.assertEqual(0, ExactFileIndex.objects.count())
+        self.assertEqual(0, Resource.objects.count())
 
         # Run test
         indexing.index_package(
@@ -103,17 +126,23 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         self.assertEqual('sha512', self.package1.sha512)
         self.assertEqual(100, self.package1.size)
 
-        result = Resource.objects.filter(package=self.package1)
-        self.assertEqual(64, result.count())
-        result = ExactFileIndex.objects.filter(package=self.package1)
-        self.assertEqual(45, result.count())
+        for expected_count, model in [
+            (11, ApproximateDirectoryContentIndex),
+            (2, ApproximateResourceContentIndex),
+            (64, Resource),
+            (45, ExactFileIndex),
+        ]:
+            self.assertEqual(
+                expected_count,
+                model.objects.filter(package=self.package1).count()
+            )
 
     def test_indexing_index_package_dwarf(self):
-        scan_data_loc = self.get_test_loc('scancodeio/get_scan_data_dwarf.json')
+        scan_data_loc = self.get_test_loc('indexing/get_scan_data_dwarf.json')
         with open(scan_data_loc, 'rb') as f:
             scan_data = json.load(f)
 
-        scan_summary_loc = self.get_test_loc('scancodeio/scan_summary_dwarf.json')
+        scan_summary_loc = self.get_test_loc('indexing/scan_summary_dwarf.json')
         with open(scan_summary_loc, 'rb') as f:
             scan_summary = json.load(f)
 

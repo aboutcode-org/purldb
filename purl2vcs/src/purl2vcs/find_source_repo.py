@@ -9,22 +9,18 @@
 
 import logging
 import subprocess
-from typing import Generator
-from typing import List
+from typing import Generator, List
 from urllib.parse import urlparse
 
 import requests
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
-from packageurl.contrib.purl2url import get_download_url
-from packageurl.contrib.purl2url import purl2url
+from packageurl.contrib.purl2url import get_download_url, purl2url
 from scancode.api import get_urls as get_urls_from_location
 
 from minecode.model_utils import add_package_to_scan_queue
 from minecode.visitors.maven import get_merged_ancestor_package_from_maven_package
-from packagedb.models import Package
-from packagedb.models import PackageContentType
-from packagedb.models import PackageSet
+from packagedb.models import Package, PackageContentType, PackageSet
 
 logger = logging.getLogger(__name__)
 
@@ -138,51 +134,59 @@ def add_source_package_to_package_set(
         )
 
 
-def get_source_repo_and_add_to_package_set():
+def get_source_package_and_add_to_package_set(package):
+    """
+    Process a package and add the source repository to the package set
+    """
+    source_purl = get_source_repo(package=package)
+
+    if not source_purl:
+        return
+
+    try:
+        download_url = get_download_url(str(source_purl))
+        if not download_url:
+            return
+    except:
+        logger.error(f"Error getting download_url for {source_purl}")
+        return
+
+    source_package = Package.objects.for_package_url(
+        purl_str=str(source_purl)
+    ).get_or_none()
+
+    if not source_package:
+        source_package, _created = Package.objects.get_or_create(
+            type=source_purl.type,
+            namespace=source_purl.namespace,
+            name=source_purl.name,
+            version=source_purl.version,
+            download_url=download_url,
+            package_content=PackageContentType.SOURCE_REPO,
+        )
+        add_package_to_scan_queue(source_package)
+        logger.info(f"Created source repo package {source_purl} for {package.purl}")
+
+    package_set_ids = set(package.package_sets.all().values("uuid"))
+    source_package_set_ids = set(source_package.package_sets.all().values("uuid"))
+
+    # If the package exists and already in the set then there is nothing left to do
+    if package_set_ids.intersection(source_package_set_ids):
+        return
+
+    add_source_package_to_package_set(
+        source_package=source_package,
+        package=package,
+    )
+
+
+def get_source_package_for_all_packages():
     """
     Add the PackageURL of the source repository of a Package
     if found
     """
     for package in Package.objects.all().paginated():
-        source_purl = get_source_repo(package=package)
-
-        if not source_purl:
-            continue
-
-        try:
-            download_url = get_download_url(str(source_purl))
-            if not download_url:
-                continue
-        except:
-            logger.error(f"Error getting download_url for {source_purl}")
-            continue
-
-        source_package = Package.objects.for_package_url(
-            purl_str=str(source_purl)
-        ).get_or_none()
-        if not source_package:
-            source_package, _created = Package.objects.get_or_create(
-                type=source_purl.type,
-                namespace=source_purl.namespace,
-                name=source_purl.name,
-                version=source_purl.version,
-                download_url=download_url,
-                package_content=PackageContentType.SOURCE_REPO,
-            )
-            add_package_to_scan_queue(source_package)
-            logger.info(f"Created source repo package {source_purl} for {package.purl}")
-
-        package_set_ids = set(package.package_sets.all().values("uuid"))
-        source_package_set_ids = set(source_package.package_sets.all().values("uuid"))
-
-        # If the package exists and already in the set then there is nothing left to do
-        if package_set_ids.intersection(source_package_set_ids):
-            continue
-
-        add_source_package_to_package_set(
-            source_package=source_package,
-            package=package,
-        )
+        get_source_package_and_add_to_package_set(package)
 
 
 def get_source_repo(package: Package) -> PackageURL:
@@ -248,53 +252,67 @@ def get_source_urls_from_package_data_and_resources(package: Package) -> List[st
 
 def convert_repo_urls_to_purls(source_urls):
     """
-    Convert a source URL to a purl
+    Yield PURLs from a list from a list of source repository URLs.
+    """
+    for source_url in source_urls or []:
+        yield from convert_repo_url_to_purls(source_url)
+
+
+def convert_repo_url_to_purls(source_url):
+    """
+    Yield PURLs from a single source repository URL.
     """
     url_hints = [
         "github",
         "gitlab",
         "bitbucket",
     ]
-    if not source_urls:
+    # URL like: git@github.com+https://github.com/graphql-java/java-dataloader.git
+    if source_url.startswith("git@github.com+"):
+        _, _, source_url = source_url.partition("+")
+
+    # VCS URL like: https+//github.com/graphql-java-kickstart/graphql-java-servlet.git
+    if source_url.startswith("https+//"):
+        # convert https+// to https://
+        source_url = source_url.replace("https+//", "https://")
+
+    if (
+        source_url.startswith("git+https://") or source_url.startswith("git://")
+    ) and "@" in source_url:
+        # remove the commit from the end of the URL
+        source_url, _, _ = source_url.rpartition("@")
+
+    # remove .git from the end of the URL
+    if source_url.endswith(".git"):
+        source_url, _, _ = source_url.rpartition(".git")
+
+    # git:: URLs
+    if source_url.startswith("git://"):
+        # remove git:// from the beginning of the URL
+        _, _, source_url = source_url.partition("git://")
+        if ":" in source_url:
+            # convert : to /
+            source_url = source_url.replace(":", "/")
+        source_url = f"https://{source_url}"
+
+    urlparse_result = urlparse(source_url)
+
+    path_segments = urlparse_result.path.split("/")
+    if not len(path_segments) > 2:
         return
-    for source_url in source_urls:
-        # git@github.com+https://github.com/graphql-java/java-dataloader.git
-        if source_url.startswith("git@github.com+"):
-            _, _, source_url = source_url.partition("+")
-        # https+//github.com/graphql-java-kickstart/graphql-java-servlet.git
-        if source_url.startswith("https+//"):
-            # convert https+// to https://
-            source_url = source_url.replace("https+//", "https://")
-        if (
-            source_url.startswith("git+https://") or source_url.startswith("git://")
-        ) and "@" in source_url:
-            # remove the commit from the end of the URL
-            source_url, _, _ = source_url.rpartition("@")
-        # remove .git from the end of the URL
-        if source_url.endswith(".git"):
-            source_url, _, _ = source_url.rpartition(".git")
-        if source_url.startswith("git://"):
-            # remove git:// from the beginning of the URL
-            _, _, source_url = source_url.partition("git://")
-            if ":" in source_url:
-                # convert : to /
-                source_url = source_url.replace(":", "/")
-            source_url = f"https://{source_url}"
-        urlparse_result = urlparse(source_url)
-        path_segments = urlparse_result.path.split("/")
-        if not len(path_segments) > 2:
-            continue
-        namespace = path_segments[1]
-        name = path_segments[2]
-        if not name:
-            continue
-        for url_hint in url_hints:
-            if url_hint in urlparse_result.netloc:
-                yield PackageURL(
-                    type=url_hint,
-                    namespace=namespace,
-                    name=name,
-                )
+
+    namespace = path_segments[1]
+    name = path_segments[2]
+    if not name:
+        return
+
+    for url_hint in url_hints:
+        if url_hint in urlparse_result.netloc:
+            yield PackageURL(
+                type=url_hint,
+                namespace=namespace,
+                name=name,
+            )
 
 
 def get_urls_from_package_resources(package):

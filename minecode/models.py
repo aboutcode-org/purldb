@@ -787,6 +787,7 @@ class ScannableURI(BaseURI):
             scan_results_location=scan_results_location,
             scan_summary_location=scan_summary_location,
             project_extra_data=project_extra_data,
+            job_timeout=1200,
         )
         return job
 

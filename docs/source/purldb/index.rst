@@ -5,4 +5,4 @@ PURLdb
    :maxdepth: 2
 
    overview
-   purl2sym
+   symbol_and_string_collection
