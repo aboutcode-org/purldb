@@ -16,6 +16,7 @@ from packagedb.models import Resource
 import attr
 
 from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
+from matchcode_toolkit.fingerprinting import get_file_fingerprint_hashes
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
@@ -342,6 +343,31 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
             self.test_package
         )
 
+        # Add approximate file resource
+        self.test_package1, _ = Package.objects.get_or_create(
+            filename='deep-equal-1.0.1.tgz',
+            sha1='f5d260292b660e084eff4cdbc9f08ad3247448b5',
+            type='npm',
+            name='deep-equal',
+            version='1.0.1',
+            download_url='https://registry.npmjs.org/deep-equal/-/deep-equal-1.0.1.tgz',
+        )
+        self.test_resource1, _ = Resource.objects.get_or_create(
+            path='package/index.js',
+            name='index',
+            extension='js',
+            package=self.test_package1
+        )
+        test_resource1_loc = self.get_test_loc('match/approximate-file-matching/index.js')
+        fingerprints = get_file_fingerprint_hashes(test_resource1_loc)
+        self.test_resource1_fingerprint = fingerprints['halo1']
+        ApproximateResourceContentIndex.index(
+            self.test_resource1_fingerprint,
+            self.test_resource1.path,
+            self.test_package1
+        )
+
+
     def test_ApproximateResourceContentIndex_index(self):
         # Test index
         fingerprint = '000018fba23a39e4cd40718d1297be719e6564a4'
@@ -394,6 +420,15 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
 
         expected = self.get_test_loc('match/approximate-file-matching/approximate-match-model-test-results.json')
         self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
+
+    def test_ApproximateResourceContentIndex_match_deep_equals(self):
+        test_file_loc = self.get_test_loc('match/approximate-file-matching/index-modified.js')
+        fingerprints = get_file_fingerprint_hashes(test_file_loc)
+        fp = fingerprints['halo1']
+        matches = ApproximateResourceContentIndex.match(fp)
+        results = [match.package.to_dict() for match in matches]
+        expected_results_loc = self.get_test_loc('match/approximate-file-matching/index-modified.js-expected.json')
+        self.check_expected_results(results, expected_results_loc, regen=True)
 
 
 class MatchcodeModelUtilsTestCase(MatchcodeTestCase):

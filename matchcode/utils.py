@@ -7,8 +7,10 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from collections import OrderedDict
 from unittest import TestCase
 
+import codecs
 import json
 import ntpath
 import os
@@ -17,12 +19,14 @@ import posixpath
 from django.test import TestCase as DjangoTestCase
 
 from commoncode.resource import VirtualCodebase
-from scancode.cli_test_utils import purl_with_fake_uuid
-
 from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
+from rest_framework.utils.serializer_helpers import ReturnDict
+from rest_framework.utils.serializer_helpers import ReturnList
+from scancode.cli_test_utils import purl_with_fake_uuid
 
 from matchcode.tests import FIXTURES_REGEN
+from minecode.utils_test import JsonBasedTestingMixin
 
 
 ############## TEST UTILITIES ##############
@@ -91,7 +95,7 @@ class CodebaseTester(object):
         self.assertEqual(expected, results)
 
 
-class MatchcodeTestCase(CodebaseTester, BaseTestCase, DjangoTestCase):
+class MatchcodeTestCase(CodebaseTester, JsonBasedTestingMixin, BaseTestCase, DjangoTestCase):
     databases = '__all__'
 
 
