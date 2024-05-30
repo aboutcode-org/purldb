@@ -380,7 +380,7 @@ class ApproximateMatchingHashMixin(models.Model):
                         name_difference
                     )
 
-        # Order these from low to high (low being low difference/very similar))
+        # Order these from low to high (low being low difference/very similar)), first by hamming distance, then by size difference, and finally by name difference.
         ranked_attributes = sorted(matches_by_rank_attributes)
         best_ranked_attributes = ranked_attributes[0]
         ranked_matches = matches_by_rank_attributes[best_ranked_attributes]
