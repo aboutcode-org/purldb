@@ -10,27 +10,26 @@
 import binascii
 import os
 
-from commoncode.resource import VirtualCodebase
-from packagedb.models import Package
-from packagedb.models import Resource
 import attr
-
+from commoncode.resource import VirtualCodebase
 from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 from matchcode_toolkit.fingerprinting import get_file_fingerprint_hashes
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
+
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ApproximateResourceContentIndex
-from matchcode.models import create_halohash_chunks
-from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ExactFileIndex
-from matchcode.utils import index_package_directories
-from matchcode.utils import index_packages_sha1
-from matchcode.utils import index_package_files_sha1
-from matchcode.utils import load_resources_from_scan
-from matchcode.utils import MatchcodeTestCase
+from matchcode.models import ExactPackageArchiveIndex
+from matchcode.models import create_halohash_chunks
 from matchcode.tests import FIXTURES_REGEN
-
+from matchcode.utils import MatchcodeTestCase
+from matchcode.utils import index_package_directories
+from matchcode.utils import index_package_files_sha1
+from matchcode.utils import index_packages_sha1
+from matchcode.utils import load_resources_from_scan
+from packagedb.models import Package
+from packagedb.models import Resource
 
 EXACT_PACKAGE_ARCHIVE_MATCH = 0
 APPROXIMATE_DIRECTORY_STRUCTURE_MATCH = 1
@@ -251,7 +250,10 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             if resource.is_file:
                 continue
             fp = resource.extra_data.get('directory_structure', '')
-            matches = ApproximateDirectoryStructureIndex.match(fp)
+            matches = ApproximateDirectoryStructureIndex.match(
+                fingerprint=fp,
+                resource=resource
+            )
             for match in matches:
                 p = match.package.to_dict()
                 p['match_type'] = 'approximate-directory-structure'
@@ -306,7 +308,10 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             if resource.is_file:
                 continue
             fp = resource.extra_data.get('directory_content', '')
-            matches = ApproximateDirectoryContentIndex.match(fp)
+            matches = ApproximateDirectoryContentIndex.match(
+                fingerprint=fp,
+                resource=resource
+            )
             for match in matches:
                 p = match.package.to_dict()
                 p['match_type'] = 'approximate-directory-content'
@@ -334,6 +339,8 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
         )
         self.test_resource, _ = Resource.objects.get_or_create(
             path='inflate.c',
+            name='inflate.c',
+            size=55466,
             package=self.test_package
         )
         self.test_resource_fingerprint = '000018fba23a49e4cd40718d1297be719e6564a4'
@@ -366,7 +373,6 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
             self.test_resource1.path,
             self.test_package1
         )
-
 
     def test_ApproximateResourceContentIndex_index(self):
         # Test index
@@ -411,7 +417,10 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
         for resource in codebase.walk(topdown=True):
             if not (fp := resource.halo1):
                 continue
-            matches = ApproximateResourceContentIndex.match(fp)
+            matches = ApproximateResourceContentIndex.match(
+                fingerprint=fp,
+                resource=resource
+            )
             for match in matches:
                 p = match.package.to_dict()
                 p['match_type'] = 'approximate-resource-content'

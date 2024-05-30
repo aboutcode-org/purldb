@@ -170,7 +170,8 @@ def match_purldb_resource_approximately(project, resource):
     """Match by approximation a single resource in the PurlDB."""
     fingerprint = resource.extra_data.get("halo1", "")
     results = ApproximateResourceContentIndex.match(
-        fingerprint=fingerprint
+        fingerprint=fingerprint,
+        resource=resource
     )
     for result in results:
         package_data = result.package.to_dict()
@@ -184,6 +185,7 @@ def match_purldb_directory(project, resource, exact_match=False):
     fingerprint = resource.extra_data.get("directory_content", "")
     results = ApproximateDirectoryContentIndex.match(
         fingerprint=fingerprint,
+        resource=resource,
         exact_match=exact_match
     )
     for result in results:

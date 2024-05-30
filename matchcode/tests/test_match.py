@@ -9,23 +9,22 @@
 
 import os
 
-from packagedb.models import Package
-from packagedb.models import Resource
-
-from matchcode.match import APPROXIMATE_DIRECTORY_STRUCTURE_MATCH
 from matchcode.match import APPROXIMATE_DIRECTORY_CONTENT_MATCH
+from matchcode.match import APPROXIMATE_DIRECTORY_STRUCTURE_MATCH
 from matchcode.match import APPROXIMATE_FILE_MATCH
 from matchcode.match import EXACT_FILE_MATCH
 from matchcode.match import EXACT_PACKAGE_ARCHIVE_MATCH
 from matchcode.match import path_suffixes
 from matchcode.match import run_do_match_from_scan
 from matchcode.models import ApproximateResourceContentIndex
+from matchcode.tests import FIXTURES_REGEN
+from matchcode.utils import MatchcodeTestCase
 from matchcode.utils import index_package_directories
 from matchcode.utils import index_package_files_sha1
 from matchcode.utils import index_packages_sha1
 from matchcode.utils import load_resources_from_scan
-from matchcode.utils import MatchcodeTestCase
-from matchcode.tests import FIXTURES_REGEN
+from packagedb.models import Package
+from packagedb.models import Resource
 
 
 class MatchPackagesTestCase(MatchcodeTestCase):
@@ -101,6 +100,7 @@ class MatchPackagesTestCase(MatchcodeTestCase):
         )
         self.test_resource5, _ = Resource.objects.get_or_create(
             path='inflate.c',
+            size=55466,
             package=self.test_package5
         )
         self.test_resource5_fingerprint = '000018fba23a49e4cd40718d1297be719e6564a4'
@@ -177,7 +177,13 @@ class MatchNestedPackagesTestCase(MatchcodeTestCase):
     def test_do_match_approximate_directory_structure_match(self):
         input_file = self.get_test_loc('match/nested/nested.json')
         vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_STRUCTURE_MATCH)
-        expected = self.get_test_loc('match/nested/nested-expected.json')
+        expected = self.get_test_loc('match/nested/nested-directory-structure-match-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_do_match_approximate_directory_content_match(self):
+        input_file = self.get_test_loc('match/nested/nested.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/nested/nested-directory-content-match-expected.json')
         self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
 
 
@@ -334,5 +340,59 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
     def test_match_ApproximateDirectoryStructureIndex_get_stdin_3_0_2(self):
         input_file = self.get_test_loc('match/directory-matching/get-stdin-3.0.2-i.json')
         vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_STRUCTURE_MATCH)
+        expected = self.get_test_loc('match/directory-matching/get-stdin-3.0.2-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_3(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.3-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.3-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_4(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.4-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.4-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_5(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.5-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.5-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_6(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.6-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.6-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_7(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.7-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.7-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_0_9(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.0.9-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.0.9-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_1_0(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.1.0-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.1.0-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_abbrev_1_1_1(self):
+        input_file = self.get_test_loc('match/directory-matching/abbrev-1.1.1-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
+        expected = self.get_test_loc('match/directory-matching/abbrev-1.1.1-i-expected.json')
+        self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+    def test_match_ApproximateDirectoryContentIndex_get_stdin_3_0_2(self):
+        input_file = self.get_test_loc('match/directory-matching/get-stdin-3.0.2-i.json')
+        vc = run_do_match_from_scan(input_file, APPROXIMATE_DIRECTORY_CONTENT_MATCH)
         expected = self.get_test_loc('match/directory-matching/get-stdin-3.0.2-i-expected.json')
         self.check_codebase(vc, expected, regen=FIXTURES_REGEN)

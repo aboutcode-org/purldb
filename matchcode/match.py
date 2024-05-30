@@ -10,18 +10,16 @@
 from functools import reduce
 from operator import or_
 
-from django.db.models import Q
-
-from commoncode.resource import VirtualCodebase
-from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 import attr
+from commoncode.resource import VirtualCodebase
+from django.db.models import Q
+from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import ExactFileIndex
 from matchcode.models import ExactPackageArchiveIndex
-
 
 """
 These functions are convenience functions to run matching on a Codebase or
@@ -188,7 +186,10 @@ def get_directory_content_match(resource):
     matches = ApproximateDirectoryContentIndex.objects.none()
     match_type = ''
     if directory_content_fingerprint:
-        directory_matches = ApproximateDirectoryContentIndex.match(directory_content_fingerprint)
+        directory_matches = ApproximateDirectoryContentIndex.match(
+            directory_content_fingerprint,
+            resource
+        )
         matches |= directory_matches
         match_type = 'approximate-content'
     return matches, match_type
@@ -203,7 +204,10 @@ def get_directory_structure_match(resource):
     matches = ApproximateDirectoryStructureIndex.objects.none()
     match_type = ''
     if directory_structure_fingerprint:
-        directory_matches = ApproximateDirectoryStructureIndex.match(directory_structure_fingerprint)
+        directory_matches = ApproximateDirectoryStructureIndex.match(
+            directory_structure_fingerprint,
+            resource
+        )
         matches |= directory_matches
         match_type = 'approximate-structure'
     return matches, match_type
@@ -233,7 +237,10 @@ def get_approximate_file_match(resource):
         resource_content_fingerprint = resource.halo1
     else:
         resource_content_fingerprint = resource.extra_data.get('halo1', '')
-    file_matches = ApproximateResourceContentIndex.match(resource_content_fingerprint)
+    file_matches = ApproximateResourceContentIndex.match(
+        resource_content_fingerprint,
+        resource
+    )
     return file_matches, 'approximate-file'
 
 

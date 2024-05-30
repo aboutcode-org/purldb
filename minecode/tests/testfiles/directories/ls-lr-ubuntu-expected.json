@@ -38,21 +38,21 @@
     "path":"dists/dapper/Contents-amd64.gz",
     "type":"f",
     "size":677,
-    "date":"2011-04",
+    "date":"-04-29",
     "target":null
   },
   {
     "path":"dists/dapper/Contents-hppa.gz",
     "type":"f",
     "size":9542678,
-    "date":"2008-12",
+    "date":"-12-16",
     "target":null
   },
   {
     "path":"dists/dapper/Contents-i386.gz",
     "type":"f",
     "size":677,
-    "date":"2011-04",
+    "date":"-04-29",
     "target":null
   },
   {

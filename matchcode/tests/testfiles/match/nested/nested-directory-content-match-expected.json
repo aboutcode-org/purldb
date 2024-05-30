@@ -22,7 +22,6 @@
       "is_script": false,
       "package_data": [],
       "for_packages": [],
-      "packages": [],
       "matched_to": [],
       "files_count": 11,
       "dirs_count": 4,
@@ -53,7 +52,6 @@
       "for_packages": [
         "pkg:npm/%40types/underscore@1.10.9?uuid=420db78a-625f-4622-b1a0-93d1ea853194"
       ],
-      "packages": [],
       "matched_to": [],
       "files_count": 0,
       "dirs_count": 0,
@@ -84,7 +82,6 @@
       "for_packages": [
         "pkg:npm/%40types/underscore@1.10.9?uuid=420db78a-625f-4622-b1a0-93d1ea853194"
       ],
-      "packages": [],
       "matched_to": [],
       "files_count": 0,
       "dirs_count": 0,
@@ -218,7 +215,6 @@
       "for_packages": [
         "pkg:npm/%40types/underscore@1.10.9?uuid=420db78a-625f-4622-b1a0-93d1ea853194"
       ],
-      "packages": [],
       "matched_to": [],
       "files_count": 0,
       "dirs_count": 0,
@@ -249,7 +245,6 @@
       "for_packages": [
         "pkg:npm/%40types/underscore@1.10.9?uuid=420db78a-625f-4622-b1a0-93d1ea853194"
       ],
-      "packages": [],
       "matched_to": [],
       "files_count": 0,
       "dirs_count": 0,
@@ -278,7 +273,6 @@
       "is_script": false,
       "package_data": [],
       "for_packages": [],
-      "packages": [],
       "matched_to": [
         "pkg:npm/plugin-request@2.4.1"
       ],
@@ -309,7 +303,6 @@
       "is_script": false,
       "package_data": [],
       "for_packages": [],
-      "packages": [],
       "matched_to": [
         "pkg:npm/plugin-request@2.4.1"
       ],
@@ -342,7 +335,6 @@
       "for_packages": [
         "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
       ],
-      "packages": [],
       "matched_to": [
         "pkg:npm/plugin-request@2.4.1"
       ],
@@ -447,7 +439,6 @@
       "for_packages": [
         "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
       ],
-      "packages": [],
       "matched_to": [
         "pkg:npm/plugin-request@2.4.1"
       ],
@@ -480,7 +471,6 @@
       "for_packages": [
         "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
       ],
-      "packages": [],
       "matched_to": [
         "pkg:npm/plugin-request@2.4.1"
       ],
@@ -513,7 +503,6 @@
       "for_packages": [
         "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
       ],
-      "packages": [],
       "matched_to": [
         "pkg:npm/plugin-request@2.4.1"
       ],
@@ -546,7 +535,6 @@
       "for_packages": [
         "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
       ],
-      "packages": [],
       "matched_to": [
         "pkg:npm/plugin-request@2.4.1"
       ],
@@ -579,7 +567,6 @@
       "for_packages": [
         "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
       ],
-      "packages": [],
       "matched_to": [
         "pkg:npm/plugin-request@2.4.1"
       ],
@@ -612,7 +599,6 @@
       "for_packages": [
         "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
       ],
-      "packages": [],
       "matched_to": [
         "pkg:npm/plugin-request@2.4.1"
       ],
@@ -645,7 +631,6 @@
       "for_packages": [
         "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
       ],
-      "packages": [],
       "matched_to": [
         "pkg:npm/plugin-request@2.4.1"
       ],
@@ -678,7 +663,6 @@
       "for_packages": [
         "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
       ],
-      "packages": [],
       "matched_to": [
         "pkg:npm/plugin-request@2.4.1"
       ],
