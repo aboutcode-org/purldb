@@ -5,7 +5,7 @@ build-backend = "flot.buildapi"
 [project]
 name = "purl2vcs"
 # keep version same as purldb for now
-version = "1.0.0"
+version = "1.0.1"
 description = "purl2vcs is an add-on library working with the PurlDB to find the version control system (VCS) URL of a package and detect the commit, tags and path for a given version."
 readme = "README.rst"
 license = { text = "Apache-2.0" }
