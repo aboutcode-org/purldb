@@ -898,37 +898,27 @@ class D2DPackage(NamedTuple):
     download_url: str
 
 
-def get_set_packages(set_uuid, purldb_api_url):
+def get_packages_by_set(purl, purldb_api_url):
     """
-    Yield D2DPackage objects for all the packages in the set of a PURL.
+    Yield list of D2DPackages for each package_set of a purl.
     """
-    packages_set = get_packages_set(set_uuid, purldb_api_url)
-    for result in packages_set.get("results") or []:
-        for package in result.get("packages") or []:
-            yield D2DPackage(
-                purl=package.get("purl"),
-                package_content=package.get("package_content"),
-                download_url=package.get("download_url"),
-            )
-
-
-def get_packages_set(set_uuid, purldb_api_url):
-    url = urljoin(purldb_api_url, f"package_sets/{set_uuid}/")
-    response = requests.get(url=url)
-    packages_set = response.json()
-    return packages_set
-
-
-def get_sets(purl, purldb_api_url):
-    """
-    Yield package_set uuids for a given PURL.
-    """
-    package = get_package(purl, purldb_api_url)
-    package = package.get("results")[0]
-    if not package:
+    package_api_url = get_package(purl, purldb_api_url)
+    package_api_url = package_api_url.get("results")[0]
+    if not package_api_url:
         return
-    for package_set in package.get("package_sets") or []:
-        yield package_set.get("uuid") 
+    for package_set in package_api_url.get("package_sets") or []:
+        packages = []
+        for package_api_url in package_set.get("packages") or []:
+            package_response = requests.get(package_api_url)
+            package_data = package_response.json()
+            p = D2DPackage(
+                purl=package_data.get("purl"),
+                package_content=package_data.get("package_content"),
+                download_url=package_data.get("download_url"),
+            )
+            packages.append(p)
+        yield packages
+
 
 class PackagePair(NamedTuple):
     from_package: D2DPackage
@@ -1066,9 +1056,8 @@ def d2d_purl_set(purl, output, purldb_api_url, matchcode_api_url):
     Wait for the analysis to complete and save results to the ``output`` FILE.
     """
     projects: list[D2DProject] = []
-    for set_uuid in get_sets(purl, purldb_api_url):
-        packages = get_set_packages(set_uuid=set_uuid, purldb_api_url=purldb_api_url)
-        package_pairs = get_package_pairs_for_d2d(packages)
+    for d2d_packages in get_packages_by_set(purl, purldb_api_url):
+        package_pairs = get_package_pairs_for_d2d(d2d_packages)
         for package_pair in package_pairs:
             run_id, project_url = map_deploy_to_devel(
                 from_purl=package_pair.from_package.purl,
