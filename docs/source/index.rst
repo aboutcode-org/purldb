@@ -65,6 +65,16 @@ How-To documents explain how to accomplish specific tasks.
 
 ----
 
+Miscellaneous
+-------------
+
+.. toctree::
+   :maxdepth: 2
+
+   miscellaneous/index
+
+----
+
 
 Indices and tables
 ==================

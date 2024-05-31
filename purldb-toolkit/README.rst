@@ -4,16 +4,16 @@ purldb-toolkit
 .. contents:: :local:
     :depth: 3
 
-
-
-purldb-toolkit is command line utility and library to use the PurlDB, its API and various related libraries.
+purldb-toolkit is a command line utility and library to use the PurlDB, its API and various related libraries.
 
 The ``purlcli`` command acts as a client to the PurlDB REST API end point(s) to expose PURL services.
-It serves both as a tool, as a library and as an example on how to use the services programmatically.
+It serves as a tool, a library and an example of how to use the services programmatically.
 
 
 Installation
 ------------
+
+.. code-block:: console
 
     pip install purldb-toolkit
 
@@ -21,29 +21,31 @@ Installation
 Usage
 -----
 
-Use this command to get basic help::
+Use this command to get basic help:
+
+.. code-block:: console
 
     $ purlcli --help
     Usage: purlcli [OPTIONS] COMMAND [ARGS]...
 
-      Return information from a PURL.
+    Return information from a PURL.
 
     Options:
-      --help  Show this message and exit.
+    --help  Show this message and exit.
 
     Commands:
-      metadata  Given one or more PURLs, for each PURL, return a mapping of...
-      urls      Given one or more PURLs, for each PURL, return a list of all...
-      validate  Check the syntax and upstream repo status of one or more PURLs.
-      versions  Given one or more PURLs, return a list of all known versions...
+    metadata  Given one or more PURLs, for each PURL, return a mapping of...
+    urls      Given one or more PURLs, for each PURL, return a list of all...
+    validate  Check the syntax and upstream repo status of one or more PURLs.
+    versions  Given one or more PURLs, return a list of all known versions...
 
 
 And the following subcommands:
 
-'validate' -- validate a PURL
+``validate``: validate a PURL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: none
+.. code-block:: console
 
     $ purlcli validate --help
     Usage: purlcli validate [OPTIONS]
@@ -61,13 +63,13 @@ Examples
 
 **Submit multiple PURLs using the command line:**
 
-.. code-block:: none
+.. code-block:: console
 
     purlcli validate --purl pkg:npm/canonical-path@1.0.0 --purl pkg:nginx/nginx@0.8.9 --output <path/to/output.json>
 
 *Sample output:*
 
-.. code-block:: console
+.. code-block:: json
 
     {
         "headers": [
@@ -108,31 +110,33 @@ Examples
 
 **Submit multiple PURLs using a .txt file:**
 
-.. code-block:: none
+.. code-block:: console
 
     purlcli validate --file <path/to/output.txt> --output <path/to/output.json>
 
 *Sample input.txt:*
 
-.. code-block:: console
+.. code-block:: text
 
     pkg:npm/canonical-path@1.0.0
     pkg:nginx/nginx@0.8.9
 
 
-Notes
+Details
 #######
 
-``validate`` calls the ``public.purldb.io/api/validate/`` endpoint.
+``validate`` calls the ``validate/`` endpoint of the `purldb API <https://public.purldb.io/api/>`_.
+
+See also https://public.purldb.io/api/docs/#/validate.
 
 
 ----
 
 
-'versions' -- collect package versions for a PURL
+``versions``: collect package versions for a PURL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: none
+.. code-block:: console
 
     $ purlcli versions  --help
     Usage: purlcli versions [OPTIONS]
@@ -150,13 +154,13 @@ Examples
 
 **Submit multiple PURLs using the command line:**
 
-.. code-block:: none
+.. code-block:: console
 
     purlcli versions --purl pkg:npm/canonical-path --purl pkg:nginx/nginx --output <path/to/output.json>
 
 *Sample output:*
 
-.. code-block:: console
+.. code-block:: json
 
     {
         "headers": [
@@ -198,10 +202,10 @@ Examples
     }
 
 
-Notes
+Details
 #######
 
-``versions`` calls ``versions()`` from `fetchcode/package_versions.py <https://github.com/nexB/fetchcode/blob/master/src/fetchcode/package_versions.py>`__.
+``versions`` calls ``versions()`` from `fetchcode/package_versions.py`.
 
 Version information is not needed in submitted PURLs and, if included, will be removed before processing.
 
@@ -209,7 +213,7 @@ Version information is not needed in submitted PURLs and, if included, will be r
 ----
 
 
-'metadata' -- collect package metadata for a PURL
+``metadata``: collect package metadata for a PURL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: console
@@ -231,13 +235,13 @@ Examples
 
 **Submit multiple PURLs using the command line:**
 
-.. code-block:: none
+.. code-block:: console
 
     purlcli metadata --purl pkg:openssl/openssl@3.0.6 --purl pkg:nginx/nginx@0.8.9 --purl pkg:gnu/glibc@2.38 --output <path/to/output.json>
 
 *Sample output:*
 
-.. code-block:: console
+.. code-block:: json
 
     {
         "headers": [
@@ -339,23 +343,23 @@ Examples
     }
 
 
-Notes
+Details
 #######
 
-``metadata`` calls ``info()`` from `fetchcode/package.py <https://github.com/nexB/fetchcode/blob/master/src/fetchcode/package.py>`__.
+``metadata`` calls ``info()`` from `fetchcode/package.py`.
 
 The intended output for each PURL type supported by the ``metadata`` command is
 
 - an input PURL with a version: output the metadata for the input version
-- an input PURL with no version: output a list of the metadata for all versions
+- an input PURL without a version: output a list of the metadata for all versions
 
-The output of the various PURL types currently supported in `fetchcode/package.py <https://github.com/nexB/fetchcode/blob/master/src/fetchcode/package.py>`__ varies from type to type at the moment -- the underlying functions will be updated as needed so that all produce the intended output for input PURLs with and without a version.
+The output of the various PURL types currently supported in `fetchcode/package.py` varies from type to type at the moment -- the underlying functions will be updated as needed so that all produce the intended output for input PURLs with and without a version.
 
 
 ----
 
 
-'urls' -- collect package URLs for a PURL
+``urls``: collect package URLs for a PURL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: console
@@ -378,13 +382,13 @@ Examples
 
 **Submit multiple PURLs using the command line:**
 
-.. code-block:: none
+.. code-block:: console
 
     purlcli urls --purl pkg:npm/canonical-path@1.0.0 --purl pkg:nginx/nginx@0.8.9 --purl pkg:rubygems/rails@7.0.0 --output <path/to/output.json>
 
 *Sample output:*
 
-.. code-block:: console
+.. code-block:: json
 
     {
         "headers": [
@@ -437,13 +441,13 @@ Examples
 
 ``--head``
 
-.. code-block:: none
+.. code-block:: console
 
     purlcli urls --purl pkg:npm/canonical-path@1.0.0 --purl pkg:nginx/nginx@0.8.9 --purl pkg:rubygems/rails@7.0.0 --output <path/to/output.json> --head
 
 *Sample output:*
 
-.. code-block:: console
+.. code-block:: json
 
     {
         "headers": [
@@ -533,64 +537,7 @@ Examples
     }
 
 
-Notes
+Details
 #######
 
-- None atm.
-
-
-Testing
--------
-
-Run all purldb tests:
-
-.. code-block:: none
-
-    make test
-
-Run all purlcli non-live tests (i.e., no live network calls):
-
-.. code-block:: none
-
-    DJANGO_SETTINGS_MODULE=purldb_project.settings pytest -vvs purldb-toolkit/tests/test_purlcli.py
-
-Run all purlcli live tests (i.e., check actual API endpoints etc.)
-
-.. code-block:: none
-
-    DJANGO_SETTINGS_MODULE=purldb_project.settings pytest -vvs purldb-toolkit/tests/test_purlcli_live.py --run_live_fetch
-
-
-Funding
--------
-
-This project was funded through the NGI Assure Fund https://nlnet.nl/assure, a
-fund established by NLnet https://nlnet.nl/ with financial support from the
-European Commission's Next Generation Internet programme, under the aegis of DG
-Communications Networks, Content and Technology under grant agreement No 957073.
-
-This project is also funded through grants from the Google Summer of Code
-program, continuing support and sponsoring from nexB Inc. and generous
-donations from multiple sponsors.
-
-
-License
--------
-
-Copyright (c) nexB Inc. and others. All rights reserved.
-
-purldb is a trademark of nexB Inc.
-
-SPDX-License-Identifier: Apache-2.0 AND CC-BY-SA-4.0
-
-purldb software is licensed under the Apache License version 2.0.
-
-purldb data is licensed collectively under CC-BY-SA-4.0.
-
-See https://www.apache.org/licenses/LICENSE-2.0 for the license text.
-
-See https://creativecommons.org/licenses/by-sa/4.0/legalcode for the license text.
-
-See https://github.com/nexB/purldb for support or download.
-
-See https://aboutcode.org for more information about nexB OSS projects.
+None atm.
