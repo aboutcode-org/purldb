@@ -40,6 +40,7 @@ SUPPORTED_ADDON_PIPELINES = (
     'collect_symbols_pygments',
     'collect_symbols_tree_sitter',
     'inspect_elf_binaries',
+    'scan_for_virus',
 )
 
 
