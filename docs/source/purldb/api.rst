@@ -869,3 +869,205 @@ Using cURL to update status:
     }
 
 
+
+Package Update Set List
+-----------------------
+
+Take a list of purls (where each item is a mapping containing PURL and content_type).
+
+If uuid is given then all purls will be added to package set if it exists else a new set would be created and all the purls will be added to that new set.
+
+Note: There is also a slight addition to the logic where a purl already exists in the database and so there are no changes done to the purl entry it is passed as it is.
+
+Using cURL to update status:
+
+.. code-block:: console
+
+    api_url="https://public.purldb.io/api/scan_queue/update_status/"
+    content_type="Content-Type: application/json"
+    authorization="Authorization:Token abcdef123456"
+    data='{
+        "purls": [
+            {
+                "purl": "pkg:npm/less@1.0.32",
+                "content_type": "CURATION"
+            }
+        ],
+        "uuid" : "b67ceb49-1538-481f-a572-431062f382gg"
+    }'
+
+    curl -X POST "$api_url" -H "$content_type" -H "$authorization" -d "$data"
+
+.. code-block:: json
+
+    [
+        {
+            "purl": "pkg:npm/less@1.0.32",
+            "updated_status":: "Updated"
+        }
+    ]
+
+
+Package Set List
+----------------
+
+Return a list of package sets and the package data of packages within
+
+``GET /api/projects/0bbdcf88-ad07-4970-9272-7d5f4c82cc7b/``
+
+.. code-block:: json
+    {
+        "count": 8198,
+        "next": "https://public.purldb.io/api/package_sets/?page=2",
+        "previous": null,
+        "results": [
+            {
+                "uuid": "9d1655c0-16c7-424f-b027-a141cfdbf706",
+                "packages": [
+                    {
+                        "url": "https://public.purldb.io/api/packages/8a433f5e-372c-4fe1-9fc3-1027ecc9678b/",
+                        "uuid": "8a433f5e-372c-4fe1-9fc3-1027ecc9678b",
+                        "filename": "rfc8528-data-util-8.0.6.jar",
+                        "package_sets": [
+                            {
+                                "uuid": "9d1655c0-16c7-424f-b027-a141cfdbf706",
+                                "packages": [
+                                    "https://public.purldb.io/api/packages/8a433f5e-372c-4fe1-9fc3-1027ecc9678b/",
+                                    "https://public.purldb.io/api/packages/99b26f6e-b823-4c72-8408-9996f17d30f4/"
+                                ]
+                            }
+                        ],
+                        "package_content": "binary",
+                        "purl": "pkg:maven/org.opendaylight.yangtools/rfc8528-data-util@8.0.6",
+                        "type": "maven",
+                        "namespace": "org.opendaylight.yangtools",
+                        "name": "rfc8528-data-util",
+                        "version": "8.0.6",
+                        "qualifiers": "",
+                        "subpath": "",
+                        "primary_language": "Java",
+                        "description": "rfc8528-data-util\nRFC8528 data model utilities",
+                        "release_date": "2022-05-25T13:36:00Z",
+                        "parties": [],
+                        "keywords": [],
+                        "homepage_url": null,
+                        "download_url": "https://repo1.maven.org/maven2/org/opendaylight/yangtools/rfc8528-data-util/8.0.6/rfc8528-data-util-8.0.6.jar",
+                        "bug_tracking_url": null,
+                        "code_view_url": null,
+                        "vcs_url": null,
+                        "repository_homepage_url": null,
+                        "repository_download_url": null,
+                        "api_data_url": null,
+                        "size": null,
+                        "md5": null,
+                        "sha1": "31157249a6286d5478b5d01e8a29f5de9c33fb80",
+                        "sha256": "e1d83077ff746ccce4783971d85b5f3efecc2a5504e7ca7801e29d9f131dfdf2",
+                        "sha512": "f633bd2fa6cd1d9a36fb296c373fe750dc48f1310b13bc1d020fe8f6ab7dddaf7ff650b11b910504d25a19b205c7237660e170d19fab9b152eabc6d51bd8525a",
+                        "copyright": "Copyright (c) PANTHEON.tech, s.r.o. and others",
+                        "holder": null,
+                        "declared_license_expression": "epl-1.0",
+                        "declared_license_expression_spdx": "EPL-1.0",
+                        "license_detections": [],
+                        "other_license_expression": "((epl-2.0 OR apache-2.0) AND epl-2.0) AND (epl-1.0 AND epl-2.0)",
+                        "other_license_expression_spdx": "((EPL-2.0 OR Apache-2.0) AND EPL-2.0) AND (EPL-1.0 AND EPL-2.0)",
+                        "other_license_detections": [],
+                        "extracted_license_statement": null,
+                        "notice_text": null,
+                        "source_packages": [
+                            "pkg:maven/org.opendaylight.yangtools/rfc8528-data-util@8.0.6?classifier=sources"
+                        ],
+                        "extra_data": {},
+                        "package_uid": "pkg:maven/org.opendaylight.yangtools/rfc8528-data-util@8.0.6?uuid=8a433f5e-372c-4fe1-9fc3-1027ecc9678b",
+                        "datasource_id": null,
+                        "file_references": [],
+                        "dependencies": [
+                            {
+                                "purl": "pkg:maven/com.google.guava/guava",
+                                "extracted_requirement": null,
+                                "scope": "compile",
+                                "is_runtime": false,
+                                "is_optional": true,
+                                "is_resolved": false
+                            },
+                            {
+                                "purl": "pkg:maven/org.opendaylight.yangtools/concepts",
+                                "extracted_requirement": null,
+                                "scope": "compile",
+                                "is_runtime": false,
+                                "is_optional": true,
+                                "is_resolved": false
+                            },
+                            {
+                                "purl": "pkg:maven/org.opendaylight.yangtools/yang-common",
+                                "extracted_requirement": null,
+                                "scope": "compile",
+                                "is_runtime": false,
+                                "is_optional": true,
+                                "is_resolved": false
+                            },
+                            {
+                                "purl": "pkg:maven/org.opendaylight.yangtools/yang-data-api",
+                                "extracted_requirement": null,
+                                "scope": "compile",
+                                "is_runtime": false,
+                                "is_optional": true,
+                                "is_resolved": false
+                            },
+                            {
+                                "purl": "pkg:maven/org.opendaylight.yangtools/yang-data-spi",
+                                "extracted_requirement": null,
+                                "scope": "compile",
+                                "is_runtime": false,
+                                "is_optional": true,
+                                "is_resolved": false
+                            },
+                            {
+                                "purl": "pkg:maven/org.opendaylight.yangtools/yang-model-api",
+                                "extracted_requirement": null,
+                                "scope": "compile",
+                                "is_runtime": false,
+                                "is_optional": true,
+                                "is_resolved": false
+                            },
+                            {
+                                "purl": "pkg:maven/org.opendaylight.yangtools/yang-model-spi",
+                                "extracted_requirement": null,
+                                "scope": "compile",
+                                "is_runtime": false,
+                                "is_optional": true,
+                                "is_resolved": false
+                            },
+                            {
+                                "purl": "pkg:maven/org.opendaylight.yangtools/yang-parser-api",
+                                "extracted_requirement": null,
+                                "scope": "compile",
+                                "is_runtime": false,
+                                "is_optional": true,
+                                "is_resolved": false
+                            },
+                            {
+                                "purl": "pkg:maven/org.opendaylight.yangtools/rfc8528-data-api",
+                                "extracted_requirement": null,
+                                "scope": "compile",
+                                "is_runtime": false,
+                                "is_optional": true,
+                                "is_resolved": false
+                            },
+                            {
+                                "purl": "pkg:maven/org.opendaylight.yangtools/rfc8528-model-api",
+                                "extracted_requirement": null,
+                                "scope": "compile",
+                                "is_runtime": false,
+                                "is_optional": true,
+                                "is_resolved": false
+                            }
+                        ],
+                        "resources": "https://public.purldb.io/api/packages/8a433f5e-372c-4fe1-9fc3-1027ecc9678b/resources/",
+                        "history": "https://public.purldb.io/api/packages/8a433f5e-372c-4fe1-9fc3-1027ecc9678b/history/"
+                    },
+                    ...
+                ]
+            },
+            ...
+        ]
+    }
