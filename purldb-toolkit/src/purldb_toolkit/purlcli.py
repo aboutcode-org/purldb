@@ -943,20 +943,21 @@ def generate_d2d_package_pairs(from_packages, to_packages):
 
 
 def get_package_pairs_for_d2d(packages):
-    """
-    Yield PackagePairs for each pair of package candidates for a deploy-to-devel analysis.
-    """
     packages = sorted(packages, key=lambda p: p.package_content)
 
-    packages_by_content = dict(groupby(packages, key=lambda p: p.package_content))
+    packages_by_content = {}
 
-    source_repo_packages = packages_by_content.get(PackageContentType.SOURCE_REPO.value, [])
-    source_archive_packages = packages_by_content.get(PackageContentType.SOURCE_ARCHIVE.value, [])
-    binary_packages = packages_by_content.get(PackageContentType.BINARY.value, [])
+    for content, content_packages in groupby(packages, key=lambda p: p.package_content):
+        packages_by_content[content] = list(content_packages)
+
+    source_repo_packages = packages_by_content.get(PackageContentType.SOURCE_REPO.name.lower(), [])
+    source_archive_packages = packages_by_content.get(PackageContentType.SOURCE_ARCHIVE.name.lower(), [])
+    binary_packages = packages_by_content.get(PackageContentType.BINARY.name.lower(), [])
 
     yield from generate_d2d_package_pairs(from_packages=source_repo_packages, to_packages=binary_packages)
     yield from generate_d2d_package_pairs(from_packages=source_archive_packages, to_packages=binary_packages)
     yield from generate_d2d_package_pairs(from_packages=source_repo_packages, to_packages=source_archive_packages)
+
 
 
 @purlcli.command(name="d2d")
@@ -1059,6 +1060,7 @@ def d2d_purl_set(purl, output, purldb_api_url, matchcode_api_url):
     for d2d_packages in get_packages_by_set(purl, purldb_api_url):
         package_pairs = get_package_pairs_for_d2d(d2d_packages)
         for package_pair in package_pairs:
+            print(f"Running D2D for {package_pair.from_package.purl} -> {package_pair.to_package.purl}")
             run_id, project_url = map_deploy_to_devel(
                 from_purl=package_pair.from_package.purl,
                 to_purl=package_pair.to_package.purl,
