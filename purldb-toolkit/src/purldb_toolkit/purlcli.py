@@ -7,14 +7,21 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from enum import Enum
 import json
 import logging
 import os
 import re
+import sys
 from importlib.metadata import version
 from pathlib import Path
+import time
+from itertools import groupby
+from typing import NamedTuple
+from urllib.parse import urljoin
 
 import click
+from dataclasses import dataclass
 import requests
 from fetchcode.package import info
 from fetchcode.package_versions import SUPPORTED_ECOSYSTEMS, versions
@@ -883,6 +890,287 @@ def clear_log_file():
 
     if log_file.is_file():
         os.remove(log_file)
+
+
+class D2DPackage(NamedTuple):
+    purl: str
+    package_content: str
+    download_url: str
+
+
+def get_packages_by_set(purl, purldb_api_url):
+    """
+    Yield list of D2DPackages for each package_set of a purl.
+    """
+    package_api_url = get_package(purl, purldb_api_url)
+    package_api_url = package_api_url.get("results")[0]
+    if not package_api_url:
+        return
+    for package_set in package_api_url.get("package_sets") or []:
+        packages = []
+        for package_api_url in package_set.get("packages") or []:
+            package_response = requests.get(package_api_url)
+            package_data = package_response.json()
+            p = D2DPackage(
+                purl=package_data.get("purl"),
+                package_content=package_data.get("package_content"),
+                download_url=package_data.get("download_url"),
+            )
+            packages.append(p)
+        yield packages
+
+
+class PackagePair(NamedTuple):
+    from_package: D2DPackage
+    to_package: D2DPackage
+
+
+# TODO: Keep in sync with the packagedb.models.PackageContentType
+class PackageContentType(Enum):
+    SOURCE_REPO = 3, 'source_repo'
+    SOURCE_ARCHIVE = 4, 'source_archive'
+    BINARY = 5, 'binary'
+
+def generate_d2d_package_pairs(from_packages, to_packages):
+    """
+    Yield PackagePair objects based on all the combinations of packages in the
+    from_packages and to_packages lists.
+    """
+
+    for from_package in from_packages:
+        for to_package in to_packages:
+            yield PackagePair(from_package=from_package, to_package=to_package)
+
+
+def get_package_pairs_for_d2d(packages):
+    packages = sorted(packages, key=lambda p: p.package_content)
+
+    packages_by_content = {}
+
+    for content, content_packages in groupby(packages, key=lambda p: p.package_content):
+        packages_by_content[content] = list(content_packages)
+
+    source_repo_packages = packages_by_content.get(PackageContentType.SOURCE_REPO.name.lower(), [])
+    source_archive_packages = packages_by_content.get(PackageContentType.SOURCE_ARCHIVE.name.lower(), [])
+    binary_packages = packages_by_content.get(PackageContentType.BINARY.name.lower(), [])
+
+    yield from generate_d2d_package_pairs(from_packages=source_repo_packages, to_packages=binary_packages)
+    yield from generate_d2d_package_pairs(from_packages=source_archive_packages, to_packages=binary_packages)
+    yield from generate_d2d_package_pairs(from_packages=source_repo_packages, to_packages=source_archive_packages)
+
+
+
+@purlcli.command(name="d2d")
+@click.option(
+    "--from-purl",
+    required=True,
+    help="PURL for the source or `from` package.",
+)
+@click.option(
+    "--to-purl",
+    required=True,
+    help="PURL for the destination or `to` package.",
+)
+@click.option(
+    "--output",
+    type=click.File(mode="w", encoding="utf-8"),
+    required=True,
+    help="Write results as JSON to FILE.",
+)
+@click.option(
+    "--purldb-api-url",
+    required=True,
+    default="https://public.purldb.io/api",
+    help="",
+)
+@click.option(
+    "--matchcode-api-url",
+    required=True,
+    default="https://matchcode.io/api/d2d",
+    help="PackageURL or PURL.",
+)
+def d2d(from_purl, to_purl, output, purldb_api_url, matchcode_api_url):
+    """
+    Run a deploy-to-devel analysis using the "from" PURL and "to" PURL.
+    Wait for the analysis to complete and save results to the ``output`` FILE.
+    """
+    run_id, project_url = map_deploy_to_devel(from_purl, to_purl, purldb_api_url, matchcode_api_url)
+    while True:
+        # TODO: Use a better progress indicator.
+        sys.stderr.write(".")
+        data = get_run_data(matchcode_api_url=matchcode_api_url,run_id=run_id)
+        if data.get("status") != "running":
+            break
+        time.sleep(5)
+    json.dump(get_project_data(project_url=project_url), output, indent=4)
+
+
+def get_run_data(matchcode_api_url, run_id):
+    url = urljoin(matchcode_api_url, f"runs/{run_id}/")
+    response = requests.get(url)
+    data = response.json()
+    return data
+
+
+def get_project_data(project_url):
+    response = requests.get(project_url)
+    data = response.json()
+    return data
+
+
+@dataclass
+class D2DProject:
+    project_url: str
+    done: bool
+    package_pair: PackagePair
+    result: dict
+    run_id: str
+
+
+@purlcli.command(name="d2d-purl-set")
+@click.option(
+    "--purl",
+    required=True,
+    help="Perform a deploy-to-devel on all the PURLs in the set of this PURL.",
+)
+@click.option(
+    "--output",
+    type=click.File(mode="w", encoding="utf-8"),
+    required=True,
+    help="Write results as JSON to FILE.",
+)
+@click.option(
+    "--purldb-api-url",
+    required=True,
+    default="https://public.purldb.io/api/",
+    help="",
+)
+@click.option(
+    "--matchcode-api-url",
+    required=True,
+    default="https://matchcode.io/api/",
+    help="",
+)
+def d2d_purl_set(purl, output, purldb_api_url, matchcode_api_url):
+    """
+    Run a deploy-to-devel analysis using all the PURLs in the set of this PURL. .
+    Wait for the analysis to complete and save results to the ``output`` FILE.
+    """
+    projects: list[D2DProject] = []
+    for d2d_packages in get_packages_by_set(purl, purldb_api_url):
+        package_pairs = get_package_pairs_for_d2d(d2d_packages)
+        for package_pair in package_pairs:
+            print(f"Running D2D for {package_pair.from_package.purl} -> {package_pair.to_package.purl}")
+            run_id, project_url = map_deploy_to_devel(
+                from_purl=package_pair.from_package.purl,
+                to_purl=package_pair.to_package.purl,
+                purldb_api_url=purldb_api_url,
+                matchcode_api_url=matchcode_api_url,
+            )
+            projects.append(D2DProject(project_url=project_url, done=False, run_id=run_id, package_pair=package_pair, result={}))
+
+    while True:
+        for project in projects:
+            if project.done:
+                continue
+            # TODO: Use a better progress indicator.
+            sys.stderr.write(".")
+            data = get_run_data(matchcode_api_url=matchcode_api_url,run_id=run_id)
+            if data.get("status") != "running":
+                project.done = True
+                project.result = get_project_data(project_url=project.project_url)
+            time.sleep(1)
+        time.sleep(5)
+        if all(project.done for project in projects):
+            break
+
+    d2d_results = []
+    for project in projects:
+        d2d_results.append({
+            "results" : {
+                "from": {
+                    "purl": project.package_pair.from_package.purl,
+                    "package_content": project.package_pair.from_package.package_content,
+                    "download_url": project.package_pair.from_package.download_url
+                },
+                "to": {
+                    "purl": project.package_pair.to_package.purl,
+                    "package_content": project.package_pair.to_package.package_content,
+                    "download_url": project.package_pair.to_package.download_url
+                },
+                "d2d_result": project.result
+            }
+        })
+    json.dump(d2d_results, output, indent=4)
+    
+
+def map_deploy_to_devel(from_purl, to_purl, purldb_api_url, matchcode_api_url):
+    """
+    Return the matchcode.io d2d run ID, project URL for a given pair of PURLs.
+    Raise an exception if we can not find download URLs for the PURLs. 
+    """
+    from_url, to_url = get_download_urls(from_purl=from_purl, to_purl=to_purl, purldb_api_url=purldb_api_url)
+
+    if not from_url:
+        raise Exception(f"Could not find download URLs for the `from` PURL {from_purl}.")
+
+    if not to_url:
+        raise Exception(f"Could not find download URLs for the `to` PURL {to_url}.")
+
+    from_url = f"{from_url}#from"
+    to_url = f"{to_url}#to"
+
+    input_urls = [from_url, to_url]
+
+    d2d_results = get_d2d_results(matchcode_api_url, input_urls)
+    project_url = d2d_results.get("url") or None
+    run_url = d2d_results.get("runs") or []
+
+    if not run_url:
+        raise Exception(f"Could not find a run URL for the input URLs {input_urls}.")
+
+    return run_url[0], project_url
+
+
+def get_d2d_results(matchcode_api_url, input_urls):
+    url = urljoin(matchcode_api_url, "d2d/")
+    headers = {'Content-Type': 'application/json'}
+    d2d_results = requests.post(url=url, data=json.dumps({"input_urls": input_urls, "runs": []}), headers=headers).json()
+    return d2d_results
+
+
+def get_download_urls(from_purl, to_purl, purldb_api_url):
+    """
+    Return a tuple of download URLs for a given "from" and "to" PURL.
+    """
+    from_url = get_download_url(from_purl, purldb_api_url)
+    to_url = get_download_url(to_purl, purldb_api_url)
+
+    return from_url, to_url
+
+
+def get_download_url(purl, purldb_api_url):
+    """
+    Return the download URL for a given PURL or None.
+    """
+    package = get_package(purl, purldb_api_url)
+    package = package.get("results") or []
+    if package:
+        package = package[0]
+    else:
+        return None
+    return package.get("download_url") or None
+
+
+def get_package(purl, purldb_api_url):
+    """
+    Return a package mapping for a given PURL or empty dict.
+    """
+    url = urljoin(purldb_api_url, f"packages/?purl={purl}")
+    response = requests.get(url=url)
+    data = response.json()
+    return data or {}
+
 
 
 if __name__ == "__main__":
