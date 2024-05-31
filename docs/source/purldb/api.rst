@@ -3,7 +3,7 @@
 REST API
 ========
 
-To get started with the REST API, visit the **projects' API endpoint** at
+To get started with the REST API, visit the **PurlDB API endpoints** at
 http://localhost/api/ or http://localhost:8001/api/ if you run on a
 local development setup.
 
@@ -45,6 +45,9 @@ Example of a Python script:
     }
     response = requests.get(api_url, headers=headers, params=params)
     response.json()
+
+packages
+--------
 
 package list
 ------------
@@ -466,7 +469,7 @@ Reindex package
 Reindex this package instance. This will trigger a new scan for this package and
 the package data will be updated from the scan data.
 
-Using cURL to get reindex a package:
+Using cURL to reindex a package:
 
 .. code-block:: console
 
@@ -481,6 +484,9 @@ Using cURL to get reindex a package:
         "status": "pkg:maven/org.elasticsearch/elasticsearch@7.17.9 has been queued for reindexing"
     }
 
+
+resources
+---------
 
 resources list
 --------------
@@ -574,6 +580,8 @@ Supported checksum fields are:
 
 Multiple checksums field scan be passed in one request.
 
+Using cURL to filter for packages using multiple checksums:
+
 .. code-block:: console
 
     api_url="https://public.purldb.io/api/resources/filter_by_checksums/"
@@ -638,3 +646,226 @@ Multiple checksums field scan be passed in one request.
             }
         ]
     }
+
+
+validate purl
+-------------
+
+Take a purl and check whether it's valid PackageURL or not. Optionally set check_existence to true to check whether the package exists in real world.
+
+Note: As of now check_existence only supports ``cargo``, ``composer``, ``deb``, ``gem``, ``golang``, ``hex``, ``maven``, ``npm``, ``nuget`` and ``pypi`` ecosystems.
+
+``GET /api/validate/?purl=pkg:npm/asdf@1.0.2&check_existence=true``
+
+.. code-block:: json
+
+    {
+        "valid": true,
+        "exists": true,
+        "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
+        "purl": "pkg:npm/asdf@1.0.2"
+    }
+
+
+collect
+-------
+
+Return Package data for the purl passed in the purl query parameter.
+
+If the package does not exist, we will fetch the Package data and return it in
+the same request. Optionally, provide the list of addon_pipelines to run on the
+package. Find all addon pipelines at
+https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html.
+
+``GET /api/collect/?purl=pkg:npm/asdf@1.0.2``
+
+.. code-block:: json
+
+    [
+        {
+            "url": "https://public.purldb.io/api/packages/4f3a57de-e367-43c6-a7f1-51633d0ecd45/",
+            "uuid": "4f3a57de-e367-43c6-a7f1-51633d0ecd45",
+            "filename": "asdf-1.0.2.tgz",
+            "package_sets": [],
+            "package_content": null,
+            "purl": "pkg:npm/asdf@1.0.2",
+            "type": "npm",
+            "namespace": "",
+            "name": "asdf",
+            "version": "1.0.2",
+            "qualifiers": "",
+            "subpath": "",
+            "primary_language": "JavaScript",
+            "description": "tiny static web server that you can launch instantly in any directory (inspired by https://github.com/ddfreyne/adsf/)",
+            "release_date": null,
+            "parties": [
+                {
+                    "type": "person",
+                    "role": "author",
+                    "name": "alsotang",
+                    "email": "alsotang@gmail.com",
+                    "url": null
+                },
+                {
+                    "type": "person",
+                    "role": "maintainer",
+                    "name": "alsotang",
+                    "email": "alsotang@gmail.com",
+                    "url": null
+                }
+            ],
+            "keywords": [
+                "static",
+                "web",
+                "server"
+            ],
+            "homepage_url": "https://github.com/alsotang/asdf",
+            "download_url": "https://registry.npmjs.org/asdf/-/asdf-1.0.2.tgz",
+            "bug_tracking_url": "https://github.com/alsotang/asdf/issues",
+            "code_view_url": null,
+            "vcs_url": "git+https://github.com/alsotang/asdf.git@53aeca5c74c3d8c1fe88c1f98f8e362389fa1d2a",
+            "repository_homepage_url": null,
+            "repository_download_url": null,
+            "api_data_url": null,
+            "size": null,
+            "md5": null,
+            "sha1": "45b7468df1a6f2ec4826257535f97ea89db943e4",
+            "sha256": null,
+            "sha512": null,
+            "copyright": null,
+            "holder": null,
+            "declared_license_expression": "mit",
+            "declared_license_expression_spdx": "MIT",
+            "license_detections": [],
+            "other_license_expression": null,
+            "other_license_expression_spdx": null,
+            "other_license_detections": [],
+            "extracted_license_statement": "MIT",
+            "notice_text": null,
+            "source_packages": [],
+            "extra_data": {},
+            "package_uid": "pkg:npm/asdf@1.0.2?uuid=4f3a57de-e367-43c6-a7f1-51633d0ecd45",
+            "datasource_id": null,
+            "file_references": [],
+            "dependencies": [
+                {
+                    "purl": "pkg:npm/express",
+                    "extracted_requirement": "^4.9.7",
+                    "scope": "dependencies",
+                    "is_runtime": true,
+                    "is_optional": false,
+                    "is_resolved": false
+                },
+                {
+                    "purl": "pkg:npm/mocha",
+                    "extracted_requirement": "^1.21.5",
+                    "scope": "devDependencies",
+                    "is_runtime": false,
+                    "is_optional": true,
+                    "is_resolved": false
+                },
+                {
+                    "purl": "pkg:npm/should",
+                    "extracted_requirement": "^4.0.4",
+                    "scope": "devDependencies",
+                    "is_runtime": false,
+                    "is_optional": true,
+                    "is_resolved": false
+                },
+                {
+                    "purl": "pkg:npm/supertest",
+                    "extracted_requirement": "^0.14.0",
+                    "scope": "devDependencies",
+                    "is_runtime": false,
+                    "is_optional": true,
+                    "is_resolved": false
+                }
+            ],
+            "resources": "https://public.purldb.io/api/packages/4f3a57de-e367-43c6-a7f1-51633d0ecd45/resources/",
+            "history": "https://public.purldb.io/api/packages/4f3a57de-e367-43c6-a7f1-51633d0ecd45/history/"
+        }
+
+scan_queue
+----------
+
+This endpoint provides a queue of Packages to be scanned by the package scan worker. A special key for package scan workers or superusers is needed to access this endpoint.
+
+This endpoint is intended for use with a PurlDB package scan worker and is not intended for users to use directly.
+
+scan_queue actions
+------------------
+
+get_next_download_url
+^^^^^^^^^^^^^^^^^^^^^
+
+Return a mapping containing a ``download_url`` of a package to be scanned with the list of provided ``pipelines`` for the scan request ``scannable_uri_uuid``.
+
+The names of the pipelines that can be run are listed here: https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html
+
+Using cURL to get next download URL:
+
+.. code-block:: console
+
+    api_url="https://public.purldb.io/api/scan_queue/get_next_download_url/"
+    content_type="Content-Type: application/json"
+    authorization="Authorization:Token abcdef123456"
+
+    curl -X GET "$api_url" -H "$content_type" -H "$authorization"
+
+.. code-block:: json
+
+    {
+        "scannable_uri_uuid": "4f3a57de-e367-43c6-a7f1-51633d0ecd45",
+        "download_url": "https://registry.npmjs.org/asdf/-/asdf-1.0.2.tgz",
+        "pipelines": ["scan_codebase", "fingerprint_codebase"]
+    }
+
+Example of a Python script:
+
+.. code-block:: python
+
+    import requests
+
+    api_url = "https://public.purldb.io/api/scan_queue/get_next_download_url/"
+    headers = {
+        "Authorization": "Token abcdef123456",
+    }
+    response = requests.get(api_url, headers=headers, params=params)
+    response.json()
+
+
+update_status
+^^^^^^^^^^^^^
+
+Update the status of scan request ``scannable_uri_uuid`` with ``scan_status``
+
+If ``scan_status`` is 'failed', then a ``scan_log`` string is expected and
+should contain the error messages for that scan.
+
+If ``scan_status`` is 'scanned', then a ``scan_results_file``,
+``scan_summary_file``, and ``project_extra_data`` mapping are expected.
+``scan_results_file``, ``scan_summary_file``, and ``project_extra_data`` are
+then used to update Package data and its Resources.
+
+Using cURL to update status:
+
+.. code-block:: console
+
+    api_url="https://public.purldb.io/api/scan_queue/update_status/"
+    content_type="Content-Type: application/json"
+    authorization="Authorization:Token abcdef123456"
+    data='{
+        "scannable_uri_uuid": "4f3a57de-e367-43c6-a7f1-51633d0ecd45",
+        "scan_status": "failed",
+        "scan_status": "scanned timed out"
+    }'
+
+    curl -X POST "$api_url" -H "$content_type" -H "$authorization" -d "$data"
+
+.. code-block:: json
+
+    {
+        "status": "updated scannable_uri 4f3a57de-e367-43c6-a7f1-51633d0ecd45 scan_status to failed"
+    }
+
+
