@@ -179,7 +179,7 @@ For example:
 package details
 ---------------
 
-The project details view returns all information available about a project.
+The package details view returns all information available about a package.
 
 ``GET /api/projects/0bbdcf88-ad07-4970-9272-7d5f4c82cc7b/``
 
@@ -479,4 +479,162 @@ Using cURL to get reindex a package:
 
     {
         "status": "pkg:maven/org.elasticsearch/elasticsearch@7.17.9 has been queued for reindexing"
+    }
+
+
+resources list
+--------------
+
+Return a list of resources in the PurlDB.
+
+``GET /api/resources/``
+
+.. code-block:: json
+
+    {
+        "count": 6031130,
+        "next": "https://public.purldb.io/api/resources/?page=2",
+        "previous": null,
+        "results": [
+            {
+                "package": "https://public.purldb.io/api/packages/20b7d376-09c7-45ef-a102-75f7f5eef7e2/",
+                "purl": "pkg:npm/cac@6.7.14",
+                "path": "package/deno/CAC.ts",
+                "type": "file",
+                "name": "",
+                "extension": "",
+                "size": 8133,
+                "md5": "969474f21d02f9a1dad6a2e85f4bbd25",
+                "sha1": "8c7042781582df3d5f39fd2fabf7d2dd365f1669",
+                "sha256": null,
+                "sha512": null,
+                "git_sha1": null,
+                "mime_type": "",
+                "file_type": "",
+                "programming_language": "",
+                "is_binary": false,
+                "is_text": false,
+                "is_archive": false,
+                "is_media": false,
+                "is_key_file": false,
+                "detected_license_expression": "",
+                "detected_license_expression_spdx": "",
+                "license_detections": [
+                    {
+                        "matches": [],
+                        "identifier": "none-f9065fa7-3897-50e1-6fe0-0d7ba36748f6",
+                        "license_expression": "None"
+                    }
+                ],
+                "license_clues": [],
+                "percentage_of_license_text": null,
+                "copyrights": [],
+                "holders": [],
+                "authors": [],
+                "package_data": [],
+                "emails": [],
+                "urls": [],
+                "extra_data": {}
+            },
+            ...
+    }
+
+The resources list can be filtered by the following fields:
+
+    - ``package_uuid``
+    - ``package_url``
+    - ``md5``
+    - ``sha1``
+
+For example:
+
+.. code-block:: console
+
+    api_url="http://localhost/api/resources/"
+    content_type="Content-Type: application/json"
+    payload="sha1=8c7042781582df3d5f39fd2fabf7d2dd365f1669"
+
+    curl -X GET "$api_url?$payload" -H "$content_type"
+
+
+resources actions
+-----------------
+
+One action is available on resources:
+
+Filter by checksum
+^^^^^^^^^^^^^^^^^^
+
+Take a mapping, where the keys are the names of the checksum algorthm and the values is a list of checksum values and query those values against the packagedb.
+
+Supported checksum fields are:
+
+    - ``md5``
+    - ``sha1``
+
+Multiple checksums field scan be passed in one request.
+
+.. code-block:: console
+
+    api_url="https://public.purldb.io/api/resources/filter_by_checksums/"
+    content_type="Content-Type: application/json"
+    data='{
+        "sha1": [
+            "8c7042781582df3d5f39fd2fabf7d2dd365f1669"
+        ],
+        "md5": [
+            "969474f21d02f9a1dad6a2e85f4bbd25"
+        ]
+    }'
+
+    curl -X POST "$api_url" -H "$content_type" -d "$data"
+
+.. code-block:: json
+
+    {
+        "count": 1,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
+                "package": "https://public.purldb.io/api/packages/20b7d376-09c7-45ef-a102-75f7f5eef7e2/",
+                "purl": "pkg:npm/cac@6.7.14",
+                "path": "package/deno/CAC.ts",
+                "type": "file",
+                "name": "",
+                "extension": "",
+                "size": 8133,
+                "md5": "969474f21d02f9a1dad6a2e85f4bbd25",
+                "sha1": "8c7042781582df3d5f39fd2fabf7d2dd365f1669",
+                "sha256": null,
+                "sha512": null,
+                "git_sha1": null,
+                "mime_type": "",
+                "file_type": "",
+                "programming_language": "",
+                "is_binary": false,
+                "is_text": false,
+                "is_archive": false,
+                "is_media": false,
+                "is_key_file": false,
+                "detected_license_expression": "",
+                "detected_license_expression_spdx": "",
+                "license_detections": [
+                    {
+                        "matches": [],
+                        "identifier": "none-f9065fa7-3897-50e1-6fe0-0d7ba36748f6",
+                        "license_expression": "None"
+                    }
+                ],
+                "license_clues": [],
+                "percentage_of_license_text": null,
+                "copyrights": [],
+                "holders": [],
+                "authors": [],
+                "package_data": [],
+                "emails": [],
+                "urls": [],
+                "extra_data": {}
+            }
+        ]
     }
