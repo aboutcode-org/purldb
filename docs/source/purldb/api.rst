@@ -1071,3 +1071,32 @@ Return a list of package sets and the package data of packages within
             ...
         ]
     }
+
+
+to_purl
+-------
+
+Return a ``golang_purl`` PackageURL from ``go_package``, a standard go import
+string or a go.mod string.
+
+``GET /api/to_purl/?go_package=github.com/gorilla/mux%20v1.8.1``
+
+.. code-block:: json
+
+    {
+        "golang_purl": "pkg:golang/github.com/gorilla/mux@v1.8.1"
+    }
+
+
+from_purl
+---------
+
+Return a ``git_repo`` from a standard PackageURL ``package_url``.
+
+``GET /api/from_purl/?package_url=pkg:github/ckeditor/ckeditor4-react``
+
+.. code-block:: json
+
+    {
+        "git_repo": "git+https://github.com/ckeditor/ckeditor4-react.git"
+    }
