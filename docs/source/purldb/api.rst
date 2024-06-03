@@ -1106,11 +1106,53 @@ Return a ``git_repo`` from a standard PackageURL ``package_url``.
 matching
 --------
 
+Given a ScanCode.io JSON output ``upload_file``, match directory and resources
+of the codebase in ``upload_file`` to Packages indexed in the PurlDB.
+
+This endpoint runs the ``matching`` pipeline at https://github.com/nexB/purldb/blob/main/matchcode_pipeline/pipelines/matching.py
+
+Using cURL to upload a scan for matching:
+
+.. code-block:: console
+
+    api_url="https://public.purldb.io/api/matching/"
+    content_type="Content-Type: application/json"
+
+    curl -X POST "$api_url" -H "$content_type" -F "upload_file=@/home/user/scan.json"
 
 .. code-block:: json
 
-{
-    "upload_file": null,
-    "input_urls": [],
-    "webhook_url": ""
-}
+    {
+        'url': 'http://testserver/api/matching/d7b3a3f3-87de-44d5-852a-e0fb99b10d89/',
+        'uuid': 'd7b3a3f3-87de-44d5-852a-e0fb99b10d89',
+        'created_date': '2024-06-03T19:02:28.966557Z',
+        'input_sources': [
+            {
+                'filename': 'scan.json',
+                'download_url': '',
+                'is_uploaded': True,
+                'tag': '',
+                'exists': True,
+                'uuid': '2f67a376-6ff7-4762-9ea5-e998d8164156'
+            }
+        ],
+        'runs': [
+            {
+                'url': 'http://testserver/api/runs/74c533f7-b31b-451c-8fff-a5a556a410ce/',
+                'pipeline_name': 'matching',
+                'status': AbstractTaskFieldsModel.Status.NOT_STARTED,
+                'description': '',
+                'project': 'http://testserver/api/runs/d7b3a3f3-87de-44d5-852a-e0fb99b10d89/',
+                'uuid': '74c533f7-b31b-451c-8fff-a5a556a410ce',
+                'created_date': '2024-06-03T19:02:28.968804Z',
+                'scancodeio_version': '',
+                'task_id': None,
+                'task_start_date': None,
+                'task_end_date': None,
+                'task_exitcode': None,
+                'task_output': '',
+                'log': '',
+                'execution_time': None
+            }
+        ]
+    }
