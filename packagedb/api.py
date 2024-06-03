@@ -14,9 +14,13 @@ from django.core.exceptions import ValidationError
 from django.db.models import OuterRef
 from django.db.models import Q
 from django.db.models import Subquery
+from django.forms import widgets
+from django.forms.fields import MultipleChoiceField
 from django_filters.filters import Filter
+from django_filters.filters import MultipleChoiceFilter
 from django_filters.filters import OrderingFilter
 from django_filters.rest_framework import FilterSet
+
 from drf_spectacular.plumbing import build_array_type
 from drf_spectacular.plumbing import build_basic_type
 from drf_spectacular.types import OpenApiTypes
@@ -35,8 +39,6 @@ from univers.version_range import RANGE_CLASS_BY_SCHEMES
 from univers.version_range import VersionRange
 from univers.versions import InvalidVersion
 
-from matchcode.api import MultipleCharFilter
-from matchcode.api import MultipleCharInFilter
 # UnusedImport here!
 # But importing the mappers and visitors module triggers routes registration
 from minecode import priority_router
@@ -72,6 +74,66 @@ from packagedb.throttling import StaffUserRateThrottle
 from purl2vcs.find_source_repo import get_source_package_and_add_to_package_set
 
 logger = logging.getLogger(__name__)
+
+
+class CharMultipleWidget(widgets.TextInput):
+    """
+    Enables the support for `MultiValueDict` `?field=a&field=b`
+    reusing the `SelectMultiple.value_from_datadict()` but render as a `TextInput`.
+    """
+    def value_from_datadict(self, data, files, name):
+        value = widgets.SelectMultiple().value_from_datadict(data, files, name)
+        if not value or value == ['']:
+            return ''
+
+        return value
+
+    def format_value(self, value):
+        """
+        Return a value as it should appear when rendered in a template.
+        """
+        return ', '.join(value)
+
+
+class MultipleCharField(MultipleChoiceField):
+    """
+    Overrides `MultipleChoiceField` to fit in `MultipleCharFilter`.
+    """
+    widget = CharMultipleWidget
+
+    def valid_value(self, value):
+        return True
+
+
+class MultipleCharFilter(MultipleChoiceFilter):
+    """
+    Filters on multiple values for a CharField type using `?field=a&field=b` URL syntax.
+    """
+    field_class = MultipleCharField
+
+
+class MultipleCharInFilter(MultipleCharFilter):
+    """
+    Does a <field>__in = [value] filter instead of field=value filter
+    """
+    def filter(self, qs, value):
+        if not value:
+            # Even though not a noop, no point filtering if empty.
+            return qs
+
+        if self.is_noop(qs, value):
+            return qs
+
+        predicate = self.get_filter_predicate(value)
+        old_field_name = next(iter(predicate))
+        new_field_name = f'{old_field_name}__in'
+        predicate[new_field_name] = predicate[old_field_name]
+        predicate.pop(old_field_name)
+
+        q = Q(**predicate)
+        qs = self.get_method(qs)(q)
+
+        return qs.distinct() if self.distinct else qs
 
 
 class CreateListRetrieveUpdateViewSetMixin(
@@ -674,7 +736,7 @@ class CollectViewSet(viewsets.ViewSet):
     Return Package data for the purl passed in the `purl` query parameter.
 
     If the package does not exist, we will fetch the Package data and return
-    it in the same request.  
+    it in the same request.
     Optionally, provide the list of addon_pipelines
     to run on the package. Find all addon pipelines [here.](https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html)
 
@@ -693,7 +755,7 @@ class CollectViewSet(viewsets.ViewSet):
 
                 # There is no OpenApiTypes.LIST https://github.com/tfranzel/drf-spectacular/issues/341
                 OpenApiParameter(
-                    'addon_pipelines', 
+                    'addon_pipelines',
                     build_array_type(build_basic_type(OpenApiTypes.STR)),
                     'query', description='Addon pipelines',
                     ),
@@ -704,17 +766,17 @@ class CollectViewSet(viewsets.ViewSet):
         serializer = self.serializer_class(data=request.query_params)
         if not serializer.is_valid():
             return Response(
-                {'errors': serializer.errors}, 
+                {'errors': serializer.errors},
                 status=status.HTTP_400_BAD_REQUEST,
                 )
 
         validated_data = serializer.validated_data
         purl = validated_data.get('purl')
-        
+
         kwargs = dict()
         if source_purl := validated_data.get('source_purl', None):
             kwargs["source_purl"] = source_purl
-        
+
         if addon_pipelines := validated_data.get('addon_pipelines', []):
             kwargs["pipelines"] = addon_pipelines
 
@@ -756,8 +818,8 @@ class CollectViewSet(viewsets.ViewSet):
         """
         Take a list of `packages` (where each item is a dictionary containing either PURL
         or versionless PURL along with vers range, optionally with source package PURL)
-        and index it.  
-        Also each package can have list of `addon_pipelines` to run on the package.  
+        and index it.
+        Also each package can have list of `addon_pipelines` to run on the package.
         Find all addon pipelines [here.](https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html)
 
 
@@ -1057,7 +1119,7 @@ def get_resolved_packages(packages, supported_ecosystems):
                 resolved_packages_by_purl[res_purl] = {'purl': res_purl}
         else:
             unsupported_vers.add(vers)
-    
+
     unique_resolved_packages = resolved_packages_by_purl.values()
 
     return list(unique_resolved_packages), list(unsupported_purls), list(unsupported_vers)
