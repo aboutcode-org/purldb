@@ -93,10 +93,15 @@ MatchCode.io
         make envfile
         docker compose -f docker-compose.matchcodeio.yml build
 
-  - Move this ``.env`` file to ``/etc/matchcodeio``:::
+  - Move this ``.env`` file to ``/etc/matchcodeio`` and ``/etc/scancodeio``:::
 
         sudo mkdir -p /etc/matchcodeio
         sudo cp .env /etc/matchcodeio
+        sudo cp .env /etc/scancodeio
+
+    We need to put ``.env`` in the ``/etc/scancodeio`` directory because the
+    settings of ScanCode.io are loaded before MatchCode.io's settings, as it is
+    based off of ScanCode.io.
 
   - Run your image as a container::
 
