@@ -1,0 +1,32 @@
+{% extends "rest_framework/base.html" %}
+
+{% block style %}
+    {{ block.super }}
+    <style>
+        body {background: none;}
+        .navbar {background: #363636; border-top: 3px solid #f7bf3c;}
+        .navbar-inverse .navbar-brand {color: white;}
+        .nexb-orange
+        .booleanwidget {width: 90%;}
+    </style>
+{% endblock %}
+
+{% block title %}
+    PurlDB REST API
+{% endblock %}
+
+{% block branding %}
+    <span class="navbar-brand">
+        PurlDB REST API
+    </span>
+{% endblock %}
+
+{% block userlinks %}
+    <li class="navbar-link">
+        <a href="/api/docs/">API Documentation</a>
+    </li>
+    <li class="navbar-link">
+        <a href="https://purldb.readthedocs.io">PurlDB Documentation</a>
+    </li>
+    {{ block.super }}
+{% endblock %}

@@ -4,6 +4,8 @@ Changelog
 Next Release
 ----------------
 
+- Improve web template for API web page https://github.com/nexB/purldb/issues/132
+
 
 v5.0.0
 ---------
