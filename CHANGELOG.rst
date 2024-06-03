@@ -5,6 +5,10 @@ Next Release
 ----------------
 
 - Improve web template for API web page https://github.com/nexB/purldb/issues/132
+- The API endpoints for ``approximate_directory_content_index``,
+  ``approximate_directory_structure_index``, ``exact_file_index``,
+  ``exact_package_archive_index``, ``cditems``, ``on_demand_queue`` have been
+  removed.
 
 
 v5.0.0
@@ -16,7 +20,7 @@ v5.0.0
 - Support indexing of PURLs listed in https://github.com/nexB/purldb/issues/326,
   https://github.com/nexB/purldb/issues/327, https://github.com/nexB/purldb/issues/328,
   https://github.com/nexB/purldb/issues/329 and https://github.com/nexB/purldb/issues/356.
-- Support ``addon_pipelines`` for symbol and string collection in ``/api/collect`` endpoint. https://github.com/nexB/purldb/pull/393 
+- Support ``addon_pipelines`` for symbol and string collection in ``/api/collect`` endpoint. https://github.com/nexB/purldb/pull/393
 - Store ``source_symbols`` and ``source_strings`` in ``extra_data`` field. https://github.com/nexB/purldb/pull/351
 
 

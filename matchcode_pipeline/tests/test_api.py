@@ -203,7 +203,7 @@ class D2DPipelineAPITest(TransactionTestCase):
         self.auth = f'Token {self.user.auth_token.key}'
         self.csrf_client = APIClient(enforce_csrf_checks=True)
         self.csrf_client.credentials(HTTP_AUTHORIZATION=self.auth)
-    
+
     def test_d2d_pipeline_api_d2d_list(self):
         response = self.csrf_client.get(self.d2d_list_url)
 
@@ -215,12 +215,12 @@ class D2DPipelineAPITest(TransactionTestCase):
         self.assertNotContains(response, 'resource_count')
         self.assertNotContains(response, 'package_count')
         self.assertNotContains(response, 'dependency_count')
-    
+
     @mock.patch('scanpipe.models.Run.execute_task_async')
     def test_d2d_pipeline_api_d2d_create(self, mock_execute_pipeline_task):
         # load upload_file contents
         data = {
-            'input_urls': ['https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/from-data.zip#from', 
+            'input_urls': ['https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/from-data.zip#from',
                            'https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/to-data.zip#to'],
         }
 
@@ -231,7 +231,7 @@ class D2DPipelineAPITest(TransactionTestCase):
         mock_execute_pipeline_task.assert_called_once()
         response = self.csrf_client.get(response.data['url'])
         self.assertIn('codebase_resources_discrepancies', response.data)
-    
+
     def test_d2d_pipeline_api_run_detail(self):
         run1 = self.project1.add_pipeline('d2d')
         url = reverse('run-detail', args=[run1.uuid])
