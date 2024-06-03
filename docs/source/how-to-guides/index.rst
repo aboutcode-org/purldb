@@ -2,10 +2,7 @@ How-To-Guides
 =============
 
 Here are the various how-to guides across various purldb projects to guide you
-thourgh specifica use cases:
-
-- Code matching with Matchcode
-- Getting symbols from a package (or a PURL)
+through specific use cases:
 
 .. toctree::
    :maxdepth: 2
