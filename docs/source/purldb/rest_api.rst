@@ -12,7 +12,7 @@ local development setup.
 Authentication
 --------------
 
-When the authentication setting :ref:`purldb_settings_require_authentication`
+When the authentication setting ``PURLDB_SETTINGS_REQUIRE_AUTHENTICATION``
 is enabled on a PurlDB instance (disabled by default), you will have to include
 an authentication token ``API key`` in the Authorization HTTP header of each request.
 
@@ -359,8 +359,8 @@ Using cURL to get package resources:
                 "emails": [],
                 "urls": [],
                 "extra_data": {}
-            },
-            ...
+            }
+        ]
     }
 
 
@@ -369,7 +369,8 @@ Get enhanced package data
 
 Return a mapping of enhanced Package data for a given Package
 
-This data is formed by supplanting missing data with other data from packages in the same package set.
+This data is formed by supplanting missing data with other data from packages in
+the same package set.
 
 Using cURL to get enhanced package data:
 
@@ -541,8 +542,8 @@ Return a list of resources in the PurlDB.
                 "emails": [],
                 "urls": [],
                 "extra_data": {}
-            },
-            ...
+            }
+        ]
     }
 
 The resources list can be filtered by the following fields:
@@ -571,7 +572,9 @@ One action is available on resources:
 Filter by checksum
 ^^^^^^^^^^^^^^^^^^
 
-Take a mapping, where the keys are the names of the checksum algorthm and the values is a list of checksum values and query those values against the packagedb.
+Take a mapping, where the keys are the names of the checksum algorthm and the
+values is a list of checksum values and query those values against the
+packagedb.
 
 Supported checksum fields are:
 
@@ -651,9 +654,12 @@ Using cURL to filter for packages using multiple checksums:
 validate purl
 -------------
 
-Take a purl and check whether it's valid PackageURL or not. Optionally set check_existence to true to check whether the package exists in real world.
+Take a purl and check whether it's valid PackageURL or not. Optionally set
+check_existence to true to check whether the package exists in real world.
 
-Note: As of now check_existence only supports ``cargo``, ``composer``, ``deb``, ``gem``, ``golang``, ``hex``, ``maven``, ``npm``, ``nuget`` and ``pypi`` ecosystems.
+Note: As of now check_existence only supports ``cargo``, ``composer``, ``deb``,
+``gem``, ``golang``, ``hex``, ``maven``, ``npm``, ``nuget`` and ``pypi``
+ecosystems.
 
 ``GET /api/validate/?purl=pkg:npm/asdf@1.0.2&check_existence=true``
 
@@ -788,9 +794,12 @@ https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html.
 scan_queue
 ----------
 
-This endpoint provides a queue of Packages to be scanned by the package scan worker. A special key for package scan workers or superusers is needed to access this endpoint.
+This endpoint provides a queue of Packages to be scanned by the package scan
+worker. A special key for package scan workers or superusers is needed to access
+this endpoint.
 
-This endpoint is intended for use with a PurlDB package scan worker and is not intended for users to use directly.
+This endpoint is intended for use with a PurlDB package scan worker and is not
+intended for users to use directly.
 
 scan_queue actions
 ------------------
@@ -798,9 +807,11 @@ scan_queue actions
 get_next_download_url
 ^^^^^^^^^^^^^^^^^^^^^
 
-Return a mapping containing a ``download_url`` of a package to be scanned with the list of provided ``pipelines`` for the scan request ``scannable_uri_uuid``.
+Return a mapping containing a ``download_url`` of a package to be scanned with
+the list of provided ``pipelines`` for the scan request ``scannable_uri_uuid``.
 
-The names of the pipelines that can be run are listed here: https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html
+The names of the pipelines that can be run are listed here:
+https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html
 
 Using cURL to get next download URL:
 
@@ -873,11 +884,15 @@ Using cURL to update status:
 Package Update Set List
 -----------------------
 
-Take a list of purls (where each item is a mapping containing PURL and content_type).
+Take a list of purls (where each item is a mapping containing PURL and
+content_type).
 
-If uuid is given then all purls will be added to package set if it exists else a new set would be created and all the purls will be added to that new set.
+If uuid is given then all purls will be added to package set if it exists else a
+new set would be created and all the purls will be added to that new set.
 
-Note: There is also a slight addition to the logic where a purl already exists in the database and so there are no changes done to the purl entry it is passed as it is.
+Note: There is also a slight addition to the logic where a purl already exists
+in the database and so there are no changes done to the purl entry it is passed
+as it is.
 
 Using cURL to update status:
 
@@ -1065,11 +1080,9 @@ Return a list of package sets and the package data of packages within
                         ],
                         "resources": "https://public.purldb.io/api/packages/8a433f5e-372c-4fe1-9fc3-1027ecc9678b/resources/",
                         "history": "https://public.purldb.io/api/packages/8a433f5e-372c-4fe1-9fc3-1027ecc9678b/history/"
-                    },
-                    ...
+                    }
                 ]
-            },
-            ...
+            }
         ]
     }
 
@@ -1123,36 +1136,36 @@ Using cURL to upload a scan for matching:
 .. code-block:: json
 
     {
-        'url': 'http://testserver/api/matching/d7b3a3f3-87de-44d5-852a-e0fb99b10d89/',
-        'uuid': 'd7b3a3f3-87de-44d5-852a-e0fb99b10d89',
-        'created_date': '2024-06-03T19:02:28.966557Z',
-        'input_sources': [
+        "url": "http://testserver/api/matching/d7b3a3f3-87de-44d5-852a-e0fb99b10d89/",
+        "uuid": "d7b3a3f3-87de-44d5-852a-e0fb99b10d89",
+        "created_date": "2024-06-03T19:02:28.966557Z",
+        "input_sources": [
             {
-                'filename': 'scan.json',
-                'download_url': '',
-                'is_uploaded': True,
-                'tag': '',
-                'exists': True,
-                'uuid': '2f67a376-6ff7-4762-9ea5-e998d8164156'
+                "filename": "scan.json",
+                "download_url": "",
+                "is_uploaded": true,
+                "tag": "",
+                "exists": true,
+                "uuid": "2f67a376-6ff7-4762-9ea5-e998d8164156"
             }
         ],
-        'runs': [
+        "runs": [
             {
-                'url': 'http://testserver/api/runs/74c533f7-b31b-451c-8fff-a5a556a410ce/',
-                'pipeline_name': 'matching',
-                'status': AbstractTaskFieldsModel.Status.NOT_STARTED,
-                'description': '',
-                'project': 'http://testserver/api/runs/d7b3a3f3-87de-44d5-852a-e0fb99b10d89/',
-                'uuid': '74c533f7-b31b-451c-8fff-a5a556a410ce',
-                'created_date': '2024-06-03T19:02:28.968804Z',
-                'scancodeio_version': '',
-                'task_id': None,
-                'task_start_date': None,
-                'task_end_date': None,
-                'task_exitcode': None,
-                'task_output': '',
-                'log': '',
-                'execution_time': None
+                "url": "http://testserver/api/runs/74c533f7-b31b-451c-8fff-a5a556a410ce/",
+                "pipeline_name": "matching",
+                "status": "not started",
+                "description": "",
+                "project": "http://testserver/api/runs/d7b3a3f3-87de-44d5-852a-e0fb99b10d89/",
+                "uuid": "74c533f7-b31b-451c-8fff-a5a556a410ce",
+                "created_date": "2024-06-03T19:02:28.968804Z",
+                "scancodeio_version": "",
+                "task_id": null,
+                "task_start_date": null,
+                "task_end_date": null,
+                "task_exitcode": null,
+                "task_output": "",
+                "log": "",
+                "execution_time": null
             }
         ]
     }
