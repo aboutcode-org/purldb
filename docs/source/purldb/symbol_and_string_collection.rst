@@ -52,8 +52,8 @@ See the detailed tutorial on :ref:`tutorial_symbol_and_string_collection` in Pur
 
 .. line-block::
 
-    To use these pipeline on ScanCode.io refer to  `Symbol and String Collection
-    <https://scancodeio.readthedocs.io/en/latest/tutorial_web_ui_symbol_and_string_collection.html>`_.
+    To use these pipeline on ScanCode.io refer to
+    `Symbol and String Collection <https://scancodeio.readthedocs.io/en/latest/tutorial_web_ui_symbol_and_string_collection.html>`_.
 
-    For more details on these plugins refer to `source-inspector
-    <https://github.com/nexB/source-inspector/blob/main/README.rst>`_.
+    For more details on these plugins refer to
+    `source-inspector <https://github.com/nexB/source-inspector/blob/main/README.rst>`_.

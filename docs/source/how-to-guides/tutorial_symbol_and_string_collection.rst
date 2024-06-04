@@ -1,9 +1,10 @@
 .. _tutorial_symbol_and_string_collection:
 
-How To get symbols and strings from a PURL/package
+==================================================
+How to get symbols and strings from a PURL
 ==================================================
 
-In this tutorial we'll introduce the different addon pipeline that can be used for
+In this tutorial we'll introduce the different addon pipelines that can be used for
 collecting symbols and strings from codebase resources.
 
 .. note::
