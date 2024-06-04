@@ -35,3 +35,21 @@ Restore PurlDB database from backup
     docker cp <path to backup.dump> purldb-db-1:/tmp
     docker compose exec db bash
     pg_restore --verbose -U packagedb -d packagedb /tmp/backup.dump
+
+
+Create a PurlDB API key
+-----------------------
+
+.. code-block:: console
+
+    docker compose exec web purldb create-user <user_name>
+
+
+Create a PurlDB Package scan worker API key
+-------------------------------------------
+
+.. code-block:: console
+
+    docker compose exec web purldb create-scan-queue-worker-user <scan_worker_user_name>
+
+
