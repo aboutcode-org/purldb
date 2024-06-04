@@ -28,6 +28,9 @@ from fetchcode.package_versions import SUPPORTED_ECOSYSTEMS, versions
 from packageurl import PackageURL
 from packageurl.contrib import purl2url
 
+# in seconds
+POLLING_INTERVAL = 5
+
 LOG_FILE_LOCATION = os.path.join(os.path.expanduser("~"), "purlcli.log")
 
 
@@ -1118,14 +1121,14 @@ def d2d(purls, output, purldb_api_url, matchcode_api_url):
         # this should never happen
         raise click.BadParameter("Invalid PURLs or URLs combination.")
 
-    # poll every 5 seconds to get results back
+    # poll every fewseconds to get results back
     while True:
         # TODO: Use a better progress indicator.
         sys.stderr.write(".")
         data = get_run_data(run_id=run_id, matchcode_api_url=matchcode_api_url)
         if data.get("status") != "running":
             break
-        time.sleep(5)
+        time.sleep(POLLING_INTERVAL)
 
     results = get_project_results(project_url=project_url)
     json.dump(results, output, indent=4)
@@ -1201,7 +1204,7 @@ def run_d2d_purl_set(purl, purldb_api_url, matchcode_api_url):
                 project.done = True
                 project.result = get_project_results(project_url=project.project_url)
             time.sleep(1)
-        time.sleep(5)
+        time.sleep(POLLING_INTERVAL)
         if all(project.done for project in projects):
             break
 

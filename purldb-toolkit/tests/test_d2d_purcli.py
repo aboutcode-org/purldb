@@ -2,7 +2,8 @@
 import pytest
 import json
 from click.testing import CliRunner
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
+from unittest.mock import MagicMock
 
 from purldb_toolkit.purlcli import d2d
 from purldb_toolkit.purlcli import D2DPackage
@@ -12,6 +13,10 @@ from purldb_toolkit.purlcli import get_run_data
 from purldb_toolkit.purlcli import get_project_results
 from purldb_toolkit.purlcli import get_download_url
 from purldb_toolkit.purlcli import get_package
+
+from purldb_toolkit import purlcli
+
+purlcli.POLLING_INTERVAL = 0.01
 
 
 @pytest.fixture
