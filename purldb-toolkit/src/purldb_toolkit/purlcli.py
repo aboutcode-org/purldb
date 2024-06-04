@@ -1007,13 +1007,16 @@ def validate_purls_for_d2d(ctx, param, value):
     if len_purls > 2:
         raise click.BadParameter("Invalid number of --purl options. Only one or two options are allowed.")
 
-    if len_purls == 1 and not purls[0].startswith("pkg:"):
-        raise click.BadParameter(f"Invalid PURL: {purls[0]!r}. Must start with `pkg:`")
+    if len_purls == 1:
+        if not purls[0].startswith("pkg:"):
+            raise click.BadParameter(f"Invalid PURL: {purls[0]!r}. Must start with `pkg:`")
+        else:
+            return value
 
-    if len_purls != 2:
-        raise click.BadParameter(f"Invalid number of --purl options. Should not be more than two and not {len_purls}")
+    elif len_purls != 2:
+        raise click.BadParameter(f"Invalid number of --purl options. There should be exactly two --purl options.")
 
-    if not (all_purls(purls) or all_urls(purls)):
+    elif not (all_purls(purls) or all_urls(purls)):
         purls = '\n'.join(purls)
         raise click.BadParameter(
             f"Invalid combination of --purl options:\n"
