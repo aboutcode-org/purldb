@@ -6,8 +6,10 @@ purldb-toolkit
 
 purldb-toolkit is a command line utility and library to use the PurlDB, its API and various related libraries.
 
-The ``purlcli`` command acts as a client to the PurlDB REST API end point(s) to expose PURL services.
-It serves as a tool, a library and an example of how to use the services programmatically.
+purldb-toolkit exposes the ``purlcli`` command that acts as a client to the PURL libraries,
+the PurlDB and MatchCode REST API and exposes various PURL-based services.
+
+purldb-toolkit serves as a tool, a library and an example of how to use the services programmatically.
 
 
 Installation
@@ -21,42 +23,55 @@ Installation
 Usage
 -----
 
-Use this command to get basic help:
+The purlcli command exposes multiple subcommands. Run this to command to get basic help:
 
 .. code-block:: console
 
-    $ purlcli --help
+    purlcli  --help
     Usage: purlcli [OPTIONS] COMMAND [ARGS]...
+    
+      Return information for a PURL or list of PURLs.
+    
+    Options:
+      --help  Show this message and exit.
+    
+    Commands:
+      d2d       Run deploy-to-devel "back2source" analysis between packages.
+      metadata  Fetch package metadata for a PURL.
+      urls      Return known URLs for a PURL.
+      validate  Validate PURL syntax and existence.
+      versions  List all known versions for a PURL.
 
-    Return information from a PURL.
+
+
+The purlcli exposes the following subcommands:
+
+-  validate      Validate PURL syntax.
+-  metadata      Fetch package metadata for a PURL.
+-  urls          Return known URLs for a PURL.
+-  versions      List all known versions for a PURL.
+-  d2d           Run deploy-to-devel between packages.
+
+
+Each subcommand use the same set of options::
 
     Options:
-    --help  Show this message and exit.
+      --purl PURL    Package-URL or PURL.
+      --output FILE  Write output as JSON to FILE. Default is to print on screen.
+                     [default: -]
+      --file FILE    Read a list of PURLs from a FILE, one per line.
+      --help         Show this message and exit.
 
-    Commands:
-    metadata  Given one or more PURLs, for each PURL, return a mapping of...
-    urls      Given one or more PURLs, for each PURL, return a list of all...
-    validate  Check the syntax and upstream repo status of one or more PURLs.
-    versions  Given one or more PURLs, return a list of all known versions...
-
-
-And the following subcommands:
 
 ``validate``: validate a PURL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: console
+This command validates a PURL in two ways:
 
-    $ purlcli validate --help
-    Usage: purlcli validate [OPTIONS]
+* validate that the PURL syntax is correct
+* validate that the PURL points to an existing package querying the PurlDB and upstream
+  package registries as needed.
 
-      Check the syntax and upstream repo status of one or more PURLs.
-
-    Options:
-      --purl TEXT        PackageURL or PURL.
-      --output FILENAME  Write validation output as JSON to FILE.  [required]
-      --file FILENAME    Read a list of PURLs from a FILE, one per line.
-      --help             Show this message and exit.
 
 Examples
 ########
@@ -127,7 +142,7 @@ Details
 
 ``validate`` calls the ``validate/`` endpoint of the `purldb API <https://public.purldb.io/api/>`_.
 
-See also https://public.purldb.io/api/docs/#/validate.
+See also https://public.purldb.io/api/docs/#/validate for details.
 
 
 ----
@@ -135,19 +150,13 @@ See also https://public.purldb.io/api/docs/#/validate.
 
 ``versions``: collect package versions for a PURL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This command collects and return a list of all the known versions of a PURL by querying the PurlDB
+and upstream package registries as needed.
 
-.. code-block:: console
 
-    $ purlcli versions  --help
-    Usage: purlcli versions [OPTIONS]
+This command collects and return a list of all the known versions of a PURL by querying the PurlDB
+and upstream package registries as needed.
 
-      Given one or more PURLs, return a list of all known versions for each PURL.
-
-    Options:
-      --purl TEXT        PackageURL or PURL.
-      --output FILENAME  Write versions output as JSON to FILE.  [required]
-      --file FILENAME    Read a list of PURLs from a FILE, one per line.
-      --help             Show this message and exit.
 
 Examples
 ########
@@ -216,19 +225,13 @@ Version information is not needed in submitted PURLs and, if included, will be r
 ``metadata``: collect package metadata for a PURL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: console
+This command collects and return the metadata for the package pointed by a PURL. It does so by
+querying the PurlDB and upstream package registries as needed.
 
-    $ purlcli metadata --help
-    Usage: purlcli metadata [OPTIONS]
+The metadata consist of all available information found in the package manifest and package registry
+or repository API.
 
-      Given one or more PURLs, for each PURL, return a mapping of metadata fetched
-      from the fetchcode package.py info() function.
-
-    Options:
-      --purl TEXT        PackageURL or PURL.
-      --output FILENAME  Write meta output as JSON to FILE.  [required]
-      --file FILENAME    Read a list of PURLs from a FILE, one per line.
-      --help             Show this message and exit.
+The schema is the schema used by ScanCode Toolkit, PurlDB and all other AboutCode projects.
 
 Examples
 ########
@@ -348,12 +351,10 @@ Details
 
 ``metadata`` calls ``info()`` from `fetchcode/package.py`.
 
-The intended output for each PURL type supported by the ``metadata`` command is
+The intended output for each PURL type supported by the ``metadata`` command is:
 
 - an input PURL with a version: output the metadata for the input version
 - an input PURL without a version: output a list of the metadata for all versions
-
-The output of the various PURL types currently supported in `fetchcode/package.py` varies from type to type at the moment -- the underlying functions will be updated as needed so that all produce the intended output for input PURLs with and without a version.
 
 
 ----
@@ -362,20 +363,8 @@ The output of the various PURL types currently supported in `fetchcode/package.p
 ``urls``: collect package URLs for a PURL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: console
-
-    $ purlcli urls --help
-    Usage: purlcli urls [OPTIONS]
-
-      Given one or more PURLs, for each PURL, return a list of all known URLs
-      fetched from the packageurl-python purl2url.py code.
-
-    Options:
-      --purl TEXT        PackageURL or PURL.
-      --output FILENAME  Write urls output as JSON to FILE.  [required]
-      --file FILENAME    Read a list of PURLs from a FILE, one per line.
-      --head             Validate each URL's existence with a head request.
-      --help             Show this message and exit.
+This command collects and return the known URL for a PURL. It does so by based on package type/ecosystem
+conventions. It optionally also checks if the inferred URLs exists on the web.
 
 Examples
 ########
@@ -537,7 +526,121 @@ Examples
     }
 
 
-Details
-#######
 
-None atm.
+
+``d2d``: Run a deployed code to development code analysis
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This command runs deploy-to-devel aka. "back2source" analysis between packages.
+
+Its behavior depends on the number of --purl options and their values.
+
+- With a single PURL, run the deploy-to-devel between all the PURLs of the set of PURLs  that
+  this PURL belongs to.
+
+- With two PURLs, run the deploy-to-devel between these two PURLs. The first is the "from" PURL,
+  and the second is the "to" PURL. The first or "from" PURL is typically the source code or version
+  control checkout. The second or "to" PURL is the target of a build or transformnation such as a
+  binary, or a source archive.
+
+- You can also provide two HTTP URLs instead of PURLs and  use these as direct download URLs.
+
+This command waits for the run to complete and save results to the `output` FILE.
+
+
+
+Examples
+########
+
+**Run a d2d analysis between two Java JARs (source and binary)**
+
+You first need to install and run matchcode locally so you have the endpoint accessible. Starting
+from a https://github.com/nexB/purldb/ clone::
+
+    git clone https://github.com/nexB/purldb
+    cd purldb
+    make dev
+    make envfile
+    SECRET_KEY="1" make postgres_matchcodeio 
+    SECRET_KEY="1" make run_matchcodeio 
+
+Then in another shell::
+
+    cd purldb
+    source venv/bin/activate
+    
+Finally run the command:
+
+.. code-block:: console
+
+    purlcli d2d \
+        --purl https://repo1.maven.org/maven2/org/apache/htrace/htrace-core/4.0.0-incubating/htrace-core-4.0.0-incubating-sources.jar \
+        --purl https://repo1.maven.org/maven2/org/apache/htrace/htrace-core/4.0.0-incubating/htrace-core-4.0.0-incubating.jar \
+        --matchcode-api-url http://127.0.0.1:8002/api/
+
+*Sample output:*
+
+Here you can see that there are over 730 resources that require review and that may be present in the
+binary and not present in the sources.
+
+.. code-block:: json
+
+    {
+        "url": "http://127.0.0.1:8002/api/d2d/5d9dbcca-48f0-4788-a356-29196f785c52/",
+        "uuid": "5d9dbcca-48f0-4788-a356-29196f785c52",
+        "created_date": "2024-06-04T16:31:24.879808Z",
+        "input_sources": [
+            {
+                "uuid": "6b459edd-6b8b-473a-add7-cc79152b4d5e",
+                "filename": "htrace-core-4.0.0-incubating-sources.jar",
+                "download_url": "https://repo1.maven.org/maven2/org/apache/htrace/htrace-core/4.0.0-incubating/htrace-core-4.0.0-incubating-sources.jar#from",
+                "is_uploaded": false,
+                "tag": "from",
+                "size": 42766,
+                "is_file": true,
+                "exists": true
+            },
+            {
+                "uuid": "bb811a08-ea8c-46b4-8720-865f068ecc0d",
+                "filename": "htrace-core-4.0.0-incubating.jar",
+                "download_url": "https://repo1.maven.org/maven2/org/apache/htrace/htrace-core/4.0.0-incubating/htrace-core-4.0.0-incubating.jar#to",
+                "is_uploaded": false,
+                "tag": "to",
+                "size": 1485031,
+                "is_file": true,
+                "exists": true
+            }
+        ],
+        "runs": [
+            "8689ba05-3859-4eab-b2cf-9bec1495629f"
+        ],
+        "resource_count": 849,
+        "package_count": 1,
+        "dependency_count": 0,
+        "relation_count": 37,
+        "codebase_resources_summary": {
+            "ignored-directory": 56,
+            "mapped": 37,
+            "not-deployed": 1,
+            "requires-review": 730,
+            "scanned": 25
+        },
+        "discovered_packages_summary": {
+            "total": 1,
+            "with_missing_resources": 0,
+            "with_modified_resources": 0
+        },
+        "discovered_dependencies_summary": {
+            "total": 0,
+            "is_runtime": 0,
+            "is_optional": 0,
+            "is_resolved": 0
+        },
+        "codebase_relations_summary": {
+            "java_to_class": 34,
+            "sha1": 3
+        },
+        "codebase_resources_discrepancies": {
+            "total": 730
+        }
+    }

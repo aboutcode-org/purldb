@@ -7,6 +7,10 @@ To get started with the REST API, visit the **PurlDB API endpoints** at
 http://localhost/api/ or http://localhost:8001/api/ if you run on a
 local development setup.
 
+We maintain also public endpoints at https://public.purldb.io/api/ and a live Swagger API
+documentation and API browser at https://public.purldb.io/api/docs/ .
+
+
 .. _rest_api_authentication:
 
 Authentication

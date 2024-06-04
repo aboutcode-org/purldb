@@ -12,7 +12,8 @@ collecting symbols and strings from codebase resources.
 
 
 Through out this tutorial we will use ``pkg:github/llvm/llvm-project@10.0.0`` and will show
-the symbol and string for `llvm-project/clang/lib/Basic/Targets/BPF.cpp <https://github.com/llvm/llvm-project/blob/llvmorg-10.0.0/clang/lib/Basic/Targets/BPF.cpp>`_
+the symbol and string for `llvm-project/clang/lib/Basic/Targets/BPF.cpp
+<https://github.com/llvm/llvm-project/blob/llvmorg-10.0.0/clang/lib/Basic/Targets/BPF.cpp>`_
 resource.
 
 .. raw:: html
