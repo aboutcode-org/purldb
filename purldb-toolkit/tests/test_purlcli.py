@@ -25,6 +25,7 @@ test_env.test_data_dir = os.path.join(os.path.dirname(__file__), "data")
 
 
 class TestPURLCLI_metadata(object):
+
     def test_metadata_cli_duplicate_input_sources(self):
         """
         Test the `metadata` command with both `--purl` and `--file` inputs.
@@ -52,7 +53,7 @@ class TestPURLCLI_metadata(object):
         ]
         runner = CliRunner()
         result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
-        assert "Use either purls or file." in result.output
+        assert "Error: Use either purls" in result.output
         assert result.exit_code == 2
 
     @mock.patch("purldb_toolkit.purlcli.collect_metadata")
@@ -734,6 +735,7 @@ class TestPURLCLI_metadata(object):
 
 
 class TestPURLCLI_urls(object):
+
     @mock.patch("purldb_toolkit.purlcli.make_head_request")
     def test_urls_cli_head(self, mock_make_head_request):
         """
@@ -944,6 +946,7 @@ class TestPURLCLI_urls(object):
 
 
 class TestPURLCLI_validate(object):
+
     @mock.patch("requests.get")
     def test_validate_purl_mock_requests_get(self, mock_requests_get):
         mock_request_response = {
@@ -963,6 +966,7 @@ class TestPURLCLI_validate(object):
 
     @mock.patch("requests.get")
     def test_validate_purl_mock_requests_get_jsondecodeerror(self, mock_requests_get):
+
         def json_decode_failure_exception(**kwargs):
             raise json.decoder.JSONDecodeError("test", "[{}]", 0)
 
@@ -980,6 +984,7 @@ class TestPURLCLI_validate(object):
 
     @mock.patch("requests.get")
     def test_validate_purl_mock_requests_get_exception(self, mock_requests_get):
+
         def raise_exception(**kwargs):
             raise Exception
 
@@ -994,6 +999,7 @@ class TestPURLCLI_validate(object):
 
     @mock.patch("requests.get")
     def test_validate_purl_mock_requests_none(self, mock_requests_get):
+
         def raise_exception(**kwargs):
             raise Exception
 
@@ -1008,6 +1014,7 @@ class TestPURLCLI_validate(object):
 
 
 class TestPURLCLI_versions(object):
+
     @mock.patch("purldb_toolkit.purlcli.collect_versions")
     @mock.patch("purldb_toolkit.purlcli.check_versions_purl")
     def test_versions_details_multiple(
