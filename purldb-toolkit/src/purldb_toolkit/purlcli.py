@@ -7,21 +7,21 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from enum import Enum
 import json
 import logging
 import os
 import re
 import sys
-from importlib.metadata import version
-from pathlib import Path
 import time
+from dataclasses import dataclass
+from enum import Enum
+from importlib.metadata import version
 from itertools import groupby
+from pathlib import Path
 from typing import NamedTuple
 from urllib.parse import urljoin
 
 import click
-from dataclasses import dataclass
 import requests
 from fetchcode.package import info
 from fetchcode.package_versions import SUPPORTED_ECOSYSTEMS, versions
@@ -34,7 +34,7 @@ LOG_FILE_LOCATION = os.path.join(os.path.expanduser("~"), "purlcli.log")
 @click.group()
 def purlcli():
     """
-    Return information from a PURL.
+    Return information for a PURL or list of PURLs.
     """
 
 
@@ -43,19 +43,23 @@ def purlcli():
     "--purl",
     "purls",
     multiple=True,
-    required=False,
-    help="PackageURL or PURL.",
+    metavar="PURL",
+    required=True,
+    help="Package-URL or PURL.",
 )
 @click.option(
     "--output",
     type=click.File(mode="w", encoding="utf-8"),
-    required=True,
+    metavar="FILE",
+    required=False,
     default="-",
-    help="Write meta output as JSON to FILE.",
+    show_default=True,
+    help="Write output as JSON to FILE. Default to print on screen.",
 )
 @click.option(
     "--file",
     type=click.File(mode="r", encoding="utf-8"),
+    metavar="FILE",
     required=False,
     help="Read a list of PURLs from a FILE, one per line.",
 )
@@ -67,8 +71,7 @@ def purlcli():
 )
 def get_metadata(purls, output, file, unique):
     """
-    Given one or more PURLs, for each PURL, return a mapping of metadata
-    fetched from the fetchcode package.py info() function.
+    Fetch package metadata for a PURL.
     """
     check_for_duplicate_input_sources(purls, file)
 
@@ -300,19 +303,22 @@ def construct_headers(
     "--purl",
     "purls",
     multiple=True,
-    required=False,
-    help="PackageURL or PURL.",
+    metavar="PURL",
+    help="Package-URL or PURL.",
 )
 @click.option(
     "--output",
     type=click.File(mode="w", encoding="utf-8"),
-    required=True,
+    metavar="FILE",
+    required=False,
     default="-",
-    help="Write urls output as JSON to FILE.",
+    show_default=True,
+    help="Write output as JSON to FILE. Default to print on screen.",
 )
 @click.option(
     "--file",
     type=click.File(mode="r", encoding="utf-8"),
+    metavar="FILE",
     required=False,
     help="Read a list of PURLs from a FILE, one per line.",
 )
@@ -330,8 +336,11 @@ def construct_headers(
 )
 def get_urls(purls, output, file, unique, head):
     """
-    Given one or more PURLs, for each PURL, return a list of all known URLs
-    fetched from the packageurl-python purl2url.py code.
+    Return known URLs for a PURL.
+
+    This includes the "download_url" which is the standard download URL, the "repo_download_url"
+    which is the download URL provided by the package repository, the "repo_url" which is the URL of
+    this package on the package repository.
     """
     check_for_duplicate_input_sources(purls, file)
 
@@ -545,19 +554,23 @@ def check_urls_purl(purl):
     "--purl",
     "purls",
     multiple=True,
+    metavar="PURL",
     required=False,
-    help="PackageURL or PURL.",
+    help="Package-URL or PURL.",
 )
 @click.option(
     "--output",
     type=click.File(mode="w", encoding="utf-8"),
-    required=True,
+    metavar="FILE",
+    required=False,
     default="-",
-    help="Write validation output as JSON to FILE.",
+    show_default=True,
+    help="Write output as JSON to FILE. Default to print on screen.",
 )
 @click.option(
     "--file",
     type=click.File(mode="r", encoding="utf-8"),
+    metavar="FILE",
     required=False,
     help="Read a list of PURLs from a FILE, one per line.",
 )
@@ -569,7 +582,9 @@ def check_urls_purl(purl):
 )
 def validate(purls, output, file, unique):
     """
-    Check the syntax and upstream repo status of one or more PURLs.
+    Validate PURL syntax and existence.
+
+    Check that the syntax of a PURL is correct. Check that the PURL exists using the PurlDB.
     """
     check_for_duplicate_input_sources(purls, file)
 
@@ -710,19 +725,23 @@ def validate_purl(purl):
     "--purl",
     "purls",
     multiple=True,
+    metavar="PURL",
     required=False,
-    help="PackageURL or PURL.",
+    help="Package-URL or PURL.",
 )
 @click.option(
     "--output",
     type=click.File(mode="w", encoding="utf-8"),
-    required=True,
+    metavar="FILE",
+    required=False,
     default="-",
-    help="Write versions output as JSON to FILE.",
+    show_default=True,
+    help="Write output as JSON to FILE. Default to print on screen.",
 )
 @click.option(
     "--file",
     type=click.File(mode="r", encoding="utf-8"),
+    metavar="FILE",
     required=False,
     help="Read a list of PURLs from a FILE, one per line.",
 )
@@ -734,7 +753,7 @@ def validate_purl(purl):
 )
 def get_versions(purls, output, file, unique):
     """
-    Given one or more PURLs, return a list of all known versions for each PURL.
+    List all known versions for a PURL.
     """
     check_for_duplicate_input_sources(purls, file)
 
@@ -893,6 +912,10 @@ def clear_log_file():
 
 
 class D2DPackage(NamedTuple):
+    """
+    A package to use in d2d, identifier by its PURL and qualified by is package_content which is one
+    of PackageContentType.
+    """
     purl: str
     package_content: str
     download_url: str
@@ -921,11 +944,14 @@ def get_packages_by_set(purl, purldb_api_url):
 
 
 class PackagePair(NamedTuple):
+    """
+    A pair of from and to D2DPackages.=
+    """
     from_package: D2DPackage
     to_package: D2DPackage
 
 
-# TODO: Keep in sync with the packagedb.models.PackageContentType
+# Keep in sync with the packagedb.models.PackageContentType
 class PackageContentType(Enum):
     SOURCE_REPO = 3, 'source_repo'
     SOURCE_ARCHIVE = 4, 'source_archive'
@@ -933,8 +959,8 @@ class PackageContentType(Enum):
 
 def generate_d2d_package_pairs(from_packages, to_packages):
     """
-    Yield PackagePair objects based on all the combinations of packages in the
-    from_packages and to_packages lists.
+    Yield PackagePair objects based on all the combinations of ``from_packages`` and ``to_packages``
+    D2DPackage lists.
     """
 
     for from_package in from_packages:
@@ -943,6 +969,12 @@ def generate_d2d_package_pairs(from_packages, to_packages):
 
 
 def get_package_pairs_for_d2d(packages):
+    """
+    Yield PackagePair objects from a ``packages`` list of D2DPackage.
+    The approach is to yield:
+    - a pair for each (source repo, source archive)
+    - a pair for each (source repo or source archive, binary archive)
+    """
     packages = sorted(packages, key=lambda p: p.package_content)
 
     packages_by_content = {}
@@ -964,35 +996,45 @@ def get_package_pairs_for_d2d(packages):
 @click.option(
     "--from-purl",
     required=True,
-    help="PURL for the source or `from` package.",
+    metavar="FROM-PURL",
+    help="Source PURL for `from` package.",
 )
 @click.option(
     "--to-purl",
     required=True,
-    help="PURL for the destination or `to` package.",
+    metavar="TO-PURL",
+    help="Destination PURL for `to` package.",
 )
 @click.option(
     "--output",
     type=click.File(mode="w", encoding="utf-8"),
-    required=True,
-    help="Write results as JSON to FILE.",
+    metavar="FILE",
+    required=False,
+    default="-",
+    show_default=True,
+    help="Write output as JSON to FILE. Default to print on screen.",
 )
 @click.option(
     "--purldb-api-url",
-    required=True,
+    required=False,
     default="https://public.purldb.io/api",
-    help="",
+    show_default=True,
+    help="PurlDB API URL.",
 )
 @click.option(
     "--matchcode-api-url",
-    required=True,
+    required=False,
     default="https://matchcode.io/api/d2d",
-    help="PackageURL or PURL.",
+    show_default=True,
+    help="MatchCode API URL.",
 )
 def d2d(from_purl, to_purl, output, purldb_api_url, matchcode_api_url):
     """
-    Run a deploy-to-devel analysis using the "from" PURL and "to" PURL.
-    Wait for the analysis to complete and save results to the ``output`` FILE.
+    Run deploy-to-devel between FROM-PURL and TO-PURL.
+
+    The FROM-PURL is typically the source code or version control checkout.
+    The TO-PURL is the target of a build or transformnation such as a binary, or a source archive.
+    This command waits for the run to complete and save results to the `output` FILE.
     """
     run_id, project_url = map_deploy_to_devel(from_purl, to_purl, purldb_api_url, matchcode_api_url)
     while True:
@@ -1031,30 +1073,42 @@ class D2DProject:
 @click.option(
     "--purl",
     required=True,
+    metavar="PURL",
     help="Perform a deploy-to-devel on all the PURLs in the set of this PURL.",
 )
 @click.option(
     "--output",
     type=click.File(mode="w", encoding="utf-8"),
-    required=True,
-    help="Write results as JSON to FILE.",
+    metavar="FILE",
+    required=False,
+    default="-",
+    show_default=True,
+    help="Write output as JSON to FILE. Default to print on screen.",
 )
 @click.option(
     "--purldb-api-url",
-    required=True,
-    default="https://public.purldb.io/api/",
-    help="",
+    required=False,
+    default="https://public.purldb.io/api",
+    show_default=True,
+    help="PurlDB API URL.",
 )
 @click.option(
     "--matchcode-api-url",
-    required=True,
-    default="https://matchcode.io/api/",
-    help="",
+    required=False,
+    default="https://matchcode.io/api/d2d",
+    show_default=True,
+    help="MatchCode API URL.",
 )
 def d2d_purl_set(purl, output, purldb_api_url, matchcode_api_url):
     """
-    Run a deploy-to-devel analysis using all the PURLs in the set of this PURL. .
-    Wait for the analysis to complete and save results to the ``output`` FILE.
+    Run deploy-to-devel between the packages of a PURL set.
+
+    The PURLs in a set typically include the source code archives,
+    version control checkouts, and various binary pre-built archives.
+    This command runs a deploy-to-devel between all related pairs of
+    PURls in a set including all source-to-binary and all source-to-source
+    pairs.
+    This command waits for the run to complete and save results to the `output` FILE.
     """
     projects: list[D2DProject] = []
     for d2d_packages in get_packages_by_set(purl, purldb_api_url):
