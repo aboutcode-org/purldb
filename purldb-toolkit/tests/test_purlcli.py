@@ -53,7 +53,7 @@ class TestPURLCLI_metadata(object):
         ]
         runner = CliRunner()
         result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
-        assert "Error: Missing option" in result.output
+        assert "Error: Use either purls" in result.output
         assert result.exit_code == 2
 
     @mock.patch("purldb_toolkit.purlcli.collect_metadata")
