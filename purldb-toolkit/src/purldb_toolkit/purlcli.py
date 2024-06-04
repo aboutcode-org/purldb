@@ -44,7 +44,6 @@ def purlcli():
     "purls",
     multiple=True,
     metavar="PURL",
-    required=True,
     help="Package-URL or PURL.",
 )
 @click.option(
