@@ -107,3 +107,127 @@ MatchCode.io
 
         docker compose -f docker-compose.matchcodeio.yml up
 
+
+Local development installation
+------------------------------
+
+Supported Platforms
+^^^^^^^^^^^^^^^^^^^
+
+**PurlDB** has been tested and is supported on the following operating systems:
+
+    #. **Debian-based** Linux distributions
+
+
+Pre-installation Checklist
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Before you install ScanCode.io, make sure you have the following prerequisites:
+
+ * **Python: versions 3.10 to 3.12** found at https://www.python.org/downloads/
+ * **Git**: most recent release available at https://git-scm.com/
+ * **PostgreSQL**: release 11 or later found at https://www.postgresql.org/ or
+   https://postgresapp.com/ on macOS
+
+.. _system_dependencies:
+
+System Dependencies
+^^^^^^^^^^^^^^^^^^^
+
+In addition to the above pre-installation checklist, there might be some OS-specific
+system packages that need to be installed before installing ScanCode.io.
+
+On **Linux**, several **system packages are required** by the ScanCode toolkit.
+Make sure those are installed before attempting the ScanCode.io installation::
+
+    sudo apt-get install \
+        build-essential python3-dev libssl-dev libpq-dev \
+        bzip2 xz-utils zlib1g libxml2-dev libxslt1-dev libpopt0 \
+        libgpgme11 libdevmapper1.02.1 libguestfs-tools
+
+See also `ScanCode-toolkit Prerequisites <https://scancode-toolkit.readthedocs.io/en/
+latest/getting-started/install.html#prerequisites>`_ for more details.
+
+
+Clone and Configure
+^^^^^^^^^^^^^^^^^^^
+
+ * Clone the `ScanCode.io GitHub repository <https://github.com/nexB/purldb>`_::
+
+    git clone https://github.com/nexB/purldb.git && cd purldb
+
+ * Inside the :guilabel:`purldb/` directory, install the required dependencies::
+
+    make dev
+
+ .. note::
+    You can specify the Python version during the ``make dev`` step using the following
+    command::
+
+        make dev PYTHON_EXE=python3.11
+
+    When ``PYTHON_EXE`` is not specified, by default, the ``python3`` executable is
+    used.
+
+ * Create an environment file::
+
+    make envfile
+
+Database
+^^^^^^^^
+
+**PostgreSQL** is the preferred database backend and should always be used on
+production servers.
+
+* Create the PostgreSQL user, database, and table with::
+
+    make postgresdb
+
+.. warning::
+    The ``make postgres`` command is assuming that your PostgreSQL database template is
+    using the ``en_US.UTF-8`` collation.
+    If you encounter database creation errors while running this command, it is
+    generally related to an incompatible database template.
+
+    You can either `update your template <https://stackoverflow.com/a/60396581/8254946>`_
+    to fit the purldb default, or provide custom values collation using the
+    ``POSTGRES_INITDB_ARGS`` variable such as::
+
+        make postgresdb POSTGRES_INITDB_ARGS=\
+            --encoding=UTF-8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8
+
+Tests
+^^^^^
+
+You can validate your PurlDB installation by running the tests suite::
+
+    make test
+
+Web Application
+^^^^^^^^^^^^^^^
+
+A web application is available to create and manage your projects from a browser;
+you can start the local webserver and access the app with::
+
+    make run
+
+Then open your web browser and visit: http://localhost:8000/ to access the web
+application.
+
+.. warning::
+    This setup is **not suitable for deployments** and **only supported for local
+    development**.
+    It is highly recommended to use the :ref:`run_with_docker` setup to ensure the
+    availability of all the features and the benefits from asynchronous workers
+    for pipeline executions.
+
+Upgrading
+^^^^^^^^^
+
+If you already have the PurlDB repo cloned, you can upgrade to the latest version
+with::
+
+    cd purldb
+    git pull
+    make dev
+    make migrate
