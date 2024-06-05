@@ -4,9 +4,11 @@ Installation
 This article will detail the steps needed to set up a PurlDB instance with
 MatchCode and package scanning using Docker.
 
+MatchCode.io requires that it is installed and running alongside an instance of
+PurlDB, as it needs direct access to PurlDB's data. This is done by running the
+PurlDB and MatchCode.io services on the same Docker network.
 
-You will first need to create a Docker network for PurlDB. This is necessary for
-MatchCode.io to acess PurlDB's database.::
+.. code-block:: console
 
     docker network create purldb
 
@@ -14,98 +16,122 @@ MatchCode.io to acess PurlDB's database.::
 PurlDB
 ------
 
-  - Clone the PurlDB repo, create an environment file, and build the Docker image::
+- Clone the PurlDB repo, create an environment file, and build the Docker image
 
-        git clone https://github.com/nexB/scancode.io.git && cd scancode.io
-        make envfile
-        docker compose build
+.. code-block:: console
 
-    Note: if you are running PurlDB on a remote server, be sure to update
-    ``127.0.0.1`` and ``localhost`` to the address of your server in
-    ``docker-compose.yml`` ::
+    git clone https://github.com/nexB/scancode.io.git && cd scancode.io
+    make envfile
+    docker compose build
 
-        - "traefik.http.routers.web.rule=
-          Host(`127.0.0.1`)
-          || Host(`localhost`)"
+Note: if you are running PurlDB on a remote server, be sure to append the
+address of your server in this setting in ``docker-compose.yml``
 
-  - Create an ``.env`` file::
+.. code-block:: yaml
 
-        make envfile
+    - "traefik.http.routers.web.rule=
+        Host(`127.0.0.1`)
+        || Host(`localhost`)
+        || Host(`your server address`)"
 
-  - Move this ``.env`` file to ``/etc/purldb``:::
+- Create an ``.env`` file:
 
-        sudo mkdir -p /etc/purldb
-        sudo cp .env /etc/purldb
+.. code-block:: console
 
-  - Run your image as a container::
+    make envfile
 
-        docker compose up
+- Move this ``.env`` file to ``/etc/purldb``:
 
-  - You will also need to create a user account for the scan worker::
+.. code-block:: console
 
-        docker compose exec web purldb create-scan-queue-worker-user scan_worker_1
+    sudo mkdir -p /etc/purldb
+    sudo cp .env /etc/purldb
 
-    Save this API key for use in the ``.env`` file of the Package scan worker
+- Run your image as a container:
 
-  - At this point, PurlDB should be running at port 80 on your Docker host. Go
-    to the PurlDB address on a web browser to access the web UI.
+.. code-block:: console
+
+    docker compose up
+
+- You will also need to create a user account for the scan worker:
+
+.. code-block:: console
+
+    docker compose exec web purldb create-scan-queue-worker-user scan_worker_1
+
+Save this API key for use in the ``.env`` file of the Package scan worker
+
+- PurlDB should be running at port 80 on your Docker host. Go to the PurlDB
+  address on a web browser to access the web UI.
 
 
 Package Scan Worker
 -------------------
 
-  - This should be installed on another machine, if possible.
+- This should be installed on another machine, if possible.
 
-  - Download the latest release of ScanCode.io at
-    https://github.com/nexB/scancode.io/releases and follow the Docker
-    installation instructions at
-    https://scancodeio.readthedocs.io/en/latest/installation.html
+- Download the latest release of ScanCode.io at
+  https://github.com/nexB/scancode.io/releases and follow the Docker
+  installation instructions at
+  https://scancodeio.readthedocs.io/en/latest/installation.html
 
-  - In the ``.env`` file for ScanCode.io, set the following environment
-    variables::
+- In the ``.env`` file for ScanCode.io, set the following environment
+  variables ``PURLDB_URL`` and ``PURLDB_API_KEY``
 
-        PURLDB_URL = env.str("PURLDB_URL", default="")
-        PURLDB_API_KEY = env.str("PURLDB_API_KEY", default="")
+.. code-block:: console
 
-    Use the address of your PurlDB server for ``PURLDB_URL`` and the
-    ``PURLDB_API_KEY`` generated from the PurlDB install.
+    PURLDB_URL=<PurlDB URL>
+    PURLDB_API_KEY=<PurlDB API key>
 
-  - Move this ``.env`` file to ``/etc/scancodeio``:::
+Use the address of your PurlDB server for ``PURLDB_URL`` and the
+``PURLDB_API_KEY`` generated from the PurlDB install.
 
-        sudo mkdir -p /etc/scancodeio
-        sudo cp .env /etc/scancodeio
+- Move this ``.env`` file to ``/etc/scancodeio``:
 
-  - To run the worker, you must reference the
-    ``docker-compose.purldb-scan-worker.yml`` Compose file::
+.. code-block:: console
 
-        docker compose -f docker-compose.purldb-scan-worker.yml up
+    sudo mkdir -p /etc/scancodeio
+    sudo cp .env /etc/scancodeio
+
+- To run the worker, you must reference the
+  ``docker-compose.purldb-scan-worker.yml`` Compose file:
+
+.. code-block:: console
+
+    docker compose -f docker-compose.purldb-scan-worker.yml up
 
 
 MatchCode.io
 ------------
 
-  - This should be installed on the same machine as PurlDB.
+- This should be installed on the same machine as PurlDB.
 
-  - Clone the PurlDB repo, create an environment file, and build the Docker
-    image using the ``docker-compose.matchcodeio.yml`` Compose file::
+- Clone the PurlDB repo, create an environment file, and build the Docker
+  image using the ``docker-compose.matchcodeio.yml`` Compose file:
 
-        git clone https://github.com/nexB/scancode.io.git && cd scancode.io
-        make envfile
-        docker compose -f docker-compose.matchcodeio.yml build
+.. code-block:: console
 
-  - Move this ``.env`` file to ``/etc/matchcodeio`` and ``/etc/scancodeio``:::
+    git clone https://github.com/nexB/scancode.io.git && cd scancode.io
+    make envfile
+    docker compose -f docker-compose.matchcodeio.yml build
 
-        sudo mkdir -p /etc/matchcodeio
-        sudo cp .env /etc/matchcodeio
-        sudo cp .env /etc/scancodeio
+- Move this ``.env`` file to ``/etc/matchcodeio`` and ``/etc/scancodeio``:
 
-    We need to put ``.env`` in the ``/etc/scancodeio`` directory because the
-    settings of ScanCode.io are loaded before MatchCode.io's settings, as it is
-    based off of ScanCode.io.
+.. code-block:: console
 
-  - Run your image as a container::
+    sudo mkdir -p /etc/matchcodeio
+    sudo cp .env /etc/matchcodeio
+    sudo cp .env /etc/scancodeio
 
-        docker compose -f docker-compose.matchcodeio.yml up
+We need to put ``.env`` in the ``/etc/scancodeio`` directory because the
+settings of ScanCode.io are loaded before MatchCode.io's settings, as it is
+based off of ScanCode.io.
+
+- Run your image as a container:
+
+.. code-block:: console
+
+    docker compose -f docker-compose.matchcodeio.yml up
 
 
 Local development installation
@@ -152,7 +178,7 @@ latest/getting-started/install.html#prerequisites>`_ for more details.
 Clone and Configure
 ^^^^^^^^^^^^^^^^^^^
 
- * Clone the `ScanCode.io GitHub repository <https://github.com/nexB/purldb>`_::
+ * Clone the `PurlDB GitHub repository <https://github.com/nexB/purldb>`_::
 
     git clone https://github.com/nexB/purldb.git && cd purldb
 
@@ -217,7 +243,7 @@ application.
 .. warning::
     This setup is **not suitable for deployments** and **only supported for local
     development**.
-    It is highly recommended to use the :ref:`run_with_docker` setup to ensure the
+    It is highly recommended to use the Docker setup to ensure the
     availability of all the features and the benefits from asynchronous workers
     for pipeline executions.
 

@@ -8,5 +8,6 @@ through specific use cases:
    :maxdepth: 2
 
    installation
+   tasks
    matchcode
    tutorial_symbol_and_string_collection
