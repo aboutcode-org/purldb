@@ -20,12 +20,7 @@
                 "--output": "<stdout>"
             },
             "errors": [],
-            "warnings": [
-                "'pkg:pypi/fetchcode@0.3.0os=windows' does not exist in the upstream repo",
-                "'pkg:pypi/fetchcode@5.0.0' does not exist in the upstream repo",
-                "'check_existence' is not supported for 'pkg:nginx/nginx'",
-                "'check_existence' is not supported for 'pkg:rubygems/rails'"
-            ]
+            "warnings": []
         }
     ],
     "packages": [

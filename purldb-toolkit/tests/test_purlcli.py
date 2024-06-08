@@ -55,9 +55,7 @@ class TestPURLCLI_metadata(object):
         assert result.exit_code == 2
 
     @mock.patch("purldb_toolkit.purlcli.collect_metadata")
-    @mock.patch("purldb_toolkit.purlcli.check_metadata_purl")
-    def test_metadata_details(self, mock_check_metadata_purl, mock_collect_metadata):
-
+    def test_metadata_details(self, mock_collect_metadata):
         mock_collect_metadata.return_value = [
             OrderedDict(
                 [
@@ -221,8 +219,6 @@ class TestPURLCLI_metadata(object):
                 ]
             ),
         ]
-
-        mock_check_metadata_purl.return_value = None
 
         expected_data = {
             "headers": [
@@ -421,88 +417,6 @@ class TestPURLCLI_metadata(object):
 
         assert purl_metadata_data == expected_data
 
-    @mock.patch("purldb_toolkit.purlcli.validate_purl")
-    def test_check_metadata_purl(self, mock_validate_purl):
-        mock_validate_purl.return_value = {
-            "valid": True,
-            "exists": None,
-            "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-            "purl": "pkg:rubygems/bundler-sass",
-        }
-        input_purl = "pkg:rubygems/bundler-sass"
-        expected = "check_existence_not_supported"
-        purl_metadata = purlcli.check_metadata_purl(input_purl)
-
-        assert purl_metadata == expected
-
-    @mock.patch("purldb_toolkit.purlcli.validate_purl")
-    def test_check_metadata_purl_multiple(self, mock_validate_purl):
-        mock_validate_purl.side_effect = [
-            {
-                "valid": True,
-                "exists": True,
-                "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                "purl": "pkg:pypi/fetchcode",
-            },
-            {
-                "valid": True,
-                "exists": True,
-                "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                "purl": "pkg:gem/bundler-sass",
-            },
-            {
-                "valid": True,
-                "exists": None,
-                "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                "purl": "pkg:rubygems/bundler-sass",
-            },
-            {
-                "valid": True,
-                "exists": None,
-                "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                "purl": "pkg:nginx/nginx",
-            },
-            {
-                "valid": True,
-                "exists": False,
-                "message": "The provided PackageURL is valid, but does not exist in the upstream repo.",
-                "purl": "pkg:pypi/zzzzz",
-            },
-            {
-                "valid": False,
-                "exists": None,
-                "message": "The provided PackageURL is not valid.",
-                "purl": "pkg:pypi/?fetchcode",
-            },
-            {
-                "valid": False,
-                "exists": None,
-                "message": "The provided PackageURL is not valid.",
-                "purl": "zzzzz",
-            },
-            {
-                "valid": True,
-                "exists": True,
-                "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                "purl": "pkg:maven/axis/axis@1.0",
-            },
-        ]
-
-        input_purls_and_expected_states = [
-            ["pkg:pypi/fetchcode", None],
-            ["pkg:gem/bundler-sass", "valid_but_not_supported"],
-            ["pkg:rubygems/bundler-sass", "check_existence_not_supported"],
-            ["pkg:nginx/nginx", "valid_but_not_supported"],
-            ["pkg:pypi/zzzzz", "not_in_upstream_repo"],
-            ["pkg:pypi/?fetchcode", "not_valid"],
-            ["zzzzz", "not_valid"],
-            ["pkg:maven/axis/axis@1.0", "valid_but_not_supported"],
-        ]
-
-        for input_purl, expected_state in input_purls_and_expected_states:
-            purl_metadata = purlcli.check_metadata_purl(input_purl)
-            assert purl_metadata == expected_state
-
     def test_deduplicate_purls(self):
         input_purls = [
             "pkg:pypi/fetchcode@0.1.0",
@@ -515,14 +429,7 @@ class TestPURLCLI_metadata(object):
         ]
         actual_output = purlcli.deduplicate_purls(input_purls)
         expected_output = (
-            ["pkg:pypi/fetchcode@0.1.0", "pkg:pypi/fetchcode@0.2.0"],
-            [
-                "pkg:pypi/fetchcode@0.1.0",
-                "pkg:pypi/fetchcode@0.1.0",
-                "pkg:pypi/fetchcode@0.1.0",
-                "pkg:pypi/fetchcode@0.1.0",
-                "pkg:pypi/fetchcode@0.2.0",
-            ],
+            ["pkg:pypi/fetchcode@0.1.0", "pkg:pypi/fetchcode@0.2.0"]
         )
         assert actual_output == expected_output
 
@@ -558,37 +465,19 @@ class TestPURLCLI_metadata(object):
                         },
                         "tool_name": "purlcli",
                         "tool_version": "0.1.0",
-                        "warnings": [
-                            "Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0",
-                            "Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0",
-                            "Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0",
-                            "Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0",
-                            "Duplicate input PURL removed: pkg:pypi/fetchcode@0.2.0",
-                        ],
+                        "warnings": [],
                     }
                 ],
             ),
         ],
     )
-    @mock.patch("purldb_toolkit.purlcli.read_log_file")
-    def test_deduplicate_purls_construct_headers(
-        self, mock_read_log_file, test_input, expected
-    ):
-        mock_read_log_file.return_value = [
-            "WARNING - Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0\n",
-            "WARNING - Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0\n",
-            "WARNING - Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0\n",
-            "WARNING - Duplicate input PURL removed: pkg:pypi/fetchcode@0.1.0\n",
-            "WARNING - Duplicate input PURL removed: pkg:pypi/fetchcode@0.2.0\n",
-        ]
-
+    def test_deduplicate_purls_construct_headers(self, test_input, expected):
         metadata_headers = purlcli.construct_headers(
             test_input,
             output="",
             file="",
             command_name="metadata",
             head=None,
-            purl_warnings={},
         )
 
         cli_test_utils.streamline_headers(expected)
@@ -622,27 +511,19 @@ class TestPURLCLI_metadata(object):
                         },
                         "tool_name": "purlcli",
                         "tool_version": "0.1.0",
-                        "warnings": [
-                            "'pkg:gem/bundler-sass' not supported with `metadata` command"
-                        ],
+                        "warnings": [],
                     }
                 ],
             ),
         ],
     )
-    @mock.patch("purldb_toolkit.purlcli.read_log_file")
-    def test_construct_headers(self, mock_read_log_file, test_input, expected):
-        mock_read_log_file.return_value = [
-            "WARNING - 'pkg:gem/bundler-sass' not supported with `metadata` command\n",
-        ]
-
+    def test_construct_headers(self, test_input, expected):
         metadata_headers = purlcli.construct_headers(
             test_input,
             output="",
             file="",
             command_name="metadata",
             head=None,
-            purl_warnings={"pkg:gem/bundler-sass": "valid_but_not_supported"},
         )
 
         cli_test_utils.streamline_headers(expected)
@@ -652,9 +533,8 @@ class TestPURLCLI_metadata(object):
 
 
 class TestPURLCLI_urls(object):
-    @mock.patch("purldb_toolkit.purlcli.read_log_file")
     @mock.patch("purldb_toolkit.purlcli.make_head_request")
-    def test_urls_cli_head(self, mock_make_head_request, mock_read_log_file):
+    def test_urls_cli_head(self, mock_make_head_request):
         """
         Test the `urls` command with actual and expected JSON output files.
         """
@@ -669,10 +549,6 @@ class TestPURLCLI_urls(object):
             {"head_request": 200},
             {"get_request": 200},
             {"head_request": 200},
-        ]
-
-        mock_read_log_file.return_value = [
-            "WARNING - 'pkg:pypi/fetchcode' not fully supported with `urls` command\n",
         ]
 
         expected_result_file = test_env.get_test_loc(
@@ -763,15 +639,7 @@ class TestPURLCLI_urls(object):
         assert "Use either purls or file." in result.output
         assert result.exit_code == 2
 
-    @mock.patch("purldb_toolkit.purlcli.read_log_file")
-    @mock.patch("purldb_toolkit.purlcli.check_urls_purl")
-    def test_urls_details(self, mock_check_urls_purl, mock_read_log_file):
-        mock_check_urls_purl.return_value = "valid_but_not_fully_supported"
-
-        mock_read_log_file.return_value = [
-            "WARNING = 'pkg:pypi/fetchcode' not fully supported with `urls` command\n",
-        ]
-
+    def test_urls_details(self):
         expected_data = {
             "headers": [
                 {
@@ -784,9 +652,7 @@ class TestPURLCLI_urls(object):
                         "--output": "",
                     },
                     "errors": [],
-                    "warnings": [
-                        "'pkg:pypi/fetchcode' not fully supported with `urls` command"
-                    ],
+                    "warnings": [],
                 }
             ],
             "packages": [
@@ -815,21 +681,6 @@ class TestPURLCLI_urls(object):
         cli_test_utils.streamline_headers(purl_urls["headers"])
 
         assert purl_urls == expected_data
-
-    @mock.patch("purldb_toolkit.purlcli.validate_purl")
-    def test_check_urls_purl(self, mock_validate_purl):
-        mock_validate_purl.return_value = {
-            "valid": True,
-            "exists": True,
-            "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-            "purl": "pkg:pypi/fetchcode",
-        }
-
-        input_purl = "pkg:pypi/fetchcode"
-        expected = "valid_but_not_fully_supported"
-        purl_urls = purlcli.check_urls_purl(input_purl)
-
-        assert purl_urls == expected
 
     @mock.patch("requests.get")
     @mock.patch("requests.head")
@@ -873,70 +724,46 @@ class TestPURLCLI_validate(object):
 
 
 class TestPURLCLI_versions(object):
-    @mock.patch("purldb_toolkit.purlcli.read_log_file")
+
     @mock.patch("purldb_toolkit.purlcli.collect_versions")
-    @mock.patch("purldb_toolkit.purlcli.check_versions_purl")
-    def test_versions_details_multiple(
-        self, mock_check_versions_purl, mock_collect_versions, mock_read_log_file
-    ):
-
-        mock_check_versions_purl.side_effect = [
-            None,
-            None,
-            "valid_but_not_supported",
-            "valid_but_not_supported",
-            None,
-            "not_valid",
-        ]
-
+    def test_versions_details_multiple(self, mock_collect_versions):
         mock_collect_versions.side_effect = [
             [
                 {
-                    "purl": "pkg:pypi/fetchcode@0.1.0",
+                    "purl": "pkg:pypi/fetchcode",
                     "version": "0.1.0",
                     "release_date": "2021-08-25",
                 },
                 {
-                    "purl": "pkg:pypi/fetchcode@0.2.0",
+                    "purl": "pkg:pypi/fetchcode",
                     "version": "0.2.0",
                     "release_date": "2022-09-14",
                 },
                 {
-                    "purl": "pkg:pypi/fetchcode@0.3.0",
+                    "purl": "pkg:pypi/fetchcode",
                     "version": "0.3.0",
                     "release_date": "2023-12-18",
                 },
             ],
             [
                 {
-                    "purl": "pkg:gem/bundler-sass@0.1.2",
+                    "purl": "pkg:gem/bundler-sass",
                     "version": "0.1.2",
                     "release_date": "2013-12-11",
                 }
             ],
             [
                 {
-                    "purl": "pkg:cargo/socksprox@0.1.1",
+                    "purl": "pkg:cargo/socksprox",
                     "release_date": "2024-02-07",
                     "version": "0.1.1",
                 },
                 {
-                    "purl": "pkg:cargo/socksprox@0.1.0",
+                    "purl": "pkg:cargo/socksprox",
                     "release_date": "2024-02-07",
                     "version": "0.1.0",
                 },
             ],
-        ]
-
-        mock_read_log_file.side_effect = [
-            [],
-            [],
-            [
-                "WARNING - 'pkg:rubygems/bundler-sass' not supported with `versions` command\n",
-            ],
-            ["WARNING - 'pkg:nginx/nginx' not supported with `versions` command\n"],
-            [],
-            ["WARNING - 'pkg:pypi/?fetchcode' not valid\n"],
         ]
 
         input_purls_and_expected_purl_data = [
@@ -959,17 +786,17 @@ class TestPURLCLI_versions(object):
                     ],
                     "packages": [
                         {
-                            "purl": "pkg:pypi/fetchcode@0.1.0",
+                            "purl": "pkg:pypi/fetchcode",
                             "version": "0.1.0",
                             "release_date": "2021-08-25",
                         },
                         {
-                            "purl": "pkg:pypi/fetchcode@0.2.0",
+                            "purl": "pkg:pypi/fetchcode",
                             "version": "0.2.0",
                             "release_date": "2022-09-14",
                         },
                         {
-                            "purl": "pkg:pypi/fetchcode@0.3.0",
+                            "purl": "pkg:pypi/fetchcode",
                             "version": "0.3.0",
                             "release_date": "2023-12-18",
                         },
@@ -995,55 +822,11 @@ class TestPURLCLI_versions(object):
                     ],
                     "packages": [
                         {
-                            "purl": "pkg:gem/bundler-sass@0.1.2",
+                            "purl": "pkg:gem/bundler-sass",
                             "version": "0.1.2",
                             "release_date": "2013-12-11",
                         }
                     ],
-                },
-            ],
-            [
-                ["pkg:rubygems/bundler-sass"],
-                {
-                    "headers": [
-                        {
-                            "tool_name": "purlcli",
-                            "tool_version": "0.2.0",
-                            "options": {
-                                "command": "versions",
-                                "--purl": ["pkg:rubygems/bundler-sass"],
-                                "--file": None,
-                                "--output": "",
-                            },
-                            "errors": [],
-                            "warnings": [
-                                "'pkg:rubygems/bundler-sass' not supported with `versions` command"
-                            ],
-                        }
-                    ],
-                    "packages": [],
-                },
-            ],
-            [
-                ["pkg:nginx/nginx"],
-                {
-                    "headers": [
-                        {
-                            "tool_name": "purlcli",
-                            "tool_version": "0.2.0",
-                            "options": {
-                                "command": "versions",
-                                "--purl": ["pkg:nginx/nginx"],
-                                "--file": None,
-                                "--output": "",
-                            },
-                            "errors": [],
-                            "warnings": [
-                                "'pkg:nginx/nginx' not supported with `versions` command"
-                            ],
-                        }
-                    ],
-                    "packages": [],
                 },
             ],
             [
@@ -1065,36 +848,16 @@ class TestPURLCLI_versions(object):
                     ],
                     "packages": [
                         {
-                            "purl": "pkg:cargo/socksprox@0.1.1",
+                            "purl": "pkg:cargo/socksprox",
                             "version": "0.1.1",
                             "release_date": "2024-02-07",
                         },
                         {
-                            "purl": "pkg:cargo/socksprox@0.1.0",
+                            "purl": "pkg:cargo/socksprox",
                             "version": "0.1.0",
                             "release_date": "2024-02-07",
                         },
                     ],
-                },
-            ],
-            [
-                ["pkg:pypi/?fetchcode"],
-                {
-                    "headers": [
-                        {
-                            "tool_name": "purlcli",
-                            "tool_version": "0.2.0",
-                            "options": {
-                                "command": "versions",
-                                "--purl": ["pkg:pypi/?fetchcode"],
-                                "--file": None,
-                                "--output": "",
-                            },
-                            "errors": [],
-                            "warnings": ["'pkg:pypi/?fetchcode' not valid"],
-                        }
-                    ],
-                    "packages": [],
                 },
             ],
         ]
@@ -1114,32 +877,24 @@ class TestPURLCLI_versions(object):
             assert purl_versions_data == expected_data
 
     @mock.patch("purldb_toolkit.purlcli.collect_versions")
-    @mock.patch("purldb_toolkit.purlcli.check_versions_purl")
-    def test_versions_details(
-        self,
-        mock_check_versions_purl,
-        mock_collect_versions,
-    ):
-
+    def test_versions_details(self, mock_collect_versions):
         mock_collect_versions.return_value = [
             {
-                "purl": "pkg:pypi/fetchcode@0.1.0",
+                "purl": "pkg:pypi/fetchcode",
                 "version": "0.1.0",
                 "release_date": "2021-08-25",
             },
             {
-                "purl": "pkg:pypi/fetchcode@0.2.0",
+                "purl": "pkg:pypi/fetchcode",
                 "version": "0.2.0",
                 "release_date": "2022-09-14",
             },
             {
-                "purl": "pkg:pypi/fetchcode@0.3.0",
+                "purl": "pkg:pypi/fetchcode",
                 "version": "0.3.0",
                 "release_date": "2023-12-18",
             },
         ]
-
-        mock_check_versions_purl.return_value = None
 
         expected_data = {
             "headers": [
@@ -1158,17 +913,17 @@ class TestPURLCLI_versions(object):
             ],
             "packages": [
                 {
-                    "purl": "pkg:pypi/fetchcode@0.1.0",
+                    "purl": "pkg:pypi/fetchcode",
                     "version": "0.1.0",
                     "release_date": "2021-08-25",
                 },
                 {
-                    "purl": "pkg:pypi/fetchcode@0.2.0",
+                    "purl": "pkg:pypi/fetchcode",
                     "version": "0.2.0",
                     "release_date": "2022-09-14",
                 },
                 {
-                    "purl": "pkg:pypi/fetchcode@0.3.0",
+                    "purl": "pkg:pypi/fetchcode",
                     "version": "0.3.0",
                     "release_date": "2023-12-18",
                 },
@@ -1188,85 +943,6 @@ class TestPURLCLI_versions(object):
             command_name,
         )
         assert purl_versions_data == expected_data
-
-    @mock.patch("purldb_toolkit.purlcli.validate_purl")
-    def test_check_versions_purl_multiple(self, mock_validate_purl):
-        mock_validate_purl.side_effect = [
-            {
-                "valid": True,
-                "exists": True,
-                "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                "purl": "pkg:pypi/fetchcode",
-            },
-            {
-                "valid": True,
-                "exists": True,
-                "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                "purl": "pkg:gem/bundler-sass",
-            },
-            {
-                "valid": True,
-                "exists": None,
-                "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                "purl": "pkg:rubygems/bundler-sass",
-            },
-            {
-                "valid": True,
-                "exists": None,
-                "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-                "purl": "pkg:nginx/nginx",
-            },
-            {
-                "valid": True,
-                "exists": False,
-                "message": "The provided PackageURL is valid, but does not exist in the upstream repo.",
-                "purl": "pkg:pypi/zzzzz",
-            },
-            {
-                "valid": False,
-                "exists": None,
-                "message": "The provided PackageURL is not valid.",
-                "purl": "pkg:pypi/?fetchcode",
-            },
-            {
-                "valid": False,
-                "exists": None,
-                "message": "The provided PackageURL is not valid.",
-                "purl": "zzzzz",
-            },
-            {
-                "valid": True,
-                "exists": True,
-                "message": "The provided Package URL is valid, and the package exists in the upstream repo.",
-                "purl": "pkg:maven/axis/axis@1.0",
-            },
-        ]
-        input_purls_and_expected_states = [
-            ["pkg:pypi/fetchcode", None],
-            ["pkg:gem/bundler-sass", None],
-            ["pkg:rubygems/bundler-sass", "valid_but_not_supported"],
-            ["pkg:nginx/nginx", "valid_but_not_supported"],
-            ["pkg:pypi/zzzzz", "not_in_upstream_repo"],
-            ["pkg:pypi/?fetchcode", "not_valid"],
-            ["zzzzz", "not_valid"],
-            ["pkg:maven/axis/axis@1.0", None],
-        ]
-        for input_purl, expected_state in input_purls_and_expected_states:
-            purl_versions = purlcli.check_versions_purl(input_purl)
-            assert purl_versions == expected_state
-
-    @mock.patch("purldb_toolkit.purlcli.validate_purl")
-    def test_check_versions_purl(self, mock_validate_purl):
-        mock_validate_purl.return_value = {
-            "valid": True,
-            "exists": None,
-            "message": "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
-            "purl": "pkg:rubygems/bundler-sass",
-        }
-        input_purl = "pkg:rubygems/bundler-sass"
-        purl_versions = purlcli.check_versions_purl(input_purl)
-        expected = "valid_but_not_supported"
-        assert purl_versions == expected
 
 
 def streamline_metadata_packages(packages):

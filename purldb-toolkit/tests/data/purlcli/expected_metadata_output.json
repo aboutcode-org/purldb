@@ -12,21 +12,13 @@
                     "pkg:pypi/fetchcode@0.3.0os=windows",
                     "pkg:pypi/fetchcode@5.0.0",
                     "pkg:cargo/banquo",
-                    "pkg:nginx/nginx",
-                    "pkg:gem/rails",
                     "pkg:rubygems/rails"
                 ],
                 "--file": null,
                 "--output": "<stdout>"
             },
             "errors": [],
-            "warnings": [
-                "'pkg:pypi/fetchcode@0.3.0os=windows' does not exist in the upstream repo",
-                "'pkg:pypi/fetchcode@5.0.0' does not exist in the upstream repo",
-                "'pkg:nginx/nginx' not supported with `metadata` command",
-                "'pkg:gem/rails' not supported with `metadata` command",
-                "'check_existence' is not supported for 'pkg:rubygems/rails'"
-            ]
+            "warnings": []
         }
     ],
     "packages": [

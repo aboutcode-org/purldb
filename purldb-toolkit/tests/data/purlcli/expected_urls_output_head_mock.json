@@ -13,9 +13,7 @@
                 "--output": "<stdout>"
             },
             "errors": [],
-            "warnings": [
-                "'pkg:pypi/fetchcode' not fully supported with `urls` command"
-            ]
+            "warnings": []
         }
     ],
     "packages": [

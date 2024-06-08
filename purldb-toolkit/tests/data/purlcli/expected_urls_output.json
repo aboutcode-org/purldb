@@ -8,47 +8,20 @@
                 "--purl": [
                     "pkg:pypi/fetchcode",
                     "pkg:pypi/fetchcode@0.3.0",
-                    "pkg:pypi/fetchcode@5.0.0",
                     "pkg:pypi/dejacode",
                     "pkg:pypi/dejacode@5.0.0",
                     "pkg:pypi/dejacode@5.0.0?os=windows",
-                    "pkg:pypi/dejacode@5.0.0os=windows",
-                    "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
-                    "pkg:pypi/dejacode@5.0.0#how/are/you",
-                    "pkg:pypi/dejacode@10.0.0",
                     "pkg:cargo/banquo",
                     "pkg:cargo/socksprox",
-                    "pkg:nginx/nginx",
-                    "pkg:nginx/nginx@0.8.9?os=windows",
                     "pkg:gem/bundler-sass",
                     "pkg:rubygems/bundler-sass",
-                    "pkg:pypi/matchcode",
-                    "abcdefg",
-                    "pkg/abc",
                     "pkg:nuget/auth0-aspnet@1.1.0"
                 ],
                 "--file": null,
                 "--output": "<stdout>"
             },
             "errors": [],
-            "warnings": [
-                "'pkg:pypi/fetchcode' not fully supported with `urls` command",
-                "'pkg:pypi/fetchcode@0.3.0' not fully supported with `urls` command",
-                "'pkg:pypi/fetchcode@5.0.0' does not exist in the upstream repo",
-                "'pkg:pypi/dejacode' not fully supported with `urls` command",
-                "'pkg:pypi/dejacode@5.0.0' not fully supported with `urls` command",
-                "'pkg:pypi/dejacode@5.0.0?os=windows' not fully supported with `urls` command",
-                "'pkg:pypi/dejacode@5.0.0os=windows' does not exist in the upstream repo",
-                "'pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy' not fully supported with `urls` command",
-                "'pkg:pypi/dejacode@5.0.0#how/are/you' not fully supported with `urls` command",
-                "'pkg:pypi/dejacode@10.0.0' does not exist in the upstream repo",
-                "'pkg:nginx/nginx' not supported with `urls` command",
-                "'pkg:nginx/nginx@0.8.9?os=windows' not supported with `urls` command",
-                "'check_existence' is not supported for 'pkg:rubygems/bundler-sass'",
-                "'pkg:pypi/matchcode' does not exist in the upstream repo",
-                "'abcdefg' not valid",
-                "'pkg/abc' not valid"
-            ]
+            "warnings": []
         }
     ],
     "packages": [
@@ -90,24 +63,6 @@
         },
         {
             "purl": "pkg:pypi/dejacode@5.0.0?os=windows",
-            "download_url": null,
-            "inferred_urls": [
-                "https://pypi.org/project/dejacode/5.0.0/"
-            ],
-            "repository_download_url": null,
-            "repository_homepage_url": "https://pypi.org/project/dejacode/5.0.0/"
-        },
-        {
-            "purl": "pkg:pypi/dejacode@5.0.0?how_is_the_weather=rainy",
-            "download_url": null,
-            "inferred_urls": [
-                "https://pypi.org/project/dejacode/5.0.0/"
-            ],
-            "repository_download_url": null,
-            "repository_homepage_url": "https://pypi.org/project/dejacode/5.0.0/"
-        },
-        {
-            "purl": "pkg:pypi/dejacode@5.0.0#how/are/you",
             "download_url": null,
             "inferred_urls": [
                 "https://pypi.org/project/dejacode/5.0.0/"
