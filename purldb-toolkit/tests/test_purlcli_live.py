@@ -10,7 +10,6 @@
 import json
 import os
 from collections import OrderedDict
-from unittest import mock
 
 import pytest
 from click.testing import CliRunner
@@ -162,9 +161,6 @@ class TestPURLCLI_metadata(object):
                         ("version", None),
                         ("qualifiers", OrderedDict()),
                         ("subpath", None),
-                        ("repository_homepage_url", None),
-                        ("repository_download_url", None),
-                        ("api_data_url", None),
                         ("primary_language", None),
                         ("description", None),
                         ("release_date", None),
@@ -189,6 +185,9 @@ class TestPURLCLI_metadata(object):
                         ("dependencies", []),
                         ("contains_source_code", None),
                         ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
                     ]
                 ),
                 OrderedDict(
@@ -200,9 +199,6 @@ class TestPURLCLI_metadata(object):
                         ("version", "0.1.0"),
                         ("qualifiers", OrderedDict()),
                         ("subpath", None),
-                        ("repository_homepage_url", None),
-                        ("repository_download_url", None),
-                        ("api_data_url", None),
                         ("primary_language", None),
                         ("description", None),
                         ("release_date", None),
@@ -230,6 +226,9 @@ class TestPURLCLI_metadata(object):
                         ("dependencies", []),
                         ("contains_source_code", None),
                         ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
                     ]
                 ),
                 OrderedDict(
@@ -241,9 +240,6 @@ class TestPURLCLI_metadata(object):
                         ("version", "0.2.0"),
                         ("qualifiers", OrderedDict()),
                         ("subpath", None),
-                        ("repository_homepage_url", None),
-                        ("repository_download_url", None),
-                        ("api_data_url", None),
                         ("primary_language", None),
                         ("description", None),
                         ("release_date", None),
@@ -271,6 +267,9 @@ class TestPURLCLI_metadata(object):
                         ("dependencies", []),
                         ("contains_source_code", None),
                         ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
                     ]
                 ),
                 OrderedDict(
@@ -282,9 +281,6 @@ class TestPURLCLI_metadata(object):
                         ("version", "0.3.0"),
                         ("qualifiers", OrderedDict()),
                         ("subpath", None),
-                        ("repository_homepage_url", None),
-                        ("repository_download_url", None),
-                        ("api_data_url", None),
                         ("primary_language", None),
                         ("description", None),
                         ("release_date", None),
@@ -312,6 +308,9 @@ class TestPURLCLI_metadata(object):
                         ("dependencies", []),
                         ("contains_source_code", None),
                         ("source_packages", []),
+                        ("repository_homepage_url", None),
+                        ("repository_download_url", None),
+                        ("api_data_url", None),
                     ]
                 ),
             ],

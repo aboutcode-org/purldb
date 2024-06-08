@@ -154,10 +154,6 @@ This command collects and return a list of all the known versions of a PURL by q
 and upstream package registries as needed.
 
 
-This command collects and return a list of all the known versions of a PURL by querying the PurlDB
-and upstream package registries as needed.
-
-
 Examples
 ########
 

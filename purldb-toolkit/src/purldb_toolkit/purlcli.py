@@ -28,8 +28,6 @@ from packageurl.contrib import purl2url
 # in seconds
 POLLING_INTERVAL = 5
 
-LOG_FILE_LOCATION = os.path.join(os.path.expanduser("~"), "purlcli.log")
-
 
 @click.group()
 def purlcli():
@@ -501,13 +499,6 @@ def check_for_duplicate_input_sources(purls, file):
         raise click.UsageError("Use either purls or file but not both.")
     elif not (purls or file):
         raise click.UsageError("Use either purls or file.")
-
-
-def clear_log_file():
-    log_file = Path(LOG_FILE_LOCATION)
-
-    if log_file.is_file():
-        os.remove(log_file)
 
 
 class D2DPackage(NamedTuple):
