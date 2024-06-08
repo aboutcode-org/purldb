@@ -3,21 +3,21 @@
     "path":"README",
     "type":"f",
     "size":1499,
-    "date":"2023-09",
+    "date":"-09-05",
     "target":null
   },
   {
     "path":"README.CD-manufacture",
     "type":"f",
     "size":1290,
-    "date":"2010-06",
+    "date":"-06-26",
     "target":null
   },
   {
     "path":"README.html",
     "type":"f",
     "size":3185,
-    "date":"2023-09",
+    "date":"-09-05",
     "target":null
   },
   {
@@ -45,7 +45,7 @@
     "path":"dists/README",
     "type":"f",
     "size":932,
-    "date":"2023-09",
+    "date":"-09-05",
     "target":null
   },
   {
@@ -101,14 +101,14 @@
     "path":"dists/experimental/InRelease",
     "type":"f",
     "size":187349,
-    "date":"2024-01",
+    "date":"-01-12",
     "target":null
   },
   {
     "path":"dists/experimental/Release.gpg",
     "type":"f",
     "size":1554,
-    "date":"2024-01",
+    "date":"-01-12",
     "target":null
   },
   {

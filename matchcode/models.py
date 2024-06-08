@@ -7,23 +7,23 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from collections import defaultdict
-from datetime import datetime
 import binascii
 import logging
 import sys
+from collections import defaultdict
+from datetime import datetime
+from difflib import SequenceMatcher
 
 from django.db import models
 from django.forms.models import model_to_dict
 from django.utils.translation import gettext_lazy as _
-
-from minecode.management.commands import get_error_message
 from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode_toolkit.fingerprinting import split_fingerprint
 from matchcode_toolkit.halohash import byte_hamming_distance
-from packagedb.models import Package
 
+from minecode.management.commands import get_error_message
+from packagedb.models import Package
 
 TRACE = False
 
@@ -234,12 +234,19 @@ class ApproximateMatchingHashMixin(models.Model):
             logger.error(msg)
 
     @classmethod
-    def match(cls, fingerprint, exact_match=False):
+    def match(cls, fingerprint, resource=None, exact_match=False):
         """
         Return a list of matched Packages
         """
         if TRACE:
-            logger_debug(cls.__name__, 'match:', 'fingerprint:', fingerprint)
+            logger_debug(
+                cls.__name__,
+                'match:',
+                'fingerprint:',
+                fingerprint,
+                'resource:',
+                resource
+            )
 
         if not fingerprint:
             return cls.objects.none()
@@ -307,22 +314,88 @@ class ApproximateMatchingHashMixin(models.Model):
 
         # Step 3: order matches from lowest Hamming distance to highest Hamming distance
         # TODO: consider limiting matches for brevity
-        good_matches = cls.objects.none()
-        for hamming_distance, match in sorted(matches_by_hamming_distance.items()):
-            if hamming_distance == 0:
-                # If we have an exact match, return and disregard others
-                good_matches |= match
-                break
-            else:
-                # If we don't have an exact match, add all close matches we have
-                good_matches |= match
+        hamming_distances_and_matches = []
+        for hamming_distance, matches in sorted(matches_by_hamming_distance.items()):
+            hamming_distances_and_matches.append(
+                (hamming_distance, matches)
+            )
 
         if TRACE:
-            for match in good_matches:
-                dct = model_to_dict(match)
-                logger_debug(cls.__name__, 'match:', 'good_matched_package:', dct)
+            for hamming_distance, matches in hamming_distances_and_matches:
+                for match in matches:
+                    dct = model_to_dict(match)
+                    logger_debug(
+                        cls.__name__,
+                        'match:',
+                        'step_3_hamming_distance:',
+                        hamming_distance,
+                        'step_3_matched_package:',
+                        dct
+                    )
 
-        return good_matches
+        # Step 4: use file heuristics to rank matches from step 3
+
+        # If we are not given resource data, return the matches we have
+        if not (resource and hamming_distances_and_matches):
+            remaining_matches = cls.objects.none()
+            if hamming_distances_and_matches:
+                for _, matches in hamming_distances_and_matches:
+                    remaining_matches |= matches
+            return remaining_matches
+
+        resource_size = resource.size
+        matches_by_rank_attributes = defaultdict(list)
+        for hamming_distance, matches in hamming_distances_and_matches:
+            for match in matches:
+                matched_resource = match.package.resources.get(path=match.path)
+
+                if TRACE:
+                    logger_debug(
+                        cls.__name__,
+                        'match:',
+                        'step_4_matched_resource:',
+                        matched_resource
+                    )
+
+                # Compute size and name difference
+                if matched_resource.is_file:
+                    size_difference = abs(resource_size - matched_resource.size)
+                else:
+                    # TODO: index number of files in a directory so we can use
+                    # that for size comparison. For now, we are going to
+                    # disregard size as a factor.
+                    size_difference = 0
+                name_sequence_matcher = SequenceMatcher(a=resource.name, b=matched_resource.name)
+                name_difference = 1 - name_sequence_matcher.ratio()
+                rank_attributes = (hamming_distance, size_difference, name_difference)
+                matches_by_rank_attributes[rank_attributes].append(match)
+
+                if TRACE:
+                    logger_debug(
+                        cls.__name__,
+                        'match:',
+                        'step_4_size_difference:',
+                        size_difference,
+                        'step_4_name_difference:',
+                        name_difference
+                    )
+
+        # Order these from low to high (low being low difference/very similar)), first by hamming distance, then by size difference, and finally by name difference.
+        ranked_attributes = sorted(matches_by_rank_attributes)
+        best_ranked_attributes = ranked_attributes[0]
+        ranked_matches = matches_by_rank_attributes[best_ranked_attributes]
+
+        if TRACE:
+            dct = model_to_dict(match)
+            logger_debug(
+                cls.__name__,
+                'match:',
+                'step_4_best_match:',
+                dct
+            )
+
+        matches = cls.objects.filter(pk__in=[match.pk for match in ranked_matches])
+        return matches
 
     def get_chunks(self):
         chunk1 = binascii.hexlify(self.chunk1)

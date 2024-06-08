@@ -1,8 +1,13 @@
 Changelog
 =========
 
+v1.0.1
+------
 
-v2.0.0
+Add missing key data files.
+
+
+v1.0.0
 ------
 
 Initial release.

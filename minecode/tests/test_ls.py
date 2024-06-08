@@ -37,9 +37,9 @@ class ParseDirectoryListingTest(JsonBasedTesting):
         results = list(ls.parse_directory_listing(test_text, from_find=from_find))
         for r in results:
             if r.date:
-                # we replace the year in YYYY-MM-DD by **** to avoid date-
-                # sensitive test failures
-                r.date = r.date[0:7]
+                # we remove the year in YYYY-MM-DD to avoid date-sensitive test
+                # failures
+                r.date = r.date[4:]
         results.sort()
         results = [r.to_dict() for r in results]
         expected_file = self.get_test_loc(expected_file)
