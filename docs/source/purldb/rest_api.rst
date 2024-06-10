@@ -10,11 +10,50 @@ local development setup.
 We maintain also public endpoints at https://public.purldb.io/api/ and a live Swagger API
 documentation and API browser at https://public.purldb.io/api/docs/ .
 
+PurlDB API Endpoints
+-----------------------
+
+* ``api/packages``
+
+  * Contains all of the Packages stored in the PackageDB
+
+* ``api/resources``
+
+  * Contains all of the Resources stored in the PackageDB
+
+* ``api/cditems``
+
+  * Contains the visited ClearlyDefined harvests or definitions
+
+* ``api/approximate_directory_content_index``
+
+  * Contains the directory content fingerprints for Packages with Resources
+  * Used to check if a directory and the files under it is from a known Package
+    using the SHA1 values of the files
+
+* ``api/approximate_directory_structure_index``
+
+  * Contains the directory structure fingerprints for Packages with Resources
+  * Used to check if a directory and the files under it is from a known Package
+    using the name of the files
+
+* ``api/exact_file_index``
+
+  * Contains the SHA1 values of Package Resources
+  * Used to check the SHA1 values of files from a scan to see what Packages
+    also has that file
+
+* ``api/exact_package_archive_index``
+
+  * Contains the SHA1 values of Package archives
+  * Used to check the SHA1 values of archives from a scan to determine if they
+    are known Packages
+
 
 .. _rest_api_authentication:
 
 Authentication
---------------
+---------------
 
 When the authentication setting ``PURLDB_SETTINGS_REQUIRE_AUTHENTICATION``
 is enabled on a PurlDB instance (disabled by default), you will have to include
@@ -54,7 +93,7 @@ packages
 --------
 
 package list
-------------
+^^^^^^^^^^^^
 
 An API endpoint that provides the ability to list and get packages.
 
@@ -184,7 +223,7 @@ For example:
 
 
 package details
----------------
+^^^^^^^^^^^^^^^
 
 The package details view returns all information available about a package.
 
@@ -279,12 +318,12 @@ The package details view returns all information available about a package.
     }
 
 packages actions
-----------------
+^^^^^^^^^^^^^^^^
 
 Multiple **actions** are available on packages:
 
 History
-^^^^^^^
+~~~~~~~
 
 Return the history of actions taken on the ``package``, e.g. field updates.
 
@@ -309,8 +348,8 @@ Using cURL to get package history:
     }
 
 
-Resources
-^^^^^^^^^
+Package Resources
+^^^^^^^^^^^^^^^^^
 
 Return the ``resources`` of the ``package`` as a list of mappings.
 
@@ -369,7 +408,7 @@ Using cURL to get package resources:
 
 
 Get enhanced package data
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Return a mapping of enhanced Package data for a given Package
 
@@ -469,7 +508,7 @@ Using cURL to get enhanced package data:
     }
 
 Reindex package
-^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
 
 Reindex this package instance. This will trigger a new scan for this package and
 the package data will be updated from the scan data.
@@ -491,10 +530,10 @@ Using cURL to reindex a package:
 
 
 resources
----------
+----------
 
 resources list
---------------
+^^^^^^^^^^^^^^
 
 Return a list of resources in the PurlDB.
 
@@ -569,12 +608,12 @@ For example:
 
 
 resources actions
------------------
+^^^^^^^^^^^^^^^^^
 
 One action is available on resources:
 
 Filter by checksum
-^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~
 
 Take a mapping, where the keys are the names of the checksum algorthm and the
 values is a list of checksum values and query those values against the
