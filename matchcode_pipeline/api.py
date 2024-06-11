@@ -226,7 +226,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
     def get_codebase_resources_summary(self, project):
         queryset = project.codebaseresources.all()
         return count_group_by(queryset, "status")
-    
+
     def get_codebase_resources_discrepancies(self, project):
         queryset = project.codebaseresources.filter(status="requires-review")
         return {
@@ -256,7 +256,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
 
     def create(self, validated_data, matching_pipeline_name='d2d'):
         """
-        Create a new `project` with `upload_file`, using the `d2d` pipeline
+        Create a new `project` with `input_urls`, using the `d2d` pipeline
         """
         execute_now = True
         validated_data['name'] = uuid4()
@@ -270,7 +270,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
 
         urls = []
 
-        for url in input_urls: 
+        for url in input_urls:
             value = url
             if "\n" in value:
                 input_urls = input_urls[0].split("\n")
@@ -297,6 +297,35 @@ class MatchingViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
+    """
+    Take a ScanCode.io JSON of a codebase `upload_file` or from a list of
+    `input_urls` and run the ``matching`` pipeline
+    (https://github.com/nexB/purldb/blob/main/matchcode_pipeline/pipelines/matching.py)
+    on it.
+
+    The ``matching`` pipeline matches directory and resources of the codebase in
+    ``upload_file`` to Packages indexed in the PurlDB.
+
+    **Request example:**
+
+            {
+                "input_urls": <file contents in binary buffer>
+            }
+
+    Then return a mapping containing information about the match request:
+
+    - url
+        - URL of the match request
+    - uuid
+        - UUID of the match request
+    - created_date
+        - Date of the match request
+    - input_sources
+        - List of input files for the match request
+    - runs
+        - List of mapping containing details about the runs created for this
+          match request.
+    """
     queryset = Project.objects.all()
     serializer_class = MatchingSerializer
     filterset_class = ProjectFilterSet
@@ -327,6 +356,31 @@ class D2DViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
+    """
+    Take a list of `input_urls` containing package download urls and match it to its source.
+
+    **Request example:**
+
+            {
+                "input_urls": [
+                    "https://registry.npmjs.com/asdf/-/asdf-1.0.2.tgz"
+                ]
+            }
+
+    Then return a mapping containing information about the match request:
+
+    - url
+        - URL of the match request
+    - uuid
+        - UUID of the match request
+    - created_date
+        - Date of the match request
+    - input_sources
+        - List of input files for the match request
+    - runs
+        - List of mapping containing details about the runs created for this
+          match request.
+    """
     queryset = Project.objects.all()
     serializer_class = D2DSerializer
     filterset_class = ProjectFilterSet
