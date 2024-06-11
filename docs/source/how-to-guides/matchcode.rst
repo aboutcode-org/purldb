@@ -1,4 +1,1 @@
-How to use Matchcode
-=====================
-
-Instructions on setting up the matchcode server.
+.. include:: ../matchcode/matchcode-pipeline.rst

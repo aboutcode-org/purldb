@@ -51,6 +51,10 @@ intersphinx_mapping = {
         "https://scancode-workbench.readthedocs.io/en/develop/",
         None,
     ),
+    "scancode.io": (
+        "https://scancodeio.readthedocs.io/en/latest/",
+        None,
+    ),
 }
 
 
