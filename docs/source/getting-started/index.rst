@@ -8,4 +8,3 @@ Getting Started
    usage
    tasks
    install-with-scio
-   contribute

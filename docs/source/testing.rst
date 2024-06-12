@@ -1,10 +1,11 @@
-Contribute
-==========
+.. _testing:
 
-Documentation to support code and documentation contributions
-to purldb.
+Running tests
+===================
 
-PURLdb tests
+Here is how to run the tests for each PurlDB modules.
+
+PurlDB tests
 -------------
 
 Run all PURLdb tests
