@@ -9,4 +9,4 @@ through specific use cases:
 
    installation
    matchcode
-   tutorial_symbol_and_string_collection
+   symbols_and_strings

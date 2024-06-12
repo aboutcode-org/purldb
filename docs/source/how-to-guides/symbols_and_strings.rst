@@ -1,8 +1,8 @@
-.. _tutorial_symbol_and_string_collection:
+.. _symbols_and_strings:
 
-==================================================
-How to get symbols and strings from a PURL
-==================================================
+=======================================================
+Collect symbols and strings from a PURL aka. purl2sym
+=======================================================
 
 In this tutorial we'll introduce the different addon pipelines that can be used for
 collecting symbols and strings from codebase resources.
@@ -10,6 +10,61 @@ collecting symbols and strings from codebase resources.
 .. note::
     This tutorial assumes that you have a working installation of PurlDB.
     If you don't, please refer to the `installation <../purldb/overview.html#installation>`_ page.
+
+
+
+Why collect symbols and strings?
+-----------------------------------
+
+But first, why would you collect symbols and strings? Taken alone, symbols and strings are not very
+interesting. Instead, they the building blocks of important and useful workflows and processes.
+
+Here are some examples of the applications symbols and strings:
+
+Binary analysis
+~~~~~~~~~~~~~~~~ 
+
+Once we have collected symbols and strings from the source code, we can search these in a binary.
+The presence of these can be used to map source and binaries in a lightweight "reverse" engineering
+process. For instance, a tool like BANG <https://github.com/armijnhemel/binaryanalysis-ng/>_ can use
+the source symbols to build automaton-based search indexes to support binary origin analysis.
+
+
+Binary to source mapping, aka. back2source
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In another context, we can use the collected source symbols and strings to map these to the
+binaries built from these sources and validate that we have the complete and corresponding source
+code for a build binary softwrae. 
+
+
+Code search
+~~~~~~~~~~~~~~ 
+
+We can use symbols and strings to build efficient source code search indexes that are focusing on
+the essence of the source code and are more readily amenable to indexing that raw source code.
+The set of source code symbols and strings is akin to an essential fingerprint for the code.
+
+
+Vulnerable code reachability
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+
+If we can determine the vulnerable code commit or patch that introduced or fixed a vulnerability,
+we can then extract the symbols and strings from this commit or patch. We can then combine this
+with binary analysis to deternmine of the vulnerable code may be present or called in a codebase
+or binary that reuse this vulnerable component.
+
+
+Code cross-references
+~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+
+Symbols and strings can be used to build cross reference indexes of a large source code base to
+help navigate and understand the structure of the codebase. They are routinely used in code editors
+and IDEs to support this navigation.
+
+
+Tutorial
+----------
 
 
 Through out this tutorial we will use ``pkg:github/llvm/llvm-project@10.0.0`` and will show
