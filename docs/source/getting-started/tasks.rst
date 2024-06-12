@@ -1,5 +1,5 @@
-Tasks
-=====
+Common tasks
+============
 
 These are a collection of common tasks that are done when running PurlDB.
 
