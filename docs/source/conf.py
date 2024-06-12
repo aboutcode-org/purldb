@@ -34,6 +34,9 @@ extensions = [
     "sphinx_rtd_dark_mode",
     "sphinx.ext.extlinks",
     "sphinx_copybutton",
+    "sphinx.ext.autodoc",
+    "sphinxcontrib_django",
+    "sphinx_rtd_dark_mode",  # For the Dark Mode
 ]
 
 
