@@ -4,42 +4,92 @@
 Collect symbols and strings from a PURL aka. purl2sym
 =======================================================
 
-In this tutorial we'll introduce the different addon pipelines that can be used for
-collecting symbols and strings from codebase resources.
+In this tutorial we introduce the different addon pipelines used for collecting symbols and strings
+from codebase resources.
 
 .. note::
     This tutorial assumes that you have a working installation of PurlDB.
     If you don't, please refer to the `installation <../purldb/overview.html#installation>`_ page.
 
 
+Problem
+----------------
 
-Why collect symbols and strings?
+The identification of the corresponding source code compiled in native compiled binaries such as
+ELF, Mach-O or PE/COFF binaries is complex and important: only by knowing the code origin can one
+know if this code is subject to known vulnerabilities or if there is licensing conflict. The
+majority of code in IoT and embedded devices is composed of natively compiled binaries, though there
+is of course a significant Android-based ecosystem using Java with specific constraints: multiple
+programming languages (Java and Kotlin) and bytecode compiled binaries. Many devices also embed
+secondary code (typically for admin an UI) such as  Lua, JavaScript, Python or PHP.
+
+Solution
+---------
+
+To help with identification of binaries it is important to aggregate collection of identifiers and
+symbols from FOSS code and index them such that they can be easily retrieved to built efficient
+detection engines, such as based on automatons and binary scanners.
+
+The symbols and strings or "purl2sym" feature is API-based and work this way:
+
+    1. The workflow starts with an initial request for a Package URL or a download URL, or a
+    fragment of PURL. The tool then assembles the list of all known versions for this package,
+    possibly filtered for a version range (using a PURL "vers" expression) and returns a list
+    containing all known PURLs for the package satisfying these requirements. This is part of the
+    standard APIs from PurlDB and the purlcli command line tool. For instance a typical request may
+    be equivalent tp "Get all PURLs for BusyBox".
+
+    2. For each of the results one can then send a new request for just that PURL. For instance a
+    typical request may be "Get all the symbols for busybox 1.21.0. and 1.22.0".
+
+    3. PurlDB returns a JSON API response with the list of PURLs and URLs being processed and their
+    collection status. This response includes readily available, already collected symbols.
+
+    4. For each of the results of step 1 for which there are no results yet the tool fetches and
+    store the corresponding code archives, then extracts the archives and run multiple tools to
+    extract the actual identifiers, symbols  and strings and store them.
+
+The type of symbols and identifiers to collect include:
+
+    - Strings and literals (for instance collected using xgettext).
+
+    - Code symbols such as function names, variable names, method names, class names, etc. extracted
+      with various programming language-aware parsers such as ctags, tree-sitter or Pygments.
+
+
+The collected symbols are be stored at the the level of each file of a package, with additional
+existing file-level attributes such as the detected file type or programming language and are
+available in the extra_data section of the results.
+
+
+Symbols and strings use cases
 -----------------------------------
 
-But first, why would you collect symbols and strings? Taken alone, symbols and strings are not very
-interesting. Instead, they the building blocks of important and useful workflows and processes.
+Why would you collect symbols and strings? Taken alone, symbols and strings are not very
+interesting. Instead, they are the building blocks of important and useful workflows and processes.
 
-Here are some examples of the applications symbols and strings:
+Here are some examples of the applications made possible when collecting symbols and strings:
 
 Binary analysis
-~~~~~~~~~~~~~~~~ 
+~~~~~~~~~~~~~~~~
 
 Once we have collected symbols and strings from the source code, we can search these in a binary.
-The presence of these can be used to map source and binaries in a lightweight "reverse" engineering
-process. For instance, a tool like BANG <https://github.com/armijnhemel/binaryanalysis-ng/>_ can use
-the source symbols to build automaton-based search indexes to support binary origin analysis.
+The presence of these symbols in the binaries can be used to find the origin of code complied in
+binaries with a lightweight "reverse" engineering process. For instance, a tool like BANG
+<https://github.com/armijnhemel/binaryanalysis-ng/>_ can use the source symbols to build
+automatons-based search indexes to support an efficient binary origin analysis.
 
 
 Binary to source mapping, aka. back2source
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In another context, we can use the collected source symbols and strings to map these to the
-binaries built from these sources and validate that we have the complete and corresponding source
-code for a build binary softwrae. 
+binaries assumed to be built from these sources and validate that we have the complete and
+corresponding source code for a build binary software.
 
 
 Code search
-~~~~~~~~~~~~~~ 
+~~~~~~~~~~~~~~
 
 We can use symbols and strings to build efficient source code search indexes that are focusing on
 the essence of the source code and are more readily amenable to indexing that raw source code.
@@ -47,7 +97,7 @@ The set of source code symbols and strings is akin to an essential fingerprint f
 
 
 Vulnerable code reachability
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If we can determine the vulnerable code commit or patch that introduced or fixed a vulnerability,
 we can then extract the symbols and strings from this commit or patch. We can then combine this
@@ -56,7 +106,7 @@ or binary that reuse this vulnerable component.
 
 
 Code cross-references
-~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Symbols and strings can be used to build cross reference indexes of a large source code base to
 help navigate and understand the structure of the codebase. They are routinely used in code editors
