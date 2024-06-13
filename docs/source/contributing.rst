@@ -96,7 +96,7 @@ attribution.
     make test
 
 
-See also `testing`_ for module-specific testing commands.
+See also :ref:`testing` for module-specific testing commands.
 
 
 3. **Commit messages and Developer Certificate of Origin**

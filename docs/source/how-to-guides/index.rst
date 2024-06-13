@@ -1,7 +1,7 @@
 How-To-Guides
 =============
 
-Here are the various how-to guides across various purldb projects to guide you
+Here are the various how-to guides for various purldb modules designed to guide you
 through specific use cases:
 
 .. toctree::
@@ -10,3 +10,5 @@ through specific use cases:
    installation
    matchcode
    symbols_and_strings
+   deploy_to_devel
+
