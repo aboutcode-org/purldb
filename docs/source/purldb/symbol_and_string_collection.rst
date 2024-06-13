@@ -48,7 +48,7 @@ Currently PurlDB supports these addon_pipeline for symbol/string collection.
 - ``collect_symbols_tree_sitter``
 - ``collect_symbols_pygments``
 
-See the detailed tutorial on :ref:`tutorial_symbol_and_string_collection` in PurlDB.
+See the detailed tutorial on :ref:`symbols_and_strings` in PurlDB.
 
 .. line-block::
 
