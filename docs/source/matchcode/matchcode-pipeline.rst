@@ -143,7 +143,3 @@ Instructions
 
 - When the match has completed, the results can be seen at ``/api/matching/<uuid>/results``
 
-.. code-block:: json
-
-    {
-    }
