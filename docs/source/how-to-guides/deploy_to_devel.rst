@@ -291,11 +291,11 @@ For example these two:
 - https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/to-data.zip#to
 
 
-.. image:: d2d-images/da526ca9-6a8c-4883-951e-26e92597ce0d.png
+.. image:: images/d2d-images/da526ca9-6a8c-4883-951e-26e92597ce0d.png
 
 Then click POST button
 
-.. image:: d2d-images/7c9b627d-4d74-4ddc-9e51-18b33b0d86b0.png
+.. image:: images/d2d-images/7c9b627d-4d74-4ddc-9e51-18b33b0d86b0.png
 
 Click on the "url" link to obtain the d2d results.
 
@@ -323,19 +323,19 @@ To test the feature:
 
 Here is how it looks:
 
-.. image:: d2d-images/1fc96ed7-8afc-4ce5-b8c1-ae0b785c1c4b.png
+.. image:: images/d2d-images/1fc96ed7-8afc-4ce5-b8c1-ae0b785c1c4b.png
 
 - When the pipeline run is finished, refresh and click on the "relations"
 
-.. image:: d2d-images/cb66805c-56dd-4519-81d5-fe3f8ef84f7a.png
+.. image:: images/d2d-images/cb66805c-56dd-4519-81d5-fe3f8ef84f7a.png
 
 - Here you can see the mapping between source and binaries:
 
-.. image:: d2d-images/9483bb93-8e7c-4244-9a78-f7ff40eb2874.png
+.. image:: images/d2d-images/9483bb93-8e7c-4244-9a78-f7ff40eb2874.png
 
 - In the resource page, there are also file-level mappings details:
 
-.. image:: d2d-images/1b9cd82f-4c5c-452b-aad7-02cb738f9733.png
+.. image:: images/d2d-images/1b9cd82f-4c5c-452b-aad7-02cb738f9733.png
 
 
 Elf d2d in ScanCode.io
@@ -344,7 +344,7 @@ Elf d2d in ScanCode.io
 
 ELF d2d analysis that can be selectively used with Elf-specific pipeline steps that look like this:
 
-.. image:: d2d-images/d338434d-4e31-4bb9-b708-db952a03d634.png
+.. image:: images/d2d-images/d338434d-4e31-4bb9-b708-db952a03d634.png
 
 To test the feature:
 
@@ -360,19 +360,19 @@ To test the feature:
 
 Here is how the project looks like after creation:
 
-.. image:: d2d-images/8b852b04-5568-468d-87ce-2e556ac2fc5d.png
+.. image:: images/d2d-images/8b852b04-5568-468d-87ce-2e556ac2fc5d.png
 
 - When pipeline run is finished, refresh
 
-.. image:: d2d-images/67014257-7a7d-403f-8798-75fb8bd23f88.png
+.. image:: images/d2d-images/67014257-7a7d-403f-8798-75fb8bd23f88.png
 
 - and click on the "relations" , and you can see the mapping between source and binaries:
 
-.. image:: d2d-images/c42ff037-4d05-4fd4-ba24-865609df78d7.png
+.. image:: images/d2d-images/c42ff037-4d05-4fd4-ba24-865609df78d7.png
 
 - At the resource page, there are also file-level mappings details:
 
-.. image:: d2d-images/f6995025-ab75-40b7-9503-d1f8509e053f.png
+.. image:: images/d2d-images/f6995025-ab75-40b7-9503-d1f8509e053f.png
 
 
 Go d2d in ScanCode.io
@@ -382,7 +382,7 @@ Steps for Go "binary" analysis can be selectively used in the d2d pipelines.
 
 The actual Go-specific pipeline steps look like this:
 
-.. image:: d2d-images/d338434d-4e31-4bb9-b708-db952a03d634.png
+.. image:: images/d2d-images/d338434d-4e31-4bb9-b708-db952a03d634.png
 
 To test the feature:
 
@@ -398,19 +398,19 @@ To test the feature:
 
 Here is how the project creation looks like:
 
-.. image:: d2d-images/4d453ddb-3af3-4470-b6ae-d6251c731d99.png
+.. image:: images/d2d-images/4d453ddb-3af3-4470-b6ae-d6251c731d99.png
 
 - When pipeline run is finished, refresh
 
-.. image:: d2d-images/1d080401-3512-478f-9dfd-99b94fca5f73.png
+.. image:: images/d2d-images/1d080401-3512-478f-9dfd-99b94fca5f73.png
 
 - and click on the "relations" , and you can see the mapping between source and binaries:
 
-.. image:: d2d-images/d28b0b83-3760-49d6-aa98-6f09826a42e6.png
+.. image:: images/d2d-images/d28b0b83-3760-49d6-aa98-6f09826a42e6.png
 
 - At the resource page, there are also file-level mappings details:
 
-.. image:: d2d-images/38c59bb5-96c5-40ca-b229-95a63dc2c556.png
+.. image:: images/d2d-images/38c59bb5-96c5-40ca-b229-95a63dc2c556.png
 
 
 JavaScript d2d in ScanCode.io
@@ -420,7 +420,7 @@ Analysis of JavaScript minified or webpacked "binaries" is a pipeline option.
 
 The actual JavaScript-specific pipeline steps look like this:
 
-.. image:: d2d-images/5878c8f3-85bd-4ba4-a350-0da093096480.png
+.. image:: images/d2d-images/5878c8f3-85bd-4ba4-a350-0da093096480.png
 
 
 To test the feature:
@@ -437,17 +437,17 @@ To test the feature:
 
 Here is how the project creation looks like:
 
-.. image:: d2d-images/9d9df257-db0d-4d01-91e4-34643f38fa5a.png
+.. image:: images/d2d-images/9d9df257-db0d-4d01-91e4-34643f38fa5a.png
 
 - When the pipeline run is finished, refresh to display the results:
 
-.. image:: d2d-images/b7451ce2-883e-45c6-ba49-0f061203d0df.png
+.. image:: images/d2d-images/b7451ce2-883e-45c6-ba49-0f061203d0df.png
 
 - and click on the "relations" , and you can see the mapping between source and binaries:
 
-.. image:: d2d-images/43a5ff56-fb36-45c7-82bb-8b5256759eee.png
+.. image:: images/d2d-images/43a5ff56-fb36-45c7-82bb-8b5256759eee.png
 
 
 - Inthe resource page, there are also file-level mappings details:
 
-.. image:: d2d-images/4acd087e-0cd1-4361-a8ee-f7af7681c74e.png
+.. image:: images/d2d-images/4acd087e-0cd1-4361-a8ee-f7af7681c74e.png
