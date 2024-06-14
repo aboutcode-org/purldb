@@ -30,7 +30,7 @@ To help with identification of binaries it is important to aggregate collection 
 symbols from FOSS code and index them such that they can be easily retrieved to built efficient
 detection engines, such as based on automatons and binary scanners.
 
-The symbols and strings or "purl2sym" feature is API-based and work this way:
+The symbols and strings or "purl2sym" feature is API-based and works this way:
 
     1. The workflow starts with an initial request for a Package URL or a download URL, or a
     fragment of PURL. The tool then assembles the list of all known versions for this package,
@@ -57,7 +57,7 @@ The type of symbols and identifiers to collect include:
       with various programming language-aware parsers such as ctags, tree-sitter or Pygments.
 
 
-The collected symbols are be stored at the the level of each file of a package, with additional
+The collected symbols are stored at the the level of each file of a package, with additional
 existing file-level attributes such as the detected file type or programming language and are
 available in the extra_data section of the results.
 
@@ -66,7 +66,8 @@ Symbols and strings use cases
 -----------------------------------
 
 Why would you collect symbols and strings? Taken alone, symbols and strings are not very
-interesting. Instead, they are the building blocks of important and useful workflows and processes.
+interesting. Instead, they are the building blocks of important and useful workflows and processes
+to support the binary analysis (and in some cases the source analysis).
 
 Here are some examples of the applications made possible when collecting symbols and strings:
 
