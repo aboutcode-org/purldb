@@ -11,4 +11,5 @@ through specific use cases:
    matchcode
    symbols_and_strings
    deploy_to_devel
+   purl_watch_how_to
 
