@@ -47,9 +47,6 @@ What can you do PurlDB?
 - Access multiple services keyed by PURL, such as metadata, package versions, packages URLs, or
   dependencies.
 
-- Access multiple services keyed by PURL, such as metadata, package versions, packages URLs, or
-  dependencies.
-
 
 What's in PurlDB?
 -------------------
