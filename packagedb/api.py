@@ -55,7 +55,8 @@ from packagedb.models import Resource
 from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
 from packagedb.package_managers import get_api_package_name
 from packagedb.package_managers import get_version_fetcher
-from packagedb.serializers import CollectPackageSerializer, is_supported_addon_pipeline
+from packagedb.serializers import CollectPackageSerializer
+from packagedb.serializers import is_supported_addon_pipeline
 from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import IndexPackagesResponseSerializer
 from packagedb.serializers import IndexPackagesSerializer
@@ -81,6 +82,7 @@ class CharMultipleWidget(widgets.TextInput):
     Enables the support for `MultiValueDict` `?field=a&field=b`
     reusing the `SelectMultiple.value_from_datadict()` but render as a `TextInput`.
     """
+
     def value_from_datadict(self, data, files, name):
         value = widgets.SelectMultiple().value_from_datadict(data, files, name)
         if not value or value == ['']:
@@ -116,6 +118,7 @@ class MultipleCharInFilter(MultipleCharFilter):
     """
     Does a <field>__in = [value] filter instead of field=value filter
     """
+
     def filter(self, qs, value):
         if not value:
             # Even though not a noop, no point filtering if empty.
@@ -152,6 +155,7 @@ class CreateListRetrieveUpdateViewSetMixin(
 
 
 class PackageResourcePurlFilter(Filter):
+
     def filter(self, qs, value):
         if not value:
             return qs
@@ -169,13 +173,14 @@ class PackageResourcePurlFilter(Filter):
 
 
 class PackageResourceUUIDFilter(Filter):
+
     def filter(self, qs, value):
         if not value:
             return qs
 
         try:
             package = Package.objects.get(uuid=value)
-        except (Package.DoesNotExist, ValidationError) as e:
+        except (Package.DoesNotExist, ValidationError):
             return qs.none()
 
         return qs.filter(package=package)
@@ -268,6 +273,7 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class MultiplePackageURLFilter(MultipleCharFilter):
+
     def filter(self, qs, value):
         if not value:
             # Even though not a noop, no point filtering if empty.
@@ -387,7 +393,7 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         Return the History field associated with the current Package.
         """
         package = self.get_object()
-        return Response({"history" : package.history})
+        return Response({"history": package.history})
 
     @action(detail=True, methods=['get'])
     def resources(self, request, *args, **kwargs):
@@ -497,6 +503,7 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class PackageViewSet(PackagePublicViewSet):
+
     @action(detail=True)
     def reindex_package(self, request, *args, **kwargs):
 
@@ -618,7 +625,6 @@ UPDATEABLE_FIELDS = [
     'description',
 ]
 
-
 NONUPDATEABLE_FIELDS = [
     'type',
     'namespace',
@@ -733,21 +739,43 @@ class PackageWatchViewSet(CreateListRetrieveUpdateViewSetMixin):
 
 class CollectViewSet(viewsets.ViewSet):
     """
-    Return Package data for the purl passed in the `purl` query parameter.
+    Return Package data for a `purl` query parameter.
 
-    If the package does not exist, we will fetch the Package data and return
-    it in the same request.
-    Optionally, provide the list of addon_pipelines
-    to run on the package. Find all addon pipelines [here.](https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html)
+    If the package does not exist in the database, collect, store and return the Package
+    metadata immediately, then run scan and indexing in the background.
+    Optionally, use a list of `addon_pipelines` to use for the scan.
+    See add-on pipelines at https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html
 
-    **Example:**
+    Paremeters:
 
-            /api/collect/?purl=pkg:npm/foo@1.2.3&addon_pipelines=collect_symbols_ctags&addon_pipelines=inspect_elf_binaries
+    - `purl`: (required, string) a PURL, with a version.
 
+    - `addon_pipelines`: (optional, string) a add-on pipeline names to run in addition to the
+      standard "scan_single_package" pipeline. Can be repeated to run multiple add-ons.
+      See also documentation at https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html
 
-    **Note:** Use `Index packages` for bulk indexing/reindexing of packages.
+      Available addon pipelines are:
+
+       - `collect_strings_gettext`
+       - `collect_symbols_ctags`
+       - `collect_symbols_pygments`
+       - `collect_symbols_tree_sitter`
+       - `inspect_elf_binaries`
+       - `scan_for_virus`        - `source_purl`: (optional, string) a PURL Package URL for the source package to collect at
+          the same time, when this source is not derivable from the PURL, like for Debian.
+
+    - `source_purl`: (optional, string) a PURL Package URL for the compnaion source package
+      to collect at the same time, when this source data is not derivable from the main `purl`,
+      like with several Debian packages.
+
+    **Example::**
+
+        /api/collect/?purl=pkg:npm/foo@1.2.3&addon_pipelines=collect_symbols_ctags&addon_pipelines=inspect_elf_binaries
+
+    **Note:** See `Index packages` for bulk indexing/reindexing of packages.
     """
-    serializer_class=CollectPackageSerializer
+    serializer_class = CollectPackageSerializer
+
     @extend_schema(
             parameters=[
                 OpenApiParameter('purl', str, 'query', description='PackageURL', required=True),
@@ -779,7 +807,6 @@ class CollectViewSet(viewsets.ViewSet):
 
         if addon_pipelines := validated_data.get('addon_pipelines', []):
             kwargs["pipelines"] = addon_pipelines
-
 
         lookups = purl_to_lookups(purl)
         packages = Package.objects.filter(**lookups)
@@ -816,73 +843,94 @@ class CollectViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['post'], serializer_class=IndexPackagesSerializer)
     def index_packages(self, request, *args, **kwargs):
         """
-        Take a list of `packages` (where each item is a dictionary containing either PURL
-        or versionless PURL along with vers range, optionally with source package PURL)
-        and index it.
-        Also each package can have list of `addon_pipelines` to run on the package.
-        Find all addon pipelines [here.](https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html)
+        Collect and index a JSON array of `packages` objects with PURLs to process.
 
+        Each item in this `packages` array is a JSON object containing these fields:
 
-        If `reindex` flag is True then existing package will be rescanned, if `reindex_set`
-        is True then all the package in the same set will be rescanned.
-        If reindex flag is set to true then all the non existing package will be indexed.
+        - `purl`: (required, string) a PURL Package URL, with or without a version. If there is no
+          version in the purl and no vers range in the vers field, collect all the known versions
+          for this package. Otherwise, only collect the request version.
 
-        **Note:** When a versionless PURL is supplied without a vers range, then all the versions
-        of that package will be considered for indexing/reindexing.
+        - `vers`: (optional, string) a VERS version range. If provided and the purl has no version,
+          then collect all the versions of the purl that in this versions range.
 
-        **Request example:**
+        - `addon_pipelines`: (optional, strings array) an array of add-on pipeline names to run
+          in addition to the standard "scan_single_package" pipeline.
+          See also documentation at https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html
+          Available addon pipelines are:
+           - `collect_strings_gettext`
+           - `collect_symbols_ctags`
+           - `collect_symbols_pygments`
+           - `collect_symbols_tree_sitter`
+           - `inspect_elf_binaries`
+           - `scan_for_virus`
 
+        - `reindex`: (optional, boolean, default to false) reindexing flag.  If the `reindex` flag
+          is true, then all pre-existing and new package versions for the requested `purl` and
+          `vers` will be (re)fetched, (re)scanned and (re)indexed.
+
+        - `reindex_set`: (optional, boolean, default to false) set reindexing flag.
+           If `reindex_set` flag is set to "true", then all the packages in the same set will be
+           re-indexex.
+
+        - `source_purl`: (optional, string) a PURL Package URL for the compnaion source package
+          to collect at the same time, when this source data is not derivable from the main `purl`,
+          like with several Debian packages.
+
+        **Request example**::
+
+            {
+              "packages": [
                 {
-                    "packages": [
-                        {
-                            "purl": "pkg:npm/less@1.0.32",
-                            "vers": null,
-                            "source_purl": None,
-                            "addon_pipelines": ['collect_symbols_ctags']
-                        },
-                        {
-                            "purl": "pkg:npm/less",
-                            "vers": "vers:npm/>=1.1.0|<=1.1.4",
-                            "source_purl": None,
-                            "addon_pipelines": None
-                        },
-                        {
-                            "purl": "pkg:npm/foobar",
-                            "vers": null,
-                            "source_purl": None,
-                            "addon_pipelines": ['inspect_elf_binaries', 'collect_symbols_ctags']
-                        }
-                    ]
-                    "reindex": true,
-                    "reindex_set": false,
+                  "purl": "pkg:npm/less@1.0.32",
+                  "addon_pipelines": [
+                    "collect_symbols_ctags"
+                  ]
+                },
+                {
+                  "purl": "pkg:npm/less",
+                  "vers": "vers:npm/>=1.1.0|<=1.1.4"
+                },
+                {
+                  "purl": "pkg:npm/foobar",
+                  "addon_pipelines": [
+                    "inspect_elf_binaries",
+                    "collect_symbols_ctags"
+                  ]
+                },
+                {
+                  "purl": "pkg:generic/busybox@1.36.1",
+                  "addon_pipelines": [
+                    "inspect_elf_binaries",
+                    "collect_symbols_ctags"
+                  ]
                 }
+              ],
+              "reindex": true,
+              "reindex_set": false
+            }
 
-        Then return a mapping containing:
 
-        - queued_packages_count
-            - The number of package urls placed on the index queue.
-        - queued_packages
-            - A list of package urls that were placed on the index queue.
-        - requeued_packages_count
-            - The number of existing package urls placed on the rescan queue.
-        - requeued_packages
-            - A list of existing package urls that were placed on the rescan queue.
-        - unqueued_packages_count
-            - The number of package urls not placed on the index queue.
-                This is because the package url already exists on the index queue and has not
-                yet been processed.
-        - unqueued_packages
-            - A list of package urls that were not placed on the index queue.
-        - unsupported_packages_count
-            - The number of package urls that are not processable by the index queue.
-        - unsupported_packages
-            - A list of package urls that are not processable by the index queue.
-                The package indexing queue can only handle npm and maven purls.
-        - unsupported_vers_count
-            - The number of vers range that are not supported by the univers or package_manager.
-        - unsupported_vers
-            - A list of vers range that are not supported by the univers or package_manager.
+        POSTing this request will return a mapping containing this data:
+
+        - `queued_packages_count`: The number of package urls placed on the index queue.
+        - `queued_packages`: An array of package urls that were placed on the index queue.
+        - `requeued_packages_count`: The number of existing package urls placed on the rescan queue.
+        - `requeued_packages`: An array of existing package urls placed on the rescan queue.
+        - `unqueued_packages_count`: The number of package urls not placed on the index queue.
+          This is because the package url already exists on the index queue and has not
+          yet been processed.
+        - `unqueued_packages`: An array of package urls that were not placed on the index queue.
+        - `unsupported_packages_count`: The number of package urls that are not processable by the
+          index queue.
+        - `unsupported_packages`: An array of package urls that cannot be queued for indexing.
+          The package indexing queue can only handle certain support purl types.
+        - `unsupported_vers_count`: The number of vers range that are not supported by the univers
+          or package_manager.
+        - `unsupported_vers`: A list of vers range that are not supported by the univers or
+          package_manager.
         """
+
         def _reindex_package(package, reindexed_packages, **kwargs):
             if package in reindexed_packages:
                 return
@@ -1034,7 +1082,6 @@ class PurlValidateViewSet(viewsets.ViewSet):
             serializer = PurlValidateResponseSerializer(response, context={'request': request})
             return Response(serializer.data)
 
-
         response['valid'] = True
         response["message"] = message_valid
         unsupported_ecosystem = False
@@ -1070,7 +1117,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
                 response['exists'] = None
                 response["message"] = message_valid_but_package_type_not_supported
             else:
-                response["message"] =message_valid_but_does_not_exist
+                response["message"] = message_valid_but_does_not_exist
 
         serializer = PurlValidateResponseSerializer(response, context={'request': request})
         return Response(serializer.data)
