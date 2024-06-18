@@ -964,7 +964,7 @@ class CollectViewSet(viewsets.ViewSet):
             for package in unique_packages:
                 purl = package['purl']
                 kwargs = dict()
-                if addon_pipelines := package.get('source_purl'):
+                if addon_pipelines := package.get('addon_pipelines'):
                     kwargs["addon_pipelines"] = [pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)]
                 lookups = purl_to_lookups(purl)
                 packages = Package.objects.filter(**lookups)

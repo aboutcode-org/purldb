@@ -940,6 +940,13 @@ class PriorityResourceURI(BaseURI):
         help_text='Processing errors messages. When present this means the processing failed.',
     )
 
+    addon_pipelines = models.JSONField(
+        default=list,
+        blank=True,
+        editable=False,
+        help_text='A list of addon ScanCode.io pipeline to run.',
+    )
+
     objects = PriorityResourceURIManager()
 
     class Meta:
