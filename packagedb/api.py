@@ -770,7 +770,7 @@ class CollectViewSet(viewsets.ViewSet):
 
     **Example::**
 
-        /api/collect/?purl=pkg:npm/foo@1.2.3&addon_pipelines=collect_symbols_ctags&addon_pipelines=inspect_elf_binaries
+        /api/collect/?purl=pkg:npm/foo@0.0.7&addon_pipelines=collect_symbols_ctags&addon_pipelines=inspect_elf_binaries
 
     **Note:** See `Index packages` for bulk indexing/reindexing of packages.
     """
@@ -806,7 +806,7 @@ class CollectViewSet(viewsets.ViewSet):
             kwargs["source_purl"] = source_purl
 
         if addon_pipelines := validated_data.get('addon_pipelines', []):
-            kwargs["pipelines"] = addon_pipelines
+            kwargs["addon_pipelines"] = addon_pipelines
 
         lookups = purl_to_lookups(purl)
         packages = Package.objects.filter(**lookups)
