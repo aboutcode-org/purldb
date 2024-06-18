@@ -768,9 +768,11 @@ class CollectViewSet(viewsets.ViewSet):
       to collect at the same time, when this source data is not derivable from the main `purl`,
       like with several Debian packages.
 
-    **Example::**
+    **Examples::**
+    
+        /api/collect/?purl=pkg:npm/foo@0.0.7&addon_pipelines=collect_symbols_ctags
 
-        /api/collect/?purl=pkg:npm/foo@0.0.7&addon_pipelines=collect_symbols_ctags&addon_pipelines=inspect_elf_binaries
+        /api/collect/?purl=pkg:generic/busybox@1.36.1&addon_pipelines=collect_symbols_ctags&addon_pipelines=inspect_elf_binaries
 
     **Note:** See `Index packages` for bulk indexing/reindexing of packages.
     """
