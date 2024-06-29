@@ -269,7 +269,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         self.package3 = Package.objects.create(**self.package_data3)
         self.package3.refresh_from_db()
 
-        self.package_data4= {
+        self.package_data4 = {
             'type': 'jar',
             'namespace': 'sample',
             'name': 'Baz',
@@ -286,7 +286,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         self.package4 = Package.objects.create(**self.package_data4)
         self.package4.refresh_from_db()
 
-        self.package_data5= {
+        self.package_data5 = {
             'type': 'maven',
             'namespace': 'foot',
             'name': 'baz',
@@ -305,7 +305,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         self.package5 = Package.objects.create(**self.package_data5)
         self.package5.refresh_from_db()
 
-        self.package_data6= {
+        self.package_data6 = {
             'type': 'maven',
             'namespace': 'fooo',
             'name': 'baz',
@@ -323,7 +323,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         self.package6 = Package.objects.create(**self.package_data6)
         self.package6.refresh_from_db()
 
-        self.package_data7= {
+        self.package_data7 = {
             'type': 'github',
             'namespace': 'glue',
             'name': 'cat',
@@ -462,7 +462,6 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         self.assertIn(self.package2.purl, purls)
         self.assertIn(self.package3.purl, purls)
         self.assertNotIn(self.package.purl, purls)
-
 
     def test_package_api_filter_by_checksums(self):
         sha1s = [
@@ -814,6 +813,33 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
 
         self.check_expected_results(result, expected, fields_to_remove=fields_to_remove, regen=FIXTURES_REGEN)
 
+    def test_package_live_works_with_purl2vcs(self):
+        purl = "pkg:maven/org.elasticsearch.plugin/elasticsearch-scripting-painless-spi@6.8.15"
+        download_url = 'https://repo1.maven.org/maven2/org/elasticsearch/plugin/elasticsearch-scripting-painless-spi/6.8.15/elasticsearch-scripting-painless-spi-6.8.15.jar'
+        purl_sources_str = f'{purl}?classifier=sources'
+        sources_download_url = 'https://repo1.maven.org/maven2/org/elasticsearch/plugin/elasticsearch-scripting-painless-spi/6.8.15/elasticsearch-scripting-painless-spi-6.8.15-sources.jar'
+
+        self.assertEqual(0, Package.objects.filter(download_url=download_url).count())
+        self.assertEqual(0, Package.objects.filter(download_url=sources_download_url).count())
+        response = self.client.get(f'/api/collect/?purl={purl}')
+        self.assertEqual(1, Package.objects.filter(download_url=download_url).count())
+        self.assertEqual(1, Package.objects.filter(download_url=sources_download_url).count())
+        expected = self.get_test_loc('api/elasticsearch-scripting-painless-spi-6.8.15.json')
+
+        self.assertEqual(2, len(response.data))
+        result = response.data[0]
+
+        # remove fields
+        result.pop('url')
+        fields_to_remove = [
+            'uuid',
+            'resources',
+            'package_sets',
+            'history'
+        ]
+
+        self.check_expected_results(result, expected, fields_to_remove=fields_to_remove, regen=FIXTURES_REGEN)
+
     def test_package_api_index_packages_endpoint(self):
         priority_resource_uris_count = PriorityResourceURI.objects.all().count()
         self.assertEqual(0, priority_resource_uris_count)
@@ -1131,7 +1157,7 @@ class PackageUpdateSetTestCase(TestCase):
             'sha1': 'testsha1',
             'md5': 'testmd5',
             'size': 101,
-            'package_content' : 1
+            'package_content': 1
         }
         self.package = Package.objects.create(**self.package_data)
         self.package.refresh_from_db()
@@ -1157,7 +1183,7 @@ class PackageUpdateSetTestCase(TestCase):
           "purls": [
             {"purl": "pkg:npm/foobar@1.1.0", "content_type": "PATCH"}
           ],
-          "uuid" : str(self.new_package_set_uuid)
+          "uuid": str(self.new_package_set_uuid)
         }
 
         expected = [{"purl": "pkg:npm/foobar@1.1.0", "update_status": "Already Exists"}]
@@ -1171,7 +1197,7 @@ class PackageUpdateSetTestCase(TestCase):
           "purls": [
             {"purl": "pkg:npm/foobar@1.1.0", "content_type": "SOURCE_REPO"}
           ],
-          "uuid" : "ac9c36f4-a1ed-4824-8448-c6ed8f1da71d"
+          "uuid": "ac9c36f4-a1ed-4824-8448-c6ed8f1da71d"
         }
 
         expected = {"update_status": "No Package Set found for ac9c36f4-a1ed-4824-8448-c6ed8f1da71d"}
@@ -1192,7 +1218,6 @@ class PackageUpdateSetTestCase(TestCase):
         response = self.client.post(f"/api/update_packages/", data=data, content_type="application/json")
 
         self.assertEqual(expected, response.data)
-
 
     def test_api_purl_validation_empty_request(self):
         data = {}
@@ -1259,7 +1284,6 @@ class PurlValidateApiTestCase(TestCase):
             "check_existence": True,
         }
         response1 = self.client.get(f"/api/validate/", data=data1)
-
 
         self.assertEqual(True, response1.data["valid"])
         self.assertEqual(
