@@ -168,7 +168,7 @@ def get_source_package_and_add_to_package_set(package):
         logger.info(f"Created source repo package {source_purl} for {package.purl}")
     package_set_uuids = [item["uuid"] for item in package.package_sets.all().values("uuid")]
     package_set_ids = set(package_set_uuids)
-    source_package_set_ids = set(source_package.package_sets.all().values("uuid"))
+    source_package_set_ids = set(source_package.package_sets.all().values_list("uuid"))
 
     # If the package exists and already in the set then there is nothing left to do
     if package_set_ids.intersection(source_package_set_ids):
