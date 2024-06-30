@@ -27,7 +27,6 @@ from minecode import visitors  # NOQA
 
 from packagedb.models import Package
 
-
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
@@ -515,6 +514,7 @@ class ResourceURI(BaseURI):
 
 
 class ScannableURIManager(models.Manager):
+
     def get_scannables(self):
         """
         Return an ordered query set of all scannable ScannableURIs.
@@ -615,6 +615,48 @@ class ScannableURIManager(models.Manager):
         transaction.atomic block.
         """
         return self.__get_next_candidate(self.get_processables())
+
+    def statistics(self):
+        """
+        Return a statistics mapping with summary counts of ScannableURI grouped by status.
+        """
+        statuses = list(self.values('scan_status').annotate(count=models.Count('scan_status')).order_by('scan_status'),)
+        for stat in statuses:
+            stat['scan_status'] = ScannableURI.SCAN_STATUSES_BY_CODE[stat['scan_status']]
+        stats = {
+            'total': self.count(),
+            'processables': self.get_processables().count(),
+            'scannables': self.get_scannables().count(),
+            'by_status': statuses,
+        }
+
+        most_recent = dict(
+            most_recent_submitted=self._recent(scan_status=ScannableURI.SCAN_SUBMITTED),
+            most_recent_indexed=self._recent(scan_status=ScannableURI.SCAN_INDEXED),
+            most_recent_failed=self._recent(scan_status=ScannableURI.SCAN_FAILED, extra_value="scan_error",),
+            most_recent_in_progress=self._recent(scan_status=ScannableURI.SCAN_IN_PROGRESS),
+            most_recent_completed=self._recent(scan_status=ScannableURI.SCAN_COMPLETED),
+            most_recent_index_errors=self._recent(scan_status=ScannableURI.SCAN_INDEX_FAILED, extra_value="index_error",),
+        )
+        stats.update(most_recent)
+        return stats
+
+    def _recent(self, scan_status, extra_value=None, most_recent=10):
+        """
+        Yield mappings of the ``most_recent`` PURL and download URL with a given
+        ``scan_status``.
+        Include an optional ``extra value`` field name.
+        """
+        recent_uris = self.filter(scan_status=scan_status).order_by('-scan_date')[:most_recent]
+        for scauri in recent_uris:
+            recent = dict(
+                # this is NOT a field requiring this loop
+                package_url=scauri.package.package_url,
+                download_url=scauri.package.download_url,
+            )
+            if extra_value:
+                recent[extra_value] = getattr(scauri, extra_value)
+            yield recent
 
 
 class ScannableURI(BaseURI):
@@ -794,6 +836,7 @@ class ScannableURI(BaseURI):
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
 class PriorityResourceURIManager(models.Manager):
+
     def insert(self, uri, **extra_fields):
         """
         Create and return a new PriorityResourceURI after computing its canonical URI
@@ -962,6 +1005,7 @@ class PriorityResourceURI(BaseURI):
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
 class ImportableURIManager(models.Manager):
+
     def insert(self, uri, data, package_url, **extra_fields):
         """
         Create and return a new ImportableURI
@@ -1027,9 +1071,9 @@ class ImportableURIManager(models.Manager):
         importable_uri.save(update_fields=['wip_date'])
         return importable_uri
 
-
 # TODO: have a second queue for crawling maven repo, that tracks which pages and namespaces we visited
 # when we hit the point of a package page, we add it to the queue that creates skinny packages for the package we visited.
+
 
 class ImportableURI(BaseURI):
     package_url = models.CharField(
