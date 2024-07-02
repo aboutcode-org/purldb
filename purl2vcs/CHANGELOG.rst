@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.2
+------
+
+Fix bug when collecting versions.
+Reference: https://github.com/nexB/purldb/issues/486
+
+
 v1.0.1
 ------
 
