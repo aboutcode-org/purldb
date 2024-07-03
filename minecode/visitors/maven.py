@@ -64,7 +64,6 @@ TRACE_DEEP = False
 if TRACE:
     logger.setLevel(logging.DEBUG)
 
-
 MAVEN_BASE_URL = 'https://repo1.maven.org/maven2'
 
 
@@ -329,14 +328,20 @@ def map_maven_binary_and_source(package_url, pipelines):
     Return an error string for errors that occur, or empty string if there is no error.
     """
     error = ''
-    package, emsg = map_maven_package(package_url, PackageContentType.BINARY, pipelines)
+    package, emsg = map_maven_package(
+        package_url=package_url,
+        package_content=PackageContentType.BINARY,
+        pipelines=pipelines,
+    )
     if emsg:
         error += emsg
 
     source_package_url = package_url
     source_package_url.qualifiers['classifier'] = 'sources'
     source_package, emsg = map_maven_package(
-        source_package_url, PackageContentType.SOURCE_ARCHIVE, pipelines
+        package_url=source_package_url,
+        package_content=PackageContentType.SOURCE_ARCHIVE,
+        pipelines=pipelines,
     )
     if emsg:
         error += emsg
@@ -419,7 +424,7 @@ def process_request(purl_str, **kwargs):
     Return an error string for errors that occur, or empty string if there is no error.
     """
     from minecode.model_utils import DEFAULT_PIPELINES
-    
+
     addon_pipelines = kwargs.get('addon_pipelines', [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
 
@@ -1103,7 +1108,6 @@ def is_source(classifier):
     """
     return classifier and ('source' in classifier or 'src' in classifier)
 
-
 ########################################################################
 # DOCUMENTAION OF the FIELDS aka. Records:
 #
@@ -1495,10 +1499,10 @@ def java_time_ts(tm):
     ar = arrow.get(tm / 1000).replace(tzinfo=tzinfo).to('utc')
     return ar.isoformat()
 
-
 ################################################################################
 # These are CLI/shell test and stat utilities
 ################################################################################
+
 
 def _spit_json(location, target):
     with open(target, 'w') as t:
