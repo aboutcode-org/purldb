@@ -651,10 +651,11 @@ NONUPDATEABLE_FIELDS = [
 def get_enhanced_package(package):
     """
     Return package data from `package`, where the data has been enhanced by
-    other packages in the same package_set.
+    other packages in the same first_package_in_set.
     """
     package_content = package.package_content
     in_package_sets = package.package_sets.count() > 0
+
     if (
         not in_package_sets
         or not package_content
@@ -665,21 +666,23 @@ def get_enhanced_package(package):
         # Source repo packages can't really be enhanced much further, datawise
         # and we can't enhance a package that is not in a package set.
         return package.to_dict()
-    if package_content in [PackageContentType.BINARY, PackageContentType.SOURCE_ARCHIVE]:
+
+    elif package_content in [PackageContentType.BINARY, PackageContentType.SOURCE_ARCHIVE]:
         # Binary packages can only be part of one set
         # TODO: Can source_archive packages be part of multiple sets?
-        package_set = package.package_sets.first()
-        if package_set:
-            package_set_members = package_set.get_package_set_members()
+        first_package_in_set = package.package_sets.first()
+        if first_package_in_set:
+            package_set_members = first_package_in_set.get_package_set_members()
             if package_content == PackageContentType.SOURCE_ARCHIVE:
                 # Mix data from SOURCE_REPO packages for SOURCE_ARCHIVE packages
                 package_set_members = package_set_members.filter(
                     package_content=PackageContentType.SOURCE_REPO
                 )
             # TODO: consider putting in the history field that we enhanced the data
-            return _get_enhanced_package(package, package_set_members)
-        else:
-            return package.to_dict()
+            return _get_enhanced_package(package=package, packages=package_set_members)
+    else:
+        # if not enhanced return the package as-is
+        return package.to_dict()
 
 
 def _get_enhanced_package(package, packages):
@@ -688,10 +691,20 @@ def _get_enhanced_package(package, packages):
     `packages`.
     """
     package_data = package.to_dict()
+
+    # always default to PackageContentType.BINARY as we can have None/NULL in the model for now
+    # Reference: https://github.com/nexB/purldb/issues/490
+    package_content = (package and package.package_content) or PackageContentType.BINARY
+
     for peer in packages:
-        if peer.package_content >= package.package_content:
+        # always default to PackageContentType.BINARY as we can have None/NULL in the model for now
+        # Reference: https://github.com/nexB/purldb/issues/490
+        peer_content = (peer and peer.package_content) or PackageContentType.BINARY
+
+        if peer_content >= package_content:
             # We do not want to mix data with peers of the same package content
             continue
+
         enhanced = False
         for field in UPDATEABLE_FIELDS:
             package_value = package_data.get(field)
@@ -709,6 +722,7 @@ def _get_enhanced_package(package, packages):
             enhanced_by.append(peer.purl)
             extra_data['enhanced_by'] = enhanced_by
             package_data['extra_data'] = extra_data
+
     return package_data
 
 
