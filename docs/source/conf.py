@@ -120,3 +120,8 @@ rst_prolog = """
 # -- Options for LaTeX output -------------------------------------------------
 
 latex_elements = {"classoptions": ",openany,oneside"}
+
+# Note: The redirect is relative to the current page https://documatt.com/sphinx-reredirects/usage.html#usage
+redirects = {
+    "how-to-guides/tutorial_symbol_and_string_collection.html": "symbols_and_strings.html",
+}
