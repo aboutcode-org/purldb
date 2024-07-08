@@ -352,7 +352,7 @@ def map_maven_binary_and_source(package_url, pipelines, reindex_metadata=False):
     if emsg:
         error += emsg
 
-    if package and source_package:
+    if not reindex_metadata and package and source_package:
         make_relationship(
             from_package=source_package,
             to_package=package,
