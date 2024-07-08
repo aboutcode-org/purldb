@@ -1030,6 +1030,73 @@ class CollectViewSet(viewsets.ViewSet):
         serializer = IndexPackagesResponseSerializer(response_data, context={'request': request})
         return Response(serializer.data)
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter('purl', str, 'query', description='PackageURL', required=True),
+        ],
+        responses={200:PackageAPISerializer()},
+    )
+    @action(detail=False, methods=['get'], serializer_class=CollectPackageSerializer)
+    def reindex_metadata(self, request, *args, **kwargs):
+        """
+        Collect or recollect the package metadata of a ``PURL`` string.
+        Also recollects all packages in the set of the PURL.
+
+        If the PURL does exist, calling thios endpoint with re-collect, re-store and return the
+        Package metadata immediately,
+
+        If the package does not exist in the database this call does nothing.
+        NOTE: this WILL NOT re-run scan and indexing in the background in contrast with the /collect
+        and collect/index_packages endpoints.
+        
+        **Request example**::
+        
+            /api/collect/reindex_metadata/?purl=pkg:npm/foo@0.0.7
+
+        """
+        serializer = self.serializer_class(data=request.query_params)
+        if not serializer.is_valid():
+            return Response(
+                {'errors': serializer.errors},
+                status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        validated_data = serializer.validated_data
+        purl = validated_data.get('purl')
+
+        lookups = purl_to_lookups(purl)
+        packages = Package.objects.filter(**lookups)
+        if packages.count() == 0:
+            return Response(
+                {'status': f'Not recollecting: Package does not exist for {purl}'}, 
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+        # Pass to only reindex_metadata downstream
+        kwargs["reindex_metadata"] = True
+        # here we have a package(s) matching our purl and we want to recollect metadata live
+        try:
+            errors = priority_router.process(purl, **kwargs)
+        except NoRouteAvailable:
+            message = {
+                'status': f'cannot fetch Package data for {purl}: no available handler'
+            }
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+        lookups = purl_to_lookups(purl)
+        packages = Package.objects.filter(**lookups)
+        if packages.count() == 0:
+            message = {}
+            if errors:
+                message = {
+                    'status': f'error(s) occurred when fetching metadata for {purl}: {errors}'
+                }
+            return Response(message)
+
+        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
 
 class PurlValidateViewSet(viewsets.ViewSet):
     """

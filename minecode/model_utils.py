@@ -219,18 +219,26 @@ def merge_packages(existing_package, new_package_data, replace=False):
     return updated_fields
 
 
-def merge_or_create_package(scanned_package, visit_level):
+def merge_or_create_package(scanned_package, visit_level, override=False):
     """
-    Update Package from `scanned_package` instance if `visit_level` is greater
+    Update Package from ``scanned_package`` instance if `visit_level` is greater
     than the mining level of the existing package.
 
-    If `scanned_package` does not exist in the PackageDB, create a new entry in
-    the PackageDB for `scanned_package`.
+    If ``scanned_package`` does not exist in the PackageDB, create a new entry in
+    the PackageDB for ``scanned_package``.
+    
+    If ``override`` is True, then all existing empty values of the PackageDB package are replaced by
+    a non-empty value of the provided override.
     """
     created = False
     merged = False
     package = None
     map_error = ''
+
+    mining_level = visit_level
+    if override:
+        # this will force the data override
+        visit_level =+1
 
     if not isinstance(scanned_package, PackageData):
         msg = 'Not a ScanCode PackageData type:' + repr(scanned_package)
@@ -297,7 +305,7 @@ def merge_or_create_package(scanned_package, visit_level):
             # package and the existing package, the existing package parties should be
             # deleted first and then the new package's parties added.
 
-            stored_package.mining_level = visit_level
+            stored_package.mining_level = mining_level
 
         if updated_fields:
             data = {
@@ -335,7 +343,7 @@ def merge_or_create_package(scanned_package, visit_level):
             filename=fileutils.file_name(package_uri),
             # TODO: update the PackageDB model
             release_date=scanned_package.release_date,
-            mining_level=visit_level,
+            mining_level=mining_level,
             type=scanned_package.type,
             namespace=scanned_package.namespace,
             name=scanned_package.name,

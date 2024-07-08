@@ -1211,13 +1211,17 @@ class PackageRelation(models.Model):
 
 
 def make_relationship(
-    from_package, to_package, relationship
+    from_package, to_package, relationship,
 ):
-    return PackageRelation.objects.create(
+    """
+    Create and return the from/to package relathionship if it does exists.
+    """
+    pkg, _created = PackageRelation.objects.get_or_create(
         from_package=from_package,
         to_package=to_package,
         relationship=relationship,
     )
+    return pkg
 
 
 class PackageWatch(models.Model):
