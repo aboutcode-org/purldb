@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("minecode", "0031_importableuri"),
+        ("minecode", "0036_priorityresourceuri_addon_pipelines"),
     ]
 
     operations = [

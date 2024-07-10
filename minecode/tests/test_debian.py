@@ -121,22 +121,22 @@ class DebutilsTest(BaseDebianTest):
     def test_parse_email(self):
         content = 'Debian TeX Maintainers <debian-tex-maint@lists.debian.org>'
         name, email = debutils.parse_email(content)
-        self.assertEquals('Debian TeX Maintainers', name)
-        self.assertEquals('debian-tex-maint@lists.debian.org', email)
+        self.assertEqual('Debian TeX Maintainers', name)
+        self.assertEqual('debian-tex-maint@lists.debian.org', email)
 
     def test_parse_email_2(self):
         # Space left Purposefully
         content = '        Debian TeX Maintainers '
         name, email = debutils.parse_email(content)
-        self.assertEquals('Debian TeX Maintainers', name)
-        self.assertEquals(None, email)
+        self.assertEqual('Debian TeX Maintainers', name)
+        self.assertEqual(None, email)
 
     def test_parse_email_3(self):
         # Space left Purposefully
         content = '<       debian-tex-maint@lists.debian.org   >'
         name, email = debutils.parse_email(content)
-        self.assertEquals(None, name)
-        self.assertEquals("debian-tex-maint@lists.debian.org", email)
+        self.assertEqual(None, name)
+        self.assertEqual("debian-tex-maint@lists.debian.org", email)
 
     def test_comma_separated(self):
         tags = 'implemented-in::perl, role::program, use::converting, works-with::pim'
@@ -209,7 +209,7 @@ class DebianCopyrightTest(BaseDebianTest):
              'copyright': 'Copyright 1998 Jane Doe <packager@example.com>'
              }
         ]
-        self.assertEquals(expected, copyright_data)
+        self.assertEqual(expected, copyright_data)
 
     @expectedFailure
     def test_parse_copyright_allinfo_with_invalid_file(self):
@@ -399,11 +399,11 @@ class DebianMapperTest(BaseDebianTest):
         }
         keys = ['build1', 'build2']
         result = debian_mapper.get_dependencies(test, keys)
-        self.assertEquals(2, len(result))
-        self.assertEquals('build', result[0].purl)
-        self.assertEquals(None, result[0].requirement)
-        self.assertEquals('build2', result[1].purl)
-        self.assertEquals(None, result[1].requirement)
+        self.assertEqual(2, len(result))
+        self.assertEqual('build', result[0].purl)
+        self.assertEqual(None, result[0].requirement)
+        self.assertEqual('build2', result[1].purl)
+        self.assertEqual(None, result[1].requirement)
 
     def test_get_programming_language(self):
         tags = ['role::program', 'implemented-in::perl', 'use::converting', 'works-with::pim']

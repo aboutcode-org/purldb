@@ -22,7 +22,6 @@ import requests
 from minecode.visitors.maven import collect_links_from_text
 from minecode.visitors.maven import filter_for_artifacts
 from minecode.management.commands import VerboseCommand
-from packagedb.management.commands.update_maven_download_urls import check_download_url
 from packagedb.models import Package
 from packagedcode.maven import get_urls, build_filename
 from packageurl import PackageURL
@@ -207,7 +206,7 @@ class Command(VerboseCommand):
                     and package.qualifiers == artifact_qualifiers
                 ):
                     # check download url
-                    if check_download_url(package.download_url):
+                    if requests.head(package.download_url):
                         # Continue if it resolves
                         continue
                     else:

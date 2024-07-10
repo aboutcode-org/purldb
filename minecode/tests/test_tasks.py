@@ -52,7 +52,7 @@ class MinecodeTasksTestCase(JsonBasedTesting, TestCase):
         self.assertFalse(self.package1.size)
         self.assertFalse(self.package1.declared_license_expression)
         self.assertFalse(self.package1.copyright)
-        self.assertEquals(0, self.package1.resources.count())
+        self.assertEqual(0, self.package1.resources.count())
         scan_file_location = self.get_test_loc('scancodeio/get_scan_data.json')
         summary_file_location = self.get_test_loc('scancodeio/scan_summary_response.json')
         project_extra_data = json.dumps(self.project_extra_data1)

@@ -306,7 +306,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
     def test_run_map_command(self):
         output = StringIO()
         management.call_command('run_map', exit_on_empty=True, stdout=output)
-        self.assertEquals('', output.getvalue())
+        self.assertEqual('', output.getvalue())
 
     def test_map_uri_does_update_with_same_mining_level(self):
         # setup

@@ -61,4 +61,4 @@ class CranMapperTest(JsonBasedTesting, DjangoTestCase):
         url = "../../../src/contrib/Archive/ANN2"
         result = get_download_url(url)
         expected_url = 'https://cloud.r-project.org/src/contrib/Archive/ANN2'
-        self.assertEquals(expected_url, result)
+        self.assertEqual(expected_url, result)

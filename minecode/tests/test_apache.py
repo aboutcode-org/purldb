@@ -43,8 +43,8 @@ class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, data, _ = apache.ApacheChecksumVisitor(uri)
 
-        self.assertEquals(None, uris)
-        self.assertEquals(b'0b5f2c334916c289f06c03f8577a9879', data)
+        self.assertEqual(None, uris)
+        self.assertEqual(b'0b5f2c334916c289f06c03f8577a9879', data)
 
     def test_ApacheChecksumVisitor_2(self):
         uri = 'http://archive.apache.org/dist/groovy/2.4.6/distribution/apache-groovy-docs-2.4.6.zip.md5'

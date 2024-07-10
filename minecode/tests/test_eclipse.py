@@ -43,7 +43,7 @@ class EclipseVistorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = eclipse.EclipseSingleProjectVisitor(uri)
         with open(self.get_test_loc('eclipse/acceleo_expected.html'), 'rb') as data_file:
-            self.assertEquals(data_file.read(), data)
+            self.assertEqual(data_file.read(), data)
 
     def test_visit_eclipse_git_repo(self):
         uri = 'http://git.eclipse.org/c'

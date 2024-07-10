@@ -151,8 +151,8 @@ class PackageModelTestCase(TransactionTestCase):
     def test_packagedb_package_model_update_fields(self):
         p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
         self.assertFalse(p1.history)
-        self.assertEquals('', p1.namespace)
-        self.assertEquals(None, p1.homepage_url)
+        self.assertEqual('', p1.namespace)
+        self.assertEqual(None, p1.homepage_url)
         package, updated_fields = p1.update_fields(namespace='test', homepage_url='https://example.com')
         self.assertEqual(
             sorted(updated_fields),
@@ -284,14 +284,14 @@ class PackageModelTestCase(TransactionTestCase):
         for entry in p1.history:
             entry.pop('timestamp')
             history.append(entry)
-        self.assertEquals(expected_history, history)
+        self.assertEqual(expected_history, history)
 
     def test_packagedb_package_model_update_fields_related_models(self):
         p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
         path = 'asdf'
         resources = [Resource(package=p1, path=path)]
         _, updated_fields = p1.update_fields(resources=resources)
-        self.assertEquals(
+        self.assertEqual(
             sorted(['resources', 'history']),
             sorted(updated_fields)
         )
@@ -341,7 +341,7 @@ class PackageModelTestCase(TransactionTestCase):
             }
         ]
         _, updated_fields = p2.update_fields(resources=resources)
-        self.assertEquals(
+        self.assertEqual(
             sorted(['resources', 'history']),
             sorted(updated_fields)
         )
@@ -361,7 +361,7 @@ class PackageModelTestCase(TransactionTestCase):
              )
         ]
         _, updated_fields = p3.update_fields(parties=parties)
-        self.assertEquals(
+        self.assertEqual(
             sorted(['parties', 'history']),
             sorted(updated_fields)
         )
@@ -382,7 +382,7 @@ class PackageModelTestCase(TransactionTestCase):
              )
         ]
         _, updated_fields = p4.update_fields(parties=parties)
-        self.assertEquals(
+        self.assertEqual(
             sorted(['parties', 'history']),
             sorted(updated_fields)
         )
@@ -403,7 +403,7 @@ class PackageModelTestCase(TransactionTestCase):
             )
         ]
         _, updated_fields = p5.update_fields(dependencies=dependencies)
-        self.assertEquals(
+        self.assertEqual(
             sorted(['dependencies', 'history']),
             sorted(updated_fields)
         )
@@ -425,7 +425,7 @@ class PackageModelTestCase(TransactionTestCase):
             )
         ]
         _, updated_fields = p6.update_fields(dependencies=dependencies)
-        self.assertEquals(
+        self.assertEqual(
             sorted(['dependencies', 'history']),
             sorted(updated_fields)
         )
@@ -465,7 +465,7 @@ class PackageWatchModelTestCase(TransactionTestCase):
     def test_package_watch_no_duplicate(self):
         self.assertRaises(
             IntegrityError,
-            PackageWatch.objects.create, 
+            PackageWatch.objects.create,
             package_url="pkg:maven/org.test/test-package",
         )
 
@@ -508,7 +508,7 @@ class PackageWatchModelTestCase(TransactionTestCase):
         self.assertEqual(None, self.package_watch1.schedule_work_id)
 
 
-        
+
     def test_get_or_none(self):
         Package.objects.create(download_url='http://a.ab', name='name', version='1.0', type="foo")
         package = Package.objects.filter(

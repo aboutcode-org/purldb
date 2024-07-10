@@ -24,7 +24,7 @@ class RsyncTest(MiningTestCase):
         output = list(rsync.modules(inp))
         expected = '''apache CPAN CTAN eclipse flightgear gnualpha gnuftp
                       mozdev mozilla opencsw simgear sugar xemacs'''.split()
-        self.assertEquals(expected, output)
+        self.assertEqual(expected, output)
 
     def test_entry_rsync_31(self):
         # $ rsync --no-motd --recursive rsync/rsync_dir/
@@ -47,7 +47,7 @@ class RsyncTest(MiningTestCase):
 
         for test, exp in zip(lines, expected):
             result = rsync.entry(test)
-            self.assertEquals(exp, result)
+            self.assertEqual(exp, result)
 
     def test_entry(self):
         lines = [
@@ -68,7 +68,7 @@ class RsyncTest(MiningTestCase):
 
         for test, exp in zip(lines, expected):
             result = rsync.entry(test)
-            self.assertEquals(exp, result)
+            self.assertEqual(exp, result)
 
     def test_directory(self):
         test_dir = self.get_test_loc('rsync/rsync_wicket.dir')
@@ -98,7 +98,7 @@ class RsyncTest(MiningTestCase):
             rsync.Entry(type='-', perm='rw-rw-r--', size=29890658, date='2014-02-14T15:51:23+00:00', path='6.14.0/binaries/apache-wicket-6.14.0-bin.zip')
         ]
         expected = [dict(x._asdict()) for x in expected]
-        self.assertEquals(expected, output)
+        self.assertEqual(expected, output)
 
     def test_directory_weird_file_types_are_ignored(self):
         self.maxDiff = None
@@ -106,7 +106,7 @@ class RsyncTest(MiningTestCase):
         output = rsync.directory_entries(inp)
         results = [e['path'] for e in output if e['type'] == '-']
         expected = ['dev/.udev/rules.d/root.rules']
-        self.assertEquals(expected, results)
+        self.assertEqual(expected, results)
 
     @skipIf(ON_WINDOWS, 'rsync is not available on windows')
     def test_fetch_directory(self):

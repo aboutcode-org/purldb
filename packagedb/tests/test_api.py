@@ -1206,7 +1206,7 @@ class PackageUpdateSetTestCase(TestCase):
             }
         }
 
-        self.assertAlmostEquals(expected, response.data)
+        self.assertAlmostEqual(expected, response.data)
 
 
 class PurlValidateApiTestCase(TestCase):
@@ -1279,7 +1279,7 @@ class PurlValidateApiTestCase(TestCase):
             }
         }
 
-        self.assertAlmostEquals(expected, response1.data)
+        self.assertAlmostEqual(expected, response1.data)
 
 
 class PackageWatchTestCase(TestCase):
