@@ -876,15 +876,17 @@ Take a list of ``packages`` (where each item is a dictionary containing either P
 or versionless PURL along with vers range, optionally with source package PURL)
 and index it.
 Also each package can have list of ``addon_pipelines`` to run on the package.
-Find all addon pipelines [here.](https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html)
+Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html>`_
 
 
 If ``reindex`` flag is True then existing package will be rescanned, if ``reindex_set``
 is True then all the package in the same set will be rescanned.
 If reindex flag is set to true then all the non existing package will be indexed.
 
-**Note:** When a versionless PURL is supplied without a vers range, then all the versions
-of that package will be considered for indexing/reindexing.
+.. Note::
+
+    When a versionless PURL is supplied without a vers range, then all the versions
+    of that package will be considered for indexing/reindexing.
 
 
 Using cURL to get next download URL:
