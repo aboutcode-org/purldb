@@ -8,7 +8,6 @@
 #
 from dateutil.parser import parse as dateutil_parse
 from os.path import basename
-import copy
 import logging
 import sys
 import traceback
@@ -16,12 +15,12 @@ import traceback
 from django.db import transaction
 from django.db.utils import DataError
 from django.utils import timezone
-
-from minecode.models import ProcessingError
-from minecode.management.commands import VerboseCommand
-from packagedb.models import Package
 from packageurl import normalize_qualifiers
+
 from minecode.collectors.maven import MavenNexusCollector
+from minecode.management.commands import VerboseCommand
+from minecode.models import ProcessingError
+from packagedb.models import Package
 
 DEFAULT_TIMEOUT = 30
 
@@ -30,30 +29,6 @@ TRACE = False
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
-
-
-# This is from https://stackoverflow.com/questions/4856882/limiting-memory-use-in-a-large-django-queryset/5188179#5188179
-class MemorySavingQuerysetIterator(object):
-    def __init__(self,queryset,max_obj_num=1000):
-        self._base_queryset = queryset
-        self._generator = self._setup()
-        self.max_obj_num = max_obj_num
-
-    def _setup(self):
-        for i in range(0,self._base_queryset.count(),self.max_obj_num):
-            # By making a copy of of the queryset and using that to actually access
-            # the objects we ensure that there are only `max_obj_num` objects in
-            # memory at any given time
-            smaller_queryset = copy.deepcopy(self._base_queryset)[i:i+self.max_obj_num]
-            logger.debug('Grabbing next %s objects from DB' % self.max_obj_num)
-            for obj in smaller_queryset.iterator():
-                yield obj
-
-    def __iter__(self):
-        return self._generator
-
-    def next(self):
-        return self._generator.next()
 
 
 def update_packages(packages, fields_to_update):

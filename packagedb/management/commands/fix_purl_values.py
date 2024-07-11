@@ -12,19 +12,18 @@ import copy
 import logging
 import sys
 
-from django.db import transaction
-
 from urllib3.util import Retry
+from packageurl import PackageURL
+from packagedcode.maven import get_urls, build_filename
 from requests import Session
 from requests.adapters import HTTPAdapter
 import requests
 
+from minecode.management.commands import VerboseCommand
+from minecode.utils import MemorySavingQuerysetIterator
 from minecode.visitors.maven import collect_links_from_text
 from minecode.visitors.maven import filter_for_artifacts
-from minecode.management.commands import VerboseCommand
 from packagedb.models import Package
-from packagedcode.maven import get_urls, build_filename
-from packageurl import PackageURL
 
 DEFAULT_TIMEOUT = 30
 
@@ -113,30 +112,6 @@ class MavenArtifact(object):
                 )
 
 
-# This is from https://stackoverflow.com/questions/4856882/limiting-memory-use-in-a-large-django-queryset/5188179#5188179
-class MemorySavingQuerysetIterator(object):
-    def __init__(self,queryset,max_obj_num=1000):
-        self._base_queryset = queryset
-        self._generator = self._setup()
-        self.max_obj_num = max_obj_num
-
-    def _setup(self):
-        for i in range(0,self._base_queryset.count(),self.max_obj_num):
-            # By making a copy of of the queryset and using that to actually access
-            # the objects we ensure that there are only `max_obj_num` objects in
-            # memory at any given time
-            smaller_queryset = copy.deepcopy(self._base_queryset)[i:i+self.max_obj_num]
-            logger.debug('Grabbing next %s objects from DB' % self.max_obj_num)
-            for obj in smaller_queryset.iterator():
-                yield obj
-
-    def __iter__(self):
-        return self._generator
-
-    def next(self):
-        return self._generator.next()
-
-
 def query_sha1_on_maven(sha1, timeout=DEFAULT_TIMEOUT):
     maven_api_search_url = f'https://search.maven.org/solrsearch/select?q=1:{sha1}'
     try:
@@ -177,10 +152,8 @@ class Command(VerboseCommand):
         maven_packages_count = maven_packages.count()
         logger.info(f'Checking {maven_packages_count:,} Maven Package PackageURL values')
         packages_to_delete = []
-        unsaved_packages = []
 
-        processed_packages_count = 0
-        for i, package in enumerate(MemorySavingQuerysetIterator(maven_packages)):
+        for package in MemorySavingQuerysetIterator(maven_packages):
             matched_artifacts = query_sha1_on_maven(package.sha1)
             if not matched_artifacts:
                 # Remove this package from the database because it's not on maven
@@ -223,4 +196,5 @@ class Command(VerboseCommand):
                     package_different_case.repository_homepage_url = artifact.repository_homepage_url
                     package_different_case.repository_download_url = artifact.repository_download_url
                     package_different_case.api_data_url = artifact.api_data_url
+                    package_different_case.sha1 = package.sha1
                     package_different_case.save()
