@@ -528,6 +528,38 @@ Using cURL to reindex a package:
         "status": "pkg:maven/org.elasticsearch/elasticsearch@7.17.9 has been queued for reindexing"
     }
 
+Filter by checksum
+~~~~~~~~~~~~~~~~~~
+
+Take a mapping, where the keys are the names of the checksum algorthm and the
+values is a list of checksum values and query those values against the
+packagedb.
+
+Supported checksum fields are:
+
+    - ``md5``
+    - ``sha1``
+    - ``sha256``
+    - ``sha512``
+
+Multiple checksums field scan be passed in one request.
+
+Using cURL to filter for packages using multiple checksums:
+
+.. code-block:: console
+
+    api_url="https://public.purldb.io/api/resources/filter_by_checksums/"
+    content_type="Content-Type: application/json"
+    data='{
+        "sha1": [
+            "8c7042781582df3d5f39fd2fabf7d2dd365f1669"
+        ],
+        "md5": [
+            "969474f21d02f9a1dad6a2e85f4bbd25"
+        ]
+    }'
+
+    curl -X POST "$api_url" -H "$content_type" -d "$data"
 
 resources
 ----------
@@ -700,9 +732,11 @@ validate purl
 Take a purl and check whether it's valid PackageURL or not. Optionally set
 check_existence to true to check whether the package exists in real world.
 
-Note: As of now check_existence only supports ``cargo``, ``composer``, ``deb``,
-``gem``, ``golang``, ``hex``, ``maven``, ``npm``, ``nuget`` and ``pypi``
-ecosystems.
+.. Note::
+
+    As of now check_existence only supports ``cargo``, ``composer``, ``deb``,
+    ``gem``, ``golang``, ``hex``, ``maven``, ``npm``, ``nuget`` and ``pypi``
+    ecosystems.
 
 ``GET /api/validate/?purl=pkg:npm/asdf@1.0.2&check_existence=true``
 
@@ -723,8 +757,7 @@ Return Package data for the purl passed in the purl query parameter.
 
 If the package does not exist, we will fetch the Package data and return it in
 the same request. Optionally, provide the list of addon_pipelines to run on the
-package. Find all addon pipelines at
-https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html.
+package. Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html>`_
 
 ``GET /api/collect/?purl=pkg:npm/asdf@1.0.2``
 
@@ -834,6 +867,89 @@ https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html.
             "history": "https://public.purldb.io/api/packages/4f3a57de-e367-43c6-a7f1-51633d0ecd45/history/"
         }
 
+collect actions
+---------------
+
+index_packages
+^^^^^^^^^^^^^^
+
+Take a list of ``packages`` (where each item is a dictionary containing either PURL
+or versionless PURL along with vers range, optionally with source package PURL)
+and index it.
+Also each package can have list of ``addon_pipelines`` to run on the package.
+Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html>`_
+
+
+If ``reindex`` flag is True then existing package will be rescanned, if ``reindex_set``
+is True then all the package in the same set will be rescanned.
+If reindex flag is set to true then all the non existing package will be indexed.
+
+.. Note::
+
+    When a versionless PURL is supplied without a vers range, then all the versions
+    of that package will be considered for indexing/reindexing.
+
+
+Using cURL to get next download URL:
+
+.. code-block:: console
+
+    api_url="https://public.purldb.io/api/collect/index_packages"
+    content_type="Content-Type: application/json"
+    authorization="Authorization:Token abcdef123456"
+    data='{
+        "packages": [
+            {
+                "purl": "pkg:npm/less@1.0.32",
+                "vers": null,
+                "source_purl": None,
+                "addon_pipelines": ['collect_symbols_ctags']
+            },
+            {
+                "purl": "pkg:npm/less",
+                "vers": "vers:npm/>=1.1.0|<=1.1.4",
+                "source_purl": None,
+                "addon_pipelines": None
+            },
+            {
+                "purl": "pkg:npm/foobar",
+                "vers": null,
+                "source_purl": None,
+                "addon_pipelines": ['inspect_elf_binaries', 'collect_symbols_ctags']
+            }
+        ]
+        "reindex": true,
+        "reindex_set": false,
+    }'
+
+    curl -X POST "$api_url" -H "$content_type" -H "$authorization" -d "$data"
+
+Then return a mapping containing:
+
+- queued_packages_count
+    - The number of package urls placed on the index queue.
+- queued_packages
+    - A list of package urls that were placed on the index queue.
+- requeued_packages_count
+    - The number of existing package urls placed on the rescan queue.
+- requeued_packages
+    - A list of existing package urls that were placed on the rescan queue.
+- unqueued_packages_count
+    - The number of package urls not placed on the index queue.
+        This is because the package url already exists on the index queue and has not
+        yet been processed.
+- unqueued_packages
+    - A list of package urls that were not placed on the index queue.
+- unsupported_packages_count
+    - The number of package urls that are not processable by the index queue.
+- unsupported_packages
+    - A list of package urls that are not processable by the index queue.
+        The package indexing queue can only handle npm and maven purls.
+- unsupported_vers_count
+    - The number of vers range that are not supported by the univers or package_manager.
+- unsupported_vers
+    - A list of vers range that are not supported by the univers or package_manager.
+
 scan_queue
 ----------
 
@@ -933,9 +1049,11 @@ content_type).
 If uuid is given then all purls will be added to package set if it exists else a
 new set would be created and all the purls will be added to that new set.
 
-Note: There is also a slight addition to the logic where a purl already exists
-in the database and so there are no changes done to the purl entry it is passed
-as it is.
+.. Note::
+
+    There is also a slight addition to the logic where a purl already exists
+    in the database and so there are no changes done to the purl entry it is passed
+    as it is.
 
 Using cURL to update status:
 
