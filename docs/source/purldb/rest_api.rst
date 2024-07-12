@@ -732,9 +732,11 @@ validate purl
 Take a purl and check whether it's valid PackageURL or not. Optionally set
 check_existence to true to check whether the package exists in real world.
 
-Note: As of now check_existence only supports ``cargo``, ``composer``, ``deb``,
-``gem``, ``golang``, ``hex``, ``maven``, ``npm``, ``nuget`` and ``pypi``
-ecosystems.
+.. Note::
+
+    As of now check_existence only supports ``cargo``, ``composer``, ``deb``,
+    ``gem``, ``golang``, ``hex``, ``maven``, ``npm``, ``nuget`` and ``pypi``
+    ecosystems.
 
 ``GET /api/validate/?purl=pkg:npm/asdf@1.0.2&check_existence=true``
 
@@ -755,8 +757,7 @@ Return Package data for the purl passed in the purl query parameter.
 
 If the package does not exist, we will fetch the Package data and return it in
 the same request. Optionally, provide the list of addon_pipelines to run on the
-package. Find all addon pipelines at
-https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html.
+package. Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html>`_
 
 ``GET /api/collect/?purl=pkg:npm/asdf@1.0.2``
 
@@ -1048,9 +1049,11 @@ content_type).
 If uuid is given then all purls will be added to package set if it exists else a
 new set would be created and all the purls will be added to that new set.
 
-Note: There is also a slight addition to the logic where a purl already exists
-in the database and so there are no changes done to the purl entry it is passed
-as it is.
+.. Note::
+
+    There is also a slight addition to the logic where a purl already exists
+    in the database and so there are no changes done to the purl entry it is passed
+    as it is.
 
 Using cURL to update status:
 
