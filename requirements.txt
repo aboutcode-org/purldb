@@ -53,7 +53,7 @@ ftputil==5.0.4
 fusepy==3.0.1
 gemfileparser2==0.9.3
 gitdb==4.0.11
-GitPython==3.1.40
+GitPython==3.1.43
 go-inspector==0.2.2
 gunicorn==22.0.0
 html5lib==1.1
