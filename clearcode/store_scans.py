@@ -63,6 +63,7 @@ with gzip or git based on looking at 15 million scans. Each repo should be rough
 couple hundred mega bytes big, based on 15 million scans.
 """
 
+# Create hex values of integers and ignore the 0x prefix
 repo_names = [hex(hash)[2:].zfill(3) for hash in range(4096)]
 
 def store_scancode_scans_from_cd_items(work_dir, github_org="", count=0):
@@ -82,12 +83,12 @@ def store_scancode_scans_from_cd_items(work_dir, github_org="", count=0):
             cd_url = data.get("_metadata", {}).get("url")
             coordinate = Coordinate.from_dict(coords=str2coord(cd_url))
             if not is_valid_coordinate(coordinate):
-                #TODO: this is a bug, we need to log it
+                print(f"Invalid coordinate {coordinate}")
                 continue
             scancode_scan = data.get("content")
             if not scancode_scan:
                 continue
-            repo = get_or_init_repo(repo_name=purl_hash, work_dir=work_dir, repo_namespace=github_org, pull=False)
+            repo = get_or_init_repo(repo_name=purl_hash, work_dir=work_dir, repo_namespace=github_org, user_name=github_org, pull=False)
             purl = coordinate.to_purl()
             if add_scancode_scan(scancode_scan=scancode_scan, purl=purl, repo=repo):
                 commit_count += 1
@@ -107,7 +108,7 @@ def get_cd_item_by_purl_hash(cd_items):
         cd_url = data.get("_metadata", {}).get("url")
         coordinate = Coordinate.from_dict(coords=str2coord(cd_url))
         if not is_valid_coordinate(coordinate):
-            #TODO: this is a bug, we need to log it
+            print(f"Invalid coordinate {cd_url}")
             continue
         purl = coordinate.to_purl()
         purl_hash = get_purl_hash(purl=purl)
@@ -155,13 +156,17 @@ def get_purl_hash(purl: PackageURL, length: int=3) -> str:
     """
     Return a short lower cased hash of a purl.
     """
-    #TODO: document this function in great detail, this is a part of spec
+    # This function takes a PackageURL object and an optional length parameter.
+    # It returns a short hash of the purl. The length of the hash is determined by the length parameter.
+    # The default length is 3. The function first converts the purl to bytes and then computes the sha512 hash of the purl.
+    # It then takes the first 'length' characters of the hash and returns it in lower case.
+
     purl_bytes = str(purl).encode("utf-8")
     short_hash = sha512(purl_bytes).hexdigest()[:length]
     return short_hash.lower()
 
 
-def get_or_init_repo(repo_name: str, work_dir: Path, repo_namespace: str= "", pull=False):
+def get_or_init_repo(repo_name: str, work_dir: Path, repo_namespace: str= "", user_name: str = "", pull=False):
     """
     Return a repo object for repo name and namespace 
     and store it in the work dir. Clone if it does not 
@@ -169,7 +174,7 @@ def get_or_init_repo(repo_name: str, work_dir: Path, repo_namespace: str= "", pu
     """
     # TODO: Manage org repo name
     # MAYBE: CREATE ALL THE REPOS AT A TIME AND CLONE THEM LOCALLY
-    if repo_name not in get_github_repos(user_name="TG1999"):
+    if repo_name not in get_github_repos(user_name=user_name):
         repo_url = create_github_repo(repo_name=repo_name)
     repo_path = work_dir / repo_name
     if repo_path.exists():
@@ -231,7 +236,3 @@ def get_github_repos(user_name, token=os.getenv("GH_TOKEN")):
         full_repo_name = repo_data.get("full_name")
         if full_repo_name:
             yield full_repo_name
-
-if __name__ == "__main__":
-    work_dir = Path("")
-    store_scancode_scans_from_cd_items(work_dir=work_dir, github_org="TG1999", count=5)
