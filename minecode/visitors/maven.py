@@ -64,7 +64,6 @@ TRACE_DEEP = False
 if TRACE:
     logger.setLevel(logging.DEBUG)
 
-
 MAVEN_BASE_URL = 'https://repo1.maven.org/maven2'
 
 
@@ -243,11 +242,13 @@ def merge_ancestors(ancestor_pom_texts, package):
     return package
 
 
-def map_maven_package(package_url, package_content, pipelines):
+def map_maven_package(package_url, package_content, pipelines, reindex_metadata=False):
     """
     Add a maven `package_url` to the PackageDB.
 
     Return an error string if errors have occured in the process.
+    
+    if ``reindex_metadata`` is True, only reindex metadata and DO NOT rescan the full package.
     """
     from minecode.model_utils import add_package_to_scan_queue, merge_or_create_package
 
@@ -308,20 +309,22 @@ def map_maven_package(package_url, package_content, pipelines):
     sha1 = get_package_sha1(package)
     if sha1:
         package.sha1 = sha1
-        db_package, _, _, _ = merge_or_create_package(package, visit_level=50)
+        override = reindex_metadata
+        db_package, _, _, _ = merge_or_create_package(package, visit_level=50, override=override)
     else:
         msg = f'Failed to retrieve JAR: {package_url}'
         error += msg + '\n'
         logger.error(msg)
-
-    # Submit package for scanning
-    if db_package:
-        add_package_to_scan_queue(db_package, pipelines)
+    
+    if not reindex_metadata: 
+        # Submit package for scanning
+        if db_package:
+            add_package_to_scan_queue(package=db_package, pipelines=pipelines)
 
     return db_package, error
 
 
-def map_maven_binary_and_source(package_url, pipelines):
+def map_maven_binary_and_source(package_url, pipelines, reindex_metadata=False):
     """
     Get metadata for the binary and source release of the Maven package
     `package_url` and save it to the PackageDB.
@@ -329,19 +332,27 @@ def map_maven_binary_and_source(package_url, pipelines):
     Return an error string for errors that occur, or empty string if there is no error.
     """
     error = ''
-    package, emsg = map_maven_package(package_url, PackageContentType.BINARY, pipelines)
+    package, emsg = map_maven_package(
+        package_url=package_url,
+        package_content=PackageContentType.BINARY,
+        pipelines=pipelines,
+        reindex_metadata=reindex_metadata,
+    )
     if emsg:
         error += emsg
 
     source_package_url = package_url
     source_package_url.qualifiers['classifier'] = 'sources'
     source_package, emsg = map_maven_package(
-        source_package_url, PackageContentType.SOURCE_ARCHIVE, pipelines
+        package_url=source_package_url,
+        package_content=PackageContentType.SOURCE_ARCHIVE,
+        pipelines=pipelines,
+        reindex_metadata=reindex_metadata,
     )
     if emsg:
         error += emsg
 
-    if package and source_package:
+    if not reindex_metadata and package and source_package:
         make_relationship(
             from_package=source_package,
             to_package=package,
@@ -419,9 +430,10 @@ def process_request(purl_str, **kwargs):
     Return an error string for errors that occur, or empty string if there is no error.
     """
     from minecode.model_utils import DEFAULT_PIPELINES
-    
+
     addon_pipelines = kwargs.get('addon_pipelines', [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+
 
     try:
         package_url = PackageURL.from_string(purl_str)
@@ -431,7 +443,8 @@ def process_request(purl_str, **kwargs):
 
     has_version = bool(package_url.version)
     if has_version:
-        error = map_maven_binary_and_source(package_url, pipelines)
+        reindex_metadata=kwargs.get("reindex_metadata", False)
+        error = map_maven_binary_and_source(package_url, pipelines, reindex_metadata=reindex_metadata)
     else:
         error = map_maven_packages(package_url, pipelines)
 
@@ -1103,7 +1116,6 @@ def is_source(classifier):
     """
     return classifier and ('source' in classifier or 'src' in classifier)
 
-
 ########################################################################
 # DOCUMENTAION OF the FIELDS aka. Records:
 #
@@ -1495,10 +1507,10 @@ def java_time_ts(tm):
     ar = arrow.get(tm / 1000).replace(tzinfo=tzinfo).to('utc')
     return ar.isoformat()
 
-
 ################################################################################
 # These are CLI/shell test and stat utilities
 ################################################################################
+
 
 def _spit_json(location, target):
     with open(target, 'w') as t:

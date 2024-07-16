@@ -114,13 +114,16 @@ def index_package(scannable_uri, package, scan_data, summary_data, project_extra
             'copyright': copyright,
             **checksums_and_size_by_field
         }
+        # do not override fields with empty values
+        values_by_updateable_fields = {k: v for k, v in values_by_updateable_fields.items() if v}
+        
         _, updated_fields = package.update_fields(save=True, **values_by_updateable_fields)
         updated_fields = ', '.join(updated_fields)
         message = f'Updated fields for Package {package.purl}: {updated_fields}'
         logger.info(message)
         scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
         scannable_uri.save()
-    except Exception as e:
+    except Exception:
         traceback_message = traceback.format_exc()
         error_message = traceback_message + '\n'
         # TODO: We should rerun the specific indexers that have failed

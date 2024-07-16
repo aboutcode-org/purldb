@@ -28,6 +28,8 @@ RUN apt-get update \
        libldap-dev \
        openssl \
        wait-for-it \
+       git \
+       cvs \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

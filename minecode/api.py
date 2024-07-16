@@ -226,3 +226,12 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             }
 
         return Response(msg)
+
+    @action(detail=False, methods=['get'])
+    def statistics(self, request, *args, **kwargs):
+        """
+        Return a scan queue statistics.
+        """
+        response = ScannableURI.objects.statistics()
+        return Response(response)
+

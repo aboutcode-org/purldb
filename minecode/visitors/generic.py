@@ -15,6 +15,7 @@ from packagedcode.models import PackageData
 from packageurl import PackageURL
 
 from minecode import priority_router
+from packagedb.models import PackageContentType
 
 """
 Collect generic packages from a download URL.
@@ -28,7 +29,7 @@ logger.setLevel(logging.INFO)
 
 def map_generic_package(package_url, pipelines):
     """
-    Add a npm `package_url` to the PackageDB.
+    Add a generic `package_url` to the PackageDB.
 
     Return an error string if any errors are encountered during the process
     """
@@ -44,8 +45,8 @@ def map_generic_package(package_url, pipelines):
         qualifiers=package_url.qualifiers,
         subpath=package_url.subpath,
         download_url=download_url,
+        extra_data=dict(package_content=PackageContentType.BINARY),
     )
-    # TODO: set package_content type
 
     db_package, _, _, error = merge_or_create_package(package, visit_level=0)
 
@@ -157,6 +158,7 @@ GENERIC_FETCHCODE_SUPPORTED_PURLS = [
     "pkg:generic/minissdpd@.*",
     "pkg:generic/erofs-utils@.*",
 ]
+
 
 # Indexing some generic PURLs requires a GitHub API token.
 # Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
