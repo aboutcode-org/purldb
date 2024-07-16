@@ -105,7 +105,7 @@ class RubyGemsVisitorTest(JsonBasedTesting):
             _, data, _ = RubyGemsPackageArchiveMetadataVisitor(uri)
         expected_loc = self.get_test_loc('rubygems/a_okay-0.1.0.gem.metadata')
         with open(expected_loc) as expect_file:
-            self.assertEquals(expect_file.read(), data)
+            self.assertEqual(expect_file.read(), data)
 
 
 class RubyGemsApiMapperTest(JsonBasedTesting):

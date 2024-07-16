@@ -85,7 +85,7 @@ class TestPopulateHasErrorFields(TestMigrations):
                 'visit_error': None
             },
         ]
-        self.assertEquals(results, expected)
+        self.assertEqual(results, expected)
 
 
 class TestSetIsVisitableForMavenIndexURIs(TestMigrations):
@@ -130,7 +130,7 @@ class TestSetIsVisitableForMavenIndexURIs(TestMigrations):
                 'uri': 'maven-index://repo1.maven.org/zone/src/sheaf/logback-sheaf/1.1.7/logback-sheaf-1.1.7.jar'
             }
         ]
-        self.assertEquals(results, expected)
+        self.assertEqual(results, expected)
 
 class TestSetIsVisitableForMavenIndexURIs(TestMigrations):
     app_name = "minecode"
@@ -174,7 +174,7 @@ class TestSetIsVisitableForMavenIndexURIs(TestMigrations):
                 'uri': 'maven-index://repo1.maven.org/zone/src/sheaf/logback-sheaf/1.1.7/logback-sheaf-1.1.7.jar'
             }
         ]
-        self.assertEquals(results, expected)
+        self.assertEqual(results, expected)
 
 
 class TestReplaceHttpWithHttpsInMavenURIs(TestMigrations):
@@ -214,4 +214,4 @@ class TestReplaceHttpWithHttpsInMavenURIs(TestMigrations):
                 'uri': 'https://repo1.maven.org/maven2/xyz/upperlevel/command/spigot/spigot-command-api/1.1.1/spigot-command-api-1.1.1.pom'
             }
         ]
-        self.assertEquals(results, expected)
+        self.assertEqual(results, expected)

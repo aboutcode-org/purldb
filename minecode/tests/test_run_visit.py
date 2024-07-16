@@ -474,7 +474,7 @@ class RunVisitTest(MiningTestCase):
         output = StringIO()
         management.call_command('run_visit', exit_on_empty=True, stdout=output)
         expected = 'Visited 0 URIs\nInserted 0 new URIs\n'
-        self.assertEquals(expected, output.getvalue())
+        self.assertEqual(expected, output.getvalue())
 
     def test_visit_uri_always_inserts_new_uri(self):
         # test proper

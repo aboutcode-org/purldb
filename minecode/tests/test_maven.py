@@ -946,7 +946,7 @@ class MavenCrawlerFunctionsTest(JsonBasedTesting, DjangoTestCase):
         scheme, netloc, path_segments = maven_visitor.url_parts(url)
         self.assertEqual('https', scheme)
         self.assertEqual('example.com', netloc)
-        self.assertEquals(['foo', 'bar', 'baz.jar'], path_segments)
+        self.assertEqual(['foo', 'bar', 'baz.jar'], path_segments)
 
     def test_create_url(self):
         scheme = 'https'
