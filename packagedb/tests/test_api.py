@@ -813,6 +813,14 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
 
         self.check_expected_results(result, expected, fields_to_remove=fields_to_remove, regen=FIXTURES_REGEN)
 
+        # Ensure that the created ScannableURI objects have a priority of 100
+        package = Package.objects.get(download_url=download_url)
+        source_package = Package.objects.get(download_url=sources_download_url)
+        package_scannable_uri = ScannableURI.objects.get(package=package)
+        source_package_scannable_uri = ScannableURI.objects.get(package=source_package)
+        self.assertEqual(100, package_scannable_uri.priority)
+        self.assertEqual(100, source_package_scannable_uri.priority)
+
     def test_package_live_works_with_purl2vcs(self):
         purl = "pkg:maven/org.elasticsearch.plugin/elasticsearch-scripting-painless-spi@6.8.15"
         download_url = 'https://repo1.maven.org/maven2/org/elasticsearch/plugin/elasticsearch-scripting-painless-spi/6.8.15/elasticsearch-scripting-painless-spi-6.8.15.jar'
