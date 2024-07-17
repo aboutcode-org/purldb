@@ -99,7 +99,7 @@ def get_download_info(conandata, version):
     return download_url, sha256
 
 
-def map_conan_package(package_url, pipelines):
+def map_conan_package(package_url, pipelines, priority=0):
     """
     Add a conan `package_url` to the PackageDB.
 
@@ -134,7 +134,7 @@ def map_conan_package(package_url, pipelines):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package, pipelines)
+        add_package_to_scan_queue(db_package, pipelines, priority)
 
     return error
 
@@ -154,11 +154,12 @@ def process_request(purl_str, **kwargs):
     package_url = PackageURL.from_string(purl_str)
     addon_pipelines = kwargs.get('addon_pipelines', [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+    priority = kwargs.get('priority', 0)
 
     if not package_url.version:
         return
 
-    error_msg = map_conan_package(package_url, pipelines)
+    error_msg = map_conan_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg

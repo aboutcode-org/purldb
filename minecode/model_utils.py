@@ -44,7 +44,7 @@ SUPPORTED_ADDON_PIPELINES = (
 )
 
 
-def add_package_to_scan_queue(package, pipelines=DEFAULT_PIPELINES, reindex_uri=False, priority=100):
+def add_package_to_scan_queue(package, pipelines=DEFAULT_PIPELINES, priority=0, reindex_uri=False):
     """
     Add a Package `package` to the scan queue to run the list of provided `pipelines`
 
@@ -226,7 +226,7 @@ def merge_or_create_package(scanned_package, visit_level, override=False):
 
     If ``scanned_package`` does not exist in the PackageDB, create a new entry in
     the PackageDB for ``scanned_package``.
-    
+
     If ``override`` is True, then all existing empty values of the PackageDB package are replaced by
     a non-empty value of the provided override.
     """

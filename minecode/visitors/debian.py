@@ -337,6 +337,7 @@ def process_request(purl_str, **kwargs):
     source_purl = kwargs.get("source_purl", None)
     addon_pipelines = kwargs.get('addon_pipelines', [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+    priority = kwargs.get('priority', 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)
@@ -351,15 +352,16 @@ def process_request(purl_str, **kwargs):
     has_version = bool(package_url.version)
     if has_version:
         error = map_debian_metadata_binary_and_source(
-            package_url=package_url, 
+            package_url=package_url,
             source_package_url=source_package_url,
             pipelines=pipelines,
+            priority=priority,
         )
 
     return error
 
 
-def map_debian_package(debian_package, package_content, pipelines):
+def map_debian_package(debian_package, package_content, pipelines, priority=0):
     """
     Add a debian `package_url` to the PackageDB.
 
@@ -372,7 +374,7 @@ def map_debian_package(debian_package, package_content, pipelines):
     error = ''
 
     purl = debian_package.package_url
-    if package_content == PackageContentType.BINARY:  
+    if package_content == PackageContentType.BINARY:
         download_url = debian_package.binary_archive_url
     elif package_content == PackageContentType.SOURCE_ARCHIVE:
         download_url = debian_package.source_archive_url
@@ -427,7 +429,7 @@ def map_debian_package(debian_package, package_content, pipelines):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package, pipelines)
+        add_package_to_scan_queue(db_package, pipelines, priority)
 
     return db_package, error
 
@@ -507,13 +509,13 @@ def update_license_copyright_fields(package_from, package_to, replace=True):
             setattr(package_to, field, value)
 
 
-def map_debian_metadata_binary_and_source(package_url, source_package_url, pipelines):
+def map_debian_metadata_binary_and_source(package_url, source_package_url, pipelines, priority=0):
     """
     Get metadata for the binary and source release of the Debian package
     `package_url` and save it to the PackageDB.
 
     Return an error string for errors that occur, or empty string if there is no error.
-    """    
+    """
     error = ''
 
     if "repository_url" in package_url.qualifiers:
@@ -522,7 +524,7 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url, pipel
         base_url = UBUNTU_BASE_URL
     else:
         base_url = DEBIAN_BASE_URL
-    
+
     if "api_data_url" in package_url.qualifiers:
         metadata_base_url = package_url.qualifiers["api_data_url"]
     elif package_url.namespace == 'ubuntu':
@@ -544,6 +546,7 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url, pipel
         debian_package,
         PackageContentType.BINARY,
         pipelines,
+        priority,
     )
     if emsg:
         error += emsg
@@ -552,7 +555,8 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url, pipel
     source_package, emsg = map_debian_package(
         debian_package,
         PackageContentType.SOURCE_ARCHIVE,
-       pipelines,
+        pipelines,
+        priority,
     )
     if emsg:
         error += emsg
@@ -594,7 +598,7 @@ class DebianPackage:
     def package_archive_version(self):
         """
         Get the useful part of the debian package version used in
-        source, binary, metadata and copyright URLs optionally. 
+        source, binary, metadata and copyright URLs optionally.
         """
         debvers = DebVersion.from_string(self.package_url.version)
         if debvers.revision != "0":
@@ -679,7 +683,7 @@ class DebianPackage:
         copyright_file_string = "_copyright"
         if self.package_url.namespace == "ubuntu":
             copyright_file_string = "/copyright"
-        
+
         metadata_version = self.package_archive_version
         if not self.source_package_url:
             metadata_package_name = self.package_url.name

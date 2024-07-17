@@ -783,7 +783,7 @@ class CollectViewSet(viewsets.ViewSet):
       like with several Debian packages.
 
     **Examples::**
-    
+
         /api/collect/?purl=pkg:npm/foo@0.0.7&addon_pipelines=collect_symbols_ctags
 
         /api/collect/?purl=pkg:generic/busybox@1.36.1&addon_pipelines=collect_symbols_ctags&addon_pipelines=inspect_elf_binaries
@@ -818,6 +818,10 @@ class CollectViewSet(viewsets.ViewSet):
         purl = validated_data.get('purl')
 
         kwargs = dict()
+        # We want this request to have high priority since the user knows the
+        # exact package they want
+        kwargs['priority'] = 100
+
         if source_purl := validated_data.get('source_purl', None):
             kwargs["source_purl"] = source_purl
 
@@ -1048,9 +1052,9 @@ class CollectViewSet(viewsets.ViewSet):
         If the package does not exist in the database this call does nothing.
         NOTE: this WILL NOT re-run scan and indexing in the background in contrast with the /collect
         and collect/index_packages endpoints.
-        
+
         **Request example**::
-        
+
             /api/collect/reindex_metadata/?purl=pkg:npm/foo@0.0.7
 
         """
@@ -1068,10 +1072,10 @@ class CollectViewSet(viewsets.ViewSet):
         packages = Package.objects.filter(**lookups)
         if packages.count() == 0:
             return Response(
-                {'status': f'Not recollecting: Package does not exist for {purl}'}, 
+                {'status': f'Not recollecting: Package does not exist for {purl}'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        
+
         # Pass to only reindex_metadata downstream
         kwargs["reindex_metadata"] = True
         # here we have a package(s) matching our purl and we want to recollect metadata live

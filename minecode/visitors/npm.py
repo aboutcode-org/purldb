@@ -127,7 +127,7 @@ def get_package_json(namespace, name, version):
         logger.error(f"HTTP error occurred: {err}")
 
 
-def map_npm_package(package_url, pipelines):
+def map_npm_package(package_url, pipelines, priority=0):
     """
     Add a npm `package_url` to the PackageDB.
 
@@ -156,7 +156,11 @@ def map_npm_package(package_url, pipelines):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package, pipelines)
+        add_package_to_scan_queue(
+            package=db_package,
+            pipelines=pipelines,
+            priority=priority
+        )
 
     return error
 
@@ -172,15 +176,16 @@ def process_request(purl_str, **kwargs):
     scan queue afterwards.
     """
     from minecode.model_utils import DEFAULT_PIPELINES
-    
+
     addon_pipelines = kwargs.get('addon_pipelines', [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+    priority = kwargs.get('priority', 0)
 
     package_url = PackageURL.from_string(purl_str)
     if not package_url.version:
         return
 
-    error_msg = map_npm_package(package_url, pipelines)
+    error_msg = map_npm_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg

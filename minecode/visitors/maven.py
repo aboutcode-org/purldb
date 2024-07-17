@@ -242,12 +242,12 @@ def merge_ancestors(ancestor_pom_texts, package):
     return package
 
 
-def map_maven_package(package_url, package_content, pipelines, reindex_metadata=False):
+def map_maven_package(package_url, package_content, pipelines, priority=0, reindex_metadata=False):
     """
     Add a maven `package_url` to the PackageDB.
 
     Return an error string if errors have occured in the process.
-    
+
     if ``reindex_metadata`` is True, only reindex metadata and DO NOT rescan the full package.
     """
     from minecode.model_utils import add_package_to_scan_queue, merge_or_create_package
@@ -315,16 +315,20 @@ def map_maven_package(package_url, package_content, pipelines, reindex_metadata=
         msg = f'Failed to retrieve JAR: {package_url}'
         error += msg + '\n'
         logger.error(msg)
-    
-    if not reindex_metadata: 
+
+    if not reindex_metadata:
         # Submit package for scanning
         if db_package:
-            add_package_to_scan_queue(package=db_package, pipelines=pipelines)
+            add_package_to_scan_queue(
+                package=db_package,
+                pipelines=pipelines,
+                priority=priority
+            )
 
     return db_package, error
 
 
-def map_maven_binary_and_source(package_url, pipelines, reindex_metadata=False):
+def map_maven_binary_and_source(package_url, pipelines, priority=0, reindex_metadata=False):
     """
     Get metadata for the binary and source release of the Maven package
     `package_url` and save it to the PackageDB.
@@ -336,6 +340,7 @@ def map_maven_binary_and_source(package_url, pipelines, reindex_metadata=False):
         package_url=package_url,
         package_content=PackageContentType.BINARY,
         pipelines=pipelines,
+        priority=priority,
         reindex_metadata=reindex_metadata,
     )
     if emsg:
@@ -347,6 +352,7 @@ def map_maven_binary_and_source(package_url, pipelines, reindex_metadata=False):
         package_url=source_package_url,
         package_content=PackageContentType.SOURCE_ARCHIVE,
         pipelines=pipelines,
+        priority=priority,
         reindex_metadata=reindex_metadata,
     )
     if emsg:
@@ -433,7 +439,7 @@ def process_request(purl_str, **kwargs):
 
     addon_pipelines = kwargs.get('addon_pipelines', [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-
+    priority = kwargs.get('priority', 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)
@@ -444,7 +450,12 @@ def process_request(purl_str, **kwargs):
     has_version = bool(package_url.version)
     if has_version:
         reindex_metadata=kwargs.get("reindex_metadata", False)
-        error = map_maven_binary_and_source(package_url, pipelines, reindex_metadata=reindex_metadata)
+        error = map_maven_binary_and_source(
+            package_url,
+            pipelines,
+            reindex_metadata=reindex_metadata,
+            priority=priority,
+        )
     else:
         error = map_maven_packages(package_url, pipelines)
 

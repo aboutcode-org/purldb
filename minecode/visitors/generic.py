@@ -27,7 +27,7 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 
-def map_generic_package(package_url, pipelines):
+def map_generic_package(package_url, pipelines, priority=0):
     """
     Add a generic `package_url` to the PackageDB.
 
@@ -52,7 +52,11 @@ def map_generic_package(package_url, pipelines):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package, pipelines)
+        add_package_to_scan_queue(
+            package=db_package,
+            pipelines=pipelines,
+            priority=priority,
+        )
 
     return error
 
@@ -67,6 +71,7 @@ def process_request(purl_str, **kwargs):
 
     addon_pipelines = kwargs.get('addon_pipelines', [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+    priority = kwargs.get('priority', 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)
@@ -79,7 +84,7 @@ def process_request(purl_str, **kwargs):
         error = f'package_url {purl_str} does not contain a download_url qualifier'
         return error
 
-    error_msg = map_generic_package(package_url, pipelines)
+    error_msg = map_generic_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg
@@ -97,7 +102,7 @@ def packagedata_from_dict(package_data):
     return PackageData.from_data(cleaned_package_data)
 
 
-def map_fetchcode_supported_package(package_url, pipelines):
+def map_fetchcode_supported_package(package_url, pipelines, priority=0):
     """
     Add a `package_url` supported by fetchcode to the PackageDB.
 
@@ -122,7 +127,11 @@ def map_fetchcode_supported_package(package_url, pipelines):
 
     # Submit package for scanning
     if db_package:
-        add_package_to_scan_queue(db_package, pipelines)
+        add_package_to_scan_queue(
+            package=db_package,
+            pipelines=pipelines,
+            priority=priority,
+        )
 
     return error
 
@@ -176,6 +185,7 @@ def process_request_fetchcode_generic(purl_str, **kwargs):
 
     addon_pipelines = kwargs.get('addon_pipelines', [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+    priority = kwargs.get('priority', 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)
@@ -183,7 +193,7 @@ def process_request_fetchcode_generic(purl_str, **kwargs):
         error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
-    error_msg = map_fetchcode_supported_package(package_url, pipelines)
+    error_msg = map_fetchcode_supported_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg
