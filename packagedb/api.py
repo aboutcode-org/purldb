@@ -1009,9 +1009,11 @@ class CollectViewSet(viewsets.ViewSet):
                     # add to queue
                     extra_fields = dict()
                     if source_purl := package.get('source_purl'):
-                        extra_fields["source_uri"] = source_purl
+                        extra_fields['source_uri'] = source_purl
                     if addon_pipelines := package.get('addon_pipelines'):
-                        extra_fields["addon_pipelines"] = [pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)]
+                        extra_fields['addon_pipelines'] = [pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)]
+                    if priority := package.get('priority'):
+                        extra_fields['priority'] = priority
                     priority_resource_uri = PriorityResourceURI.objects.insert(purl, **extra_fields)
                     if priority_resource_uri:
                         queued_packages.append(purl)
@@ -1238,6 +1240,8 @@ def get_resolved_packages(packages, supported_ecosystems):
             continue
 
         if parsed_purl.version:
+            # We prioritize Package requests that have explicit versions
+            package['priority'] = 100
             resolved_packages_by_purl[purl] = package
             continue
 
