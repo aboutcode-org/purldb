@@ -15,6 +15,7 @@ from uuid import uuid4
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
+from packageurl.contrib.django.utils import purl_to_lookups
 from rest_framework import status
 from rest_framework.test import APIClient
 from univers.versions import MavenVersion
@@ -1090,6 +1091,46 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             self.assertEqual(None, scannable_uri.scan_error)
             self.assertEqual(None, scannable_uri.index_error)
             self.assertEqual(None, scannable_uri.scan_date)
+
+    def test_package_api_index_packages_priority(self):
+        priority_resource_uris_count = PriorityResourceURI.objects.all().count()
+        self.assertEqual(0, priority_resource_uris_count)
+        packages = [
+            {'purl':'pkg:maven/ch.qos.reload4j/reload4j@1.2.24'},
+            {'purl':'pkg:maven/com.esotericsoftware.kryo/kryo'},
+        ]
+        data = {
+            'packages': packages
+        }
+        response = self.client.post('/api/collect/index_packages/', data=data, content_type="application/json")
+        self.assertEqual(14, response.data['queued_packages_count'])
+        expected_kryo_packages = [
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.10',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.12',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.14',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.16',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.17',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.19',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.20',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.21',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.21.1',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.22',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.23.0',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.23.1',
+            'pkg:maven/com.esotericsoftware.kryo/kryo@2.24.0',
+        ]
+        expected_queued_packages = expected_kryo_packages + ['pkg:maven/ch.qos.reload4j/reload4j@1.2.24']
+        self.assertEqual(
+            sorted(expected_queued_packages),
+            sorted(response.data['queued_packages'])
+        )
+
+        priority_resource_uri = PriorityResourceURI.objects.get(package_url='pkg:maven/ch.qos.reload4j/reload4j@1.2.24')
+        self.assertEqual(100, priority_resource_uri.priority)
+
+        for purl in expected_kryo_packages:
+            priority_resource_uri = PriorityResourceURI.objects.get(package_url=purl)
+            self.assertEqual(0, priority_resource_uri.priority)
 
 
 class ResourceApiTestCase(TestCase):

@@ -109,15 +109,18 @@ def process_request(priority_resource_uri, _priority_router=priority_router):
     purl_to_visit = priority_resource_uri.uri
     source_purl = priority_resource_uri.source_uri
     addon_pipelines = priority_resource_uri.addon_pipelines
+    priority = priority_resource_uri.priority
 
     try:
         if TRACE:
             logger.debug('visit_uri: uri: {}'.format(purl_to_visit))
         kwargs = dict()
         if source_purl:
-            kwargs["source_purl"] = source_purl
+            kwargs['source_purl'] = source_purl
         if addon_pipelines:
-            kwargs["addon_pipelines"] = addon_pipelines
+            kwargs['addon_pipelines'] = addon_pipelines
+        if priority:
+            kwargs['priority'] = priority
         errors = _priority_router.process(purl_to_visit, **kwargs)
         if TRACE:
             new_uris_to_visit = list(new_uris_to_visit or [])
