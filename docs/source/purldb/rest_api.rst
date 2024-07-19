@@ -875,7 +875,7 @@ index_packages
 
 Take a list of ``packages`` (where each item is a dictionary containing either PURL
 or versionless PURL along with vers range, optionally with source package PURL)
-and index it.
+and index it. PURLs with versions are processed ahead of versionless PURLs.
 Also each package can have list of ``addon_pipelines`` to run on the package.
 Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html>`_
 

@@ -91,6 +91,7 @@ class OpenSSLVisitor(HttpVisitor):
             else:
                 yield URI(uri=url, source_uri=self.uri, date=date, size=size)
 
+
 # Indexing OpenSSL PURLs requires a GitHub API token.
 # Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
 @priority_router.route('pkg:openssl/openssl@.*')
@@ -104,9 +105,10 @@ def process_request_dir_listed(purl_str, **kwargs):
     PackageDB entry. The package is then added to the scan queue afterwards.
     """
     from minecode.model_utils import DEFAULT_PIPELINES
-    
+
     addon_pipelines = kwargs.get('addon_pipelines', [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+    priority = kwargs.get('priority', 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)
@@ -114,7 +116,7 @@ def process_request_dir_listed(purl_str, **kwargs):
         error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
-    error_msg = map_fetchcode_supported_package(package_url, pipelines)
+    error_msg = map_fetchcode_supported_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg

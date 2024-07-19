@@ -198,13 +198,15 @@ def process_request_dir_listed(purl_str, **kwargs):
 
     addon_pipelines = kwargs.get('addon_pipelines', [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
+    priority = kwargs.get('priority', 0)
+
     try:
         package_url = PackageURL.from_string(purl_str)
     except ValueError as e:
         error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
-    error_msg = map_fetchcode_supported_package(package_url, pipelines)
+    error_msg = map_fetchcode_supported_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg

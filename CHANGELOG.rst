@@ -9,6 +9,9 @@ Next Release
   ``approximate_directory_structure_index``, ``exact_file_index``,
   ``exact_package_archive_index``, ``cditems``, ``on_demand_queue`` have been
   removed.
+- The `/api/collect/` and `/api/collect/index_packages/` API endpoints have been
+  updated such that Package scan and processing requests made with purls with
+  versions are processed ahead of those made with versionless purls. https://github.com/nexB/purldb/issues/502
 
 
 v5.0.0
