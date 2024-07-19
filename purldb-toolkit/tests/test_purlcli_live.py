@@ -50,7 +50,7 @@ class TestPURLCLI_metadata(object):
             "--purl",
             "pkg:cargo/banquo",
             "--purl",
-            "pkg:rubygems/rails",
+            "pkg:rubygems/pronto-goodcheck",
             "--output",
             actual_result_file,
         ]
@@ -152,44 +152,6 @@ class TestPURLCLI_metadata(object):
                 }
             ],
             "packages": [
-                OrderedDict(
-                    [
-                        ("purl", "pkg:pypi/fetchcode"),
-                        ("type", "pypi"),
-                        ("namespace", None),
-                        ("name", "fetchcode"),
-                        ("version", None),
-                        ("qualifiers", OrderedDict()),
-                        ("subpath", None),
-                        ("repository_homepage_url", None),
-                        ("repository_download_url", None),
-                        ("api_data_url", None),
-                        ("primary_language", None),
-                        ("description", None),
-                        ("release_date", None),
-                        ("parties", []),
-                        ("keywords", []),
-                        ("homepage_url", "https://github.com/nexB/fetchcode"),
-                        ("download_url", None),
-                        ("api_url", "https://pypi.org/pypi/fetchcode/json"),
-                        ("size", None),
-                        ("sha1", None),
-                        ("md5", None),
-                        ("sha256", None),
-                        ("sha512", None),
-                        ("bug_tracking_url", None),
-                        ("code_view_url", None),
-                        ("vcs_url", None),
-                        ("copyright", None),
-                        ("license_expression", None),
-                        ("declared_license", "Apache-2.0"),
-                        ("notice_text", None),
-                        ("root_path", None),
-                        ("dependencies", []),
-                        ("contains_source_code", None),
-                        ("source_packages", []),
-                    ]
-                ),
                 OrderedDict(
                     [
                         ("purl", "pkg:pypi/fetchcode@0.1.0"),

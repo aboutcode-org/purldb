@@ -106,12 +106,12 @@ def collect_metadata(purl):
     from fetchcode/package.py.
     """
     collected_metadata = []
-    for release in list(info(purl)):
-        if release is None:
-            continue
-        release_detail = release.to_dict()
-        release_detail.move_to_end("purl", last=False)
-        collected_metadata.append(release_detail)
+    purl_metadata = info(purl)
+    if purl_metadata:
+        for release in list(purl_metadata):
+            release_detail = release.to_dict()
+            release_detail.move_to_end("purl", last=False)
+            collected_metadata.append(release_detail)
 
     return collected_metadata
 
