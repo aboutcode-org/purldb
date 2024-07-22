@@ -711,6 +711,13 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
                 f.write(pom_contents)
         self.assertEqual(self.expected_pom_contents, pom_contents)
 
+        pom_contents = maven_visitor.get_pom_text(
+            namespace='',
+            name='does-not-exist',
+            version='1.0',
+        )
+        self.assertFalse(pom_contents)
+
     def test_get_package_sha1(self):
         sha1 = maven_visitor.get_package_sha1(self.scan_package)
         expected_sha1 = '60c708f55deeb7c5dfce8a7886ef09cbc1388eca'

@@ -125,6 +125,8 @@ def get_pom_text(namespace, name, version, qualifiers={}, base_url=MAVEN_BASE_UR
         qualifiers=qualifiers,
         base_url=base_url,
     )
+    if not urls:
+        return
     # Get and parse POM info
     pom_url = urls['api_data_url']
     # TODO: manage different types of errors (404, etc.)

@@ -212,6 +212,19 @@ class ResourceAPITestCase(JsonBasedTesting, TestCase):
         expected = self.get_test_loc('api/resource-filter_by_checksums-expected.json')
         self.check_expected_results(response.data['results'], expected, fields_to_remove=["url", "uuid", "package"], regen=FIXTURES_REGEN)
 
+        data = {
+            'does-not-exist': 'dne'
+        }
+        response = self.client.post('/api/resources/filter_by_checksums/', data=data)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        expected_status = 'Unsupported field(s) given: does-not-exist'
+        self.assertEqual(expected_status, response.data['status'])
+
+        data = {}
+        response = self.client.post('/api/resources/filter_by_checksums/', data=data)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        expected_status = 'No values provided'
+        self.assertEqual(expected_status, response.data['status'])
 
 class PackageApiTestCase(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
@@ -485,6 +498,19 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         expected = self.get_test_loc('api/package-filter_by_checksums-enhanced-package-data-expected.json')
         self.check_expected_results(enhanced_response.data['results'], expected, fields_to_remove=["url", "uuid", "resources", "package_sets", "history"], regen=FIXTURES_REGEN)
 
+        data = {
+            'does-not-exist': 'dne'
+        }
+        response = self.client.post('/api/packages/filter_by_checksums/', data=data)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        expected_status = 'Unsupported field(s) given: does-not-exist'
+        self.assertEqual(expected_status, response.data['status'])
+
+        data = {}
+        response = self.client.post('/api/packages/filter_by_checksums/', data=data)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        expected_status = 'No values provided'
+        self.assertEqual(expected_status, response.data['status'])
 
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
@@ -910,6 +936,12 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         ]
         self.assertEqual(expected_unsupported_packages, response.data['unsupported_packages'])
 
+        bad_data = {'does-not-exist': 'dne'}
+        response = self.client.post('/api/collect/index_packages/', data=bad_data, content_type="application/json")
+        expected_errors = {'packages': ['This field is required.']}
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertEqual(expected_errors, response.data['errors'])
+
     @mock.patch("packagedb.api.get_all_versions")
     def test_package_api_index_packages_endpoint_with_vers(self, mock_get_all_versions):
         priority_resource_uris_count = PriorityResourceURI.objects.all().count()
@@ -1132,6 +1164,29 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             priority_resource_uri = PriorityResourceURI.objects.get(package_url=purl)
             self.assertEqual(0, priority_resource_uri.priority)
 
+    def test_collect_errors(self):
+        invalid_purl = 'pkg:asdf1'
+        response = self.client.get(f'/api/collect/?purl={invalid_purl}')
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        expected_status = {'purl': ["purl validation error: purl is missing the required type component: 'pkg:asdf1'."]}
+        self.assertEqual(expected_status, response.data['errors'])
+
+        unhandled_purl = 'pkg:does-not-exist/does-not-exist@1.0'
+        response = self.client.get(f'/api/collect/?purl={unhandled_purl}')
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        expected_status = f'cannot fetch Package data for {unhandled_purl}: no available handler'
+        self.assertEqual(expected_status, response.data['status'])
+
+        purl_str = 'pkg:maven/does-not-exist@1.0'
+        response = self.client.get(f'/api/collect/?purl={purl_str}')
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        expected_status = (
+            'error(s) occurred when fetching metadata for pkg:maven/does-not-exist@1.0: '
+            'Package does not exist on maven: pkg:maven/does-not-exist@1.0\n'
+            'Package does not exist on maven: pkg:maven/does-not-exist@1.0?classifier=sources\n'
+        )
+        self.assertEqual(expected_status, response.data['status'])
+
 
 class ResourceApiTestCase(TestCase):
 
@@ -1321,11 +1376,14 @@ class PurlValidateApiTestCase(TestCase):
             "The provided Package URL is valid, and the package exists in the upstream repo.",
             response1.data["message"],
         )
+        self.assertEqual(status.HTTP_200_OK, response1.status_code)
 
         self.assertEqual(False, response2.data["valid"])
         self.assertEqual(
             "The provided PackageURL is not valid.", response2.data["message"]
         )
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response2.status_code)
+
 
     def test_api_purl_validation_unsupported_package_type(self):
         data1 = {
@@ -1344,6 +1402,11 @@ class PurlValidateApiTestCase(TestCase):
         data1 = {}
         response1 = self.client.get(f"/api/validate/", data=data1)
 
+        data2 = {
+            "does-not-exist": "dne",
+        }
+        response2 = self.client.get(f"/api/validate/", data=data2)
+
         expected = {
             "errors": {
                 "purl": [
@@ -1353,6 +1416,10 @@ class PurlValidateApiTestCase(TestCase):
         }
 
         self.assertAlmostEqual(expected, response1.data)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response1.status_code)
+
+        self.assertAlmostEqual(expected, response2.data)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response2.status_code)
 
 
 class PackageWatchTestCase(TestCase):
