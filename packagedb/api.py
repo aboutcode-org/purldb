@@ -250,13 +250,13 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
             response_data = {
                 'status': f'Unsupported field(s) given: {unsupported_fields_str}'
             }
-            return Response(response_data)
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
         if not data:
             response_data = {
                 'status': 'No values provided'
             }
-            return Response(response_data)
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
         lookups = Q()
         for field, value in data.items():
@@ -467,14 +467,14 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
             response_data = {
                 'status': f'Unsupported field(s) given: {unsupported_fields_str}'
             }
-            return Response(response_data)
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
         enhance_package_data = data.pop('enhance_package_data', False)
         if not data:
             response_data = {
                 'status': 'No values provided'
             }
-            return Response(response_data)
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
         lookups = Q()
         for field, value in data.items():
@@ -546,7 +546,7 @@ class PackageUpdateSet(viewsets.ViewSet):
         serializer = UpdatePackagesSerializer(data=request.data)
 
         if not serializer.is_valid():
-            return Response({'errors': serializer.errors}, status=400)
+            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         validated_data = serializer.validated_data
         packages = validated_data.get('purls', [])
@@ -812,7 +812,7 @@ class CollectViewSet(viewsets.ViewSet):
             return Response(
                 {'errors': serializer.errors},
                 status=status.HTTP_400_BAD_REQUEST,
-                )
+            )
 
         validated_data = serializer.validated_data
         purl = validated_data.get('purl')
@@ -847,7 +847,7 @@ class CollectViewSet(viewsets.ViewSet):
                     message = {
                         'status': f'error(s) occurred when fetching metadata for {purl}: {errors}'
                     }
-                return Response(message)
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
         for package in packages:
             get_source_package_and_add_to_package_set(package)
 
@@ -960,7 +960,7 @@ class CollectViewSet(viewsets.ViewSet):
         serializer = self.serializer_class(data=request.data)
 
         if not serializer.is_valid():
-            return Response({'errors': serializer.errors}, status=400)
+            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         validated_data = serializer.validated_data
         packages = validated_data.get('packages', [])
@@ -1065,7 +1065,7 @@ class CollectViewSet(viewsets.ViewSet):
             return Response(
                 {'errors': serializer.errors},
                 status=status.HTTP_400_BAD_REQUEST,
-                )
+            )
 
         validated_data = serializer.validated_data
         purl = validated_data.get('purl')
@@ -1097,7 +1097,7 @@ class CollectViewSet(viewsets.ViewSet):
                 message = {
                     'status': f'error(s) occurred when fetching metadata for {purl}: {errors}'
                 }
-            return Response(message)
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = PackageAPISerializer(packages, many=True, context={'request': request})
         return Response(serializer.data)
@@ -1169,7 +1169,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
             package_url = PackageURL.from_string(purl)
         except ValueError:
             serializer = PurlValidateResponseSerializer(response, context={'request': request})
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
         response['valid'] = True
         response["message"] = message_valid
