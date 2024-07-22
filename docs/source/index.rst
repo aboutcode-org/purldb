@@ -25,7 +25,7 @@ This what PurlDB is all about and it offers:
 - An active, continuously updated reference for FOSS packages origin, information and licensing,
   aka. open code knowledge base.
 - A code matching capability to identify and find similar code to existing indexed FOSS code using
-  this knowled base.
+  this knowledge base.
 - Additional utilities to help asses the quality and integrity of software packages as used in the
   software supply chain.
 
