@@ -850,7 +850,7 @@ class CollectViewSet(viewsets.ViewSet):
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
             lookups = purl_to_lookups(purl)
-            packages = Package.objects.filter(**lookups)
+            packages = Package.objects.filter(**lookups).order_by('-version')
             if packages.count() == 0:
                 message = {}
                 if errors:
