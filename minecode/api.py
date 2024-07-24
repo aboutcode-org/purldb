@@ -11,13 +11,11 @@ import json
 
 from django.db import transaction
 from django.utils import timezone
-from networkx import project
 from packageurl import PackageURL
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-import requests
 
 # UnusedImport here!
 # But importing the mappers and visitors module triggers routes registration
@@ -25,7 +23,6 @@ from minecode import visitors  # NOQA
 from minecode import priority_router
 from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 from minecode.permissions import IsScanQueueWorkerAPIUser
-from minecode.utils import validate_uuid
 from minecode.utils import get_temp_file
 
 
