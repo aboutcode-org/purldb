@@ -99,6 +99,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
     queryset = ScannableURI.objects.all()
     serializer_class = ScannableURISerializer
     permission_classes = [IsScanQueueWorkerAPIUser|IsAdminUser]
+    lookup_field = 'uuid'
 
     @action(detail=False, methods=['get'])
     def get_next_download_url(self, request, *args, **kwargs):
