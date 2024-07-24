@@ -299,8 +299,8 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         project_data = request.data.get('project')
-        results_url = project_data.get('results_url')
-        summary_url = project_data.get('summary_url')
+        results = project_data.get('results')
+        summary = project_data.get('summary')
         extra_data = project_data.get('extra_data')
 
         # Save results to temporary files
@@ -313,14 +313,11 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             extension='.json'
         )
 
-        # TODO: map worker hostnames to API key used to communicate with them
-        response = requests.get(results_url)
         with open(scan_results_location, 'wb') as f:
-            json.dump(response.json(), f)
+            json.dump(results, f)
 
-        response = requests.get(summary_url)
         with open(scan_summary_location, 'wb') as f:
-            json.dump(response.json(), f)
+            json.dump(summary, f)
 
         scannable_uri = self.get_object()
         scannable_uri.process_scan_results(
