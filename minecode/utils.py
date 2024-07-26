@@ -15,6 +15,8 @@ import tempfile
 import uuid
 
 from django.conf import settings
+from django.core import signing
+from django.urls import reverse
 from django.utils.encoding import force_str
 
 import arrow
@@ -415,3 +417,15 @@ class MemorySavingQuerysetIterator(object):
 
     def next(self):
         return self._generator.next()
+
+
+def get_webhook_url(view_name, user_uuid):
+    """
+    Return a Webhook target URL based on the `user_uuid`.
+    This URL is used to create notifications for this user.
+    """
+    user_key = signing.dumps(str(user_uuid))
+    target_url = reverse(view_name, args=[user_key])
+    site_url = settings.SITE_URL.rstrip("/")
+    webhook_url = site_url + target_url
+    return webhook_url

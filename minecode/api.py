@@ -24,6 +24,7 @@ from minecode import priority_router
 from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 from minecode.permissions import IsScanQueueWorkerAPIUser
 from minecode.utils import get_temp_file
+from minecode.utils import get_webhook_url
 
 
 class ResourceURISerializer(serializers.ModelSerializer):
@@ -109,10 +110,15 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             scannable_uri = ScannableURI.objects.get_next_scannable()
             if scannable_uri:
+                user = self.request.user
+                # TODO: Create scan index API view
+                # TODO: Create custom User class and use UUID as id field
+                webhook_url = get_webhook_url("notifications:send_scan_notification", user.id)
                 response = {
                     'scannable_uri_uuid': scannable_uri.uuid,
                     'download_url': scannable_uri.uri,
                     'pipelines': scannable_uri.pipelines,
+                    'webhook_url': webhook_url,
                 }
                 scannable_uri.scan_status = ScannableURI.SCAN_SUBMITTED
                 scannable_uri.scan_date = timezone.now()
@@ -122,6 +128,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
                     'scannable_uri_uuid': '',
                     'download_url': '',
                     'pipelines': [],
+                    'webhook_url': '',
                 }
             return Response(response)
 
