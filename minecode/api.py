@@ -9,8 +9,13 @@
 
 import json
 
+from django import http
+from django.core import signing
 from django.db import transaction
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+
 from packageurl import PackageURL
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
@@ -21,7 +26,7 @@ from rest_framework.response import Response
 # But importing the mappers and visitors module triggers routes registration
 from minecode import visitors  # NOQA
 from minecode import priority_router
-from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
+from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI, PurldbUser
 from minecode.permissions import IsScanQueueWorkerAPIUser
 from minecode.utils import get_temp_file
 from minecode.utils import get_webhook_url
@@ -345,3 +350,48 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
         response = ScannableURI.objects.statistics()
         return Response(response)
 
+
+@require_POST
+@csrf_exempt
+def send_scan_notification(request, key):
+    try:
+        json_data = json.loads(request.body.decode("utf-8"))
+    except json.JSONDecodeError:
+        raise http.Http404
+
+    user_uuid = signing.loads(key)
+    user = http.get_object_or_404(PurldbUser, uuid=user_uuid)
+
+    results = json_data.get('results')
+    summary = json_data.get('summary')
+    project_data = json_data.get('project')
+    extra_data = project_data.get('extra_data')
+    scannable_uri_uuid = extra_data.get('scannable_uri_uuid')
+
+    # Save results to temporary files
+    scan_results_location = get_temp_file(
+        file_name='scan_results',
+        extension='.json'
+    )
+    scan_summary_location = get_temp_file(
+        file_name='scan_summary',
+        extension='.json'
+    )
+
+    with open(scan_results_location, 'wb') as f:
+        json.dump(results, f)
+
+    with open(scan_summary_location, 'wb') as f:
+        json.dump(summary, f)
+
+    scannable_uri = http.get_object_or_404(ScannableURI, uuid=scannable_uri_uuid)
+    scannable_uri.process_scan_results(
+        scan_results_location=scan_results_location,
+        scan_summary_location=scan_summary_location,
+        project_extra_data=extra_data
+    )
+    msg = {
+        'status': f'scan results for scannable_uri {scannable_uri.uuid} '
+                    'have been queued for indexing'
+    }
+    return Response(msg)

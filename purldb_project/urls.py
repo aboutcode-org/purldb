@@ -18,6 +18,7 @@ from rest_framework import routers
 from matchcode.api import ApproximateDirectoryContentIndexViewSet
 from matchcode.api import ApproximateDirectoryStructureIndexViewSet
 from minecode.api import ScannableURIViewSet
+from minecode.api import send_scan_notification
 from packagedb.api import CollectViewSet
 from packagedb.api import PackageSetViewSet
 from packagedb.api import PackageUpdateSet
@@ -52,4 +53,7 @@ urlpatterns = [
     path("", RedirectView.as_view(url="api/")),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path(
+        'api/send_scan_notification/<str:key>/', send_scan_notification, name='send_scan_notification'
+    ),
 ]
