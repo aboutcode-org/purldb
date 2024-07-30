@@ -54,6 +54,9 @@ SCANCODEIO_API_KEY = env.str("SCANCODEIO_API_KEY", "")
 
 PURLDB_LOG_LEVEL = env.str("PURLDB_LOG_LEVEL", "INFO")
 
+# DejaCode User Model
+AUTH_USER_MODEL = "minecode.PurldbUser"
+
 # Application definition
 
 INSTALLED_APPS = (
