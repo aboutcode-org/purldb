@@ -8,19 +8,14 @@
 #
 
 from datetime import timedelta
-from contextlib import suppress
 import logging
 import sys
 import uuid
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import BaseUserManager
-from django.contrib.auth.models import Group
 from django.db import models
 from django.utils import timezone
 
-from rest_framework.authtoken.models import Token
 import django_rq
 
 from minecode import map_router
