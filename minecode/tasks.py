@@ -34,7 +34,6 @@ def process_scan_results(
         scan_data = json.load(f)
     with open(scan_summary_location) as f:
         summary_data = json.load(f)
-    project_extra_data = json.loads(project_extra_data)
 
     try:
         scannable_uri = ScannableURI.objects.get(uuid=scannable_uri_uuid)
