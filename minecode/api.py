@@ -9,13 +9,15 @@
 
 import json
 
-from django import http
 from django.contrib.auth import get_user_model
 from django.core import signing
 from django.db import transaction
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+
 from packageurl import PackageURL
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
@@ -355,11 +357,11 @@ def send_scan_notification(request, key):
     try:
         json_data = json.loads(request.body.decode("utf-8"))
     except json.JSONDecodeError:
-        raise http.Http404
+        raise Http404
 
     user_id = signing.loads(key)
     User = get_user_model()
-    user = http.get_object_or_404(User, id=user_id)
+    user = get_object_or_404(User, id=user_id)
 
     results = json_data.get('results')
     summary = json_data.get('summary')
@@ -383,7 +385,7 @@ def send_scan_notification(request, key):
     with open(scan_summary_location, 'wb') as f:
         json.dump(summary, f)
 
-    scannable_uri = http.get_object_or_404(ScannableURI, uuid=scannable_uri_uuid)
+    scannable_uri = get_object_or_404(ScannableURI, uuid=scannable_uri_uuid)
     scannable_uri.process_scan_results(
         scan_results_location=scan_results_location,
         scan_summary_location=scan_summary_location,
