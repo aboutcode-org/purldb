@@ -16,7 +16,6 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
 
 from packageurl import PackageURL
 from rest_framework import serializers, status, viewsets
@@ -118,7 +117,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             scannable_uri = ScannableURI.objects.get_next_scannable()
             if scannable_uri:
                 user = self.request.user
-                webhook_url = get_webhook_url("send_scan_notification", user.id)
+                webhook_url = get_webhook_url('index_package_scan', user.id)
                 response = {
                     'scannable_uri_uuid': scannable_uri.uuid,
                     'download_url': scannable_uri.uri,
@@ -140,16 +139,10 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def update_status(self, request, *args, **kwargs):
         """
-        Update the status of a ScannableURI with UUID of `scannable_uri_uuid`
-        with `scan_status`
+        Update the status of a ScannableURI with `scan_status`
 
         If `scan_status` is 'failed', then a `scan_log` string is expected and
         should contain the error messages for that scan.
-
-        If `scan_status` is 'scanned', then a `scan_results_file`,
-        `scan_summary_file`, and `project_extra_data` mapping are expected.
-        `scan_results_file`, `scan_summary_file`, and `project_extra_data` are
-        then used to update Package data and its Resources.
         """
         scan_status = request.data.get('scan_status')
         if not scan_status:
@@ -161,13 +154,6 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
         scannable_uri = self.get_object()
         scannable_uri_uuid = scannable_uri.uuid
         scannable_uri_status = ScannableURI.SCAN_STATUSES_BY_CODE.get(scannable_uri.scan_status)
-        scan_status_code = ScannableURI.SCAN_STATUS_CODES_BY_SCAN_STATUS.get(scan_status)
-
-        if not scan_status_code:
-            msg = {
-                'error': f'invalid scan_status: {scan_status}'
-            }
-            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
 
         if scannable_uri.scan_status in [
             ScannableURI.SCAN_INDEXED,
@@ -194,166 +180,20 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             scannable_uri.scan_status = ScannableURI.SCAN_FAILED
             scannable_uri.wip_date = None
             scannable_uri.save()
-            msg = {
+            response = {
                 'status': f'updated scannable_uri {scannable_uri_uuid} scan_status to {scan_status}'
             }
+            return Response(response)
 
-        elif scan_status == 'scanned':
-            scan_results_file = request.data.get('scan_results_file')
-            scan_summary_file = request.data.get('scan_summary_file')
-            project_extra_data = request.data.get('project_extra_data')
-
-            # Save results to temporary files
-            scan_results_location = get_temp_file(
-                file_name='scan_results',
-                extension='.json'
-            )
-            scan_summary_location = get_temp_file(
-                file_name='scan_summary',
-                extension='.json'
-            )
-            with open(scan_results_location, 'wb') as f:
-                f.write(scan_results_file.read())
-            with open(scan_summary_location, 'wb') as f:
-                f.write(scan_summary_file.read())
-
-            scannable_uri.process_scan_results(
-                scan_results_location=scan_results_location,
-                scan_summary_location=scan_summary_location,
-                project_extra_data=project_extra_data
-            )
-            msg = {
-                'status': f'scan results for scannable_uri {scannable_uri_uuid} '
-                           'have been queued for indexing'
-            }
-
-        return Response(msg)
-
-    @action(detail=True, methods=['post'])
-    def update_status(self, request, *args, **kwargs):
-        """
-        Update the status of a ScannableURI with UUID of `scannable_uri_uuid`
-        with `scan_status`
-
-        If `scan_status` is 'failed', then a `scan_log` string is expected and
-        should contain the error messages for that scan.
-
-        If `scan_status` is 'scanned', then a `scan_results_file`,
-        `scan_summary_file`, and `project_extra_data` mapping are expected.
-        `scan_results_file`, `scan_summary_file`, and `project_extra_data` are
-        then used to update Package data and its Resources.
-        """
-        scan_status = request.data.get('scan_status')
-        if not scan_status:
-            response = {
-                'error': 'missing scan_status'
-            }
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-        scannable_uri = self.get_object()
-        scannable_uri_uuid = scannable_uri.uuid
-        scannable_uri_status = ScannableURI.SCAN_STATUSES_BY_CODE.get(scannable_uri.scan_status)
-        scan_status_code = ScannableURI.SCAN_STATUS_CODES_BY_SCAN_STATUS.get(scan_status)
-
-        if not scan_status_code:
-            msg = {
-                'error': f'invalid scan_status: {scan_status}'
-            }
-            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
-
-        if scannable_uri.scan_status in [
-            ScannableURI.SCAN_INDEXED,
-            ScannableURI.SCAN_FAILED,
-            ScannableURI.SCAN_TIMEOUT,
-            ScannableURI.SCAN_INDEX_FAILED,
-        ]:
-            response = {
-                'error': f'cannot update status for scannable_uri {scannable_uri_uuid}: '
-                         f'scannable_uri has finished with status "{scannable_uri_status}"'
-            }
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-        if scan_status == scannable_uri_status:
-            response = {
-                'error': f'cannot update status for scannable_uri {scannable_uri_uuid}: '
-                         f'scannable_uri status is already "{scannable_uri_status}"'
-            }
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-        if scan_status == 'failed':
-            scan_log = request.data.get('scan_log')
-            scannable_uri.scan_error = scan_log
-            scannable_uri.scan_status = ScannableURI.SCAN_FAILED
-            scannable_uri.wip_date = None
-            scannable_uri.save()
-            msg = {
-                'status': f'updated scannable_uri {scannable_uri_uuid} scan_status to {scan_status}'
-            }
-
-        return Response(msg)
-
-    @action(detail=True, methods=['post'])
-    def index_package_scan(self, request, *args, **kwargs):
-        scannable_uri = self.get_object()
-        scannable_uri_uuid = scannable_uri.uuid
-        if scannable_uri.scan_status in [
-            ScannableURI.SCAN_INDEXED,
-            ScannableURI.SCAN_FAILED,
-            ScannableURI.SCAN_TIMEOUT,
-            ScannableURI.SCAN_INDEX_FAILED,
-        ]:
-            response = {
-                'error': f'cannot index package scan for scannable_uri {scannable_uri_uuid}: '
-                         f'scannable_uri has finished with status "{scannable_uri.status}"'
-            }
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-        project_data = request.data.get('project')
-        results = project_data.get('results')
-        summary = project_data.get('summary')
-        extra_data = project_data.get('extra_data')
-
-        # Save results to temporary files
-        scan_results_location = get_temp_file(
-            file_name='scan_results',
-            extension='.json'
-        )
-        scan_summary_location = get_temp_file(
-            file_name='scan_summary',
-            extension='.json'
-        )
-
-        with open(scan_results_location, 'wb') as f:
-            json.dump(results, f)
-
-        with open(scan_summary_location, 'wb') as f:
-            json.dump(summary, f)
-
-        scannable_uri = self.get_object()
-        scannable_uri.process_scan_results(
-            scan_results_location=scan_results_location,
-            scan_summary_location=scan_summary_location,
-            project_extra_data=extra_data
-        )
-        msg = {
-            'status': f'scan results for scannable_uri {scannable_uri.uuid} '
-                       'have been queued for indexing'
+        response = {
+            'error': f'invalid scan_status: {scan_status}'
         }
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(msg)
-
-    @action(detail=False, methods=['get'])
-    def statistics(self, request, *args, **kwargs):
-        """
-        Return a scan queue statistics.
-        """
-        response = ScannableURI.objects.statistics()
-        return Response(response)
 
 @api_view(['POST'])
-@require_POST
 @csrf_exempt
-def send_scan_notification(request, key):
+def index_package_scan(request, key):
     try:
         json_data = json.loads(request.body.decode("utf-8"))
     except json.JSONDecodeError:
