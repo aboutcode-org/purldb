@@ -20,7 +20,7 @@ from django.views.decorators.http import require_POST
 
 from packageurl import PackageURL
 from rest_framework import serializers, status, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
@@ -350,7 +350,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
         response = ScannableURI.objects.statistics()
         return Response(response)
 
-
+@api_view(['POST'])
 @require_POST
 @csrf_exempt
 def send_scan_notification(request, key):
