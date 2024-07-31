@@ -10,12 +10,12 @@
 import json
 
 from django import http
+from django.contrib.auth import get_user_model
 from django.core import signing
 from django.db import transaction
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-
 from packageurl import PackageURL
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
@@ -26,7 +26,7 @@ from rest_framework.response import Response
 # But importing the mappers and visitors module triggers routes registration
 from minecode import visitors  # NOQA
 from minecode import priority_router
-from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI, PurldbUser
+from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 from minecode.permissions import IsScanQueueWorkerAPIUser
 from minecode.utils import get_temp_file
 from minecode.utils import get_webhook_url
@@ -116,9 +116,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             scannable_uri = ScannableURI.objects.get_next_scannable()
             if scannable_uri:
                 user = self.request.user
-                # TODO: Create scan index API view
-                # TODO: Create custom User class and use UUID as id field
-                webhook_url = get_webhook_url("notifications:send_scan_notification", user.id)
+                webhook_url = get_webhook_url("send_scan_notification", user.id)
                 response = {
                     'scannable_uri_uuid': scannable_uri.uuid,
                     'download_url': scannable_uri.uri,
@@ -359,8 +357,9 @@ def send_scan_notification(request, key):
     except json.JSONDecodeError:
         raise http.Http404
 
-    user_uuid = signing.loads(key)
-    user = http.get_object_or_404(PurldbUser, uuid=user_uuid)
+    user_id = signing.loads(key)
+    User = get_user_model()
+    user = http.get_object_or_404(User, id=user_id)
 
     results = json_data.get('results')
     summary = json_data.get('summary')
