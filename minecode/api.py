@@ -194,6 +194,12 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
 @api_view(['POST'])
 @csrf_exempt
 def index_package_scan(request, key):
+    """
+    Given a `request` to the `/api/scan_queue/index_package_scan/<key>/`
+    endpoint, where `key` is the id of the purldb scan queue worker that has
+    been encoded as a secret, save the package scan results and summary to files
+    and create a new rq worker task to index the scan results and summary.
+    """
     try:
         json_data = json.loads(request.body.decode("utf-8"))
     except json.JSONDecodeError:
