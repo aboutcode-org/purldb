@@ -379,10 +379,10 @@ def send_scan_notification(request, key):
         extension='.json'
     )
 
-    with open(scan_results_location, 'wb') as f:
+    with open(scan_results_location, 'w') as f:
         json.dump(results, f)
 
-    with open(scan_summary_location, 'wb') as f:
+    with open(scan_summary_location, 'w') as f:
         json.dump(summary, f)
 
     scannable_uri = get_object_or_404(ScannableURI, uuid=scannable_uri_uuid)
