@@ -11,7 +11,14 @@ Next Release
   removed.
 - The `/api/collect/` and `/api/collect/index_packages/` API endpoints have been
   updated such that Package scan and processing requests made with purls with
-  versions are processed ahead of those made with versionless purls. https://github.com/nexB/purldb/issues/502
+  versions are processed ahead of those made with versionless purls.
+  https://github.com/nexB/purldb/issues/502
+- The `/api/scan_queue/` endpoint has been updated.
+  `/api/scan_queue/get_next_download_url/` now returns a `webhook_url`, where
+  the purldb scan worker will submit results. This is a URL to the
+  `/api/scan_queue/index_package_scan/` endpoint.
+  `/api/scan_queue/update_status/` is now an action on a ScannableURI.
+  https://github.com/nexB/purldb/issues/504
 
 
 v5.0.0

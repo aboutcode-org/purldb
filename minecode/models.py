@@ -7,14 +7,15 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import uuid
 from datetime import timedelta
 import logging
 import sys
+import uuid
 
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+
 import django_rq
 
 from minecode import map_router

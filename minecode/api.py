@@ -7,11 +7,19 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import json
+
+from django.contrib.auth import get_user_model
+from django.core import signing
 from django.db import transaction
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+
 from packageurl import PackageURL
 from rest_framework import serializers, status, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
@@ -21,8 +29,8 @@ from minecode import visitors  # NOQA
 from minecode import priority_router
 from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 from minecode.permissions import IsScanQueueWorkerAPIUser
-from minecode.utils import validate_uuid
 from minecode.utils import get_temp_file
+from minecode.utils import get_webhook_url
 
 
 class ResourceURISerializer(serializers.ModelSerializer):
@@ -98,6 +106,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
     queryset = ScannableURI.objects.all()
     serializer_class = ScannableURISerializer
     permission_classes = [IsScanQueueWorkerAPIUser|IsAdminUser]
+    lookup_field = 'uuid'
 
     @action(detail=False, methods=['get'])
     def get_next_download_url(self, request, *args, **kwargs):
@@ -107,10 +116,13 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             scannable_uri = ScannableURI.objects.get_next_scannable()
             if scannable_uri:
+                user = self.request.user
+                webhook_url = get_webhook_url('index_package_scan', user.id)
                 response = {
                     'scannable_uri_uuid': scannable_uri.uuid,
                     'download_url': scannable_uri.uri,
                     'pipelines': scannable_uri.pipelines,
+                    'webhook_url': webhook_url,
                 }
                 scannable_uri.scan_status = ScannableURI.SCAN_SUBMITTED
                 scannable_uri.scan_date = timezone.now()
@@ -120,52 +132,28 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
                     'scannable_uri_uuid': '',
                     'download_url': '',
                     'pipelines': [],
+                    'webhook_url': '',
                 }
             return Response(response)
 
-    @action(detail=False, methods=['post'])
+    @action(detail=True, methods=['post'])
     def update_status(self, request, *args, **kwargs):
         """
-        Update the status of a ScannableURI with UUID of `scannable_uri_uuid`
-        with `scan_status`
+        Update the status of a ScannableURI with `scan_status`
 
         If `scan_status` is 'failed', then a `scan_log` string is expected and
         should contain the error messages for that scan.
-
-        If `scan_status` is 'scanned', then a `scan_results_file`,
-        `scan_summary_file`, and `project_extra_data` mapping are expected.
-        `scan_results_file`, `scan_summary_file`, and `project_extra_data` are
-        then used to update Package data and its Resources.
         """
-        scannable_uri_uuid = request.data.get('scannable_uri_uuid')
         scan_status = request.data.get('scan_status')
-        if not scannable_uri_uuid:
-            response = {
-                'error': 'missing scannable_uri_uuid'
-            }
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
         if not scan_status:
             response = {
                 'error': 'missing scan_status'
             }
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-        if not validate_uuid(scannable_uri_uuid):
-            response = {
-                'error': f'invalid scannable_uri_uuid: {scannable_uri_uuid}'
-            }
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-        scannable_uri = ScannableURI.objects.get(uuid=scannable_uri_uuid)
+        scannable_uri = self.get_object()
+        scannable_uri_uuid = scannable_uri.uuid
         scannable_uri_status = ScannableURI.SCAN_STATUSES_BY_CODE.get(scannable_uri.scan_status)
-        scan_status_code = ScannableURI.SCAN_STATUS_CODES_BY_SCAN_STATUS.get(scan_status)
-
-        if not scan_status_code:
-            msg = {
-                'error': f'invalid scan_status: {scan_status}'
-            }
-            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
 
         if scannable_uri.scan_status in [
             ScannableURI.SCAN_INDEXED,
@@ -192,46 +180,65 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
             scannable_uri.scan_status = ScannableURI.SCAN_FAILED
             scannable_uri.wip_date = None
             scannable_uri.save()
-            msg = {
+            response = {
                 'status': f'updated scannable_uri {scannable_uri_uuid} scan_status to {scan_status}'
             }
+            return Response(response)
 
-        elif scan_status == 'scanned':
-            scan_results_file = request.data.get('scan_results_file')
-            scan_summary_file = request.data.get('scan_summary_file')
-            project_extra_data = request.data.get('project_extra_data')
+        response = {
+            'error': f'invalid scan_status: {scan_status}'
+        }
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-            # Save results to temporary files
-            scan_results_location = get_temp_file(
-                file_name='scan_results',
-                extension='.json'
-            )
-            scan_summary_location = get_temp_file(
-                file_name='scan_summary',
-                extension='.json'
-            )
-            with open(scan_results_location, 'wb') as f:
-                f.write(scan_results_file.read())
-            with open(scan_summary_location, 'wb') as f:
-                f.write(scan_summary_file.read())
 
-            scannable_uri.process_scan_results(
-                scan_results_location=scan_results_location,
-                scan_summary_location=scan_summary_location,
-                project_extra_data=project_extra_data
-            )
-            msg = {
-                'status': f'scan results for scannable_uri {scannable_uri_uuid} '
-                           'have been queued for indexing'
-            }
+@api_view(['POST'])
+@csrf_exempt
+def index_package_scan(request, key):
+    """
+    Given a `request` to the `/api/scan_queue/index_package_scan/<key>/`
+    endpoint, where `key` is the id of the purldb scan queue worker that has
+    been encoded as a secret, save the package scan results and summary to files
+    and create a new rq worker task to index the scan results and summary.
+    """
+    try:
+        json_data = json.loads(request.body.decode("utf-8"))
+    except json.JSONDecodeError:
+        raise Http404
 
-        return Response(msg)
+    user_id = signing.loads(key)
+    User = get_user_model()
+    user = get_object_or_404(User, id=user_id)
 
-    @action(detail=False, methods=['get'])
-    def statistics(self, request, *args, **kwargs):
-        """
-        Return a scan queue statistics.
-        """
-        response = ScannableURI.objects.statistics()
-        return Response(response)
+    results = json_data.get('results')
+    summary = json_data.get('summary')
+    project_data = json_data.get('project')
+    extra_data = project_data.get('extra_data')
+    scannable_uri_uuid = extra_data.get('scannable_uri_uuid')
 
+    # Save results to temporary files
+    scan_results_location = get_temp_file(
+        file_name='scan_results',
+        extension='.json'
+    )
+    scan_summary_location = get_temp_file(
+        file_name='scan_summary',
+        extension='.json'
+    )
+
+    with open(scan_results_location, 'w') as f:
+        json.dump(results, f)
+
+    with open(scan_summary_location, 'w') as f:
+        json.dump(summary, f)
+
+    scannable_uri = get_object_or_404(ScannableURI, uuid=scannable_uri_uuid)
+    scannable_uri.process_scan_results(
+        scan_results_location=scan_results_location,
+        scan_summary_location=scan_summary_location,
+        project_extra_data=extra_data
+    )
+    msg = {
+        'status': f'scan results for scannable_uri {scannable_uri.uuid} '
+                    'have been queued for indexing'
+    }
+    return Response(msg)

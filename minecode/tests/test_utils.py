@@ -14,10 +14,8 @@ from django.test import TestCase as DjangoTestCase
 
 from packagedcode import models as scan_models
 
+from minecode import utils
 from minecode.utils_test import JsonBasedTesting
-from minecode.utils import is_int
-from minecode.utils import stringify_null_purl_fields
-from minecode.utils import validate_uuid
 
 
 class UtilsTest(JsonBasedTesting, DjangoTestCase):
@@ -28,7 +26,7 @@ class UtilsTest(JsonBasedTesting, DjangoTestCase):
             'type': None
         }
 
-        stringify_null_purl_fields(common_data)
+        utils.stringify_null_purl_fields(common_data)
 
         self.assertEqual(1, len(common_data))
         self.assertEqual('', common_data['type'])
@@ -43,7 +41,7 @@ class UtilsTest(JsonBasedTesting, DjangoTestCase):
             'subpath': None
         }
 
-        stringify_null_purl_fields(common_data)
+        utils.stringify_null_purl_fields(common_data)
 
         for d in common_data:
             self.assertIsNotNone(common_data[d])
@@ -65,8 +63,8 @@ class UtilsTest(JsonBasedTesting, DjangoTestCase):
         self.assertEqual(None, package.subpath)
 
     def test_is_int(self):
-        self.assertTrue(is_int(0))
-        self.assertFalse(is_int('a'))
+        self.assertTrue(utils.is_int(0))
+        self.assertFalse(utils.is_int('a'))
 
     def test_validate_uuid(self):
         invalid_uuid1 = 'invalid'
@@ -78,4 +76,4 @@ class UtilsTest(JsonBasedTesting, DjangoTestCase):
             [invalid_uuid2, False],
             [valid_uuid, True],
         ]:
-            self.assertEqual(expected_result, validate_uuid(uuid))
+            self.assertEqual(expected_result, utils.validate_uuid(uuid))

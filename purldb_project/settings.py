@@ -54,6 +54,8 @@ SCANCODEIO_API_KEY = env.str("SCANCODEIO_API_KEY", "")
 
 PURLDB_LOG_LEVEL = env.str("PURLDB_LOG_LEVEL", "INFO")
 
+SITE_URL = env.str("SITE_URL", default="")
+
 # Application definition
 
 INSTALLED_APPS = (
