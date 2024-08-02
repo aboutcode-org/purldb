@@ -829,7 +829,7 @@ class CollectViewSet(viewsets.ViewSet):
 
         validated_data = serializer.validated_data
         purl = validated_data.get('purl')
-        sort = validated_data.get('sort', [])
+        sort = validated_data.get('sort') or ['-version',]
 
         kwargs = dict()
         # We want this request to have high priority since the user knows the
