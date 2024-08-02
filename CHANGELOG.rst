@@ -19,7 +19,10 @@ Next Release
   `/api/scan_queue/index_package_scan/` endpoint.
   `/api/scan_queue/update_status/` is now an action on a ScannableURI.
   https://github.com/aboutcode-org/purldb/issues/504
-
+- The packages collected via the `/api/collect/` endpoint can be ordered in an
+  ascending or descending fashion on fields using the ``sort`` query parameter.
+  This parameter takes in the same fields as ``sort`` from `/api/packages/`.
+  https://github.com/aboutcode-org/purldb/issues/508
 
 v5.0.1
 ---------

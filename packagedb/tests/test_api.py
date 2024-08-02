@@ -1052,11 +1052,6 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             prev_package_data = response.data[i-1]
             self.assertTrue(prev_package_data['size'] > package_data['size'])
 
-        response = self.client.get(f'/api/collect/?purl={purl_str}&sort=-size')
-        for i, package_data in enumerate(response.data[1:], start=1):
-            prev_package_data = response.data[i-1]
-            self.assertTrue(prev_package_data['size'] > package_data['size'])
-            
     def test_package_api_index_packages_endpoint(self):
         priority_resource_uris_count = PriorityResourceURI.objects.all().count()
         self.assertEqual(0, priority_resource_uris_count)
