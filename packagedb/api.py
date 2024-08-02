@@ -829,6 +829,7 @@ class CollectViewSet(viewsets.ViewSet):
 
         validated_data = serializer.validated_data
         purl = validated_data.get('purl')
+        sort = validated_data.get('sort', [])
 
         kwargs = dict()
         # We want this request to have high priority since the user knows the
@@ -841,7 +842,8 @@ class CollectViewSet(viewsets.ViewSet):
         if addon_pipelines := validated_data.get('addon_pipelines', []):
             kwargs["addon_pipelines"] = addon_pipelines
 
-        packages = Package.objects.filter(**lookups)
+        lookups = purl_to_lookups(purl)
+        packages = Package.objects.filter(**lookups).order_by(*sort)
         if packages.count() == 0:
             try:
                 errors = priority_router.process(purl, **kwargs)
@@ -852,7 +854,6 @@ class CollectViewSet(viewsets.ViewSet):
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
             lookups = purl_to_lookups(purl)
-            sort = validated_data.get('sort', [])
             packages = Package.objects.filter(**lookups).order_by(*sort)
             if packages.count() == 0:
                 message = {}
@@ -861,6 +862,7 @@ class CollectViewSet(viewsets.ViewSet):
                         'status': f'error(s) occurred when fetching metadata for {purl}: {errors}'
                     }
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
         for package in packages:
             get_source_package_and_add_to_package_set(package)
 

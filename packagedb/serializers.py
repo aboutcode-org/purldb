@@ -428,20 +428,15 @@ class CollectPackageSerializer(Serializer):
         return value
 
     def validate_addon_pipelines(self, value):
-        invalid_pipelines = [
-            pipe for pipe in value if not is_supported_addon_pipeline(pipe)]
-        if invalid_pipelines:
-            raise ValidationError(
-                f'Error unsupported addon pipelines: {",".join(invalid_pipelines)}')
-
+        if invalid_pipelines := [pipe for pipe in value if not is_supported_addon_pipeline(pipe)]:
+            raise ValidationError(f'Error unsupported addon pipelines: {",".join(invalid_pipelines)}')
         return value
 
     def validate_sort(self, value):
-        invalid_sort_fields = [field for field in value if not is_supported_sort_field(field)]
-        if invalid_sort_fields:
+        if invalid_sort_fields := [field for field in value if not is_supported_sort_field(field)]:
             raise ValidationError(f'Error unsupported sort fields: {",".join(invalid_sort_fields)}')
-
         return value
+
 
 class PackageVersSerializer(Serializer):
     purl = CharField()
@@ -544,4 +539,5 @@ def is_supported_addon_pipeline(addon_pipeline):
 
 def is_supported_sort_field(field):
     from packagedb.api import PACKAGE_FILTER_SORT_FIELDS
-    return field in PACKAGE_FILTER_SORT_FIELDS
+    # A field could have a leading `-`
+    return field.lstrip('-') in PACKAGE_FILTER_SORT_FIELDS
