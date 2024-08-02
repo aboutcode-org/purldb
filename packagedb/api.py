@@ -301,6 +301,20 @@ class MultiplePackageURLFilter(MultipleCharFilter):
         return qs.distinct() if self.distinct else qs
 
 
+PACKAGE_FILTER_SORT_FIELDS = [
+    'type',
+    'namespace',
+    'name',
+    'version',
+    'qualifiers',
+    'subpath',
+    'download_url',
+    'filename',
+    'size',
+    'release_date',
+]
+
+
 class PackageFilterSet(FilterSet):
     type = django_filters.CharFilter(
         lookup_expr='iexact',
@@ -332,18 +346,7 @@ class PackageFilterSet(FilterSet):
         lookup_expr='icontains',
     )
 
-    sort = OrderingFilter(fields=[
-        'type',
-        'namespace',
-        'name',
-        'version',
-        'qualifiers',
-        'subpath',
-        'download_url',
-        'filename',
-        'size',
-        'release_date'
-    ])
+    sort = OrderingFilter(fields=PACKAGE_FILTER_SORT_FIELDS)
 
     class Meta:
         model = Package
@@ -838,7 +841,6 @@ class CollectViewSet(viewsets.ViewSet):
         if addon_pipelines := validated_data.get('addon_pipelines', []):
             kwargs["addon_pipelines"] = addon_pipelines
 
-        lookups = purl_to_lookups(purl)
         packages = Package.objects.filter(**lookups)
         if packages.count() == 0:
             try:
@@ -850,7 +852,8 @@ class CollectViewSet(viewsets.ViewSet):
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
             lookups = purl_to_lookups(purl)
-            packages = Package.objects.filter(**lookups).order_by('-version')
+            sort = validated_data.get('sort', [])
+            packages = Package.objects.filter(**lookups).order_by(*sort)
             if packages.count() == 0:
                 message = {}
                 if errors:

@@ -7,14 +7,8 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from django.http import HttpRequest
 from django.urls import reverse_lazy
-from packagedb.models import DependentPackage
-from packagedb.models import Package
-from packagedb.models import PackageSet
-from packagedb.models import PackageWatch
-from packagedb.models import Party
-from packagedb.models import Resource
+
 from packageurl import PackageURL
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import BooleanField
@@ -28,6 +22,13 @@ from rest_framework.serializers import ListField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import Serializer
 from rest_framework.serializers import SerializerMethodField
+
+from packagedb.models import DependentPackage
+from packagedb.models import Package
+from packagedb.models import PackageSet
+from packagedb.models import PackageWatch
+from packagedb.models import Party
+from packagedb.models import Resource
 
 
 class ResourceAPISerializer(HyperlinkedModelSerializer):
@@ -382,18 +383,33 @@ class PackageWatchUpdateSerializer(ModelSerializer):
         fields = ['depth', 'watch_interval', 'is_active']
 
 
+class CommaListField(ListField):
+    """ListField that allows also a str of comma-separated values as value."""
+
+    def to_internal_value(self, data):
+        if isinstance(data, str):
+            split_data = []
+            for datum in data:
+                split_data.extend(datum.split(','))
+            data = split_data
+        return super().to_internal_value(data)
+
+
 class CollectPackageSerializer(Serializer):
     purl = CharField(help_text="PackageURL strings in canonical form.")
     source_purl = CharField(
         required=False,
         help_text="Source PackageURL.",
     )
-
     addon_pipelines = ListField(
         child=CharField(),
         required=False,
         allow_empty=True,
         help_text="Addon pipelines to run on the package.",
+    )
+    sort = CommaListField(
+        required=False,
+        help_text="Fields to sort Package results by.",
     )
 
     def validate_purl(self, value):
@@ -420,6 +436,12 @@ class CollectPackageSerializer(Serializer):
 
         return value
 
+    def validate_sort(self, value):
+        invalid_sort_fields = [field for field in value if not is_supported_sort_field(field)]
+        if invalid_sort_fields:
+            raise ValidationError(f'Error unsupported sort fields: {",".join(invalid_sort_fields)}')
+
+        return value
 
 class PackageVersSerializer(Serializer):
     purl = CharField()
@@ -518,3 +540,8 @@ class PurltoGitRepoResponseSerializer(Serializer):
 def is_supported_addon_pipeline(addon_pipeline):
     from minecode.model_utils import SUPPORTED_ADDON_PIPELINES
     return addon_pipeline in SUPPORTED_ADDON_PIPELINES
+
+
+def is_supported_sort_field(field):
+    from packagedb.api import PACKAGE_FILTER_SORT_FIELDS
+    return field in PACKAGE_FILTER_SORT_FIELDS
