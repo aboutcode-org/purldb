@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   db:
     image: postgres:13
@@ -31,58 +29,6 @@ services:
       - temp_data:/tmp/minecode/
     depends_on:
       - db
-
-  visitor:
-    build: .
-    command: sh -c "
-        wait-for-it web:8000 -- python manage_purldb.py seed &&
-        python manage_purldb.py run_visit --ignore-robots --ignore-throttle"
-    env_file:
-      - docker_purldb.env
-    volumes:
-      - /etc/purldb/:/etc/purldb/
-    profiles:
-      - visit_and_map
-    depends_on:
-      - db
-      - web # Ensure that potential db migrations run first
-
-  mapper:
-    build: .
-    command: wait-for-it web:8000 -- python manage_purldb.py run_map
-    env_file:
-      - docker_purldb.env
-    volumes:
-      - /etc/purldb/:/etc/purldb/
-    profiles:
-      - visit_and_map
-    depends_on:
-      - db
-      - web # Ensure that potential db migrations run first
-
-  clearsync:
-    build: .
-    command: wait-for-it web:8000 -- clearsync --save-to-db  --verbose -n 3
-    env_file:
-      - docker_purldb.env
-    volumes:
-      - /etc/purldb/:/etc/purldb/
-    profiles:
-      - clearsync
-    depends_on:
-      - db
-      - web # Ensure that potential db migrations run first
-
-  clearindex:
-    build: .
-    command: wait-for-it web:8000 -- python manage_purldb.py run_clearindex
-    env_file:
-      - docker_purldb.env
-    profiles:
-      - clearsync
-    depends_on:
-      - db
-      - web # Ensure that potential db migrations run first
 
   priority_queue:
     build: .
