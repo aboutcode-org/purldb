@@ -138,6 +138,7 @@ def build_packages_from_html(metadata, uri=None, purl=None):
                     common_data['dependencies'] = get_dependencies(value)
     if extracted_license_statement:
         common_data['extracted_license_statement'] = extracted_license_statement
+        common_data['license_detections'] = []
 
     if download_urls:  # for else statement will have else running always if there is no break statement
         for download_url in download_urls:
