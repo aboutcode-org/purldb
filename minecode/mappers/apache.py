@@ -107,6 +107,7 @@ def build_packages_from_projects(metadata, uri=None):
         if license_url in APACHE_LICENSE_URL:
             common_data['declared_license_expression'] = 'apache-2.0'
             common_data['declared_license_expression_spdx'] = 'Apache-2.0'
+            common_data['license_detections'] = []
 
         keywords = []
         category = project_meta.get('category', '')
