@@ -64,6 +64,7 @@ def build_packages_with_json(metadata, purl=None):
             homepage_url=metadata.get('projectUrl'),
             description=description,
             extracted_license_statement=licenseUrl,
+            license_detections=[],
             copyright=copyr,
             parties=authors,
             keywords=keywords,
@@ -168,6 +169,7 @@ def build_packages_from_html(metadata, uri, purl=None):
                         description=description,
                         download_url=download_url,
                         extracted_license_statement=license_value,
+                        license_detections=[],
                         copyright=copyright_value
                     )
                     package = scan_models.Package.from_package_data(

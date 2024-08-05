@@ -57,6 +57,7 @@ def build_packages_from_release_json(metadata, uri=None):
             version=release.get('version'),
             download_url=release.get('download_url'),
             extracted_license_statement=extracted_license_statement,
+            license_detections=[],
             # the date format passing is like:
             # "2014-04-20T21:30:13"
             release_date=parse_date(release.get('date')),
