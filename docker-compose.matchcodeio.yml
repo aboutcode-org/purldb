@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   matchcodeio_db:
     image: postgres:13
