@@ -30,9 +30,10 @@ jobs:
                 displayName: '${{ pyver }} - Install Python'
 
               - script: |
-                    python${{ pyver }} --version
-                    echo "python${{ pyver }}" > PYTHON_EXECUTABLE
-                    ./configure --clean && ./configure --dev
+                    make dev
+                    make envfile_testing
+                    sudo mkdir /etc/scancodeio
+                    sudo cp .env /etc/scancodeio
                 displayName: '${{ pyver }} - Configure'
 
               - script: $(test_suite)
