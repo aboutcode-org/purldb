@@ -42,7 +42,7 @@ def build_packages_with_json(metadata, purl=None, uri=None):
         primary_language = package.get('language')
         for version_content in package.get('versions').values():
             common = dict(
-                datasource_id='composer_json',
+                datasource_id='php_composer_json',
                 type='composer',
                 name=version_content.get('name'),
                 description=version_content.get('description'),

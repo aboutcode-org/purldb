@@ -63,6 +63,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -72,7 +74,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0037@1.0037"
   },
@@ -140,6 +142,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -149,7 +153,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0005@1.0005"
   },
@@ -217,6 +221,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -226,7 +232,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0009@1.0009"
   },
@@ -294,6 +300,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -303,7 +311,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0001@1.0001"
   },
@@ -371,6 +379,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -380,7 +390,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0002@1.0002"
   },
@@ -448,6 +458,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -457,7 +469,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0014@1.0014"
   },
@@ -525,6 +537,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -534,7 +548,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0027@1.0027"
   },
@@ -602,6 +616,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -611,7 +627,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0028@1.0028"
   },
@@ -679,6 +695,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -688,7 +706,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0018@1.0018"
   },
@@ -756,6 +774,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -765,7 +785,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0020@1.0020"
   },
@@ -833,6 +853,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -842,7 +864,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0022@1.0022"
   },
@@ -910,6 +932,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -919,7 +943,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0021@1.0021"
   },
@@ -987,6 +1011,8 @@
     "extracted_license_statement":"- unknown\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -996,7 +1022,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Bundle-Sledge-0.04@0.04"
   },
@@ -1064,6 +1090,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1073,7 +1101,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Video-Subtitle-SRT-0.01@0.01"
   },
@@ -1141,6 +1169,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1150,7 +1180,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0032@1.0032"
   },
@@ -1218,6 +1248,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1227,7 +1259,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Carmel-v0.1.34@v0.1.34"
   },
@@ -1295,6 +1327,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1304,7 +1338,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Plack-1.0046@1.0046"
   },
@@ -1372,6 +1406,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1381,7 +1417,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Filesys-Notify-Simple-0.12@0.12"
   },
@@ -1449,6 +1485,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1458,7 +1496,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.10@v0.9.10"
   },
@@ -1526,6 +1564,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1535,7 +1575,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/carton-v0.9_8@v0.9_8"
   },
@@ -1603,6 +1643,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1612,7 +1654,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.50-TRIAL@v0.9.50"
   },
@@ -1680,6 +1722,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1689,7 +1733,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.57-TRIAL@v0.9.57"
   },
@@ -1757,6 +1801,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1766,7 +1812,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.59-TRIAL@v0.9.59"
   },
@@ -1834,6 +1880,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1843,7 +1891,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.61-TRIAL@v0.9.61"
   },
@@ -1911,6 +1959,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1920,7 +1970,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.67-TRIAL@v0.9.67"
   },
@@ -1988,6 +2038,8 @@
     "extracted_license_statement":"- unknown\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1997,7 +2049,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/WebService-Google-Suggest-0.02@0.02"
   },
@@ -2065,6 +2117,8 @@
     "extracted_license_statement":"- unknown\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2074,7 +2128,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/HTTP-MobileAgent-0.16@0.16"
   },
@@ -2142,6 +2196,8 @@
     "extracted_license_statement":"- unknown\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2151,7 +2207,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Email-Find-0.09@0.09"
   },
@@ -2219,6 +2275,8 @@
     "extracted_license_statement":"- unknown\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2228,7 +2286,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/POE-Component-YahooMessenger-0.04@0.04"
   },
@@ -2296,6 +2354,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2305,7 +2365,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Kwiki-Emoticon-0.01@0.01"
   },
@@ -2373,6 +2433,8 @@
     "extracted_license_statement":"- unknown\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2382,7 +2444,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-IPAddr-Find-0.01@0.01"
   },
@@ -2450,6 +2512,8 @@
     "extracted_license_statement":"- unknown\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2459,7 +2523,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Email-Valid-Loose-0.03@0.03"
   },
@@ -2527,6 +2591,8 @@
     "extracted_license_statement":"- unknown\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2536,7 +2602,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Kwiki-TypeKey-0.07@0.07"
   },
@@ -2604,6 +2670,8 @@
     "extracted_license_statement":"- unknown\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2613,7 +2681,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Text-Emoticon-Yahoo-0.01@0.01"
   }

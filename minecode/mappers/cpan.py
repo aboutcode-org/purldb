@@ -178,7 +178,7 @@ def build_packages_from_metafile(metadata, uri=None, purl=None):
             # https://spdx.org/spdx-specification-21-web-version#h.49x2ik5
             vcs_repo = vcs_tool + '+' + vcs_repo
         common_data = dict(
-            datasource_id="cpan_metadata_json",
+            datasource_id="cpan_meta_json",
             type='cpan',
             name=name,
             description=content.get('abstract', name),

@@ -63,6 +63,8 @@
     "extracted_license_statement":"- bsd\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -72,7 +74,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.00@1.00"
   },
@@ -140,6 +142,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -149,7 +153,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Win32-Snarl-0.03@0.03"
   },
@@ -217,6 +221,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -226,7 +232,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.03@1.03"
   },
@@ -294,6 +300,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -303,7 +311,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.09@1.09"
   },
@@ -371,6 +379,8 @@
     "extracted_license_statement":"- bsd\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -380,7 +390,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.01@1.01"
   },
@@ -448,6 +458,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -457,7 +469,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.1@1.32.1"
   },
@@ -525,6 +537,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -534,7 +548,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.02@0.02"
   },
@@ -602,6 +616,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -611,7 +627,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.07@1.07"
   },
@@ -679,6 +695,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -688,7 +706,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.03@0.03"
   },
@@ -756,6 +774,8 @@
     "extracted_license_statement":"- bsd\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -765,7 +785,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.06@0.06"
   },
@@ -833,6 +853,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -842,7 +864,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-Sybil-0.1@0.1"
   },
@@ -910,6 +932,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -919,7 +943,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.02@0.02"
   },
@@ -987,6 +1011,8 @@
     "extracted_license_statement":"- unknown\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -996,7 +1022,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.01@0.01"
   },
@@ -1064,6 +1090,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1073,7 +1101,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Win32-Snarl-withoutworldwriteables@0.04"
   },
@@ -1141,6 +1169,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1150,7 +1180,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.06@0.06"
   },
@@ -1218,6 +1248,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1227,7 +1259,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.09@1.09"
   },
@@ -1295,6 +1327,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1304,7 +1338,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.4@1.32.4"
   },
@@ -1372,6 +1406,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1381,7 +1417,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.04@0.04"
   },
@@ -1449,6 +1485,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1458,7 +1496,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDSync-0.01@0.01"
   },
@@ -1526,6 +1564,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1535,7 +1575,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.05@0.05"
   },
@@ -1603,6 +1643,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1612,7 +1654,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.2@1.32.2"
   },
@@ -1680,6 +1722,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1689,7 +1733,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.05@0.05"
   },
@@ -1757,6 +1801,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1766,7 +1812,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.3@1.32.3"
   },
@@ -1834,6 +1880,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1843,7 +1891,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.04@0.04"
   },
@@ -1911,6 +1959,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1920,7 +1970,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.02@1.02"
   },
@@ -1988,6 +2038,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -1997,7 +2049,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.0@1.32.0"
   },
@@ -2065,6 +2117,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2074,7 +2128,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.01@0.01"
   },
@@ -2142,6 +2196,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2151,7 +2207,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.08@1.08"
   },
@@ -2219,6 +2275,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2228,7 +2286,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.05@1.05"
   },
@@ -2296,6 +2354,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2305,7 +2365,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.08@1.08"
   },
@@ -2373,6 +2433,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2382,7 +2444,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.04@0.04"
   },
@@ -2450,6 +2512,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2459,7 +2523,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.05@0.05"
   },
@@ -2527,6 +2591,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2536,7 +2602,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/win32-snarl-1.01@0.04"
   },
@@ -2604,6 +2670,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2613,7 +2681,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-Sybil-0.4@0.4"
   },
@@ -2681,6 +2749,8 @@
     "extracted_license_statement":"- bsd\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2690,7 +2760,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.10@1.10"
   },
@@ -2758,6 +2828,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2767,7 +2839,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.1@1.1"
   },
@@ -2835,6 +2907,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2844,7 +2918,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.07@1.07"
   },
@@ -2912,6 +2986,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2921,7 +2997,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.06@1.06"
   },
@@ -2989,6 +3065,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -2998,7 +3076,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.02@0.02"
   },
@@ -3066,6 +3144,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3075,7 +3155,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.04@1.04"
   },
@@ -3143,6 +3223,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3152,7 +3234,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.06@1.06"
   },
@@ -3220,6 +3302,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3229,7 +3313,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.01@0.01"
   },
@@ -3297,6 +3381,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3306,7 +3392,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.03@0.03"
   },
@@ -3374,6 +3460,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3383,7 +3471,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.03@0.03"
   },
@@ -3451,6 +3539,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3460,7 +3550,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.02-withoutworldwriteables@0.02"
   },
@@ -3528,6 +3618,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3537,7 +3629,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Win32-Snarl-1.00@0.04"
   },
@@ -3605,6 +3697,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3614,7 +3708,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-Sybil-0.2@0.2"
   },
@@ -3682,6 +3776,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3691,7 +3787,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-Sybil-0.3@0.3"
   },
@@ -3759,6 +3855,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3768,7 +3866,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Win32-Snarl-0.01@0.01"
   },
@@ -3836,6 +3934,8 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3845,7 +3945,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Win32-Snarl-0.02@0.02"
   },
@@ -3913,6 +4013,8 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3922,7 +4024,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.09-TRIAL@1.09"
   },
@@ -3990,6 +4092,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -3999,7 +4103,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.07@0.07"
   },
@@ -4067,6 +4171,8 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -4076,7 +4182,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-MPDSync-0.02@0.02"
   },
@@ -4144,6 +4250,8 @@
     "extracted_license_statement":"- bsd\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -4153,7 +4261,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_release_json"
+      "cpan_meta_json"
     ],
     "purl":"pkg:cpan/App-Sybil-0.5@0.5"
   }
