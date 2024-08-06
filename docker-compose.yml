@@ -12,9 +12,11 @@ services:
       - "traefik.http.routers.web.entrypoints=web"
     volumes:
       - ./etc/nginx/conf.d/:/etc/nginx/conf.d/
+      - /var/www/html:/var/www/html
       - static:/var/purldb/static/
     depends_on:
       - web
+    restart: always
 
   traefik:
     image: "traefik:v2.10"
