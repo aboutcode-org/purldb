@@ -50,12 +50,11 @@ envfile:
 	@mkdir -p $(shell dirname ${ENV_FILE}) && touch ${ENV_FILE}
 	@echo SECRET_KEY=\"${GET_SECRET_KEY}\" > ${ENV_FILE}
 
-envfile_testing:
-	@echo "-> Create the .env file and generate a secret key"
-	@if test -f ${ENV_FILE}; then echo ".env file exists already"; exit 1; fi
-	@mkdir -p $(shell dirname ${ENV_FILE}) && touch ${ENV_FILE}
-	@echo SECRET_KEY=\"${GET_SECRET_KEY}\" >> ${ENV_FILE}
-	@echo SCANCODEIO_DB_PORT=\"5433\" >> ${ENV_FILE}
+envfile_testing: envfile
+	@echo PACKAGEDB_DB_USER=\"postgres\" >> ${ENV_FILE}
+	@echo PACKAGEDB_DB_PASSWORD=\"postgres\" >> ${ENV_FILE}
+	@echo SCANCODEIO_DB_USER=\"postgres\" >> ${ENV_FILE}
+	@echo SCANCODEIO_DB_PASSWORD=\"postgres\" >> ${ENV_FILE}
 
 isort:
 	@echo "-> Apply isort changes to ensure proper imports ordering"
@@ -126,7 +125,7 @@ run_map:
 
 test:
 	@echo "-> Run the test suite"
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode_pipeline --ignore matchcode_project --ignore purldb-toolkit --ignore packagedb/tests/test_throttling.py
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -x -vvs --ignore matchcode_pipeline --ignore matchcode_project --ignore purldb-toolkit --ignore packagedb/tests/test_throttling.py
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=matchcode_project.settings ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline
 	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs purldb-toolkit/
