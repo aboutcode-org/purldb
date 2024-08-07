@@ -29,12 +29,12 @@ The purlcli command exposes multiple subcommands. Run this to command to get bas
 
     purlcli  --help
     Usage: purlcli [OPTIONS] COMMAND [ARGS]...
-    
+
       Return information for a PURL or list of PURLs.
-    
+
     Options:
       --help  Show this message and exit.
-    
+
     Commands:
       d2d       Run deploy-to-devel "back2source" analysis between packages.
       metadata  Fetch package metadata for a PURL.
@@ -561,14 +561,14 @@ from a https://github.com/nexB/purldb/ clone::
     cd purldb
     make dev
     make envfile
-    SECRET_KEY="1" make postgres_matchcodeio 
-    SECRET_KEY="1" make run_matchcodeio 
+    SECRET_KEY="1" make postgres_matchcodeio
+    SECRET_KEY="1" make run_matchcodeio
 
 Then in another shell::
 
     cd purldb
     source venv/bin/activate
-    
+
 Finally run the command:
 
 .. code-block:: console
