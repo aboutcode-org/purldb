@@ -28,16 +28,25 @@ RUN apt-get update \
        zlib1g \
        libxml2-dev \
        libxslt1-dev \
+       libgomp1 \
+       libsqlite3-0 \
+       libgcrypt20 \
        libpopt0 \
-       bzip2 \
+       libzstd1 \
+       libgpgme11 \
+       libdevmapper1.02.1 \
+       libguestfs-tools \
+       linux-image-amd64 \
+       git \
+       wait-for-it \
+       universal-ctags \
+       gettext \
        tar \
        unzip \
        zip \
        libsasl2-dev \
        libldap-dev \
        openssl \
-       wait-for-it \
-       git \
        cvs \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
