@@ -125,7 +125,7 @@ run_map:
 
 test:
 	@echo "-> Run the test suite"
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -x -vvs --ignore matchcode_pipeline --ignore matchcode_project --ignore purldb-toolkit --ignore packagedb/tests/test_throttling.py
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode_pipeline --ignore matchcode_project --ignore purldb-toolkit --ignore packagedb/tests/test_throttling.py
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
 	${ACTIVATE} DJANGO_SETTINGS_MODULE=matchcode_project.settings ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline
 	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs purldb-toolkit/
