@@ -51,6 +51,7 @@ def build_packages_from_metafile(metadata, purl=None, uri=None):
             name=metadata.get('shortname', metadata.get('name')),
             description=description,
             homepage_url=metadata.get('external_homepage', metadata.get('url')),
+            license_detections=[],
         )
 
         devs = metadata.get('developers') or []

@@ -46,7 +46,7 @@ class CranMapperTest(JsonBasedTesting, DjangoTestCase):
         packages = mappers.cran.build_packages_from_html(metadata, 'https://cloud.r-project.org/web/packages/ANN2/index.html', 'pkg:cran/ANN2')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cran/mapper_ANN2_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=True)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_from_directory_listing2(self):
         ResourceURI.objects.create(uri='https://cloud.r-project.org/web/packages/abe/index.html')
@@ -55,7 +55,7 @@ class CranMapperTest(JsonBasedTesting, DjangoTestCase):
         packages = mappers.cran.build_packages_from_html(metadata, 'https://cloud.r-project.org/web/packages/abe/index.htm', 'pkg:cran/abe')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cran/mapper_abe_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=True)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_replace_downloadurl(self):
         url = "../../../src/contrib/Archive/ANN2"

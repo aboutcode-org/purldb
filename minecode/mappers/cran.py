@@ -20,7 +20,7 @@ CRAN_WEB_URL = CRAN_URL + 'web/'
 
 
 @map_router.route('https://cloud.r-project.org/web/packages/[\w\-\.]/index.html')
-class CpanMetaFileMapper(Mapper):
+class CranMetaFileMapper(Mapper):
 
     def get_packages(self, uri, resource_uri):
         """
@@ -138,6 +138,7 @@ def build_packages_from_html(metadata, uri=None, purl=None):
                     common_data['dependencies'] = get_dependencies(value)
     if extracted_license_statement:
         common_data['extracted_license_statement'] = extracted_license_statement
+        common_data['license_detections'] = []
 
     if download_urls:  # for else statement will have else running always if there is no break statement
         for download_url in download_urls:

@@ -81,6 +81,7 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
             keywords=keywords_content,
             homepage_url=content.get('homepage'),
             datasource_id='bower_json',
+            license_detections=[],
         )
 
         if extracted_license_statement:

@@ -53,6 +53,7 @@ def build_packages(resource_uri, purl=None):
         size=resource_uri.size,
         release_date=parse_date(resource_uri.last_modified_date),
         extracted_license_statement='OpenSSL License',
+        license_detections=[],
         homepage_url='https://www.openssl.org/',
         download_url=uri,
         copyright='Copyright (c) 1998-2018 The OpenSSL Project\nCopyright (c) 1995-1998 Eric A. Young, Tim J. Hudson\nAll rights reserved.',

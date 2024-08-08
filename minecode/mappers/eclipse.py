@@ -65,6 +65,7 @@ def build_packages_with_json(metadata, purl=None, uri=None):
 
         if project_metadata.get('licenses'):
             common_data['extracted_license_statement'] = [l.get('name') for l in project_metadata.get('licenses', [])]
+            common_data['license_detections'] = []
 
         # FIXME: this is a download page and NOT a download URL!!!!!
         for download_url in project_metadata.get('download_url', []):
@@ -121,6 +122,7 @@ def build_packages(html_text, purl=None, uri=None):
                 extracted_license_statement.append(license_name)
     if extracted_license_statement:
         common_data['extracted_license_statement'] = extracted_license_statement
+        common_data['license_detections'] = []
 
     for a in page.find_all(name='a'):
         if a.contents:

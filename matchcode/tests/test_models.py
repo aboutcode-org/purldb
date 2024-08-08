@@ -437,7 +437,7 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
         matches = ApproximateResourceContentIndex.match(fp)
         results = [match.package.to_dict() for match in matches]
         expected_results_loc = self.get_test_loc('match/approximate-file-matching/index-modified.js-expected.json')
-        self.check_expected_results(results, expected_results_loc, regen=True)
+        self.check_expected_results(results, expected_results_loc, regen=FIXTURES_REGEN)
 
 
 class MatchcodeModelUtilsTestCase(MatchcodeTestCase):

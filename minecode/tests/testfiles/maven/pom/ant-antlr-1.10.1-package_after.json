@@ -42,6 +42,8 @@
     "pkg:maven/org.apache.ant/ant-antlr@1.10.1?classifier=sources"
   ],
   "file_references":[],
+  "is_private":false,
+  "is_virtual":false,
   "extra_data":{
     "history":[
       "Field `declared_license_expression` has been updated using values obtained from the parent POM pkg:maven/org.apache.ant/ant-parent@1.10.1",
@@ -56,6 +58,7 @@
       "is_runtime":false,
       "is_optional":true,
       "is_resolved":true,
+      "is_direct":true,
       "resolved_package":{},
       "extra_data":{}
     },
@@ -66,6 +69,7 @@
       "is_runtime":true,
       "is_optional":true,
       "is_resolved":true,
+      "is_direct":true,
       "resolved_package":{},
       "extra_data":{}
     }

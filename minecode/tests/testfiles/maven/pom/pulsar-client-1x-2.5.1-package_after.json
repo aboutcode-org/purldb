@@ -42,6 +42,8 @@
     "pkg:maven/org.apache.pulsar/pulsar-client-1x@2.5.1?classifier=sources"
   ],
   "file_references":[],
+  "is_private":false,
+  "is_virtual":false,
   "extra_data":{
     "history":[
       "Field `declared_license_expression` has been updated using values obtained from the parent POM pkg:maven/org.apache/apache@18",
@@ -57,6 +59,7 @@
       "is_runtime":false,
       "is_optional":true,
       "is_resolved":true,
+      "is_direct":true,
       "resolved_package":{},
       "extra_data":{}
     },
@@ -67,6 +70,7 @@
       "is_runtime":false,
       "is_optional":true,
       "is_resolved":false,
+      "is_direct":true,
       "resolved_package":{},
       "extra_data":{}
     },
@@ -77,6 +81,7 @@
       "is_runtime":false,
       "is_optional":true,
       "is_resolved":false,
+      "is_direct":true,
       "resolved_package":{},
       "extra_data":{}
     }

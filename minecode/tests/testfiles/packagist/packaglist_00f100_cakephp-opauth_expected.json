@@ -76,6 +76,8 @@
     "extracted_license_statement":"- MIT\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
@@ -83,7 +85,7 @@
     "package_uid":"pkg:composer/00f100/cakephp-opauth@dev-master?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
     "datasource_ids":[
-      "composer_json"
+      "php_composer_json"
     ],
     "purl":"pkg:composer/00f100/cakephp-opauth@dev-master"
   }
