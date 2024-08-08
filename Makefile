@@ -154,6 +154,12 @@ docs:
 	rm -rf docs/_build/
 	@${ACTIVATE} sphinx-build docs/source docs/_build/
 
+check_docs:
+	@echo "Check Sphinx Documentation build minimally"
+	@${ACTIVATE} sphinx-build -E -W docs/source build
+	@echo "Check for documentation style errors"
+	@${ACTIVATE} doc8 --max-line-length 100 docs/source --ignore D000 --quiet
+
 docker-images:
 	@echo "-> Build Docker services"
 	docker-compose build
