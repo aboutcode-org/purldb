@@ -20,7 +20,7 @@ CRAN_WEB_URL = CRAN_URL + 'web/'
 
 
 @map_router.route('https://cloud.r-project.org/web/packages/[\w\-\.]/index.html')
-class CpanMetaFileMapper(Mapper):
+class CranMetaFileMapper(Mapper):
 
     def get_packages(self, uri, resource_uri):
         """

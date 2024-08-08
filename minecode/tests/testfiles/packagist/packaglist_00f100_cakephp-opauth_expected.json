@@ -83,9 +83,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:composer/00f100/cakephp-opauth@dev-master?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "php_composer_json"
     ],

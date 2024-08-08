@@ -55,6 +55,8 @@
     "extracted_license_statement":"OpenSSL License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,

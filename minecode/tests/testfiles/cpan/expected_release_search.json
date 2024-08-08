@@ -74,7 +74,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.00@1.00"
   },
@@ -153,7 +153,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Win32-Snarl-0.03@0.03"
   },
@@ -232,7 +232,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.03@1.03"
   },
@@ -311,7 +311,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.09@1.09"
   },
@@ -390,7 +390,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.01@1.01"
   },
@@ -469,7 +469,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.1@1.32.1"
   },
@@ -548,7 +548,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.02@0.02"
   },
@@ -627,7 +627,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.07@1.07"
   },
@@ -706,7 +706,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.03@0.03"
   },
@@ -785,7 +785,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.06@0.06"
   },
@@ -864,7 +864,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-Sybil-0.1@0.1"
   },
@@ -943,7 +943,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.02@0.02"
   },
@@ -1022,7 +1022,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.01@0.01"
   },
@@ -1101,7 +1101,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Win32-Snarl-withoutworldwriteables@0.04"
   },
@@ -1180,7 +1180,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.06@0.06"
   },
@@ -1259,7 +1259,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.09@1.09"
   },
@@ -1338,7 +1338,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.4@1.32.4"
   },
@@ -1417,7 +1417,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.04@0.04"
   },
@@ -1496,7 +1496,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDSync-0.01@0.01"
   },
@@ -1575,7 +1575,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.05@0.05"
   },
@@ -1654,7 +1654,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.2@1.32.2"
   },
@@ -1733,7 +1733,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.05@0.05"
   },
@@ -1812,7 +1812,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.3@1.32.3"
   },
@@ -1891,7 +1891,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.04@0.04"
   },
@@ -1970,7 +1970,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.02@1.02"
   },
@@ -2049,7 +2049,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.0@1.32.0"
   },
@@ -2128,7 +2128,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.01@0.01"
   },
@@ -2207,7 +2207,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.08@1.08"
   },
@@ -2286,7 +2286,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.05@1.05"
   },
@@ -2365,7 +2365,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.08@1.08"
   },
@@ -2444,7 +2444,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.04@0.04"
   },
@@ -2523,7 +2523,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.05@0.05"
   },
@@ -2602,7 +2602,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/win32-snarl-1.01@0.04"
   },
@@ -2681,7 +2681,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-Sybil-0.4@0.4"
   },
@@ -2760,7 +2760,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.10@1.10"
   },
@@ -2839,7 +2839,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.1@1.1"
   },
@@ -2918,7 +2918,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.07@1.07"
   },
@@ -2997,7 +2997,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.06@1.06"
   },
@@ -3076,7 +3076,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.02@0.02"
   },
@@ -3155,7 +3155,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.04@1.04"
   },
@@ -3234,7 +3234,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDJ-1.06@1.06"
   },
@@ -3313,7 +3313,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.01@0.01"
   },
@@ -3392,7 +3392,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.03@0.03"
   },
@@ -3471,7 +3471,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.03@0.03"
   },
@@ -3550,7 +3550,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-0.02-withoutworldwriteables@0.02"
   },
@@ -3629,7 +3629,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Win32-Snarl-1.00@0.04"
   },
@@ -3708,7 +3708,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-Sybil-0.2@0.2"
   },
@@ -3787,7 +3787,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-Sybil-0.3@0.3"
   },
@@ -3866,7 +3866,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Win32-Snarl-0.01@0.01"
   },
@@ -3945,7 +3945,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Win32-Snarl-0.02@0.02"
   },
@@ -4024,7 +4024,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-Snarl-1.09-TRIAL@1.09"
   },
@@ -4103,7 +4103,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-MPD-0.07@0.07"
   },
@@ -4182,7 +4182,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-MPDSync-0.02@0.02"
   },
@@ -4261,7 +4261,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/App-Sybil-0.5@0.5"
   }

@@ -74,7 +74,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0037@1.0037"
   },
@@ -153,7 +153,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0005@1.0005"
   },
@@ -232,7 +232,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0009@1.0009"
   },
@@ -311,7 +311,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0001@1.0001"
   },
@@ -390,7 +390,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0002@1.0002"
   },
@@ -469,7 +469,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0014@1.0014"
   },
@@ -548,7 +548,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0027@1.0027"
   },
@@ -627,7 +627,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0028@1.0028"
   },
@@ -706,7 +706,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0018@1.0018"
   },
@@ -785,7 +785,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0020@1.0020"
   },
@@ -864,7 +864,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0022@1.0022"
   },
@@ -943,7 +943,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0021@1.0021"
   },
@@ -1022,7 +1022,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Bundle-Sledge-0.04@0.04"
   },
@@ -1101,7 +1101,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Video-Subtitle-SRT-0.01@0.01"
   },
@@ -1180,7 +1180,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0032@1.0032"
   },
@@ -1259,7 +1259,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Carmel-v0.1.34@v0.1.34"
   },
@@ -1338,7 +1338,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Plack-1.0046@1.0046"
   },
@@ -1417,7 +1417,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Filesys-Notify-Simple-0.12@0.12"
   },
@@ -1496,7 +1496,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.10@v0.9.10"
   },
@@ -1575,7 +1575,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/carton-v0.9_8@v0.9_8"
   },
@@ -1654,7 +1654,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.50-TRIAL@v0.9.50"
   },
@@ -1733,7 +1733,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.57-TRIAL@v0.9.57"
   },
@@ -1812,7 +1812,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.59-TRIAL@v0.9.59"
   },
@@ -1891,7 +1891,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.61-TRIAL@v0.9.61"
   },
@@ -1970,7 +1970,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/carton-v0.9.67-TRIAL@v0.9.67"
   },
@@ -2049,7 +2049,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/WebService-Google-Suggest-0.02@0.02"
   },
@@ -2128,7 +2128,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/HTTP-MobileAgent-0.16@0.16"
   },
@@ -2207,7 +2207,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Email-Find-0.09@0.09"
   },
@@ -2286,7 +2286,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/POE-Component-YahooMessenger-0.04@0.04"
   },
@@ -2365,7 +2365,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Kwiki-Emoticon-0.01@0.01"
   },
@@ -2444,7 +2444,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Net-IPAddr-Find-0.01@0.01"
   },
@@ -2523,7 +2523,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Email-Valid-Loose-0.03@0.03"
   },
@@ -2602,7 +2602,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Kwiki-TypeKey-0.07@0.07"
   },
@@ -2681,7 +2681,7 @@
       "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000"
     ],
     "datasource_ids":[
-      "cpan_meta_json"
+      "cpan_release_json"
     ],
     "purl":"pkg:cpan/Text-Emoticon-Yahoo-0.01@0.01"
   }

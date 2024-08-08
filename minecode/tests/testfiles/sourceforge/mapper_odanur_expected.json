@@ -47,9 +47,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:sourceforge/odanur?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "sourceforge_metadata"
     ],

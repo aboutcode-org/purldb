@@ -41,9 +41,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/abdera@1.7.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -100,9 +98,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/activemq?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -158,9 +154,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.7.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -216,9 +210,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.7.0?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -274,9 +266,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.6.5?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -332,9 +322,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.6.4?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -390,9 +378,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.6.3?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -448,9 +434,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.6.2?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -506,9 +490,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.6.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -564,9 +546,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.6.0?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -622,9 +602,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.5.4?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -680,9 +658,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.5.3?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -738,9 +714,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.5.2?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -796,9 +770,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.5.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -854,9 +826,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.4.5?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -912,9 +882,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/accumulo@1.3.6?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -970,9 +938,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/ace@0.8.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
@@ -1030,9 +996,7 @@
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:apache/airavata@0.11?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[
-      null
-    ],
+    "datafile_paths":[],
     "datasource_ids":[
       "apache_json"
     ],
