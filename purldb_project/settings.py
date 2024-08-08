@@ -107,7 +107,6 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = env.int(
 )
 
 # Database
-
 DATABASES = {
     'default': {
         'ENGINE': env.str('PACKAGEDB_DB_ENGINE', 'django.db.backends.postgresql'),
