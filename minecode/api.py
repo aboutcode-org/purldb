@@ -24,8 +24,8 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 # UnusedImport here!
-# But importing the miners module triggers routes registration
-from minecode import miners  # NOQA
+# But importing the collectors module triggers routes registration
+from minecode import collectors  # NOQA
 from minecode import priority_router
 from minecode.models import PriorityResourceURI, ResourceURI, ScannableURI
 from minecode.permissions import IsScanQueueWorkerAPIUser

@@ -3,29 +3,21 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-
-import logging
-
 from packageurl import PackageURL
-
 from minecode import priority_router
-from minecode.miners.generic import map_fetchcode_supported_package
-
-logger = logging.getLogger(__name__)
-handler = logging.StreamHandler()
-logger.addHandler(handler)
-logger.setLevel(logging.INFO)
+from minecode.collectors.generic import map_fetchcode_supported_package
 
 
-@priority_router.route("pkg:gnu/.*")
-def process_request(purl_str, **kwargs):
+# Indexing GitHub PURLs requires a GitHub API token.
+# Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
+@priority_router.route('pkg:github/.*')
+def process_request_dir_listed(purl_str, **kwargs):
     """
-    Process `priority_resource_uri` containing a GNU Package URL (PURL) as a
-    URI.
+    Process `priority_resource_uri` containing a GitHub Package URL (PURL).
 
     This involves obtaining Package information for the PURL using
     https://github.com/aboutcode-org/fetchcode and using it to create a new
@@ -37,9 +29,11 @@ def process_request(purl_str, **kwargs):
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
     priority = kwargs.get('priority', 0)
 
-    package_url = PackageURL.from_string(purl_str)
-    if not package_url.version:
-        return
+    try:
+        package_url = PackageURL.from_string(purl_str)
+    except ValueError as e:
+        error = f"error occurred when parsing {purl_str}: {e}"
+        return error
 
     error_msg = map_fetchcode_supported_package(
         package_url, pipelines, priority)

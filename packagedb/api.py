@@ -40,11 +40,10 @@ from univers.version_range import VersionRange
 from univers.versions import InvalidVersion
 
 # UnusedImport here!
-# But importing the miners module triggers routes registration
+# But importing the collectors module triggers routes registration
 from minecode import priority_router
-from minecode import miners  # NOQA
+from minecode import collectors  # NOQA
 from minecode.models import PriorityResourceURI
-from minecode.models import ScannableURI
 from minecode.route import NoRouteAvailable
 from packagedb.filters import PackageSearchFilter
 from packagedb.models import Package

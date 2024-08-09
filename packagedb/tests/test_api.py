@@ -15,7 +15,6 @@ from uuid import uuid4
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
-from packageurl.contrib.django.utils import purl_to_lookups
 from rest_framework import status
 from rest_framework.test import APIClient
 from univers.versions import MavenVersion

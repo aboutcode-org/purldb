@@ -13,7 +13,7 @@ from packageurl import PackageURL
 
 from minecode.route import NoRouteAvailable
 from minecode.utils_test import JsonBasedTesting
-from minecode.miners import generic
+from minecode.collectors import generic
 from packagedb.models import Package
 
 

@@ -18,12 +18,10 @@ import attr
 import packagedcode.models as scan_models
 
 from minecode import map_router
-from minecode import priority_router
 from minecode import visit_router, seed
 from minecode.miners import HttpJsonVisitor
 from minecode.miners import Mapper
 from minecode.miners import URI
-from minecode.miners.generic import map_fetchcode_supported_package
 from minecode.utils import form_vcs_url
 from minecode.utils import parse_date
 
@@ -189,36 +187,6 @@ def json_serial_date_obj(obj):
     """JSON serializer for date object"""
     if obj and isinstance(obj, (datetime, date)):
         return obj.isoformat()
-
-
-# Indexing GitHub PURLs requires a GitHub API token.
-# Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
-@priority_router.route('pkg:github/.*')
-def process_request_dir_listed(purl_str, **kwargs):
-    """
-    Process `priority_resource_uri` containing a GitHub Package URL (PURL).
-
-    This involves obtaining Package information for the PURL using
-    https://github.com/aboutcode-org/fetchcode and using it to create a new
-    PackageDB entry. The package is then added to the scan queue afterwards.
-    """
-    from minecode.model_utils import DEFAULT_PIPELINES
-
-    addon_pipelines = kwargs.get('addon_pipelines', [])
-    pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
-
-    try:
-        package_url = PackageURL.from_string(purl_str)
-    except ValueError as e:
-        error = f"error occurred when parsing {purl_str}: {e}"
-        return error
-
-    error_msg = map_fetchcode_supported_package(
-        package_url, pipelines, priority)
-
-    if error_msg:
-        return error_msg
 
 
 @map_router.route('https://api\.github\.com/repos/([^/]+)/([^/]+)')

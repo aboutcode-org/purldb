@@ -14,12 +14,12 @@ from django.test import TestCase
 from mock import patch
 
 from minecode.utils_test import JsonBasedTesting
-from minecode.miners import gnu
+from minecode.collectors import gnu
 from packagedb.models import Package
 
 
 class GnuPriorityQueueTests(JsonBasedTesting, TestCase):
-    test_data_dir = os.path.join(os.path.dirname(__file__), "testfiles")
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def setUp(self):
         super(GnuPriorityQueueTests, self).setUp()

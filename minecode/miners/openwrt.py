@@ -22,11 +22,11 @@ from minecode import seed
 from minecode import map_router
 from minecode import visit_router
 from minecode.utils import extract_file
+from minecode.collectors.debian import get_dependencies
 from minecode.miners import Mapper
 from minecode.miners import HttpVisitor
 from minecode.miners import NonPersistentHttpVisitor
 from minecode.miners import URI
-from minecode.miners.debian import get_dependencies
 
 
 logger = logging.getLogger(__name__)

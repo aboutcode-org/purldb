@@ -16,13 +16,12 @@ from django.db import transaction
 from django.utils import timezone
 
 # UnusedImport here!
-# But importing the miners module triggers routes registration
-from minecode import miners  # NOQA
+# But importing the collectors module triggers routes registration
+from minecode import collectors  # NOQA
 from minecode import priority_router
 from minecode.management.commands import get_error_message
 from minecode.management.commands import VerboseCommand
 from minecode.models import PriorityResourceURI
-from minecode.models import ScannableURI
 from minecode.route import NoRouteAvailable
 
 

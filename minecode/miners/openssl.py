@@ -18,13 +18,13 @@ from packagedcode import models as scan_models
 from minecode import map_router
 from minecode.miners import Mapper
 from minecode.utils import parse_date
-from minecode import priority_router
+
 from minecode import seed
 from minecode import visit_router
 from minecode.utils import is_int
 from minecode.miners import HttpVisitor
 from minecode.miners import URI
-from minecode.miners.generic import map_fetchcode_supported_package
+
 
 
 logger = logging.getLogger(__name__)
@@ -103,36 +103,6 @@ class OpenSSLVisitor(HttpVisitor):
                 yield URI(uri=url, source_uri=self.uri, package_url=package_url, date=date, file_name=file_name, size=size)
             else:
                 yield URI(uri=url, source_uri=self.uri, date=date, size=size)
-
-
-# Indexing OpenSSL PURLs requires a GitHub API token.
-# Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
-@priority_router.route('pkg:openssl/openssl@.*')
-def process_request_dir_listed(purl_str, **kwargs):
-    """
-    Process `priority_resource_uri` containing a OpenSSL Package URL (PURL)
-    supported by fetchcode.
-
-    This involves obtaining Package information for the PURL using
-    https://github.com/aboutcode-org/fetchcode and using it to create a new
-    PackageDB entry. The package is then added to the scan queue afterwards.
-    """
-    from minecode.model_utils import DEFAULT_PIPELINES
-
-    addon_pipelines = kwargs.get('addon_pipelines', [])
-    pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
-
-    try:
-        package_url = PackageURL.from_string(purl_str)
-    except ValueError as e:
-        error = f"error occurred when parsing {purl_str}: {e}"
-        return error
-
-    error_msg = map_fetchcode_supported_package(package_url, pipelines, priority)
-
-    if error_msg:
-        return error_msg
 
 
 @map_router.route('https://ftp.openssl.org/.*')
