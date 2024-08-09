@@ -13,7 +13,7 @@ import django_filters
 from django.core.exceptions import FieldError
 from django.db.models import Q
 
-# The function and Classes in this file are from https://github.com/nexB/scancode.io/blob/main/scanpipe/filters.py
+# The function and Classes in this file are from https://github.com/aboutcode-org/scancode.io/blob/main/scanpipe/filters.py
 
 
 def parse_query_string_to_lookups(query_string, default_lookup_expr, default_field):

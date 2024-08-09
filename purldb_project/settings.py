@@ -265,7 +265,7 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'packagedb.throttling.throttled_exception_handler',
     'DEFAULT_PAGINATION_CLASS': 'packagedb.api_custom.PageSizePagination',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    # Limit the load on the Database returning a small number of records by default. https://github.com/nexB/vulnerablecode/issues/819
+    # Limit the load on the Database returning a small number of records by default. https://github.com/aboutcode-org/vulnerablecode/issues/819
     "PAGE_SIZE": 20,
 }
 

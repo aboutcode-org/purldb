@@ -28,7 +28,7 @@ def process_request(purl_str, **kwargs):
     URI.
 
     This involves obtaining Package information for the PURL using
-    https://github.com/nexB/fetchcode and using it to create a new
+    https://github.com/aboutcode-org/fetchcode and using it to create a new
     PackageDB entry. The package is then added to the scan queue afterwards.
     """
     from minecode.model_utils import DEFAULT_PIPELINES

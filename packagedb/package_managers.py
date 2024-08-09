@@ -3,7 +3,7 @@
 # VulnerableCode is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/vulnerablecode for support or download.
+# See https://github.com/aboutcode-org/vulnerablecode for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -202,7 +202,7 @@ class PypiVersionAPI(VersionAPI):
             release_date = self.get_latest_date(download_items)
             yield PackageVersion(
                 value=version,
-                # 
+                #
                 release_date=release_date,
             )
 

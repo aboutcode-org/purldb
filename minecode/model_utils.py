@@ -87,7 +87,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
     existing_mapping.pop('purl')
 
     # FIXME REMOVE this workaround when a ScanCode bug fixed with
-    # https://github.com/nexB/scancode-toolkit/commit/9b687e6f9bbb695a10030a81be7b93c8b1d816c2
+    # https://github.com/aboutcode-org/scancode-toolkit/commit/9b687e6f9bbb695a10030a81be7b93c8b1d816c2
     qualifiers = new_package_data.get('qualifiers')
     if isinstance(qualifiers, dict):
         # somehow we get an dict on the new value instead of a string

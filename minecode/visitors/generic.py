@@ -120,7 +120,7 @@ def map_fetchcode_supported_package(package_url, pipelines, priority=0):
 
     package_data = packages[0].to_dict()
 
-    # Remove obsolete Package fields see https://github.com/nexB/fetchcode/issues/108
+    # Remove obsolete Package fields see https://github.com/aboutcode-org/fetchcode/issues/108
     package = packagedata_from_dict(package_data)
 
     db_package, _, _, error = merge_or_create_package(package, visit_level=0)
@@ -178,7 +178,7 @@ def process_request_fetchcode_generic(purl_str, **kwargs):
     supported by fetchcode.
 
     This involves obtaining Package information for the PURL using
-    https://github.com/nexB/fetchcode and using it to create a new
+    https://github.com/aboutcode-org/fetchcode and using it to create a new
     PackageDB entry. The package is then added to the scan queue afterwards.
     """
     from minecode.model_utils import DEFAULT_PIPELINES

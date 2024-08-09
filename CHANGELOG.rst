@@ -21,6 +21,11 @@ Next Release
   https://github.com/aboutcode-org/purldb/issues/504
 
 
+v5.0.1
+---------
+
+- Update link references of ownership from nexB to aboutcode-org
+
 v5.0.0
 ---------
 
