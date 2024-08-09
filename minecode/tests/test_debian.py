@@ -21,8 +21,7 @@ from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
 from minecode import debutils
-from minecode.mappers import debian as debian_mapper
-from minecode.visitors import debian as debian_visitor
+from minecode.miners import debian
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -150,15 +149,14 @@ class DebianReleaseTest(BaseDebianTest):
 
     def test_parse_release(self):
         release_file = self.get_test_loc('debian/release/Release')
-        result = list(debian_visitor.parse_release(release_file))
+        result = list(debian.parse_release(release_file))
         expected_loc = self.get_test_loc('debian/release/Release_expected')
         self.check_expected_deb822(result, expected_loc)
 
     def test_parse_release_with_md5(self):
         release_file = self.get_test_loc('debian/release/Release_with_md5')
-        result = list(debian_visitor.parse_release(release_file))
-        expected_loc = self.get_test_loc(
-            'debian/release/Release_with_md5_expected')
+        result = list(debian.parse_release(release_file))
+        expected_loc = self.get_test_loc('debian/release/Release_with_md5_expected')
         self.check_expected_deb822(result, expected_loc)
 
     @expectedFailure
@@ -167,7 +165,7 @@ class DebianReleaseTest(BaseDebianTest):
         test_loc = self.get_test_loc('debian/release/visited_Release')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
-            _, data, _ = debian_visitor.DebianReleaseVisitor(uri)
+            _, data, _ = debian.DebianReleaseVisitor(uri)
         result = json.loads(data)
 
         release_file = self.get_test_loc(
@@ -181,35 +179,29 @@ class DebianCopyrightTest(BaseDebianTest):
     @expectedFailure
     def test_parse_copyright_only_basic(self):
         copyright_file = self.get_test_loc('debian/copyright/basic_copyright')
-        copyrights = [
-            info for info in debian_visitor.parse_copyright_only(copyright_file)]
-        self.assertTrue(
-            'Copyright 1998 John Doe <jdoe@example.com>' in copyrights)
-        self.assertTrue(
-            'Copyright 1998 Jane Doe <packager@example.com>' in copyrights)
+        copyrights = [info for info in debian.parse_copyright_only(copyright_file)]
+        self.assertTrue('Copyright 1998 John Doe <jdoe@example.com>' in copyrights)
+        self.assertTrue('Copyright 1998 Jane Doe <packager@example.com>' in copyrights)
 
     @expectedFailure
     def test_parse_copyright_only_with_incorrect_file(self):
         copyright_file = self.get_test_loc(
             'debian/copyright/invalid_copyright')
         with self.assertRaises(Exception) as context:
-            [info for info in debian_visitor.parse_copyright_only(
-                copyright_file)]
+            [info for info in debian.parse_copyright_only(copyright_file)]
         self.assertTrue('no paragraphs in input' in context.exception)
 
     @expectedFailure
     def test_parse_copyright_only_with_incorrect_path(self):
         copyright_file = 'path_invalid'
         with self.assertRaises(Exception) as context:
-            [info for info in debian_visitor.parse_copyright_only(
-                copyright_file)]
+            [info for info in debian.parse_copyright_only(copyright_file)]
         self.assertTrue('No such file or directory' in context.exception)
 
     @expectedFailure
     def test_parse_copyright_allinfo_basic(self):
         copyright_file = self.get_test_loc('debian/copyright/basic_copyright')
-        copyright_data = [
-            info for info in debian_visitor.parse_copyright_allinfo(copyright_file)]
+        copyright_data = [info for info in debian.parse_copyright_allinfo(copyright_file)]
         expected = [
             {'files': (u'*',),
              'license': u'GPL-2+',
@@ -227,22 +219,20 @@ class DebianCopyrightTest(BaseDebianTest):
         copyright_file = self.get_test_loc(
             'debian/copyright/invalid_copyright')
         with self.assertRaises(Exception) as context:
-            [info for info in debian_visitor.parse_copyright_allinfo(
-                copyright_file)]
+            [info for info in debian.parse_copyright_allinfo(copyright_file)]
         self.assertTrue('no paragraphs in input' in context.exception)
 
     @expectedFailure
     def test_parse_copyright_allinfo_with_incorrect_path(self):
         copyright_file = 'path_invalid'
         with self.assertRaises(Exception) as context:
-            [info for info in debian_visitor.parse_copyright_allinfo(
-                copyright_file)]
+            [info for info in debian.parse_copyright_allinfo(copyright_file)]
         self.assertTrue('No such file or directory' in context.exception)
 
     @expectedFailure
     def test_parse_license_basic(self):
         copyright_file = self.get_test_loc('debian/copyright/basic_copyright')
-        licenses, licensetexts = debian_visitor.parse_license(copyright_file)
+        licenses, licensetexts = debian.parse_license(copyright_file)
         expected = {
             'GPL-2+': [
                 "This program is free software; you can redistribute it\n"
@@ -270,14 +260,14 @@ class DebianCopyrightTest(BaseDebianTest):
         copyright_file = self.get_test_loc(
             'debian/copyright/invalid_copyright')
         with self.assertRaises(Exception) as context:
-            debian_visitor.parse_license(copyright_file)
+            debian.parse_license(copyright_file)
         self.assertTrue('no paragraphs in input' in context.exception)
 
     @expectedFailure
     def test_parse_license_with_incorrect_path(self):
         copyright_file = 'path_invalid'
         with self.assertRaises(Exception) as context:
-            debian_visitor.parse_license(copyright_file)
+            debian.parse_license(copyright_file)
         self.assertTrue('No such file or directory' in context.exception)
 
 
@@ -285,21 +275,15 @@ class DebianSourcesTest(BaseDebianTest):
 
     def test_collect_source_packages(self):
         index_file = self.get_test_loc('debian/sources/debian_Sources')
-        source_info = [
-            info for info in debian_visitor.collect_source_packages(index_file)]
-        expected_loc = self.get_test_loc(
-            'debian/sources/debian_Sources_visit_expected')
-        self.check_objects_expected(
-            source_info, expected_loc, regen=FIXTURES_REGEN)
+        source_info = [info for info in debian.collect_source_packages(index_file)]
+        expected_loc = self.get_test_loc('debian/sources/debian_Sources_visit_expected')
+        self.check_objects_expected(source_info, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_source_packages_ubuntu(self):
         index_file = self.get_test_loc('debian/sources/ubuntu_Sources')
-        source_info = [
-            info for info in debian_visitor.collect_source_packages(index_file)]
-        expected_loc = self.get_test_loc(
-            'debian/sources/ubuntu_Sources_visit_expected')
-        self.check_objects_expected(
-            source_info, expected_loc, regen=FIXTURES_REGEN)
+        source_info = [info for info in debian.collect_source_packages(index_file)]
+        expected_loc = self.get_test_loc('debian/sources/ubuntu_Sources_visit_expected')
+        self.check_objects_expected(source_info, expected_loc, regen=FIXTURES_REGEN)
 
     @expectedFailure
     def test_DebianSourcesVisitor(self):
@@ -307,9 +291,8 @@ class DebianSourcesTest(BaseDebianTest):
         test_loc = self.get_test_loc('debian/sources/Sources.gz')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
-            uris, _, _ = debian_visitor.DebianSourcesVisitor(uri)
-        expected_loc = self.get_test_loc(
-            'debian/sources/Sources.gz-expected.json')
+            uris, _, _ = debian.DebianSourcesVisitor(uri)
+        expected_loc = self.get_test_loc('debian/sources/Sources.gz-expected.json')
         self.check_expected_uris(list(uris), expected_loc)
 
     @expectedFailure
@@ -318,13 +301,13 @@ class DebianSourcesTest(BaseDebianTest):
         test_loc = self.get_test_loc('debian/invalid_files/ls-lR.gz')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
-            uris, _data, _ = debian_visitor.DebianSourcesVisitor(uri)
+            uris, _data, _ = debian.DebianSourcesVisitor(uri)
         self.assertEqual(0, len(list(uris)))
 
     @expectedFailure
     def test_build_source_file_packages(self):
         with open(self.get_test_loc('debian/sources/debian_Sources')) as packs:
-            packages = debian_mapper.build_source_file_packages(packs.read())
+            packages = debian.build_source_file_packages(packs.read())
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'debian/sources/debian_Sources_mapped-expected-packages.json')
@@ -335,17 +318,14 @@ class DebianPackagesTest(BaseDebianTest):
 
     def test_parse_packages_index(self):
         index_file = self.get_test_loc('debian/packages/debian_Packages')
-        package_info = [
-            info for info in debian_visitor.parse_packages_index(index_file)]
-        expected_loc = self.get_test_loc(
-            'debian/packages/debian_Packages-visit-expected.json')
-        self.check_objects_expected(
-            package_info, expected_loc, regen=FIXTURES_REGEN)
+        package_info = [info for info in debian.parse_packages_index(index_file)]
+        expected_loc = self.get_test_loc('debian/packages/debian_Packages-visit-expected.json')
+        self.check_objects_expected(package_info, expected_loc, regen=FIXTURES_REGEN)
 
     @expectedFailure
     def test_parse_packages_from_debian_Packages(self):
         with open(self.get_test_loc('debian/packages/debian_Packages')) as packs:
-            packages = debian_mapper.parse_packages(packs.read())
+            packages = debian.parse_packages(packs.read())
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'debian/packages/debian_Packages-expected.json')
@@ -355,7 +335,7 @@ class DebianPackagesTest(BaseDebianTest):
     @expectedFailure
     def test_parse_packages_from_ubuntu_Packages(self):
         with open(self.get_test_loc('debian/packages/ubuntu_Packages')) as packs:
-            packages = debian_mapper.parse_packages(packs.read())
+            packages = debian.parse_packages(packs.read())
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'debian/packages/ubuntu_Packages-expected.json')
@@ -365,7 +345,7 @@ class DebianPackagesTest(BaseDebianTest):
     @expectedFailure
     def test_parse_packages_from_installed_status(self):
         with open(self.get_test_loc('debian/status/simple_status')) as packs:
-            packages = debian_mapper.parse_packages(packs.read())
+            packages = debian.parse_packages(packs.read())
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'debian/packages/ubuntu_Packages-expected.json')
@@ -380,11 +360,9 @@ class DebianLSLRTest(BaseDebianTest):
         test_loc = self.get_test_loc('debian/lslr/ls-lR_debian')
         temp_gz_location = self.get_tmp_gz_file(test_loc)
         with patch('requests.get') as mock_http_get:
-            mock_http_get.return_value = mocked_requests_get(
-                uri, temp_gz_location)
-            uris, _, _ = debian_visitor.DebianDirectoryIndexVisitor(uri)
-        expected_loc = self.get_test_loc(
-            'debian/lslr/ls-lR_debian.gz-expected.json')
+            mock_http_get.return_value = mocked_requests_get(uri, temp_gz_location)
+            uris, _, _ = debian.DebianDirectoryIndexVisitor(uri)
+        expected_loc = self.get_test_loc('debian/lslr/ls-lR_debian.gz-expected.json')
         self.check_expected_uris(list(uris), expected_loc)
 
     def test_DebianDirectoryIndexVisitor_from_ubuntu(self):
@@ -392,9 +370,8 @@ class DebianLSLRTest(BaseDebianTest):
         test_loc = self.get_test_loc('debian/lslr/ls-lR_ubuntu')
         temp_gz_location = self.get_tmp_gz_file(test_loc)
         with patch('requests.get') as mock_http_get:
-            mock_http_get.return_value = mocked_requests_get(
-                uri, temp_gz_location)
-            uris, _, _ = debian_visitor.DebianDirectoryIndexVisitor(uri)
+            mock_http_get.return_value = mocked_requests_get(uri, temp_gz_location)
+            uris, _, _ = debian.DebianDirectoryIndexVisitor(uri)
         expected_loc = self.get_test_loc(
             'debian/lslr/ls-lR_ubuntu.gz-expected.json')
         self.check_expected_uris(list(uris), expected_loc)
@@ -408,7 +385,7 @@ class DebianDescriptionTest(BaseDebianTest):
         test_loc = self.get_test_loc('debian/dsc/7kaa_2.14.3-1.dsc')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
-            _, data, _ = debian_visitor.DebianDescriptionVisitor(uri)
+            _, data, _ = debian.DebianDescriptionVisitor(uri)
         result = json.loads(data)
         dsc_file = self.get_test_loc('debian/dsc/description_expected.json')
         self.check_expected_deb822(result, dsc_file)
@@ -417,7 +394,7 @@ class DebianDescriptionTest(BaseDebianTest):
     def test_parse_description(self):
         with open(self.get_test_loc('debian/dsc/description.json')) as debian_description_meta:
             metadata = json.load(debian_description_meta)
-        packages = debian_mapper.parse_description(metadata)
+        packages = debian.parse_description(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'debian/dsc/description-expected.json')
@@ -434,7 +411,7 @@ class DebianMapperTest(BaseDebianTest):
             'build3': 'buildnot',
         }
         keys = ['build1', 'build2']
-        result = debian_mapper.get_dependencies(test, keys)
+        result = debian.get_dependencies(test, keys)
         self.assertEqual(2, len(result))
         self.assertEqual('build', result[0].purl)
         self.assertEqual(None, result[0].requirement)
@@ -442,7 +419,6 @@ class DebianMapperTest(BaseDebianTest):
         self.assertEqual(None, result[1].requirement)
 
     def test_get_programming_language(self):
-        tags = ['role::program', 'implemented-in::perl',
-                'use::converting', 'works-with::pim']
-        result = debian_mapper.get_programming_language(tags)
+        tags = ['role::program', 'implemented-in::perl', 'use::converting', 'works-with::pim']
+        result = debian.get_programming_language(tags)
         self.assertEqual('perl', result)

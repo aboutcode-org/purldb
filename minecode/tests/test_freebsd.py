@@ -17,8 +17,8 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.visitors import freebsd
+from minecode import miners
+from minecode.miners import freebsd
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -60,7 +60,7 @@ class FreedesktopMapperTest(JsonBasedTesting):
     def test_map_index_file(self):
         with open(self.get_test_loc('freebsd/mapper_input1')) as freebsd_metadata:
             metadata = freebsd_metadata.read()
-        packages = mappers.freebsd.build_packages(metadata)
+        packages = miners.freebsd.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'freebsd/indexfile_expected_mapper.json')

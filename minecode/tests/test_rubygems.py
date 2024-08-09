@@ -23,19 +23,19 @@ from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 from minecode.utils_test import model_to_dict
 
-from minecode import mappers
+from minecode import miners
 from minecode import route
 from minecode.models import ResourceURI
 from minecode import visit_router
-from minecode.mappers.rubygems import build_rubygem_packages_from_api_data
-from minecode.mappers.rubygems import build_rubygem_packages_from_metadata
-from minecode.mappers.rubygems import RubyGemsApiVersionsJsonMapper
-from minecode.mappers.rubygems import RubyGemsPackageArchiveMetadataMapper
+from minecode.miners.rubygems import build_rubygem_packages_from_api_data
+from minecode.miners.rubygems import build_rubygem_packages_from_metadata
+from minecode.miners.rubygems import RubyGemsApiVersionsJsonMapper
+from minecode.miners.rubygems import RubyGemsPackageArchiveMetadataMapper
 
-from minecode.visitors.rubygems import get_gem_metadata
-from minecode.visitors.rubygems import RubyGemsApiManyVersionsVisitor
-from minecode.visitors.rubygems import RubyGemsIndexVisitor
-from minecode.visitors.rubygems import RubyGemsPackageArchiveMetadataVisitor
+from minecode.miners.rubygems import get_gem_metadata
+from minecode.miners.rubygems import RubyGemsApiManyVersionsVisitor
+from minecode.miners.rubygems import RubyGemsIndexVisitor
+from minecode.miners.rubygems import RubyGemsPackageArchiveMetadataVisitor
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -138,8 +138,7 @@ class RubyGemsApiMapperTest(JsonBasedTesting):
     def test_build_rubygem_packages_from_api_data_3(self):
         with open(self.get_test_loc('rubygems/apiv1/a1630ty_a1630ty.api.json')) as api:
             apidata = json.load(api)
-        packages = mappers.rubygems.build_rubygem_packages_from_api_data(
-            apidata, 'a1630ty_a1630ty')
+        packages = miners.rubygems.build_rubygem_packages_from_api_data(apidata, 'a1630ty_a1630ty')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'rubygems/apiv1/a1630ty_a1630ty.api.package.json')
@@ -149,8 +148,7 @@ class RubyGemsApiMapperTest(JsonBasedTesting):
     def test_build_rubygem_packages_from_api_data_with_deps(self):
         with open(self.get_test_loc('rubygems/apiv1/action_tracker.api.json')) as api:
             apidata = json.load(api)
-        packages = mappers.rubygems.build_rubygem_packages_from_api_data(
-            apidata, 'action_tracker')
+        packages = miners.rubygems.build_rubygem_packages_from_api_data(apidata, 'action_tracker')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'rubygems/apiv1/action_tracker.api.package.json')

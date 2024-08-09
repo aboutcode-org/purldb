@@ -21,8 +21,8 @@ import requests
 
 from minecode.management.commands import VerboseCommand
 from minecode.utils import MemorySavingQuerysetIterator
-from minecode.visitors.maven import collect_links_from_text
-from minecode.visitors.maven import filter_for_artifacts
+from minecode.miners.maven import collect_links_from_text
+from minecode.miners.maven import filter_for_artifacts
 from packagedb.models import Package
 
 DEFAULT_TIMEOUT = 30

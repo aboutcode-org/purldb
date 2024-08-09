@@ -13,8 +13,8 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from minecode import visitors
-from minecode import mappers
+from minecode import miners
+from minecode import miners
 
 from minecode.models import ResourceURI
 from packagedb.models import Package

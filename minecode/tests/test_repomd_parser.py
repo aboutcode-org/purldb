@@ -17,11 +17,11 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get_for_uris
 from minecode.utils_test import JsonBasedTesting
 
-from minecode.visitors import URI
-from minecode.visitors.repodata import combine_list_of_dicts
-from minecode.visitors.repodata import combine_dicts_using_pkgid
-from minecode.visitors.repomd_parser import generate_rpm_objects
-from minecode.visitors.repomd_parser import collect_rpm_packages_from_repomd
+from minecode.miners import URI
+from minecode.miners.repodata import combine_list_of_dicts
+from minecode.miners.repodata import combine_dicts_using_pkgid
+from minecode.miners.repomd import generate_rpm_objects
+from minecode.miners.repomd import collect_rpm_packages_from_repomd
 from minecode.tests import FIXTURES_REGEN
 
 # TODO: add redhat repo test!

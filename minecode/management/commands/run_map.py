@@ -17,9 +17,9 @@ from django.db import transaction
 from django.utils import timezone
 
 # UnusedImport here!
-# But importing the mappers and visitors module triggers routes registration
-from minecode import mappers  # NOQA
-from minecode import visitors  # NOQA
+# But importing the miners module triggers routes registration
+
+from minecode import miners  # NOQA
 
 from minecode import map_router
 from minecode.models import ResourceURI

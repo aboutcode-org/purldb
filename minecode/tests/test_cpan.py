@@ -17,8 +17,8 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.visitors import cpan
+from minecode import miners
+from minecode.miners import cpan
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -82,7 +82,7 @@ class CpanMapperTest(JsonBasedTesting):
     def test_build_from_release_search_json(self):
         with open(self.get_test_loc('cpan/release_search.json')) as cpan_metadata:
             metadata = cpan_metadata.read()
-        packages = mappers.cpan.build_packages_from_release_json(
+        packages = miners.cpan.build_packages_from_release_json(
             metadata, 'https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cpan/expected_release_search.json')
@@ -92,7 +92,7 @@ class CpanMapperTest(JsonBasedTesting):
     def test_build_from_release_search_json2(self):
         with open(self.get_test_loc('cpan/MIYAGAWA_author_release_search.json')) as cpan_metadata:
             metadata = cpan_metadata.read()
-        packages = mappers.cpan.build_packages_from_release_json(
+        packages = miners.cpan.build_packages_from_release_json(
             metadata, 'https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
@@ -103,7 +103,7 @@ class CpanMapperTest(JsonBasedTesting):
     def test_build_packages_metafile_from_yaml(self):
         with open(self.get_test_loc('cpan/variable-2009110702.meta')) as cpan_metadata:
             metadata = cpan_metadata.read()
-        packages = mappers.cpan.build_packages_from_metafile(
+        packages = miners.cpan.build_packages_from_metafile(
             metadata, 'http://www.cpan.org/authors/id/A/AB/ABIGAIL/variable-2009110702.metadata', 'pkg:cpan/variable@2009110702')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cpan/expected_yaml_cpanmapper.json')
@@ -113,7 +113,7 @@ class CpanMapperTest(JsonBasedTesting):
     def test_build_packages_metafile_from_json(self):
         with open(self.get_test_loc('cpan/Regexp-Common-2016010701.meta')) as cpan_metadata:
             metadata = cpan_metadata.read()
-        packages = mappers.cpan.build_packages_from_metafile(
+        packages = miners.cpan.build_packages_from_metafile(
             metadata, 'http://www.cpan.org/authors/id/A/AB/ABIGAIL/Regexp-Common-2016010701.metadata', 'pkg:cpan/Regexp-Common@2016010701')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cpan/expected_json_cpanmapper.json')
@@ -127,7 +127,7 @@ class CpanMapperTest(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = cpan.CpanReadmeVisitors(uri)
-        packages = mappers.cpan.build_packages_from_readmefile(
+        packages = miners.cpan.build_packages_from_readmefile(
             data, 'http://www.cpan.org/authors/id/A/AM/AMIRITE/Mojolicious-Plugin-Nour-Config-0.09.readme', 'pkg:cpan/Mojolicious-Plugin-Nour-Config@0.09')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
@@ -142,7 +142,7 @@ class CpanMapperTest(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = cpan.CpanReadmeVisitors(uri)
-        packages = mappers.cpan.build_packages_from_readmefile(
+        packages = miners.cpan.build_packages_from_readmefile(
             data,
             'http://www.cpan.org/authors/id/A/AB/ABIGAIL/Algorithm-Graphs-TransitiveClosure-2009110901.readme')
         packages = [p.to_dict() for p in packages]

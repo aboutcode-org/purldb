@@ -18,9 +18,9 @@ import requests
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.visitors import URI
-from minecode.visitors import eclipse
+from minecode import miners
+from minecode.miners import URI
+from minecode.miners import eclipse
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -106,7 +106,7 @@ class TestEclipseMap(JsonBasedTesting):
     def test_build_packages(self):
         with open(self.get_test_loc('eclipse/birt.json')) as eclipse_metadata:
             metadata = json.load(eclipse_metadata)
-        packages = mappers.eclipse.build_packages_with_json(metadata)
+        packages = miners.eclipse.build_packages_with_json(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('eclipse/eclipse_birt_expected.json')
         self.check_expected_results(
@@ -115,7 +115,7 @@ class TestEclipseMap(JsonBasedTesting):
     def test_build_eclipse_html_packages(self):
         with open(self.get_test_loc('eclipse/Acceleo_projects.eclipse.org.html')) as eclipse_metadata:
             metadata = eclipse_metadata.read()
-        packages = mappers.eclipse.build_packages(metadata)
+        packages = miners.eclipse.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'eclipse/Acceleo_projects_expected.json')

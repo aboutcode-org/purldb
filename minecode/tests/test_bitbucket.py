@@ -18,12 +18,12 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode.mappers.bitbucket import build_bitbucket_download_packages
-from minecode.mappers.bitbucket import build_bitbucket_repo_package
+from minecode.miners.bitbucket import build_bitbucket_download_packages
+from minecode.miners.bitbucket import build_bitbucket_repo_package
 
-from minecode.visitors.bitbucket import BitbucketDetailsVisitorPaginated
-from minecode.visitors.bitbucket import BitbucketIndexVisitor
-from minecode.visitors.bitbucket import BitbucketSingleRepoVisitor
+from minecode.miners.bitbucket import BitbucketDetailsVisitorPaginated
+from minecode.miners.bitbucket import BitbucketIndexVisitor
+from minecode.miners.bitbucket import BitbucketSingleRepoVisitor
 
 from minecode.tests import FIXTURES_REGEN
 

@@ -19,7 +19,7 @@ from packageurl.contrib.purl2url import get_download_url, purl2url
 from scancode.api import get_urls as get_urls_from_location
 
 from minecode.model_utils import add_package_to_scan_queue
-from minecode.visitors.maven import get_merged_ancestor_package_from_maven_package
+from minecode.miners.maven import get_merged_ancestor_package_from_maven_package
 from packagedb.models import Package, PackageContentType, PackageSet
 
 logger = logging.getLogger(__name__)

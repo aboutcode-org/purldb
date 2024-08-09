@@ -17,8 +17,8 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.visitors import nuget
+from minecode import miners
+from minecode.miners import nuget
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -80,7 +80,7 @@ class TestNugetMap(JsonBasedTesting):
     def test_build_packages(self):
         with open(self.get_test_loc('nuget/entityframework2.json')) as nuget_metadata:
             metadata = json.load(nuget_metadata)
-        packages = mappers.nuget.build_packages_with_json(metadata)
+        packages = miners.nuget.build_packages_with_json(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('nuget/nuget_mapper_expected.json')
         self.check_expected_results(
@@ -104,7 +104,7 @@ class TestNugetMap(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _errors = nuget.NugetHTMLPackageVisitor(uri)
-            packages = mappers.nuget.build_packages_from_html(data, uri,)
+            packages = miners.nuget.build_packages_from_html(data, uri,)
             packages = [p.to_dict() for p in packages]
             expected_loc = self.get_test_loc(
                 'nuget/nuget_mapper_log4net_expected.json')

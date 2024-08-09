@@ -16,9 +16,9 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode.visitors import gitlab
+from minecode.miners import gitlab
 from minecode.tests import FIXTURES_REGEN
-from minecode import mappers
+from minecode import miners
 
 
 class GitlabTest(JsonBasedTesting):
@@ -52,7 +52,7 @@ class GitlabMapperTest(JsonBasedTesting):
     def test_map_software_html_page_hal(self):
         with open(self.get_test_loc('gitlab/microservice-express-mongo.json')) as gitlab_json:
             metadata = gitlab_json.read()
-        packages = mappers.gitlab.build_packages_from_json(metadata)
+        packages = miners.gitlab.build_packages_from_json(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'gitlab/microservice-express-mongo_expected.json')

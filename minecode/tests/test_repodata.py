@@ -11,7 +11,7 @@ import os
 
 from commoncode.testcase import FileBasedTesting
 
-from minecode.visitors import repodata
+from minecode.miners import repodata
 
 
 class TestRepoData(FileBasedTesting):

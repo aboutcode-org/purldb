@@ -22,9 +22,9 @@ from packagedb.models import Package
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode import visitors
-from minecode.visitors import URI
+from minecode import miners
+from minecode import miners
+from minecode.miners import URI
 from minecode.models import ResourceURI
 from minecode.route import Router
 from minecode.tests import FIXTURES_REGEN
@@ -65,7 +65,7 @@ class TestFoo(unittest.TestCase):
         instance = mock_serverproxyclass.return_value
         instance.list_packages.return_value = iter(package_list)
         uri = 'https://pypi.python.org/pypi/'
-        uris, _data, _error = visitors.pypi.PypiIndexVisitor(uri)
+        uris, _data, _error = miners.pypi.PypiIndexVisitor(uri)
         self.assertIsNone(_data)
 
         expected_loc = self.get_test_loc('pypi/pypiindexvisitor-expected.json')
@@ -76,7 +76,7 @@ class TestFoo(unittest.TestCase):
         test_loc = self.get_test_loc('pypi/cage.json')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
-            uris, _data, _error = visitors.pypi.PypiPackageVisitor(uri)
+            uris, _data, _error = miners.pypi.PypiPackageVisitor(uri)
 
         expected_loc = self.get_test_loc('pypi/expected_uris-cage.json')
         self.check_expected_uris(uris, expected_loc)
@@ -86,7 +86,7 @@ class TestFoo(unittest.TestCase):
         test_loc = self.get_test_loc('pypi/boolean.py.json')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
-            uris, _data, _errors = visitors.pypi.PypiPackageVisitor(uri)
+            uris, _data, _errors = miners.pypi.PypiPackageVisitor(uri)
 
         expected_loc = self.get_test_loc('pypi/expected_uris-boolean.py.json')
         self.check_expected_uris(uris, expected_loc)
@@ -96,7 +96,7 @@ class TestFoo(unittest.TestCase):
         test_loc = self.get_test_loc('pypi/cage_1.1.2.json')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
-            uris, data, _error = visitors.pypi.PypiPackageReleaseVisitor(uri)
+            uris, data, _error = miners.pypi.PypiPackageReleaseVisitor(uri)
 
         expected_loc = self.get_test_loc('pypi/expected_uris-cage_1.1.2.json')
         self.check_expected_uris(uris, expected_loc)
@@ -109,7 +109,7 @@ class TestFoo(unittest.TestCase):
         test_loc = self.get_test_loc('pypi/cage_1.1.3.json')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
-            uris, data, _error = visitors.pypi.PypiPackageReleaseVisitor(uri)
+            uris, data, _error = miners.pypi.PypiPackageReleaseVisitor(uri)
 
         expected_loc = self.get_test_loc('pypi/expected_uris-cage_1.1.3.json')
         self.check_expected_uris(uris, expected_loc)
@@ -122,7 +122,7 @@ class TestFoo(unittest.TestCase):
         test_loc = self.get_test_loc('pypi/boolean.py-2.0.dev3.json')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
-            uris, data, _error = visitors.pypi.PypiPackageReleaseVisitor(uri)
+            uris, data, _error = miners.pypi.PypiPackageReleaseVisitor(uri)
 
         expected_loc = self.get_test_loc(
             'pypi/expected_uris-boolean.py-2.0.dev3.json')
@@ -148,7 +148,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
     def test_build_packages_lxml(self):
         with open(self.get_test_loc('pypi/lxml-3.2.0.json')) as pypi_meta:
             metadata = json.load(pypi_meta)
-        packages = mappers.pypi.build_packages(metadata)
+        packages = miners.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-lxml-3.2.0.json')
         self.check_expected_results(
@@ -157,7 +157,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
     def test_build_packages_boolean(self):
         with open(self.get_test_loc('pypi/boolean.py-2.0.dev3.json')) as pypi_meta:
             metadata = json.load(pypi_meta)
-        packages = mappers.pypi.build_packages(metadata)
+        packages = miners.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'pypi/expected-boolean.py-2.0.dev3.json')
@@ -167,7 +167,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
     def test_build_packages_cage13(self):
         with open(self.get_test_loc('pypi/cage_1.1.3.json')) as pypi_meta:
             metadata = json.load(pypi_meta)
-        packages = mappers.pypi.build_packages(metadata)
+        packages = miners.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-CAGE-1.1.3.json')
         self.check_expected_results(
@@ -176,7 +176,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
     def test_build_packages_cage12(self):
         with open(self.get_test_loc('pypi/cage_1.1.2.json')) as pypi_meta:
             metadata = json.load(pypi_meta)
-        packages = mappers.pypi.build_packages(metadata)
+        packages = miners.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-CAGE-1.1.2.json')
         self.check_expected_results(
@@ -186,7 +186,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         data = open(self.get_test_loc('pypi/cage_1.1.2.json')).read()
         uri = 'https://pypi.python.org/pypi/CAGE/1.1.2/json'
         resuri = MockResourceURI(uri, data)
-        packages = mappers.pypi.PypiPackageMapper(uri, resuri)
+        packages = miners.pypi.PypiPackageMapper(uri, resuri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-CAGE-1.1.2.json')
         self.check_expected_results(
@@ -196,7 +196,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         data = open(self.get_test_loc('pypi/lxml-3.2.0.json')).read()
         uri = 'https://pypi.python.org/pypi/lxml/3.2.0/json'
         resuri = MockResourceURI(uri, data)
-        packages = mappers.pypi.PypiPackageMapper(uri, resuri)
+        packages = miners.pypi.PypiPackageMapper(uri, resuri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-lxml-3.2.0.json')
         self.check_expected_results(
@@ -209,7 +209,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
             resuri.save()
 
         # sanity check
-        packages = mappers.pypi.PypiPackageMapper(resuri.uri, resuri)
+        packages = miners.pypi.PypiPackageMapper(resuri.uri, resuri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/map/expected-3to2-1.1.1.json')
         self.check_expected_results(
@@ -217,8 +217,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
 
         # build a mock router
         router = Router()
-        router.append('https://pypi.python.org/pypi/3to2/1.1.1/json',
-                      mappers.pypi.PypiPackageMapper)
+        router.append('https://pypi.python.org/pypi/3to2/1.1.1/json', miners.pypi.PypiPackageMapper)
 
         # sanity check
         expected_mapped_package_uri = 'https://pypi.python.org/packages/8f/ab/58a363eca982c40e9ee5a7ca439e8ffc5243dde2ae660ba1ffdd4868026b/3to2-1.1.1.zip'

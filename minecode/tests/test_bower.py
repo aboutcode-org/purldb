@@ -17,9 +17,9 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode.visitors import bower
+from minecode.miners import bower
 from minecode.tests import FIXTURES_REGEN
-from minecode import mappers
+from minecode import miners
 
 
 class BowerVistorTest(JsonBasedTesting):
@@ -51,7 +51,7 @@ class BowerMapperTest(JsonBasedTesting):
     def test_build_packages_metafile_from_bowerjson1(self):
         with open(self.get_test_loc('bower/28msec_bower.json')) as bower_metadata:
             metadata = bower_metadata.read()
-        result = mappers.bower.build_packages_from_jsonfile(
+        result = miners.bower.build_packages_from_jsonfile(
             metadata, 'https://raw.githubusercontent.com/28msec/28.io-angularjs/master/bower.json', 'pkg:bower/1140-grid')
         result = [p.to_dict() for p in result]
         expected_loc = self.get_test_loc('bower/expected_28msec_bower.json')
@@ -60,7 +60,7 @@ class BowerMapperTest(JsonBasedTesting):
     def test_build_packages_metafile_from_bowerjson2(self):
         with open(self.get_test_loc('bower/example1_bower.json')) as bower_metadata:
             metadata = bower_metadata.read()
-        result = mappers.bower.build_packages_from_jsonfile(
+        result = miners.bower.build_packages_from_jsonfile(
             metadata, 'https://coding.net/u/QiaoButang/p/jquery.easing-qbt/git/raw/master/bower.json', 'pkg:bower/1140-grid')
         result = [p.to_dict() for p in result]
         expected_loc = self.get_test_loc(

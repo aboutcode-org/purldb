@@ -17,9 +17,9 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.visitors import URI
-from minecode.visitors import googlecode
+from minecode import miners
+from minecode.miners import URI
+from minecode.miners import googlecode
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -95,8 +95,7 @@ class GoogleNewAPIMappersTest(JsonBasedTesting):
     def test_build_packages_from_v2_projects_json(self):
         with open(self.get_test_loc('googlecode/v2_api/project.json')) as projectsjson_meta:
             metadata = json.load(projectsjson_meta)
-        packages = mappers.googlecode.build_packages_from_projectsjson_v2(
-            metadata)
+        packages = miners.googlecode.build_packages_from_projectsjson_v2(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'googlecode/v2_api/package_expected_project.json')
@@ -106,8 +105,7 @@ class GoogleNewAPIMappersTest(JsonBasedTesting):
     def test_build_packages_from_v1_projects_json(self):
         with open(self.get_test_loc('googlecode/v2_apache-extras.org_124799961-qian_project.json')) as projectsjson_meta:
             metadata = json.load(projectsjson_meta)
-        packages = mappers.googlecode.build_packages_from_projectsjson_v1(
-            metadata)
+        packages = miners.googlecode.build_packages_from_projectsjson_v1(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'googlecode/mapper_expected_v2_apache-extras.org_124799961-qian_project.json')

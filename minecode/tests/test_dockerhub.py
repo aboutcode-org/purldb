@@ -18,9 +18,9 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode.visitors import dockerhub
+from minecode.miners import dockerhub
 from minecode.tests import FIXTURES_REGEN
-from minecode import mappers
+from minecode import miners
 
 
 class DockerHubTest(JsonBasedTesting):
@@ -80,7 +80,7 @@ class DockerHubMapperTest(DockerHubTest):
     def test_build_packages_fromjson(self):
         with open(self.get_test_loc('dockerhub/elixir.json')) as dockerhub_metadata:
             metadata = dockerhub_metadata.read()
-        packages = mappers.dockerhub.build_packages_from_jsonfile(
+        packages = miners.dockerhub.build_packages_from_jsonfile(
             metadata, 'https://registry.hub.docker.com/v2/repositories/library')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(

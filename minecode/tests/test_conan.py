@@ -17,7 +17,7 @@ from packageurl import PackageURL
 
 import packagedb
 from minecode.utils_test import JsonBasedTesting
-from minecode.visitors import conan
+from minecode.miners import conan
 
 
 class ConanPriorityQueueTests(JsonBasedTesting, TestCase):
@@ -91,7 +91,7 @@ class ConanPriorityQueueTests(JsonBasedTesting, TestCase):
         self.assertEqual(result_download_url, expected_zlib_download_url)
         self.assertEqual(result_sha256, expected_zlib_sha256)
 
-    @patch("minecode.visitors.conan.get_conan_recipe")
+    @patch("minecode.miners.conan.get_conan_recipe")
     def test_map_conan_package(self, mock_get_conan_recipe):
         mock_get_conan_recipe.return_value = (
             self.zlib_conanfile_contents,

@@ -15,8 +15,8 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.visitors import freedesktop
+from minecode import miners
+from minecode.miners import freedesktop
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -43,7 +43,7 @@ class FreedesktopMapperTest(FreedesktopTest):
     def test_map_software_html_page_hal(self):
         with open(self.get_test_loc('freedesktop/hal.html')) as freedesktop_metadata:
             metadata = freedesktop_metadata.read()
-        packages = mappers.freedesktop.build_packages(
+        packages = miners.freedesktop.build_packages(
             metadata,
             'https://www.freedesktop.org/wiki/Software/hal',
             purl='pkg:freedesktop/hal')
@@ -56,7 +56,7 @@ class FreedesktopMapperTest(FreedesktopTest):
     def test_map_software_html_page_libinput(self):
         with open(self.get_test_loc('freedesktop/libinput.html')) as freedesktop_metadata:
             metadata = freedesktop_metadata.read()
-        packages = mappers.freedesktop.build_packages(
+        packages = miners.freedesktop.build_packages(
             metadata,
             'https://www.freedesktop.org/wiki/Software/libinput/',
             purl='pkg:freedesktop/libinput')

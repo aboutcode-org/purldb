@@ -19,7 +19,7 @@ from minecode.utils_test import MiningTestCase
 from minecode.management.commands.run_visit import visit_uri
 from minecode.models import ResourceURI
 from minecode.route import Router
-from minecode.visitors import URI
+from minecode.miners import URI
 
 
 class RunVisitWithCounterTest(MiningTestCase):

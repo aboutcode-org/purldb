@@ -16,7 +16,7 @@ from __future__ import unicode_literals
 import os
 
 from minecode.utils_test import MiningTestCase
-from minecode.visitors import repodata_rpms
+from minecode.miners import repodata_rpms
 
 
 class RepodataRPMVisitorsTest(MiningTestCase):

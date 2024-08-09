@@ -16,8 +16,8 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.visitors import openwrt
+from minecode import miners
+from minecode.miners import openwrt
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -89,7 +89,7 @@ class OpenWRTMapperTest(JsonBasedTesting):
     def test_build_packages_1(self):
         with open(self.get_test_loc('openwrt/6to4_12-2_all_ipk_expected')) as openwrt_ipk_meta:
             metadata = json.load(openwrt_ipk_meta)
-        packages = mappers.openwrt.build_packages(metadata)
+        packages = miners.openwrt.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'openwrt/6to4_12-2_all_ipk_expected_mapper.json')
@@ -99,7 +99,7 @@ class OpenWRTMapperTest(JsonBasedTesting):
     def test_build_packages_2(self):
         with open(self.get_test_loc('openwrt/wpa-cli_0.5.7-1_mipsel.ipk_expected')) as openwrt_ipk_meta:
             metadata = json.load(openwrt_ipk_meta)
-        packages = mappers.openwrt.build_packages(metadata)
+        packages = miners.openwrt.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'openwrt/wpa-cli_0.5.7-1_mipsel.ipk_expected_mapper.json')

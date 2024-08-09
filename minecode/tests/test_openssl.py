@@ -18,9 +18,9 @@ from django.test import TestCase as DjangoTestCase
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode.mappers.openssl import build_packages
+from minecode.miners.openssl import build_packages
 from minecode.models import ResourceURI
-from minecode.visitors import openssl
+from minecode.miners import openssl
 from minecode.tests import FIXTURES_REGEN
 
 

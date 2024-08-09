@@ -18,10 +18,10 @@ from packageurl import PackageURL
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode.visitors.golang import GodocIndexVisitor
-from minecode.visitors.golang import GodocSearchVisitor
-from minecode.visitors.golang import parse_package_path
-from minecode.mappers.golang import build_golang_package
+from minecode.miners.golang import GodocIndexVisitor
+from minecode.miners.golang import GodocSearchVisitor
+from minecode.miners.golang import parse_package_path
+from minecode.miners.golang import build_golang_package
 from minecode.tests import FIXTURES_REGEN
 
 

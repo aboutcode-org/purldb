@@ -21,8 +21,8 @@ from github.Repository import Repository
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.visitors import github
+from minecode import miners
+from minecode.miners import github
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -147,8 +147,7 @@ class GithubMapperTest(JsonBasedTesting):
     def test_github_repo_mapper1(self):
         with open(self.get_test_loc('github/calendar_builder.json')) as json_metadata:
             metadata = json_metadata.read()
-        packages = mappers.github.build_github_packages(
-            metadata, 'https://api.github.com/repos/collectiveidea/calendar_builder')
+        packages = miners.github.build_github_packages(metadata, 'https://api.github.com/repos/collectiveidea/calendar_builder')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'github/mapper_calendar_builder_expected.json')
@@ -158,8 +157,7 @@ class GithubMapperTest(JsonBasedTesting):
     def test_github_repo_mapper2(self):
         with open(self.get_test_loc('github/mojombo_grit_from_visitor_4mapper_input.json')) as json_metadata:
             metadata = json_metadata.read()
-        packages = mappers.github.build_github_packages(
-            metadata, 'https://api.github.com/repos/mojombo/grit')
+        packages = miners.github.build_github_packages(metadata, 'https://api.github.com/repos/mojombo/grit')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'github/mojombo_grit_result_mapper_expected.json')

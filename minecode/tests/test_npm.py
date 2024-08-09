@@ -20,12 +20,12 @@ from packagedcode.npm import NpmPackageJsonHandler
 from packageurl import PackageURL
 
 import packagedb
-from minecode import mappers
+from minecode import miners
 from minecode import route
 from minecode.models import ResourceURI
 from minecode.utils_test import JsonBasedTesting
 from minecode.utils_test import mocked_requests_get
-from minecode.visitors import npm
+from minecode.miners import npm
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -69,7 +69,7 @@ class TestNPMMapper(JsonBasedTesting):
     def test_build_packages(self):
         with open(self.get_test_loc('npm/0flux.json')) as npm_metadata:
             metadata = json.load(npm_metadata)
-        packages = mappers.npm.build_packages(metadata)
+        packages = miners.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/0flux_npm_expected.json')
         self.check_expected_results(
@@ -78,7 +78,7 @@ class TestNPMMapper(JsonBasedTesting):
     def test_build_package2(self):
         with open(self.get_test_loc('npm/2112.json')) as npm_metadata:
             metadata = json.load(npm_metadata)
-        packages = mappers.npm.build_packages(metadata)
+        packages = miners.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/npm_2112_expected.json')
         self.check_expected_results(
@@ -87,7 +87,7 @@ class TestNPMMapper(JsonBasedTesting):
     def test_build_package3(self):
         with open(self.get_test_loc('npm/microdata.json')) as npm_metadata:
             metadata = json.load(npm_metadata)
-        packages = mappers.npm.build_packages(metadata)
+        packages = miners.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/microdata-node_expected.json')
         self.check_expected_results(
@@ -103,7 +103,7 @@ class TestNPMMapper(JsonBasedTesting):
         assert len(uris_list) == 1001
         # Randomly pick a record from 0-1000
         metadata = uris_list[29].data
-        packages = mappers.npm.build_packages(json.loads(metadata))
+        packages = miners.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/29_record_expected.json')
         self.check_expected_results(
@@ -111,7 +111,7 @@ class TestNPMMapper(JsonBasedTesting):
 
         # Randomly pick a record from 0-1000
         metadata = uris_list[554].data
-        packages = mappers.npm.build_packages(json.loads(metadata))
+        packages = miners.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/554_record_expected.json')
         self.check_expected_results(
@@ -128,7 +128,7 @@ class TestNPMMapper(JsonBasedTesting):
         # Pickup the first one,  since it's the one which is the problem package "angular2-autosize"
         # The zero element in json is the url for next visitor use, and data is empty and the url is
         metadata = uris_list[1].data
-        packages = mappers.npm.build_packages(json.loads(metadata))
+        packages = miners.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/expected_ticket_439.json')
         self.check_expected_results(
@@ -145,7 +145,7 @@ class TestNPMMapper(JsonBasedTesting):
         # Pickup the index one instead of zero,  since it's the one which is the problem package "npm-research", https://registry.npmjs.org/npm-research,
         # The zero element in json is the url for next visitor use only
         metadata = uris_list[1].data
-        packages = mappers.npm.build_packages(json.loads(metadata))
+        packages = miners.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/expected_ticket_440.json')
         self.check_expected_results(
@@ -154,13 +154,13 @@ class TestNPMMapper(JsonBasedTesting):
     def test_npm_mapper(self):
         test_uri = 'https://registry.npmjs.org/angular-compare-validator'
         router = route.Router()
-        router.append(test_uri, mappers.npm.NpmPackageMapper)
+        router.append(test_uri, miners.npm.NpmPackageMapper)
         test_loc = self.get_test_loc('npm/mapper/index.json')
         with open(test_loc, 'rb') as test_file:
             test_data = test_file.read().decode('utf-8')
 
         test_res_uri = ResourceURI(uri=test_uri, data=test_data)
-        packages = mappers.npm.NpmPackageMapper(test_uri, test_res_uri)
+        packages = miners.npm.NpmPackageMapper(test_uri, test_res_uri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/mapper/index.expected.json')
         self.check_expected_results(
@@ -169,7 +169,7 @@ class TestNPMMapper(JsonBasedTesting):
     def test_build_package_for_jsonp_filter(self):
         with open(self.get_test_loc('npm/jsonp-filter.json')) as npm_metadata:
             metadata = json.load(npm_metadata)
-        packages = mappers.npm.build_packages(metadata)
+        packages = miners.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/jsonp-filter-expected.json')
         self.check_expected_results(

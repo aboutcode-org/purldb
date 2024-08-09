@@ -16,8 +16,8 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.visitors import haxe
+from minecode import miners
+from minecode.miners import haxe
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -60,7 +60,7 @@ class HaxeMappersTest(JsonBasedTesting):
     def test_build_project_package_json(self):
         with open(self.get_test_loc('haxe/project_package.json')) as projectsjson_meta:
             metadata = json.load(projectsjson_meta)
-        packages = mappers.haxe.build_packages_with_json(metadata)
+        packages = miners.haxe.build_packages_with_json(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('haxe/project_package.json-expected')
         self.check_expected_results(

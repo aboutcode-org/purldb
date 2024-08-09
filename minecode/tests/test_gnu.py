@@ -14,7 +14,7 @@ from django.test import TestCase
 from mock import patch
 
 from minecode.utils_test import JsonBasedTesting
-from minecode.visitors import gnu
+from minecode.miners import gnu
 from packagedb.models import Package
 
 

@@ -23,9 +23,9 @@ from django.utils.encoding import smart_str
 import reppy.cache
 
 # UnusedImport here!
-# But importing the mappers and visitors module triggers routes registration
-from minecode import mappers  # NOQA
-from minecode import visitors  # NOQA
+# But importing the miners module triggers routes registration
+
+from minecode import miners  # NOQA
 from minecode import visit_router
 
 from minecode.management.commands import get_error_message

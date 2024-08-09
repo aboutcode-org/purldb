@@ -16,10 +16,10 @@ from django.test import TestCase as DjangoTestCase
 from mock import Mock
 from mock import patch
 
-from minecode import mappers
+from minecode import miners
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
-from minecode.visitors import apache
+from minecode.miners import apache
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -133,7 +133,7 @@ class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
 
     def test_build_package_from_download(self):
-        package = mappers.apache.build_package_from_download(
+        package = miners.apache.build_package_from_download(
             'http://archive.apache.org/dist/groovy/2.4.6/sources/apache-groovy-src-2.4.6.zip',
             'pkg:apache/groovy@2.4.6')
         expected_loc = self.get_test_loc('apache/map-groovy_expected.json')
@@ -141,7 +141,7 @@ class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
             package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_from_download2(self):
-        package = mappers.apache.build_package_from_download(
+        package = miners.apache.build_package_from_download(
             'http://archive.apache.org/dist/turbine/maven/turbine-webapp-2.3.3-1.0.0-source-release.zip',
             'pkg:apache/turbine-webapp@2.3.3-1.0.0-source-release')
         expected_loc = self.get_test_loc(
@@ -153,9 +153,8 @@ class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
 
     def test_build_packages_from_projects_json(self):
         with open(self.get_test_loc('apache/projects.json')) as projectsjson_meta:
-            metadata = json.load(
-                projectsjson_meta, object_pairs_hook=OrderedDict)
-        packages = mappers.apache.build_packages_from_projects(metadata)
+            metadata = json.load(projectsjson_meta, object_pairs_hook=OrderedDict)
+        packages = miners.apache.build_packages_from_projects(metadata)
         packages = [p.to_dict() for p in packages]
 
         expected_loc = self.get_test_loc('apache/projects_expected.json')
@@ -165,8 +164,7 @@ class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
     def test_build_packages_from_one_podling_json(self):
         with open(self.get_test_loc('apache/podling_amaterasu.json')) as podlings_meta:
             metadata = json.load(podlings_meta, object_pairs_hook=OrderedDict)
-        packages = mappers.apache.build_packages_from_podlings(
-            metadata, purl='pkg:apache-podlings/amaterasu')
+        packages = miners.apache.build_packages_from_podlings(metadata, purl='pkg:apache-podlings/amaterasu')
         packages = [p.to_dict() for p in packages]
 
         expected_loc = self.get_test_loc(

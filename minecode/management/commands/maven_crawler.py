@@ -10,7 +10,7 @@
 import logging
 import sys
 
-from minecode.visitors.maven import crawl_maven_repo_from_root
+from minecode.miners.maven import crawl_maven_repo_from_root
 from minecode.management.commands import VerboseCommand
 
 

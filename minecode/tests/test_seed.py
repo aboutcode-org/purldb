@@ -248,6 +248,6 @@ class SeedTest(MiningTestCase):
     def test_get_configured_seeders(self):
         seeders = seed.get_configured_seeders()
         expected = [
-            'minecode.visitors.maven.MavenSeed',
+            'minecode.miners.maven.MavenSeed',
         ]
         assert sorted(expected) == sorted(seeders)

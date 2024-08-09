@@ -16,8 +16,7 @@ from django.core.management.base import BaseCommand
 
 # NOTE: mappers and visitors are Unused Import here: But importing the mappers
 # module triggers routes registration
-from minecode import mappers  # NOQA
-from minecode import visitors  # NOQA
+from minecode import miners  # NOQA
 from minecode import map_router
 from minecode import visit_router
 from minecode.models import ResourceURI

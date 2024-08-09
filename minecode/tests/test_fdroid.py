@@ -15,9 +15,8 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode.mappers import fdroid as fdroid_mapper
-from minecode.visitors import fdroid as fdroid_visitor
-from minecode.visitors import URI
+from minecode.miners import fdroid
+from minecode.miners import URI
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -29,7 +28,7 @@ class TestFdroidVisitor(JsonBasedTesting):
         test_loc = self.get_test_loc('fdroid/index-v2.json')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
-            uris, data, _errors = fdroid_visitor.FdroidIndexVisitor(uri)
+            uris, data, _errors = fdroid.FdroidIndexVisitor(uri)
 
         # this is a non-persistent visitor, lets make sure we dont return any data
         assert not data
@@ -49,7 +48,7 @@ class TestFdroidMapper(JsonBasedTesting):
         packages = []
 
         for purl, data in purl_data:
-            pkgs = list(fdroid_mapper.build_packages(purl, data))
+            pkgs = list(fdroid.build_packages(purl, data))
             packages.extend(pkgs)
 
         packages = [p.to_dict() for p in packages]

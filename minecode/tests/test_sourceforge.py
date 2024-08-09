@@ -15,8 +15,8 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.visitors import sourceforge
+from minecode import miners
+from minecode.miners import sourceforge
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -78,7 +78,7 @@ class SourceforgeMappersTest(JsonBasedTesting):
     def test_build_packages(self):
         with open(self.get_test_loc('sourceforge/odanur.json')) as sourceforge_metadata:
             metadata = json.load(sourceforge_metadata)
-        packages = mappers.sourceforge.build_packages_from_metafile(metadata)
+        packages = miners.sourceforge.build_packages_from_metafile(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'sourceforge/mapper_odanur_expected.json')
@@ -88,7 +88,7 @@ class SourceforgeMappersTest(JsonBasedTesting):
     def test_build_packages2(self):
         with open(self.get_test_loc('sourceforge/openstunts.json')) as sourceforge_metadata:
             metadata = json.load(sourceforge_metadata)
-        packages = mappers.sourceforge.build_packages_from_metafile(metadata)
+        packages = miners.sourceforge.build_packages_from_metafile(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'sourceforge/mapper_openstunts_expected.json')
@@ -98,7 +98,7 @@ class SourceforgeMappersTest(JsonBasedTesting):
     def test_build_packages3(self):
         with open(self.get_test_loc('sourceforge/monoql.json')) as sourceforge_metadata:
             metadata = json.load(sourceforge_metadata)
-        packages = mappers.sourceforge.build_packages_from_metafile(metadata)
+        packages = miners.sourceforge.build_packages_from_metafile(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'sourceforge/mapper_omonoql_expected.json')
@@ -108,7 +108,7 @@ class SourceforgeMappersTest(JsonBasedTesting):
     def test_build_packages4(self):
         with open(self.get_test_loc('sourceforge/niftyphp.json')) as sourceforge_metadata:
             metadata = json.load(sourceforge_metadata)
-        packages = mappers.sourceforge.build_packages_from_metafile(metadata)
+        packages = miners.sourceforge.build_packages_from_metafile(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'sourceforge/mapper_niftyphp_expected.json')

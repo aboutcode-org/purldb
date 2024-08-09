@@ -16,8 +16,8 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.visitors import packagist
+from minecode import miners
+from minecode.miners import packagist
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -40,7 +40,7 @@ class TestPackagistMap(JsonBasedTesting):
     def test_build_packages(self):
         with open(self.get_test_loc('packagist/00f100_cakephp-opauth.json')) as packagist_package:
             metadata = json.load(packagist_package)
-        packages = mappers.packagist.build_packages_with_json(metadata)
+        packages = miners.packagist.build_packages_with_json(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'packagist/packaglist_00f100_cakephp-opauth_expected.json')

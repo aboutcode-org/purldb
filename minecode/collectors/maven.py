@@ -1,5 +1,5 @@
 from dateutil.parser import parse as dateutil_parse
-from minecode.visitors.maven import get_artifacts, is_worthy_artifact, build_url_and_filename
+from minecode.miners.maven import get_artifacts, is_worthy_artifact, build_url_and_filename
 from packagedcode.maven import get_urls
 from minecode.utils import fetch_http, get_temp_file
 from packagedcode.models import PackageData

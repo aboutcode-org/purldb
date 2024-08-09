@@ -16,10 +16,10 @@ from mock import patch
 from minecode.utils_test import mocked_requests_get
 from minecode.utils_test import JsonBasedTesting
 
-from minecode import mappers
-from minecode.mappers.cran import get_download_url
+from minecode import miners
+from minecode.miners.cran import get_download_url
 from minecode.models import ResourceURI
-from minecode.visitors import cran
+from minecode.miners import cran
 from minecode.tests import FIXTURES_REGEN
 
 
@@ -44,8 +44,7 @@ class CranMapperTest(JsonBasedTesting, DjangoTestCase):
             uri='https://cloud.r-project.org/web/packages/ANN2/index.html')
         with open(self.get_test_loc('cran/CRAN_Package_ANN2.html')) as html_metadata:
             metadata = html_metadata.read()
-        packages = mappers.cran.build_packages_from_html(
-            metadata, 'https://cloud.r-project.org/web/packages/ANN2/index.html', 'pkg:cran/ANN2')
+        packages = miners.cran.build_packages_from_html(metadata, 'https://cloud.r-project.org/web/packages/ANN2/index.html', 'pkg:cran/ANN2')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cran/mapper_ANN2_expected.json')
         self.check_expected_results(
@@ -56,8 +55,7 @@ class CranMapperTest(JsonBasedTesting, DjangoTestCase):
             uri='https://cloud.r-project.org/web/packages/abe/index.html')
         with open(self.get_test_loc('cran/CRAN_Package_abe.html')) as html_metadata:
             metadata = html_metadata.read()
-        packages = mappers.cran.build_packages_from_html(
-            metadata, 'https://cloud.r-project.org/web/packages/abe/index.htm', 'pkg:cran/abe')
+        packages = miners.cran.build_packages_from_html(metadata, 'https://cloud.r-project.org/web/packages/abe/index.htm', 'pkg:cran/abe')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cran/mapper_abe_expected.json')
         self.check_expected_results(
