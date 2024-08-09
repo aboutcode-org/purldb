@@ -4,7 +4,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -32,25 +32,30 @@ class GoogleNewAPIVisitorsTest(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = googlecode.GooglecodeArchiveVisitor(uri)
-        expected_loc = self.get_test_loc('googlecode/expected_google-code-archive.txt.zip.json')
+        expected_loc = self.get_test_loc(
+            'googlecode/expected_google-code-archive.txt.zip.json')
         self.check_expected_uris(uris, expected_loc)
 
     def test_visit_google_projectpages(self):
         uri = 'https://code.google.com/archive/search?q=domain:code.google.com'
-        test_loc = self.get_test_loc('googlecode/v2_api/GoogleCodeProjectHosting.htm')
+        test_loc = self.get_test_loc(
+            'googlecode/v2_api/GoogleCodeProjectHosting.htm')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = googlecode.GoogleDownloadsPageJsonVisitor(uri)
-        expected_loc = self.get_test_loc('googlecode/v2_api/expected_googleprojects.json')
+        expected_loc = self.get_test_loc(
+            'googlecode/v2_api/expected_googleprojects.json')
         self.check_expected_uris(uris, expected_loc)
 
     def test_visit_google_projectpage2(self):
         uri = 'https://code.google.com/archive/search?q=domain:code.google.com&page=2'
-        test_loc = self.get_test_loc('googlecode/v2_api/GoogleCodeProjectHosting_page2.htm')
+        test_loc = self.get_test_loc(
+            'googlecode/v2_api/GoogleCodeProjectHosting_page2.htm')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = googlecode.GoogleDownloadsPageJsonVisitor(uri)
-        expected_loc = self.get_test_loc('googlecode/v2_api/expected_googleproject_page2.json')
+        expected_loc = self.get_test_loc(
+            'googlecode/v2_api/expected_googleproject_page2.json')
         self.check_expected_uris(uris, expected_loc)
 
     def test_visit_google_download_json(self):
@@ -59,7 +64,8 @@ class GoogleNewAPIVisitorsTest(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = googlecode.GoogleProjectJsonVisitor(uri)
-        self.assertEqual([URI(uri=u'https://storage.googleapis.com/google-code-archive/v2/code.google.com/hg4j/downloads-page-1.json')], list(uris))
+        self.assertEqual(
+            [URI(uri=u'https://storage.googleapis.com/google-code-archive/v2/code.google.com/hg4j/downloads-page-1.json')], list(uris))
 
     def test_visit_google_json(self):
         uri = 'https://storage.googleapis.com/google-code-archive/v2/code.google.com/hg4j/downloads-page-1.json'
@@ -67,16 +73,19 @@ class GoogleNewAPIVisitorsTest(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = googlecode.GoogleDownloadsPageJsonVisitor(uri)
-        expected_loc = self.get_test_loc('googlecode/v2_api/hg4j_download_expected.json')
+        expected_loc = self.get_test_loc(
+            'googlecode/v2_api/hg4j_download_expected.json')
         self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_googleapi_project_json(self):
         uri = 'https://www.googleapis.com/storage/v1/b/google-code-archive/o/v2%2Fapache-extras.org%2F124799961-qian%2Fproject.json?alt=media'
-        test_loc = self.get_test_loc('googlecode/v2_apache-extras.org_124799961-qian_project.json')
+        test_loc = self.get_test_loc(
+            'googlecode/v2_apache-extras.org_124799961-qian_project.json')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = googlecode.GoogleDownloadsPageJsonVisitor(uri)
-        expected_loc = self.get_test_loc('googlecode/expected_v2_apache-extras.org_124799961-qian_project2.json')
+        expected_loc = self.get_test_loc(
+            'googlecode/expected_v2_apache-extras.org_124799961-qian_project2.json')
         self.check_expected_results(data, expected_loc)
 
 
@@ -86,15 +95,21 @@ class GoogleNewAPIMappersTest(JsonBasedTesting):
     def test_build_packages_from_v2_projects_json(self):
         with open(self.get_test_loc('googlecode/v2_api/project.json')) as projectsjson_meta:
             metadata = json.load(projectsjson_meta)
-        packages = mappers.googlecode.build_packages_from_projectsjson_v2(metadata)
+        packages = mappers.googlecode.build_packages_from_projectsjson_v2(
+            metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc('googlecode/v2_api/package_expected_project.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'googlecode/v2_api/package_expected_project.json')
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_from_v1_projects_json(self):
         with open(self.get_test_loc('googlecode/v2_apache-extras.org_124799961-qian_project.json')) as projectsjson_meta:
             metadata = json.load(projectsjson_meta)
-        packages = mappers.googlecode.build_packages_from_projectsjson_v1(metadata)
+        packages = mappers.googlecode.build_packages_from_projectsjson_v1(
+            metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc('googlecode/mapper_expected_v2_apache-extras.org_124799961-qian_project.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'googlecode/mapper_expected_v2_apache-extras.org_124799961-qian_project.json')
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)

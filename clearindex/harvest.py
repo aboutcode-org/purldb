@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -85,7 +85,8 @@ def create_from_harvest(package_scan={}, files_data=[], cditem_path=''):
         'source_packages',
     )
 
-    package_data = {field_name: package_scan.get(field_name) for field_name in fields}
+    package_data = {field_name: package_scan.get(
+        field_name) for field_name in fields}
 
     stringify_null_purl_fields(package_data)
 
@@ -98,7 +99,8 @@ def create_from_harvest(package_scan={}, files_data=[], cditem_path=''):
 
     download_url = package_data.get('download_url')
     if not download_url:
-        logger.error('Null `download_url` value for `package_data`: {}'.format(package_data))
+        logger.error(
+            'Null `download_url` value for `package_data`: {}'.format(package_data))
         return
 
     # This ugly block is needed until https://github.com/nexB/packagedb/issues/14
@@ -119,9 +121,11 @@ def create_from_harvest(package_scan={}, files_data=[], cditem_path=''):
             new_package_data=package_data,
             replace=False
         )
-        package.append_to_history('Updated package from CDitem harvest: {}'.format(cditem_path))
+        package.append_to_history(
+            'Updated package from CDitem harvest: {}'.format(cditem_path))
 
-        logger.info('Merged package data from scancode harvest: {}'.format(package))
+        logger.info(
+            'Merged package data from scancode harvest: {}'.format(package))
 
     except Package.DoesNotExist:
         try:
@@ -132,15 +136,19 @@ def create_from_harvest(package_scan={}, files_data=[], cditem_path=''):
                 new_package_data=package_data,
                 replace=False
             )
-            package.append_to_history('Updated package from CDitem harvest: {}'.format(cditem_path))
+            package.append_to_history(
+                'Updated package from CDitem harvest: {}'.format(cditem_path))
 
-            logger.info('Merged package data from scancode harvest: {}'.format(package))
+            logger.info(
+                'Merged package data from scancode harvest: {}'.format(package))
 
         except Package.DoesNotExist:
             package = Package.objects.create(**package_data)
-            package.append_to_history('Created package from CDitem harvest: {}'.format(cditem_path))
+            package.append_to_history(
+                'Created package from CDitem harvest: {}'.format(cditem_path))
 
-            logger.info('Created package from scancode harvest: {}'.format(package))
+            logger.info(
+                'Created package from scancode harvest: {}'.format(package))
 
     # Now, add resources to the Package.
     for f in files_data:
@@ -179,7 +187,8 @@ def map_scancode_harvest(cditem):
         try:
             harvest_data = cditem.data
         except ValueError:
-            err_msg = 'CDitemError: empty content field for CDitem: {}'.format(cditem.path)
+            err_msg = 'CDitemError: empty content field for CDitem: {}'.format(
+                cditem.path)
             logger.error(err_msg)
 
             cditem.map_error = err_msg
@@ -198,7 +207,8 @@ def map_scancode_harvest(cditem):
             download_url = package_scan.get('download_url')
             if not download_url:
                 purl = package_scan.get('purl')
-                err_msg = 'CDitemError: empty download_url for package: {}'.format(purl)
+                err_msg = 'CDitemError: empty download_url for package: {}'.format(
+                    purl)
                 logger.error(err_msg)
 
                 cditem.map_error = err_msg

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 #
-# http://nexb.com and https://github.com/nexB/scancode.io
+# http://nexb.com and https://github.com/aboutcode-org/scancode.io
 # The ScanCode.io software is licensed under the Apache License version 2.0.
 # Data generated with ScanCode.io is provided as-is without warranties.
 # ScanCode is a trademark of nexB Inc.
@@ -18,7 +18,7 @@
 # for any legal advice.
 #
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
-# Visit https://github.com/nexB/scancode.io for support and download.
+# Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
 from scanpipe.pipelines.load_inventory import LoadInventory
 from scanpipe.pipelines.scan_codebase import ScanCodebase
@@ -113,7 +113,8 @@ class Matching(ScanCodebase, LoadInventory):
 
     def match_purldb_resources_post_process(self):
         """Choose the best package for PurlDB matched resources."""
-        matching.match_purldb_resources_post_process(self.project, logger=self.log)
+        matching.match_purldb_resources_post_process(
+            self.project, logger=self.log)
 
     def remove_packages_without_resources(self):
         """Remove packages without any resources."""

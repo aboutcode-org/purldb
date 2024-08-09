@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -36,23 +36,27 @@ api_router.register('package_sets', PackageSetViewSet)
 api_router.register('resources', ResourceViewSet)
 api_router.register('validate', PurlValidateViewSet, 'validate')
 api_router.register('collect', CollectViewSet, 'collect')
-api_router.register('watch',PackageWatchViewSet)
+api_router.register('watch', PackageWatchViewSet)
 api_router.register('scan_queue', ScannableURIViewSet)
-api_router.register('approximate_directory_content_index', ApproximateDirectoryContentIndexViewSet)
-api_router.register('approximate_directory_structure_index', ApproximateDirectoryStructureIndexViewSet)
+api_router.register('approximate_directory_content_index',
+                    ApproximateDirectoryContentIndexViewSet)
+api_router.register('approximate_directory_structure_index',
+                    ApproximateDirectoryStructureIndexViewSet)
 
 
 urlpatterns = [
     path(
         'robots.txt',
-        TemplateView.as_view(template_name='robots.txt', content_type='text/plain'),
+        TemplateView.as_view(template_name='robots.txt',
+                             content_type='text/plain'),
     ),
     path('api/', include((api_router.urls, 'api'))),
     path('api/to_purl/', include((api_to_purl_router.urls, 'api_to'))),
     path('api/from_purl/', include((api_from_purl_router.urls, 'api_from'))),
     path("", RedirectView.as_view(url="api/")),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'),
+         name='swagger-ui'),
     path(
         'api/scan_queue/index_package_scan/<str:key>/', index_package_scan, name='index_package_scan'
     ),

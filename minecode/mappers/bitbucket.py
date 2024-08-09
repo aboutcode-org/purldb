@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -36,7 +36,8 @@ class BitbucketDownloadMapper(Mapper):
         """
         Yield Package built from resource_uri record for a single package version.
         """
-        downloads_data = json.loads(resource_uri.data, object_pairs_hook=OrderedDict)
+        downloads_data = json.loads(
+            resource_uri.data, object_pairs_hook=OrderedDict)
         for download_data in downloads_data.get('values', []):
             for package in build_bitbucket_download_packages(
                     download_data, resource_uri.package_url):
@@ -75,6 +76,7 @@ class BitbucketIndexMapper(Mapper):
     """
     Build a Package for a repo.
     """
+
     def get_packages(self, uri, resource_uri):
         repo = json.loads(resource_uri.data, object_pairs_hook=OrderedDict)
         if not repo:
@@ -88,6 +90,7 @@ class BitbucketRepoMapper(Mapper):
     """
     Build a Package for a repo.
     """
+
     def get_packages(self, uri, resource_uri):
         repo = json.loads(resource_uri.data, object_pairs_hook=OrderedDict)
         if not repo:
@@ -104,7 +107,8 @@ def build_bitbucket_repo_package(repo_data, purl):
     scm_protocol = repo_data.get('scm')
     if not scm_protocol:
         scm_protocol = 'git'
-    bb_url = '{protocol}+https://bitbucket.org/{namespace}/{name}'.format(protocol=scm_protocol, **purl.to_dict())
+    bb_url = '{protocol}+https://bitbucket.org/{namespace}/{name}'.format(
+        protocol=scm_protocol, **purl.to_dict())
 
     owner = repo_data.get('owner')
     owner_party = scan_models.Party(

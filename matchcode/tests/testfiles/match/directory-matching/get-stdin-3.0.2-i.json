@@ -4,13 +4,11 @@
       "tool_name": "scancode-toolkit",
       "tool_version": "31.2.2",
       "options": {
-        "input": [
-          "package/"
-        ],
+        "input": ["package/"],
         "--info": true,
         "--json-pp": "get-stdin-3.0.2-i.json"
       },
-      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/nexB/scancode-toolkit/ for support and download.",
+      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/aboutcode-org/scancode-toolkit/ for support and download.",
       "start_timestamp": "2022-12-02T012403.760550",
       "end_timestamp": "2022-12-02T012403.875478",
       "output_format_version": "2.0.0",

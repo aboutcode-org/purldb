@@ -1,1172 +1,1172 @@
 {
-  "type":"maven",
-  "namespace":"org.apache.pulsar",
-  "name":"pulsar",
-  "version":"2.5.1",
-  "qualifiers":"",
-  "subpath":"",
-  "package_content":null,
-  "primary_language":"Java",
-  "description":"Pulsar\nPulsar is a distributed pub-sub messaging platform with a very\nflexible messaging model and an intuitive client API.",
-  "release_date":null,
-  "parties":[
+  "type": "maven",
+  "namespace": "org.apache.pulsar",
+  "name": "pulsar",
+  "version": "2.5.1",
+  "qualifiers": "",
+  "subpath": "",
+  "package_content": null,
+  "primary_language": "Java",
+  "description": "Pulsar\nPulsar is a distributed pub-sub messaging platform with a very\nflexible messaging model and an intuitive client API.",
+  "release_date": null,
+  "parties": [
     {
-      "type":"person",
-      "role":"developer",
-      "name":null,
-      "email":null,
-      "url":null
+      "type": "person",
+      "role": "developer",
+      "name": null,
+      "email": null,
+      "url": null
     },
     {
-      "type":"organization",
-      "role":"owner",
-      "name":"Apache Software Foundation",
-      "email":null,
-      "url":"http://www.apache.org/"
+      "type": "organization",
+      "role": "owner",
+      "name": "Apache Software Foundation",
+      "email": null,
+      "url": "http://www.apache.org/"
     }
   ],
-  "keywords":[],
-  "homepage_url":"https://github.com/apache/pulsar",
-  "download_url":"https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/pulsar-2.5.1.jar",
-  "size":null,
-  "md5":null,
-  "sha1":null,
-  "sha256":null,
-  "sha512":null,
-  "bug_tracking_url":"https://github.com/apache/pulsar/issues",
-  "code_view_url":"https://github.com/apache/pulsar",
-  "vcs_url":"git+https://github.com/apache/pulsar.git",
-  "copyright":null,
-  "holder":null,
-  "declared_license_expression":"apache-2.0",
-  "declared_license_expression_spdx":"Apache-2.0",
-  "license_detections":[
+  "keywords": [],
+  "homepage_url": "https://github.com/apache/pulsar",
+  "download_url": "https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/pulsar-2.5.1.jar",
+  "size": null,
+  "md5": null,
+  "sha1": null,
+  "sha256": null,
+  "sha512": null,
+  "bug_tracking_url": "https://github.com/apache/pulsar/issues",
+  "code_view_url": "https://github.com/apache/pulsar",
+  "vcs_url": "git+https://github.com/apache/pulsar.git",
+  "copyright": null,
+  "holder": null,
+  "declared_license_expression": "apache-2.0",
+  "declared_license_expression_spdx": "Apache-2.0",
+  "license_detections": [
     {
-      "license_expression":"apache-2.0",
-      "license_expression_spdx":"Apache-2.0",
-      "matches":[
+      "license_expression": "apache-2.0",
+      "license_expression_spdx": "Apache-2.0",
+      "matches": [
         {
-          "license_expression":"apache-2.0",
-          "spdx_license_expression":"Apache-2.0",
-          "from_file":null,
-          "start_line":1,
-          "end_line":1,
-          "matcher":"2-aho",
-          "score":100.0,
-          "matched_length":5,
-          "match_coverage":100.0,
-          "rule_relevance":100,
-          "rule_identifier":"apache-2.0_48.RULE",
-          "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_48.RULE",
-          "matched_text":"- name: Apache License, Version 2.0"
+          "license_expression": "apache-2.0",
+          "spdx_license_expression": "Apache-2.0",
+          "from_file": null,
+          "start_line": 1,
+          "end_line": 1,
+          "matcher": "2-aho",
+          "score": 100.0,
+          "matched_length": 5,
+          "match_coverage": 100.0,
+          "rule_relevance": 100,
+          "rule_identifier": "apache-2.0_48.RULE",
+          "rule_url": "https://github.com/aboutcode-org/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_48.RULE",
+          "matched_text": "- name: Apache License, Version 2.0"
         },
         {
-          "license_expression":"apache-2.0",
-          "spdx_license_expression":"Apache-2.0",
-          "from_file":null,
-          "start_line":2,
-          "end_line":2,
-          "matcher":"2-aho",
-          "score":100.0,
-          "matched_length":9,
-          "match_coverage":100.0,
-          "rule_relevance":100,
-          "rule_identifier":"apache-2.0_216.RULE",
-          "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_216.RULE",
-          "matched_text":"  url: https://www.apache.org/licenses/LICENSE-2.0.txt"
+          "license_expression": "apache-2.0",
+          "spdx_license_expression": "Apache-2.0",
+          "from_file": null,
+          "start_line": 2,
+          "end_line": 2,
+          "matcher": "2-aho",
+          "score": 100.0,
+          "matched_length": 9,
+          "match_coverage": 100.0,
+          "rule_relevance": 100,
+          "rule_identifier": "apache-2.0_216.RULE",
+          "rule_url": "https://github.com/aboutcode-org/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_216.RULE",
+          "matched_text": "  url: https://www.apache.org/licenses/LICENSE-2.0.txt"
         }
       ],
-      "identifier":"apache_2_0-4571b303-7bd2-686b-401c-e805e9f4700e"
+      "identifier": "apache_2_0-4571b303-7bd2-686b-401c-e805e9f4700e"
     }
   ],
-  "other_license_expression":null,
-  "other_license_expression_spdx":null,
-  "other_license_detections":[],
-  "extracted_license_statement":"- name: Apache License, Version 2.0\n  url: https://www.apache.org/licenses/LICENSE-2.0.txt\n",
-  "notice_text":null,
-  "source_packages":[
+  "other_license_expression": null,
+  "other_license_expression_spdx": null,
+  "other_license_detections": [],
+  "extracted_license_statement": "- name: Apache License, Version 2.0\n  url: https://www.apache.org/licenses/LICENSE-2.0.txt\n",
+  "notice_text": null,
+  "source_packages": [
     "pkg:maven/org.apache.pulsar/pulsar@2.5.1?classifier=sources"
   ],
-  "extra_data":{},
-  "dependencies":[
-    {
-      "purl":"pkg:maven/com.amazonaws/aws-java-sdk-bom@1.11.297",
-      "extracted_requirement":"1.11.297",
-      "scope":"import",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.pulsar/buildtools@2.5.1",
-      "extracted_requirement":"2.5.1",
-      "scope":"test",
-      "is_runtime":false,
-      "is_optional":true,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.testng/testng@6.14.3",
-      "extracted_requirement":"6.14.3",
-      "scope":"test",
-      "is_runtime":false,
-      "is_optional":true,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.mockito/mockito-core@2.28.2",
-      "extracted_requirement":"2.28.2",
-      "scope":"test",
-      "is_runtime":false,
-      "is_optional":true,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.powermock/powermock-api-mockito2@2.0.2",
-      "extracted_requirement":"2.0.2",
-      "scope":"test",
-      "is_runtime":false,
-      "is_optional":true,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.powermock/powermock-module-testng@2.0.2",
-      "extracted_requirement":"2.0.2",
-      "scope":"test",
-      "is_runtime":false,
-      "is_optional":true,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.assertj/assertj-core@3.11.1",
-      "extracted_requirement":"3.11.1",
-      "scope":"test",
-      "is_runtime":false,
-      "is_optional":true,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.bookkeeper/bookkeeper-server@4.10.0",
-      "extracted_requirement":"4.10.0",
-      "scope":"test",
-      "is_runtime":false,
-      "is_optional":true,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.projectlombok/lombok@1.18.10",
-      "extracted_requirement":"1.18.10",
-      "scope":"provided",
-      "is_runtime":true,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.asynchttpclient/async-http-client@2.7.0",
-      "extracted_requirement":"2.7.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.httpcomponents/httpclient@4.5.5",
-      "extracted_requirement":"4.5.5",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.testng/testng@6.14.3",
-      "extracted_requirement":"6.14.3",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.mockito/mockito-core@2.28.2",
-      "extracted_requirement":"2.28.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.powermock/powermock-api-mockito2@2.0.2",
-      "extracted_requirement":"2.0.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.powermock/powermock-module-testng@2.0.2",
-      "extracted_requirement":"2.0.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.zookeeper/zookeeper@3.5.7",
-      "extracted_requirement":"3.5.7",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.bookkeeper/bookkeeper-server@4.10.0",
-      "extracted_requirement":"4.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.bookkeeper/bookkeeper-common-allocator@4.10.0",
-      "extracted_requirement":"4.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.bookkeeper/bookkeeper-tools-framework@4.10.0",
-      "extracted_requirement":"4.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.reflections/reflections@0.9.11",
-      "extracted_requirement":"0.9.11",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.bookkeeper/stream-storage-java-client@4.10.0",
-      "extracted_requirement":"4.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.bookkeeper/stream-storage-server@4.10.0",
-      "extracted_requirement":"4.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.bookkeeper/bookkeeper-common@4.10.0",
-      "extracted_requirement":"4.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.bookkeeper.stats/bookkeeper-stats-api@4.10.0",
-      "extracted_requirement":"4.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.bookkeeper.stats/datasketches-metrics-provider@4.10.0",
-      "extracted_requirement":"4.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.bookkeeper.stats/prometheus-metrics-provider@4.10.0",
-      "extracted_requirement":"4.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.rocksdb/rocksdbjni@5.13.3",
-      "extracted_requirement":"5.13.3",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.eclipse.jetty/jetty-server@9.4.20.v20190813",
-      "extracted_requirement":"9.4.20.v20190813",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.eclipse.jetty/jetty-servlet@9.4.20.v20190813",
-      "extracted_requirement":"9.4.20.v20190813",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.eclipse.jetty/jetty-servlets@9.4.20.v20190813",
-      "extracted_requirement":"9.4.20.v20190813",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.eclipse.jetty/jetty-proxy@9.4.20.v20190813",
-      "extracted_requirement":"9.4.20.v20190813",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.eclipse.jetty/jetty-util@9.4.20.v20190813",
-      "extracted_requirement":"9.4.20.v20190813",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-buffer@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-common@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-transport@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-handler@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-codec@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-transport-native-epoll@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-transport-native-unix-common@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-codec-http2@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-codec-http@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-handler-proxy@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-codec-socks@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-resolver@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-resolver-dns@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-codec-dns@4.1.45.Final",
-      "extracted_requirement":"4.1.45.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty-tcnative-boringssl-static@2.0.26.Final",
-      "extracted_requirement":"2.0.26.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.netty/netty@3.10.6.Final",
-      "extracted_requirement":"3.10.6.Final",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.beust/jcommander@1.48",
-      "extracted_requirement":"1.48",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.google.guava/guava@25.1-jre",
-      "extracted_requirement":"25.1-jre",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.commons/commons-lang3@3.4",
-      "extracted_requirement":"3.4",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.commons/commons-compress@1.19",
-      "extracted_requirement":"1.19",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/commons-configuration/commons-configuration@1.10",
-      "extracted_requirement":"1.10",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/commons-io/commons-io@2.5",
-      "extracted_requirement":"2.5",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.lz4/lz4-java@1.5.0",
-      "extracted_requirement":"1.5.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.github.luben/zstd-jni@1.3.7-3",
-      "extracted_requirement":"1.3.7-3",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.xerial.snappy/snappy-java@1.1.1.3",
-      "extracted_requirement":"1.1.1.3",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.slf4j/slf4j-api@1.7.25",
-      "extracted_requirement":"1.7.25",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.slf4j/slf4j-simple@1.7.25",
-      "extracted_requirement":"1.7.25",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.slf4j/jul-to-slf4j@1.7.25",
-      "extracted_requirement":"1.7.25",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.slf4j/jcl-over-slf4j@1.7.25",
-      "extracted_requirement":"1.7.25",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.logging.log4j/log4j-api@2.10.0",
-      "extracted_requirement":"2.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.logging.log4j/log4j-core@2.10.0",
-      "extracted_requirement":"2.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.logging.log4j/log4j-slf4j-impl@2.10.0",
-      "extracted_requirement":"2.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.logging.log4j/log4j-web@2.10.0",
-      "extracted_requirement":"2.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/commons-codec/commons-codec@1.10",
-      "extracted_requirement":"1.10",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.glassfish.jersey.core/jersey-server@2.27",
-      "extracted_requirement":"2.27",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.glassfish.jersey.core/jersey-client@2.27",
-      "extracted_requirement":"2.27",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.glassfish.jersey.inject/jersey-hk2@2.27",
-      "extracted_requirement":"2.27",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.glassfish.jersey.containers/jersey-container-servlet-core@2.27",
-      "extracted_requirement":"2.27",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.glassfish.jersey.containers/jersey-container-servlet@2.27",
-      "extracted_requirement":"2.27",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/javax.ws.rs/javax.ws.rs-api@2.1",
-      "extracted_requirement":"2.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.glassfish.jersey.media/jersey-media-json-jackson@2.27",
-      "extracted_requirement":"2.27",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.glassfish.jersey.media/jersey-media-multipart@2.27",
-      "extracted_requirement":"2.27",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/net.java.dev.jna/jna@4.2.0",
-      "extracted_requirement":"4.2.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider@2.10.1",
-      "extracted_requirement":"2.10.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.fasterxml.jackson.core/jackson-core@2.10.1",
-      "extracted_requirement":"2.10.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.10.1",
-      "extracted_requirement":"2.10.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.fasterxml.jackson.module/jackson-module-jaxb-annotations@2.10.1",
-      "extracted_requirement":"2.10.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.10.1",
-      "extracted_requirement":"2.10.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.fasterxml.jackson.jaxrs/jackson-jaxrs-base@2.10.1",
-      "extracted_requirement":"2.10.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-joda@2.10.1",
-      "extracted_requirement":"2.10.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml@2.10.1",
-      "extracted_requirement":"2.10.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.fasterxml.jackson.module/jackson-module-jsonSchema@2.10.1",
-      "extracted_requirement":"2.10.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/log4j/log4j@1.2.17",
-      "extracted_requirement":"1.2.17",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.hdrhistogram/HdrHistogram@2.1.9",
-      "extracted_requirement":"2.1.9",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.swagger/swagger-core@1.5.21",
-      "extracted_requirement":"1.5.21",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.swagger/swagger-annotations@1.5.21",
-      "extracted_requirement":"1.5.21",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/javax.servlet/javax.servlet-api@3.1.0",
-      "extracted_requirement":"3.1.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.github.ben-manes.caffeine/caffeine@2.6.2",
-      "extracted_requirement":"2.6.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.yahoo.athenz/athenz-zts-java-client@1.8.38",
-      "extracted_requirement":"1.8.38",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.yahoo.athenz/athenz-zpe-java-client@1.8.38",
-      "extracted_requirement":"1.8.38",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.github.zafarkhaja/java-semver@0.9.0",
-      "extracted_requirement":"0.9.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.prometheus/simpleclient@0.5.0",
-      "extracted_requirement":"0.5.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.prometheus/simpleclient_hotspot@0.5.0",
-      "extracted_requirement":"0.5.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.prometheus/simpleclient_log4j2@0.5.0",
-      "extracted_requirement":"0.5.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.prometheus/simpleclient_servlet@0.5.0",
-      "extracted_requirement":"0.5.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.prometheus/simpleclient_jetty@0.5.0",
-      "extracted_requirement":"0.5.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.prometheus/simpleclient_caffeine@0.5.0",
-      "extracted_requirement":"0.5.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.carrotsearch/hppc@0.7.3",
-      "extracted_requirement":"0.7.3",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.spark/spark-streaming_2.10@2.1.0",
-      "extracted_requirement":"2.1.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.jsonwebtoken/jjwt-api@0.10.5",
-      "extracted_requirement":"0.10.5",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.jsonwebtoken/jjwt-impl@0.10.5",
-      "extracted_requirement":"0.10.5",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.jsonwebtoken/jjwt-jackson@0.10.5",
-      "extracted_requirement":"0.10.5",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.aspectj/aspectjrt@1.9.2",
-      "extracted_requirement":"1.9.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.aspectj/aspectjweaver@1.9.2",
-      "extracted_requirement":"1.9.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/net.jodah/typetools@0.5.0",
-      "extracted_requirement":"0.5.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.grpc/grpc-all@1.18.0",
-      "extracted_requirement":"1.18.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.grpc/grpc-core@1.18.0",
-      "extracted_requirement":"1.18.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.grpc/grpc-protobuf-lite@1.18.0",
-      "extracted_requirement":"1.18.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.google.code.gson/gson@2.8.2",
-      "extracted_requirement":"2.8.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.yahoo.datasketches/sketches-core@0.8.3",
-      "extracted_requirement":"0.8.3",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.amazonaws/aws-java-sdk-bom@1.11.297",
-      "extracted_requirement":"1.11.297",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.distributedlog/distributedlog-core@4.10.0",
-      "extracted_requirement":"4.10.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/commons-collections/commons-collections@3.2.2",
-      "extracted_requirement":"3.2.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.apache.jclouds/jclouds-allblobstore@2.1.1",
-      "extracted_requirement":"2.1.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.lmax/disruptor@3.4.0",
-      "extracted_requirement":"3.4.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.testcontainers/testcontainers@1.11.2",
-      "extracted_requirement":"1.11.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.testcontainers/kafka@1.11.2",
-      "extracted_requirement":"1.11.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.testcontainers/mysql@1.11.2",
-      "extracted_requirement":"1.11.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.arquillian.cube/arquillian-cube-docker",
-      "extracted_requirement":"${arquillian-cube.version}",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":false
-    },
-    {
-      "purl":"pkg:maven/org.jboss.arquillian.junit/arquillian-junit-standalone",
-      "extracted_requirement":"${arquillian-junit.version}",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":false
-    },
-    {
-      "purl":"pkg:maven/com.datastax.cassandra/cassandra-driver-core@3.6.0",
-      "extracted_requirement":"3.6.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.assertj/assertj-core@3.11.1",
-      "extracted_requirement":"3.11.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.projectlombok/lombok@1.18.10",
-      "extracted_requirement":"1.18.10",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/javax.annotation/javax.annotation-api@1.2",
-      "extracted_requirement":"1.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/javax.xml.bind/jaxb-api@2.3.1",
-      "extracted_requirement":"2.3.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/com.sun.activation/javax.activation@1.2.0",
-      "extracted_requirement":"1.2.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.opencensus/opencensus-api@0.18.0",
-      "extracted_requirement":"0.18.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/io.opencensus/opencensus-contrib-grpc-metrics@0.18.0",
-      "extracted_requirement":"0.18.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.elasticsearch.client/elasticsearch-rest-high-level-client@6.3.2",
-      "extracted_requirement":"6.3.2",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/joda-time/joda-time@2.10.1",
-      "extracted_requirement":"2.10.1",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/org.javassist/javassist@3.25.0-GA",
-      "extracted_requirement":"3.25.0-GA",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
-    },
-    {
-      "purl":"pkg:maven/net.jcip/jcip-annotations@1.0",
-      "extracted_requirement":"1.0",
-      "scope":"dependencymanagement",
-      "is_runtime":false,
-      "is_optional":false,
-      "is_resolved":true
+  "extra_data": {},
+  "dependencies": [
+    {
+      "purl": "pkg:maven/com.amazonaws/aws-java-sdk-bom@1.11.297",
+      "extracted_requirement": "1.11.297",
+      "scope": "import",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.pulsar/buildtools@2.5.1",
+      "extracted_requirement": "2.5.1",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.testng/testng@6.14.3",
+      "extracted_requirement": "6.14.3",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.mockito/mockito-core@2.28.2",
+      "extracted_requirement": "2.28.2",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.powermock/powermock-api-mockito2@2.0.2",
+      "extracted_requirement": "2.0.2",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.powermock/powermock-module-testng@2.0.2",
+      "extracted_requirement": "2.0.2",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.assertj/assertj-core@3.11.1",
+      "extracted_requirement": "3.11.1",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.bookkeeper/bookkeeper-server@4.10.0",
+      "extracted_requirement": "4.10.0",
+      "scope": "test",
+      "is_runtime": false,
+      "is_optional": true,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.projectlombok/lombok@1.18.10",
+      "extracted_requirement": "1.18.10",
+      "scope": "provided",
+      "is_runtime": true,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.asynchttpclient/async-http-client@2.7.0",
+      "extracted_requirement": "2.7.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.httpcomponents/httpclient@4.5.5",
+      "extracted_requirement": "4.5.5",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.testng/testng@6.14.3",
+      "extracted_requirement": "6.14.3",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.mockito/mockito-core@2.28.2",
+      "extracted_requirement": "2.28.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.powermock/powermock-api-mockito2@2.0.2",
+      "extracted_requirement": "2.0.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.powermock/powermock-module-testng@2.0.2",
+      "extracted_requirement": "2.0.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.zookeeper/zookeeper@3.5.7",
+      "extracted_requirement": "3.5.7",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.bookkeeper/bookkeeper-server@4.10.0",
+      "extracted_requirement": "4.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.bookkeeper/bookkeeper-common-allocator@4.10.0",
+      "extracted_requirement": "4.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.bookkeeper/bookkeeper-tools-framework@4.10.0",
+      "extracted_requirement": "4.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.reflections/reflections@0.9.11",
+      "extracted_requirement": "0.9.11",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.bookkeeper/stream-storage-java-client@4.10.0",
+      "extracted_requirement": "4.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.bookkeeper/stream-storage-server@4.10.0",
+      "extracted_requirement": "4.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.bookkeeper/bookkeeper-common@4.10.0",
+      "extracted_requirement": "4.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.bookkeeper.stats/bookkeeper-stats-api@4.10.0",
+      "extracted_requirement": "4.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.bookkeeper.stats/datasketches-metrics-provider@4.10.0",
+      "extracted_requirement": "4.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.bookkeeper.stats/prometheus-metrics-provider@4.10.0",
+      "extracted_requirement": "4.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.rocksdb/rocksdbjni@5.13.3",
+      "extracted_requirement": "5.13.3",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.eclipse.jetty/jetty-server@9.4.20.v20190813",
+      "extracted_requirement": "9.4.20.v20190813",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.eclipse.jetty/jetty-servlet@9.4.20.v20190813",
+      "extracted_requirement": "9.4.20.v20190813",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.eclipse.jetty/jetty-servlets@9.4.20.v20190813",
+      "extracted_requirement": "9.4.20.v20190813",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.eclipse.jetty/jetty-proxy@9.4.20.v20190813",
+      "extracted_requirement": "9.4.20.v20190813",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.eclipse.jetty/jetty-util@9.4.20.v20190813",
+      "extracted_requirement": "9.4.20.v20190813",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-buffer@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-common@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-transport@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-handler@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-codec@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-transport-native-epoll@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-transport-native-unix-common@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-codec-http2@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-codec-http@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-handler-proxy@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-codec-socks@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-resolver@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-resolver-dns@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-codec-dns@4.1.45.Final",
+      "extracted_requirement": "4.1.45.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty-tcnative-boringssl-static@2.0.26.Final",
+      "extracted_requirement": "2.0.26.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.netty/netty@3.10.6.Final",
+      "extracted_requirement": "3.10.6.Final",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.beust/jcommander@1.48",
+      "extracted_requirement": "1.48",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.google.guava/guava@25.1-jre",
+      "extracted_requirement": "25.1-jre",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.commons/commons-lang3@3.4",
+      "extracted_requirement": "3.4",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.commons/commons-compress@1.19",
+      "extracted_requirement": "1.19",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/commons-configuration/commons-configuration@1.10",
+      "extracted_requirement": "1.10",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/commons-io/commons-io@2.5",
+      "extracted_requirement": "2.5",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.lz4/lz4-java@1.5.0",
+      "extracted_requirement": "1.5.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.github.luben/zstd-jni@1.3.7-3",
+      "extracted_requirement": "1.3.7-3",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.xerial.snappy/snappy-java@1.1.1.3",
+      "extracted_requirement": "1.1.1.3",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.slf4j/slf4j-api@1.7.25",
+      "extracted_requirement": "1.7.25",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.slf4j/slf4j-simple@1.7.25",
+      "extracted_requirement": "1.7.25",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.slf4j/jul-to-slf4j@1.7.25",
+      "extracted_requirement": "1.7.25",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.slf4j/jcl-over-slf4j@1.7.25",
+      "extracted_requirement": "1.7.25",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.logging.log4j/log4j-api@2.10.0",
+      "extracted_requirement": "2.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.logging.log4j/log4j-core@2.10.0",
+      "extracted_requirement": "2.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.logging.log4j/log4j-slf4j-impl@2.10.0",
+      "extracted_requirement": "2.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.logging.log4j/log4j-web@2.10.0",
+      "extracted_requirement": "2.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/commons-codec/commons-codec@1.10",
+      "extracted_requirement": "1.10",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.glassfish.jersey.core/jersey-server@2.27",
+      "extracted_requirement": "2.27",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.glassfish.jersey.core/jersey-client@2.27",
+      "extracted_requirement": "2.27",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.glassfish.jersey.inject/jersey-hk2@2.27",
+      "extracted_requirement": "2.27",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.glassfish.jersey.containers/jersey-container-servlet-core@2.27",
+      "extracted_requirement": "2.27",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.glassfish.jersey.containers/jersey-container-servlet@2.27",
+      "extracted_requirement": "2.27",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/javax.ws.rs/javax.ws.rs-api@2.1",
+      "extracted_requirement": "2.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.glassfish.jersey.media/jersey-media-json-jackson@2.27",
+      "extracted_requirement": "2.27",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.glassfish.jersey.media/jersey-media-multipart@2.27",
+      "extracted_requirement": "2.27",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/net.java.dev.jna/jna@4.2.0",
+      "extracted_requirement": "4.2.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider@2.10.1",
+      "extracted_requirement": "2.10.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.10.1",
+      "extracted_requirement": "2.10.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.10.1",
+      "extracted_requirement": "2.10.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.module/jackson-module-jaxb-annotations@2.10.1",
+      "extracted_requirement": "2.10.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.10.1",
+      "extracted_requirement": "2.10.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.jaxrs/jackson-jaxrs-base@2.10.1",
+      "extracted_requirement": "2.10.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-joda@2.10.1",
+      "extracted_requirement": "2.10.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml@2.10.1",
+      "extracted_requirement": "2.10.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.fasterxml.jackson.module/jackson-module-jsonSchema@2.10.1",
+      "extracted_requirement": "2.10.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/log4j/log4j@1.2.17",
+      "extracted_requirement": "1.2.17",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.hdrhistogram/HdrHistogram@2.1.9",
+      "extracted_requirement": "2.1.9",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.swagger/swagger-core@1.5.21",
+      "extracted_requirement": "1.5.21",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.swagger/swagger-annotations@1.5.21",
+      "extracted_requirement": "1.5.21",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/javax.servlet/javax.servlet-api@3.1.0",
+      "extracted_requirement": "3.1.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.github.ben-manes.caffeine/caffeine@2.6.2",
+      "extracted_requirement": "2.6.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.yahoo.athenz/athenz-zts-java-client@1.8.38",
+      "extracted_requirement": "1.8.38",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.yahoo.athenz/athenz-zpe-java-client@1.8.38",
+      "extracted_requirement": "1.8.38",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.github.zafarkhaja/java-semver@0.9.0",
+      "extracted_requirement": "0.9.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.prometheus/simpleclient@0.5.0",
+      "extracted_requirement": "0.5.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.prometheus/simpleclient_hotspot@0.5.0",
+      "extracted_requirement": "0.5.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.prometheus/simpleclient_log4j2@0.5.0",
+      "extracted_requirement": "0.5.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.prometheus/simpleclient_servlet@0.5.0",
+      "extracted_requirement": "0.5.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.prometheus/simpleclient_jetty@0.5.0",
+      "extracted_requirement": "0.5.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.prometheus/simpleclient_caffeine@0.5.0",
+      "extracted_requirement": "0.5.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.carrotsearch/hppc@0.7.3",
+      "extracted_requirement": "0.7.3",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.spark/spark-streaming_2.10@2.1.0",
+      "extracted_requirement": "2.1.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-api@0.10.5",
+      "extracted_requirement": "0.10.5",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-impl@0.10.5",
+      "extracted_requirement": "0.10.5",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-jackson@0.10.5",
+      "extracted_requirement": "0.10.5",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.aspectj/aspectjrt@1.9.2",
+      "extracted_requirement": "1.9.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.aspectj/aspectjweaver@1.9.2",
+      "extracted_requirement": "1.9.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/net.jodah/typetools@0.5.0",
+      "extracted_requirement": "0.5.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.grpc/grpc-all@1.18.0",
+      "extracted_requirement": "1.18.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.grpc/grpc-core@1.18.0",
+      "extracted_requirement": "1.18.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.grpc/grpc-protobuf-lite@1.18.0",
+      "extracted_requirement": "1.18.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.google.code.gson/gson@2.8.2",
+      "extracted_requirement": "2.8.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.yahoo.datasketches/sketches-core@0.8.3",
+      "extracted_requirement": "0.8.3",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.amazonaws/aws-java-sdk-bom@1.11.297",
+      "extracted_requirement": "1.11.297",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.distributedlog/distributedlog-core@4.10.0",
+      "extracted_requirement": "4.10.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/commons-collections/commons-collections@3.2.2",
+      "extracted_requirement": "3.2.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.apache.jclouds/jclouds-allblobstore@2.1.1",
+      "extracted_requirement": "2.1.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.lmax/disruptor@3.4.0",
+      "extracted_requirement": "3.4.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.testcontainers/testcontainers@1.11.2",
+      "extracted_requirement": "1.11.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.testcontainers/kafka@1.11.2",
+      "extracted_requirement": "1.11.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.testcontainers/mysql@1.11.2",
+      "extracted_requirement": "1.11.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.arquillian.cube/arquillian-cube-docker",
+      "extracted_requirement": "${arquillian-cube.version}",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": false
+    },
+    {
+      "purl": "pkg:maven/org.jboss.arquillian.junit/arquillian-junit-standalone",
+      "extracted_requirement": "${arquillian-junit.version}",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": false
+    },
+    {
+      "purl": "pkg:maven/com.datastax.cassandra/cassandra-driver-core@3.6.0",
+      "extracted_requirement": "3.6.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.assertj/assertj-core@3.11.1",
+      "extracted_requirement": "3.11.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.projectlombok/lombok@1.18.10",
+      "extracted_requirement": "1.18.10",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/javax.annotation/javax.annotation-api@1.2",
+      "extracted_requirement": "1.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/javax.xml.bind/jaxb-api@2.3.1",
+      "extracted_requirement": "2.3.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/com.sun.activation/javax.activation@1.2.0",
+      "extracted_requirement": "1.2.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.opencensus/opencensus-api@0.18.0",
+      "extracted_requirement": "0.18.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/io.opencensus/opencensus-contrib-grpc-metrics@0.18.0",
+      "extracted_requirement": "0.18.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.elasticsearch.client/elasticsearch-rest-high-level-client@6.3.2",
+      "extracted_requirement": "6.3.2",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/joda-time/joda-time@2.10.1",
+      "extracted_requirement": "2.10.1",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/org.javassist/javassist@3.25.0-GA",
+      "extracted_requirement": "3.25.0-GA",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
+    },
+    {
+      "purl": "pkg:maven/net.jcip/jcip-annotations@1.0",
+      "extracted_requirement": "1.0",
+      "scope": "dependencymanagement",
+      "is_runtime": false,
+      "is_optional": false,
+      "is_resolved": true
     }
   ],
-  "package_uid":"pkg:maven/org.apache.pulsar/pulsar@2.5.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-  "datasource_id":"maven_pom",
-  "purl":"pkg:maven/org.apache.pulsar/pulsar@2.5.1",
-  "repository_homepage_url":"https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/",
-  "repository_download_url":"https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/pulsar-2.5.1.jar",
-  "api_data_url":"https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/pulsar-2.5.1.pom",
-  "file_references":[]
+  "package_uid": "pkg:maven/org.apache.pulsar/pulsar@2.5.1?uuid=fixed-uid-done-for-testing-5642512d1758",
+  "datasource_id": "maven_pom",
+  "purl": "pkg:maven/org.apache.pulsar/pulsar@2.5.1",
+  "repository_homepage_url": "https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/",
+  "repository_download_url": "https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/pulsar-2.5.1.jar",
+  "api_data_url": "https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/pulsar-2.5.1.pom",
+  "file_references": []
 }

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -31,10 +31,14 @@ class RunVisitWithCounterTest(MiningTestCase):
 
         def mock_visitor(uri):
             return [URI(uri='http://test-counter-0-max-uris-3-multi-uri1.com', package_url='pkg:npm/foobar@12.3.1'),
-                    URI(uri='http://test-counter-0-max-uris-3-multi-uri2.com', package_url='pkg:npm/foobar@12.3.2'),
-                    URI(uri='http://test-counter-0-max-uris-3-multi-uri3.com', package_url='pkg:npm/foobar@12.3.3'),
-                    URI(uri='http://test-counter-0-max-uris-3-multi-uri4.com', package_url='pkg:npm/foobar@12.3.4'),
-                    URI(uri='http://test-counter-0-max-uris-3-multi-uri5.com', package_url='pkg:npm/foobar@12.3.5'),
+                    URI(uri='http://test-counter-0-max-uris-3-multi-uri2.com',
+                        package_url='pkg:npm/foobar@12.3.2'),
+                    URI(uri='http://test-counter-0-max-uris-3-multi-uri3.com',
+                        package_url='pkg:npm/foobar@12.3.3'),
+                    URI(uri='http://test-counter-0-max-uris-3-multi-uri4.com',
+                        package_url='pkg:npm/foobar@12.3.4'),
+                    URI(uri='http://test-counter-0-max-uris-3-multi-uri5.com',
+                        package_url='pkg:npm/foobar@12.3.5'),
                     URI(uri='http://test-counter-0-max-uris-3-multi-uri6.com', package_url='pkg:npm/foobar@12.3.5')], None, None
 
         router = Router()
@@ -459,7 +463,8 @@ class RunVisitTest(MiningTestCase):
         self.assertEqual(1, visited.count())
 
     def test_visit_uri_with_no_route_defined_does_not_visit(self):
-        resource_uri = ResourceURI.objects.create(uri='http://undefined-route.com')
+        resource_uri = ResourceURI.objects.create(
+            uri='http://undefined-route.com')
         resource_uri.is_visitable = True
         resource_uri.save()
 
@@ -479,7 +484,8 @@ class RunVisitTest(MiningTestCase):
     def test_visit_uri_always_inserts_new_uri(self):
         # test proper
         visit_uri(self.resource_uri, _visit_router=self.router2)
-        visited = ResourceURI.objects.filter(uri='http://test.com').order_by('-package_url')
+        visited = ResourceURI.objects.filter(
+            uri='http://test.com').order_by('-package_url')
         expected = [
             URI(uri=u'http://test.com', data=u"{'some': 'data'}"),
             URI(uri=u'http://test.com', package_url='pkg:npm/foobar@12.3.1'),

@@ -4,13 +4,11 @@
       "tool_name": "scancode-toolkit",
       "tool_version": "3.1.1.post554.72bef69a3",
       "options": {
-        "input": [
-          "/home/jono/Desktop/test"
-        ],
+        "input": ["/home/jono/Desktop/test"],
         "--info": true,
         "--json-pp": "/home/jono/Desktop/match-test.json"
       },
-      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/nexB/scancode-toolkit/ for support and download.",
+      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/aboutcode-org/scancode-toolkit/ for support and download.",
       "start_timestamp": "2020-06-19T230151.719124",
       "end_timestamp": "2020-06-19T230151.855330",
       "duration": 0.13622713088989258,

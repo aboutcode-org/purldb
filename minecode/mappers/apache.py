@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -93,7 +93,8 @@ def build_packages_from_projects(metadata, uri=None):
         for maintainer in maintainers:
             mailbox = maintainer.get('mbox', '').replace('mailto:', '')
             name = maintainer.get('name')
-            party = scan_models.Party(type=scan_models.party_person, name=name, role='maintainer', email=mailbox)
+            party = scan_models.Party(
+                type=scan_models.party_person, name=name, role='maintainer', email=mailbox)
             parties = common_data.get('parties')
             if not parties:
                 common_data['parties'] = []
@@ -117,7 +118,8 @@ def build_packages_from_projects(metadata, uri=None):
                 keywords.append(kw)
         common_data['keywords'] = keywords
 
-        common_data['primary_language'] = project_meta.get('programming-language')
+        common_data['primary_language'] = project_meta.get(
+            'programming-language')
 
         # FIXME: these cannot be related to actual packages with a download URL
         releases = project_meta.get('release')
@@ -128,7 +130,8 @@ def build_packages_from_projects(metadata, uri=None):
                 if release.get('created') and len(release.get('created')) == 10:
                     rdata['release_date'] = parse_date(release.get('created'))
                 else:
-                    logger.warn('Unexpected date format for release date: {}'.format(release.get('created')))
+                    logger.warn('Unexpected date format for release date: {}'.format(
+                        release.get('created')))
                 package = scan_models.Package.from_package_data(
                     package_data=rdata,
                     datafile_path=uri,
@@ -136,9 +139,9 @@ def build_packages_from_projects(metadata, uri=None):
                 yield package
         else:
             package = scan_models.Package.from_package_data(
-                    package_data=common_data,
-                    datafile_path=uri,
-                )
+                package_data=common_data,
+                datafile_path=uri,
+            )
             yield package
 
 
@@ -186,12 +189,14 @@ class ApacheDownloadMapper(Mapper):
             # 1. create a regular package from the URL stripped from its checksum extension
             archive_uri, _, checksum_type = uri.rpartition('.')
 
-            pack = build_package_from_download(archive_uri, resource_uri.package_url)
+            pack = build_package_from_download(
+                archive_uri, resource_uri.package_url)
             # 2. collect the checksum inside the file
             # and attach it to the package
             checksum_value = resource_uri.data.strip()
             if checksum_value:
-                checksum_field_name = 'download_{checksum_type}'.format(**locals())
+                checksum_field_name = 'download_{checksum_type}'.format(
+                    **locals())
                 setattr(pack, checksum_field_name, checksum_value)
                 yield pack
         else:

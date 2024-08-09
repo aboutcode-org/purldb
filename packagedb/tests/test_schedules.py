@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -39,5 +39,7 @@ def test_get_next_execution():
     with patch("datetime.datetime", wraps=datetime.datetime) as dt:
         dt.now.return_value = time_now
 
-        assert expected1 == get_next_execution(watch_interval_days1, last_watch_date1)
-        assert expected2 == get_next_execution(watch_interval_days2, last_watch_date2)
+        assert expected1 == get_next_execution(
+            watch_interval_days1, last_watch_date1)
+        assert expected2 == get_next_execution(
+            watch_interval_days2, last_watch_date2)

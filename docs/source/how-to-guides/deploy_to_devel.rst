@@ -130,7 +130,7 @@ Install PurlDB and matchcode.io from a clone of the PurlDB git repository
 
 Then run these commands::
 
-    git clone https://github.com/nexB/purldb
+    git clone https://github.com/aboutcode-org/purldb
     cd purldb
     make dev
     make envfile
@@ -189,8 +189,8 @@ Then run a d2d subcommand
 3. run the d2d for a pair of URLs::
 
     purlcli d2d \
-    --purl https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/from-data.zip \
-    --purl https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/to-data.zip \
+    --purl https://github.com/aboutcode-org/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/from-data.zip \
+    --purl https://github.com/aboutcode-org/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/to-data.zip \
     --output - \
     --purldb-api-url  http://127.0.0.1:8001/api/ \
     --matchcode-api-url http://127.0.0.1:8002/api/
@@ -286,9 +286,9 @@ Make a request to the local URL for the /api/d2d endpoint and enter Input URLs
 
 For example these two:
 
-- https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/from-data.zip#from
+- https://github.com/aboutcode-org/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/from-data.zip#from
 
-- https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/to-data.zip#to
+- https://github.com/aboutcode-org/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/to-data.zip#to
 
 
 .. image:: images/d2d-images/da526ca9-6a8c-4883-951e-26e92597ce0d.png
@@ -352,9 +352,9 @@ To test the feature:
 
 - Add these two `Download URLs` exactly as below using these zip examples:
 
-  - source:  https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/from-data.zip#from
+  - source:  https://github.com/aboutcode-org/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/from-data.zip#from
 
-  - binary: https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/to-data.zip#to
+  - binary: https://github.com/aboutcode-org/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/to-data.zip#to
 
 - Select and execute the "map_deploy_to_develop" pipeline, and then click on the "Elf" option
 
@@ -390,9 +390,9 @@ To test the feature:
 
 - Add these two `Download URLs` exactly as below using these webpacked examples:
 
-  - source:  https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-go/from-data.zip#from
+  - source:  https://github.com/aboutcode-org/scancode.io/raw/main/scanpipe/tests/data/d2d-go/from-data.zip#from
 
-  - binary: https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-go/to-data.zip#to
+  - binary: https://github.com/aboutcode-org/scancode.io/raw/main/scanpipe/tests/data/d2d-go/to-data.zip#to
 
 - Select and execute the "map_deploy_to_develop" pipeline, clicking on the Go option
 

@@ -3,7 +3,7 @@
 # ScanCode is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://github.com/aboutcode-org/scancode-toolkit for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -18,7 +18,8 @@ from packageurl import PackageURL
 from scancode_config import scancode_root_dir
 
 
-REGEN_TEST_FIXTURES = os.environ.get("PURLDB_TOOLKIT_TEST_FIXTURES_REGEN", False)
+REGEN_TEST_FIXTURES = os.environ.get(
+    "PURLDB_TOOLKIT_TEST_FIXTURES_REGEN", False)
 
 
 def run_scan_plain(
@@ -125,14 +126,16 @@ def run_scan_click(
 
     runner = CliRunner()
 
-    result = runner.invoke(cli.scancode, options, catch_exceptions=False, env=env)
+    result = runner.invoke(cli.scancode, options,
+                           catch_exceptions=False, env=env)
     if retry and result.exit_code != expected_rc:
         if on_windows:
             # wait and rerun in verbose mode to get more in the output
             time.sleep(1)
         if "--verbose" not in options:
             options.append("--verbose")
-        result = runner.invoke(cli.scancode, options, catch_exceptions=False, env=env)
+        result = runner.invoke(cli.scancode, options,
+                               catch_exceptions=False, env=env)
 
     if result.exit_code != expected_rc:
         output = result.output
@@ -196,7 +199,8 @@ def check_json_scan(
     If `remove_uuid` is True, removes UUID from Package and Dependency.
     and if also `regen` is True then regenerate expected file with old UUIDs present already.
     """
-    results = load_json_result(location=result_file, remove_file_date=remove_file_date)
+    results = load_json_result(
+        location=result_file, remove_file_date=remove_file_date)
     if remove_uuid:
         results = remove_uuid_from_scan(results)
 
@@ -242,7 +246,8 @@ def remove_uuid_from_scan(results):
 
         for_package_uid = dependency.get("for_package_uid")
         if for_package_uid:
-            dependency["for_package_uid"] = purl_with_fake_uuid(for_package_uid)
+            dependency["for_package_uid"] = purl_with_fake_uuid(
+                for_package_uid)
 
     for resource in results.get("files") or []:
         for_packages = []

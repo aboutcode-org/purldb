@@ -3,7 +3,7 @@
 # VulnerableCode is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/vulnerablecode for support or download.
+# See https://github.com/aboutcode-org/vulnerablecode for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -165,7 +165,8 @@ class LaunchpadVersionAPI(VersionAPI):
 
             for release in entries:
                 source_package_version = release.get("source_package_version")
-                source_package_version = remove_debian_default_epoch(version=source_package_version)
+                source_package_version = remove_debian_default_epoch(
+                    version=source_package_version)
                 date_published = release.get("date_published")
                 release_date = None
                 if date_published and type(date_published) is str:
@@ -202,7 +203,7 @@ class PypiVersionAPI(VersionAPI):
             release_date = self.get_latest_date(download_items)
             yield PackageVersion(
                 value=version,
-                # 
+                #
                 release_date=release_date,
             )
 
@@ -276,7 +277,8 @@ class RubyVersionAPI(VersionAPI):
             if release.get("number"):
                 yield PackageVersion(value=release["number"], release_date=release_date)
             else:
-                logger.error(f"Failed to parse release {release} from url: {url}")
+                logger.error(
+                    f"Failed to parse release {release} from url: {url}")
 
 
 class NpmVersionAPI(VersionAPI):
@@ -295,7 +297,8 @@ class NpmVersionAPI(VersionAPI):
             return
         for version in response.get("versions") or []:
             release_date = response.get("time", {}).get(version)
-            release_date = release_date and dateparser.parse(release_date) or None
+            release_date = release_date and dateparser.parse(
+                release_date) or None
             yield PackageVersion(value=version, release_date=release_date)
 
 
@@ -481,12 +484,13 @@ class GoproxyVersionAPI(VersionAPI):
         """
         # some advisories contains this prefix in package name, e.g. https://github.com/advisories/GHSA-7h6j-2268-fhcm
         if url_path.startswith("https://pkg.go.dev/"):
-            url_path = url_path[len("https://pkg.go.dev/") :]
+            url_path = url_path[len("https://pkg.go.dev/"):]
         parsed_url_path = urlparse(url_path)
         path = parsed_url_path.path
         parts = path.split("/")
         if len(parts) < 3:
-            logger.error(f"Not a valid Go URL path {url_path} trim_go_url_path")
+            logger.error(
+                f"Not a valid Go URL path {url_path} trim_go_url_path")
             return
         else:
             joined_path = "/".join(parts[:3])
@@ -534,7 +538,8 @@ class GoproxyVersionAPI(VersionAPI):
                     f"Error while fetching version info for {escaped_pkg}/{escaped_ver} "
                     f"from goproxy:\n{traceback.format_exc()}"
                 )
-            release_date = parse_datetime(response.get("Time", "")) if response else None
+            release_date = parse_datetime(
+                response.get("Time", "")) if response else None
 
         return PackageVersion(value=value, release_date=release_date)
 
@@ -560,7 +565,8 @@ class GoproxyVersionAPI(VersionAPI):
             break
 
         if response is None or escaped_pkg is None or trimmed_pkg is None:
-            logger.error(f"Error while fetching versions for {pkg!r} from goproxy")
+            logger.error(
+                f"Error while fetching versions for {pkg!r} from goproxy")
             return
         self.module_name_by_package_name[pkg] = trimmed_pkg
         for version_info in response.split("\n"):
@@ -584,7 +590,8 @@ VERSION_API_CLASSES = {
 }
 
 
-VERSION_API_CLASSES_BY_PACKAGE_TYPE = {cls.package_type: cls for cls in VERSION_API_CLASSES}
+VERSION_API_CLASSES_BY_PACKAGE_TYPE = {
+    cls.package_type: cls for cls in VERSION_API_CLASSES}
 
 
 VERSION_API_CLASS_BY_PACKAGE_NAMESPACE = {
@@ -617,7 +624,8 @@ def get_api_package_name(purl: PackageURL) -> str:
 
 def get_version_fetcher(package_url):
     if package_url.type == "deb":
-        versions_fetcher: VersionAPI = VERSION_API_CLASS_BY_PACKAGE_NAMESPACE[package_url.namespace]
+        versions_fetcher: VersionAPI = VERSION_API_CLASS_BY_PACKAGE_NAMESPACE[
+            package_url.namespace]
     else:
         versions_fetcher: VersionAPI = VERSION_API_CLASSES_BY_PACKAGE_TYPE[package_url.type]
     return versions_fetcher

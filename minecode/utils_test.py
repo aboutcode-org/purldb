@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -222,7 +222,8 @@ class JsonBasedTestingMixin(TestCase):
                 ):
                     value = purl_with_fake_uuid(value)
                 if key == "for_packages":
-                    value = [purl_with_fake_uuid(package_uid) for package_uid in value]
+                    value = [purl_with_fake_uuid(package_uid)
+                             for package_uid in value]
                 if key in fields_to_remove:
                     continue
                 normalized_data[key] = value
@@ -287,7 +288,8 @@ class JsonBasedTesting(JsonBasedTestingMixin, FileBasedTesting):
                 ):
                     value = purl_with_fake_uuid(value)
                 if key == "for_packages":
-                    value = [purl_with_fake_uuid(package_uid) for package_uid in value]
+                    value = [purl_with_fake_uuid(package_uid)
+                             for package_uid in value]
                 if key in fields_to_remove:
                     continue
                 normalized_data[key] = value
@@ -345,7 +347,8 @@ class JsonBasedTesting(JsonBasedTestingMixin, FileBasedTesting):
                 # FIXME: we should ONLY have strings there!!!
                 uri_dict['date'] = str(uri_dict.get('date'))
             results.append(uri_dict)
-        self.check_expected_results(results=results, expected_loc=expected_loc, regen=regen)
+        self.check_expected_results(
+            results=results, expected_loc=expected_loc, regen=regen)
 
 
 def model_to_dict(instance, fields=None, exclude=None):

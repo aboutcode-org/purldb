@@ -4,15 +4,13 @@
       "tool_name": "scancode-toolkit",
       "tool_version": "3.2.2rc3",
       "options": {
-        "input": [
-          "/tmp/test/package/"
-        ],
+        "input": ["/tmp/test/package/"],
         "--info": true,
         "--json-pp": "/tmp/test/plugin-request-2.4.1-ip.json",
         "--package": true,
         "--processes": "2"
       },
-      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/nexB/scancode-toolkit/ for support and download.",
+      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/aboutcode-org/scancode-toolkit/ for support and download.",
       "start_timestamp": "2020-11-07T201424.972560",
       "end_timestamp": "2020-11-07T201429.280526",
       "duration": 4.30798077583313,
@@ -108,9 +106,7 @@
           "description": "@umijs/plugin-request",
           "release_date": null,
           "parties": [],
-          "keywords": [
-            "umi"
-          ],
+          "keywords": ["umi"],
           "homepage_url": "https://github.com/umijs/plugins/tree/master/packages/plugin-request#readme",
           "download_url": "https://registry.npmjs.org/@umijs/plugin-request/-/plugin-request-2.4.1.tgz",
           "size": null,
@@ -123,9 +119,7 @@
           "vcs_url": "git+https://github.com/umijs/plugins",
           "copyright": null,
           "license_expression": "mit",
-          "declared_license": [
-            "MIT"
-          ],
+          "declared_license": ["MIT"],
           "notice_text": null,
           "root_path": "package",
           "dependencies": [

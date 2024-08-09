@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -220,8 +220,8 @@ class D2DPipelineAPITest(TransactionTestCase):
     def test_d2d_pipeline_api_d2d_create(self, mock_execute_pipeline_task):
         # load upload_file contents
         data = {
-            'input_urls': ['https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/from-data.zip#from',
-                           'https://github.com/nexB/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/to-data.zip#to'],
+            'input_urls': ['https://github.com/aboutcode-org/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/from-data.zip#from',
+                           'https://github.com/aboutcode-org/scancode.io/raw/main/scanpipe/tests/data/d2d-elfs/to-data.zip#to'],
         }
 
         # Send match request

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -38,7 +38,8 @@ class EclipseVistorTest(JsonBasedTesting):
 
     def test_visit_eclipse_project(self):
         uri = 'https://projects.eclipse.org/projects/modeling.m2t.acceleo'
-        test_loc = self.get_test_loc('eclipse/Acceleo_projects.eclipse.org.html')
+        test_loc = self.get_test_loc(
+            'eclipse/Acceleo_projects.eclipse.org.html')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = eclipse.EclipseSingleProjectVisitor(uri)
@@ -108,12 +109,15 @@ class TestEclipseMap(JsonBasedTesting):
         packages = mappers.eclipse.build_packages_with_json(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('eclipse/eclipse_birt_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_eclipse_html_packages(self):
         with open(self.get_test_loc('eclipse/Acceleo_projects.eclipse.org.html')) as eclipse_metadata:
             metadata = eclipse_metadata.read()
         packages = mappers.eclipse.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc('eclipse/Acceleo_projects_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'eclipse/Acceleo_projects_expected.json')
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)

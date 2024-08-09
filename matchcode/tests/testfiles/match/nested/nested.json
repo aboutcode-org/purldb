@@ -4,14 +4,12 @@
       "tool_name": "scancode-toolkit",
       "tool_version": "31.2.2",
       "options": {
-        "input": [
-          "underscore"
-        ],
+        "input": ["underscore"],
         "--info": true,
         "--json-pp": "nested.json",
         "--package": true
       },
-      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/nexB/scancode-toolkit/ for support and download.",
+      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/aboutcode-org/scancode-toolkit/ for support and download.",
       "start_timestamp": "2022-12-01T211637.050383",
       "end_timestamp": "2022-12-01T211640.918285",
       "output_format_version": "2.0.0",
@@ -165,9 +163,7 @@
       "vcs_url": "git+https://github.com/DefinitelyTyped/DefinitelyTyped.git",
       "copyright": null,
       "license_expression": "mit",
-      "declared_license": [
-        "MIT"
-      ],
+      "declared_license": ["MIT"],
       "notice_text": null,
       "source_packages": [],
       "extra_data": {},
@@ -175,12 +171,8 @@
       "repository_download_url": "https://registry.npmjs.org/@types/underscore/-/underscore-1.10.9.tgz",
       "api_data_url": "https://registry.npmjs.org/@types%2funderscore",
       "package_uid": "pkg:npm/%40types/underscore@1.10.9?uuid=420db78a-625f-4622-b1a0-93d1ea853194",
-      "datafile_paths": [
-        "underscore/package.json"
-      ],
-      "datasource_ids": [
-        "npm_package_json"
-      ],
+      "datafile_paths": ["underscore/package.json"],
+      "datasource_ids": ["npm_package_json"],
       "purl": "pkg:npm/%40types/underscore@1.10.9"
     },
     {
@@ -194,9 +186,7 @@
       "description": "@umijs/plugin-request",
       "release_date": null,
       "parties": [],
-      "keywords": [
-        "umi"
-      ],
+      "keywords": ["umi"],
       "homepage_url": "https://github.com/umijs/plugins/tree/master/packages/plugin-request#readme",
       "download_url": "https://registry.npmjs.org/@umijs/plugin-request/-/plugin-request-2.4.1.tgz",
       "size": null,
@@ -209,9 +199,7 @@
       "vcs_url": "git+https://github.com/umijs/plugins",
       "copyright": null,
       "license_expression": "mit",
-      "declared_license": [
-        "MIT"
-      ],
+      "declared_license": ["MIT"],
       "notice_text": null,
       "source_packages": [],
       "extra_data": {},
@@ -219,12 +207,8 @@
       "repository_download_url": "https://registry.npmjs.org/@umijs/plugin-request/-/plugin-request-2.4.1.tgz",
       "api_data_url": "https://registry.npmjs.org/@umijs%2fplugin-request",
       "package_uid": "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4",
-      "datafile_paths": [
-        "underscore/node_modules/package/package.json"
-      ],
-      "datasource_ids": [
-        "npm_package_json"
-      ],
+      "datafile_paths": ["underscore/node_modules/package/package.json"],
+      "datasource_ids": ["npm_package_json"],
       "purl": "pkg:npm/%40umijs/plugin-request@2.4.1"
     }
   ],
@@ -423,9 +407,7 @@
           "vcs_url": "git+https://github.com/DefinitelyTyped/DefinitelyTyped.git",
           "copyright": null,
           "license_expression": "mit",
-          "declared_license": [
-            "MIT"
-          ],
+          "declared_license": ["MIT"],
           "notice_text": null,
           "source_packages": [],
           "file_references": [],
@@ -590,9 +572,7 @@
           "description": "@umijs/plugin-request",
           "release_date": null,
           "parties": [],
-          "keywords": [
-            "umi"
-          ],
+          "keywords": ["umi"],
           "homepage_url": "https://github.com/umijs/plugins/tree/master/packages/plugin-request#readme",
           "download_url": "https://registry.npmjs.org/@umijs/plugin-request/-/plugin-request-2.4.1.tgz",
           "size": null,
@@ -605,9 +585,7 @@
           "vcs_url": "git+https://github.com/umijs/plugins",
           "copyright": null,
           "license_expression": "mit",
-          "declared_license": [
-            "MIT"
-          ],
+          "declared_license": ["MIT"],
           "notice_text": null,
           "source_packages": [],
           "file_references": [],

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -29,9 +29,11 @@ class SourceforgeVisitorsTest(JsonBasedTesting):
         test_loc = self.get_test_loc('sourceforge/sitemap.xml')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
-            uris, _data, error = sourceforge.SourceforgeSitemapIndexVisitor(uri)
+            uris, _data, error = sourceforge.SourceforgeSitemapIndexVisitor(
+                uri)
 
-        expected_loc = self.get_test_loc('sourceforge/expected_sf_sitemap_new.json')
+        expected_loc = self.get_test_loc(
+            'sourceforge/expected_sf_sitemap_new.json')
         self.check_expected_uris(uris, expected_loc)
         self.assertIsNone(error)
 
@@ -42,7 +44,8 @@ class SourceforgeVisitorsTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, error = sourceforge.SourceforgeSitemapPageVisitor(uri)
 
-        expected_loc = self.get_test_loc('sourceforge/expected_sf_sitemap_page_new.json')
+        expected_loc = self.get_test_loc(
+            'sourceforge/expected_sf_sitemap_page_new.json')
         self.check_expected_uris(uris, expected_loc)
         self.assertIsNone(error)
 
@@ -77,29 +80,37 @@ class SourceforgeMappersTest(JsonBasedTesting):
             metadata = json.load(sourceforge_metadata)
         packages = mappers.sourceforge.build_packages_from_metafile(metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc('sourceforge/mapper_odanur_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'sourceforge/mapper_odanur_expected.json')
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages2(self):
         with open(self.get_test_loc('sourceforge/openstunts.json')) as sourceforge_metadata:
             metadata = json.load(sourceforge_metadata)
         packages = mappers.sourceforge.build_packages_from_metafile(metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc('sourceforge/mapper_openstunts_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'sourceforge/mapper_openstunts_expected.json')
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages3(self):
         with open(self.get_test_loc('sourceforge/monoql.json')) as sourceforge_metadata:
             metadata = json.load(sourceforge_metadata)
         packages = mappers.sourceforge.build_packages_from_metafile(metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc('sourceforge/mapper_omonoql_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'sourceforge/mapper_omonoql_expected.json')
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages4(self):
         with open(self.get_test_loc('sourceforge/niftyphp.json')) as sourceforge_metadata:
             metadata = json.load(sourceforge_metadata)
         packages = mappers.sourceforge.build_packages_from_metafile(metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc('sourceforge/mapper_niftyphp_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'sourceforge/mapper_niftyphp_expected.json')
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)

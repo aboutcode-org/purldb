@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -129,7 +129,8 @@ def process_request(importable_uri):
     else:
         namespace, name, _ = determine_namespace_name_version_from_url(uri)
 
-    timestamps_by_directory_links = collect_links_from_text(data, filter_only_directories)
+    timestamps_by_directory_links = collect_links_from_text(
+        data, filter_only_directories)
     # Go into each version directory
     for directory_link in timestamps_by_directory_links.keys():
         version = directory_link.rstrip('/')
@@ -137,7 +138,8 @@ def process_request(importable_uri):
         timestamps_by_artifact_links = get_artifact_links(version_page_url)
         for artifact_link, timestamp in timestamps_by_artifact_links.items():
             sha1 = get_artifact_sha1(artifact_link)
-            classifier = get_classifier_from_artifact_url(artifact_link, version_page_url, name, version)
+            classifier = get_classifier_from_artifact_url(
+                artifact_link, version_page_url, name, version)
             qualifiers = None
             if classifier:
                 qualifiers = f'classifier={classifier}'

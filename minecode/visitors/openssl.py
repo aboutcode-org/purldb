@@ -85,8 +85,10 @@ class OpenSSLVisitor(HttpVisitor):
                 package_url = None
                 version = None
                 if 'tar.gz' in file_name:
-                    version = file_name.replace('openssl-', '').partition('.tar.gz')[0]
-                package_url = PackageURL(type='generic', name='openssl', version=version).to_string()
+                    version = file_name.replace(
+                        'openssl-', '').partition('.tar.gz')[0]
+                package_url = PackageURL(
+                    type='generic', name='openssl', version=version).to_string()
                 yield URI(uri=url, source_uri=self.uri, package_url=package_url, date=date, file_name=file_name, size=size)
             else:
                 yield URI(uri=url, source_uri=self.uri, date=date, size=size)
@@ -101,7 +103,7 @@ def process_request_dir_listed(purl_str, **kwargs):
     supported by fetchcode.
 
     This involves obtaining Package information for the PURL using
-    https://github.com/nexB/fetchcode and using it to create a new
+    https://github.com/aboutcode-org/fetchcode and using it to create a new
     PackageDB entry. The package is then added to the scan queue afterwards.
     """
     from minecode.model_utils import DEFAULT_PIPELINES
@@ -116,7 +118,8 @@ def process_request_dir_listed(purl_str, **kwargs):
         error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
-    error_msg = map_fetchcode_supported_package(package_url, pipelines, priority)
+    error_msg = map_fetchcode_supported_package(
+        package_url, pipelines, priority)
 
     if error_msg:
         return error_msg

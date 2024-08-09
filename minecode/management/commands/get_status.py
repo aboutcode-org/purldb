@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -34,14 +34,17 @@ class Command(BaseCommand):
             ('visitables', ResourceURI.objects.get_visitables().count()),
             ('visited', ResourceURI.objects.visited().count()),
             ('successfully_visited', ResourceURI.objects.successfully_visited().count()),
-            ('unsuccessfully_visited', ResourceURI.objects.unsuccessfully_visited().count()),
+            ('unsuccessfully_visited',
+             ResourceURI.objects.unsuccessfully_visited().count()),
             ('never_visited', ResourceURI.objects.never_visited().count()),
-            ('visit_in_progress', ResourceURI.objects.filter(wip_date__isnull=False, last_visit_date__isnull=True).count()),
+            ('visit_in_progress', ResourceURI.objects.filter(
+                wip_date__isnull=False, last_visit_date__isnull=True).count()),
 
             ('mappables', ResourceURI.objects.get_mappables().count()),
             ('mapped', ResourceURI.objects.mapped().count()),
             ('successfully_mapped', ResourceURI.objects.successfully_mapped().count()),
-            ('unsuccessfully_mapped', ResourceURI.objects.unsuccessfully_mapped().count()),
+            ('unsuccessfully_mapped',
+             ResourceURI.objects.unsuccessfully_mapped().count()),
             ('never_mapped', ResourceURI.objects.never_mapped().count()),
         ])
 

@@ -4,15 +4,13 @@
       "tool_name": "scancode-toolkit",
       "tool_version": "3.2.2rc3",
       "options": {
-        "input": [
-          "/tmp/test/underscore/"
-        ],
+        "input": ["/tmp/test/underscore/"],
         "--info": true,
         "--json-pp": "/tmp/test/underscore-ip.json",
         "--package": true,
         "--processes": "2"
       },
-      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/nexB/scancode-toolkit/ for support and download.",
+      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/aboutcode-org/scancode-toolkit/ for support and download.",
       "start_timestamp": "2020-11-07T201338.623038",
       "end_timestamp": "2020-11-07T201343.409115",
       "duration": 4.78609824180603,
@@ -211,9 +209,7 @@
           "vcs_url": "git+https://github.com/DefinitelyTyped/DefinitelyTyped.git",
           "copyright": null,
           "license_expression": "mit",
-          "declared_license": [
-            "MIT"
-          ],
+          "declared_license": ["MIT"],
           "notice_text": null,
           "root_path": "underscore",
           "dependencies": [],

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -61,10 +61,12 @@ def build_packages_with_json(metadata, purl=None, uri=None):
 
         bug_tracking_urls = project_metadata.get('bugzilla')
         if bug_tracking_urls and len(bug_tracking_urls) > 0:
-            common_data['bug_tracking_url'] = bug_tracking_urls[0].get('query_url')
+            common_data['bug_tracking_url'] = bug_tracking_urls[0].get(
+                'query_url')
 
         if project_metadata.get('licenses'):
-            common_data['extracted_license_statement'] = [l.get('name') for l in project_metadata.get('licenses', [])]
+            common_data['extracted_license_statement'] = [
+                l.get('name') for l in project_metadata.get('licenses', [])]
             common_data['license_detections'] = []
 
         # FIXME: this is a download page and NOT a download URL!!!!!

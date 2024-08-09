@@ -4,7 +4,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -39,11 +39,14 @@ class BitbucketVisitorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, data, _ = BitbucketIndexVisitor(uri)
 
-        expected_uri_loc = self.get_test_loc('bitbucket/visit/index-repositories_expected_uris.json')
+        expected_uri_loc = self.get_test_loc(
+            'bitbucket/visit/index-repositories_expected_uris.json')
         self.check_expected_uris(uris, expected_uri_loc, regen=FIXTURES_REGEN)
 
-        expected_data_loc = self.get_test_loc('bitbucket/visit/index-repositories_expected_data.json')
-        self.check_expected_results(data, expected_data_loc, regen=FIXTURES_REGEN)
+        expected_data_loc = self.get_test_loc(
+            'bitbucket/visit/index-repositories_expected_data.json')
+        self.check_expected_results(
+            data, expected_data_loc, regen=FIXTURES_REGEN)
 
     def test_BitbucketSingleRepoVisitor(self):
         uri = 'https://api.bitbucket.org/2.0/repositories/bastiand/mercurialeclipse/'
@@ -53,10 +56,13 @@ class BitbucketVisitorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, data, _ = BitbucketSingleRepoVisitor(uri)
 
-        expected_data_loc = self.get_test_loc('bitbucket/visit/singlerepo_expected_data.json')
-        self.check_expected_results(data, expected_data_loc, regen=FIXTURES_REGEN)
+        expected_data_loc = self.get_test_loc(
+            'bitbucket/visit/singlerepo_expected_data.json')
+        self.check_expected_results(
+            data, expected_data_loc, regen=FIXTURES_REGEN)
 
-        expected_uris_loc = self.get_test_loc('bitbucket/visit/singlerepo_expected_uris.json')
+        expected_uris_loc = self.get_test_loc(
+            'bitbucket/visit/singlerepo_expected_uris.json')
         self.check_expected_uris(uris, expected_uris_loc, regen=FIXTURES_REGEN)
 
     def test_BitbucketDetailsVisitorPaginated(self):
@@ -67,10 +73,13 @@ class BitbucketVisitorTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, data, _ = BitbucketDetailsVisitorPaginated(uri)
 
-        expected_data_loc = self.get_test_loc('bitbucket/visit/paginated_tags_expected_data.json')
-        self.check_expected_results(data, expected_data_loc, regen=FIXTURES_REGEN)
+        expected_data_loc = self.get_test_loc(
+            'bitbucket/visit/paginated_tags_expected_data.json')
+        self.check_expected_results(
+            data, expected_data_loc, regen=FIXTURES_REGEN)
 
-        expected_uris_loc = self.get_test_loc('bitbucket/visit/paginated_tags_expected_uris.json')
+        expected_uris_loc = self.get_test_loc(
+            'bitbucket/visit/paginated_tags_expected_uris.json')
         self.check_expected_uris(uris, expected_uris_loc, regen=FIXTURES_REGEN)
 
 
@@ -100,16 +109,20 @@ class BitbucketMapperTest(JsonBasedTesting):
             repo_data = json.load(pck, object_pairs_hook=OrderedDict)
         purl = 'pkg:bitbucket/bastiand/mercurialeclipse'
         package = build_bitbucket_repo_package(repo_data, purl)
-        expected_loc = self.get_test_loc('bitbucket/map/repository_expected.json')
-        self.check_expected_results(package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'bitbucket/map/repository_expected.json')
+        self.check_expected_results(
+            package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_bitbucket_repo_package_with_issues(self):
         with open(self.get_test_loc('bitbucket/map/tweakmsg.json')) as pck:
             repo_data = json.load(pck, object_pairs_hook=OrderedDict)
         purl = 'pkg:bitbucket/phlogistonjohn/tweakmsg'
         package = build_bitbucket_repo_package(repo_data, purl)
-        expected_loc = self.get_test_loc('bitbucket/map/tweakmsg_expected.json')
-        self.check_expected_results(package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'bitbucket/map/tweakmsg_expected.json')
+        self.check_expected_results(
+            package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_bitbucket_download_packages_single(self):
         with open(self.get_test_loc('bitbucket/map/downloads.json')) as pck:
@@ -117,8 +130,10 @@ class BitbucketMapperTest(JsonBasedTesting):
         purl = 'pkg:bitbucket/bastiand/mercurialeclipse'
         packages = build_bitbucket_download_packages(dnl_data, purl)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc('bitbucket/map/downloads_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'bitbucket/map/downloads_expected.json')
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_bitbucket_download_packages_many(self):
         with open(self.get_test_loc('bitbucket/map/downloads_many.json')) as pck:
@@ -126,5 +141,7 @@ class BitbucketMapperTest(JsonBasedTesting):
         purl = 'pkg:bitbucket/pypa/setuptools'
         packages = build_bitbucket_download_packages(dnl_data, purl)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc('bitbucket/map/downloads_many_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'bitbucket/map/downloads_many_expected.json')
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)

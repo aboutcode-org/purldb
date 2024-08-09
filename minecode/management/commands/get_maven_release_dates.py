@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -47,22 +47,27 @@ class Command(VerboseCommand):
         for index, package in enumerate(iterator, start=1):
             download_url = package.download_url
             package_url = package.package_url
-            logger.info(f'Updating release_date for package {package_url} ({download_url})')
+            logger.info(
+                f'Updating release_date for package {package_url} ({download_url})')
             package_version_page_url = dirname(download_url)
             filename = download_url.rsplit('/')[-1]
             response = requests.get(package_version_page_url)
             if response:
-                timestamps_by_links = collect_links_from_text(response.text, filter=filter_for_artifacts)
+                timestamps_by_links = collect_links_from_text(
+                    response.text, filter=filter_for_artifacts)
                 timestamp = timestamps_by_links.get(filename)
                 if not timestamp:
-                    logger.info(f'\tCould not get release_date for package {package_url} ({download_url})')
+                    logger.info(
+                        f'\tCould not get release_date for package {package_url} ({download_url})')
                     continue
                 timestamp = dateutil_parse(timestamp)
                 package.release_date = timestamp
                 unsaved_objects.append(package)
-                logger.info(f'\t{package_url} ({download_url}) release_date has been updated to {timestamp}')
+                logger.info(
+                    f'\t{package_url} ({download_url}) release_date has been updated to {timestamp}')
             else:
-                logger.info(f'\t{package_url} not updated: error encountered when visiting {package_version_page_url}')
+                logger.info(
+                    f'\t{package_url} not updated: error encountered when visiting {package_version_page_url}')
             if not (index % chunk_size) and unsaved_objects:
                 logger.info(f'{index:,} / {object_count:,} Packages processed')
 

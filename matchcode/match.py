@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -115,7 +115,8 @@ def approximate_directory_content_match(codebase):
             continue
 
         match_count += directory_matches.count()
-        tag_matched_resources(resource, codebase, directory_matches, match_type)
+        tag_matched_resources(resource, codebase,
+                              directory_matches, match_type)
     return match_count
 
 
@@ -135,7 +136,8 @@ def approximate_directory_structure_match(codebase):
             continue
 
         match_count += directory_matches.count()
-        tag_matched_resources(resource, codebase, directory_matches, match_type)
+        tag_matched_resources(resource, codebase,
+                              directory_matches, match_type)
     return match_count
 
 
@@ -182,7 +184,8 @@ def get_directory_content_match(resource):
     """
     Match a directory to a Package using its contents
     """
-    directory_content_fingerprint = resource.extra_data.get('directory_content', '')
+    directory_content_fingerprint = resource.extra_data.get(
+        'directory_content', '')
     matches = ApproximateDirectoryContentIndex.objects.none()
     match_type = ''
     if directory_content_fingerprint:
@@ -200,7 +203,8 @@ def get_directory_structure_match(resource):
     """
     Match a directory to a Package using its structure
     """
-    directory_structure_fingerprint = resource.extra_data.get('directory_structure', '')
+    directory_structure_fingerprint = resource.extra_data.get(
+        'directory_structure', '')
     matches = ApproximateDirectoryStructureIndex.objects.none()
     match_type = ''
     if directory_structure_fingerprint:
@@ -276,7 +280,8 @@ def tag_matched_resources(resource, codebase, matches, match_type):
         # by or), then querying the matched packages resources to see if any of
         # those suffixes match a package child resource path
         for child in resource.walk(codebase):
-            query = reduce(or_, (Q(path=suffix) for suffix in path_suffixes(child.path)), Q())
+            query = reduce(or_, (Q(path=suffix)
+                           for suffix in path_suffixes(child.path)), Q())
             matched_child_resources = match.package.resources.filter(query)
             if len(matched_child_resources) > 0:
                 tag_matched_resource(child, codebase, purl)

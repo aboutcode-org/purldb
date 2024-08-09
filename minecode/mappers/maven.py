@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -68,7 +68,8 @@ def get_mini_package(data, uri, purl):
 
     qualifiers = None
     if purl and purl.qualifiers:
-        qualifiers = packageurl.normalize_qualifiers(purl.qualifiers, encode=False)
+        qualifiers = packageurl.normalize_qualifiers(
+            purl.qualifiers, encode=False)
     if qualifiers:
         assert isinstance(qualifiers, dict)
     logger.debug('get_mini_package: qualifiers: {}'.format(qualifiers))
@@ -85,8 +86,10 @@ def get_mini_package(data, uri, purl):
         size=artifact.size,
         sha1=artifact.sha1 or None,
     )
-    logger.debug('get_mini_package: package.qualifiers: {}'.format(package.qualifiers))
-    logger.debug('get_mini_package for uri: {}, package: {}'.format(uri, package))
+    logger.debug('get_mini_package: package.qualifiers: {}'.format(
+        package.qualifiers))
+    logger.debug(
+        'get_mini_package for uri: {}, package: {}'.format(uri, package))
     return package
 
 
@@ -96,6 +99,7 @@ class MavenPomMapper(Mapper):
     """
     Map a proper full POM visited as XML.
     """
+
     def get_packages(self, uri, resource_uri):
 
         logger.debug('MavenPomMapper.get_packages: uri: {}, resource_uri: {}, purl:'

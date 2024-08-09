@@ -1,31 +1,31 @@
 [
   {
-    "type":"pypi",
-    "namespace":null,
-    "name":"CAGE",
-    "version":"1.1.3",
-    "qualifiers":{},
-    "subpath":null,
-    "primary_language":null,
-    "description":"A generic and fairly complete cellular automata simulation engine.\nCAGE is a fairy generic and complete cellular automaton simulation\r\n    engine in Python.  It supports both 1D and 2D automata, a variety\r\n    of prepackaged rules, and the concept of \"agents\" which can move\r\n    about independently on the map for implementing agent behavior.\r\n\r\n    CAGE comes with numerous examples of fully-functional CA systems,\r\n    including Conway's Game of Life, Langton's self-reproducing\r\n    automaton, Langton's \"vants,\" and 1D automata rule explorers.  It\r\n    also comes with simple displayers (including a curses interface\r\n    for 2D automata).  Also included is a unique implementation of a\r\n    finite state machine (ant.py).",
-    "release_date":null,
-    "parties":[
+    "type": "pypi",
+    "namespace": null,
+    "name": "CAGE",
+    "version": "1.1.3",
+    "qualifiers": {},
+    "subpath": null,
+    "primary_language": null,
+    "description": "A generic and fairly complete cellular automata simulation engine.\nCAGE is a fairy generic and complete cellular automaton simulation\r\n    engine in Python.  It supports both 1D and 2D automata, a variety\r\n    of prepackaged rules, and the concept of \"agents\" which can move\r\n    about independently on the map for implementing agent behavior.\r\n\r\n    CAGE comes with numerous examples of fully-functional CA systems,\r\n    including Conway's Game of Life, Langton's self-reproducing\r\n    automaton, Langton's \"vants,\" and 1D automata rule explorers.  It\r\n    also comes with simple displayers (including a curses interface\r\n    for 2D automata).  Also included is a unique implementation of a\r\n    finite state machine (ant.py).",
+    "release_date": null,
+    "parties": [
       {
-        "type":"person",
-        "role":"author",
-        "name":"Erik Max Francis",
-        "email":"software@alcyone.com",
-        "url":null
+        "type": "person",
+        "role": "author",
+        "name": "Erik Max Francis",
+        "email": "software@alcyone.com",
+        "url": null
       },
       {
-        "type":"person",
-        "role":"maintainer",
-        "name":"Erik Max Francis",
-        "email":"",
-        "url":null
+        "type": "person",
+        "role": "maintainer",
+        "name": "Erik Max Francis",
+        "email": "",
+        "url": null
       }
     ],
-    "keywords":[
+    "keywords": [
       "cellular automata",
       "Turing machines",
       "Langton vants",
@@ -33,59 +33,59 @@
       "finite state machines",
       "finite state automata"
     ],
-    "homepage_url":"http://www.alcyone.com/software/cage/",
-    "download_url":"http://www.alcyone.com/software/cage/cage-latest.tar.gz",
-    "size":null,
-    "sha1":null,
-    "md5":null,
-    "sha256":null,
-    "sha512":null,
-    "bug_tracking_url":"",
-    "code_view_url":null,
-    "vcs_url":null,
-    "copyright":null,
-    "holder":null,
-    "declared_license_expression":"gpl-1.0-plus",
-    "declared_license_expression_spdx":"GPL-1.0-or-later",
-    "license_detections":[
+    "homepage_url": "http://www.alcyone.com/software/cage/",
+    "download_url": "http://www.alcyone.com/software/cage/cage-latest.tar.gz",
+    "size": null,
+    "sha1": null,
+    "md5": null,
+    "sha256": null,
+    "sha512": null,
+    "bug_tracking_url": "",
+    "code_view_url": null,
+    "vcs_url": null,
+    "copyright": null,
+    "holder": null,
+    "declared_license_expression": "gpl-1.0-plus",
+    "declared_license_expression_spdx": "GPL-1.0-or-later",
+    "license_detections": [
       {
-        "license_expression":"gpl-1.0-plus",
-        "license_expression_spdx":"GPL-1.0-or-later",
-        "matches":[
+        "license_expression": "gpl-1.0-plus",
+        "license_expression_spdx": "GPL-1.0-or-later",
+        "matches": [
           {
-            "license_expression":"gpl-1.0-plus",
-            "spdx_license_expression":"GPL-1.0-or-later",
-            "from_file":null,
-            "start_line":1,
-            "end_line":1,
-            "matcher":"1-hash",
-            "score":50.0,
-            "matched_length":1,
-            "match_coverage":100.0,
-            "rule_relevance":50,
-            "rule_identifier":"gpl_bare_word_only.RULE",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl_bare_word_only.RULE",
-            "matched_text":"GPL"
+            "license_expression": "gpl-1.0-plus",
+            "spdx_license_expression": "GPL-1.0-or-later",
+            "from_file": null,
+            "start_line": 1,
+            "end_line": 1,
+            "matcher": "1-hash",
+            "score": 50.0,
+            "matched_length": 1,
+            "match_coverage": 100.0,
+            "rule_relevance": 50,
+            "rule_identifier": "gpl_bare_word_only.RULE",
+            "rule_url": "https://github.com/aboutcode-org/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl_bare_word_only.RULE",
+            "matched_text": "GPL"
           }
         ],
-        "identifier":"gpl_1_0_plus-473308ff-72ce-7e72-b3a9-5b1cc6680abb"
+        "identifier": "gpl_1_0_plus-473308ff-72ce-7e72-b3a9-5b1cc6680abb"
       }
     ],
-    "other_license_expression":null,
-    "other_license_expression_spdx":null,
-    "other_license_detections":[],
-    "extracted_license_statement":"- GPL\n",
-    "notice_text":null,
-    "source_packages":[],
-    "file_references":[],
-    "is_private":false,
-    "is_virtual":false,
-    "extra_data":{},
-    "dependencies":[],
-    "repository_homepage_url":null,
-    "repository_download_url":null,
-    "api_data_url":null,
-    "datasource_id":"pypi_api_metadata",
-    "purl":"pkg:pypi/cage@1.1.3"
+    "other_license_expression": null,
+    "other_license_expression_spdx": null,
+    "other_license_detections": [],
+    "extracted_license_statement": "- GPL\n",
+    "notice_text": null,
+    "source_packages": [],
+    "file_references": [],
+    "is_private": false,
+    "is_virtual": false,
+    "extra_data": {},
+    "dependencies": [],
+    "repository_homepage_url": null,
+    "repository_download_url": null,
+    "api_data_url": null,
+    "datasource_id": "pypi_api_metadata",
+    "purl": "pkg:pypi/cage@1.1.3"
   }
 ]

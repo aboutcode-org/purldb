@@ -3,7 +3,7 @@
 # PurlDB is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -36,7 +36,8 @@ class Command(BaseCommand):
         purl_value = options.get("purl")
 
         packages_qs = (
-            Package.objects.filter(type__in=PRIORITY_QUEUE_SUPPORTED_ECOSYSTEMS)
+            Package.objects.filter(
+                type__in=PRIORITY_QUEUE_SUPPORTED_ECOSYSTEMS)
             .filter(type__in=SUPPORTED_ECOSYSTEMS)
             .distinct("type", "namespace", "name")
             .order_by("type", "namespace", "name")

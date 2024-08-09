@@ -2,8 +2,8 @@ MatchCode toolkit
 =================
 
 MatchCode toolkit is a Python library that provides the directory fingerprinting
-functionality for `ScanCode toolkit <https://github.com/nexB/scancode-toolkit>`_
-and `ScanCode.io <https://github.com/nexB/scancode.io>`_ by implementing the
+functionality for `ScanCode toolkit <https://github.com/aboutcode-org/scancode-toolkit>`_
+and `ScanCode.io <https://github.com/aboutcode-org/scancode.io>`_ by implementing the
 HaloHash algorithm and using it in ScanCode toolkit and ScanCode.io plugins and
 pipelines.
 
@@ -53,5 +53,5 @@ added step of computing fingerprints for directories.
 
 .. note::
 
-    MatchCode toolkit has moved to its own repo at https://github.com/nexB/matchcode-toolkit
-    from its previous location https://github.com/nexB/purldb/tree/main/matchcode-toolkit
+    MatchCode toolkit has moved to its own repo at https://github.com/aboutcode-org/matchcode-toolkit
+    from its previous location https://github.com/aboutcode-org/purldb/tree/main/matchcode-toolkit

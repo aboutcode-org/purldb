@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -40,22 +40,28 @@ class CranMapperTest(JsonBasedTesting, DjangoTestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
 
     def test_build_packages_from_directory_listing(self):
-        ResourceURI.objects.create(uri='https://cloud.r-project.org/web/packages/ANN2/index.html')
+        ResourceURI.objects.create(
+            uri='https://cloud.r-project.org/web/packages/ANN2/index.html')
         with open(self.get_test_loc('cran/CRAN_Package_ANN2.html')) as html_metadata:
             metadata = html_metadata.read()
-        packages = mappers.cran.build_packages_from_html(metadata, 'https://cloud.r-project.org/web/packages/ANN2/index.html', 'pkg:cran/ANN2')
+        packages = mappers.cran.build_packages_from_html(
+            metadata, 'https://cloud.r-project.org/web/packages/ANN2/index.html', 'pkg:cran/ANN2')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cran/mapper_ANN2_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_from_directory_listing2(self):
-        ResourceURI.objects.create(uri='https://cloud.r-project.org/web/packages/abe/index.html')
+        ResourceURI.objects.create(
+            uri='https://cloud.r-project.org/web/packages/abe/index.html')
         with open(self.get_test_loc('cran/CRAN_Package_abe.html')) as html_metadata:
             metadata = html_metadata.read()
-        packages = mappers.cran.build_packages_from_html(metadata, 'https://cloud.r-project.org/web/packages/abe/index.htm', 'pkg:cran/abe')
+        packages = mappers.cran.build_packages_from_html(
+            metadata, 'https://cloud.r-project.org/web/packages/abe/index.htm', 'pkg:cran/abe')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cran/mapper_abe_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_replace_downloadurl(self):
         url = "../../../src/contrib/Archive/ANN2"

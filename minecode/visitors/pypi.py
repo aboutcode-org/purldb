@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -50,6 +50,7 @@ class PypiIndexVisitor(Visitor):
     """
     Collect package metadata URIs from the top level pypi index for each package.
     """
+
     def fetch(self, uri, timeout=None):
         """
         Specialized fetching using XML RPCs.
@@ -85,6 +86,7 @@ class PypiPackageVisitor(HttpJsonVisitor):
     The url will contain only the package name, for example: https://pypi.org/pypi/vmock/json
     By parsing the content, the goal is to form the json with version/release: https://pypi.org/pypi/vmock/0.1/json
     """
+
     def get_uris(self, content):
 
         url_template = 'https://pypi.python.org/pypi/{name}/{release}/json'
@@ -92,7 +94,8 @@ class PypiPackageVisitor(HttpJsonVisitor):
         name = info.get('name')
         if name:
             for release in content['releases']:
-                package_url = PackageURL(type='pypi', name=name, version=release).to_string()
+                package_url = PackageURL(
+                    type='pypi', name=name, version=release).to_string()
                 yield URI(uri=url_template.format(name=name, release=release), package_url=package_url, source_uri=self.uri)
 
 
@@ -102,6 +105,7 @@ class PypiPackageReleaseVisitor(HttpJsonVisitor):
     Collect package download URIs for all packages archives of one Pypi package
     release. The example is: https://pypi.org/pypi/vmock/0.1/json
     """
+
     def get_uris(self, content):
         # TODO: this is likely best ignored entirely???
         # A download_url may be provided for an off-Pypi-download
@@ -111,7 +115,8 @@ class PypiPackageReleaseVisitor(HttpJsonVisitor):
         download_url = info.get('download_url')
         if download_url and download_url != 'UNKNOWN':
             version = info.get('version')
-            package_url = PackageURL(type='pypi', name=name, version=version).to_string()
+            package_url = PackageURL(
+                type='pypi', name=name, version=version).to_string()
             yield URI(uri=download_url, package_url=package_url, source_uri=self.uri)
 
         # Common on-Pypi-download URLs are in the urls block
@@ -119,7 +124,8 @@ class PypiPackageReleaseVisitor(HttpJsonVisitor):
             url = download.get('url')
             if not url:
                 continue
-            package_url = PackageURL(type='pypi', name=name, version=version).to_string()
+            package_url = PackageURL(
+                type='pypi', name=name, version=version).to_string()
             yield URI(url, package_url=package_url, file_name=download.get('filename'),
                       size=download.get('size'), date=download.get('upload_time'),
                       md5=download.get('md5_digest'), source_uri=self.uri)

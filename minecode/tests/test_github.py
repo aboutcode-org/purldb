@@ -4,7 +4,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -127,7 +127,8 @@ class GithubVisitorTest(JsonBasedTesting):
         mock_get_repo.return_value = repository
         uri = 'https://api.github.com/repos/collectiveidea/calendar_builder'
         _, data, _ = github.GithubSingleRepoVisitor(uri)
-        expected_loc = self.get_test_loc('github/calendar_builder-expected.json')
+        expected_loc = self.get_test_loc(
+            'github/calendar_builder-expected.json')
         self.check_expected_results(data, expected_loc, regen=FIXTURES_REGEN)
 
     def test_GithubReposVisitor(self):
@@ -146,15 +147,21 @@ class GithubMapperTest(JsonBasedTesting):
     def test_github_repo_mapper1(self):
         with open(self.get_test_loc('github/calendar_builder.json')) as json_metadata:
             metadata = json_metadata.read()
-        packages = mappers.github.build_github_packages(metadata, 'https://api.github.com/repos/collectiveidea/calendar_builder')
+        packages = mappers.github.build_github_packages(
+            metadata, 'https://api.github.com/repos/collectiveidea/calendar_builder')
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc('github/mapper_calendar_builder_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'github/mapper_calendar_builder_expected.json')
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_github_repo_mapper2(self):
         with open(self.get_test_loc('github/mojombo_grit_from_visitor_4mapper_input.json')) as json_metadata:
             metadata = json_metadata.read()
-        packages = mappers.github.build_github_packages(metadata, 'https://api.github.com/repos/mojombo/grit')
+        packages = mappers.github.build_github_packages(
+            metadata, 'https://api.github.com/repos/mojombo/grit')
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc('github/mojombo_grit_result_mapper_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc(
+            'github/mojombo_grit_result_mapper_expected.json')
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)

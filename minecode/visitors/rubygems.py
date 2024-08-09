@@ -4,7 +4,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -81,7 +81,8 @@ class RubyGemsIndexVisitor(NonPersistentHttpVisitor):
 
             download_url += '.gem'
             download_url = download_url.format(**locals())
-            package_url = PackageURL(type='gem', name=name, version=version).to_string()
+            package_url = PackageURL(
+                type='gem', name=name, version=version).to_string()
             yield URI(uri=download_url, package_url=package_url, source_uri=self.uri)
 
 
@@ -104,8 +105,10 @@ class RubyGemsApiManyVersionsVisitor(HttpJsonVisitor):
                 self.uri.index('/versions/') + len('/versions/'):-len('.json')]
             version = version_details.get('number')
             gem_name = '%(name)s-%(version)s' % locals()
-            package_url = PackageURL(type='gem', name=name, version=version).to_string()
-            download_url = 'https://rubygems.org/downloads/%(gem_name)s.gem' % locals()
+            package_url = PackageURL(
+                type='gem', name=name, version=version).to_string()
+            download_url = 'https://rubygems.org/downloads/%(gem_name)s.gem' % locals(
+            )
             yield URI(uri=download_url, source_uri=self.uri, package_url=package_url,
                       data=json.dumps(version_details))
 
@@ -136,6 +139,7 @@ def get_gem_metadata(location):
     # Extract the embedded metadata gz file
     extract_parent_location = extract_file(metadata_gz)
     # Get the first file in the etracted folder which is the meta file location
-    meta_extracted_file = os.path.join(extract_parent_location, os.listdir(extract_parent_location)[0])
+    meta_extracted_file = os.path.join(
+        extract_parent_location, os.listdir(extract_parent_location)[0])
     with open(meta_extracted_file) as meta_file:
         return meta_file.read()

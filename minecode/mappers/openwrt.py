@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -67,7 +67,8 @@ def build_packages(metadata, purl=None, uri=None):
             parties = common_data.get('parties')
             if not parties:
                 common_data['parties'] = []
-            party = scan_models.Party(name=name, role='maintainer', email=email)
+            party = scan_models.Party(
+                name=name, role='maintainer', email=email)
             common_data['parties'].append(party)
 
     lic = metadata.get('License')
