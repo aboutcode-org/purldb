@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -31,12 +31,15 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
             email="e@mail.com",
             password="secret"
         )
-        scan_queue_workers_group, _ = Group.objects.get_or_create(name='scan_queue_workers')
+        scan_queue_workers_group, _ = Group.objects.get_or_create(
+            name='scan_queue_workers')
         scan_queue_workers_group.user_set.add(self.scan_queue_worker_user)
         self.scan_queue_worker_auth = f"Token {self.scan_queue_worker_user.auth_token.key}"
         self.scan_queue_worker_client = APIClient(enforce_csrf_checks=True)
-        self.scan_queue_worker_client.credentials(HTTP_AUTHORIZATION=self.scan_queue_worker_auth)
-        self.scan_queue_worker_user_id_str = str(self.scan_queue_worker_user.id)
+        self.scan_queue_worker_client.credentials(
+            HTTP_AUTHORIZATION=self.scan_queue_worker_auth)
+        self.scan_queue_worker_user_id_str = str(
+            self.scan_queue_worker_user.id)
 
         # create a staff user
         self.staff_user = User.objects.create_user(
@@ -98,7 +101,8 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         response = self.anonymous_client.get('/api/scan_queue/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        response = self.anonymous_client.get('/api/scan_queue/get_next_download_url/')
+        response = self.anonymous_client.get(
+            '/api/scan_queue/get_next_download_url/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         response = self.anonymous_client.post('/api/scan_queue/update_status/')
@@ -107,7 +111,8 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         response = self.regular_client.get('/api/scan_queue/')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        response = self.regular_client.get('/api/scan_queue/get_next_download_url/')
+        response = self.regular_client.get(
+            '/api/scan_queue/get_next_download_url/')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.regular_client.post('/api/scan_queue/update_status/')
@@ -127,33 +132,45 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
             webhook_url = response.data.get('webhook_url')
             key = webhook_url.rstrip('/').split('/')[-1]
             self.assertIn('/api/scan_queue/index_package_scan/', webhook_url)
-            self.assertEqual(signing.loads(key), str(self.scan_queue_worker_user.id))
+            self.assertEqual(signing.loads(key), str(
+                self.scan_queue_worker_user.id))
 
-        response = self.scan_queue_worker_client.get('/api/scan_queue/get_next_download_url/')
+        response = self.scan_queue_worker_client.get(
+            '/api/scan_queue/get_next_download_url/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get('scannable_uri_uuid'), self.scannable_uri1.uuid)
-        self.assertEqual(response.data.get('download_url'), self.scannable_uri1.uri)
+        self.assertEqual(response.data.get(
+            'scannable_uri_uuid'), self.scannable_uri1.uuid)
+        self.assertEqual(response.data.get(
+            'download_url'), self.scannable_uri1.uri)
         check_webhook_url(self, response.data.get('webhook_url'))
 
-        response = self.scan_queue_worker_client.get('/api/scan_queue/get_next_download_url/')
+        response = self.scan_queue_worker_client.get(
+            '/api/scan_queue/get_next_download_url/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get('scannable_uri_uuid'), self.scannable_uri2.uuid)
-        self.assertEqual(response.data.get('download_url'), self.scannable_uri2.uri)
+        self.assertEqual(response.data.get(
+            'scannable_uri_uuid'), self.scannable_uri2.uuid)
+        self.assertEqual(response.data.get(
+            'download_url'), self.scannable_uri2.uri)
         check_webhook_url(self, response.data.get('webhook_url'))
 
-        response = self.scan_queue_worker_client.get('/api/scan_queue/get_next_download_url/')
+        response = self.scan_queue_worker_client.get(
+            '/api/scan_queue/get_next_download_url/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get('scannable_uri_uuid'), self.scannable_uri3.uuid)
-        self.assertEqual(response.data.get('download_url'), self.scannable_uri3.uri)
+        self.assertEqual(response.data.get(
+            'scannable_uri_uuid'), self.scannable_uri3.uuid)
+        self.assertEqual(response.data.get(
+            'download_url'), self.scannable_uri3.uri)
         check_webhook_url(self, response.data.get('webhook_url'))
 
-        response = self.scan_queue_worker_client.get('/api/scan_queue/get_next_download_url/')
+        response = self.scan_queue_worker_client.get(
+            '/api/scan_queue/get_next_download_url/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get('scannable_uri_uuid'), '')
         self.assertEqual(response.data.get('download_url'), '')
         self.assertEqual(response.data.get('webhook_url'), '')
 
-        response = self.staff_client.get('/api/scan_queue/get_next_download_url/')
+        response = self.staff_client.get(
+            '/api/scan_queue/get_next_download_url/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get('scannable_uri_uuid'), '')
         self.assertEqual(response.data.get('download_url'), '')
@@ -165,22 +182,26 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         scannable_uri1_update_status_url = f'/api/scan_queue/{scannable_uri1_uuid}/update_status/'
         scannable_uri2_update_status_url = f'/api/scan_queue/{scannable_uri2_uuid}/update_status/'
 
-        self.assertEqual(ScannableURI.SCAN_NEW, self.scannable_uri1.scan_status)
+        self.assertEqual(ScannableURI.SCAN_NEW,
+                         self.scannable_uri1.scan_status)
         data = {
             "scannable_uri_uuid": scannable_uri1_uuid,
             "scan_status": 'failed',
             'scan_log': 'scan_log',
         }
-        response = self.scan_queue_worker_client.post(scannable_uri1_update_status_url, data=data)
+        response = self.scan_queue_worker_client.post(
+            scannable_uri1_update_status_url, data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.scannable_uri1.refresh_from_db()
-        self.assertEqual(ScannableURI.SCAN_FAILED, self.scannable_uri1.scan_status)
+        self.assertEqual(ScannableURI.SCAN_FAILED,
+                         self.scannable_uri1.scan_status)
         self.assertEqual('scan_log', self.scannable_uri1.scan_error)
 
         data = {
             'scan_status': ''
         }
-        response = self.scan_queue_worker_client.post(scannable_uri2_update_status_url, data=data)
+        response = self.scan_queue_worker_client.post(
+            scannable_uri2_update_status_url, data=data)
         expected_response = {'error': 'missing scan_status'}
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(expected_response, response.data)
@@ -188,14 +209,17 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         data = {
             'scan_status': 'invalid'
         }
-        response = self.scan_queue_worker_client.post(scannable_uri2_update_status_url, data=data)
+        response = self.scan_queue_worker_client.post(
+            scannable_uri2_update_status_url, data=data)
         expected_response = {'error': 'invalid scan_status: invalid'}
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(expected_response, response.data)
 
         data = {}
-        response = self.scan_queue_worker_client.post('/api/scan_queue/asdf/', data=data)
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        response = self.scan_queue_worker_client.post(
+            '/api/scan_queue/asdf/', data=data)
+        self.assertEqual(response.status_code,
+                         status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_api_scannable_uri_update_status_update_finished_scannable_uri(self):
         scannable_uri_uuid = self.scannable_uri3.uuid
@@ -216,8 +240,8 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
             )
             expected_response = {
                 'error': 'cannot update status for scannable_uri '
-                        f'{self.scannable_uri3.uuid}: scannable_uri has finished '
-                        f'with status "{ScannableURI.SCAN_STATUSES_BY_CODE[scan_status]}"'
+                f'{self.scannable_uri3.uuid}: scannable_uri has finished '
+                f'with status "{ScannableURI.SCAN_STATUSES_BY_CODE[scan_status]}"'
             }
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
             self.assertEqual(expected_response, response.data)
@@ -232,7 +256,8 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         self.assertFalse(self.package2.copyright)
         self.assertEqual(0, Resource.objects.all().count())
         scan_file_location = self.get_test_loc('scancodeio/get_scan_data.json')
-        summary_file_location = self.get_test_loc('scancodeio/scan_summary_response.json')
+        summary_file_location = self.get_test_loc(
+            'scancodeio/scan_summary_response.json')
         project_extra_data = {
             'scannable_uri_uuid': self.scannable_uri2.uuid,
             'md5': 'md5',
@@ -255,19 +280,24 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
                 'summary': summary,
             }
 
-        webhook_url = get_webhook_url('index_package_scan', self.scan_queue_worker_user.id)
+        webhook_url = get_webhook_url(
+            'index_package_scan', self.scan_queue_worker_user.id)
 
-        response = self.scan_queue_worker_client.post(webhook_url, data=data, format='json')
+        response = self.scan_queue_worker_client.post(
+            webhook_url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.scannable_uri2.refresh_from_db()
-        self.assertEqual(ScannableURI.SCAN_INDEXED, self.scannable_uri2.scan_status)
+        self.assertEqual(ScannableURI.SCAN_INDEXED,
+                         self.scannable_uri2.scan_status)
         self.package2.refresh_from_db()
         self.assertEqual('md5', self.package2.md5)
         self.assertEqual('sha1', self.package2.sha1)
         self.assertEqual('sha256', self.package2.sha256)
         self.assertEqual('sha512', self.package2.sha512)
         self.assertEqual(100, self.package2.size)
-        self.assertEqual('apache-2.0', self.package2.declared_license_expression)
-        self.assertEqual('Copyright (c) Apache Software Foundation', self.package2.copyright)
+        self.assertEqual(
+            'apache-2.0', self.package2.declared_license_expression)
+        self.assertEqual(
+            'Copyright (c) Apache Software Foundation', self.package2.copyright)
         self.assertFalse(self.scannable_uri2.scan_error)
         self.assertEqual(64, Resource.objects.all().count())

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -214,7 +214,8 @@ class ResourceURIManager(models.Manager):
         if existing:
             return False
 
-        revisitable = self.get_revisitables(hours=hours).filter(uri=uri).exists()
+        revisitable = self.get_revisitables(
+            hours=hours).filter(uri=uri).exists()
         if revisitable:
             return True
         else:
@@ -596,10 +597,10 @@ class ScannableURIManager(models.Manager):
         database for update.
         """
         qs = self.filter(scan_status__in=[
-                ScannableURI.SCAN_SUBMITTED,
-                ScannableURI.SCAN_IN_PROGRESS,
-                ScannableURI.SCAN_COMPLETED
-            ],
+            ScannableURI.SCAN_SUBMITTED,
+            ScannableURI.SCAN_IN_PROGRESS,
+            ScannableURI.SCAN_COMPLETED
+        ],
             wip_date=None, scan_error=None,
         )
         # NOTE: this matches an index for efficient ordering
@@ -621,7 +622,8 @@ class ScannableURIManager(models.Manager):
         """
         Return a statistics mapping with summary counts of ScannableURI grouped by status.
         """
-        statuses = list(self.values('scan_status').annotate(count=models.Count('scan_status')).order_by('scan_status'),)
+        statuses = list(self.values('scan_status').annotate(
+            count=models.Count('scan_status')).order_by('scan_status'),)
         for stat in statuses:
             stat['scan_status'] = ScannableURI.SCAN_STATUSES_BY_CODE[stat['scan_status']]
         stats = {
@@ -632,12 +634,18 @@ class ScannableURIManager(models.Manager):
         }
 
         most_recent = dict(
-            most_recent_submitted=self._recent(scan_status=ScannableURI.SCAN_SUBMITTED),
-            most_recent_indexed=self._recent(scan_status=ScannableURI.SCAN_INDEXED),
-            most_recent_failed=self._recent(scan_status=ScannableURI.SCAN_FAILED, extra_value="scan_error",),
-            most_recent_in_progress=self._recent(scan_status=ScannableURI.SCAN_IN_PROGRESS),
-            most_recent_completed=self._recent(scan_status=ScannableURI.SCAN_COMPLETED),
-            most_recent_index_errors=self._recent(scan_status=ScannableURI.SCAN_INDEX_FAILED, extra_value="index_error",),
+            most_recent_submitted=self._recent(
+                scan_status=ScannableURI.SCAN_SUBMITTED),
+            most_recent_indexed=self._recent(
+                scan_status=ScannableURI.SCAN_INDEXED),
+            most_recent_failed=self._recent(
+                scan_status=ScannableURI.SCAN_FAILED, extra_value="scan_error",),
+            most_recent_in_progress=self._recent(
+                scan_status=ScannableURI.SCAN_IN_PROGRESS),
+            most_recent_completed=self._recent(
+                scan_status=ScannableURI.SCAN_COMPLETED),
+            most_recent_index_errors=self._recent(
+                scan_status=ScannableURI.SCAN_INDEX_FAILED, extra_value="index_error",),
         )
         stats.update(most_recent)
         return stats
@@ -648,7 +656,8 @@ class ScannableURIManager(models.Manager):
         ``scan_status``.
         Include an optional ``extra value`` field name.
         """
-        recent_uris = self.filter(scan_status=scan_status).order_by('-scan_date')[:most_recent]
+        recent_uris = self.filter(scan_status=scan_status).order_by(
+            '-scan_date')[:most_recent]
         for scauri in recent_uris:
             recent = dict(
                 # this is NOT a field requiring this loop
@@ -898,7 +907,8 @@ class PriorityResourceURIManager(models.Manager):
         NOTE: this method can only be called from within a transaction.atomic
         block.
         """
-        priority_resource_uri = self.get_requests().select_for_update(skip_locked=True).first()
+        priority_resource_uri = self.get_requests(
+        ).select_for_update(skip_locked=True).first()
         if not priority_resource_uri:
             return
         priority_resource_uri.wip_date = timezone.now()

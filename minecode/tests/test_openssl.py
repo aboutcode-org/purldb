@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -64,4 +64,5 @@ class OpenSSLTest(JsonBasedTesting, DjangoTestCase):
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'openssl/openssl_mapper_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(
+            packages, expected_loc, regen=FIXTURES_REGEN)

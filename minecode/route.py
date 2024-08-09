@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -44,6 +44,7 @@ class Rule(object):
     (typically a URI) for the rule to be considered, i.e. for the endpoint to
     be resolved and eventually invoked for a given string (typically a URI).
     """
+
     def __init__(self, pattern, endpoint):
         # To ensure the pattern will match entirely, we wrap the pattern
         # with start of line ^ and  end of line $.
@@ -101,6 +102,7 @@ class Router(object):
     Multiple routers can co-exist as needed, such as a router to collect,
     another to fetch, etc.
     """
+
     def __init__(self, route_map=None):
         """
         'route_map' is an ordered mapping of pattern -> Rule.

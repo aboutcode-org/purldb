@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -35,7 +35,8 @@ class MatchCodePipelineAPITest(TransactionTestCase):
             project=self.project1,
             path='daglib-0.3.2.tar.gz-extract/daglib-0.3.2/PKG-INFO',
         )
-        self.discovered_package1 = self.resource1.create_and_add_package(package_data1)
+        self.discovered_package1 = self.resource1.create_and_add_package(
+            package_data1)
         self.discovered_dependency1 = DiscoveredDependency.create_from_data(
             self.project1, dependency_data1
         )
@@ -47,9 +48,11 @@ class MatchCodePipelineAPITest(TransactionTestCase):
         )
 
         self.matching_list_url = reverse('matching-list')
-        self.project1_detail_url = reverse('matching-detail', args=[self.project1.uuid])
+        self.project1_detail_url = reverse(
+            'matching-detail', args=[self.project1.uuid])
 
-        self.user = User.objects.create_user('username', 'e@mail.com', 'secret')
+        self.user = User.objects.create_user(
+            'username', 'e@mail.com', 'secret')
         self.auth = f'Token {self.user.auth_token.key}'
 
         self.csrf_client = APIClient(enforce_csrf_checks=True)
@@ -86,7 +89,8 @@ class MatchCodePipelineAPITest(TransactionTestCase):
             'with_missing_resources': 0,
             'with_modified_resources': 0,
         }
-        self.assertEqual(expected, response.data['discovered_packages_summary'])
+        self.assertEqual(
+            expected, response.data['discovered_packages_summary'])
 
         expected = {
             'total': 1,
@@ -94,13 +98,16 @@ class MatchCodePipelineAPITest(TransactionTestCase):
             'is_optional': 0,
             'is_resolved': 0,
         }
-        self.assertEqual(expected, response.data['discovered_dependencies_summary'])
+        self.assertEqual(
+            expected, response.data['discovered_dependencies_summary'])
 
         expected = {'java_to_class': 1}
         self.assertEqual(expected, response.data['codebase_relations_summary'])
 
-        input1 = self.project1.add_input_source(filename='file1', is_uploaded=True)
-        input2 = self.project1.add_input_source(filename='file2', download_url='https://download.url')
+        input1 = self.project1.add_input_source(
+            filename='file1', is_uploaded=True)
+        input2 = self.project1.add_input_source(
+            filename='file2', download_url='https://download.url')
         self.project1.save()
         response = self.csrf_client.get(self.project1_detail_url)
         expected = [
@@ -145,7 +152,8 @@ class MatchCodePipelineAPITest(TransactionTestCase):
 
         # Check that the file was uploaded
         response = self.csrf_client.get(created_matching_project_detail_url)
-        self.assertEqual('test-out.json', response.data['input_sources'][0]['filename'])
+        self.assertEqual(
+            'test-out.json', response.data['input_sources'][0]['filename'])
 
     @mock.patch('scanpipe.models.Run.execute_task_async')
     def test_matching_pipeline_api_matching_create_multiple_input_urls(self, mock_execute_pipeline_task):
@@ -197,9 +205,11 @@ class D2DPipelineAPITest(TransactionTestCase):
     def setUp(self):
         self.project1 = Project.objects.create(name='Analysis')
         self.d2d_list_url = reverse('d2d-list')
-        self.project1_detail_url = reverse('d2d-detail', args=[self.project1.uuid])
+        self.project1_detail_url = reverse(
+            'd2d-detail', args=[self.project1.uuid])
 
-        self.user = User.objects.create_user('username', 'a@mail.com', 'secret')
+        self.user = User.objects.create_user(
+            'username', 'a@mail.com', 'secret')
         self.auth = f'Token {self.user.auth_token.key}'
         self.csrf_client = APIClient(enforce_csrf_checks=True)
         self.csrf_client.credentials(HTTP_AUTHORIZATION=self.auth)
@@ -240,7 +250,8 @@ class D2DPipelineAPITest(TransactionTestCase):
         self.assertEqual(str(run1.uuid), response.data['uuid'])
         self.assertIn(project1_detail_url, response.data['project'])
         self.assertEqual('d2d', response.data['pipeline_name'])
-        self.assertEqual('Establish relationships between two code trees: deployment and development.', response.data['description'])
+        self.assertEqual(
+            'Establish relationships between two code trees: deployment and development.', response.data['description'])
         self.assertEqual('', response.data['scancodeio_version'])
         self.assertIsNone(response.data['task_id'])
         self.assertIsNone(response.data['task_start_date'])

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -99,7 +99,7 @@ def build_packages(purl, data):
         extracted_license_statement=extracted_license_statement,
         vcs_url=vcs_url,
         homepage_url=homepage_url,
-        repository_homepage_url = f'https://f-droid.org/en/packages/{base_purl.name}',
+        repository_homepage_url=f'https://f-droid.org/en/packages/{base_purl.name}',
         description=description,
         parties=parties,
     )
@@ -114,7 +114,8 @@ def build_packages(purl, data):
     for _sha256_of_apk, version_data in versions.items():
         # TODO: collect versionName
         version_code = str(version_data['manifest']['versionCode'])
-        logger.debug(f'build_packages: base_purl: {base_purl} version: {version_code}')
+        logger.debug(
+            f'build_packages: base_purl: {base_purl} version: {version_code}')
         logger.debug(f'build_packages: data: {version_data}')
 
         # TODO: add  release_date from "added": 1655164800000,
@@ -212,4 +213,3 @@ def build_description(metadata, language='en-US'):
 
     non_empty_parts = [p for p in [name, summary, description] if p]
     return '\n'.join(non_empty_parts)
-

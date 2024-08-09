@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -24,7 +24,8 @@ class Command(CreateUserCommand):
             verbosity=verbosity
         )
         # Add user to `scan_queue_workers` group
-        scan_queue_workers_group, _ = Group.objects.get_or_create(name='scan_queue_workers')
+        scan_queue_workers_group, _ = Group.objects.get_or_create(
+            name='scan_queue_workers')
         scan_queue_workers_group.user_set.add(user)
         msg = f'User {username} added to `scan_queue_workers` group'
         self.stdout.write(msg, self.style.SUCCESS)

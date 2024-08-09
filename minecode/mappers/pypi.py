@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -83,7 +83,8 @@ def build_packages(metadata, purl=None):
 
     classifiers = info.get('classifiers')
     if classifiers and not extracted_license_statement:
-        licenses = [lic for lic in classifiers if lic.lower().startswith('license')]
+        licenses = [
+            lic for lic in classifiers if lic.lower().startswith('license')]
         for lic in licenses:
             extracted_license_statement.append(lic)
 
@@ -91,7 +92,8 @@ def build_packages(metadata, purl=None):
 
     kw = info.get('keywords')
     if kw:
-        common_data['keywords'] = [k.strip() for k in kw.split(',') if k.strip()]
+        common_data['keywords'] = [k.strip()
+                                   for k in kw.split(',') if k.strip()]
 
     # FIXME: we should either support "extra" data in a ScannedPackage or just ignore this kind of FIXME comments for now
 

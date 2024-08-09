@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -189,7 +189,8 @@ class ApproximateMatchingHashMixin(models.Model):
 
     class Meta:
         abstract = True
-        unique_together = ['chunk1', 'chunk2', 'chunk3', 'chunk4', 'package', 'path']
+        unique_together = ['chunk1', 'chunk2',
+                           'chunk3', 'chunk4', 'package', 'path']
 
     def __str__(self):
         return self.fingerprint()
@@ -206,7 +207,8 @@ class ApproximateMatchingHashMixin(models.Model):
         """
         try:
             indexed_elements_count, fp = split_fingerprint(fingerprint)
-            fp_chunk1, fp_chunk2, fp_chunk3, fp_chunk4 = create_halohash_chunks(fp)
+            fp_chunk1, fp_chunk2, fp_chunk3, fp_chunk4 = create_halohash_chunks(
+                fp)
             bdi, created = cls.objects.get_or_create(
                 indexed_elements_count=indexed_elements_count,
                 chunk1=fp_chunk1,
@@ -307,7 +309,8 @@ class ApproximateMatchingHashMixin(models.Model):
             # TODO: try other thresholds if this is too restrictive
             if hd < 8:
                 # Save match to `matches_by_hamming_distance` by adding the matched object to the queryset
-                matches_by_hamming_distance[hd] |= cls.objects.filter(pk=match.pk)
+                matches_by_hamming_distance[hd] |= cls.objects.filter(
+                    pk=match.pk)
 
         if TRACE:
             logger_debug(list(matches_by_hamming_distance.items()))
@@ -359,15 +362,18 @@ class ApproximateMatchingHashMixin(models.Model):
 
                 # Compute size and name difference
                 if matched_resource.is_file:
-                    size_difference = abs(resource_size - matched_resource.size)
+                    size_difference = abs(
+                        resource_size - matched_resource.size)
                 else:
                     # TODO: index number of files in a directory so we can use
                     # that for size comparison. For now, we are going to
                     # disregard size as a factor.
                     size_difference = 0
-                name_sequence_matcher = SequenceMatcher(a=resource.name, b=matched_resource.name)
+                name_sequence_matcher = SequenceMatcher(
+                    a=resource.name, b=matched_resource.name)
                 name_difference = 1 - name_sequence_matcher.ratio()
-                rank_attributes = (hamming_distance, size_difference, name_difference)
+                rank_attributes = (
+                    hamming_distance, size_difference, name_difference)
                 matches_by_rank_attributes[rank_attributes].append(match)
 
                 if TRACE:
@@ -394,7 +400,8 @@ class ApproximateMatchingHashMixin(models.Model):
                 dct
             )
 
-        matches = cls.objects.filter(pk__in=[match.pk for match in ranked_matches])
+        matches = cls.objects.filter(
+            pk__in=[match.pk for match in ranked_matches])
         return matches
 
     def get_chunks(self):
@@ -407,7 +414,8 @@ class ApproximateMatchingHashMixin(models.Model):
     def fingerprint(self):
         indexed_element_count_as_hex_bytes = b'%08x' % self.indexed_elements_count
         chunk1, chunk2, chunk3, chunk4 = self.get_chunks()
-        fingerprint = indexed_element_count_as_hex_bytes + chunk1 + chunk2 + chunk3 + chunk4
+        fingerprint = indexed_element_count_as_hex_bytes + \
+            chunk1 + chunk2 + chunk3 + chunk4
         return fingerprint.decode('utf-8')
 
 

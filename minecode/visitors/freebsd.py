@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -56,6 +56,7 @@ class FreeBSDSubHTMLVisitors(HttpVisitor):
     """
     Visit the sub repo URL and yield all uris in the page and in its children page
     """
+
     def get_uris(self, content):
         page = BeautifulSoup(content, 'lxml')
         base_url = self.uri + '{path}'
@@ -73,6 +74,7 @@ class FreeBSDIndexVisitors(NonPersistentHttpVisitor):
     """
     Extract packagesite.txz index file, get the data of packagesite.yaml file.
     """
+
     def dumps(self, content):
         """
         Extract the file packagesite.yaml and read the content of the file and return.
@@ -83,4 +85,5 @@ class FreeBSDIndexVisitors(NonPersistentHttpVisitor):
             with open(manifest_file) as file_handler:
                 return file_handler.read()
         else:
-            logger.warn('The packagesite.yaml is not existing in index file:' + content)
+            logger.warn(
+                'The packagesite.yaml is not existing in index file:' + content)

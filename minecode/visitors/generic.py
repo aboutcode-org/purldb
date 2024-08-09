@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -193,7 +193,8 @@ def process_request_fetchcode_generic(purl_str, **kwargs):
         error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
-    error_msg = map_fetchcode_supported_package(package_url, pipelines, priority)
+    error_msg = map_fetchcode_supported_package(
+        package_url, pipelines, priority)
 
     if error_msg:
         return error_msg

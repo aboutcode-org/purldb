@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -59,9 +59,9 @@ class TestRepoData(FileBasedTesting):
                 u'url': 'https://github.com/openstack/python-ceilometerclient',
                 u'checksum': '36547e200627ea25c4e3fb6f9735d58e682f8e35cd815dceed796c83628e60d5',
                 u'directories': [],
-                u'summary':'Python API and CLI for OpenStack Ceilometer',
-                u'start_header_range':'880',
-                u'required_rpms':[
+                u'summary': 'Python API and CLI for OpenStack Ceilometer',
+                u'start_header_range': '880',
+                u'required_rpms': [
                     {
                         u'name': 'python-d2to1'
                     },

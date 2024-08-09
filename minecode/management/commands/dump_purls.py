@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -22,7 +22,8 @@ def dump_purls(package_type, output):
     for i, package in enumerate(Package.objects.filter(type=package_type).all()):
         if not output:
             out = open(f"{output}-{i}.json", "w")
-        purl = dict(purl=package.package_url, download_url=package.download_url)
+        purl = dict(purl=package.package_url,
+                    download_url=package.download_url)
         if not i % 500:
             print(f"#{i} purl: {package.package_url}")
         out.write(json.dumps(purl, separators=compact_separators))
@@ -37,4 +38,3 @@ if __name__ == "__main__":
     package_type = args[0]
     output = args[1]
     dump_purls(package_type=package_type, output=output)
-

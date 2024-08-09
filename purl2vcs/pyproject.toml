@@ -53,7 +53,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/nexB/purldb"
+Homepage = "https://github.com/aboutcode-org/purldb"
 
 
 [project.optional-dependencies]
@@ -77,7 +77,7 @@ allow_dirty = true
 
 files = [
     { filename = "pyproject.toml" },
-    
+
 ]
 
 

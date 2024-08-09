@@ -3,7 +3,7 @@
 
 FROM --platform=linux/amd64 python:3.12-slim
 
-LABEL org.opencontainers.image.source="https://github.com/nexB/purldb"
+LABEL org.opencontainers.image.source="https://github.com/aboutcode-org/purldb"
 LABEL org.opencontainers.image.description="PurlDB"
 LABEL org.opencontainers.image.licenses="Apache-2.0"
 

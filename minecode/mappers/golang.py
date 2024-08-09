@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -31,7 +31,8 @@ def build_golang_package(package_data, purl):
     """
     package_url = PackageURL.from_string(purl)
     vcs_url = package_url.qualifiers.get('vcs_repository')
-    homepage_url = '/'.join(['https:/', package_url.namespace, package_url.name])
+    homepage_url = '/'.join(['https:/',
+                            package_url.namespace, package_url.name])
     vcs_tool = 'git' if 'github.com' in package_url.namespace else None
     if vcs_tool:
         vcs_url = form_vcs_url(vcs_tool, vcs_url)

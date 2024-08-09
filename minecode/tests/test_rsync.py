@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -37,12 +37,18 @@ class RsyncTest(MiningTestCase):
             '-rw-rw-r--              0 2015/07/23 17:36:47 bar/that/baz',
         ]
         expected = [
-            rsync.Entry('d', 'rwxrwxr-x', 4096, '2015-07-23T17:36:47+00:00', '.')._asdict(),
-            rsync.Entry('-', 'rw-rw-r--', 0, '2015-07-23T17:36:47+00:00', 'foo')._asdict(),
-            rsync.Entry('d', 'rwxrwxr-x', 4096, '2015-07-23T17:36:47+00:00', 'bar')._asdict(),
-            rsync.Entry('-', 'rw-rw-r--', 0, '2015-07-23T17:36:47+00:00', 'bar/this')._asdict(),
-            rsync.Entry('d', 'rwxrwxr-x', 4096, '2015-07-23T17:36:47+00:00', 'bar/that')._asdict(),
-            rsync.Entry('-', 'rw-rw-r--', 0, '2015-07-23T17:36:47+00:00', 'bar/that/baz')._asdict(),
+            rsync.Entry('d', 'rwxrwxr-x', 4096,
+                        '2015-07-23T17:36:47+00:00', '.')._asdict(),
+            rsync.Entry('-', 'rw-rw-r--', 0,
+                        '2015-07-23T17:36:47+00:00', 'foo')._asdict(),
+            rsync.Entry('d', 'rwxrwxr-x', 4096,
+                        '2015-07-23T17:36:47+00:00', 'bar')._asdict(),
+            rsync.Entry('-', 'rw-rw-r--', 0,
+                        '2015-07-23T17:36:47+00:00', 'bar/this')._asdict(),
+            rsync.Entry('d', 'rwxrwxr-x', 4096,
+                        '2015-07-23T17:36:47+00:00', 'bar/that')._asdict(),
+            rsync.Entry('-', 'rw-rw-r--', 0,
+                        '2015-07-23T17:36:47+00:00', 'bar/that/baz')._asdict(),
         ]
 
         for test, exp in zip(lines, expected):
@@ -59,9 +65,12 @@ class RsyncTest(MiningTestCase):
         ]
 
         expected = [
-            rsync.Entry('-', 'rw-r--r--', 4399746, '2008-11-23T16:03:57+00:00', 'zz/ZZUL P/ZUL.gz')._asdict(),
-            rsync.Entry('d', 'rwxrwxr-x', 4096, '2004-08-09T00:47:02+00:00', 'pub/sou/a/a7')._asdict(),
-            rsync.Entry('-', 'rwxrwxr-x', 4096, '2004-08-09T00:47:02+00:00', 'pub/\xe5sou/a/a7')._asdict(),
+            rsync.Entry('-', 'rw-r--r--', 4399746,
+                        '2008-11-23T16:03:57+00:00', 'zz/ZZUL P/ZUL.gz')._asdict(),
+            rsync.Entry('d', 'rwxrwxr-x', 4096,
+                        '2004-08-09T00:47:02+00:00', 'pub/sou/a/a7')._asdict(),
+            rsync.Entry('-', 'rwxrwxr-x', 4096,
+                        '2004-08-09T00:47:02+00:00', 'pub/\xe5sou/a/a7')._asdict(),
             None,
             None,
         ]
@@ -75,27 +84,48 @@ class RsyncTest(MiningTestCase):
         output = list(rsync.directory_entries(test_dir))
 
         expected = [
-            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096, date='2014-03-18T19:02:46+00:00', path='.'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=5, date='2014-03-18T19:02:46+00:00', path='.revision'),
-            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096, date='2014-02-05T09:34:20+00:00', path='1.4.23'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=95314, date='2014-02-05T09:23:44+00:00', path='1.4.23/CHANGELOG-1.4'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=3712820, date='2014-02-05T09:23:44+00:00', path='1.4.23/apache-wicket-1.4.23-source.tgz'),
-            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096, date='2014-02-05T09:34:20+00:00', path='1.4.23/binaries'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=23622515, date='2014-02-05T09:23:44+00:00', path='1.4.23/binaries/apache-wicket-1.4.23.tar.gz'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=32524295, date='2014-02-05T09:23:44+00:00', path='1.4.23/binaries/apache-wicket-1.4.23.zip'),
-            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096, date='2014-01-27T09:09:40+00:00', path='1.5.11'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=115587, date='2014-01-20T16:53:10+00:00', path='1.5.11/CHANGELOG-1.5'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=4116809, date='2014-01-20T16:53:10+00:00', path='1.5.11/apache-wicket-1.5.11-source.tgz'),
-            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096, date='2014-01-27T09:09:39+00:00', path='1.5.11/binaries'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=26048500, date='2014-01-20T16:53:10+00:00', path='1.5.11/binaries/apache-wicket-1.5.11.tar.gz'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=36156260, date='2014-01-20T16:53:10+00:00', path='1.5.11/binaries/apache-wicket-1.5.11.zip'),
-            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096, date='2014-02-19T08:36:07+00:00', path='6.14.0'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=78058, date='2014-02-14T15:51:23+00:00', path='6.14.0/CHANGELOG-6.x'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=4792619, date='2014-02-14T15:51:23+00:00', path='6.14.0/apache-wicket-6.14.0.tar.gz'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=9038442, date='2014-02-14T15:51:23+00:00', path='6.14.0/apache-wicket-6.14.0.zip'),
-            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096, date='2014-02-19T08:36:05+00:00', path='6.14.0/binaries'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=29851252, date='2014-02-14T15:51:23+00:00', path='6.14.0/binaries/apache-wicket-6.14.0-bin.tar.gz'),
-            rsync.Entry(type='-', perm='rw-rw-r--', size=29890658, date='2014-02-14T15:51:23+00:00', path='6.14.0/binaries/apache-wicket-6.14.0-bin.zip')
+            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096,
+                        date='2014-03-18T19:02:46+00:00', path='.'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=5,
+                        date='2014-03-18T19:02:46+00:00', path='.revision'),
+            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096,
+                        date='2014-02-05T09:34:20+00:00', path='1.4.23'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=95314,
+                        date='2014-02-05T09:23:44+00:00', path='1.4.23/CHANGELOG-1.4'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=3712820,
+                        date='2014-02-05T09:23:44+00:00', path='1.4.23/apache-wicket-1.4.23-source.tgz'),
+            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096,
+                        date='2014-02-05T09:34:20+00:00', path='1.4.23/binaries'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=23622515, date='2014-02-05T09:23:44+00:00',
+                        path='1.4.23/binaries/apache-wicket-1.4.23.tar.gz'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=32524295,
+                        date='2014-02-05T09:23:44+00:00', path='1.4.23/binaries/apache-wicket-1.4.23.zip'),
+            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096,
+                        date='2014-01-27T09:09:40+00:00', path='1.5.11'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=115587,
+                        date='2014-01-20T16:53:10+00:00', path='1.5.11/CHANGELOG-1.5'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=4116809,
+                        date='2014-01-20T16:53:10+00:00', path='1.5.11/apache-wicket-1.5.11-source.tgz'),
+            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096,
+                        date='2014-01-27T09:09:39+00:00', path='1.5.11/binaries'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=26048500, date='2014-01-20T16:53:10+00:00',
+                        path='1.5.11/binaries/apache-wicket-1.5.11.tar.gz'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=36156260,
+                        date='2014-01-20T16:53:10+00:00', path='1.5.11/binaries/apache-wicket-1.5.11.zip'),
+            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096,
+                        date='2014-02-19T08:36:07+00:00', path='6.14.0'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=78058,
+                        date='2014-02-14T15:51:23+00:00', path='6.14.0/CHANGELOG-6.x'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=4792619,
+                        date='2014-02-14T15:51:23+00:00', path='6.14.0/apache-wicket-6.14.0.tar.gz'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=9038442,
+                        date='2014-02-14T15:51:23+00:00', path='6.14.0/apache-wicket-6.14.0.zip'),
+            rsync.Entry(type='d', perm='rwxrwxr-x', size=4096,
+                        date='2014-02-19T08:36:05+00:00', path='6.14.0/binaries'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=29851252, date='2014-02-14T15:51:23+00:00',
+                        path='6.14.0/binaries/apache-wicket-6.14.0-bin.tar.gz'),
+            rsync.Entry(type='-', perm='rw-rw-r--', size=29890658, date='2014-02-14T15:51:23+00:00',
+                        path='6.14.0/binaries/apache-wicket-6.14.0-bin.zip')
         ]
         expected = [dict(x._asdict()) for x in expected]
         self.assertEqual(expected, output)

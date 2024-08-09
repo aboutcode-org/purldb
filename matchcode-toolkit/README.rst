@@ -54,4 +54,4 @@ added step of computing fingerprints for directories.
 .. note::
 
     MatchCode toolkit has moved to its own repo at https://github.com/nexB/matchcode-toolkit
-    from its previous location https://github.com/nexB/purldb/tree/main/matchcode-toolkit
+    from its previous location https://github.com/aboutcode-org/purldb/tree/main/matchcode-toolkit

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -133,7 +133,8 @@ def fetch_directory(uri, recurse=True):
     Return the location of a tempfile containing an rsync dir listing for uri.
     Recursive if recurse is True. Raise an Exception with error details.
     """
-    temp_file = get_temp_file(file_name='minecode-rsync-dir-', extension='.rsync')
+    temp_file = get_temp_file(
+        file_name='minecode-rsync-dir-', extension='.rsync')
     with open(temp_file, 'w') as tmp:
         file_name = tmp.name
         ends = not uri.endswith('/') and '/' or ''

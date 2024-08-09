@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -25,7 +25,8 @@ def get_next_execution(watch_interval_days, last_watch_date):
     """
     current_date_time = datetime.datetime.now(tz=datetime.timezone.utc)
     if last_watch_date:
-        next_execution = last_watch_date + datetime.timedelta(days=watch_interval_days)
+        next_execution = last_watch_date + \
+            datetime.timedelta(days=watch_interval_days)
         if next_execution > current_date_time:
             return next_execution
 
@@ -40,7 +41,7 @@ def schedule_watch(watch):
     watch_interval = watch.watch_interval
     last_watch_date = watch.last_watch_date
 
-    first_execution = get_next_execution(watch_interval,last_watch_date)
+    first_execution = get_next_execution(watch_interval, last_watch_date)
     interval_in_seconds = watch_interval * 24 * 60 * 60
 
     job = scheduler.schedule(
@@ -75,7 +76,7 @@ def clear_zombie_watch_schedules(logger=log):
     """
     from packagedb.models import PackageWatch
     schedule_ids = PackageWatch.objects.all().values_list("schedule_work_id", flat=True)
-    
+
     for job in scheduler.get_jobs():
         if job._id not in schedule_ids:
             logger.info(f"Deleting scheduled job {job}")

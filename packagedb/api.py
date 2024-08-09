@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -268,7 +268,8 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
 
         qs = Resource.objects.filter(lookups)
         paginated_qs = self.paginate_queryset(qs)
-        serializer = ResourceAPISerializer(paginated_qs, many=True, context={'request': request})
+        serializer = ResourceAPISerializer(
+            paginated_qs, many=True, context={'request': request})
         return self.get_paginated_response(serializer.data)
 
 
@@ -332,16 +333,16 @@ class PackageFilterSet(FilterSet):
     )
 
     sort = OrderingFilter(fields=[
-            'type',
-            'namespace',
-            'name',
-            'version',
-            'qualifiers',
-            'subpath',
-            'download_url',
-            'filename',
-            'size',
-            'release_date'
+        'type',
+        'namespace',
+        'name',
+        'version',
+        'qualifiers',
+        'subpath',
+        'download_url',
+        'filename',
+        'size',
+        'release_date'
     ])
 
     class Meta:
@@ -382,7 +383,8 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         latest_version = package.get_latest_version()
         if latest_version:
             return Response(
-                PackageAPISerializer(latest_version, context={'request': request}).data
+                PackageAPISerializer(latest_version, context={
+                                     'request': request}).data
             )
 
         return Response({})
@@ -405,7 +407,8 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         qs = Resource.objects.filter(package=package)
         paginated_qs = self.paginate_queryset(qs)
 
-        serializer = ResourceAPISerializer(paginated_qs, many=True, context={'request': request})
+        serializer = ResourceAPISerializer(
+            paginated_qs, many=True, context={'request': request})
         return self.get_paginated_response(serializer.data)
 
     @action(detail=True)
@@ -457,7 +460,8 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         data = dict(request.data)
 
         unsupported_fields = []
-        supported_fields = ['md5', 'sha1', 'sha256', 'sha512', 'enhance_package_data']
+        supported_fields = ['md5', 'sha1', 'sha256',
+                            'sha512', 'enhance_package_data']
         for field, value in data.items():
             if field not in supported_fields:
                 unsupported_fields.append(field)
@@ -495,9 +499,11 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         qs = Package.objects.filter(lookups)
         paginated_qs = self.paginate_queryset(qs)
         if enhance_package_data:
-            serialized_package_data = [get_enhanced_package(package=package) for package in paginated_qs]
+            serialized_package_data = [get_enhanced_package(
+                package=package) for package in paginated_qs]
         else:
-            serializer = PackageAPISerializer(paginated_qs, many=True, context={'request': request})
+            serializer = PackageAPISerializer(
+                paginated_qs, many=True, context={'request': request})
             serialized_package_data = serializer.data
         return self.get_paginated_response(serialized_package_data)
 
@@ -506,7 +512,6 @@ class PackageViewSet(PackagePublicViewSet):
 
     @action(detail=True)
     def reindex_package(self, request, *args, **kwargs):
-
         """
         Reindex this package instance
         """
@@ -693,13 +698,15 @@ def _get_enhanced_package(package, packages):
     package_data = package.to_dict()
 
     # always default to PackageContentType.BINARY as we can have None/NULL in the model for now
-    # Reference: https://github.com/nexB/purldb/issues/490
-    package_content = (package and package.package_content) or PackageContentType.BINARY
+    # Reference: https://github.com/aboutcode-org/purldb/issues/490
+    package_content = (
+        package and package.package_content) or PackageContentType.BINARY
 
     for peer in packages:
         # always default to PackageContentType.BINARY as we can have None/NULL in the model for now
-        # Reference: https://github.com/nexB/purldb/issues/490
-        peer_content = (peer and peer.package_content) or PackageContentType.BINARY
+        # Reference: https://github.com/aboutcode-org/purldb/issues/490
+        peer_content = (
+            peer and peer.package_content) or PackageContentType.BINARY
 
         if peer_content >= package_content:
             # We do not want to mix data with peers of the same package content
@@ -713,7 +720,8 @@ def _get_enhanced_package(package, packages):
                 if field == 'parties':
                     peer_value = PartySerializer(peer_value, many=True).data
                 if field == 'dependencies':
-                    peer_value = DependentPackageSerializer(peer_value, many=True).data
+                    peer_value = DependentPackageSerializer(
+                        peer_value, many=True).data
                 package_data[field] = peer_value
                 enhanced = True
         if enhanced:
@@ -793,18 +801,20 @@ class CollectViewSet(viewsets.ViewSet):
     serializer_class = CollectPackageSerializer
 
     @extend_schema(
-            parameters=[
-                OpenApiParameter('purl', str, 'query', description='PackageURL', required=True),
-                OpenApiParameter('source_purl', str, 'query', description='Source PackageURL'),
+        parameters=[
+            OpenApiParameter('purl', str, 'query',
+                             description='PackageURL', required=True),
+            OpenApiParameter('source_purl', str, 'query',
+                             description='Source PackageURL'),
 
-                # There is no OpenApiTypes.LIST https://github.com/tfranzel/drf-spectacular/issues/341
-                OpenApiParameter(
-                    'addon_pipelines',
-                    build_array_type(build_basic_type(OpenApiTypes.STR)),
-                    'query', description='Addon pipelines',
-                    ),
-            ],
-            responses={200:PackageAPISerializer()},
+            # There is no OpenApiTypes.LIST https://github.com/tfranzel/drf-spectacular/issues/341
+            OpenApiParameter(
+                'addon_pipelines',
+                build_array_type(build_basic_type(OpenApiTypes.STR)),
+                'query', description='Addon pipelines',
+            ),
+        ],
+        responses={200: PackageAPISerializer()},
     )
     def list(self, request, format=None):
         serializer = self.serializer_class(data=request.query_params)
@@ -851,7 +861,8 @@ class CollectViewSet(viewsets.ViewSet):
         for package in packages:
             get_source_package_and_add_to_package_set(package)
 
-        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
+        serializer = PackageAPISerializer(
+            packages, many=True, context={'request': request})
         return Response(serializer.data)
 
     @extend_schema(
@@ -974,16 +985,19 @@ class CollectViewSet(viewsets.ViewSet):
         reindexed_packages = []
         requeued_packages = []
 
-        supported_ecosystems = ['maven', 'npm', 'deb', 'generic', 'gnu', 'openssl', 'github', 'conan']
+        supported_ecosystems = ['maven', 'npm', 'deb',
+                                'generic', 'gnu', 'openssl', 'github', 'conan']
 
-        unique_packages, unsupported_packages, unsupported_vers = get_resolved_packages(packages, supported_ecosystems)
+        unique_packages, unsupported_packages, unsupported_vers = get_resolved_packages(
+            packages, supported_ecosystems)
 
         if reindex:
             for package in unique_packages:
                 purl = package['purl']
                 kwargs = dict()
                 if addon_pipelines := package.get('addon_pipelines'):
-                    kwargs["addon_pipelines"] = [pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)]
+                    kwargs["addon_pipelines"] = [
+                        pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)]
                 lookups = purl_to_lookups(purl)
                 packages = Package.objects.filter(**lookups)
                 if packages.count() > 0:
@@ -993,10 +1007,12 @@ class CollectViewSet(viewsets.ViewSet):
                         if reindex_set:
                             for package_set in package.package_sets.all():
                                 for p in package_set.packages.all():
-                                    _reindex_package(p, reindexed_packages, **kwargs)
+                                    _reindex_package(
+                                        p, reindexed_packages, **kwargs)
                 else:
                     nonexistent_packages.append(package)
-            requeued_packages.extend([p.package_url for p in reindexed_packages])
+            requeued_packages.extend(
+                [p.package_url for p in reindexed_packages])
 
         if not reindex or nonexistent_packages:
             interesting_packages = nonexistent_packages if nonexistent_packages else unique_packages
@@ -1011,10 +1027,12 @@ class CollectViewSet(viewsets.ViewSet):
                     if source_purl := package.get('source_purl'):
                         extra_fields['source_uri'] = source_purl
                     if addon_pipelines := package.get('addon_pipelines'):
-                        extra_fields['addon_pipelines'] = [pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)]
+                        extra_fields['addon_pipelines'] = [
+                            pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)]
                     if priority := package.get('priority'):
                         extra_fields['priority'] = priority
-                    priority_resource_uri = PriorityResourceURI.objects.insert(purl, **extra_fields)
+                    priority_resource_uri = PriorityResourceURI.objects.insert(
+                        purl, **extra_fields)
                     if priority_resource_uri:
                         queued_packages.append(purl)
                     else:
@@ -1033,14 +1051,16 @@ class CollectViewSet(viewsets.ViewSet):
             'unsupported_vers': unsupported_vers,
         }
 
-        serializer = IndexPackagesResponseSerializer(response_data, context={'request': request})
+        serializer = IndexPackagesResponseSerializer(
+            response_data, context={'request': request})
         return Response(serializer.data)
 
     @extend_schema(
         parameters=[
-            OpenApiParameter('purl', str, 'query', description='PackageURL', required=True),
+            OpenApiParameter('purl', str, 'query',
+                             description='PackageURL', required=True),
         ],
-        responses={200:PackageAPISerializer()},
+        responses={200: PackageAPISerializer()},
     )
     @action(detail=False, methods=['get'], serializer_class=CollectPackageSerializer)
     def reindex_metadata(self, request, *args, **kwargs):
@@ -1099,9 +1119,9 @@ class CollectViewSet(viewsets.ViewSet):
                 }
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = PackageAPISerializer(packages, many=True, context={'request': request})
+        serializer = PackageAPISerializer(
+            packages, many=True, context={'request': request})
         return Response(serializer.data)
-
 
 
 class PurlValidateViewSet(viewsets.ViewSet):
@@ -1132,7 +1152,8 @@ class PurlValidateViewSet(viewsets.ViewSet):
     @extend_schema(
         parameters=[
             OpenApiParameter('purl', str, 'query', description='PackageURL'),
-            OpenApiParameter('check_existence', bool, 'query', description='Check existence', default=False),
+            OpenApiParameter('check_existence', bool, 'query',
+                             description='Check existence', default=False),
         ],
         responses={200: PurlValidateResponseSerializer()},
     )
@@ -1168,7 +1189,8 @@ class PurlValidateViewSet(viewsets.ViewSet):
         try:
             package_url = PackageURL.from_string(purl)
         except ValueError:
-            serializer = PurlValidateResponseSerializer(response, context={'request': request})
+            serializer = PurlValidateResponseSerializer(
+                response, context={'request': request})
             return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
         response['valid'] = True
@@ -1208,7 +1230,8 @@ class PurlValidateViewSet(viewsets.ViewSet):
             else:
                 response["message"] = message_valid_but_does_not_exist
 
-        serializer = PurlValidateResponseSerializer(response, context={'request': request})
+        serializer = PurlValidateResponseSerializer(
+            response, context={'request': request})
         return Response(serializer.data)
 
 
@@ -1312,7 +1335,8 @@ def resolve_versions(parsed_purl, vers):
                 )
                 result.append(str(package_url))
         except InvalidConstraintsError:
-            logger.warning(f"Invalid constraints sequence in '{vers}' for '{parsed_purl}'")
+            logger.warning(
+                f"Invalid constraints sequence in '{vers}' for '{parsed_purl}'")
             return
 
     return result
@@ -1335,7 +1359,7 @@ def get_all_versions_plain(purl: PackageURL):
         return
 
     all_versions = versionAPI().fetch(package_name) or []
-    return [ version.value for version in all_versions ]
+    return [version.value for version in all_versions]
 
 
 def get_all_versions(purl):
@@ -1357,4 +1381,5 @@ def get_all_versions(purl):
     return result
 
 
-VERSION_CLASS_BY_PACKAGE_TYPE = {pkg_type: range_class.version_class for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()}
+VERSION_CLASS_BY_PACKAGE_TYPE = {
+    pkg_type: range_class.version_class for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()}

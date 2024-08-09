@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -26,7 +26,8 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
 
     def setUp(self):
         pom_loc = self.get_test_loc('maven/pom/pulsar-2.5.1.pom')
-        self.scanned_package = _parse('maven_pom', 'maven', 'Java', location=pom_loc)
+        self.scanned_package = _parse(
+            'maven_pom', 'maven', 'Java', location=pom_loc)
         self.scanned_package.download_url = 'https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/pulsar-2.5.1.jar'
 
     def test_merge_or_create_package_create_package(self):
@@ -92,12 +93,15 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
             'Package field values have been updated.',
             message,
         )
-        last_modified_date_formatted = package.last_modified_date.strftime("%Y-%m-%d-%H:%M:%S")
+        last_modified_date_formatted = package.last_modified_date.strftime(
+            "%Y-%m-%d-%H:%M:%S")
         self.assertEqual(timestamp, last_modified_date_formatted)
         data = entry['data']
         updated_fields = data['updated_fields']
-        expected_updated_fields_loc = self.get_test_loc('model_utils/expected_updated_fields.json')
-        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN)
+        expected_updated_fields_loc = self.get_test_loc(
+            'model_utils/expected_updated_fields.json')
+        self.check_expected_results(
+            updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN)
 
 
 class UpdateORCreateResourceTest(TransactionTestCase):

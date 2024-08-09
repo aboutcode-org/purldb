@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -124,7 +124,8 @@ def process_request(priority_resource_uri, _priority_router=priority_router):
         errors = _priority_router.process(purl_to_visit, **kwargs)
         if TRACE:
             new_uris_to_visit = list(new_uris_to_visit or [])
-            logger.debug('visit_uri: new_uris_to_visit: {}'.format(new_uris_to_visit))
+            logger.debug(
+                'visit_uri: new_uris_to_visit: {}'.format(new_uris_to_visit))
 
         return errors
 

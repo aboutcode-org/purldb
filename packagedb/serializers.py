@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -31,7 +31,8 @@ from rest_framework.serializers import SerializerMethodField
 
 
 class ResourceAPISerializer(HyperlinkedModelSerializer):
-    package = HyperlinkedRelatedField(view_name='api:package-detail', lookup_field='uuid', read_only=True)
+    package = HyperlinkedRelatedField(
+        view_name='api:package-detail', lookup_field='uuid', read_only=True)
     purl = CharField(source='package.package_url')
 
     class Meta:
@@ -150,13 +151,15 @@ class PackageInPackageSetAPISerializer(ModelSerializer):
         )
 
     def to_representation(self, instance):
-        reverse_uri = reverse_lazy('api:package-detail', kwargs={'uuid': instance.uuid})
+        reverse_uri = reverse_lazy(
+            'api:package-detail', kwargs={'uuid': instance.uuid})
         request = self.context['request']
         return request.build_absolute_uri(reverse_uri)
 
 
 class PackageSetAPISerializer(ModelSerializer):
     packages = PackageInPackageSetAPISerializer(many=True)
+
     class Meta:
         model = PackageSet
         fields = (
@@ -168,9 +171,12 @@ class PackageSetAPISerializer(ModelSerializer):
 class PackageAPISerializer(HyperlinkedModelSerializer):
     dependencies = DependentPackageSerializer(many=True)
     parties = PartySerializer(many=True)
-    resources = HyperlinkedIdentityField(view_name='api:package-resources', lookup_field='uuid')
-    history = HyperlinkedIdentityField(view_name='api:package-history', lookup_field='uuid')
-    url = HyperlinkedIdentityField(view_name='api:package-detail', lookup_field='uuid')
+    resources = HyperlinkedIdentityField(
+        view_name='api:package-resources', lookup_field='uuid')
+    history = HyperlinkedIdentityField(
+        view_name='api:package-history', lookup_field='uuid')
+    url = HyperlinkedIdentityField(
+        view_name='api:package-detail', lookup_field='uuid')
     package_sets = PackageSetAPISerializer(many=True)
     package_content = SerializerMethodField()
     declared_license_expression_spdx = CharField()
@@ -251,6 +257,7 @@ class PackageInPackageSetMetadataSerializer(ModelSerializer):
 
 class PackageSetMetadataSerializer(ModelSerializer):
     packages = PackageInPackageSetMetadataSerializer(many=True)
+
     class Meta:
         model = PackageSet
         fields = (
@@ -342,6 +349,7 @@ class PackageWatchAPISerializer(HyperlinkedModelSerializer):
         view_name='api:packagewatch-detail',
         lookup_field='package_url'
     )
+
     class Meta:
         model = PackageWatch
         fields = [
@@ -362,7 +370,8 @@ class PackageWatchCreateSerializer(ModelSerializer):
         model = PackageWatch
         fields = ["package_url", "depth", "watch_interval", "is_active"]
         extra_kwargs = {
-            field: {"initial": PackageWatch._meta.get_field(field).get_default()}
+            field: {"initial": PackageWatch._meta.get_field(
+                field).get_default()}
             for field in ["depth", "watch_interval", "is_active"]
         }
 
@@ -376,24 +385,24 @@ class PackageWatchUpdateSerializer(ModelSerializer):
 class CollectPackageSerializer(Serializer):
     purl = CharField(help_text="PackageURL strings in canonical form.")
     source_purl = CharField(
-        required=False, 
+        required=False,
         help_text="Source PackageURL.",
-        )
+    )
 
     addon_pipelines = ListField(
-        child = CharField(),
+        child=CharField(),
         required=False,
         allow_empty=True,
         help_text="Addon pipelines to run on the package.",
-        )
-    
+    )
+
     def validate_purl(self, value):
         try:
             PackageURL.from_string(value)
         except ValueError as e:
             raise ValidationError(f'purl validation error: {e}')
         return value
-    
+
     def validate_source_purl(self, value):
         if value:
             try:
@@ -403,9 +412,11 @@ class CollectPackageSerializer(Serializer):
         return value
 
     def validate_addon_pipelines(self, value):
-        invalid_pipelines = [pipe for pipe in value if not is_supported_addon_pipeline(pipe)]
+        invalid_pipelines = [
+            pipe for pipe in value if not is_supported_addon_pipeline(pipe)]
         if invalid_pipelines:
-            raise ValidationError(f'Error unsupported addon pipelines: {",".join(invalid_pipelines)}')
+            raise ValidationError(
+                f'Error unsupported addon pipelines: {",".join(invalid_pipelines)}')
 
         return value
 
@@ -419,7 +430,7 @@ class PackageVersSerializer(Serializer):
         required=False,
         allow_empty=True,
         help_text="Addon pipelines to run on the package.",
-        )
+    )
 
 
 class PackageUpdateSerializer(Serializer):
@@ -444,27 +455,32 @@ class PurlUpdateResponseSerializer(Serializer):
 
 
 class IndexPackagesResponseSerializer(Serializer):
-    queued_packages_count = IntegerField(help_text="Number of package urls placed on the index queue.")
+    queued_packages_count = IntegerField(
+        help_text="Number of package urls placed on the index queue.")
     queued_packages = ListField(
         child=CharField(),
         help_text="List of package urls that were placed on the index queue."
     )
-    requeued_packages_count = IntegerField(help_text="Number of existing package urls placed on the rescan queue.")
+    requeued_packages_count = IntegerField(
+        help_text="Number of existing package urls placed on the rescan queue.")
     requeued_packages = ListField(
         child=CharField(),
         help_text="List of existing package urls that were placed on the rescan queue."
     )
-    unqueued_packages_count = IntegerField(help_text="Number of package urls not placed on the index queue.")
+    unqueued_packages_count = IntegerField(
+        help_text="Number of package urls not placed on the index queue.")
     unqueued_packages = ListField(
         child=CharField(),
         help_text="List of package urls that were not placed on the index queue."
     )
-    unsupported_packages_count = IntegerField(help_text="Number of package urls that are not processable by the index queue.")
+    unsupported_packages_count = IntegerField(
+        help_text="Number of package urls that are not processable by the index queue.")
     unsupported_packages = ListField(
         child=CharField(),
         help_text="List of package urls that are not processable by the index queue."
     )
-    unsupported_vers_count = IntegerField(help_text="Number of vers range that are not supported by the univers or package_manager.")
+    unsupported_vers_count = IntegerField(
+        help_text="Number of vers range that are not supported by the univers or package_manager.")
     unsupported_vers = ListField(
         child=CharField(),
         help_text="List of vers range that are not supported by the univers or package_manager."

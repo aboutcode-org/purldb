@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -32,7 +32,8 @@ environ.Env.read_env(str(ENV_FILE))
 
 SECRET_KEY = env.str("SECRET_KEY")
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[".localhost", "127.0.0.1", "[::1]"])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[
+                         ".localhost", "127.0.0.1", "[::1]"])
 
 # SECURITY WARNING: do not run with debug turned on in production
 DEBUG = env.bool("PURLDB_DEBUG", default=False)
@@ -240,7 +241,8 @@ STATICFILES_DIRS = [
 
 # Django restframework
 
-REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {'anon': '3600/hour', 'user': '10800/hour'}
+REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {
+    'anon': '3600/hour', 'user': '10800/hour'}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),

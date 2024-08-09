@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -72,6 +72,7 @@ class SaneLoader(SafeLoader):
     """
     A safe loader configured with many sane defaults.
     """
+
     def ignore_aliases(self, data):
         return True
 
@@ -182,8 +183,10 @@ def string_dumper(dumper, value, _tag=u'tag:yaml.org,2002:str'):
 SaneDumper.add_representer(str, string_dumper)
 
 # treat number as strings, not as numbers
-SaneDumper.add_representer(int, partial(string_dumper, _tag=u'tag:yaml.org,2002:int'))
-SaneDumper.add_representer(float, partial(string_dumper, _tag=u'tag:yaml.org,2002:float'))
+SaneDumper.add_representer(int, partial(
+    string_dumper, _tag=u'tag:yaml.org,2002:int'))
+SaneDumper.add_representer(float, partial(
+    string_dumper, _tag=u'tag:yaml.org,2002:float'))
 
 
 def boolean_dumper(dumper, value):

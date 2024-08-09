@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -26,8 +26,10 @@ class ConanPriorityQueueTests(JsonBasedTesting, TestCase):
     def setUp(self):
         super(ConanPriorityQueueTests, self).setUp()
         self.package_url1 = PackageURL.from_string("pkg:conan/zlib@1.3.1")
-        zlib_conanfile_loc = self.get_test_loc("conan/zlib/manifest/conanfile.py")
-        zlib_conandata_loc = self.get_test_loc("conan/zlib/manifest/conandata.yml")
+        zlib_conanfile_loc = self.get_test_loc(
+            "conan/zlib/manifest/conanfile.py")
+        zlib_conandata_loc = self.get_test_loc(
+            "conan/zlib/manifest/conandata.yml")
         zlib_config_loc = self.get_test_loc("conan/zlib/manifest/config.yml")
 
         with open(zlib_conanfile_loc) as f:
@@ -39,7 +41,8 @@ class ConanPriorityQueueTests(JsonBasedTesting, TestCase):
         with open(zlib_conandata_loc) as f:
             self.zlib_conandata_contents = f.read()
 
-        self.zlib_conandata_contents_dict = saneyaml.load(self.zlib_conandata_contents)
+        self.zlib_conandata_contents_dict = saneyaml.load(
+            self.zlib_conandata_contents)
 
     @patch("requests.get")
     def test_get_conan_recipe(self, mock_get):

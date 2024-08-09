@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -57,7 +57,8 @@ def get_dependencies(data):
         # FIXME:!!!
         for name in dependencies:
             purl = PackageURL(type='deb', namespace='debian', name=name)
-            dep = scan_models.DependentPackage(purl=purl.to_string(), score=scope, **flags)
+            dep = scan_models.DependentPackage(
+                purl=purl.to_string(), score=scope, **flags)
             dep_pkgs.append(dep)
 
     return dep_pkgs
@@ -76,7 +77,8 @@ def get_vcs_repo(description):
         repos.append((vcs_tool, vcs_repo))
 
     if len(repos) > 1:
-        raise TypeError('Debian description with more than one Vcs repos: %(repos)r' % locals())
+        raise TypeError(
+            'Debian description with more than one Vcs repos: %(repos)r' % locals())
 
     if repos:
         vcs_tool, vcs_repo = repos[0]
@@ -170,9 +172,12 @@ def parse_description(metadata, purl=None, base_download_url=None):
     # TODO: what do we do with files?
     # FIXME: we should store them in the package record
     files = defaultdict(File)
-    collect_files(existing_files=files, field_value=metadata.get('Files'), checksum_name='md5')
-    collect_files(existing_files=files, field_value=metadata.get('Checksums-Sha1'), checksum_name='sha1')
-    collect_files(existing_files=files, field_value=metadata.get('Checksums-Sha256'), checksum_name='sha256')
+    collect_files(existing_files=files, field_value=metadata.get(
+        'Files'), checksum_name='md5')
+    collect_files(existing_files=files, field_value=metadata.get(
+        'Checksums-Sha1'), checksum_name='sha1')
+    collect_files(existing_files=files, field_value=metadata.get(
+        'Checksums-Sha256'), checksum_name='sha256')
 
     # FIXME: craft a download_url
     download_url = None
@@ -208,7 +213,8 @@ def build_source_file_packages(metadata, purl=None):
         package_name = source.get('Package')
 
         parties = []
-        maintainer_names = debutils.comma_separated(source.get('Maintainer', ''))
+        maintainer_names = debutils.comma_separated(
+            source.get('Maintainer', ''))
         if maintainer_names:
             for maintainer in maintainer_names:
                 name, email = debutils.parse_email(maintainer)
@@ -216,7 +222,8 @@ def build_source_file_packages(metadata, purl=None):
                     party = scan_models.Party(
                         name=name, role='maintainer', email=email)
                     parties.append(party)
-        contributor_names = debutils.comma_separated(source.get('Uploaders', ''))
+        contributor_names = debutils.comma_separated(
+            source.get('Uploaders', ''))
         if contributor_names:
             for contributor in contributor_names:
                 name, email = debutils.parse_email(contributor)
@@ -318,7 +325,8 @@ def parse_packages(metadata, purl=None):
 
         filename = pack.get('Filename'),
         if filename:
-            data['download_url'] = 'http://ftp.debian.org/debian/{}'.format(filename)
+            data['download_url'] = 'http://ftp.debian.org/debian/{}'.format(
+                filename)
 
         maintainers = pack.get('Maintainer')
         if maintainers:
@@ -425,9 +433,9 @@ def build_packages_from_dist_archive(metadata, uri):
     else:
         # yield package without a download_url value
         package = scan_models.Package.from_package_data(
-                package_data=common_data,
-                datafile_path=uri,
-            )
+            package_data=common_data,
+            datafile_path=uri,
+        )
         # FIXME: this is NOT RIGHT: purl is not defined
         package.set_purl(package.purl)
         yield package

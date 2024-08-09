@@ -130,7 +130,7 @@ Install PurlDB and matchcode.io from a clone of the PurlDB git repository
 
 Then run these commands::
 
-    git clone https://github.com/nexB/purldb
+    git clone https://github.com/aboutcode-org/purldb
     cd purldb
     make dev
     make envfile

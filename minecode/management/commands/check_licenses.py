@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -73,7 +73,8 @@ class Command(VerboseCommand):
         self.stdout.write('Visited {} packages'.format(visited_counter))
         self.stdout.write('Found {} possible packages'.format(found_counter))
         if found_counter > 0:
-            self.stdout.write('Found packages dumped to: {}'.format(file_location))
+            self.stdout.write(
+                'Found packages dumped to: {}'.format(file_location))
 
 
 def find_ambiguous_packages(types=('maven',), keywords=('unknown', 'proprietary', 'commercial',)):
@@ -82,9 +83,11 @@ def find_ambiguous_packages(types=('maven',), keywords=('unknown', 'proprietary'
     contain "unknown", "proprietary" and "commercial" words.
     """
     # filter to detect declared_license field
-    filter_expression = [Q(declared_license_expression__icontains=word) for word in keywords]
+    filter_expression = [
+        Q(declared_license_expression__icontains=word) for word in keywords]
     # filter to detect license_expression field, add or relationship between these two fields
-    filter_expression.extend([Q(other_license_expression__icontains=word) for word in keywords])
+    filter_expression.extend(
+        [Q(other_license_expression__icontains=word) for word in keywords])
     license_filter = reduce(operator.or_, filter_expression)
 
     for package in Package.objects.filter(type__in=types).filter(license_filter):

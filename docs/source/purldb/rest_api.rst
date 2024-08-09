@@ -1283,7 +1283,7 @@ matching
 Given a ScanCode.io JSON output ``upload_file``, match directory and resources
 of the codebase in ``upload_file`` to Packages indexed in the PurlDB.
 
-This endpoint runs the ``matching`` pipeline at https://github.com/nexB/purldb/blob/main/matchcode_pipeline/pipelines/matching.py
+This endpoint runs the ``matching`` pipeline at https://github.com/aboutcode-org/purldb/blob/main/matchcode_pipeline/pipelines/matching.py
 
 Using cURL to upload a scan for matching:
 
