@@ -129,7 +129,7 @@ rq==1.16.2
 rq-scheduler==0.13.1
 rubymarshal==1.0.3
 saneyaml==0.6.0
-scancode-toolkit @ git+https://github.com/aboutcode-org/scancode-toolkit.git@99a44381cbfddc439b8d9620acb4ea93e5e71d66
+scancode-toolkit @ git+https://github.com/nexB/scancode-toolkit.git@99a44381cbfddc439b8d9620acb4ea93e5e71d66
 scancodeio==34.7.1
 semantic-version==2.10.0
 semver==3.0.2
