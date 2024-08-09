@@ -29,7 +29,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class BitbucketVisitorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_BitbucketIndexVisitor(self):
         uri = 'https://api.bitbucket.org/2.0/repositories?pagelen=10'
@@ -84,7 +84,7 @@ class BitbucketVisitorTest(JsonBasedTesting):
 
 
 class BitbucketMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_pattern_match_without_download(self):
         url = 'https://api.bitbucket.org/2.0/repositories/phlogistonjohn/tweakmsg'

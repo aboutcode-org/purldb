@@ -13,9 +13,6 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from minecode import miners
-from minecode import miners
-
 from minecode.models import ResourceURI
 from packagedb.models import Package
 from minecode.models import get_canonical

@@ -22,11 +22,11 @@ from minecode import miners
 
 
 class GitlabTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
 
 class GitlabVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     @unittest.skip('The test is to test fetching remotely through http connection')
     def test_visit_api_header_getheaders(self):
@@ -47,7 +47,7 @@ class GitlabVistorTest(JsonBasedTesting):
 
 
 class GitlabMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_map_software_html_page_hal(self):
         with open(self.get_test_loc('gitlab/microservice-express-mongo.json')) as gitlab_json:

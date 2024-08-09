@@ -24,7 +24,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class CranVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_metacpan_api_projects(self):
         uri = 'https://cloud.r-project.org/web/packages/available_packages_by_date.html'
@@ -37,7 +37,7 @@ class CranVistorTest(JsonBasedTesting):
 
 
 class CranMapperTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_packages_from_directory_listing(self):
         ResourceURI.objects.create(

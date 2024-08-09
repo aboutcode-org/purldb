@@ -22,7 +22,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class PackagistVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_packagistlist(self):
         uri = 'https://packagist.org/packages/list.json'
@@ -35,7 +35,7 @@ class PackagistVistorTest(JsonBasedTesting):
 
 
 class TestPackagistMap(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_packages(self):
         with open(self.get_test_loc('packagist/00f100_cakephp-opauth.json')) as packagist_package:

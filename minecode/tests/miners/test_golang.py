@@ -26,7 +26,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class GoLangVisitorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_GoLangGoDocAPIVisitor(self):
         uri = 'https://api.godoc.org/packages'
@@ -67,7 +67,7 @@ class GoLangVisitorTest(JsonBasedTesting):
 
 
 class GoLangMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_golang_package(self):
         purl = 'pkg:golang/github.com/golang/glog?vcs_repository=https://github.com/golang/glog'

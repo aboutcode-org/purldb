@@ -23,7 +23,7 @@ from minecode import miners
 
 
 class BowerVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_findls_file(self):
         uri = 'https://registry.bower.io/packages'
@@ -46,7 +46,7 @@ class BowerVistorTest(JsonBasedTesting):
 
 
 class BowerMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_packages_metafile_from_bowerjson1(self):
         with open(self.get_test_loc('bower/28msec_bower.json')) as bower_metadata:

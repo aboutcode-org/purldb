@@ -32,7 +32,7 @@ from minecode.management.commands.run_map import map_uri
 
 
 class TestPypiVisit(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     '''
 import unittest
@@ -143,7 +143,7 @@ class MockResourceURI(object):
 
 class TestPypiMap(JsonBasedTesting, DjangoTestCase):
 
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_packages_lxml(self):
         with open(self.get_test_loc('pypi/lxml-3.2.0.json')) as pypi_meta:

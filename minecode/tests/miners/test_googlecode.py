@@ -24,7 +24,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class GoogleNewAPIVisitorsTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_google_download_zip_visitor(self):
         uri = 'https://storage.googleapis.com/google-code-archive/google-code-archive.txt.zip'
@@ -90,7 +90,7 @@ class GoogleNewAPIVisitorsTest(JsonBasedTesting):
 
 
 class GoogleNewAPIMappersTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_packages_from_v2_projects_json(self):
         with open(self.get_test_loc('googlecode/v2_api/project.json')) as projectsjson_meta:

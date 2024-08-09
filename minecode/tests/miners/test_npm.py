@@ -23,7 +23,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class TestNPMVisit(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     # FIXME: use smaller test files
     def test_NpmRegistryVisitor(self):
@@ -57,7 +57,7 @@ class TestNPMVisit(JsonBasedTesting):
 
 
 class TestNPMMapper(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_packages(self):
         with open(self.get_test_loc('npm/0flux.json')) as npm_metadata:

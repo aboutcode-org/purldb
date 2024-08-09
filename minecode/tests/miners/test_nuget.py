@@ -24,7 +24,7 @@ from minecode.tests import FIXTURES_REGEN
 
 class NugetVisitorsTest(JsonBasedTesting):
 
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_NugetQueryVisitor(self):
         uri = 'https://api-v2v3search-0.nuget.org/query'
@@ -75,7 +75,7 @@ class NugetVisitorsTest(JsonBasedTesting):
 
 class TestNugetMap(JsonBasedTesting):
 
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_packages(self):
         with open(self.get_test_loc('nuget/entityframework2.json')) as nuget_metadata:

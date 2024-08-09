@@ -28,7 +28,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class TestRepomdParser(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_combine_list_of_dicts(self):
         expected = {'a': '1', 'b': '2', 'c': '3'}

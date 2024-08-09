@@ -25,7 +25,7 @@ from minecode import miners
 
 class DockerHubTest(JsonBasedTesting):
 
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
 
 class DockerHubVistorTest(DockerHubTest):

@@ -22,7 +22,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class OpenWRTVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_openwrt_download_pages(self):
         uri = 'https://downloads.openwrt.org/chaos_calmer/15.05/'
@@ -83,7 +83,7 @@ class OpenWRTVistorTest(JsonBasedTesting):
 
 
 class OpenWRTMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     @expectedFailure
     def test_build_packages_1(self):

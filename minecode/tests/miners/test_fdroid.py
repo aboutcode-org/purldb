@@ -21,7 +21,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class TestFdroidVisitor(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_FdroidPackageRepoVisitor(self):
         uri = 'https://f-droid.org/repo/index-v2.json'
@@ -38,7 +38,7 @@ class TestFdroidVisitor(JsonBasedTesting):
 
 
 class TestFdroidMapper(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_packages(self):
         with open(self.get_test_loc('fdroid/index-v2-visited.json')) as fdroid_data:

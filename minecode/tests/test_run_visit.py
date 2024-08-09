@@ -7,13 +7,10 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-
-from operator import itemgetter
 from io import StringIO
 
 from collections import Counter
 from django.core import management
-from django.forms.models import model_to_dict
 
 from minecode.utils_test import MiningTestCase
 from minecode.management.commands.run_visit import visit_uri

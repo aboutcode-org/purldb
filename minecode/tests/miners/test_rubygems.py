@@ -46,7 +46,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class RubyGemsVisitorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_check_gem_file_visitor_routes(self):
         routes = [
@@ -113,7 +113,7 @@ class RubyGemsVisitorTest(JsonBasedTesting):
 
 
 class RubyGemsApiMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_rubygem_packages_from_api_data_1(self):
         with open(self.get_test_loc('rubygems/apiv1/0xffffff.api.json')) as api:
@@ -173,7 +173,7 @@ class RubyGemsApiMapperTest(JsonBasedTesting):
 
 
 class RubyGemsArchiveMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_test_RubyGemsPackageArchiveMetadataMapper(self):
         test_uri = 'https://rubygems.org/downloads/mysmallidea-address_standardization-0.4.1.gem'
@@ -281,7 +281,7 @@ class RubyGemsArchiveMapperTest(JsonBasedTesting):
 
 class RubyEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_and_map_end2end(self):
         from minecode.management.commands.run_visit import visit_uri

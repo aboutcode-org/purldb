@@ -24,7 +24,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_ApacheDistIndexVisitor(self):
         uri = 'http://apache.org/dist/zzz/find-ls.gz'
@@ -130,7 +130,7 @@ class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
 
 
 class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_package_from_download(self):
         package = miners.apache.build_package_from_download(

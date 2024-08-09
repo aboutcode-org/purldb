@@ -26,7 +26,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class BaseDebianTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def check_objects_expected(self, results, expected_loc, regen=FIXTURES_REGEN):
         """

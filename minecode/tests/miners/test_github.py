@@ -27,7 +27,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class GithubVisitorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     @patch('github.MainClass.Github.get_repo')
     def test_GithubRepoVisitor(self, mock_get_repo):
@@ -142,7 +142,7 @@ class GithubVisitorTest(JsonBasedTesting):
 
 
 class GithubMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_github_repo_mapper1(self):
         with open(self.get_test_loc('github/calendar_builder.json')) as json_metadata:

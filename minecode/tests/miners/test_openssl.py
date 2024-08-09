@@ -26,7 +26,7 @@ from minecode.tests import FIXTURES_REGEN
 
 class OpenSSLVisitorsTest(JsonBasedTesting):
 
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_OpenSSLVisitor(self):
         uri = 'https://ftp.openssl.org/'
@@ -51,7 +51,7 @@ class OpenSSLVisitorsTest(JsonBasedTesting):
 
 class OpenSSLTest(JsonBasedTesting, DjangoTestCase):
 
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_OpenSSL_mapper(self):
         uri = 'https://ftp.openssl.org/snapshot/openssl-1.0.2-stable-SNAP-20180518.tar.gz'

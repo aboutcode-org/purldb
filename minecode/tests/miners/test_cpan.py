@@ -23,7 +23,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class CpanVisitorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_metacpanauthorurlvisitors(self):
         uri = 'https://fastapi.metacpan.org/author/_search?q=email:a*&size=5000'
@@ -77,7 +77,7 @@ class CpanVisitorTest(JsonBasedTesting):
 
 
 class CpanMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_from_release_search_json(self):
         with open(self.get_test_loc('cpan/release_search.json')) as cpan_metadata:

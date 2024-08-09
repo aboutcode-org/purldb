@@ -23,7 +23,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class FreeBSDVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_freebsd_seed(self):
         uri = 'https://pkg.freebsd.org'
@@ -55,7 +55,7 @@ class FreeBSDVistorTest(JsonBasedTesting):
 
 
 class FreedesktopMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_map_index_file(self):
         with open(self.get_test_loc('freebsd/mapper_input1')) as freebsd_metadata:

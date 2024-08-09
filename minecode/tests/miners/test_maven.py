@@ -43,7 +43,7 @@ def sort_deps(results):
 
 
 class MavenMiscTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_get_entries(self):
         index = self.get_test_loc('maven/index/nexus-maven-repository-index.gz')
@@ -199,7 +199,7 @@ class MavenMiscTest(JsonBasedTesting, DjangoTestCase):
 
 
 class MavenVisitorTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_MavenNexusIndexVisitor_uris(self):
         uri = 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz'
@@ -280,7 +280,7 @@ class MavenVisitorTest(JsonBasedTesting, DjangoTestCase):
 
 class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_MavenNexusIndexVisitor_with_run_visit_then_map_end2end(self):
         # setup
@@ -482,7 +482,7 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
 
 
 class MavenXmlMetadataVisitorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_maven_medatata_xml_file(self):
         uri = 'https://repo1.maven.org/maven2/st/digitru/identity-core/maven-metadata.xml'
@@ -495,7 +495,7 @@ class MavenXmlMetadataVisitorTest(JsonBasedTesting):
 
 
 class MavenHtmlIndexVisitorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_maven_medatata_html_index_jcenter_1(self):
         uri = 'http://jcenter.bintray.com/'
@@ -527,7 +527,7 @@ class MavenHtmlIndexVisitorTest(JsonBasedTesting):
 
 # FIXME: we should not need to call a visitor for testing a mapper
 class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_and_build_package_from_pom_axis(self):
         uri = 'https://repo1.maven.org/maven2/axis/axis/1.4/axis-1.4.pom'
@@ -602,7 +602,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
 
 
 class MavenMapperGetPackageTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_get_package_from_pom_1(self):
         test_loc = self.get_test_loc('maven/parsing/parse/jds-3.0.1.pom')

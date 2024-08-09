@@ -25,7 +25,7 @@ from minecode.tests import FIXTURES_REGEN
 
 
 class EclipseVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_eclipse_projects(self):
         uri = 'https://projects.eclipse.org/list-of-projects'
@@ -101,7 +101,7 @@ class EclipseVistorTest(JsonBasedTesting):
 
 
 class TestEclipseMap(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_packages(self):
         with open(self.get_test_loc('eclipse/birt.json')) as eclipse_metadata:

@@ -22,7 +22,7 @@ from minecode.tests import FIXTURES_REGEN
 
 class SourceforgeVisitorsTest(JsonBasedTesting):
 
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_visit_sf_sitemap_index_new(self):
         uri = 'http://sourceforge.net/sitemap.xml'
@@ -73,7 +73,7 @@ class SourceforgeVisitorsTest(JsonBasedTesting):
 
 
 class SourceforgeMappersTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_build_packages(self):
         with open(self.get_test_loc('sourceforge/odanur.json')) as sourceforge_metadata:

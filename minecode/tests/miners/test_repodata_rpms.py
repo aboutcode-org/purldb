@@ -20,7 +20,7 @@ from minecode.miners import repodata_rpms
 
 
 class RepodataRPMVisitorsTest(MiningTestCase):
-    BASE_DIR = os.path.join(os.path.dirname(__file__), 'testfiles')
+    BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'testfiles')
 
     def test_collect_rsync_urls(self):
         directory_listing_loc = self.get_test_loc(
