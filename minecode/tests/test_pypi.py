@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -124,12 +124,10 @@ class TestFoo(unittest.TestCase):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, data, _error = visitors.pypi.PypiPackageReleaseVisitor(uri)
 
-        expected_loc = self.get_test_loc(
-            'pypi/expected_uris-boolean.py-2.0.dev3.json')
+        expected_loc = self.get_test_loc('pypi/expected_uris-boolean.py-2.0.dev3.json')
         self.check_expected_uris(uris, expected_loc)
 
-        expected_loc = self.get_test_loc(
-            'pypi/expected_data-boolean.py-2.0.dev3.json')
+        expected_loc = self.get_test_loc('pypi/expected_data-boolean.py-2.0.dev3.json')
         self.check_expected_results(data, expected_loc)
 
 
@@ -151,18 +149,15 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-lxml-3.2.0.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_boolean(self):
         with open(self.get_test_loc('pypi/boolean.py-2.0.dev3.json')) as pypi_meta:
             metadata = json.load(pypi_meta)
         packages = mappers.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            'pypi/expected-boolean.py-2.0.dev3.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc('pypi/expected-boolean.py-2.0.dev3.json')
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_cage13(self):
         with open(self.get_test_loc('pypi/cage_1.1.3.json')) as pypi_meta:
@@ -170,8 +165,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-CAGE-1.1.3.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_cage12(self):
         with open(self.get_test_loc('pypi/cage_1.1.2.json')) as pypi_meta:
@@ -179,8 +173,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-CAGE-1.1.2.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_PypiPackageMapper_cage(self):
         data = open(self.get_test_loc('pypi/cage_1.1.2.json')).read()
@@ -189,8 +182,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.PypiPackageMapper(uri, resuri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-CAGE-1.1.2.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_PypiPackageMapper_lxml(self):
         data = open(self.get_test_loc('pypi/lxml-3.2.0.json')).read()
@@ -199,8 +191,7 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.PypiPackageMapper(uri, resuri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/expected-lxml-3.2.0.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_pypi_map(self):
         # setup: add a mappable URI
@@ -212,21 +203,17 @@ class TestPypiMap(JsonBasedTesting, DjangoTestCase):
         packages = mappers.pypi.PypiPackageMapper(resuri.uri, resuri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('pypi/map/expected-3to2-1.1.1.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
         # build a mock router
         router = Router()
-        router.append('https://pypi.python.org/pypi/3to2/1.1.1/json',
-                      mappers.pypi.PypiPackageMapper)
+        router.append('https://pypi.python.org/pypi/3to2/1.1.1/json', mappers.pypi.PypiPackageMapper)
 
         # sanity check
         expected_mapped_package_uri = 'https://pypi.python.org/packages/8f/ab/58a363eca982c40e9ee5a7ca439e8ffc5243dde2ae660ba1ffdd4868026b/3to2-1.1.1.zip'
-        self.assertEqual(0, Package.objects.filter(
-            download_url=expected_mapped_package_uri).count())
+        self.assertEqual(0, Package.objects.filter(download_url=expected_mapped_package_uri).count())
 
         # test proper
         map_uri(resuri, _map_router=router)
-        mapped = Package.objects.filter(
-            download_url=expected_mapped_package_uri)
+        mapped = Package.objects.filter(download_url=expected_mapped_package_uri)
         self.assertEqual(1, mapped.count())

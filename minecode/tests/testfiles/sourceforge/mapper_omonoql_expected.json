@@ -1,128 +1,132 @@
 [
   {
-    "type": "sourceforge",
-    "namespace": null,
-    "name": "monoql",
-    "version": null,
-    "qualifiers": {},
-    "subpath": null,
-    "primary_language": "php, JavaScript",
-    "description": "MonoQL is an AJAX web application to manage MySQL databases. MonoQL will provide all major features of phpMyAdmin for MySQL, including database & table design, data browsing & editing, advanced querying & more. MySQL 4+, MySQL 5+ and MySQL 6+ support",
-    "release_date": null,
-    "parties": [
+    "type":"sourceforge",
+    "namespace":null,
+    "name":"monoql",
+    "version":null,
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":"php, JavaScript",
+    "description":"MonoQL is an AJAX web application to manage MySQL databases. MonoQL will provide all major features of phpMyAdmin for MySQL, including database & table design, data browsing & editing, advanced querying & more. MySQL 4+, MySQL 5+ and MySQL 6+ support",
+    "release_date":null,
+    "parties":[
       {
-        "type": null,
-        "role": "contributor",
-        "name": "Damian O'Brien",
-        "email": null,
-        "url": "https://sourceforge.net/u/damianobrien/"
+        "type":null,
+        "role":"contributor",
+        "name":"Damian O'Brien",
+        "email":null,
+        "url":"https://sourceforge.net/u/damianobrien/"
       },
       {
-        "type": null,
-        "role": "contributor",
-        "name": "Johnathan Hebert",
-        "email": null,
-        "url": "https://sourceforge.net/u/johnathanhebert/"
+        "type":null,
+        "role":"contributor",
+        "name":"Johnathan Hebert",
+        "email":null,
+        "url":"https://sourceforge.net/u/johnathanhebert/"
       },
       {
-        "type": null,
-        "role": "contributor",
-        "name": "JDCommerce Inc",
-        "email": null,
-        "url": "https://sourceforge.net/u/jdcommerce/"
+        "type":null,
+        "role":"contributor",
+        "name":"JDCommerce Inc",
+        "email":null,
+        "url":"https://sourceforge.net/u/jdcommerce/"
       }
     ],
-    "keywords": ["frontends"],
-    "homepage_url": "http://www.monoql.com",
-    "download_url": null,
-    "size": null,
-    "sha1": null,
-    "md5": null,
-    "sha256": null,
-    "sha512": null,
-    "bug_tracking_url": null,
-    "code_view_url": null,
-    "vcs_url": null,
-    "copyright": null,
-    "holder": null,
-    "declared_license_expression": "gpl-1.0-plus AND gpl-2.0",
-    "declared_license_expression_spdx": "GPL-1.0-or-later AND GPL-2.0-only",
-    "license_detections": [
+    "keywords":[
+      "frontends"
+    ],
+    "homepage_url":"http://www.monoql.com",
+    "download_url":null,
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":null,
+    "copyright":null,
+    "holder":null,
+    "declared_license_expression":"gpl-1.0-plus AND gpl-2.0",
+    "declared_license_expression_spdx":"GPL-1.0-or-later AND GPL-2.0-only",
+    "license_detections":[
       {
-        "license_expression": "gpl-1.0-plus",
-        "license_expression_spdx": "GPL-1.0-or-later",
-        "matches": [
+        "license_expression":"gpl-1.0-plus",
+        "license_expression_spdx":"GPL-1.0-or-later",
+        "matches":[
           {
-            "license_expression": "gpl-1.0-plus",
-            "spdx_license_expression": "GPL-1.0-or-later",
-            "from_file": null,
-            "start_line": 1,
-            "end_line": 1,
-            "matcher": "1-hash",
-            "score": 50.0,
-            "matched_length": 1,
-            "match_coverage": 100.0,
-            "rule_relevance": 50,
-            "rule_identifier": "gpl_bare_word_only.RULE",
-            "rule_url": "https://github.com/aboutcode-org/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl_bare_word_only.RULE",
-            "matched_text": "gpl"
+            "license_expression":"gpl-1.0-plus",
+            "spdx_license_expression":"GPL-1.0-or-later",
+            "from_file":null,
+            "start_line":1,
+            "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "rule_relevance":50,
+            "rule_identifier":"gpl_bare_word_only.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl_bare_word_only.RULE",
+            "matched_text":"gpl"
           }
         ],
-        "identifier": "gpl_1_0_plus-473308ff-72ce-7e72-b3a9-5b1cc6680abb"
+        "identifier":"gpl_1_0_plus-473308ff-72ce-7e72-b3a9-5b1cc6680abb"
       },
       {
-        "license_expression": "gpl-2.0",
-        "license_expression_spdx": "GPL-2.0-only",
-        "matches": [
+        "license_expression":"gpl-2.0",
+        "license_expression_spdx":"GPL-2.0-only",
+        "matches":[
           {
-            "license_expression": "gpl-2.0",
-            "spdx_license_expression": "GPL-2.0-only",
-            "from_file": null,
-            "start_line": 1,
-            "end_line": 1,
-            "matcher": "2-aho",
-            "score": 100.0,
-            "matched_length": 6,
-            "match_coverage": 100.0,
-            "rule_relevance": 100,
-            "rule_identifier": "gpl-2.0_39.RULE",
-            "rule_url": "https://github.com/aboutcode-org/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_39.RULE",
-            "matched_text": "GNU General Public License version 2.0 (GPLv2)"
+            "license_expression":"gpl-2.0",
+            "spdx_license_expression":"GPL-2.0-only",
+            "from_file":null,
+            "start_line":1,
+            "end_line":1,
+            "matcher":"2-aho",
+            "score":100.0,
+            "matched_length":6,
+            "match_coverage":100.0,
+            "rule_relevance":100,
+            "rule_identifier":"gpl-2.0_39.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_39.RULE",
+            "matched_text":"GNU General Public License version 2.0 (GPLv2)"
           },
           {
-            "license_expression": "gpl-2.0",
-            "spdx_license_expression": "GPL-2.0-only",
-            "from_file": null,
-            "start_line": 1,
-            "end_line": 1,
-            "matcher": "2-aho",
-            "score": 100.0,
-            "matched_length": 1,
-            "match_coverage": 100.0,
-            "rule_relevance": 100,
-            "rule_identifier": "gpl-2.0_bare_single_word.RULE",
-            "rule_url": "https://github.com/aboutcode-org/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_bare_single_word.RULE",
-            "matched_text": "GNU General Public License version 2.0 (GPLv2)"
+            "license_expression":"gpl-2.0",
+            "spdx_license_expression":"GPL-2.0-only",
+            "from_file":null,
+            "start_line":1,
+            "end_line":1,
+            "matcher":"2-aho",
+            "score":100.0,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "rule_relevance":100,
+            "rule_identifier":"gpl-2.0_bare_single_word.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_bare_single_word.RULE",
+            "matched_text":"GNU General Public License version 2.0 (GPLv2)"
           }
         ],
-        "identifier": "gpl_2_0-c577222f-9147-72be-dd68-bd319655699a"
+        "identifier":"gpl_2_0-c577222f-9147-72be-dd68-bd319655699a"
       }
     ],
-    "other_license_expression": null,
-    "other_license_expression_spdx": null,
-    "other_license_detections": [],
-    "extracted_license_statement": "- gpl\n- GNU General Public License version 2.0 (GPLv2)\n",
-    "notice_text": null,
-    "source_packages": [],
-    "is_private": false,
-    "is_virtual": false,
-    "extra_data": {},
-    "repository_homepage_url": null,
-    "repository_download_url": null,
-    "api_data_url": null,
-    "package_uid": "pkg:sourceforge/monoql?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths": [],
-    "datasource_ids": ["sourceforge_metadata"],
-    "purl": "pkg:sourceforge/monoql"
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- gpl\n- GNU General Public License version 2.0 (GPLv2)\n",
+    "notice_text":null,
+    "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
+    "extra_data":{},
+    "repository_homepage_url":null,
+    "repository_download_url":null,
+    "api_data_url":null,
+    "package_uid":"pkg:sourceforge/monoql?uuid=fixed-uid-done-for-testing-5642512d1758",
+    "datafile_paths":[],
+    "datasource_ids":[
+      "sourceforge_metadata"
+    ],
+    "purl":"pkg:sourceforge/monoql"
   }
 ]

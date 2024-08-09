@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -76,16 +76,14 @@ class CodebaseTester(object):
                 # Normalize package_uid
                 package_uid = package_data.get('package_uid')
                 if package_uid:
-                    package_data['package_uid'] = purl_with_fake_uuid(
-                        package_uid)
+                    package_data['package_uid'] = purl_with_fake_uuid(package_uid)
 
             return rd
 
         results = list(map(serializer, codebase.walk(topdown=True)))
         if regen:
             with open(expected_codebase_json_loc, 'w') as reg:
-                json.dump(dict(files=results), reg,
-                          indent=2, separators=(',', ': '))
+                json.dump(dict(files=results), reg, indent=2, separators=(',', ': '))
 
         expected_vc = VirtualCodebase(location=expected_codebase_json_loc)
         expected = list(map(serializer, expected_vc.walk(topdown=True)))
@@ -226,10 +224,8 @@ def index_resource_fingerprints(codebase, package):
     indexed_adsi = 0
     indexed_arci = 0
     for resource in codebase.walk(topdown=False):
-        directory_content_fingerprint = resource.extra_data.get(
-            'directory_content', '')
-        directory_structure_fingerprint = resource.extra_data.get(
-            'directory_structure', '')
+        directory_content_fingerprint = resource.extra_data.get('directory_content', '')
+        directory_structure_fingerprint = resource.extra_data.get('directory_structure', '')
         resource_content_fingerprint = resource.extra_data.get('halo1', '')
 
         if directory_content_fingerprint:

@@ -47,7 +47,6 @@ class GithubReposVisitor(HttpJsonVisitor):
     Refer to: https://developer.github.com/v3/repos/#list-all-public-repositories
               https://api.github.com/repositories
     """
-
     def get_uris(self, content):
         repo_request_base = 'https://api.github.com/repositories?since='
         has_content = False
@@ -62,17 +61,14 @@ class GithubReposVisitor(HttpJsonVisitor):
                 if url:
                     package_url = None
                     if name:
-                        package_url = PackageURL(
-                            type='github', name=name).to_string()
+                        package_url = PackageURL(type='github', name=name).to_string()
                     # Yield URI for GithubSingleRepoVisitor use
                     yield URI(uri=url, package_url=package_url, source_uri=self.uri)
         if not has_content:
-            logger.info(
-                'The content of the response is empty, the processing might be finished for URI: {}'.format(self.uri))
+            logger.info('The content of the response is empty, the processing might be finished for URI: {}'.format(self.uri))
         else:
             uri = self.uri
-            current_id = uri.replace(
-                'https://api.github.com/repositories?since=', '')
+            current_id = uri.replace('https://api.github.com/repositories?since=', '')
             current_id = int(current_id)
             # 100 is fixed since each page has 100 entries. Plus 100 means to go from next page.
             new_id = current_id + 100
@@ -145,8 +141,7 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
                     bucket=download.bucket,
                     acl=download.acl,
                     accesskeyid=download.accesskeyid,
-                    expirationdate=json_serial_date_obj(
-                        download.expirationdate),
+                    expirationdate=json_serial_date_obj(download.expirationdate),
                 ))
         common_data['downloads'] = downloads
 
@@ -171,8 +166,7 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
             download_url_bases = '{html_url}/archive/{branch_name}.zip'
             if repo.get_branches():
                 for branch in list(repo.get_branches()):
-                    branches_download_urls.append(download_url_bases.format(
-                        html_url=common_data.get('html_url'), branch_name=branch.name))
+                    branches_download_urls.append(download_url_bases.format(html_url=common_data.get('html_url'), branch_name=branch.name))
             common_data['branches_download_urls'] = branches_download_urls
 
         common_data['labels'] = []
@@ -197,7 +191,7 @@ def process_request_dir_listed(purl_str, **kwargs):
     Process `priority_resource_uri` containing a GitHub Package URL (PURL).
 
     This involves obtaining Package information for the PURL using
-    https://github.com/aboutcode-org/fetchcode and using it to create a new
+    https://github.com/nexB/fetchcode and using it to create a new
     PackageDB entry. The package is then added to the scan queue afterwards.
     """
     from minecode.model_utils import DEFAULT_PIPELINES
@@ -212,8 +206,7 @@ def process_request_dir_listed(purl_str, **kwargs):
         error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
-    error_msg = map_fetchcode_supported_package(
-        package_url, pipelines, priority)
+    error_msg = map_fetchcode_supported_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg

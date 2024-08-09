@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -47,7 +47,6 @@ class NpmRegistryVisitor(NonPersistentHttpVisitor):
     each NPM package (that contains all the versions for this package) as
     previsited for mapping.
     """
-
     def get_uris(self, content):
         """
         Yield a URI for the next index sequence to visit and one URI for each
@@ -64,8 +63,7 @@ class NpmRegistryVisitor(NonPersistentHttpVisitor):
             last_seq = content['last_seq']
         except KeyError:
             # provide a more meaningful message in case the JSON is incorrect
-            raise Exception(
-                'NpmRegistryVisitor: Missing "last_seq" field: Aborting.')
+            raise Exception('NpmRegistryVisitor: Missing "last_seq" field: Aborting.')
 
         # Always yield an index URI, even if there is no results to avoid stopping the index visits
         yield URI(uri=next_visitable_index_url_template.format(last_seq=last_seq), source_uri=self.uri)
@@ -104,8 +102,7 @@ class NpmRegistryVisitor(NonPersistentHttpVisitor):
                 uri=package_api_url,
                 package_url=package_url,
                 source_uri=self.uri,
-                data=json.dumps(doc, separators=(
-                    ',', ':'), ensure_ascii=False),
+                data=json.dumps(doc, separators=(',', ':'), ensure_ascii=False),
                 # note: visited is True since there nothing more to visit
                 visited=True)
 

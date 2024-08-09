@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -39,8 +39,7 @@ class HaxeVistorTest(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = haxe.HaxeVersionsVisitor(uri)
-        expected_loc = self.get_test_loc(
-            'haxe/all_versions_openfl.html-expected')
+        expected_loc = self.get_test_loc('haxe/all_versions_openfl.html-expected')
         self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_haxe_package_json(self):
@@ -49,8 +48,7 @@ class HaxeVistorTest(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = haxe.HaxePackageJsonVisitor(uri)
-        expected_loc = self.get_test_loc(
-            'haxe/openfl-8.5.1-package.json-expected')
+        expected_loc = self.get_test_loc('haxe/openfl-8.5.1-package.json-expected')
         self.check_expected_results(data, expected_loc, regen=FIXTURES_REGEN)
 
 
@@ -63,5 +61,4 @@ class HaxeMappersTest(JsonBasedTesting):
         packages = mappers.haxe.build_packages_with_json(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('haxe/project_package.json-expected')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

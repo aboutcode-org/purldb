@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -73,8 +73,7 @@ class SourceforgeSitemapPageVisitor(HttpVisitor):
                 project_name = loc.text.partition(
                     'https://sourceforge.net/projects/')[-1].strip('/')
                 project_json_url = project_json_baseurl.format(project_name)
-                package_url = PackageURL(
-                    type='sourceforge', name=project_name).to_string()
+                package_url = PackageURL(type='sourceforge', name=project_name).to_string()
                 # The priority in the xml has different view with the priority in visitor, so skip it.
                 yield URI(uri=project_json_url, package_url=package_url, source_uri=self.uri)
 

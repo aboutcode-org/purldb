@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -44,8 +44,7 @@ def get_timestamps_by_links(package_version_page_url):
     timestamps_by_links = {}
     response = requests.get(package_version_page_url)
     if response:
-        timestamps_by_links = collect_links_from_text(
-            response.text, filter=filter_for_artifacts)
+        timestamps_by_links = collect_links_from_text(response.text, filter=filter_for_artifacts)
         timestamps_by_links = {
             link: dateutil_parse(timestamp) for link, timestamp in timestamps_by_links.items()
         }
@@ -84,8 +83,7 @@ class MavenArtifact(object):
             extension=qualifiers_mapping.get('type') or 'jar',
             classifier=qualifiers_mapping.get('classifier'),
         )
-        timestamps_by_links = get_timestamps_by_links(
-            self.repository_homepage_url)
+        timestamps_by_links = get_timestamps_by_links(self.repository_homepage_url)
         self.release_date = timestamps_by_links.get(filename)
         self.related_artifacts = list(
             self._populate_related_artifacts(
@@ -150,11 +148,9 @@ class Command(VerboseCommand):
     help = 'Update maven Package download_url values'
 
     def handle(self, *args, **options):
-        maven_packages = Package.objects.filter(
-            type='maven', sha1__is_null=False)
+        maven_packages = Package.objects.filter(type='maven', sha1__is_null=False)
         maven_packages_count = maven_packages.count()
-        logger.info(
-            f'Checking {maven_packages_count:,} Maven Package PackageURL values')
+        logger.info(f'Checking {maven_packages_count:,} Maven Package PackageURL values')
         packages_to_delete = []
 
         for package in MemorySavingQuerysetIterator(maven_packages):

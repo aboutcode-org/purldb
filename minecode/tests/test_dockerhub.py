@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -33,8 +33,7 @@ class DockerHubVistorTest(DockerHubTest):
     def test_searching_condition(self):
         combinations = dockerhub.get_search_conditions()
         expected_file = self.get_test_loc('dockerhub/conditions_expected')
-        self.check_expected_results(
-            combinations, expected_file, regen=FIXTURES_REGEN)
+        self.check_expected_results(combinations, expected_file, regen=FIXTURES_REGEN)
 
     def test_seeds(self):
         seed = dockerhub.DockerHubSeed()
@@ -62,8 +61,7 @@ class DockerHubVistorTest(DockerHubTest):
         result = json.loads(data, object_pairs_hook=OrderedDict)
         expected_file = self.get_test_loc(
             'dockerhub/visitor_library_elixir_expected')
-        self.check_expected_results(
-            result, expected_file, regen=FIXTURES_REGEN)
+        self.check_expected_results(result, expected_file, regen=FIXTURES_REGEN)
 
     def test_visit_dockerhub_search_api(self):
         uri = 'https://index.docker.io/v1/search?q=1a&n=100&page=2'
@@ -85,5 +83,4 @@ class DockerHubMapperTest(DockerHubTest):
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'dockerhub/expected_dockerhubmapper.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

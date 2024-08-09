@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -40,8 +40,7 @@ class FreeBSDVistorTest(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = freebsd.FreeBSDSubHTMLVisitors(uri)
-        expected_loc = self.get_test_loc(
-            'freebsd/FreeBSD-10-i386_release_0_.html_expected')
+        expected_loc = self.get_test_loc('freebsd/FreeBSD-10-i386_release_0_.html_expected')
         self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_freebsd_indexvisitor(self):
@@ -64,5 +63,4 @@ class FreedesktopMapperTest(JsonBasedTesting):
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc(
             'freebsd/indexfile_expected_mapper.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

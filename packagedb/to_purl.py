@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -21,8 +21,7 @@ from packagedb.serializers import GoLangPurlSerializer
 
 @extend_schema(
     parameters=[
-        OpenApiParameter("go_package", str, "query",
-                         description="go import package"),
+        OpenApiParameter("go_package", str, "query", description="go import package"),
     ],
     responses={200: GoLangPurlResponseSerializer()},
 )
@@ -30,7 +29,7 @@ class GolangPurlViewSet(viewsets.ViewSet):
     """
     Return a ``golang_purl`` PackageURL from a standard go import string or
     a go.mod string ``go_package``.
-
+    
     For example:
 
         >>> get_golang_purl("github.com/gorilla/mux v1.8.1").to_string()

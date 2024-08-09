@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -114,33 +114,28 @@ class ResourceURIManagerTestCase(TestCase):
         self.resource.last_visit_date = timezone.now()
         self.resource.save()
 
-        self.assertTrue(ResourceURI.objects.needs_revisit(
-            uri=self.uri, hours=0))
+        self.assertTrue(ResourceURI.objects.needs_revisit(uri=self.uri, hours=0))
 
     def test_needs_revisit_very_old_visit(self):
         self.resource.last_visit_date = timezone.now() - timedelta(days=20)
         self.resource.save()
 
-        self.assertTrue(ResourceURI.objects.needs_revisit(
-            uri=self.uri, hours=240))
+        self.assertTrue(ResourceURI.objects.needs_revisit(uri=self.uri, hours=240))
 
     def test_needs_revisit_near_visit(self):
         self.resource.last_visit_date = timezone.now() - timedelta(hours=3)
         self.resource.save()
 
-        self.assertTrue(ResourceURI.objects.needs_revisit(
-            uri=self.uri, hours=2))
+        self.assertTrue(ResourceURI.objects.needs_revisit(uri=self.uri, hours=2))
 
     def test_needs_revisit_recent_visit(self):
         self.resource.last_visit_date = timezone.now()
         self.resource.save()
 
-        self.assertFalse(
-            ResourceURI.objects.needs_revisit(uri=self.uri, hours=2))
+        self.assertFalse(ResourceURI.objects.needs_revisit(uri=self.uri, hours=2))
 
     def test_needs_revisit_never_been_visited(self):
-        self.assertFalse(ResourceURI.objects.needs_revisit(
-            uri=self.uri, hours=200))
+        self.assertFalse(ResourceURI.objects.needs_revisit(uri=self.uri, hours=200))
 
 
 class ResourceURIManagerGetRevisitablesUnmappableURITestCase(TestCase):
@@ -153,25 +148,18 @@ class ResourceURIManagerGetRevisitablesUnmappableURITestCase(TestCase):
         self.resource.last_visit_date = timezone.now()
         self.resource.save()
 
-        self.assertEqual(
-            1, ResourceURI.objects.get_revisitables(hours=0).count())
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=1).count())
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=240).count())
+        self.assertEqual(1, ResourceURI.objects.get_revisitables(hours=0).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=1).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=240).count())
 
     def test_get_revisitables_last_visit_date_10_days_ago(self):
         self.resource.last_visit_date = timezone.now() - timedelta(hours=240)
         self.resource.save()
 
-        self.assertEqual(
-            1, ResourceURI.objects.get_revisitables(hours=0).count())
-        self.assertEqual(
-            1, ResourceURI.objects.get_revisitables(hours=1).count())
-        self.assertEqual(
-            1, ResourceURI.objects.get_revisitables(hours=240).count())
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=241).count())
+        self.assertEqual(1, ResourceURI.objects.get_revisitables(hours=0).count())
+        self.assertEqual(1, ResourceURI.objects.get_revisitables(hours=1).count())
+        self.assertEqual(1, ResourceURI.objects.get_revisitables(hours=240).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=241).count())
 
 
 class ResourceURIManagerGetRevisitablesMappableURITestCase(TestCase):
@@ -185,66 +173,50 @@ class ResourceURIManagerGetRevisitablesMappableURITestCase(TestCase):
         self.resource.last_visit_date = timezone.now()
         self.resource.save()
 
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=0).count())
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=1).count())
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=240).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=0).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=1).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=240).count())
 
     def test_get_revisitables_unmapped_last_visit_date_less_than_threshold(self):
         self.resource.last_visit_date = timezone.now()
         self.resource.save()
 
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=1).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=1).count())
 
     def test_get_revisitables_unmapped_last_visit_date_10_days_ago(self):
         self.resource.last_visit_date = timezone.now() - timedelta(hours=240)
         self.resource.save()
 
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=0).count())
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=1).count())
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=240).count())
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=241).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=0).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=1).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=240).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=241).count())
 
     def test_get_revisitables_mapped_last_visit_date_now(self):
         self.resource.last_visit_date = timezone.now()
         self.resource.last_map_date = timezone.now()
         self.resource.save()
 
-        self.assertEqual(
-            1, ResourceURI.objects.get_revisitables(hours=0).count())
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=1).count())
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=240).count())
+        self.assertEqual(1, ResourceURI.objects.get_revisitables(hours=0).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=1).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=240).count())
 
     def test_get_revisitables_mapped_last_visit_date_less_than_threshold(self):
         self.resource.last_visit_date = timezone.now()
         self.resource.last_map_date = timezone.now()
         self.resource.save()
 
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=1).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=1).count())
 
     def test_get_revisitables_mapped_last_visit_date_10_days_ago(self):
         self.resource.last_visit_date = timezone.now() - timedelta(hours=240)
         self.resource.last_map_date = timezone.now()
         self.resource.save()
 
-        self.assertEqual(
-            1, ResourceURI.objects.get_revisitables(hours=0).count())
-        self.assertEqual(
-            1, ResourceURI.objects.get_revisitables(hours=1).count())
-        self.assertEqual(
-            1, ResourceURI.objects.get_revisitables(hours=240).count())
-        self.assertEqual(
-            0, ResourceURI.objects.get_revisitables(hours=241).count())
+        self.assertEqual(1, ResourceURI.objects.get_revisitables(hours=0).count())
+        self.assertEqual(1, ResourceURI.objects.get_revisitables(hours=1).count())
+        self.assertEqual(1, ResourceURI.objects.get_revisitables(hours=240).count())
+        self.assertEqual(0, ResourceURI.objects.get_revisitables(hours=241).count())
 
 
 class ResourceURIManagerGetNextVisitableUnmappableURITestCase(TestCase):
@@ -256,10 +228,8 @@ class ResourceURIManagerGetNextVisitableUnmappableURITestCase(TestCase):
         self.resource1 = ResourceURI.objects.insert(uri=self.uri1, priority=2)
 
     def test_get_next_visitable_unvisited(self):
-        self.assertEqual(
-            self.resource1, ResourceURI.objects.get_next_visitable())
-        self.assertEqual(
-            self.resource0, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource1, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource0, ResourceURI.objects.get_next_visitable())
         self.assertIsNone(ResourceURI.objects.get_next_visitable())
 
     def test_get_next_visitable_none_when_both_visited_less_than_10_days_ago(self):
@@ -276,10 +246,8 @@ class ResourceURIManagerGetNextVisitableUnmappableURITestCase(TestCase):
         self.resource0.save()
         self.resource1.save()
 
-        self.assertEqual(
-            self.resource1, ResourceURI.objects.get_next_visitable())
-        self.assertEqual(
-            self.resource0, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource1, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource0, ResourceURI.objects.get_next_visitable())
         self.assertIsNone(ResourceURI.objects.get_next_visitable())
 
     def test_get_next_visitable_when_one_unvisited_and_one_visited_less_than_10_days_ago(self):
@@ -288,8 +256,7 @@ class ResourceURIManagerGetNextVisitableUnmappableURITestCase(TestCase):
         self.resource0.save()
         self.resource1.save()
 
-        self.assertEqual(
-            self.resource0, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource0, ResourceURI.objects.get_next_visitable())
         self.assertIsNone(ResourceURI.objects.get_next_visitable())
 
         self.resource0.last_visit_date = timezone.now() - timedelta(hours=24)
@@ -297,8 +264,7 @@ class ResourceURIManagerGetNextVisitableUnmappableURITestCase(TestCase):
         self.resource0.save()
         self.resource1.save()
 
-        self.assertEqual(
-            self.resource1, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource1, ResourceURI.objects.get_next_visitable())
         self.assertIsNone(ResourceURI.objects.get_next_visitable())
 
     def test_get_next_visitable_when_one_visited_more_and_one_visited_less_than_10_days_ago(self):
@@ -307,8 +273,7 @@ class ResourceURIManagerGetNextVisitableUnmappableURITestCase(TestCase):
         self.resource0.save()
         self.resource1.save()
 
-        self.assertEqual(
-            self.resource0, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource0, ResourceURI.objects.get_next_visitable())
         self.assertIsNone(ResourceURI.objects.get_next_visitable())
 
         self.resource0.last_visit_date = timezone.now() - timedelta(hours=24)
@@ -316,8 +281,7 @@ class ResourceURIManagerGetNextVisitableUnmappableURITestCase(TestCase):
         self.resource0.save()
         self.resource1.save()
 
-        self.assertEqual(
-            self.resource1, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource1, ResourceURI.objects.get_next_visitable())
         self.assertIsNone(ResourceURI.objects.get_next_visitable())
 
 
@@ -327,16 +291,12 @@ class ResourceURIManagerGetNextVisitableMappableURITestCase(TestCase):
         # this is a mappable ResourceURI
         self.uri0 = 'http://repo1.maven.org/maven2/org/ye/mav/mav-all/1.0/mav-all-1.0.pom'
         self.uri1 = 'http://repo1.maven.org/maven2/org/ye/mav/mav-all/1.1/mav-all-1.1.pom'
-        self.resource0 = ResourceURI.objects.insert(
-            uri=self.uri0, priority=100)
-        self.resource1 = ResourceURI.objects.insert(
-            uri=self.uri1, priority=100)
+        self.resource0 = ResourceURI.objects.insert(uri=self.uri0, priority=100)
+        self.resource1 = ResourceURI.objects.insert(uri=self.uri1, priority=100)
 
     def test_get_next_visitable_unvisited(self):
-        self.assertEqual(
-            self.resource1, ResourceURI.objects.get_next_visitable())
-        self.assertEqual(
-            self.resource0, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource1, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource0, ResourceURI.objects.get_next_visitable())
         self.assertIsNone(ResourceURI.objects.get_next_visitable())
 
     def test_get_next_visitable_visited_unmapped(self):
@@ -355,10 +315,8 @@ class ResourceURIManagerGetNextVisitableMappableURITestCase(TestCase):
         self.resource0.save()
         self.resource1.save()
 
-        self.assertEqual(
-            self.resource1, ResourceURI.objects.get_next_visitable())
-        self.assertEqual(
-            self.resource0, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource1, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource0, ResourceURI.objects.get_next_visitable())
         self.assertIsNone(ResourceURI.objects.get_next_visitable())
 
     def test_get_next_visitable_visited_10_days_ago_one_unmapped(self):
@@ -368,8 +326,7 @@ class ResourceURIManagerGetNextVisitableMappableURITestCase(TestCase):
         self.resource0.save()
         self.resource1.save()
 
-        self.assertEqual(
-            self.resource0, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource0, ResourceURI.objects.get_next_visitable())
         self.assertIsNone(ResourceURI.objects.get_next_visitable())
 
         self.resource0.last_map_date = None
@@ -377,8 +334,7 @@ class ResourceURIManagerGetNextVisitableMappableURITestCase(TestCase):
         self.resource0.save()
         self.resource1.save()
 
-        self.assertEqual(
-            self.resource1, ResourceURI.objects.get_next_visitable())
+        self.assertEqual(self.resource1, ResourceURI.objects.get_next_visitable())
         self.assertIsNone(ResourceURI.objects.get_next_visitable())
 
     def test_get_next_visitable_recently_visited_mapped(self):
@@ -397,10 +353,8 @@ class ResourceURIManagerGetMappablesTestCase(TestCase):
     def setUp(self):
         self.uri1 = 'maven-index://repo1.maven.org/o/a/this.jar'
         self.uri2 = 'maven-index://repo1.maven.org/o/a/thisother.jar'
-        self.resource1 = ResourceURI.objects.create(
-            uri=self.uri1, priority=1, last_visit_date=timezone.now())
-        self.resource2 = ResourceURI.objects.create(
-            uri=self.uri2, priority=2, last_visit_date=timezone.now())
+        self.resource1 = ResourceURI.objects.create(uri=self.uri1, priority=1, last_visit_date=timezone.now())
+        self.resource2 = ResourceURI.objects.create(uri=self.uri2, priority=2, last_visit_date=timezone.now())
 
     def test_get_mappables(self):
         assert self.resource1.is_mappable
@@ -409,8 +363,7 @@ class ResourceURIManagerGetMappablesTestCase(TestCase):
         self.resource1.last_map_date = timezone.now()
         self.resource1.save()
         resource1 = ResourceURI.objects.get(id=self.resource1.id)
-        self.assertEqual([self.resource2], list(
-            ResourceURI.objects.get_mappables()))
+        self.assertEqual([self.resource2], list(ResourceURI.objects.get_mappables()))
 
     def test_get_mappables__map_error_must_make_a_resourceuri_non_mappable(self):
         assert self.resource1.is_mappable
@@ -426,23 +379,19 @@ class ResourceURIManagerGetMappablesTestCase(TestCase):
 class ScannableURIManagerTestCase(TestCase):
     def setUp(self):
         self.test_uri1 = 'http://example.com'
-        self.test_package1 = Package.objects.create(
-            download_url=self.test_uri1, name='Foo', version='12.34')
+        self.test_package1 = Package.objects.create(download_url=self.test_uri1, name='Foo', version='12.34')
         self.scannable_uri1 = ScannableURI.objects.create(uri=self.test_uri1, package=self.test_package1,
                                                           scan_status=ScannableURI.SCAN_NEW)
         self.test_uri2 = 'http://elpmaxe.com'
-        self.test_package2 = Package.objects.create(
-            download_url=self.test_uri2, name='Bar', version='11.75')
+        self.test_package2 = Package.objects.create(download_url=self.test_uri2, name='Bar', version='11.75')
         self.scannable_uri2 = ScannableURI.objects.create(uri=self.test_uri2, package=self.test_package2,
                                                           scan_status=ScannableURI.SCAN_SUBMITTED)
         self.test_uri3 = 'http://nexb.com'
-        self.test_package3 = Package.objects.create(
-            download_url=self.test_uri3, name='Baz', version='5')
+        self.test_package3 = Package.objects.create(download_url=self.test_uri3, name='Baz', version='5')
         self.scannable_uri3 = ScannableURI.objects.create(uri=self.test_uri3, package=self.test_package3,
                                                           scan_status=ScannableURI.SCAN_IN_PROGRESS)
         self.test_uri4 = 'http://realsite.com'
-        self.test_package4 = Package.objects.create(
-            download_url=self.test_uri4, name='Qux', version='87')
+        self.test_package4 = Package.objects.create(download_url=self.test_uri4, name='Qux', version='87')
         self.scannable_uri4 = ScannableURI.objects.create(uri=self.test_uri4, package=self.test_package4,
                                                           scan_status=ScannableURI.SCAN_COMPLETED)
 
@@ -474,20 +423,17 @@ class ScannableURIManagerTestCase(TestCase):
 class ScannableURIModelTestCase(TestCase):
     def setUp(self):
         self.test_uri = 'http://example.com'
-        self.test_package = Package.objects.create(
-            download_url=self.test_uri, name='Foo', version='12.34')
+        self.test_package = Package.objects.create(download_url=self.test_uri, name='Foo', version='12.34')
 
     def test_ScannableURI_create_basic_record(self):
-        scannable_uri = ScannableURI.objects.create(
-            uri=self.test_uri, package=self.test_package)
+        scannable_uri = ScannableURI.objects.create(uri=self.test_uri, package=self.test_package)
         result = ScannableURI.objects.get(uri=self.test_uri)
         self.assertEqual(self.test_uri, result.uri)
         self.assertEqual(self.test_package, result.package)
 
     def test_ScannableURI_save(self):
         test_error_message = 'error'
-        scannable_uri = ScannableURI.objects.create(
-            uri=self.test_uri, package=self.test_package)
+        scannable_uri = ScannableURI.objects.create(uri=self.test_uri, package=self.test_package)
         self.assertFalse(scannable_uri.scan_error)
         scannable_uri.scan_error = test_error_message
         scannable_uri.save()
@@ -495,8 +441,7 @@ class ScannableURIModelTestCase(TestCase):
         self.assertEqual(test_error_message, result.scan_error)
 
     def test_ScannableURI_save_set_canonical_uri(self):
-        scannable_uri = ScannableURI(
-            uri=self.test_uri, package=self.test_package)
+        scannable_uri = ScannableURI(uri=self.test_uri, package=self.test_package)
         self.assertFalse(scannable_uri.canonical)
         scannable_uri.save()
         result = ScannableURI.objects.get(uri=self.test_uri)

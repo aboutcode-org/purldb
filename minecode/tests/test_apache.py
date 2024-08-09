@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -33,8 +33,7 @@ class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = apache.ApacheDistIndexVisitor(uri)
 
-        expected_loc = self.get_test_loc(
-            'apache/find-ls.gz_uris-expected.json')
+        expected_loc = self.get_test_loc('apache/find-ls.gz_uris-expected.json')
         self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_ApacheChecksumVisitor(self):
@@ -137,53 +136,43 @@ class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
             'http://archive.apache.org/dist/groovy/2.4.6/sources/apache-groovy-src-2.4.6.zip',
             'pkg:apache/groovy@2.4.6')
         expected_loc = self.get_test_loc('apache/map-groovy_expected.json')
-        self.check_expected_results(
-            package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_from_download2(self):
         package = mappers.apache.build_package_from_download(
             'http://archive.apache.org/dist/turbine/maven/turbine-webapp-2.3.3-1.0.0-source-release.zip',
             'pkg:apache/turbine-webapp@2.3.3-1.0.0-source-release')
-        expected_loc = self.get_test_loc(
-            'apache/map-turbine-webapp_expected.json')
-        self.check_expected_results(
-            package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc('apache/map-turbine-webapp_expected.json')
+        self.check_expected_results(package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
 
     # TODO: add tests for checksums
 
     def test_build_packages_from_projects_json(self):
         with open(self.get_test_loc('apache/projects.json')) as projectsjson_meta:
-            metadata = json.load(
-                projectsjson_meta, object_pairs_hook=OrderedDict)
+            metadata = json.load(projectsjson_meta, object_pairs_hook=OrderedDict)
         packages = mappers.apache.build_packages_from_projects(metadata)
         packages = [p.to_dict() for p in packages]
 
         expected_loc = self.get_test_loc('apache/projects_expected.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_from_one_podling_json(self):
         with open(self.get_test_loc('apache/podling_amaterasu.json')) as podlings_meta:
             metadata = json.load(podlings_meta, object_pairs_hook=OrderedDict)
-        packages = mappers.apache.build_packages_from_podlings(
-            metadata, purl='pkg:apache-podlings/amaterasu')
+        packages = mappers.apache.build_packages_from_podlings(metadata, purl='pkg:apache-podlings/amaterasu')
         packages = [p.to_dict() for p in packages]
 
-        expected_loc = self.get_test_loc(
-            'apache/podling_amaterasu_expected.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc('apache/podling_amaterasu_expected.json')
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     # TODO: add real mapper class tests c
 
     def test_regex_1(self):
         regex = re.compile(r'^https?://(archive\.)?apache\.org/dist/.*$')
-        result = re.match(
-            regex, 'http://archive.apache.org/dist/groovy/2.4.6/sources/apache-groovy-src-2.4.6.zip')
+        result = re.match(regex, 'http://archive.apache.org/dist/groovy/2.4.6/sources/apache-groovy-src-2.4.6.zip')
         self.assertTrue(result)
 
     def test_regex_2(self):
         regex = re.compile(r'^https?://(archive\.)?apache\.org/dist/.*$')
-        result = re.match(
-            regex, 'https://apache.org/dist/chemistry/opencmis/1.1.0/chemistry-opencmis-dist-1.1.0-server-webapps.zip')
+        result = re.match(regex, 'https://apache.org/dist/chemistry/opencmis/1.1.0/chemistry-opencmis-dist-1.1.0-server-webapps.zip')
         self.assertTrue(result)

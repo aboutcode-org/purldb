@@ -20,7 +20,7 @@ PurlDB
 
 .. code-block:: console
 
-    git clone https://github.com/aboutcode-org/scancode.io.git && cd scancode.io
+    git clone https://github.com/nexB/scancode.io.git && cd scancode.io
     make envfile
     docker compose build
 
@@ -71,7 +71,7 @@ Package Scan Worker
 - This should be installed on another machine, if possible.
 
 - Download the latest release of ScanCode.io at
-  https://github.com/aboutcode-org/scancode.io/releases and follow the Docker
+  https://github.com/nexB/scancode.io/releases and follow the Docker
   installation instructions at
   https://scancodeio.readthedocs.io/en/latest/installation.html
 
@@ -111,7 +111,7 @@ MatchCode.io
 
 .. code-block:: console
 
-    git clone https://github.com/aboutcode-org/scancode.io.git && cd scancode.io
+    git clone https://github.com/nexB/scancode.io.git && cd scancode.io
     make envfile
     docker compose -f docker-compose.matchcodeio.yml build
 
@@ -178,9 +178,9 @@ latest/getting-started/install.html#prerequisites>`_ for more details.
 Clone and Configure
 ^^^^^^^^^^^^^^^^^^^
 
- * Clone the `PurlDB GitHub repository <https://github.com/aboutcode-org/purldb>`_::
+ * Clone the `PurlDB GitHub repository <https://github.com/nexB/purldb>`_::
 
-    git clone https://github.com/aboutcode-org/purldb.git && cd purldb
+    git clone https://github.com/nexB/purldb.git && cd purldb
 
  * Inside the :guilabel:`purldb/` directory, install the required dependencies::
 

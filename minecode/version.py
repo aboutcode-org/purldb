@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -78,8 +78,7 @@ def version_hint(path, ignore_pre_releases=False, remove_v_prefix=False):
 NON_VERSION_TAGS = ('win32', 'am64', 'x86_64', 'i386', 'i586', 'i586', 'x86',
                     'macosx',)
 
-NON_VT_RES = [re.compile(re.escape(t), re.IGNORECASE)
-              for t in NON_VERSION_TAGS]
+NON_VT_RES = [re.compile(re.escape(t), re.IGNORECASE) for t in NON_VERSION_TAGS]
 
 
 def strip_version_tags(path):

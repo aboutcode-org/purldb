@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -118,10 +118,8 @@ class Command(VerboseCommand):
                 logger.info('Graceful exit of the map loop.')
                 break
 
-            mappable_definitions = CDitem.objects.mappable_definitions()[
-                :MAP_BATCH_SIZE]
-            mappable_scancode_harvests = CDitem.objects.mappable_scancode_harvests()[
-                :MAP_BATCH_SIZE]
+            mappable_definitions = CDitem.objects.mappable_definitions()[:MAP_BATCH_SIZE]
+            mappable_scancode_harvests = CDitem.objects.mappable_scancode_harvests()[:MAP_BATCH_SIZE]
 
             try:
                 if not mappable_definitions and not mappable_scancode_harvests:
@@ -189,7 +187,7 @@ def get_coords_des_and_lic_from_def(definition):
     return definition.get('coordinates', {}), definition.get('described', {}), definition.get('licensed', {})
 
 
-# CD_TYPES_WITH_SOURCE = ('debsrc', 'npm', 'sourcearchive',)
+#CD_TYPES_WITH_SOURCE = ('debsrc', 'npm', 'sourcearchive',)
 
 
 def get_or_create_package_from_cditem_definition(cditem):
@@ -199,8 +197,7 @@ def get_or_create_package_from_cditem_definition(cditem):
     definition = cditem.data
     if not definition:
         raise Exception('No data available for this definition')
-    coordinates, described, licensed = get_coords_des_and_lic_from_def(
-        definition)
+    coordinates, described, licensed = get_coords_des_and_lic_from_def(definition)
 
     download_url = described.get('urls', {}).get('download', '')
     if not download_url:
@@ -222,8 +219,7 @@ def get_or_create_package_from_cditem_definition(cditem):
     name = coordinates.get('name')
     version = coordinates.get('revision')
     package_type = coordinates.get('type')
-    converted_package_type = PACKAGE_TYPES_BY_CD_TYPE.get(
-        package_type) or package_type
+    converted_package_type = PACKAGE_TYPES_BY_CD_TYPE.get(package_type) or package_type
     # TODO: Source packages need to be updated for clearlydefined, link source packages to binary packages
     hashes = described.get('hashes', {})
     sha1 = hashes.get('sha1')
@@ -231,8 +227,7 @@ def get_or_create_package_from_cditem_definition(cditem):
     homepage_url = described.get('projectWebsite')
     release_date = described.get('releaseDate')
     declared_license = licensed.get('declared')
-    normalized_license_expression = licensing.get_normalized_expression(
-        declared_license)
+    normalized_license_expression = licensing.get_normalized_expression(declared_license)
     copyrights = get_parties_from_licensed(licensed)
     copyrights = '\n'.join(copyrights)
     definition_mining_level = 0
@@ -262,8 +257,7 @@ def get_or_create_package_from_cditem_definition(cditem):
         )
         # log history if package was created
         if created:
-            package.append_to_history(
-                'Created package from CDitem definition: {}'.format(cditem.path))
+            package.append_to_history('Created package from CDitem definition: {}'.format(cditem.path))
 
     else:
         # TODO: This is temporary until we fold clearindex into minecode mapping
@@ -289,8 +283,7 @@ def get_or_create_package_from_cditem_definition(cditem):
             replace=True
         )
         package = existing_package
-        package.append_to_history(
-            'Updated package from CDitem definition: {}'.format(cditem.path))
+        package.append_to_history('Updated package from CDitem definition: {}'.format(cditem.path))
 
     return package
 
@@ -310,8 +303,7 @@ def create_download_url_from_coords(coord):
 
     package_type = PACKAGE_TYPES_BY_CD_TYPE.get(ptype)
     if not package_type:
-        raise Exception(
-            'Unsupported ClearlyDefined package type: {}'.format(ptype))
+        raise Exception('Unsupported ClearlyDefined package type: {}'.format(ptype))
 
     get_urls = PACKAGE_TYPES_WITH_GET_URLS.get(package_type)
     if get_urls:

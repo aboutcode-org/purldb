@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -154,8 +154,7 @@ def map_uri(resource_uri, _map_router=map_router):
 
             for scanned_package in mapped_scanned_packages:
                 visit_level = resource_uri.mining_level
-                package, package_created, _, m_err = merge_or_create_package(
-                    scanned_package, visit_level)
+                package, package_created, _, m_err = merge_or_create_package(scanned_package, visit_level)
                 map_error += m_err
                 if package_created:
                     # Add this Package to the scan queue
@@ -165,8 +164,7 @@ def map_uri(resource_uri, _map_router=map_router):
                         package=package,
                     )
                     if scannable_uri_created:
-                        logger.debug(
-                            ' + Inserted ScannableURI\t: {}'.format(package_uri))
+                        logger.debug(' + Inserted ScannableURI\t: {}'.format(package_uri))
 
     except Exception as e:
         msg = 'Error: Failed to map while processing ResourceURI: {}\n'.format(

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -41,8 +41,7 @@ def stringify_null_purl_fields(data):
     Modify `data` in place by ensuring `purl` fields are not None. This is useful for
     cleaning data before saving to db.
     """
-    purl_fields = ('type', 'namespace', 'name',
-                   'version', 'qualifiers', 'subpath')
+    purl_fields = ('type', 'namespace', 'name', 'version', 'qualifiers', 'subpath')
     for field in purl_fields:
         try:
             if not data[field]:
@@ -74,7 +73,6 @@ class DataObject(object):
     A data object, using attributes for storage and a to_dict method to get
     a dict back.
     """
-
     def __init__(self, defaults=None, **kw):
         if defaults:
             for k, v in defaults.items():
@@ -228,14 +226,12 @@ def get_http_response(uri, timeout=10):
     requests_args['timeout'] = timeout
 
     if not uri.lower().startswith('http'):
-        raise Exception(
-            'get_http_response: Not an HTTP URI: %(uri)r' % locals())
+        raise Exception('get_http_response: Not an HTTP URI: %(uri)r' % locals())
 
     try:
         response = requests.get(uri, **requests_args)
     except (ConnectionError, InvalidSchema) as e:
-        logger.error(
-            'get_http_response: Download failed for %(uri)r' % locals())
+        logger.error('get_http_response: Download failed for %(uri)r' % locals())
         raise
 
     status = response.status_code
@@ -275,8 +271,7 @@ def fetch_and_write_file_from_url(url):
     metadata_content = response.text
     filename = url.split("/")[-1]
     file_name, _, extension = filename.rpartition(".")
-    temp_metadata_file = get_temp_file(
-        file_name=file_name, extension=extension)
+    temp_metadata_file = get_temp_file(file_name=file_name, extension=extension)
     with open(temp_metadata_file, 'a') as metadata_file:
         metadata_file.write(metadata_content)
 
@@ -386,8 +381,7 @@ def form_vcs_url(vcs_tool, vcs_url, revision_tag_or_branch=None, sub_path=None):
         if vcs_tool:
             vcs_url = '+'.join(str(v) for v in [vcs_tool, vcs_url])
         if revision_tag_or_branch:
-            vcs_url = '@'.join(str(v)
-                               for v in [vcs_url, revision_tag_or_branch])
+            vcs_url = '@'.join(str(v) for v in [vcs_url, revision_tag_or_branch])
         if sub_path:
             vcs_url = '#'.join(str(v) for v in [vcs_url, sub_path])
     return vcs_url
@@ -403,18 +397,17 @@ def validate_uuid(uuid_string):
 
 # This is from https://stackoverflow.com/questions/4856882/limiting-memory-use-in-a-large-django-queryset/5188179#5188179
 class MemorySavingQuerysetIterator(object):
-    def __init__(self, queryset, max_obj_num=1000):
+    def __init__(self,queryset,max_obj_num=1000):
         self._base_queryset = queryset
         self._generator = self._setup()
         self.max_obj_num = max_obj_num
 
     def _setup(self):
-        for i in range(0, self._base_queryset.count(), self.max_obj_num):
+        for i in range(0,self._base_queryset.count(),self.max_obj_num):
             # By making a copy of of the queryset and using that to actually access
             # the objects we ensure that there are only `max_obj_num` objects in
             # memory at any given time
-            smaller_queryset = copy.deepcopy(self._base_queryset)[
-                i:i+self.max_obj_num]
+            smaller_queryset = copy.deepcopy(self._base_queryset)[i:i+self.max_obj_num]
             logger.debug('Grabbing next %s objects from DB' % self.max_obj_num)
             for obj in smaller_queryset.iterator():
                 yield obj

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -56,8 +56,7 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         Create and return a new Package.
         Return None if the insertion failed when an identical entry already exist.
         """
-        package, created = self.get_or_create(
-            download_url=download_url, defaults=extra_fields)
+        package, created = self.get_or_create(download_url=download_url, defaults=extra_fields)
         if created:
             return package
 
@@ -354,8 +353,7 @@ class AbstractPackage(models.Model):
     copyright = models.TextField(
         blank=True,
         null=True,
-        help_text=_(
-            "Copyright statements for this package. Typically one per line."),
+        help_text=_("Copyright statements for this package. Typically one per line."),
     )
     holder = models.TextField(
         blank=True,
@@ -529,15 +527,13 @@ class Package(
     package_sets = models.ManyToManyField(
         'PackageSet',
         related_name='packages',
-        help_text=_(
-            'A set representing the Package sets this Package is a member of.'),
+        help_text=_('A set representing the Package sets this Package is a member of.'),
     )
     package_content = models.IntegerField(
         null=True,
         choices=PackageContentType.choices,
         help_text=_(
-            'Content of this Package as one of: {}'.format(
-                ', '.join(PackageContentType.labels))
+            'Content of this Package as one of: {}'.format(', '.join(PackageContentType.labels))
         ),
     )
     summary = models.JSONField(
@@ -636,8 +632,7 @@ class Package(
         addon_pipelines = kwargs.get('addon_pipelines', [])
         pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
 
-        add_package_to_scan_queue(
-            self, pipelines=pipelines, reindex_uri=True, priority=100)
+        add_package_to_scan_queue(self, pipelines=pipelines, reindex_uri=True, priority=100)
 
     def update_fields(self, save=False, **values_by_fields):
         """
@@ -661,8 +656,7 @@ class Package(
             if not hasattr(self, field):
                 # Raise exception when we we are given a keyword argument that
                 # doesn't correspond to a Package field
-                raise AttributeError(
-                    f"'{class_name}' has no attribute '{field}'")
+                raise AttributeError(f"'{class_name}' has no attribute '{field}'")
 
             related_model_fields = [
                 'dependencies',
@@ -677,8 +671,7 @@ class Package(
                             dep = DependentPackage(
                                 package=self,
                                 purl=dep_data.get('purl'),
-                                extracted_requirement=dep_data.get(
-                                    'extracted_requirement'),
+                                extracted_requirement=dep_data.get('extracted_requirement'),
                                 scope=dep_data.get('scope'),
                                 is_runtime=dep_data.get('is_runtime'),
                                 is_optional=dep_data.get('is_optional'),
@@ -726,8 +719,7 @@ class Package(
                                 sha256=resource_data.get('sha256'),
                                 mime_type=resource_data.get('mime_type'),
                                 file_type=resource_data.get('file_type'),
-                                programming_language=resource_data.get(
-                                    'programming_language'),
+                                programming_language=resource_data.get('programming_language'),
                                 is_binary=resource_data.get('is_binary'),
                                 is_text=resource_data.get('is_text'),
                                 is_archive=resource_data.get('is_archive'),
@@ -750,8 +742,7 @@ class Package(
                         model_count = self.dependencies.all().count()
                         with transaction.atomic():
                             self.dependencies.all().delete()
-                            DependentPackage.objects.bulk_create(
-                                unsaved_models)
+                            DependentPackage.objects.bulk_create(unsaved_models)
 
                     if field == 'parties':
                         model_count = self.parties.all().count()
@@ -910,8 +901,7 @@ class DependentPackage(models.Model):
         max_length=200,
         blank=True,
         null=True,
-        help_text=_(
-            'A string defining version(s)requirements. Package-type specific.')
+        help_text=_('A string defining version(s)requirements. Package-type specific.')
     )
 
     scope = models.CharField(
@@ -952,15 +942,13 @@ class AbstractResource(models.Model):
 
     path = models.CharField(
         max_length=2000,
-        help_text=_(
-            'The full path value of a resource (file or directory) in the archive it is from.'),
+        help_text=_('The full path value of a resource (file or directory) in the archive it is from.'),
     )
 
     name = models.CharField(
         max_length=255,
         blank=True,
-        help_text=_(
-            "File or directory name of this resource with its extension."),
+        help_text=_("File or directory name of this resource with its extension."),
     )
 
     extension = models.CharField(
@@ -998,8 +986,7 @@ class AbstractResource(models.Model):
         max_length=50,
         blank=True,
         null=True,
-        help_text=_(
-            "Programming language of this resource if this is a code file."),
+        help_text=_("Programming language of this resource if this is a code file."),
     )
 
     is_binary = models.BooleanField(default=False)
@@ -1010,8 +997,7 @@ class AbstractResource(models.Model):
 
     is_file = models.BooleanField(
         default=False,
-        help_text=_(
-            'True if this Resource is a file, False if it is a Directory')
+        help_text=_('True if this Resource is a file, False if it is a Directory')
     )
 
     @property
@@ -1079,8 +1065,7 @@ class ScanFieldsModelMixin(models.Model):
     authors = models.JSONField(
         blank=True,
         default=list,
-        help_text=_(
-            "List of detected authors (and related detection details)."),
+        help_text=_("List of detected authors (and related detection details)."),
     )
     package_data = models.JSONField(
         default=list,
@@ -1301,15 +1286,13 @@ class PackageWatch(models.Model):
     depth = models.PositiveSmallIntegerField(
         choices=DEPTH_CHOICES,
         default=3,
-        help_text=_(
-            "Depth of data collection from listing versions up to a full scan."),
+        help_text=_("Depth of data collection from listing versions up to a full scan."),
     )
 
     watch_interval = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(1, message="Interval must be at least 1 day."),
-            MaxValueValidator(
-                365, message="Interval must be at most 365 days."),
+            MaxValueValidator(365, message="Interval must be at most 365 days."),
         ],
         default=7,
         help_text=_("Number of days to wait between watches of this package."),
@@ -1477,8 +1460,7 @@ class ApiUserManager(UserManager):
         except models.ObjectDoesNotExist:
             pass
         else:
-            raise exceptions.ValidationError(
-                f"Error: This email already exists: {email}")
+            raise exceptions.ValidationError(f"Error: This email already exists: {email}")
 
 
 @receiver(models.signals.post_save, sender=settings.AUTH_USER_MODEL)

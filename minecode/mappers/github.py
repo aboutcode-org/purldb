@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -98,8 +98,7 @@ def build_github_packages(visited_data, uri, purl=None):
     for tag in tags:
         package = attr.evolve(package)
         package.version = tag.get('name')
-        package_url = PackageURL(type='github', name=package.name,
-                                 namespace=namespace, version=tag.get('name')).to_string()
+        package_url = PackageURL(type='github', name=package.name, namespace=namespace, version=tag.get('name')).to_string()
         package.sha1 = tag.get('sha1')
         if tag.get('tarball_url'):
             package.download_url = tag.get('tarball_url')

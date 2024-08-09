@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -33,8 +33,7 @@ class TestFdroidVisitor(JsonBasedTesting):
 
         # this is a non-persistent visitor, lets make sure we dont return any data
         assert not data
-        expected_loc = self.get_test_loc(
-            'fdroid/index-v2-expected-visit.json',)
+        expected_loc = self.get_test_loc('fdroid/index-v2-expected-visit.json',)
         self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
 
@@ -53,7 +52,5 @@ class TestFdroidMapper(JsonBasedTesting):
             packages.extend(pkgs)
 
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            'fdroid/index-v2-visited-expected-mapped.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc('fdroid/index-v2-visited-expected-mapped.json')
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

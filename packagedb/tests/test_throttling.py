@@ -3,7 +3,7 @@
 # PurlDB is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -12,7 +12,6 @@ from rest_framework.test import APITestCase
 from unittest.mock import patch
 
 from django.contrib.auth.models import User
-
 
 @patch('rest_framework.throttling.UserRateThrottle.get_rate', lambda x: '20/day')
 @patch('rest_framework.throttling.AnonRateThrottle.get_rate', lambda x: '10/day')

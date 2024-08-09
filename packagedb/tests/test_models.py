@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -34,8 +34,7 @@ class ResourceModelTestCase(TransactionTestCase):
         Resource.objects.all().delete()
 
     def test_resource_is_created_on_a_package(self):
-        Resource.objects.create(package=self.package,
-                                path=self.resource_paths[0])
+        Resource.objects.create(package=self.package, path=self.resource_paths[0])
 
         self.assertEqual(1, Resource.objects.all().count())
 
@@ -49,8 +48,7 @@ class ResourceModelTestCase(TransactionTestCase):
         for path in self.resource_paths:
             Resource.objects.create(package=self.package, path=path)
         for path in self.resource_paths:
-            self.assertRaises(
-                IntegrityError, Resource.objects.create, package=self.package, path=path)
+            self.assertRaises(IntegrityError, Resource.objects.create, package=self.package, path=path)
 
         self.assertEqual(2, Resource.objects.all().count())
 
@@ -58,7 +56,7 @@ class ResourceModelTestCase(TransactionTestCase):
 class PackageModelHistoryFieldTestCase(TransactionTestCase):
     def setUp(self):
         self.test_package = Package.objects.create(
-            download_url='https://test.com',
+                download_url='https://test.com',
         )
         self.message0 = 'test-message0'
         self.message1 = 'test-message1'
@@ -113,16 +111,12 @@ class PackageModelTestCase(TransactionTestCase):
             'version': '12.34',
         }
 
-        self.created_package = Package.objects.create(
-            **self.created_package_data)
-        self.inserted_package = Package.objects.insert(
-            **self.inserted_package_data)
+        self.created_package = Package.objects.create(**self.created_package_data)
+        self.inserted_package = Package.objects.insert(**self.inserted_package_data)
 
     def test_package_download_url_is_unique(self):
-        self.assertIsNone(Package.objects.insert(
-            download_url=self.created_package_download_url))
-        self.assertIsNone(Package.objects.insert(
-            download_url=self.inserted_package_download_url))
+        self.assertIsNone(Package.objects.insert(download_url=self.created_package_download_url))
+        self.assertIsNone(Package.objects.insert(download_url=self.inserted_package_download_url))
 
     def test_packagedb_package_model_history_field(self):
         self.created_package.append_to_history('test-message')
@@ -131,12 +125,9 @@ class PackageModelTestCase(TransactionTestCase):
             self.assertEqual('test-message', entry.get('message'))
 
     def test_packagedb_package_model_get_all_versions(self):
-        p1 = Package.objects.create(
-            download_url='http://a.a', type='generic', name='name', version='1.0')
-        p2 = Package.objects.create(
-            download_url='http://b.b', type='generic', name='name', version='2.0')
-        p3 = Package.objects.create(
-            download_url='http://c.c', type='generic', name='name', version='3.0')
+        p1 = Package.objects.create(download_url='http://a.a', type='generic', name='name', version='1.0')
+        p2 = Package.objects.create(download_url='http://b.b', type='generic', name='name', version='2.0')
+        p3 = Package.objects.create(download_url='http://c.c', type='generic', name='name', version='3.0')
         p4 = Package.objects.create(download_url='http://d.d', type='generic', namespace='space', name='name',
                                     version='4.0')
 
@@ -146,12 +137,9 @@ class PackageModelTestCase(TransactionTestCase):
         self.assertEqual([p4], list(p4.get_all_versions()))
 
     def test_packagedb_package_model_get_latest_version(self):
-        p1 = Package.objects.create(
-            download_url='http://a.a', name='name', version='1.0')
-        p2 = Package.objects.create(
-            download_url='http://b.b', name='name', version='2.0')
-        p3 = Package.objects.create(
-            download_url='http://c.c', name='name', version='3.0')
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
+        p2 = Package.objects.create(download_url='http://b.b', name='name', version='2.0')
+        p3 = Package.objects.create(download_url='http://c.c', name='name', version='3.0')
         p4 = Package.objects.create(download_url='http://d.d', namespace='space', name='name',
                                     version='4.0')
 
@@ -161,13 +149,11 @@ class PackageModelTestCase(TransactionTestCase):
         self.assertEqual(p4, p4.get_latest_version())
 
     def test_packagedb_package_model_update_fields(self):
-        p1 = Package.objects.create(
-            download_url='http://a.a', name='name', version='1.0')
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
         self.assertFalse(p1.history)
         self.assertEqual('', p1.namespace)
         self.assertEqual(None, p1.homepage_url)
-        package, updated_fields = p1.update_fields(
-            namespace='test', homepage_url='https://example.com')
+        package, updated_fields = p1.update_fields(namespace='test', homepage_url='https://example.com')
         self.assertEqual(
             sorted(updated_fields),
             sorted(['homepage_url', 'history', 'namespace'])
@@ -198,8 +184,7 @@ class PackageModelTestCase(TransactionTestCase):
         self.assertEqual(expected_history_entry, history_entry)
 
     def test_packagedb_package_model_update_fields_special_cases(self):
-        p1 = Package.objects.create(
-            download_url='http://a.a', name='name', version='1.0')
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
         # Test dates
         date_fields = [
             'created_date',
@@ -228,7 +213,7 @@ class PackageModelTestCase(TransactionTestCase):
             'classifier': 'sources',
             'type': 'war',
         }
-        string_qualifiers1 = 'classifier=sources&type=war'
+        string_qualifiers1='classifier=sources&type=war'
         package, updated_fields = p1.update_fields(qualifiers=dict_qualifiers1)
         self.assertEqual(
             sorted(['qualifiers', 'history']),
@@ -238,9 +223,8 @@ class PackageModelTestCase(TransactionTestCase):
             string_qualifiers1,
             p1.qualifiers
         )
-        string_qualifiers2 = 'classifier=somethingelse'
-        package, updated_fields = p1.update_fields(
-            qualifiers=string_qualifiers2)
+        string_qualifiers2='classifier=somethingelse'
+        package, updated_fields = p1.update_fields(qualifiers=string_qualifiers2)
         self.assertEqual(
             sorted(['qualifiers', 'history']),
             sorted(updated_fields),
@@ -303,8 +287,7 @@ class PackageModelTestCase(TransactionTestCase):
         self.assertEqual(expected_history, history)
 
     def test_packagedb_package_model_update_fields_related_models(self):
-        p1 = Package.objects.create(
-            download_url='http://a.a', name='name', version='1.0')
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
         path = 'asdf'
         resources = [Resource(package=p1, path=path)]
         _, updated_fields = p1.update_fields(resources=resources)
@@ -317,8 +300,7 @@ class PackageModelTestCase(TransactionTestCase):
         history_message = p1.history[0]['message']
         self.assertEqual(expected_message, history_message)
 
-        p2 = Package.objects.create(
-            download_url='http://b.b', name='example', version='1.0')
+        p2 = Package.objects.create(download_url='http://b.b', name='example', version='1.0')
         resources = [
             {
                 "path": "example.jar",
@@ -368,16 +350,15 @@ class PackageModelTestCase(TransactionTestCase):
         history_message = p2.history[0]['message']
         self.assertEqual(expected_message, history_message)
 
-        p3 = Package.objects.create(
-            download_url='http://foo', name='foo', version='1.0')
+        p3 = Package.objects.create(download_url='http://foo', name='foo', version='1.0')
         parties = [
-            dict(
+             dict(
                 type='admin',
                 role='admin',
                 name='foo',
                 email='foo@foo.com',
                 url='foo.com',
-            )
+             )
         ]
         _, updated_fields = p3.update_fields(parties=parties)
         self.assertEqual(
@@ -389,17 +370,16 @@ class PackageModelTestCase(TransactionTestCase):
         history_message = p3.history[0]['message']
         self.assertEqual(expected_message, history_message)
 
-        p4 = Package.objects.create(
-            download_url='http://bar', name='bar', version='1.0')
+        p4 = Package.objects.create(download_url='http://bar', name='bar', version='1.0')
         parties = [
-            Party(
+             Party(
                 package=p4,
                 type='admin',
                 role='admin',
                 name='bar',
                 email='bar@bar.com',
                 url='foo.com',
-            )
+             )
         ]
         _, updated_fields = p4.update_fields(parties=parties)
         self.assertEqual(
@@ -411,8 +391,7 @@ class PackageModelTestCase(TransactionTestCase):
         history_message = p4.history[0]['message']
         self.assertEqual(expected_message, history_message)
 
-        p5 = Package.objects.create(
-            download_url='http://baz', name='baz', version='1.0')
+        p5 = Package.objects.create(download_url='http://baz', name='baz', version='1.0')
         dependencies = [
             dict(
                 purl='pkg:baz_dep@1.0',
@@ -433,8 +412,7 @@ class PackageModelTestCase(TransactionTestCase):
         history_message = p5.history[0]['message']
         self.assertEqual(expected_message, history_message)
 
-        p6 = Package.objects.create(
-            download_url='http://qux', name='qux', version='1.0')
+        p6 = Package.objects.create(download_url='http://qux', name='qux', version='1.0')
         dependencies = [
             DependentPackage(
                 package=p6,
@@ -457,8 +435,7 @@ class PackageModelTestCase(TransactionTestCase):
         self.assertEqual(expected_message, history_message)
 
     def test_packagedb_package_model_update_fields_exceptions(self):
-        p1 = Package.objects.create(
-            download_url='http://a.a', name='name', version='1.0')
+        p1 = Package.objects.create(download_url='http://a.a', name='name', version='1.0')
         with self.assertRaises(AttributeError):
             p1.update_fields(asdf=123)
 
@@ -524,16 +501,16 @@ class PackageWatchModelTestCase(TransactionTestCase):
 
         self.package_watch1.watch_interval = 1
         self.package_watch1.save()
-        self.assertEqual("reschedule_id_new_interval",
-                         self.package_watch1.schedule_work_id)
+        self.assertEqual("reschedule_id_new_interval", self.package_watch1.schedule_work_id)
 
         self.package_watch1.is_active = False
         self.package_watch1.save()
         self.assertEqual(None, self.package_watch1.schedule_work_id)
 
+
+
     def test_get_or_none(self):
-        Package.objects.create(download_url='http://a.ab',
-                               name='name', version='1.0', type="foo")
+        Package.objects.create(download_url='http://a.ab', name='name', version='1.0', type="foo")
         package = Package.objects.filter(
             download_url="http://a.ab"
         ).get_or_none()

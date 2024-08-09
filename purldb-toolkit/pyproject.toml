@@ -43,7 +43,7 @@ dependencies = [
     "requests >= 2.7.0",
 ]
 
-urls = { Homepage = "https://github.com/aboutcode-org/purldb/tree/main/purldb-toolkit" }
+urls = { Homepage = "https://github.com/nexB/purldb/tree/main/purldb-toolkit" }
 
 
 [project.optional-dependencies]

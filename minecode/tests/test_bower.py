@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -63,6 +63,5 @@ class BowerMapperTest(JsonBasedTesting):
         result = mappers.bower.build_packages_from_jsonfile(
             metadata, 'https://coding.net/u/QiaoButang/p/jquery.easing-qbt/git/raw/master/bower.json', 'pkg:bower/1140-grid')
         result = [p.to_dict() for p in result]
-        expected_loc = self.get_test_loc(
-            'bower/expected_mapper_example1_bower.json')
+        expected_loc = self.get_test_loc('bower/expected_mapper_example1_bower.json')
         self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)

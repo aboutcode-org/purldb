@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -189,7 +189,6 @@ class HttpVisitor(Visitor):
     Abstract base class for HTTP-based visitors. Subclasses must implement the
     get_uris() method and use a routing decorator for the URIs they can handle.
     """
-
     def fetch(self, uri, timeout=10):
         """
         Fetch and return the content found at a remote uri.
@@ -217,8 +216,7 @@ class NonPersistentHttpVisitor(HttpVisitor):
 
         `timeout` is a default timeout.
         """
-        content = super(NonPersistentHttpVisitor,
-                        self).fetch(uri, timeout=timeout)
+        content = super(NonPersistentHttpVisitor, self).fetch(uri, timeout=timeout)
         temp_file = get_temp_file('NonPersistentHttpVisitor')
         with open(temp_file, 'wb') as tmp:
             tmp.write(content)

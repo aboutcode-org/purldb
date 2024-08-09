@@ -1,86 +1,92 @@
 [
   {
-    "type": "bower",
-    "namespace": null,
-    "name": "jquery.easing",
-    "version": "1.3.1",
-    "qualifiers": {},
-    "subpath": null,
-    "primary_language": null,
-    "description": "jQuery Easing plugin",
-    "release_date": null,
-    "parties": [
+    "type":"bower",
+    "namespace":null,
+    "name":"jquery.easing",
+    "version":"1.3.1",
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":null,
+    "description":"jQuery Easing plugin",
+    "release_date":null,
+    "parties":[
       {
-        "type": null,
-        "role": "author",
-        "name": "George McGinley Smith",
-        "email": null,
-        "url": null
+        "type":null,
+        "role":"author",
+        "name":"George McGinley Smith",
+        "email":null,
+        "url":null
       },
       {
-        "type": null,
-        "role": "author",
-        "name": "Jozef Izso",
-        "email": null,
-        "url": null
+        "type":null,
+        "role":"author",
+        "name":"Jozef Izso",
+        "email":null,
+        "url":null
       }
     ],
-    "keywords": ["jquery", "jquery plugin", "easing"],
-    "homepage_url": "http://gsgd.co.uk/sandbox/jquery/easing/",
-    "download_url": null,
-    "size": null,
-    "sha1": null,
-    "md5": null,
-    "sha256": null,
-    "sha512": null,
-    "bug_tracking_url": null,
-    "code_view_url": null,
-    "vcs_url": null,
-    "copyright": null,
-    "holder": null,
-    "declared_license_expression": "bsd-new",
-    "declared_license_expression_spdx": "BSD-3-Clause",
-    "license_detections": [
+    "keywords":[
+      "jquery",
+      "jquery plugin",
+      "easing"
+    ],
+    "homepage_url":"http://gsgd.co.uk/sandbox/jquery/easing/",
+    "download_url":null,
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":null,
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":null,
+    "copyright":null,
+    "holder":null,
+    "declared_license_expression":"bsd-new",
+    "declared_license_expression_spdx":"BSD-3-Clause",
+    "license_detections":[
       {
-        "license_expression": "bsd-new",
-        "license_expression_spdx": "BSD-3-Clause",
-        "matches": [
+        "license_expression":"bsd-new",
+        "license_expression_spdx":"BSD-3-Clause",
+        "matches":[
           {
-            "license_expression": "bsd-new",
-            "spdx_license_expression": "BSD-3-Clause",
-            "from_file": null,
-            "start_line": 1,
-            "end_line": 1,
-            "matcher": "1-hash",
-            "score": 100.0,
-            "matched_length": 1,
-            "match_coverage": 100.0,
-            "rule_relevance": 100,
-            "rule_identifier": "bsd-new_1135.RULE",
-            "rule_url": "https://github.com/aboutcode-org/scancode-toolkit/tree/develop/src/licensedcode/data/rules/bsd-new_1135.RULE",
-            "matched_text": "NewBSD"
+            "license_expression":"bsd-new",
+            "spdx_license_expression":"BSD-3-Clause",
+            "from_file":null,
+            "start_line":1,
+            "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "rule_relevance":100,
+            "rule_identifier":"bsd-new_1135.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/bsd-new_1135.RULE",
+            "matched_text":"NewBSD"
           }
         ],
-        "identifier": "bsd_new-24727710-20a7-6797-19e7-458dbc925334"
+        "identifier":"bsd_new-24727710-20a7-6797-19e7-458dbc925334"
       }
     ],
-    "other_license_expression": null,
-    "other_license_expression_spdx": null,
-    "other_license_detections": [],
-    "extracted_license_statement": "- NewBSD\n",
-    "notice_text": null,
-    "source_packages": [],
-    "is_private": false,
-    "is_virtual": false,
-    "extra_data": {},
-    "repository_homepage_url": null,
-    "repository_download_url": null,
-    "api_data_url": null,
-    "package_uid": "pkg:bower/jquery.easing@1.3.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths": [
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- NewBSD\n",
+    "notice_text":null,
+    "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
+    "extra_data":{},
+    "repository_homepage_url":null,
+    "repository_download_url":null,
+    "api_data_url":null,
+    "package_uid":"pkg:bower/jquery.easing@1.3.1?uuid=fixed-uid-done-for-testing-5642512d1758",
+    "datafile_paths":[
       "https://coding.net/u/QiaoButang/p/jquery.easing-qbt/git/raw/master/bower.json"
     ],
-    "datasource_ids": ["bower_json"],
-    "purl": "pkg:bower/jquery.easing@1.3.1"
+    "datasource_ids":[
+      "bower_json"
+    ],
+    "purl":"pkg:bower/jquery.easing@1.3.1"
   }
 ]

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -283,8 +283,7 @@ def map_maven_package(package_url, package_content, pipelines, priority=0, reind
         base_url=base_url,
     )
     ancestor_pom_texts = get_ancestry(pom_text=pom_text, base_url=base_url)
-    package = merge_ancestors(
-        ancestor_pom_texts=ancestor_pom_texts, package=package)
+    package = merge_ancestors(ancestor_pom_texts=ancestor_pom_texts, package=package)
 
     urls = get_urls(
         namespace=package_url.namespace,
@@ -313,8 +312,7 @@ def map_maven_package(package_url, package_content, pipelines, priority=0, reind
     if sha1:
         package.sha1 = sha1
         override = reindex_metadata
-        db_package, _, _, _ = merge_or_create_package(
-            package, visit_level=50, override=override)
+        db_package, _, _, _ = merge_or_create_package(package, visit_level=50, override=override)
     else:
         msg = f'Failed to retrieve JAR: {package_url}'
         error += msg + '\n'
@@ -453,7 +451,7 @@ def process_request(purl_str, **kwargs):
 
     has_version = bool(package_url.version)
     if has_version:
-        reindex_metadata = kwargs.get("reindex_metadata", False)
+        reindex_metadata=kwargs.get("reindex_metadata", False)
         error = map_maven_binary_and_source(
             package_url,
             pipelines,
@@ -631,8 +629,7 @@ def add_to_import_queue(url, root_url):
     response = requests.get(url)
     if response:
         data = response.text
-    namespace, name, _ = determine_namespace_name_version_from_url(
-        url, root_url)
+    namespace, name, _ = determine_namespace_name_version_from_url(url, root_url)
     purl = PackageURL(
         type='maven',
         namespace=namespace,
@@ -855,8 +852,7 @@ class MavenNexusIndexVisitor(NonPersistentHttpVisitor):
         """
         index_location = content
 
-        artifacts = get_artifacts(
-            index_location, worthyness=is_worthy_artifact)
+        artifacts = get_artifacts(index_location, worthyness=is_worthy_artifact)
 
         for artifact in artifacts:
             # we cannot do much without these
@@ -961,8 +957,7 @@ class MavenHTMLPageVisitor(HttpVisitor):
                 url = a.get('href')
                 if not url:
                     continue
-                # Remove : symbol since it's a special char for bintray repo.
-                if url.startswith(':'):
+                if url.startswith(':'):  # Remove : symbol since it's a special char for bintray repo.
                     url = url[1:]
                 filename = None  # default is folder, the filename is None.
                 if not url.endswith('/'):
@@ -1252,8 +1247,7 @@ def to_dict(self):
 Artifact = namedtuple('Artifact', _artifact_base_fields)
 Artifact.to_dict = to_dict
 
-ArtifactExtended = namedtuple(
-    'ArtifactExtended', _artifact_base_fields + _artifact_extended_fields)
+ArtifactExtended = namedtuple('ArtifactExtended', _artifact_base_fields + _artifact_extended_fields)
 ArtifactExtended.to_dict = to_dict
 
 
@@ -1410,10 +1404,8 @@ def get_entries(location, fields=frozenset(ENTRY_FIELDS)):
 
                 except EOFError:
                     if TRACE_DEEP:
-                        print(
-                            'Index version: %(_index_version)r last_modified: %(_last_modified)r' % locals())
-                        print(
-                            'Processed %(entries_count)d docs. Last entry: %(entry)r' % locals())
+                        print('Index version: %(_index_version)r last_modified: %(_last_modified)r' % locals())
+                        print('Processed %(entries_count)d docs. Last entry: %(entry)r' % locals())
                         print('Unique keys:')
                         for k in sorted(keys):
                             print(k)

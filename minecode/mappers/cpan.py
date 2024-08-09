@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -27,8 +27,7 @@ class MetaCpanReleaseSearchMapper(Mapper):
         Yield packages by parsing the json returned from release search request.
         """
         metadata = resource_uri.data
-        build_packages_from_release_json(
-            metadata, resource_uri.uri, resource_uri.package_url)
+        build_packages_from_release_json(metadata, resource_uri.uri, resource_uri.package_url)
 
 
 def build_packages_from_release_json(metadata, uri=None):
@@ -48,8 +47,7 @@ def build_packages_from_release_json(metadata, uri=None):
         if not name:
             continue
 
-        extracted_license_statement = [
-            l for l in release.get('license', []) if l and l.strip()]
+        extracted_license_statement = [l for l in release.get('license', []) if l and l.strip()]
 
         common_data = dict(
             datasource_id="cpan_release_json",
@@ -86,8 +84,7 @@ def build_packages_from_release_json(metadata, uri=None):
         # like perl_5. The license here under resources section is the
         # url of license for example: http://dev.perl.org/licenses/ So
         # it's useful to collect both information...
-        license_url = [l for l in resources.get(
-            'license', []) if l and l.strip()]
+        license_url = [l for l in resources.get('license', []) if l and l.strip()]
         if license_url:
             common_data['extracted_license_statement'].extend(license_url)
 
@@ -112,8 +109,7 @@ def build_packages_from_release_json(metadata, uri=None):
             package_data=common_data,
             datafile_path=uri,
         )
-        package_url = PackageURL(type='cpan', name=release.get(
-            'name'), version=release.get('version'))
+        package_url = PackageURL(type='cpan', name=release.get('name'), version=release.get('version'))
         package.set_purl(package_url.to_string())
         yield package
 
@@ -144,8 +140,7 @@ class CpanMetaFileMapper(Mapper):
         Yield as many Package as there are download URLs.
         """
         metadata = resource_uri.data
-        build_packages_from_metafile(
-            metadata, resource_uri.uri, resource_uri.package_url)
+        build_packages_from_metafile(metadata, resource_uri.uri, resource_uri.package_url)
 
 
 def build_packages_from_metafile(metadata, uri=None, purl=None):
@@ -250,8 +245,7 @@ class CpanReadmeFileMapper(Mapper):
         Yield as many Package as there are download URLs.
         """
         metadata = resource_uri.data
-        build_packages_from_metafile(
-            metadata, resource_uri.uri, resource_uri.package_url)
+        build_packages_from_metafile(metadata, resource_uri.uri, resource_uri.package_url)
 
 
 def build_packages_from_readmefile(metadata, uri=None, purl=None):
@@ -286,8 +280,7 @@ def build_packages_from_readmefile(metadata, uri=None, purl=None):
         for author_content in authors:
             author_split = author_content.split('<')
             if len(author_split) > 1:
-                party = scan_models.Party(type=scan_models.party_person, name=author_split[0].rstrip(
-                ), role='author', email=author_split[1].replace('>', ''))
+                party = scan_models.Party(type=scan_models.party_person, name=author_split[0].rstrip(), role='author', email=author_split[1].replace('>', ''))
                 parties = common_data.get('parties')
                 if not parties:
                     common_data['parties'] = []

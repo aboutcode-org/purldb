@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -32,8 +32,7 @@ class GenericPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         package = Package.objects.first()
         self.assertEqual('test', package.name)
         self.assertEqual('1.0.0', package.version)
-        self.assertEqual('http://example.com/test.tar.gz',
-                         package.download_url)
+        self.assertEqual('http://example.com/test.tar.gz', package.download_url)
 
     def test_process_request_no_download_url(self):
         package_count = Package.objects.all().count()
@@ -59,16 +58,14 @@ class GenericPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         package = Package.objects.first()
         self.assertEqual('test', package.name)
         self.assertEqual('1.0.0', package.version)
-        self.assertEqual('http://example.com/test.tar.gz',
-                         package.download_url)
+        self.assertEqual('http://example.com/test.tar.gz', package.download_url)
 
     def test_map_fetchcode_supported_package(self):
         package_count = Package.objects.all().count()
         self.assertEqual(0, package_count)
 
         purl = PackageURL.from_string("pkg:generic/udhcp@0.9.1")
-        error_msg = generic.map_fetchcode_supported_package(
-            purl, ('test_pipeline'))
+        error_msg = generic.map_fetchcode_supported_package(purl, ('test_pipeline'))
 
         self.assertEqual('', error_msg)
         package_count = Package.objects.all().count()
@@ -81,7 +78,7 @@ class GenericPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             "https://web.archive.org/web/20021209021312/http://udhcp.busybox.net/source//udhcp-0.9.1.tar.gz",
             package.download_url,
         )
-
+    
     def test_process_request_fetchcode_generic(self):
         package_count = Package.objects.all().count()
         self.assertEqual(0, package_count)

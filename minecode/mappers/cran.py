@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -29,8 +29,7 @@ class CranMetaFileMapper(Mapper):
         Yield as many Package as there are download URLs.
         """
         metadata = resource_uri.data
-        build_packages_from_html(
-            metadata, resource_uri.uri, resource_uri.package_url)
+        build_packages_from_html(metadata, resource_uri.uri, resource_uri.package_url)
 
 
 def get_download_url(url):
@@ -94,8 +93,7 @@ def build_packages_from_html(metadata, uri=None, purl=None):
             cols = row.find_all('td')
             for ele in cols:
                 if ele.find_all('a'):
-                    col_values.append([a['href'].strip()
-                                      for a in ele.find_all('a')])
+                    col_values.append([a['href'].strip() for a in ele.find_all('a')])
                 col_values.append(ele.text.strip())
             if len(cols) >= 2:
                 key = col_values[0]
@@ -117,8 +115,7 @@ def build_packages_from_html(metadata, uri=None, purl=None):
                     parties = common_data.get('parties')
                     if not parties:
                         common_data['parties'] = []
-                    party = scan_models.Party(
-                        type=scan_models.party_person, name=value, role='author')
+                    party = scan_models.Party(type=scan_models.party_person, name=value, role='author')
                     common_data['parties'].append(party.to_dict())
                 elif key == 'Maintainer:':
                     maintainer_split = value.split('<')
@@ -126,8 +123,7 @@ def build_packages_from_html(metadata, uri=None, purl=None):
                         parties = common_data.get('parties')
                         if not parties:
                             common_data['parties'] = []
-                        party = scan_models.Party(type=scan_models.party_person, name=maintainer_split[0].rstrip(
-                        ), role='maintainer', email=maintainer_split[1].replace('>', '').replace(' at ', '@'))
+                        party = scan_models.Party(type=scan_models.party_person, name=maintainer_split[0].rstrip(), role='maintainer', email=maintainer_split[1].replace('>', '').replace(' at ', '@'))
                         common_data['parties'].append(party.to_dict())
                 elif 'source' in key or 'binaries' in key:
                     if type(value) == list:

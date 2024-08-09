@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -43,8 +43,7 @@ class GoLangVisitorTest(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = GodocSearchVisitor(uri)
-        expected_loc = self.get_test_loc(
-            'golang/godoc_search_expected_uris.json')
+        expected_loc = self.get_test_loc('golang/godoc_search_expected_uris.json')
         self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_GodocSearchVisitor_with_non_github_urls(self):
@@ -53,8 +52,7 @@ class GoLangVisitorTest(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = GodocSearchVisitor(uri)
-        expected_loc = self.get_test_loc(
-            'golang/godoc_search_off_github_expected_uris.json')
+        expected_loc = self.get_test_loc('golang/godoc_search_off_github_expected_uris.json')
         self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_parse_package_path(self):
@@ -76,8 +74,7 @@ class GoLangMapperTest(JsonBasedTesting):
         package = build_golang_package(package_data, purl)
         package = package.to_dict()
         expected_loc = self.get_test_loc('golang/glog_expected.json')
-        self.check_expected_results(
-            package, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_golang_package_bitbucket(self):
         purl = 'pkg:bitbucket/bitbucket.org/zombiezen/yaml?vcs_repository=https://bitbucket.org/zombiezen/yaml'
@@ -86,8 +83,7 @@ class GoLangMapperTest(JsonBasedTesting):
         package = build_golang_package(package_data, purl)
         package = package.to_dict()
         expected_loc = self.get_test_loc('golang/math3_expected.json')
-        self.check_expected_results(
-            package, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_golang_package_non_well_known(self):
         purl = 'pkg:golang/winterdrache.de/bindings/sdl'
@@ -96,5 +92,4 @@ class GoLangMapperTest(JsonBasedTesting):
         package = build_golang_package(package_data, purl)
         package = package.to_dict()
         expected_loc = self.get_test_loc('golang/winter_expected.json')
-        self.check_expected_results(
-            package, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)

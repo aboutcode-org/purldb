@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -30,12 +30,10 @@ api_router.register('validate', PurlValidateViewSet, 'validate')
 urlpatterns = [
     path(
         'robots.txt',
-        TemplateView.as_view(template_name='robots.txt',
-                             content_type='text/plain'),
+        TemplateView.as_view(template_name='robots.txt', content_type='text/plain'),
     ),
     path('api/', include((api_router.urls, 'api'))),
     path('', RedirectView.as_view(url='api/')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'),
-         name='swagger-ui'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]

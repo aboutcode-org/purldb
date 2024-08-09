@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 from dateutil.parser import parse as dateutil_parse
@@ -120,7 +120,7 @@ def process_packages(
             updated = True
 
     if unsaved_existing_packages_lowercased:
-        fields_to_update = [
+        fields_to_update=[
             'namespace',
             'name',
             'version',
@@ -133,8 +133,7 @@ def process_packages(
             'last_modified_date',
             'history',
         ]
-        upc = update_packages(
-            unsaved_existing_packages_lowercased, fields_to_update)
+        upc = update_packages(unsaved_existing_packages_lowercased, fields_to_update)
         updated_packages_count += upc
         unsaved_existing_packages_lowercased = []
         if upc > 0:
@@ -155,8 +154,7 @@ def process_packages(
         packages_to_delete = []
         deleted_packages_count += dpc
         if dpc > 0:
-            logger.info(
-                f'Deleted {deleted_packages_count:,} Duplicate Maven Packages')
+            logger.info(f'Deleted {deleted_packages_count:,} Duplicate Maven Packages')
 
     return unsaved_existing_packages, unsaved_existing_packages_lowercased, unsaved_new_packages, packages_to_delete
 
@@ -198,8 +196,7 @@ def update_maven_packages(maven_package, fields_to_update, lowercased_purl_field
     namespace = maven_package.namespace
     name = maven_package.name
     version = maven_package.version
-    normalized_qualifiers = normalize_qualifiers(
-        maven_package.qualifiers, encode=True)
+    normalized_qualifiers = normalize_qualifiers(maven_package.qualifiers, encode=True)
 
     if lowercased_purl_fields:
         namespace = namespace.lower()
@@ -218,8 +215,7 @@ def update_maven_packages(maven_package, fields_to_update, lowercased_purl_field
         duplicate_packages = []
         for existing_package in existing_packages:
             if existing_package.download_url != maven_package.download_url:
-                logger.debug(
-                    f'Deleted duplicate Package with incorrect download URL {existing_package.package_uid}')
+                logger.debug(f'Deleted duplicate Package with incorrect download URL {existing_package.package_uid}')
                 duplicate_packages.append(existing_package)
 
         duplicate_packages_pks = [p.pk for p in duplicate_packages]
@@ -320,14 +316,12 @@ class Command(VerboseCommand):
                 lowercased_purl_fields=True
             )
             if existing_package_lowercased:
-                unsaved_existing_packages_lowercased.append(
-                    existing_package_lowercased)
+                unsaved_existing_packages_lowercased.append(existing_package_lowercased)
                 packages_to_delete.extend(duplicate_packages)
                 continue
 
             if Package.objects.filter(download_url=maven_package.download_url).exists():
-                logger.debug(
-                    f'Skipping creation of {maven_package.purl} - already exists')
+                logger.debug(f'Skipping creation of {maven_package.purl} - already exists')
                 continue
 
             if create_package:

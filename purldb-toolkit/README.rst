@@ -29,12 +29,12 @@ The purlcli command exposes multiple subcommands. Run this to command to get bas
 
     purlcli  --help
     Usage: purlcli [OPTIONS] COMMAND [ARGS]...
-
+    
       Return information for a PURL or list of PURLs.
-
+    
     Options:
       --help  Show this message and exit.
-
+    
     Commands:
       d2d       Run deploy-to-devel "back2source" analysis between packages.
       metadata  Fetch package metadata for a PURL.
@@ -555,20 +555,20 @@ Examples
 **Run a d2d analysis between two Java JARs (source and binary)**
 
 You first need to install and run matchcode locally so you have the endpoint accessible. Starting
-from a https://github.com/aboutcode-org/purldb/ clone::
+from a https://github.com/nexB/purldb/ clone::
 
-    git clone https://github.com/aboutcode-org/purldb
+    git clone https://github.com/nexB/purldb
     cd purldb
     make dev
     make envfile
-    SECRET_KEY="1" make postgres_matchcodeio
-    SECRET_KEY="1" make run_matchcodeio
+    SECRET_KEY="1" make postgres_matchcodeio 
+    SECRET_KEY="1" make run_matchcodeio 
 
 Then in another shell::
 
     cd purldb
     source venv/bin/activate
-
+    
 Finally run the command:
 
 .. code-block:: console
@@ -676,6 +676,6 @@ See https://www.apache.org/licenses/LICENSE-2.0 for the license text.
 
 See https://creativecommons.org/licenses/by-sa/4.0/legalcode for the license text.
 
-See https://github.com/aboutcode-org/purldb for support or download.
+See https://github.com/nexB/purldb for support or download.
 
 See https://aboutcode.org for more information about nexB OSS projects.

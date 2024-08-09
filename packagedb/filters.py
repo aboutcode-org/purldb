@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -13,7 +13,7 @@ import django_filters
 from django.core.exceptions import FieldError
 from django.db.models import Q
 
-# The function and Classes in this file are from https://github.com/aboutcode-org/scancode.io/blob/main/scanpipe/filters.py
+# The function and Classes in this file are from https://github.com/nexB/scancode.io/blob/main/scanpipe/filters.py
 
 
 def parse_query_string_to_lookups(query_string, default_lookup_expr, default_field):
@@ -49,8 +49,7 @@ def parse_query_string_to_lookups(query_string, default_lookup_expr, default_fie
             search_value = term
             field_name = default_field
 
-        lookups &= Q(
-            **{f"{field_name}__{lookup_expr}": search_value}, _negated=negated)
+        lookups &= Q(**{f"{field_name}__{lookup_expr}": search_value}, _negated=negated)
 
     return lookups
 
@@ -85,8 +84,7 @@ class PackageSearchFilter(QuerySearchFilter):
         if "://" not in value and ":" in value:
             return super().filter(qs, value)
 
-        search_fields = ["type", "namespace",
-                         "name", "version", "download_url"]
+        search_fields = ["type", "namespace", "name", "version", "download_url"]
         lookups = Q()
         for field_names in search_fields:
             lookups |= Q(**{f"{field_names}__{self.lookup_expr}": value})

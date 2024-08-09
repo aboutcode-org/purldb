@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -30,8 +30,7 @@ class CreateUserCommand(BaseCommand):
         )
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            'username', help='Specifies the username for the user.')
+        parser.add_argument('username', help='Specifies the username for the user.')
         parser.add_argument(
             '--no-input',
             action='store_false',
@@ -58,8 +57,7 @@ class CreateUserCommand(BaseCommand):
         if interactive:
             password = self.get_password_from_stdin(username)
 
-        user = self.UserModel._default_manager.create_user(
-            username, password=password)
+        user = self.UserModel._default_manager.create_user(username, password=password)
         token, _ = Token._default_manager.get_or_create(user=user)
 
         if verbosity >= 1:

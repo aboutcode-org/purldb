@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -25,8 +25,7 @@ class DockerHubLiraryJsonMapper(Mapper):
         Yield as many Package as there are download URLs.
         """
         metadata = resource_uri.data
-        build_packages_from_jsonfile(
-            metadata, resource_uri.uri, resource_uri.package_url)
+        build_packages_from_jsonfile(metadata, resource_uri.uri, resource_uri.package_url)
 
 
 def build_packages_from_jsonfile(metadata, uri=None, purl=None):
@@ -48,8 +47,7 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
             type='docker',
             name=name,
             description=description,
-            homepage_url=dockhub_library_htmlpage_template.format(
-                project=name),
+            homepage_url=dockhub_library_htmlpage_template.format(project=name),
         )
         package = scan_models.Package(**common_data)
         package.set_purl(purl)

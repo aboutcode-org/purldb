@@ -17,9 +17,9 @@ Do Your Homework
 ----------------
 
 Before adding a contribution or create a new issue, take a look at the project’s
-`README <https://github.com/aboutcode-org/purldb#readme>`_, read through our
+`README <https://github.com/nexB/purldb#readme>`_, read through our
 `documentation <https://purldb.readthedocs.io>`_,
-and browse existing `issues <https://github.com/aboutcode-org/purldb/issues>`_,
+and browse existing `issues <https://github.com/nexB/purldb/issues>`_,
 to develop some understanding of the project and confirm whether a given
 issue/feature has previously been discussed.
 
@@ -34,7 +34,7 @@ First Timers
 
 You are here to help, but you're a new contributor! No worries, we always
 welcome newcomer contributors. We maintain some
-`good first issues <https://github.com/aboutcode-org/purldb/labels/good%20first%20issue>`_
+`good first issues <https://github.com/nexB/purldb/labels/good%20first%20issue>`_
 and encourage new contributors to work on those issues for a smooth start.
 
 .. warning::
@@ -55,15 +55,15 @@ and encourage new contributors to work on those issues for a smooth start.
 Report Issues
 ^^^^^^^^^^^^^
 
-- Report a new `bug <https://github.com/aboutcode-org/purldb/issues>`_; just remember to be
+- Report a new `bug <https://github.com/nexB/purldb/issues>`_; just remember to be
   as specific as possible.
-- Create a `new issue <https://github.com/aboutcode-org/purldb/issues>`_ to request a
+- Create a `new issue <https://github.com/nexB/purldb/issues>`_ to request a
   feature, submit a feedback, or ask a question.
-- Look into existing `bugs <https://github.com/aboutcode-org/purldb/labels/bug>`_,
+- Look into existing `bugs <https://github.com/nexB/purldb/labels/bug>`_,
   try to reproduce the issue on your side, and discuss solutions in the comments.
 
 .. note::
-    Make sure to check existing `issues <https://github.com/aboutcode-org/purldb/issues>`_,
+    Make sure to check existing `issues <https://github.com/nexB/purldb/issues>`_,
     and :ref:`faq` to confirm whether a given issue or a question has previously been
     discussed.
 
@@ -72,7 +72,7 @@ Code Contributions
 
 Code is contributed to the codebase using **pull requests**.
 A pull request should always be attached to an existing issue.
-When there is no existing issues, start by `creating one <https://github.com/aboutcode-org/purldb/issues>`_
+When there is no existing issues, start by `creating one <https://github.com/nexB/purldb/issues>`_
 to discuss potential solutions and implementation details before writing any code.
 
 We use several conventions to ensure code quality regarding format, testing, and
@@ -102,7 +102,7 @@ See also :ref:`testing` for module-specific testing commands.
 3. **Commit messages and Developer Certificate of Origin**
 
   Follow the instructions at `Writing good Commit Messages <https://aboutcode.readthedocs.io/en/latest/contributing/writing_good_commit_messages.html>`_
-  and `check some examples <https://github.com/aboutcode-org/purldb/commits/main>`_.
+  and `check some examples <https://github.com/nexB/purldb/commits/main>`_.
 
   **You must include a "Signed-off-by" to your commit messages**::
 

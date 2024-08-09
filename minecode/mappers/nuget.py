@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -69,8 +69,7 @@ def build_packages_with_json(metadata, purl=None):
             parties=authors,
             keywords=keywords,
         )
-        package = scan_models.PackageData.from_data(
-            package_data=package_mapping)
+        package = scan_models.PackageData.from_data(package_data=package_mapping)
         package.set_purl(purl)
         yield package
 
@@ -160,8 +159,7 @@ def build_packages_from_html(metadata, uri, purl=None):
                     if not version or not version.strip():
                         continue
                     version = version.strip()
-                    download_url = download_url_format.format(
-                        name=name, version=version)
+                    download_url = download_url_format.format(name=name, version=version)
                     package_mapping = dict(
                         datasource_id="nuget_metadata_json",
                         name=name,

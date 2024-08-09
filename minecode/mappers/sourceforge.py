@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -50,8 +50,7 @@ def build_packages_from_metafile(metadata, purl=None, uri=None):
             type='sourceforge',
             name=metadata.get('shortname', metadata.get('name')),
             description=description,
-            homepage_url=metadata.get(
-                'external_homepage', metadata.get('url')),
+            homepage_url=metadata.get('external_homepage', metadata.get('url')),
             license_detections=[],
         )
 
@@ -62,8 +61,7 @@ def build_packages_from_metafile(metadata, purl=None, uri=None):
                 common_data['parties'] = []
             if dev.get('name'):
                 common_data['parties'].append(
-                    scan_models.Party(name=dev.get(
-                        'name'), role='contributor', url=dev.get('url')).to_dict()
+                    scan_models.Party(name=dev.get('name'), role='contributor', url=dev.get('url')).to_dict()
                 )
 
         categories = metadata.get('categories', {})

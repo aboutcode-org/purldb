@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -69,23 +69,20 @@ def build_packages_with_json(metadata, purl=None, uri=None):
                 if not parties:
                     common['parties'] = []
                 common['parties'].append(
-                    scan_models.Party(name=author.get('name'), role='author', url=author.get(
-                        'homepage'), email=author.get('email')).to_dict()
+                    scan_models.Party(name=author.get('name'), role='author', url=author.get('homepage'), email=author.get('email')).to_dict()
                 )
 
             extracted_license_statement = set([])
             for lic in version_content.get('license'):
                 extracted_license_statement.add(lic)
             if extracted_license_statement:
-                common['extracted_license_statement'] = list(
-                    extracted_license_statement)
+                common['extracted_license_statement'] = list(extracted_license_statement)
                 common['license_detections'] = []
 
             dependencies = []
             for name, version in version_content.get('require', {}).items():
                 dependencies.append(
-                    DependentPackage(
-                        purl=name, extracted_requirement=version, scope='runtime').to_dict()
+                    DependentPackage(purl=name, extracted_requirement=version, scope='runtime').to_dict()
                 )
             if dependencies:
                 common['dependencies'] = dependencies

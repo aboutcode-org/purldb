@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -72,8 +72,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/0flux_npm_expected.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package2(self):
         with open(self.get_test_loc('npm/2112.json')) as npm_metadata:
@@ -81,8 +80,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/npm_2112_expected.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package3(self):
         with open(self.get_test_loc('npm/microdata.json')) as npm_metadata:
@@ -90,8 +88,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/microdata-node_expected.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_with_visitor_data(self):
         uri = 'https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=77777'
@@ -106,16 +103,14 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/29_record_expected.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
         # Randomly pick a record from 0-1000
         metadata = uris_list[554].data
         packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/554_record_expected.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_with_ticket_439(self):
         uri = 'https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=10&since=7333426'
@@ -131,8 +126,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/expected_ticket_439.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_verify_ticket_440(self):
         uri = 'https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=10&since=7632607'
@@ -148,8 +142,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(json.loads(metadata))
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/expected_ticket_440.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_npm_mapper(self):
         test_uri = 'https://registry.npmjs.org/angular-compare-validator'
@@ -163,8 +156,7 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.NpmPackageMapper(test_uri, test_res_uri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/mapper/index.expected.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_for_jsonp_filter(self):
         with open(self.get_test_loc('npm/jsonp-filter.json')) as npm_metadata:
@@ -172,23 +164,19 @@ class TestNPMMapper(JsonBasedTesting):
         packages = mappers.npm.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('npm/jsonp-filter-expected.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_regex_npm_mapper(self):
         regex = re.compile(r'^https://registry.npmjs.org/[^\/]+$')
-        result = re.match(
-            regex, 'https://registry.npmjs.org/react-mobile-navigation-modal')
+        result = re.match(regex, 'https://registry.npmjs.org/react-mobile-navigation-modal')
         self.assertTrue(result)
-
 
 class NpmPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
 
     def setUp(self):
         super(NpmPriorityQueueTests, self).setUp()
-        self.expected_json_loc = self.get_test_loc(
-            'npm/lodash_package-expected.json')
+        self.expected_json_loc = self.get_test_loc('npm/lodash_package-expected.json')
         with open(self.expected_json_loc) as f:
             self.expected_json_contents = json.load(f)
 

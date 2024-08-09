@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -87,8 +87,7 @@ class FdroidIndexVisitor(NonPersistentHttpVisitor):
                 uri=purl,
                 package_url=purl,
                 source_uri=self.uri,
-                data=json.dumps(package_data, separators=(
-                    ',', ':'), ensure_ascii=False),
+                data=json.dumps(package_data, separators=(',', ':'), ensure_ascii=False),
                 # note: visited is True since there nothing more to visit
                 visited=True
             )

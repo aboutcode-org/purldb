@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -94,25 +94,21 @@ class BaseModelTest(MatchcodeTestCase):
         index_packages_sha1()
 
         # Populate ExactFileIndexFingerprint table
-        load_resources_from_scan(self.get_test_loc(
-            'models/match-test.json'), self.test_package4)
+        load_resources_from_scan(self.get_test_loc('models/match-test.json'), self.test_package4)
         index_package_directories(self.test_package4)
-        index_package_files_sha1(
-            self.test_package4, self.get_test_loc('models/match-test.json'))
+        index_package_files_sha1(self.test_package4, self.get_test_loc('models/match-test.json'))
 
 
 class ExactPackageArchiveIndexModelTestCase(BaseModelTest):
     def test_ExactPackageArchiveIndex_index(self):
         # Test index
         sha1 = 'b6bbe0b067469d719708ca38de5c237cb526c3d2'
-        epai, created = ExactPackageArchiveIndex.index(
-            sha1, self.test_package1)
+        epai, created = ExactPackageArchiveIndex.index(sha1, self.test_package1)
         self.assertTrue(created)
         self.assertEqual(sha1, epai.fingerprint())
 
         # Test index of existing sha1
-        epai, created = ExactPackageArchiveIndex.index(
-            sha1, self.test_package1)
+        epai, created = ExactPackageArchiveIndex.index(sha1, self.test_package1)
         self.assertFalse(created)
         self.assertEqual(sha1, epai.fingerprint())
 
@@ -124,8 +120,7 @@ class ExactPackageArchiveIndexModelTestCase(BaseModelTest):
         )
 
     def test_ExactPackageArchiveIndex_single_sha1_single_match(self):
-        result = ExactPackageArchiveIndex.match(
-            '51d28a27d919ce8690a40f4f335b9d591ceb16e9')
+        result = ExactPackageArchiveIndex.match('51d28a27d919ce8690a40f4f335b9d591ceb16e9')
         result = [r.package.to_dict() for r in result]
         expected = [self.test_package1_metadata]
         self.assertEqual(expected, result)
@@ -173,8 +168,7 @@ class ExactFileIndexModelTestCase(BaseModelTest):
                 resource.matched_to.append(p['purl'])
             resource.save(codebase)
 
-        expected = self.get_test_loc(
-            'models/exact-file-matching-standalone-test-results.json')
+        expected = self.get_test_loc('models/exact-file-matching-standalone-test-results.json')
         self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
 
 
@@ -194,8 +188,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             type='npm',
         )
         self.test_package1_metadata = self.test_package1.to_dict()
-        load_resources_from_scan(self.get_test_loc(
-            'models/directory-matching/async-0.2.10.tgz-i.json'), self.test_package1)
+        load_resources_from_scan(self.get_test_loc('models/directory-matching/async-0.2.10.tgz-i.json'), self.test_package1)
         index_package_directories(self.test_package1)
 
         self.test_package2, _ = Package.objects.get_or_create(
@@ -209,8 +202,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             type='npm',
         )
         self.test_package2_metadata = self.test_package2.to_dict()
-        load_resources_from_scan(self.get_test_loc(
-            'models/directory-matching/async-0.2.9-i.json'), self.test_package2)
+        load_resources_from_scan(self.get_test_loc('models/directory-matching/async-0.2.9-i.json'), self.test_package2)
         index_package_directories(self.test_package2)
 
     def test_ApproximateDirectoryStructureIndex_index(self):
@@ -246,12 +238,10 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
         )
 
     def test_ApproximateDirectoryStructureIndex_match_subdir(self):
-        scan_location = self.get_test_loc(
-            'models/directory-matching/async-0.2.9-i.json')
+        scan_location = self.get_test_loc('models/directory-matching/async-0.2.9-i.json')
         vc = VirtualCodebase(
             location=scan_location,
-            resource_attributes=dict(
-                packages=attr.ib(default=attr.Factory(list)))
+            resource_attributes=dict(packages=attr.ib(default=attr.Factory(list)))
         )
         codebase = compute_codebase_directory_fingerprints(vc)
 
@@ -270,8 +260,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
                 resource.packages.append(p)
                 resource.save(codebase)
 
-        expected = self.get_test_loc(
-            'models/directory-matching/async-0.2.9-i-expected-structure.json')
+        expected = self.get_test_loc('models/directory-matching/async-0.2.9-i-expected-structure.json')
         self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
 
     def test_ApproximateDirectoryContentIndex_index(self):
@@ -307,12 +296,10 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
         )
 
     def test_ApproximateDirectoryContentIndex_match_subdir(self):
-        scan_location = self.get_test_loc(
-            'models/directory-matching/async-0.2.9-i.json')
+        scan_location = self.get_test_loc('models/directory-matching/async-0.2.9-i.json')
         vc = VirtualCodebase(
             location=scan_location,
-            resource_attributes=dict(
-                packages=attr.ib(default=attr.Factory(list)))
+            resource_attributes=dict(packages=attr.ib(default=attr.Factory(list)))
         )
         codebase = compute_codebase_directory_fingerprints(vc)
 
@@ -331,8 +318,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
                 resource.packages.append(p)
                 resource.save(codebase)
 
-        expected = self.get_test_loc(
-            'models/directory-matching/async-0.2.9-i-expected-content.json')
+        expected = self.get_test_loc('models/directory-matching/async-0.2.9-i-expected-content.json')
         self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
 
 
@@ -379,8 +365,7 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
             extension='js',
             package=self.test_package1
         )
-        test_resource1_loc = self.get_test_loc(
-            'match/approximate-file-matching/index.js')
+        test_resource1_loc = self.get_test_loc('match/approximate-file-matching/index.js')
         fingerprints = get_file_fingerprint_hashes(test_resource1_loc)
         self.test_resource1_fingerprint = fingerprints['halo1']
         ApproximateResourceContentIndex.index(
@@ -422,12 +407,10 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
         )
 
     def test_ApproximateResourceContentIndex_match(self):
-        scan_location = self.get_test_loc(
-            'match/approximate-file-matching/approximate-match-test.json')
+        scan_location = self.get_test_loc('match/approximate-file-matching/approximate-match-test.json')
         codebase = VirtualCodebase(
             location=scan_location,
-            resource_attributes=dict(
-                packages=attr.ib(default=attr.Factory(list)))
+            resource_attributes=dict(packages=attr.ib(default=attr.Factory(list)))
         )
 
         # populate codebase with match results
@@ -444,21 +427,17 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
                 resource.packages.append(p)
                 resource.save(codebase)
 
-        expected = self.get_test_loc(
-            'match/approximate-file-matching/approximate-match-model-test-results.json')
+        expected = self.get_test_loc('match/approximate-file-matching/approximate-match-model-test-results.json')
         self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
 
     def test_ApproximateResourceContentIndex_match_deep_equals(self):
-        test_file_loc = self.get_test_loc(
-            'match/approximate-file-matching/index-modified.js')
+        test_file_loc = self.get_test_loc('match/approximate-file-matching/index-modified.js')
         fingerprints = get_file_fingerprint_hashes(test_file_loc)
         fp = fingerprints['halo1']
         matches = ApproximateResourceContentIndex.match(fp)
         results = [match.package.to_dict() for match in matches]
-        expected_results_loc = self.get_test_loc(
-            'match/approximate-file-matching/index-modified.js-expected.json')
-        self.check_expected_results(
-            results, expected_results_loc, regen=FIXTURES_REGEN)
+        expected_results_loc = self.get_test_loc('match/approximate-file-matching/index-modified.js-expected.json')
+        self.check_expected_results(results, expected_results_loc, regen=FIXTURES_REGEN)
 
 
 class MatchcodeModelUtilsTestCase(MatchcodeTestCase):

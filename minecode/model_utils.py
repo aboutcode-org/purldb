@@ -87,13 +87,12 @@ def merge_packages(existing_package, new_package_data, replace=False):
     existing_mapping.pop('purl')
 
     # FIXME REMOVE this workaround when a ScanCode bug fixed with
-    # https://github.com/aboutcode-org/scancode-toolkit/commit/9b687e6f9bbb695a10030a81be7b93c8b1d816c2
+    # https://github.com/nexB/scancode-toolkit/commit/9b687e6f9bbb695a10030a81be7b93c8b1d816c2
     qualifiers = new_package_data.get('qualifiers')
     if isinstance(qualifiers, dict):
         # somehow we get an dict on the new value instead of a string
         # this not likely the best place to fix this
-        new_package_data['qualifiers'] = normalize_qualifiers(
-            qualifiers, encode=True)
+        new_package_data['qualifiers'] = normalize_qualifiers(qualifiers, encode=True)
 
     new_mapping = new_package_data
 
@@ -125,8 +124,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
                 existing_value != new_value):
             raise Exception(
                 '\n'.join([
-                    'Mismatched {} for {}:'.format(
-                        existing_field, existing_package.uri),
+                    'Mismatched {} for {}:'.format(existing_field, existing_package.uri),
                     '    existing_value: {}'.format(existing_value),
                     '    new_value: {}'.format(new_value)
                 ])
@@ -149,10 +147,8 @@ def merge_packages(existing_package, new_package_data, replace=False):
             if existing_field == 'parties':
                 # If `existing_field` is `parties`, then we update the `Party` table
                 parties = new_value
-                existing_parties = Party.objects.filter(
-                    package=existing_package)
-                serialized_existing_parties = PartySerializer(
-                    existing_parties, many=True).data
+                existing_parties = Party.objects.filter(package=existing_package)
+                serialized_existing_parties = PartySerializer(existing_parties, many=True).data
                 if replace:
                     # Delete existing Party objects
                     existing_parties.delete()
@@ -175,10 +171,8 @@ def merge_packages(existing_package, new_package_data, replace=False):
             elif existing_field == 'dependencies':
                 # If `existing_field` is `dependencies`, then we update the `DependentPackage` table
                 dependencies = new_value
-                existing_dependencies = DependentPackage.objects.filter(
-                    package=existing_package)
-                serialized_existing_dependencies = DependentPackageSerializer(
-                    existing_dependencies, many=True).data
+                existing_dependencies = DependentPackage.objects.filter(package=existing_package)
+                serialized_existing_dependencies = DependentPackageSerializer(existing_dependencies, many=True).data
                 if replace:
                     # Delete existing DependentPackage objects
                     existing_dependencies.delete()
@@ -246,7 +240,7 @@ def merge_or_create_package(scanned_package, visit_level, override=False):
     mining_level = visit_level
     if override:
         # this will force the data override
-        visit_level = +1
+        visit_level =+1
 
     if not isinstance(scanned_package, PackageData):
         msg = 'Not a ScanCode PackageData type:' + repr(scanned_package)
@@ -319,8 +313,7 @@ def merge_or_create_package(scanned_package, visit_level, override=False):
             data = {
                 'updated_fields': updated_fields,
             }
-            stored_package.append_to_history(
-                'Package field values have been updated.', data=data)
+            stored_package.append_to_history('Package field values have been updated.', data=data)
 
         # TODO: append updated_fields information to the package's history
 
@@ -357,8 +350,7 @@ def merge_or_create_package(scanned_package, visit_level, override=False):
             namespace=scanned_package.namespace,
             name=scanned_package.name,
             version=scanned_package.version,
-            qualifiers=normalize_qualifiers(
-                scanned_package.qualifiers, encode=True),
+            qualifiers=normalize_qualifiers(scanned_package.qualifiers, encode=True),
             subpath=scanned_package.subpath,
             primary_language=scanned_package.primary_language,
             description=scanned_package.description,
@@ -388,8 +380,7 @@ def merge_or_create_package(scanned_package, visit_level, override=False):
         stringify_null_purl_fields(package_data)
 
         created_package = Package.objects.create(**package_data)
-        created_package.append_to_history(
-            'New Package created from URI: {}'.format(package_uri))
+        created_package.append_to_history('New Package created from URI: {}'.format(package_uri))
 
         # This is used in the case of Maven packages created from the priority queue
         for h in history:

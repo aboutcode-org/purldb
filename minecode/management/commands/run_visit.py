@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -172,8 +172,7 @@ def visit_uris(ignore_robots=False, ignore_throttle=False,
 
         if not resource_uri:
             if exit_on_empty:
-                logger.info(
-                    'exit-on-empty requested: No more visitable resource, exiting...')
+                logger.info('exit-on-empty requested: No more visitable resource, exiting...')
                 break
 
             # Only log a single message when we go to sleep
@@ -198,8 +197,7 @@ def visit_uris(ignore_robots=False, ignore_throttle=False,
         if not ignore_throttle:
             sleep_time = get_sleep_time(resource_uri)
             if sleep_time:
-                logger.debug('Respecting revisit delay: wait for {} for {}'.format(
-                    sleep_time, resource_uri.uri))
+                logger.debug('Respecting revisit delay: wait for {} for {}'.format(sleep_time, resource_uri.uri))
                 time.sleep(sleep_time)
             # Set new value in cache 'visit_delay_by_hostname' right before making the request
             # TODO: The cache logic should move closer to the requests calls
@@ -215,8 +213,7 @@ def visit_uris(ignore_robots=False, ignore_throttle=False,
             uri_counter_by_visitor=uri_counter_by_visitor)
 
         if max_loops and int(visited_counter) > int(max_loops):
-            logger.info(
-                'Stopping visits after max_loops: {} visit loops.'.format(max_loops))
+            logger.info('Stopping visits after max_loops: {} visit loops.'.format(max_loops))
             break
 
     return visited_counter, inserted_counter
@@ -255,12 +252,10 @@ def visit_uri(resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_rout
             logger.debug('visit_uri: uri: {}'.format(uri_to_visit))
 
         # TODO: Consider pass a full visitors.URI plain object rather than a plain string
-        new_uris_to_visit, visited_data, visit_error = _visit_router.process(
-            uri_to_visit)
+        new_uris_to_visit, visited_data, visit_error = _visit_router.process(uri_to_visit)
         if TRACE:
             new_uris_to_visit = list(new_uris_to_visit or [])
-            logger.debug(
-                'visit_uri: new_uris_to_visit: {}'.format(new_uris_to_visit))
+            logger.debug('visit_uri: new_uris_to_visit: {}'.format(new_uris_to_visit))
 
     except NoRouteAvailable:
         logger.error('No route available.')
@@ -309,8 +304,7 @@ def visit_uri(resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_rout
                 visited_uri['last_modified_date'] = last_modified_date
 
             if vuri_count % 1000 == 0:
-                logger.debug(
-                    ' * Processed: {} visited URIs'.format(vuri_count))
+                logger.debug(' * Processed: {} visited URIs'.format(vuri_count))
 
             try:
                 # insert new if pre-visited
@@ -320,8 +314,7 @@ def visit_uri(resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_rout
                     visited_uri['last_visit_date'] = timezone.now()
                     new_uri = ResourceURI(**visited_uri)
                     new_uri.save()
-                    logger.debug(
-                        ' + Inserted pre-visited:\t{}'.format(uri_str))
+                    logger.debug(' + Inserted pre-visited:\t{}'.format(uri_str))
                     inserted_count += 1
                     if max_uris:
                         uri_counter_by_visitor[visitor_key] += 1
@@ -340,8 +333,7 @@ def visit_uri(resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_rout
 
             except Exception as e:
                 # FIXME: is catching all expections here correct?
-                msg = 'ERROR while processing URI from a visit through: {}'.format(
-                    uri_str)
+                msg = 'ERROR while processing URI from a visit through: {}'.format(uri_str)
                 msg += '\n'
                 msg += repr(visited_uri)
                 msg += '\n'
@@ -349,13 +341,11 @@ def visit_uri(resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_rout
                 visit_errors.append(msg)
                 logger.error(msg)
                 if len(visit_errors) > 10:
-                    logger.error(
-                        ' ! Breaking after processing over 10 vuris errors for: {}'.format(uri_str))
+                    logger.error(' ! Breaking after processing over 10 vuris errors for: {}'.format(uri_str))
                     break
 
             if max_uris and int(uri_counter_by_visitor[visitor_key]) > int(max_uris):
-                logger.info(
-                    ' ! Breaking after processing max-uris: {} URIs.'.format(max_uris))
+                logger.info(' ! Breaking after processing max-uris: {} URIs.'.format(max_uris))
                 break
 
     except Exception as e:

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -40,14 +40,12 @@ class CpanVisitorTest(JsonBasedTesting):
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = cpan.CpanModulesVisitors(uri)
-        expected_loc = self.get_test_loc(
-            'cpan/expected_release_from_author_ABERNDT.json')
+        expected_loc = self.get_test_loc('cpan/expected_release_from_author_ABERNDT.json')
         self.check_expected_results(data, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_html_modules(self):
         uri = 'http://www.cpan.org/modules/01modules.index.html'
-        test_loc = self.get_test_loc(
-            'cpan/Modules on CPAN alphabetically.html')
+        test_loc = self.get_test_loc('cpan/Modules on CPAN alphabetically.html')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = cpan.CpanModulesVisitors(uri)
@@ -65,15 +63,13 @@ class CpanVisitorTest(JsonBasedTesting):
 
     def test_visit_readme_file(self):
         uri = 'http://www.cpan.org/authors/id/A/AM/AMIRITE/Mojolicious-Plugin-Nour-Config-0.09.readme'
-        test_loc = self.get_test_loc(
-            'cpan/Mojolicious-Plugin-Nour-Config-0.09.readme')
+        test_loc = self.get_test_loc('cpan/Mojolicious-Plugin-Nour-Config-0.09.readme')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = cpan.CpanReadmeVisitors(uri)
         result = json.loads(data, object_pairs_hook=OrderedDict)
         expected_file = self.get_test_loc('cpan/expected_readme.json')
-        self.check_expected_results(
-            result, expected_file, regen=FIXTURES_REGEN)
+        self.check_expected_results(result, expected_file, regen=FIXTURES_REGEN)
 
 
 class CpanMapperTest(JsonBasedTesting):
@@ -86,8 +82,7 @@ class CpanMapperTest(JsonBasedTesting):
             metadata, 'https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cpan/expected_release_search.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_from_release_search_json2(self):
         with open(self.get_test_loc('cpan/MIYAGAWA_author_release_search.json')) as cpan_metadata:
@@ -95,10 +90,8 @@ class CpanMapperTest(JsonBasedTesting):
         packages = mappers.cpan.build_packages_from_release_json(
             metadata, 'https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000')
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            'cpan/expected_release_search_author_MIYAGAWA.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc('cpan/expected_release_search_author_MIYAGAWA.json')
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_metafile_from_yaml(self):
         with open(self.get_test_loc('cpan/variable-2009110702.meta')) as cpan_metadata:
@@ -107,8 +100,7 @@ class CpanMapperTest(JsonBasedTesting):
             metadata, 'http://www.cpan.org/authors/id/A/AB/ABIGAIL/variable-2009110702.metadata', 'pkg:cpan/variable@2009110702')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cpan/expected_yaml_cpanmapper.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_metafile_from_json(self):
         with open(self.get_test_loc('cpan/Regexp-Common-2016010701.meta')) as cpan_metadata:
@@ -117,28 +109,23 @@ class CpanMapperTest(JsonBasedTesting):
             metadata, 'http://www.cpan.org/authors/id/A/AB/ABIGAIL/Regexp-Common-2016010701.metadata', 'pkg:cpan/Regexp-Common@2016010701')
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc('cpan/expected_json_cpanmapper.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_readme_from_json(self):
         uri = 'http://www.cpan.org/authors/id/A/AM/AMIRITE/Mojolicious-Plugin-Nour-Config-0.09.readme'
-        test_loc = self.get_test_loc(
-            'cpan/Mojolicious-Plugin-Nour-Config-0.09.readme')
+        test_loc = self.get_test_loc('cpan/Mojolicious-Plugin-Nour-Config-0.09.readme')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = cpan.CpanReadmeVisitors(uri)
         packages = mappers.cpan.build_packages_from_readmefile(
             data, 'http://www.cpan.org/authors/id/A/AM/AMIRITE/Mojolicious-Plugin-Nour-Config-0.09.readme', 'pkg:cpan/Mojolicious-Plugin-Nour-Config@0.09')
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            'cpan/expected_json_readmefile_cpanmapper.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc('cpan/expected_json_readmefile_cpanmapper.json')
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_readme_from_json2(self):
         uri = 'http://www.cpan.org/authors/id/A/AB/ABIGAIL/Algorithm-Graphs-TransitiveClosure-2009110901.readme'
-        test_loc = self.get_test_loc('cpan/Algorithm-Graphs-TransitiveClosure-2009110901.readme',
-                                     'pkg:cpan/Algorithm-Graphs-TransitiveClosure@2009110901')
+        test_loc = self.get_test_loc('cpan/Algorithm-Graphs-TransitiveClosure-2009110901.readme', 'pkg:cpan/Algorithm-Graphs-TransitiveClosure@2009110901')
         with patch('requests.get') as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = cpan.CpanReadmeVisitors(uri)
@@ -146,7 +133,5 @@ class CpanMapperTest(JsonBasedTesting):
             data,
             'http://www.cpan.org/authors/id/A/AB/ABIGAIL/Algorithm-Graphs-TransitiveClosure-2009110901.readme')
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            'cpan/expected_json_readmefile_cpanmapper2.json')
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc('cpan/expected_json_readmefile_cpanmapper2.json')
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

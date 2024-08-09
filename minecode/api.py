@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -105,7 +105,7 @@ class ScannableURISerializer(serializers.ModelSerializer):
 class ScannableURIViewSet(viewsets.ModelViewSet):
     queryset = ScannableURI.objects.all()
     serializer_class = ScannableURISerializer
-    permission_classes = [IsScanQueueWorkerAPIUser | IsAdminUser]
+    permission_classes = [IsScanQueueWorkerAPIUser|IsAdminUser]
     lookup_field = 'uuid'
 
     @action(detail=False, methods=['get'])
@@ -153,8 +153,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
 
         scannable_uri = self.get_object()
         scannable_uri_uuid = scannable_uri.uuid
-        scannable_uri_status = ScannableURI.SCAN_STATUSES_BY_CODE.get(
-            scannable_uri.scan_status)
+        scannable_uri_status = ScannableURI.SCAN_STATUSES_BY_CODE.get(scannable_uri.scan_status)
 
         if scannable_uri.scan_status in [
             ScannableURI.SCAN_INDEXED,
@@ -240,6 +239,6 @@ def index_package_scan(request, key):
     )
     msg = {
         'status': f'scan results for scannable_uri {scannable_uri.uuid} '
-        'have been queued for indexing'
+                    'have been queued for indexing'
     }
     return Response(msg)

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 from django.db.models import Q
@@ -66,7 +66,6 @@ class BaseDirectoryIndexSerializer(ModelSerializer):
         read_only=True
     )
 
-
 class ApproximateDirectoryContentIndexSerializer(BaseDirectoryIndexSerializer):
     class Meta:
         model = ApproximateDirectoryContentIndex
@@ -101,7 +100,6 @@ class CharMultipleWidget(widgets.TextInput):
     Enables the support for `MultiValueDict` `?field=a&field=b`
     reusing the `SelectMultiple.value_from_datadict()` but render as a `TextInput`.
     """
-
     def value_from_datadict(self, data, files, name):
         value = widgets.SelectMultiple().value_from_datadict(data, files, name)
         if not value or value == ['']:
@@ -160,7 +158,6 @@ class MultipleSHA1Filter(MultipleCharFilter):
     Overrides `MultipleCharFilter.filter()` to convert the SHA1
     into a bytearray so it can be queried
     """
-
     def filter(self, qs, value):
         if not value:
             return qs
@@ -183,7 +180,6 @@ class MultipleFingerprintFilter(MultipleCharFilter):
     must process the fingerprint into the correct parts so we can use those
     parts to query the different fields.
     """
-
     def filter(self, qs, value):
         if not value:
             return qs

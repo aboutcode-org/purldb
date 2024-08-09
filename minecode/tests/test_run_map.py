@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -24,6 +24,7 @@ from minecode.utils_test import JsonBasedTesting
 from minecode.utils_test import MiningTestCase
 from minecode.tests import FIXTURES_REGEN
 import packagedb
+
 
 
 class RunMapTest(JsonBasedTesting, MiningTestCase):
@@ -72,8 +73,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
             download_url='http://testdomap.com')
         self.assertEqual(1, mapped.count())
         mapped_package = mapped.first()
-        self.assertEqual(
-            'pkg:maven/org.apache.spark/spark-streaming_2.10@1.2.0?extension=pom', mapped_package.package_url)
+        self.assertEqual('pkg:maven/org.apache.spark/spark-streaming_2.10@1.2.0?extension=pom', mapped_package.package_url)
 
         # test history
         history = mapped_package.get_history()
@@ -81,8 +81,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertEqual(1, len(history))
         entry = history[0]
         message = entry.get('message')
-        self.assertEqual(
-            'New Package created from URI: {}'.format(uri), message)
+        self.assertEqual('New Package created from URI: {}'.format(uri), message)
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
@@ -171,8 +170,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         resource_uri = ResourceURI.objects.get(uri=uri)
         self.assertEqual(None, resource_uri.wip_date)
         self.assertFalse(resource_uri.last_map_date is None)
-        self.assertTrue(
-            'Not a ScanCode PackageData type' in resource_uri.map_error)
+        self.assertTrue('Not a ScanCode PackageData type' in resource_uri.map_error)
 
         # check that a ScannableURI has not been created
         scannable = ScannableURI.objects.filter(uri='http://testdomap.com')
@@ -219,8 +217,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         resource_uri = ResourceURI.objects.get(uri=uri)
         self.assertEqual(None, resource_uri.wip_date)
         self.assertFalse(resource_uri.last_map_date is None)
-        self.assertTrue(
-            'No download_url for package' in resource_uri.map_error)
+        self.assertTrue('No download_url for package' in resource_uri.map_error)
 
         # check that a ScannableURI has not been created
         scannable = ScannableURI.objects.filter(uri='http://testdomap.com')
@@ -358,8 +355,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         # test proper
         map_uri(resource_uri, _map_router=router)
 
-        mapped = packagedb.models.Package.objects.filter(
-            download_url=download_url)
+        mapped = packagedb.models.Package.objects.filter(download_url=download_url)
         self.assertEqual(1, mapped.count())
         mapped_package = mapped.first()
 
@@ -375,8 +371,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         expected_updated_fields_loc = self.get_test_loc(
             'run_map/test_map_uri_does_update_with_same_mining_level_expected_updated_fields.json'
         )
-        self.check_expected_results(
-            updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN)
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
@@ -384,8 +379,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertFalse(resource_uri.last_map_date is None)
 
         # check that the Package has been updated correctly
-        expected_loc = self.get_test_loc(
-            'run_map/test_map_uri_does_update_with_same_mining_level-expected.json')
+        expected_loc = self.get_test_loc('run_map/test_map_uri_does_update_with_same_mining_level-expected.json')
         result = mapped_package.to_dict()
         self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
@@ -443,8 +437,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
 
         # test proper
         map_uri(resource_uri, _map_router=router)
-        mapped = packagedb.models.Package.objects.filter(
-            download_url=download_url)
+        mapped = packagedb.models.Package.objects.filter(download_url=download_url)
         self.assertEqual(1, mapped.count())
         mapped_package = mapped.first()
 
@@ -477,8 +470,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertFalse(resource_uri.last_map_date is None)
 
         # check that the Package has been updated correctly
-        expected_loc = self.get_test_loc(
-            'run_map/test_map_uri_update_only_empties_with_lesser_new_mining_level-expected.json')
+        expected_loc = self.get_test_loc('run_map/test_map_uri_update_only_empties_with_lesser_new_mining_level-expected.json')
         result = mapped[0].to_dict()
         self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
@@ -535,8 +527,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
 
         # test proper
         map_uri(resource_uri, _map_router=router)
-        mapped = packagedb.models.Package.objects.filter(
-            download_url=download_url)
+        mapped = packagedb.models.Package.objects.filter(download_url=download_url)
         self.assertEqual(1, mapped.count())
         mapped_package = mapped.first()
 
@@ -552,8 +543,8 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         expected_updated_fields_loc = self.get_test_loc(
             'run_map/test_map_uri_replace_with_new_with_higher_new_mining_level_expected_updated_fields.json'
         )
-        self.check_expected_results(
-            updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN)
+        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN)
+
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
@@ -561,8 +552,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertFalse(resource_uri.last_map_date is None)
 
         # check that the Package has been updated correctly
-        expected_loc = self.get_test_loc(
-            'run_map/test_map_uri_replace_with_new_with_higher_new_mining_level-expected.json')
+        expected_loc = self.get_test_loc('run_map/test_map_uri_replace_with_new_with_higher_new_mining_level-expected.json')
         result = mapped[0].to_dict()
         self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
@@ -590,8 +580,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
             download_url=download_url
         ).to_dict()
         merge_packages(existing_package, new_package_data, replace=False)
-        expected_loc = self.get_test_loc(
-            'run_map/test_merge_packages_no_replace-expected.json')
+        expected_loc = self.get_test_loc('run_map/test_merge_packages_no_replace-expected.json')
         result = existing_package.to_dict()
         self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
@@ -613,8 +602,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
             download_url=download_url,
         ).to_dict()
         merge_packages(existing_package, new_package_data, replace=True)
-        expected_loc = self.get_test_loc(
-            'run_map/test_merge_packages_with_replace-expected.json')
+        expected_loc = self.get_test_loc('run_map/test_merge_packages_with_replace-expected.json')
         result = existing_package.to_dict()
         self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 

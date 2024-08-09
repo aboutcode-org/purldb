@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -174,26 +174,22 @@ def parse_directory_listing(dir_listing, from_find=False):
         try:
             file_stat = parser.parse_line(line)
             if TRACE:
-                logger.debug(
-                    'parse_directory_listing:file_stat: ' + repr(file_stat))
+                logger.debug('parse_directory_listing:file_stat: ' + repr(file_stat))
                 dt = datetime.utcfromtimestamp(file_stat.st_mtime)
                 dt = datetime.isoformat(dt)
-                logger.debug(
-                    'parse_directory_listing:file_stat:date: ' + repr(dt))
+                logger.debug('parse_directory_listing:file_stat:date: ' + repr(dt))
 
         except ParserError as pe:
             # this is likely a directory line from an ls -LR listing. Strip
             # trailing colon and keep track of the base directory
             if not line.endswith(':'):
-                raise Exception(
-                    'Unknown directory listing line format: #%(ln)d: %(line)r' % locals())
+                raise Exception('Unknown directory listing line format: #%(ln)d: %(line)r' % locals())
             base_dir = line.strip(':')
             continue
 
         if file_stat._st_name in ('.', '..'):
             continue
 
-        entry = Entry.from_stat(
-            file_stat, base_dir=base_dir, use_utc_time=False)
+        entry = Entry.from_stat(file_stat, base_dir=base_dir, use_utc_time=False)
         if entry:
             yield entry

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -42,8 +42,7 @@ class Command(VerboseCommand):
                 maven_api_search_url = f'https://search.maven.org/solrsearch/select?q=1:{resource.sha1}'
                 response = requests.get(maven_api_search_url)
                 if not response.ok:
-                    logger.error(
-                        f"API query failed for: {maven_api_search_url}")
+                    logger.error(f"API query failed for: {maven_api_search_url}")
                     continue
                 contents = response.json()
                 resp = contents.get('response', {})
@@ -54,6 +53,5 @@ class Command(VerboseCommand):
                         version = matched_package.get('v', '')
                         if namespace and name and version:
                             purl = f'pkg:maven/{namespace}/{name}@{version}'
-                            PriorityResourceURI.objects.create(
-                                uri=purl, package_url=purl, sha1=resource.sha1)
+                            PriorityResourceURI.objects.create(uri=purl, package_url=purl, sha1=resource.sha1)
                             logger.info(f'Added {purl} to priority queue')

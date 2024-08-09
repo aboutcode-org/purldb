@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 from uuid import uuid4
@@ -155,8 +155,7 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
 
         downloads, errors = fetch_urls(input_urls)
         if errors:
-            raise serializers.ValidationError(
-                "Could not fetch: " + "\n".join(errors))
+            raise serializers.ValidationError("Could not fetch: " + "\n".join(errors))
 
         project = super().create(validated_data)
 
@@ -265,8 +264,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         errors = check_urls_availability(input_urls)
 
         if errors:
-            raise serializers.ValidationError(
-                "Could not fetch: " + "\n".join(errors))
+            raise serializers.ValidationError("Could not fetch: " + "\n".join(errors))
 
         project = super().create(validated_data)
 
@@ -287,8 +285,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         for url in urls:
             project.add_input_source(download_url=url)
 
-        project.add_pipeline(matching_pipeline_name, selected_groups=[
-                             "Java", "Javascript", "Elf", "Go"], execute_now=execute_now)
+        project.add_pipeline(matching_pipeline_name, selected_groups=["Java", "Javascript", "Elf", "Go"], execute_now=execute_now)
 
         return project
 
@@ -303,7 +300,7 @@ class MatchingViewSet(
     """
     Take a ScanCode.io JSON of a codebase `upload_file` or from a list of
     `input_urls` and run the ``matching`` pipeline
-    (https://github.com/aboutcode-org/purldb/blob/main/matchcode_pipeline/pipelines/matching.py)
+    (https://github.com/nexB/purldb/blob/main/matchcode_pipeline/pipelines/matching.py)
     on it.
 
     The ``matching`` pipeline matches directory and resources of the codebase in

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -35,10 +35,7 @@ class Command(BaseCommand):
             uri.wip_date = None
             uri.save()
 
-        ResourceURI.objects.successfully_mapped().filter(
-            uri__contains='maven').update(last_map_date=None)
-        ResourceURI.objects.successfully_mapped().filter(
-            uri__contains='npm').update(last_map_date=None)
+        ResourceURI.objects.successfully_mapped().filter(uri__contains='maven').update(last_map_date=None)
+        ResourceURI.objects.successfully_mapped().filter(uri__contains='npm').update(last_map_date=None)
 
-        ResourceURI.objects.successfully_mapped().exclude(uri__startswith='http://repo1').exclude(uri__startswith='maven-index://').exclude(
-            uri__startswith='https://replicate').exclude(uri__startswith='https://registry.npmjs.org').update(is_mappable=False)
+        ResourceURI.objects.successfully_mapped().exclude(uri__startswith='http://repo1').exclude(uri__startswith='maven-index://').exclude(uri__startswith='https://replicate').exclude(uri__startswith='https://registry.npmjs.org').update(is_mappable=False)

@@ -56,4 +56,4 @@ See the detailed tutorial on :ref:`symbols_and_strings` in PurlDB.
     `Symbol and String Collection <https://scancodeio.readthedocs.io/en/latest/tutorial_web_ui_symbol_and_string_collection.html>`_.
 
     For more details on these plugins refer to
-    `source-inspector <https://github.com/aboutcode-org/source-inspector/blob/main/README.rst>`_.
+    `source-inspector <https://github.com/nexB/source-inspector/blob/main/README.rst>`_.

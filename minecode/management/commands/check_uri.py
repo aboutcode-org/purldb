@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -61,8 +61,7 @@ class Command(BaseCommand):
         show_data = options.get('show_data')
 
         # get the last 10 uris
-        uris = ResourceURI.objects.filter(
-            uri__startswith=uri_prefix).order_by("-id")[:limit]
+        uris = ResourceURI.objects.filter(uri__startswith=uri_prefix).order_by("-id")[:limit]
 
         # TODO: add if the uri be resolved by visit and/or map router
         for uri in uris:

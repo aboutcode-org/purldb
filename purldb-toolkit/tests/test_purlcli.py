@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -39,8 +39,7 @@ class TestPURLCLI_metadata(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_metadata,
-                               options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
         assert "Use either purls or file but not both." in result.output
         assert result.exit_code == 2
 
@@ -53,8 +52,7 @@ class TestPURLCLI_metadata(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_metadata,
-                               options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
         assert "Error: Use either purls" in result.output
         assert result.exit_code == 2
 
@@ -77,7 +75,7 @@ class TestPURLCLI_metadata(object):
                     ("release_date", None),
                     ("parties", []),
                     ("keywords", []),
-                    ("homepage_url", "https://github.com/aboutcode-org/fetchcode"),
+                    ("homepage_url", "https://github.com/nexB/fetchcode"),
                     ("download_url", None),
                     ("api_url", "https://pypi.org/pypi/fetchcode/json"),
                     ("size", None),
@@ -115,7 +113,7 @@ class TestPURLCLI_metadata(object):
                     ("release_date", None),
                     ("parties", []),
                     ("keywords", []),
-                    ("homepage_url", "https://github.com/aboutcode-org/fetchcode"),
+                    ("homepage_url", "https://github.com/nexB/fetchcode"),
                     (
                         "download_url",
                         "https://files.pythonhosted.org/packages/19/a0/c90e5ba4d71ea1a1a89784f6d839ffb0dbf32d270cba04d5602188cb3713/fetchcode-0.1.0-py3-none-any.whl",
@@ -156,7 +154,7 @@ class TestPURLCLI_metadata(object):
                     ("release_date", None),
                     ("parties", []),
                     ("keywords", []),
-                    ("homepage_url", "https://github.com/aboutcode-org/fetchcode"),
+                    ("homepage_url", "https://github.com/nexB/fetchcode"),
                     (
                         "download_url",
                         "https://files.pythonhosted.org/packages/d7/e9/96e9302e84e326b3c10a40c1723f21f4db96b557a17c6871e7a4c6336906/fetchcode-0.2.0-py3-none-any.whl",
@@ -197,7 +195,7 @@ class TestPURLCLI_metadata(object):
                     ("release_date", None),
                     ("parties", []),
                     ("keywords", []),
-                    ("homepage_url", "https://github.com/aboutcode-org/fetchcode"),
+                    ("homepage_url", "https://github.com/nexB/fetchcode"),
                     (
                         "download_url",
                         "https://files.pythonhosted.org/packages/8d/fb/e45da0abf63504c3f88ad02537dc9dc64ea5206b09ce29cfb8191420d678/fetchcode-0.3.0-py3-none-any.whl",
@@ -262,8 +260,7 @@ class TestPURLCLI_metadata(object):
                                 ("release_date", None),
                                 ("parties", []),
                                 ("keywords", []),
-                                ("homepage_url",
-                                 "https://github.com/aboutcode-org/fetchcode"),
+                                ("homepage_url", "https://github.com/nexB/fetchcode"),
                                 ("download_url", None),
                                 ("api_url", "https://pypi.org/pypi/fetchcode/json"),
                                 ("size", None),
@@ -301,8 +298,7 @@ class TestPURLCLI_metadata(object):
                                 ("release_date", None),
                                 ("parties", []),
                                 ("keywords", []),
-                                ("homepage_url",
-                                 "https://github.com/aboutcode-org/fetchcode"),
+                                ("homepage_url", "https://github.com/nexB/fetchcode"),
                                 (
                                     "download_url",
                                     "https://files.pythonhosted.org/packages/19/a0/c90e5ba4d71ea1a1a89784f6d839ffb0dbf32d270cba04d5602188cb3713/fetchcode-0.1.0-py3-none-any.whl",
@@ -343,8 +339,7 @@ class TestPURLCLI_metadata(object):
                                 ("release_date", None),
                                 ("parties", []),
                                 ("keywords", []),
-                                ("homepage_url",
-                                 "https://github.com/aboutcode-org/fetchcode"),
+                                ("homepage_url", "https://github.com/nexB/fetchcode"),
                                 (
                                     "download_url",
                                     "https://files.pythonhosted.org/packages/d7/e9/96e9302e84e326b3c10a40c1723f21f4db96b557a17c6871e7a4c6336906/fetchcode-0.2.0-py3-none-any.whl",
@@ -385,8 +380,7 @@ class TestPURLCLI_metadata(object):
                                 ("release_date", None),
                                 ("parties", []),
                                 ("keywords", []),
-                                ("homepage_url",
-                                 "https://github.com/aboutcode-org/fetchcode"),
+                                ("homepage_url", "https://github.com/nexB/fetchcode"),
                                 (
                                     "download_url",
                                     "https://files.pythonhosted.org/packages/8d/fb/e45da0abf63504c3f88ad02537dc9dc64ea5206b09ce29cfb8191420d678/fetchcode-0.3.0-py3-none-any.whl",
@@ -614,8 +608,7 @@ class TestPURLCLI_metadata(object):
         self, test_input, expected_input_purls, expected_normalized_purls
     ):
         unique = True
-        input_purls, normalized_purls = purlcli.normalize_purls(
-            test_input[0], unique)
+        input_purls, normalized_purls = purlcli.normalize_purls(test_input[0], unique)
 
         assert input_purls == expected_input_purls
         assert normalized_purls == expected_normalized_purls
@@ -765,8 +758,7 @@ class TestPURLCLI_urls(object):
         expected_result_file = test_env.get_test_loc(
             "purlcli/expected_urls_output_head_mock.json"
         )
-        actual_result_file = test_env.get_temp_file(
-            "actual_urls_output_head_mock.json")
+        actual_result_file = test_env.get_temp_file("actual_urls_output_head_mock.json")
         options = [
             "--purl",
             "pkg:pypi/fetchcode",
@@ -775,8 +767,7 @@ class TestPURLCLI_urls(object):
             actual_result_file,
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_urls, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         with open(actual_result_file) as f_output:
@@ -792,8 +783,7 @@ class TestPURLCLI_urls(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"],
-             expected_data["headers"][0]["purls"]),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -837,8 +827,7 @@ class TestPURLCLI_urls(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_urls, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
         assert "Use either purls or file but not both." in result.output
         assert result.exit_code == 2
 
@@ -851,8 +840,7 @@ class TestPURLCLI_urls(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_urls, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
         assert "Use either purls or file." in result.output
         assert result.exit_code == 2
 

@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -125,13 +125,11 @@ class DebianDirectoryIndexVisitor(NonPersistentHttpVisitor):
             elif is_ubuntu_url(self.uri):
                 namespace = 'ubuntu'
             else:
-                logger.error(
-                    'Unknown Debian URI namespace: {}'.format(self.uri))
+                logger.error('Unknown Debian URI namespace: {}'.format(self.uri))
                 continue
 
             if file_name.endswith(('.deb', '.udeb', '.tar.gz', '.tar.xz', '.tar.bz2', '.tar.lzma')):
-                name, version, arch = debian_inspector.package.get_nva(
-                    file_name)
+                name, version, arch = debian_inspector.package.get_nva(file_name)
                 package_url = PackageURL(
                     type='deb',
                     namespace=namespace,
@@ -401,8 +399,7 @@ def map_debian_package(debian_package, package_content, pipelines, priority=0):
         error += error_metadata
         return db_package, error
 
-    package_copyright, error_copyright = get_debian_package_copyright(
-        debian_package)
+    package_copyright, error_copyright = get_debian_package_copyright(debian_package)
     package.update_purl_fields(package_data=purl_package, replace=True)
     if package_copyright:
         update_license_copyright_fields(
@@ -485,8 +482,7 @@ def get_debian_package_copyright(debian_package):
         logger.error(msg)
         return None, error
 
-    packages = StandaloneDebianCopyrightFileHandler.parse(
-        location=temp_metadata_file)
+    packages = StandaloneDebianCopyrightFileHandler.parse(location=temp_metadata_file)
     package = list(packages).pop()
 
     package.qualifiers = debian_package.package_url.qualifiers
@@ -619,9 +615,9 @@ class DebianPackage:
         purl_version = self.package_archive_version
         arch = self.package_url.qualifiers.get("arch")
         if arch:
-            archive_name = f"{self.package_url.name}_{purl_version}_{arch}.deb"
+            archive_name =f"{self.package_url.name}_{purl_version}_{arch}.deb"
         else:
-            archive_name = f"{self.package_url.name}_{purl_version}.deb"
+            archive_name =f"{self.package_url.name}_{purl_version}.deb"
         binary_package_url = self.archive_directory_url + f"{archive_name}"
         return binary_package_url
 
@@ -645,11 +641,9 @@ class DebianPackage:
         for archive_format in debian_source_archive_formats:
             if ".orig" in archive_format:
                 base_version_source = source_version.split('-')[0]
-                archive_name = f"{source_package_name}_{base_version_source}" + \
-                    archive_format
+                archive_name = f"{source_package_name}_{base_version_source}" + archive_format
             else:
-                archive_name = f"{source_package_name}_{source_version}" + \
-                    archive_format
+                archive_name = f"{source_package_name}_{source_version}" + archive_format
             source_package_url = self.archive_directory_url + archive_name
             response = requests.get(source_package_url)
             if response.ok:
@@ -671,12 +665,10 @@ class DebianPackage:
                 metadata_version = self.source_package_url.version
 
         base_version_metadata = metadata_version.split('+')[0]
-        metadata_dsc_package_url = self.archive_directory_url + \
-            f"{metadata_package_name}_{base_version_metadata}.dsc"
+        metadata_dsc_package_url = self.archive_directory_url + f"{metadata_package_name}_{base_version_metadata}.dsc"
         response = requests.get(metadata_dsc_package_url)
         if not response.ok:
-            metadata_dsc_package_url = self.archive_directory_url + \
-                f"{metadata_package_name}_{metadata_version}.dsc"
+            metadata_dsc_package_url = self.archive_directory_url + f"{metadata_package_name}_{metadata_version}.dsc"
 
         return metadata_dsc_package_url
 
@@ -700,13 +692,11 @@ class DebianPackage:
             if self.source_package_url.version:
                 metadata_version = self.source_package_url.version
 
-        copyright_package_url = self.metadata_directory_url + \
-            f"{metadata_package_name}_{metadata_version}{copyright_file_string}"
+        copyright_package_url = self.metadata_directory_url + f"{metadata_package_name}_{metadata_version}{copyright_file_string}"
         response = requests.get(copyright_package_url)
         if not response.ok:
             base_version_metadata = metadata_version.split('+')[0]
-            copyright_package_url = self.metadata_directory_url + \
-                f"{metadata_package_name}_{base_version_metadata}{copyright_file_string}"
+            copyright_package_url = self.metadata_directory_url + f"{metadata_package_name}_{base_version_metadata}{copyright_file_string}"
 
         return copyright_package_url
 
