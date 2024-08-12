@@ -878,7 +878,6 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             'size': 100,
         }
         self.package = Package.objects.create(**self.package_data)
-        self.package.refresh_from_db()
         self.scannableuri = ScannableURI.objects.create(
             package=self.package,
             uri=self.package_download_url,
@@ -906,7 +905,6 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             'size': 100,
         }
         self.package2 = Package.objects.create(**self.package_data2)
-        self.package2.refresh_from_db()
         self.scannableuri2 = ScannableURI.objects.create(
             package=self.package2,
             uri=self.package_download_url2,
@@ -918,6 +916,55 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         self.scannableuri2.index_error = 'error'
         self.scan_request_date2 = timezone.now()
         self.scannableuri2.scan_request_date = self.scan_request_date2
+
+        self.package_download_url3 = 'http://clone.org/clone1.zip'
+        self.package_data3 = {
+            'type': 'pypi',
+            'namespace': '',
+            'name': 'clone',
+            'version': '1',
+            'qualifiers': '',
+            'subpath': '',
+            'download_url': self.package_download_url3,
+            'filename': 'clone1.zip',
+            'sha1': 'clone1',
+            'md5': '',
+            'size': 100,
+        }
+        self.package3 = Package.objects.create(**self.package_data3)
+
+        self.package_download_url4 = 'http://clone.org/clone1-src.zip'
+        self.package_data4 = {
+            'type': 'pypi',
+            'namespace': '',
+            'name': 'clone',
+            'version': '1',
+            'qualifiers': 'package=src',
+            'subpath': '',
+            'download_url': self.package_download_url4,
+            'filename': 'clone1-src.zip',
+            'sha1': 'clone1-src',
+            'md5': '',
+            'size': 50,
+        }
+        self.package4 = Package.objects.create(**self.package_data4)
+
+        self.package_download_url5 = 'http://clone.org/clone1-all.zip'
+        self.package_data5 = {
+            'type': 'pypi',
+            'namespace': '',
+            'name': 'clone',
+            'version': '1',
+            'qualifiers': 'package=all',
+            'subpath': '',
+            'download_url': self.package_download_url5,
+            'filename': 'clone1-all.zip',
+            'sha1': 'clone1-all',
+            'md5': '',
+            'size': 25,
+        }
+        self.package5 = Package.objects.create(**self.package_data5)
+
 
     def test_package_live(self):
         purl_str = 'pkg:maven/org.apache.twill/twill-core@0.12.0'
@@ -992,6 +1039,18 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
 
         self.check_expected_results(
             result, expected, fields_to_remove=fields_to_remove, regen=FIXTURES_REGEN)
+
+    def test_collect_sort(self):
+        purl_str = 'pkg:pypi/clone@1'
+        response = self.client.get(f'/api/collect/?purl={purl_str}&sort=size')
+        for i, package_data in enumerate(response.data[1:], start=1):
+            prev_package_data = response.data[i-1]
+            self.assertTrue(prev_package_data['size'] < package_data['size'])
+
+        response = self.client.get(f'/api/collect/?purl={purl_str}&sort=-size')
+        for i, package_data in enumerate(response.data[1:], start=1):
+            prev_package_data = response.data[i-1]
+            self.assertTrue(prev_package_data['size'] > package_data['size'])
 
     def test_package_api_index_packages_endpoint(self):
         priority_resource_uris_count = PriorityResourceURI.objects.all().count()

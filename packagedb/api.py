@@ -301,6 +301,20 @@ class MultiplePackageURLFilter(MultipleCharFilter):
         return qs.distinct() if self.distinct else qs
 
 
+PACKAGE_FILTER_SORT_FIELDS = [
+    'type',
+    'namespace',
+    'name',
+    'version',
+    'qualifiers',
+    'subpath',
+    'download_url',
+    'filename',
+    'size',
+    'release_date',
+]
+
+
 class PackageFilterSet(FilterSet):
     type = django_filters.CharFilter(
         lookup_expr='iexact',
@@ -332,18 +346,7 @@ class PackageFilterSet(FilterSet):
         lookup_expr='icontains',
     )
 
-    sort = OrderingFilter(fields=[
-        'type',
-        'namespace',
-        'name',
-        'version',
-        'qualifiers',
-        'subpath',
-        'download_url',
-        'filename',
-        'size',
-        'release_date'
-    ])
+    sort = OrderingFilter(fields=PACKAGE_FILTER_SORT_FIELDS)
 
     class Meta:
         model = Package
@@ -826,6 +829,7 @@ class CollectViewSet(viewsets.ViewSet):
 
         validated_data = serializer.validated_data
         purl = validated_data.get('purl')
+        sort = validated_data.get('sort') or ['-version',]
 
         kwargs = dict()
         # We want this request to have high priority since the user knows the
@@ -839,7 +843,7 @@ class CollectViewSet(viewsets.ViewSet):
             kwargs["addon_pipelines"] = addon_pipelines
 
         lookups = purl_to_lookups(purl)
-        packages = Package.objects.filter(**lookups)
+        packages = Package.objects.filter(**lookups).order_by(*sort)
         if packages.count() == 0:
             try:
                 errors = priority_router.process(purl, **kwargs)
@@ -850,7 +854,7 @@ class CollectViewSet(viewsets.ViewSet):
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
             lookups = purl_to_lookups(purl)
-            packages = Package.objects.filter(**lookups)
+            packages = Package.objects.filter(**lookups).order_by(*sort)
             if packages.count() == 0:
                 message = {}
                 if errors:
@@ -858,6 +862,7 @@ class CollectViewSet(viewsets.ViewSet):
                         'status': f'error(s) occurred when fetching metadata for {purl}: {errors}'
                     }
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
         for package in packages:
             get_source_package_and_add_to_package_set(package)
 

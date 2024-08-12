@@ -221,6 +221,25 @@ For example:
 
     curl -X GET "$api_url?$payload" -H "$content_type"
 
+The packages list can be ordered by the following fields:
+
+    - ``type``
+    - ``namespace``
+    - ``name``
+    - ``version``
+    - ``qualifiers``
+    - ``subpath``
+    - ``download_url``
+    - ``filename``
+    - ``size``
+    - ``release_date``
+
+To sort a field in a descending fashion, prefix the field name with ``-``.
+Packages can be sorted by multiple fields.
+
+For example:
+
+``GET /api/packages/?sort=type,-size``
 
 package details
 ^^^^^^^^^^^^^^^
@@ -866,6 +885,13 @@ package. Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/l
             "resources": "https://public.purldb.io/api/packages/4f3a57de-e367-43c6-a7f1-51633d0ecd45/resources/",
             "history": "https://public.purldb.io/api/packages/4f3a57de-e367-43c6-a7f1-51633d0ecd45/history/"
         }
+
+The ordering of the packages returned by ``/api/collect/`` can be set using the
+``sort`` query parameter.
+
+``GET /api/collect/?purl=pkg:npm/asdf@1.0.2&sort=qualifiers,-size``
+
+The same sort fields from ``/api/packages/`` is also used here.
 
 collect actions
 ---------------
