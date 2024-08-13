@@ -218,7 +218,7 @@ def update_maven_packages(
         version=version,
         qualifiers=normalized_qualifiers or "",
     )
-    if existing_package.exists():
+    if existing_packages.exists():
         duplicate_packages = []
         for existing_package in existing_packages:
             if existing_package.download_url != maven_package.download_url:

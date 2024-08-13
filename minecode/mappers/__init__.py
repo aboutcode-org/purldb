@@ -25,8 +25,8 @@ class Mapper:
 
     def get_packages(self, uri, resource_uri):
         """
-        This method must yield ScannedPackage objects (or return a list) built
-        from a resource_uri ResourceURI object.
+        Yield ScannedPackage objects (or return a list) built from a
+        resource_uri ResourceURI object.
         """
         raise NotImplementedError
 

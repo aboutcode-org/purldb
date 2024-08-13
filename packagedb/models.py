@@ -216,7 +216,7 @@ class ExtraDataFieldMixin(models.Model):
     )
 
     def update_extra_data(self, data):
-        """Updates the `extra_data` field with the provided `data` dict."""
+        """Update `extra_data` field with the provided `data` dict."""
         if type(data) is not dict:
             raise ValueError("Argument `data` value must be a dict()")
 

@@ -295,7 +295,7 @@ def visit_uri(
     if visit_error:
         msg = f"Visit error for URI: {uri_to_visit}"
         msg += "\n".format()
-        msg += get_error_message(e)
+        msg += get_error_message(e)  # NOQA
         visit_errors.append(msg)
         logger.error(msg)
 

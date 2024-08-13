@@ -279,7 +279,7 @@ class RsyncTest(MiningTestCase):
             self.assertTrue("bar/this" not in results)
 
     def get_dirs(self, input_path):
-        """Returns only the type and path from rsync entries."""
+        """Return only the type and path from rsync entries."""
         return [
             (e["type"], e["path"])
             for e in rsync.directory_entries(input_path)

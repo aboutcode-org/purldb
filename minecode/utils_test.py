@@ -189,16 +189,16 @@ def mocked_requests_get_for_uris(url_to_location, *args, **kwargs):
 
 
 def response_403(url, request):
-    """Returns a HTTP response with status 403."""
+    """Return a HTTP response with status 403."""
     return {"status_code": 403, "content": ""}
 
 
 class JsonBasedTestingMixin(TestCase):
     def _normalize_results(self, data, fields_to_remove=[]):
         """
-        Returns the `data`, where any `package_uid` value has been normalized
-        with `purl_with_fake_uuid()` and fields from `fields_to_remove` have
-        been removed from `data`.
+        Return `data`, where any `package_uid` value has been normalized with
+        `purl_with_fake_uuid()` and fields from `fields_to_remove` have been
+        removed from it.
         """
         if type(data) in (list, ReturnList):
             return [self._normalize_results(entry, fields_to_remove) for entry in data]
@@ -265,9 +265,9 @@ class JsonBasedTestingMixin(TestCase):
 class JsonBasedTesting(JsonBasedTestingMixin, FileBasedTesting):
     def _normalize_results(self, data, fields_to_remove=[]):
         """
-        Returns the `data`, where any `package_uid` value has been normalized
-        with `purl_with_fake_uuid()` and fields from `fields_to_remove` have
-        been removed from `data`.
+        Return the `data`, where any `package_uid` value has been normalized
+        with `purl_with_fake_uuid()` and fields from `fields_to_remove` that
+        have been removed from `data`.
         """
         if type(data) in (list, ReturnList):
             return [self._normalize_results(entry, fields_to_remove) for entry in data]
@@ -354,10 +354,6 @@ class JsonBasedTesting(JsonBasedTestingMixin, FileBasedTesting):
 
 def model_to_dict(instance, fields=None, exclude=None):
     """
-    Copied from django.forms.models. model_to_dict
-    license: bsd-new
-    see ABOUT file for details
-
     Return a mapping containing the data in ``instance``.
 
     ``fields`` is an optional list of field names. If provided, only the
@@ -369,6 +365,10 @@ def model_to_dict(instance, fields=None, exclude=None):
 
     Note that all field with the word "date" in their name is converted
     to a boolean value to abstract test results from dates.
+
+    Copied from django.forms.models. model_to_dict
+    license: bsd-new
+    see ABOUT file for details
     """
     opts = instance._meta
     data = dict()

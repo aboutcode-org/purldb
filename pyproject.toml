@@ -68,7 +68,19 @@ select = [
     "I",  # isort
     "C9", # McCabe complexity
 ]
-ignore = ["D1", "D203", "D205", "D212", "D400", "D415", "E501", "S101", "S113", "S324"]
+ignore = [
+    "C901", # complex-structure
+    "D1",
+    "D203", # one-blank-line-before-class
+    "D205", # blank-line-after-summary
+    "D212", # multi-line-summary-first-line
+    "D400", # ends-in-period
+    "D415", # ends-in-punctuation
+    "E501", # line-too-long
+    "S101", # assert
+    "S113", # request-without-timeout
+    "S324", # hashlib-insecure-hash-function
+]
 
 [tool.ruff.lint.isort]
 force-single-line = true
@@ -86,6 +98,6 @@ section-order = [
 max-complexity = 10
 
 [tool.ruff.lint.per-file-ignores]
-# Allow the usage of assert in the test_spdx file.
-"**/test_spdx.py*" = ["S101"]
-"scanpipe/pipes/spdx.py" = ["UP006", "UP035"]
+"**/testfiles/**.py" = ["F821"] # Ignore undefined names from test files
+"matchcode_project/settings.py" = ["F403", "F405"] # Ignore undefined names from star imports and star imports
+"purldb_public_project/settings.py" = ["F403", "F405"]  # Ignore undefined names from star imports and star imports

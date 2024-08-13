@@ -32,8 +32,8 @@ def get_next_execution(watch_interval_days, last_watch_date):
 
 def schedule_watch(watch):
     """
-    Takes a `PackageWatch` object as input and schedule a
-    recurring job using `rq_scheduler` to watch the package.
+    Schedule a recurring job with a `PackageWatch` object using `rq_scheduler`
+    to watch the package.
     """
     watch_interval = watch.watch_interval
     last_watch_date = watch.last_watch_date

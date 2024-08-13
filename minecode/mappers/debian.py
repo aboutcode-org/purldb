@@ -74,9 +74,7 @@ def get_vcs_repo(description):
         repos.append((vcs_tool, vcs_repo))
 
     if len(repos) > 1:
-        raise TypeError(
-            "Debian description with more than one Vcs repos: %(repos)r" % locals()
-        )
+        raise TypeError(f"Debian description with more than one Vcs repos: {repos}")
 
     if repos:
         vcs_tool, vcs_repo = repos[0]

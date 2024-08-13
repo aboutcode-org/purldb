@@ -50,8 +50,8 @@ class RubyGemsVisitorTest(JsonBasedTesting):
             "https://rubygems.org/downloads/O365RubyEasy-0.0.1.gem",  # upper
         ]
 
-        for route in routes:
-            self.assertTrue(visit_router.resolve(route))
+        for gem_file_visitor_route in routes:
+            self.assertTrue(visit_router.resolve(gem_file_visitor_route))
 
     def test_RubyGemsIndexVisitor_latest(self):
         uri = "http://rubygems.org/specs.4.8.gz"

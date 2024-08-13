@@ -137,7 +137,7 @@ SaneDumper.add_representer(dict, ordered_dumper)
 
 
 def null_dumper(dumper, value):
-    """Always dump nulls as empty string."""
+    """Dump nulls as empty string."""
     return dumper.represent_scalar("tag:yaml.org,2002:null", "")
 
 
@@ -149,7 +149,7 @@ def string_dumper(dumper, value, _tag="tag:yaml.org,2002:str"):
     Ensure that all scalars are dumped as UTF-8 unicode, folded and
     quoted in the sanest and most readable way.
     """
-    if not isinstance(value, basestring):
+    if not isinstance(value, str):
         value = repr(value)
 
     if isinstance(value, str):

@@ -1410,13 +1410,9 @@ def get_entries(location, fields=frozenset(ENTRY_FIELDS)):
                 except EOFError:
                     if TRACE_DEEP:
                         print(
-                            "Index version: %(_index_version)r last_modified: %(_last_modified)r"
-                            % locals()
+                            f"Index version: {_index_version} last_modified: {_last_modified}"
                         )
-                        print(
-                            "Processed %(entries_count)d docs. Last entry: %(entry)r"
-                            % locals()
-                        )
+                        print(f"Processed {entries_count} docs. Last entry: {entry}")
                         print("Unique keys:")
                         for k in sorted(keys):
                             print(k)

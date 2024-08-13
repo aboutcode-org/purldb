@@ -458,8 +458,8 @@ def merge_or_create_package(scanned_package, visit_level, override=False):
 
 def update_or_create_resource(package, resource_data):
     """
-    Using Resource data from `resource_data`, create or update the
-    corresponding purldb Resource from `package`.
+    Create or update the corresponding purldb Resource from `package` using
+    `resource_data`.
 
     Return a 3-tuple of the corresponding purldb Resource of `resource_data`,
     `resource`, as well as booleans representing whether the Resource was

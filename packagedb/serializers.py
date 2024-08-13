@@ -143,8 +143,8 @@ class DependentPackageSerializer(ModelSerializer):
 
 class PackageInPackageSetAPISerializer(ModelSerializer):
     """
-    This serializes Package instances within a PackageSet that is within a
-    Package in the PackageAPISerializer
+    Serialize Package instances within a PackageSet that is within a Package in
+    the PackageAPISerializer
     """
 
     class Meta:
@@ -243,8 +243,8 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
 
 class PackageInPackageSetMetadataSerializer(ModelSerializer):
     """
-    This serializes Package instances within a PackageSet that is within a
-    Package in the PackageMetadataSerializer
+    Serialize Package instances within a PackageSet that is within a Package in
+    the PackageMetadataSerializer
     """
 
     class Meta:

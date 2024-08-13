@@ -37,7 +37,6 @@ class BaseDebianTest(JsonBasedTesting):
         result = ""
         for item in results:
             if isinstance(item, str):
-                item = unicode(item, "utf-8")
                 result += item.encode("utf-8")
             else:
                 if isinstance(item, debcon.Debian822):
@@ -66,7 +65,7 @@ class BaseDebianTest(JsonBasedTesting):
             assert expected == result
 
     def get_tmp_gz_file(self, loc):
-        """Creates a .gz file at a temporary location, and returns that location."""
+        """Create a .gz file at a temporary location, and returns that location."""
         temp_gz_location = self.get_temp_file(extension=".gz")
         with open(loc, "rb") as f:
             file_content = f.read()

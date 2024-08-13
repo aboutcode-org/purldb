@@ -16,7 +16,7 @@ from minecode import map_router
 
 @map_router.route(".+/repomd.xml")
 def map_repomd_data(uris, resource_uri):
-    """Returns a list of RpmPackage objects collected from visitors."""
+    """Return a list of RpmPackage objects collected from visitors."""
     if not resource_uri.data:
         return
     packages = []

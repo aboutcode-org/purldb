@@ -78,8 +78,8 @@ def generate_rpm_objects(package_infos, base_url):
 
 def fetch_repomd_subfile(base_url, repomd_xml, subfile):
     """
-    Downloads and extract a subfile('filelists.xml.gz', 'primary.xml.gz',
-    'other.xml.gz') of any repodata and returns the subfile location.
+    Download and extract a subfile('filelists.xml.gz', 'primary.xml.gz',
+    'other.xml.gz') of any repodata and return the subfile location.
     """
     url = base_url + repodata.get_url_for_tag(repomd_xml, subfile)
     target_location = extract_file(download(url))
