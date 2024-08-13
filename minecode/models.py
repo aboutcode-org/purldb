@@ -21,10 +21,9 @@ import django_rq
 from minecode import map_router
 
 # UnusedImport here!
-# But importing the mappers and visitors module triggers routes registration
-from minecode import mappers  # NOQA
+# But importing the miners module triggers routes registration
+from minecode import miners  # NOQA
 from minecode import visit_router
-from minecode import visitors  # NOQA
 from packagedb.models import Package
 
 logger = logging.getLogger(__name__)

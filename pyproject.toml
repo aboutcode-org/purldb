@@ -75,10 +75,10 @@ ignore = [
     "D212", # multi-line-summary-first-line
     "D400", # ends-in-period
     "D415", # ends-in-punctuation
-    "E501", # line-too-long
     # TODO: we want to address these issues in the codebase, then get rid of
     # the following ignores
     "C901", # complex-structure
+    "E501", # line-too-long
     "S101", # assert
     "S103", # bad-file-permissions
     "S113", # request-without-timeout

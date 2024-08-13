@@ -222,6 +222,7 @@ def build_packages(purl, data):
         # these must exists or there is no F-Droid package
         file = version_data["file"]
         filename = file["name"]
+        filename = filename.lstrip("/")
         sha256 = file["sha256"]
         size = file["size"]
         download_url = f"https://f-droid.org/repo/{filename}"
