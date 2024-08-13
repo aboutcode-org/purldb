@@ -305,31 +305,6 @@ class JsonBasedTesting(JsonBasedTestingMixin, FileBasedTesting):
                     continue
                 data.pop(field)
 
-    def check_expected_results(
-        self, results, expected_loc, fields_to_remove=[], regen=FIXTURES_REGEN
-    ):
-        """
-        Check `results` are  equal to expected data stored in a JSON
-        file at `expected_loc`.
-        `results` can be a JSON string or a regular Python structure.
-
-        Regen the expected JSON if `regen` is True.
-        """
-        if isinstance(results, str):
-            results = json.loads(results)
-
-        results = self._normalize_results(results, fields_to_remove)
-
-        if regen:
-            with codecs.open(expected_loc, mode="wb", encoding="utf-8") as expect:
-                json.dump(results, expect, indent=2, separators=(",", ":"))
-
-        with codecs.open(expected_loc, mode="rb", encoding="utf-8") as expect:
-            expected = json.load(expect)
-
-        results = json.loads(json.dumps(results))
-        self.assertEqual(expected, results)
-
     def check_expected_uris(
         self, uris, expected_loc, data_is_json=False, regen=FIXTURES_REGEN
     ):

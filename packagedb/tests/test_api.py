@@ -979,7 +979,9 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         expected = self.get_test_loc("api/twill-core-0.12.0.json")
 
         self.assertEqual(2, len(response.data))
-        result = response.data[0]
+        # Sort results by name
+        results = sorted(response.data, key=lambda x: x["name"])
+        result = results[0]
 
         # remove fields
         result.pop("url")
