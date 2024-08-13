@@ -11,12 +11,12 @@ import json
 import logging
 
 from packagedcode.models import PackageData
+from packagedcode.models import Party
+from packagedcode.models import party_person
+from packageurl import PackageURL
 
 from minecode import map_router
 from minecode.mappers import Mapper
-from packageurl import PackageURL
-from packagedcode.models import party_person
-from packagedcode.models import Party
 
 TRACE = False
 
@@ -24,13 +24,13 @@ logger = logging.getLogger(__name__)
 
 if TRACE:
     import sys
+
     logging.basicConfig(stream=sys.stdout)
     logger.setLevel(logging.DEBUG)
 
 
-@map_router.route('pkg:fdroid/.+')
+@map_router.route("pkg:fdroid/.+")
 class FdroidPackageMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
         """
         Yield Package(s) built from the index data for all versions of an F-Droid
@@ -50,20 +50,20 @@ def build_packages(purl, data):
 
     # we map categories to keyword
     # "categories": ["Time"],
-    keywords = metadata.get('categories', [])
+    keywords = metadata.get("categories", [])
 
     # "issueTracker": "https://github.com/jdmonin/anstop/issues",
-    bug_tracking_url = metadata.get('issueTracker')
+    bug_tracking_url = metadata.get("issueTracker")
 
     # "license": "GPL-2.0-only",
     # this is supposed to be an SPDX expression
-    extracted_license_statement = metadata.get('license')
+    extracted_license_statement = metadata.get("license")
 
     # "sourceCode": "https://github.com/jdmonin/anstop",
-    vcs_url = metadata.get('sourceCode')
+    vcs_url = metadata.get("sourceCode")
 
     # "webSite": "https://sourceforge.net/projects/androidspeedo",
-    homepage_url = metadata.get('webSite')
+    homepage_url = metadata.get("webSite")
 
     description = build_description(metadata, language="en-US")
 
@@ -71,16 +71,18 @@ def build_packages(purl, data):
     # "authorEmail": "jigsaw-code@google.com",
     # "authorName": "Jigsaw",
     # "authorWebSite": "https://jigsaw.google.com/",
-    author_name = metadata.get('authorName')
-    author_email = metadata.get('authorEmail')
-    author_url = metadata.get('authorWebSite')
+    author_name = metadata.get("authorName")
+    author_email = metadata.get("authorEmail")
+    author_url = metadata.get("authorWebSite")
     if any([author_name, author_email, author_url]):
-        parties.append(Party(
-            type=party_person,
-            name=author_name,
-            role="author",
-            email=author_email,
-            url=author_url)
+        parties.append(
+            Party(
+                type=party_person,
+                name=author_name,
+                role="author",
+                email=author_email,
+                url=author_url,
+            )
         )
 
     # TODO: add these
@@ -99,7 +101,7 @@ def build_packages(purl, data):
         extracted_license_statement=extracted_license_statement,
         vcs_url=vcs_url,
         homepage_url=homepage_url,
-        repository_homepage_url=f'https://f-droid.org/en/packages/{base_purl.name}',
+        repository_homepage_url=f"https://f-droid.org/en/packages/{base_purl.name}",
         description=description,
         parties=parties,
     )
@@ -109,22 +111,21 @@ def build_packages(purl, data):
     #     "added": 1344556800000,
     #     "file": {
     #           "name": "/An.stop_10.apk", ....
-    versions = data['versions']
+    versions = data["versions"]
 
     for _sha256_of_apk, version_data in versions.items():
         # TODO: collect versionName
-        version_code = str(version_data['manifest']['versionCode'])
-        logger.debug(
-            f'build_packages: base_purl: {base_purl} version: {version_code}')
-        logger.debug(f'build_packages: data: {version_data}')
+        version_code = str(version_data["manifest"]["versionCode"])
+        logger.debug(f"build_packages: base_purl: {base_purl} version: {version_code}")
+        logger.debug(f"build_packages: data: {version_data}")
 
         # TODO: add  release_date from "added": 1655164800000,
 
         # these must exists since F-Droid builds from sources
-        src = version_data['src']
-        src_filename = src['name']
-        src_sha256 = src['sha256']
-        src_size = src['size']
+        src = version_data["src"]
+        src_filename = src["name"]
+        src_sha256 = src["sha256"]
+        src_size = src["size"]
         download_url = f'https://f-droid.org/repo/{src_filename.strip("/")}'
 
         package_mapping = dict(
@@ -142,15 +143,15 @@ def build_packages(purl, data):
             type=src.type,
             name=src.name,
             version=src.version,
-            qualifiers=dict(download_url=download_url)
+            qualifiers=dict(download_url=download_url),
         )
 
         # these must exists or there is no F-Droid package
-        file = version_data['file']
-        filename = file['name']
-        sha256 = file['sha256']
-        size = file['size']
-        download_url = f'https://f-droid.org/repo/{filename}'
+        file = version_data["file"]
+        filename = file["name"]
+        sha256 = file["sha256"]
+        size = file["size"]
+        download_url = f"https://f-droid.org/repo/{filename}"
 
         package_mappping = dict(
             version=version_code,
@@ -164,7 +165,7 @@ def build_packages(purl, data):
         yield PackageData.from_data(package_mapping)
 
 
-def build_description(metadata, language='en-US'):
+def build_description(metadata, language="en-US"):
     r"""
     Return a description in ``language`` built from
     a package name, summary and description, one per line.
@@ -196,20 +197,20 @@ def build_description(metadata, language='en-US'):
     >>> build_description(metadata)
     'Anstop'
     """
-    names = metadata.get('name') or {}
+    names = metadata.get("name") or {}
     name = names.get(language)
 
-    summaries = metadata.get('summary') or {}
+    summaries = metadata.get("summary") or {}
     summary = summaries.get(language)
 
     if name and summary and summary.startswith(name):
         name = None
 
-    descriptions = metadata.get('description') or {}
+    descriptions = metadata.get("description") or {}
     description = descriptions.get(language)
 
     if summary and description and description.startswith(summary):
         summary = None
 
     non_empty_parts = [p for p in [name, summary, description] if p]
-    return '\n'.join(non_empty_parts)
+    return "\n".join(non_empty_parts)

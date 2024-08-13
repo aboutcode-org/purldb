@@ -2,8 +2,6 @@
 # Copyright (c) 2016 by nexB, Inc. http://www.nexb.com/ - All rights reserved.
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from itertools import chain
 
@@ -12,12 +10,10 @@ from packageurl import PackageURL
 from minecode import ls
 from minecode import seed
 from minecode import visit_router
-
-from minecode.visitors import HttpVisitor
-from minecode.visitors import HttpJsonVisitor
-from minecode.visitors import NonPersistentHttpVisitor
 from minecode.visitors import URI
-
+from minecode.visitors import HttpJsonVisitor
+from minecode.visitors import HttpVisitor
+from minecode.visitors import NonPersistentHttpVisitor
 
 """
 Collect data from Apache.org.
@@ -69,76 +65,84 @@ just based on parsing the find-ls directory listing so bring nothing new.
 
 
 class ApacheSeed(seed.Seeder):
-
     def get_seeds(self):
         # note: this is the same as below and does not list archived files
         # https://archive.apache.org/dist/zzz/find-ls.gz
         # to get these we need to rsync or use other techniques
-        yield 'https://apache.org/dist/zzz/find-ls.gz'
+        yield "https://apache.org/dist/zzz/find-ls.gz"
 
         # FIXME: we cannot relate this to a download  package: disabled for now
         # yield 'https://projects.apache.org/json/foundation/projects.json'
         # yield 'https://projects.apache.org/json/foundation/podlings.json'
 
 
-CHECKSUM_EXTS = '.sha256', '.sha512', '.md5', '.sha', '.sha1',
+CHECKSUM_EXTS = (
+    ".sha256",
+    ".sha512",
+    ".md5",
+    ".sha",
+    ".sha1",
+)
 
 # only keep downloads with certain extensions for some archives, packages and checksums
 ARCHIVE_EXTS = (
     # archives
-    '.jar', '.zip', '.tar.gz', '.tgz', '.tar.bz2', '.war', '.tar.xz', '.tgz', '.tar',
+    ".jar",
+    ".zip",
+    ".tar.gz",
+    ".tgz",
+    ".tar.bz2",
+    ".war",
+    ".tar.xz",
+    ".tgz",
+    ".tar",
     # packages
     # '.deb', '.rpm', '.msi', '.exe',
-    '.whl', '.gem', '.nupkg',
+    ".whl",
+    ".gem",
+    ".nupkg",
     # '.dmg',
     # '.nbm',
 )
 
 IGNORED_PATH_CONTAINS = (
-    'META/',  # #
+    "META/",  # #
     # doc
-    '/documentation/',
-    '/doc/',  # #
-    '-doc.',  # #
-    '-doc-',  # #
-
-    '/docs/',  # #
-    '-docs.',  # #
-    '-docs-',  # #
-
-    'javadoc',  # #
-    'fulldoc',  # #
-    'apidoc',  # #
-    '-manual.',
-    '-asdocs.',  # #
-
+    "/documentation/",
+    "/doc/",  # #
+    "-doc.",  # #
+    "-doc-",  # #
+    "/docs/",  # #
+    "-docs.",  # #
+    "-docs-",  # #
+    "javadoc",  # #
+    "fulldoc",  # #
+    "apidoc",  # #
+    "-manual.",
+    "-asdocs.",  # #
     # eclipse p2/update sites are redundant
     # redundant
-    'updatesite/',  # #
-    'eclipse-update-site',  # #
-    'update/eclipse',  # #
-    'sling/eclipse',  # #
-    'eclipse.site-',
-
+    "updatesite/",  # #
+    "eclipse-update-site",  # #
+    "update/eclipse",  # #
+    "sling/eclipse",  # #
+    "eclipse.site-",
     # large multi-origin binary distributions
-    '-distro.',
-    '-bin-withdeps.',
-    '-bin-with-deps',
-
+    "-distro.",
+    "-bin-withdeps.",
+    "-bin-with-deps",
     # these are larger distributions with third-parties
-    'apache-airavata-distribution',
-    'apache-airavata-server',
-    'apache-mahout-distribution',
-    '/syncope-standalone-',
-
-    'binaries/conda',
-
+    "apache-airavata-distribution",
+    "apache-airavata-server",
+    "apache-mahout-distribution",
+    "/syncope-standalone-",
+    "binaries/conda",
     # obscure
-    'perl/contrib',
+    "perl/contrib",
     # index data
-    'zzz',
+    "zzz",
     # doc
-    'ant/manual'
+    "ant/manual",
 )
 
 
@@ -149,37 +153,41 @@ IGNORED_PATH_CONTAINS = (
 
 
 SOURCE_INDICATORS = (
-    '_src.',
-    '-src.',
-    '-source.',
-    '-sources.',
-    '-source-release',
-    '/source/',
-    '/sources/',
-    '/src/',
-    '_sources.',
+    "_src.",
+    "-src.",
+    "-source.",
+    "-sources.",
+    "-source-release",
+    "/source/",
+    "/sources/",
+    "/src/",
+    "_sources.",
 )
 
 
-BINARY_INDICATORS = (
-)
+BINARY_INDICATORS = ()
 
 
-@visit_router.route('https?://apache.org/dist/zzz/find\-ls\.gz')
+@visit_router.route(r"https?://apache.org/dist/zzz/find\-ls\.gz")
 class ApacheDistIndexVisitor(NonPersistentHttpVisitor):
     """
     Collect URIs for all packages in the "find -ls" index available from Apache
     dist sites.
     """
+
     def get_uris(self, content):
         import gzip
-        with gzip.open(content, 'rt') as f:
+
+        with gzip.open(content, "rt") as f:
             content = f.read()
 
-        url_template = 'https://apache.org/dist/{path}'
+        url_template = "https://apache.org/dist/{path}"
 
-        archive_checksum_extensions = tuple(chain.from_iterable(
-            [[ae + cke for ae in ARCHIVE_EXTS] for cke in CHECKSUM_EXTS]))
+        archive_checksum_extensions = tuple(
+            chain.from_iterable(
+                [[ae + cke for ae in ARCHIVE_EXTS] for cke in CHECKSUM_EXTS]
+            )
+        )
         kept_extensions = archive_checksum_extensions + ARCHIVE_EXTS
 
         for entry in ls.parse_directory_listing(content, from_find=True):
@@ -189,8 +197,9 @@ class ApacheDistIndexVisitor(NonPersistentHttpVisitor):
             path = entry.path
 
             # ignore several downloads
-            if (not path.endswith(kept_extensions)
-                    or any(i in path for i in IGNORED_PATH_CONTAINS)):
+            if not path.endswith(kept_extensions) or any(
+                i in path for i in IGNORED_PATH_CONTAINS
+            ):
                 continue
             # only checksums need further visit, the archive will be scanned only
             is_visited = not path.endswith(CHECKSUM_EXTS)
@@ -200,7 +209,7 @@ class ApacheDistIndexVisitor(NonPersistentHttpVisitor):
                 source_uri=self.uri,
                 uri=url_template.format(path=path),
                 package_url=build_purl(path),
-                size=entry.size
+                size=entry.size,
             )
 
 
@@ -212,30 +221,32 @@ def build_purl(uri):
     """
     # FIXME: this is the essence of collecting name and versions for Apache and
     # this need to be super robust
-    segments = [p for p in uri.split('/') if p]
+    segments = [p for p in uri.split("/") if p]
     version = None
     project_name = segments[0]
     # The path typically contains the version but where is highly inconsistent
     # - bahir/bahir-spark/2.1.1/apache-bahir-2.1.1-src.zip
     # - groovy/2.4.15/sources/apache-groovy-src-2.4.15.zip
     # FIXME: this is not correct
-    if len(segments) > 1 and ('/distribution/' in uri or '/sources/' in uri):
+    if len(segments) > 1 and ("/distribution/" in uri or "/sources/" in uri):
         version = segments[1]
 
     package_url = PackageURL(
-        type='apache',
+        type="apache",
         # TODO: namespace='',
         name=project_name,
-        version=version)
+        version=version,
+    )
 
     return package_url
 
 
-@visit_router.route('https?://(archive\.)apache.org/dist/.*\.(md5|sha1?|sha256|sha512)',)
+@visit_router.route(
+    r"https?://(archive\.)apache.org/dist/.*\.(md5|sha1?|sha256|sha512)",
+)
 class ApacheChecksumVisitor(HttpVisitor):
-    """
-    Collect files that contain archive checksums.
-    """
+    """Collect files that contain archive checksums."""
+
     def dumps(self, content):
         if content:
             # the format can be md5sum-like this way:
@@ -245,7 +256,7 @@ class ApacheChecksumVisitor(HttpVisitor):
             if content:
                 content = content[0]
             else:
-                content = ''
+                content = ""
             return content
 
 
@@ -282,14 +293,16 @@ class ApacheProjectsJsonVisitor(HttpJsonVisitor):
             "shortdesc": "An open source Atom implementation"
         },
     """
+
     def get_uris(self, content):
-        url_template = 'https://projects.apache.org/json/projects/{name}.json'
+        url_template = "https://projects.apache.org/json/projects/{name}.json"
         for project_name, project_meta in content.items():
-            package_url = PackageURL(type='apache', name=project_name)
+            package_url = PackageURL(type="apache", name=project_name)
             yield URI(
                 uri=url_template.format(name=project_name),
                 package_url=package_url.to_string(),
-                date=project_meta.get('created'))
+                date=project_meta.get("created"),
+            )
 
 
 # FIXME: we cannot relate this to a download  package: disabled for now
@@ -300,6 +313,7 @@ class ApacheSingleProjectJsonVisitor(HttpJsonVisitor):
     return any URI as the json contains the project meatadata only, so
     this visitor is getting the json to pass to mapper.
     """
+
     pass
 
 
@@ -319,19 +333,20 @@ class ApachePodlingsJsonVisitor(HttpJsonVisitor):
         "started": "2016-03"
         },
     """
+
     def get_uris(self, content):
         for project_name, project_meta in content.items():
-            if 'homepage' not in project_meta:
+            if "homepage" not in project_meta:
                 continue
 
             package_url = PackageURL(
-                type='apache',
-                namespace='incubator',
-                name=project_name)
+                type="apache", namespace="incubator", name=project_name
+            )
 
             yield URI(
-                uri=project_meta.get('homepage'),
+                uri=project_meta.get("homepage"),
                 package_url=package_url.to_string(),
                 data=project_meta,
                 source_uri=self.uri,
-                visited=True)
+                visited=True,
+            )

@@ -12,13 +12,16 @@ from minecode.management.commands import VerboseCommand
 
 
 class Command(VerboseCommand):
-    help = 'Store scancode scans in git repositories'
+    help = "Store scancode scans in git repositories"
 
     def add_arguments(self, parser):
-        parser.add_argument('work_dir', type=str)
-        parser.add_argument('--github_org', type=str, default="")
-        parser.add_argument('--count', type=int, default=0)
+        parser.add_argument("work_dir", type=str)
+        parser.add_argument("--github_org", type=str, default="")
+        parser.add_argument("--count", type=int, default=0)
 
     def handle(self, *args, **options):
         store_scancode_scans_from_cd_items(
-            work_dir=options['work_dir'], github_org=options['github_org'], count=options['count'])
+            work_dir=options["work_dir"],
+            github_org=options["github_org"],
+            count=options["count"],
+        )

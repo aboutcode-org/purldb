@@ -11,11 +11,10 @@ import logging
 import sys
 
 import requests
-
 from commoncode.resource import VirtualCodebase
+
 from minecode.management.commands import VerboseCommand
 from minecode.models import PriorityResourceURI
-
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
@@ -27,33 +26,35 @@ if TRACE:
 
 
 class Command(VerboseCommand):
-    help = 'Run a Package request queue.'
+    help = "Run a Package request queue."
 
     def add_arguments(self, parser):
         parser.add_argument("--input", type=str)
 
     def handle(self, *args, **options):
-        input = options.get('input')
+        input = options.get("input")
         if input:
             vc = VirtualCodebase(location=input)
             for resource in vc.walk():
                 if not resource.sha1:
                     continue
-                maven_api_search_url = f'https://search.maven.org/solrsearch/select?q=1:{resource.sha1}'
+                maven_api_search_url = (
+                    f"https://search.maven.org/solrsearch/select?q=1:{resource.sha1}"
+                )
                 response = requests.get(maven_api_search_url)
                 if not response.ok:
-                    logger.error(
-                        f"API query failed for: {maven_api_search_url}")
+                    logger.error(f"API query failed for: {maven_api_search_url}")
                     continue
                 contents = response.json()
-                resp = contents.get('response', {})
-                if resp.get('numFound', 0) > 0:
-                    for matched_package in resp.get('docs', []):
-                        namespace = matched_package.get('g', '')
-                        name = matched_package.get('a', '')
-                        version = matched_package.get('v', '')
+                resp = contents.get("response", {})
+                if resp.get("numFound", 0) > 0:
+                    for matched_package in resp.get("docs", []):
+                        namespace = matched_package.get("g", "")
+                        name = matched_package.get("a", "")
+                        version = matched_package.get("v", "")
                         if namespace and name and version:
-                            purl = f'pkg:maven/{namespace}/{name}@{version}'
+                            purl = f"pkg:maven/{namespace}/{name}@{version}"
                             PriorityResourceURI.objects.create(
-                                uri=purl, package_url=purl, sha1=resource.sha1)
-                            logger.info(f'Added {purl} to priority queue')
+                                uri=purl, package_url=purl, sha1=resource.sha1
+                            )
+                            logger.info(f"Added {purl} to priority queue")

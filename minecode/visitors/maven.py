@@ -7,9 +7,6 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from collections import namedtuple
-from typing import Dict
-from urllib.parse import urlparse
 import gzip
 import hashlib
 import io
@@ -17,31 +14,30 @@ import json
 import logging
 import os
 import re
+from collections import namedtuple
+from urllib.parse import urlparse
 
+import arrow
+import javaproperties
+import requests
 from bs4 import BeautifulSoup
 from dateutil import tz
-import arrow
-import requests
-
 from jawa.util.utf import decode_modified_utf8
-import javaproperties
-
-from packageurl import PackageURL
+from packagedcode.maven import _parse
 from packagedcode.maven import build_filename
 from packagedcode.maven import build_url
-from packagedcode.maven import get_urls
 from packagedcode.maven import get_maven_pom
-from packagedcode.maven import _parse
+from packagedcode.maven import get_urls
+from packageurl import PackageURL
 
 from minecode import priority_router
 from minecode import seed
 from minecode import visit_router
-from minecode.visitors import java_stream
+from minecode.utils import validate_sha1
+from minecode.visitors import URI
 from minecode.visitors import HttpVisitor
 from minecode.visitors import NonPersistentHttpVisitor
-from minecode.visitors import URI
-from minecode.utils import validate_sha1
-from packagedb.models import make_relationship
+from minecode.visitors import java_stream
 from packagedb.models import PackageContentType
 from packagedb.models import PackageRelation
 from packagedb.models import make_relationship
@@ -64,7 +60,7 @@ TRACE_DEEP = False
 if TRACE:
     logger.setLevel(logging.DEBUG)
 
-MAVEN_BASE_URL = 'https://repo1.maven.org/maven2'
+MAVEN_BASE_URL = "https://repo1.maven.org/maven2"
 
 
 class GzipFileWithTrailing(gzip.GzipFile):
@@ -72,9 +68,10 @@ class GzipFileWithTrailing(gzip.GzipFile):
     A subclass of gzip.GzipFile supporting files with trailing garbage. Ignore
     the garbage.
     """
+
     # TODO: what is first_file??
     first_file = True
-    gzip_magic = b'\037\213'
+    gzip_magic = b"\037\213"
     has_trailing_garbage = False
 
     def _read_gzip_header(self):
@@ -86,17 +83,16 @@ class GzipFileWithTrailing(gzip.GzipFile):
         if is_gzip and not self.first_file:
             self.first_file = False
             self.has_trailing_garbage = True
-            raise EOFError('Trailing garbage found')
+            raise EOFError("Trailing garbage found")
 
         self.first_file = False
         gzip.GzipFile._read_gzip_header(self)
 
 
 class MavenSeed(seed.Seeder):
-
     def get_seeds(self):
-        yield 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz'
-        yield 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties'
+        yield "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz"
+        yield "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties"
         # yield 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.457.gz'
         # yield 'http://jcenter.bintray.com/'
         # yield 'https://repo2.maven.org/maven2/.index/nexus-maven-repository-index.gz'
@@ -116,7 +112,7 @@ def get_pom_text(namespace, name, version, qualifiers={}, base_url=MAVEN_BASE_UR
     field arguments in a string.
     """
     # Create URLs using purl fields
-    if qualifiers and not isinstance(qualifiers, Dict):
+    if qualifiers and not isinstance(qualifiers, dict):
         return
     urls = get_urls(
         namespace=namespace,
@@ -128,7 +124,7 @@ def get_pom_text(namespace, name, version, qualifiers={}, base_url=MAVEN_BASE_UR
     if not urls:
         return
     # Get and parse POM info
-    pom_url = urls['api_data_url']
+    pom_url = urls["api_data_url"]
     # TODO: manage different types of errors (404, etc.)
     response = requests.get(pom_url)
     if not response:
@@ -137,9 +133,7 @@ def get_pom_text(namespace, name, version, qualifiers={}, base_url=MAVEN_BASE_UR
 
 
 def fetch_parent(pom_text, base_url=MAVEN_BASE_URL):
-    """
-    Return the parent pom text of `pom_text`, or None if `pom_text` has no parent.
-    """
+    """Return the parent pom text of `pom_text`, or None if `pom_text` has no parent."""
     if not pom_text:
         return
     pom = get_maven_pom(text=pom_text)
@@ -201,13 +195,11 @@ def get_merged_ancestor_package_from_maven_package(package, base_url=MAVEN_BASE_
 
 
 def merge_parent(package, parent_package):
-    """
-    Merge `parent_package` data into `package` and return `package.
-    """
+    """Merge `parent_package` data into `package` and return `package."""
     mergeable_fields = (
-        'declared_license_expression',
-        'homepage_url',
-        'parties',
+        "declared_license_expression",
+        "homepage_url",
+        "parties",
     )
     for field in mergeable_fields:
         # If `field` is empty on the package we're looking at, populate
@@ -216,12 +208,12 @@ def merge_parent(package, parent_package):
             value = getattr(parent_package, field)
             setattr(package, field, value)
 
-            msg = f'Field `{field}` has been updated using values obtained from the parent POM {parent_package.purl}'
-            history = package.extra_data.get('history')
+            msg = f"Field `{field}` has been updated using values obtained from the parent POM {parent_package.purl}"
+            history = package.extra_data.get("history")
             if history:
-                package.extra_data['history'].append(msg)
+                package.extra_data["history"].append(msg)
             else:
-                package.extra_data['history'] = [msg]
+                package.extra_data["history"] = [msg]
 
     return package
 
@@ -235,16 +227,18 @@ def merge_ancestors(ancestor_pom_texts, package):
     """
     for ancestor_pom_text in ancestor_pom_texts:
         ancestor_package = _parse(
-            datasource_id='maven_pom',
-            package_type='maven',
-            primary_language='Java',
+            datasource_id="maven_pom",
+            package_type="maven",
+            primary_language="Java",
             text=ancestor_pom_text,
         )
         package = merge_parent(package, ancestor_package)
     return package
 
 
-def map_maven_package(package_url, package_content, pipelines, priority=0, reindex_metadata=False):
+def map_maven_package(
+    package_url, package_content, pipelines, priority=0, reindex_metadata=False
+):
     """
     Add a maven `package_url` to the PackageDB.
 
@@ -252,13 +246,14 @@ def map_maven_package(package_url, package_content, pipelines, priority=0, reind
 
     if ``reindex_metadata`` is True, only reindex metadata and DO NOT rescan the full package.
     """
-    from minecode.model_utils import add_package_to_scan_queue, merge_or_create_package
+    from minecode.model_utils import add_package_to_scan_queue
+    from minecode.model_utils import merge_or_create_package
 
     db_package = None
-    error = ''
+    error = ""
 
-    if 'repository_url' in package_url.qualifiers:
-        base_url = package_url.qualifiers['repository_url']
+    if "repository_url" in package_url.qualifiers:
+        base_url = package_url.qualifiers["repository_url"]
     else:
         base_url = MAVEN_BASE_URL
 
@@ -270,21 +265,20 @@ def map_maven_package(package_url, package_content, pipelines, priority=0, reind
         base_url=base_url,
     )
     if not pom_text:
-        msg = f'Package does not exist on maven: {package_url}'
-        error += msg + '\n'
+        msg = f"Package does not exist on maven: {package_url}"
+        error += msg + "\n"
         logger.error(msg)
         return db_package, error
 
     package = _parse(
-        'maven_pom',
-        'maven',
-        'Java',
+        "maven_pom",
+        "maven",
+        "Java",
         text=pom_text,
         base_url=base_url,
     )
     ancestor_pom_texts = get_ancestry(pom_text=pom_text, base_url=base_url)
-    package = merge_ancestors(
-        ancestor_pom_texts=ancestor_pom_texts, package=package)
+    package = merge_ancestors(ancestor_pom_texts=ancestor_pom_texts, package=package)
 
     urls = get_urls(
         namespace=package_url.namespace,
@@ -299,11 +293,11 @@ def map_maven_package(package_url, package_content, pipelines, priority=0, reind
     # url is not properly generated since it would be missing the sources bit
     # from the filename.
     package.qualifiers = package_url.qualifiers
-    package.download_url = urls['repository_download_url']
-    package.repository_download_url = urls['repository_download_url']
+    package.download_url = urls["repository_download_url"]
+    package.repository_download_url = urls["repository_download_url"]
 
     # Set package_content value
-    package.extra_data['package_content'] = package_content
+    package.extra_data["package_content"] = package_content
 
     # If sha1 exists for a jar, we know we can create the package
     # Use pom info as base and create packages for binary and source package
@@ -314,32 +308,33 @@ def map_maven_package(package_url, package_content, pipelines, priority=0, reind
         package.sha1 = sha1
         override = reindex_metadata
         db_package, _, _, _ = merge_or_create_package(
-            package, visit_level=50, override=override)
+            package, visit_level=50, override=override
+        )
     else:
-        msg = f'Failed to retrieve JAR: {package_url}'
-        error += msg + '\n'
+        msg = f"Failed to retrieve JAR: {package_url}"
+        error += msg + "\n"
         logger.error(msg)
 
     if not reindex_metadata:
         # Submit package for scanning
         if db_package:
             add_package_to_scan_queue(
-                package=db_package,
-                pipelines=pipelines,
-                priority=priority
+                package=db_package, pipelines=pipelines, priority=priority
             )
 
     return db_package, error
 
 
-def map_maven_binary_and_source(package_url, pipelines, priority=0, reindex_metadata=False):
+def map_maven_binary_and_source(
+    package_url, pipelines, priority=0, reindex_metadata=False
+):
     """
     Get metadata for the binary and source release of the Maven package
     `package_url` and save it to the PackageDB.
 
     Return an error string for errors that occur, or empty string if there is no error.
     """
-    error = ''
+    error = ""
     package, emsg = map_maven_package(
         package_url=package_url,
         package_content=PackageContentType.BINARY,
@@ -351,7 +346,7 @@ def map_maven_binary_and_source(package_url, pipelines, priority=0, reindex_meta
         error += emsg
 
     source_package_url = package_url
-    source_package_url.qualifiers['classifier'] = 'sources'
+    source_package_url.qualifiers["classifier"] = "sources"
     source_package, emsg = map_maven_package(
         package_url=source_package_url,
         package_content=PackageContentType.SOURCE_ARCHIVE,
@@ -380,21 +375,21 @@ def map_maven_packages(package_url, pipelines):
 
     Return an error string for errors that occur, or empty string if there is no error.
     """
-    error = ''
+    error = ""
     namespace = package_url.namespace
     name = package_url.name
     # Find all versions of this package
-    query_params = f'g:{namespace}+AND+a:{name}'
-    url = f'https://search.maven.org/solrsearch/select?q={query_params}&core=gav'
+    query_params = f"g:{namespace}+AND+a:{name}"
+    url = f"https://search.maven.org/solrsearch/select?q={query_params}&core=gav"
     response = requests.get(url)
     if response:
-        package_listings = response.json().get('response', {}).get('docs', [])
+        package_listings = response.json().get("response", {}).get("docs", [])
     for listing in package_listings:
         purl = PackageURL(
-            type='maven',
-            namespace=listing.get('g'),
-            name=listing.get('a'),
-            version=listing.get('v'),
+            type="maven",
+            namespace=listing.get("g"),
+            name=listing.get("a"),
+            version=listing.get("v"),
         )
         emsg = map_maven_binary_and_source(purl, pipelines)
         if emsg:
@@ -410,7 +405,7 @@ def get_package_sha1(package):
     from that.
     """
     download_url = package.repository_download_url
-    sha1_download_url = f'{download_url}.sha1'
+    sha1_download_url = f"{download_url}.sha1"
     response = requests.get(sha1_download_url)
     if response.ok:
         sha1_contents = response.text.strip().split()
@@ -420,12 +415,12 @@ def get_package_sha1(package):
             # Download JAR and calculate sha1 if we cannot get it from the repo
             response = requests.get(download_url)
             if response:
-                sha1_hash = hashlib.new('sha1', response.content)
+                sha1_hash = hashlib.new("sha1", response.content)
                 sha1 = sha1_hash.hexdigest()
         return sha1
 
 
-@priority_router.route('pkg:maven/.*')
+@priority_router.route("pkg:maven/.*")
 def process_request(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a maven Package URL (PURL) as a
@@ -441,14 +436,14 @@ def process_request(purl_str, **kwargs):
     """
     from minecode.model_utils import DEFAULT_PIPELINES
 
-    addon_pipelines = kwargs.get('addon_pipelines', [])
+    addon_pipelines = kwargs.get("addon_pipelines", [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
+    priority = kwargs.get("priority", 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)
     except ValueError as e:
-        error = f'error occured when parsing {purl_str}: {e}'
+        error = f"error occured when parsing {purl_str}: {e}"
         return error
 
     has_version = bool(package_url.version)
@@ -473,30 +468,22 @@ collect_links_and_artifact_timestamps = re.compile(
 
 
 def check_if_file_name_is_linked_on_page(file_name, links, **kwargs):
-    """
-    Return True if `file_name` is in `links`
-    """
+    """Return True if `file_name` is in `links`"""
     return any(l.endswith(file_name) for l in links)
 
 
 def check_if_page_has_pom_files(links, **kwargs):
-    """
-    Return True of any entry in `links` ends with .pom.
-    """
-    return any(l.endswith('.pom') for l in links)
+    """Return True of any entry in `links` ends with .pom."""
+    return any(l.endswith(".pom") for l in links)
 
 
 def check_if_page_has_directories(links, **kwargs):
-    """
-    Return True if any entry, excluding "../", ends with /.
-    """
-    return any(l.endswith('/') for l in links if l != '../')
+    """Return True if any entry, excluding "../", ends with /."""
+    return any(l.endswith("/") for l in links if l != "../")
 
 
 def check_if_package_version_page(links, **kwargs):
-    """
-    Return True if `links` contains pom files and has no directories
-    """
+    """Return True if `links` contains pom files and has no directories"""
     return check_if_page_has_pom_files(
         links=links
     ) and not check_if_page_has_directories(links=links)
@@ -504,7 +491,7 @@ def check_if_package_version_page(links, **kwargs):
 
 def check_if_package_page(links, **kwargs):
     return check_if_file_name_is_linked_on_page(
-        file_name='maven-metadata.xml', links=links
+        file_name="maven-metadata.xml", links=links
     ) and not check_if_page_has_pom_files(links=links)
 
 
@@ -514,7 +501,7 @@ def check_if_maven_root(links, **kwargs):
     repo contains "archetype-catalog.xml".
     """
     return check_if_file_name_is_linked_on_page(
-        file_name='archetype-catalog.xml', links=links
+        file_name="archetype-catalog.xml", links=links
     )
 
 
@@ -531,23 +518,17 @@ def check_on_page(url, checker):
 
 
 def is_maven_root(url):
-    """
-    Return True if `url` is the root of a Maven repo, False otherwise.
-    """
+    """Return True if `url` is the root of a Maven repo, False otherwise."""
     return check_on_page(url, check_if_maven_root)
 
 
 def is_package_page(url):
-    """
-    Return True if `url` is a package page on a Maven repo, False otherwise.
-    """
+    """Return True if `url` is a package page on a Maven repo, False otherwise."""
     return check_on_page(url, check_if_package_page)
 
 
 def is_package_version_page(url):
-    """
-    Return True if `url` is a package version page on a Maven repo, False otherwise.
-    """
+    """Return True if `url` is a package version page on a Maven repo, False otherwise."""
     return check_on_page(url, check_if_package_version_page)
 
 
@@ -555,14 +536,14 @@ def url_parts(url):
     parsed_url = urlparse(url)
     scheme = parsed_url.scheme
     netloc = parsed_url.netloc
-    path_segments = [p for p in parsed_url.path.split('/') if p]
+    path_segments = [p for p in parsed_url.path.split("/") if p]
     return scheme, netloc, path_segments
 
 
 def create_url(scheme, netloc, path_segments):
-    url_template = f'{scheme}://{netloc}'
-    path = '/'.join(path_segments)
-    return f'{url_template}/{path}'
+    url_template = f"{scheme}://{netloc}"
+    path = "/".join(path_segments)
+    return f"{url_template}/{path}"
 
 
 def get_maven_root(url):
@@ -597,79 +578,74 @@ def determine_namespace_name_version_from_url(url, root_url=None):
     if not root_url:
         root_url = get_maven_root(url)
         if not root_url:
-            raise Exception(f'Error: not a Maven repository: {url}')
+            raise Exception(f"Error: not a Maven repository: {url}")
 
     _, remaining_path_segments = url.split(root_url)
-    remaining_path_segments = remaining_path_segments.split('/')
+    remaining_path_segments = remaining_path_segments.split("/")
     remaining_path_segments = [p for p in remaining_path_segments if p]
 
     namespace_segments = []
-    package_name = ''
-    package_version = ''
+    package_name = ""
+    package_version = ""
     for i in range(len(remaining_path_segments)):
         segment = remaining_path_segments[i]
         segments = remaining_path_segments[: i + 1]
-        path = '/'.join(segments)
-        url_segment = f'{root_url}/{path}'
+        path = "/".join(segments)
+        url_segment = f"{root_url}/{path}"
         if is_package_page(url_segment):
             package_name = segment
         elif is_package_version_page(url_segment):
             package_version = segment
         else:
             namespace_segments.append(segment)
-    namespace = '.'.join(namespace_segments)
+    namespace = ".".join(namespace_segments)
     return namespace, package_name, package_version
 
 
 def add_to_import_queue(url, root_url):
-    """
-    Create ImportableURI for the Maven repo package page at `url`.
-    """
+    """Create ImportableURI for the Maven repo package page at `url`."""
     from minecode.models import ImportableURI
 
     data = None
     response = requests.get(url)
     if response:
         data = response.text
-    namespace, name, _ = determine_namespace_name_version_from_url(
-        url, root_url)
+    namespace, name, _ = determine_namespace_name_version_from_url(url, root_url)
     purl = PackageURL(
-        type='maven',
+        type="maven",
         namespace=namespace,
         name=name,
     )
     importable_uri = ImportableURI.objects.insert(url, data, purl)
     if importable_uri:
-        logger.info(f'Inserted {url} into ImportableURI queue')
+        logger.info(f"Inserted {url} into ImportableURI queue")
 
 
 def filter_only_directories(timestamps_by_links):
-    """
-    Given a mapping of `timestamps_by_links`, where the links are directory names (which end with `/`),
-    """
+    """Given a mapping of `timestamps_by_links`, where the links are directory names (which end with `/`),"""
     timestamps_by_links_filtered = {}
     for link, timestamp in timestamps_by_links.items():
-        if link != '../' and link.endswith('/'):
+        if link != "../" and link.endswith("/"):
             timestamps_by_links_filtered[link] = timestamp
     return timestamps_by_links_filtered
 
 
 valid_artifact_extensions = [
-    'ejb3',
-    'ear',
-    'aar',
-    'apk',
-    'gem',
-    'jar',
-    'nar',
+    "ejb3",
+    "ear",
+    "aar",
+    "apk",
+    "gem",
+    "jar",
+    "nar",
     # 'pom',
-    'so',
-    'swc',
-    'tar',
-    'tar.gz',
-    'war',
-    'xar',
-    'zip',
+    "so",
+    "swc",
+    "tar",
+    "tar.gz",
+    "war",
+    "xar",
+    "zip",
 ]
 
 
@@ -695,8 +671,8 @@ def collect_links_from_text(text, filter):
     links_and_timestamps = collect_links_and_artifact_timestamps(text)
     timestamps_by_links = {}
     for link, timestamp in links_and_timestamps:
-        if timestamp == '-':
-            timestamp = ''
+        if timestamp == "-":
+            timestamp = ""
         timestamps_by_links[link] = timestamp
 
     timestamps_by_links = filter(timestamps_by_links=timestamps_by_links)
@@ -709,19 +685,17 @@ def create_absolute_urls_for_links(text, url, filter):
     links from `url` and their timestamps, that is then filtered by `filter`.
     """
     timestamps_by_absolute_links = {}
-    url = url.rstrip('/')
+    url = url.rstrip("/")
     timestamps_by_links = collect_links_from_text(text, filter)
     for link, timestamp in timestamps_by_links.items():
         if not link.startswith(url):
-            link = f'{url}/{link}'
+            link = f"{url}/{link}"
         timestamps_by_absolute_links[link] = timestamp
     return timestamps_by_absolute_links
 
 
 def get_directory_links(url):
-    """
-    Return a list of absolute directory URLs of the hyperlinks from `url`
-    """
+    """Return a list of absolute directory URLs of the hyperlinks from `url`"""
     timestamps_by_directory_links = {}
     response = requests.get(url)
     if response:
@@ -732,9 +706,7 @@ def get_directory_links(url):
 
 
 def get_artifact_links(url):
-    """
-    Return a list of absolute directory URLs of the hyperlinks from `url`
-    """
+    """Return a list of absolute directory URLs of the hyperlinks from `url`"""
     timestamps_by_artifact_links = []
     response = requests.get(url)
     if response:
@@ -745,9 +717,7 @@ def get_artifact_links(url):
 
 
 def crawl_to_package(url, root_url):
-    """
-    Given a maven repo `url`,
-    """
+    """Given a maven repo `url`,"""
     if is_package_page(url):
         add_to_import_queue(url, root_url)
         return
@@ -765,11 +735,9 @@ def crawl_maven_repo_from_root(root_url):
 
 
 def get_artifact_sha1(artifact_url):
-    """
-    Return the SHA1 value of the Maven artifact located at `artifact_url`.
-    """
+    """Return the SHA1 value of the Maven artifact located at `artifact_url`."""
     sha1 = None
-    artifact_sha1_url = f'{artifact_url}.sha1'
+    artifact_sha1_url = f"{artifact_url}.sha1"
     response = requests.get(artifact_sha1_url)
     if response:
         sha1_contents = response.text.strip().split()
@@ -787,29 +755,31 @@ def get_classifier_from_artifact_url(
     """
     classifier = None
     # https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0
-    package_version_page_url = package_version_page_url.rstrip('/')
+    package_version_page_url = package_version_page_url.rstrip("/")
     # https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0
-    leading_url_portion = f'{package_version_page_url}/{package_name}-{package_version}'
+    leading_url_portion = f"{package_version_page_url}/{package_name}-{package_version}"
     # artifact_url = 'https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0-onejar.jar'
     # ['', '-onejar.jar']
     _, remaining_url_portion = artifact_url.split(leading_url_portion)
     # ['-onejar', 'jar']
-    remaining_url_portions = remaining_url_portion.split('.')
+    remaining_url_portions = remaining_url_portion.split(".")
     if remaining_url_portions and remaining_url_portions[0]:
         # '-onejar'
         classifier = remaining_url_portions[0]
-        if classifier.startswith('-'):
+        if classifier.startswith("-"):
             # 'onejar'
             classifier = classifier[1:]
     return classifier
 
 
-@visit_router.route('http://repo1\.maven\.org/maven2/\.index/nexus-maven-repository-index.properties')
-@visit_router.route('https://repo1\.maven\.org/maven2/\.index/nexus-maven-repository-index.properties')
+@visit_router.route(
+    r"http://repo1\.maven\.org/maven2/\.index/nexus-maven-repository-index.properties"
+)
+@visit_router.route(
+    r"https://repo1\.maven\.org/maven2/\.index/nexus-maven-repository-index.properties"
+)
 class MavenNexusPropertiesVisitor(NonPersistentHttpVisitor):
-    """
-    Fetch the property files, parse the create the URI for each increment index
-    """
+    """Fetch the property files, parse the create the URI for each increment index"""
 
     def get_uris(self, content):
         """
@@ -821,13 +791,12 @@ class MavenNexusPropertiesVisitor(NonPersistentHttpVisitor):
         Each value points to a fragment increamental index that has the same
         format as the bigger one.
         """
-
-        base_url = 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.{index}.gz'
+        base_url = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.{index}.gz"
         with open(content) as config_file:
             properties = javaproperties.load(config_file) or {}
 
         for key, increment_index in properties.items():
-            if key.startswith('nexus.index.incremental'):
+            if key.startswith("nexus.index.incremental"):
                 yield URI(
                     uri=base_url.format(index=increment_index),
                     source_uri=self.uri,
@@ -835,9 +804,10 @@ class MavenNexusPropertiesVisitor(NonPersistentHttpVisitor):
 
 
 @visit_router.route(
-    'https?://.*/nexus-maven-repository-index.gz',
+    "https?://.*/nexus-maven-repository-index.gz",
     # increments
-    'https?://.*/nexus-maven-repository-index\.\d+\.gz')
+    r"https?://.*/nexus-maven-repository-index\.\d+\.gz",
+)
 class MavenNexusIndexVisitor(NonPersistentHttpVisitor):
     """
     Download and process a Nexus Maven index file.
@@ -855,8 +825,7 @@ class MavenNexusIndexVisitor(NonPersistentHttpVisitor):
         """
         index_location = content
 
-        artifacts = get_artifacts(
-            index_location, worthyness=is_worthy_artifact)
+        artifacts = get_artifacts(index_location, worthyness=is_worthy_artifact)
 
         for artifact in artifacts:
             # we cannot do much without these
@@ -869,15 +838,15 @@ class MavenNexusIndexVisitor(NonPersistentHttpVisitor):
                 continue
 
             qualifiers = {}
-            if extension and extension != 'jar':
-                qualifiers['type'] = extension
+            if extension and extension != "jar":
+                qualifiers["type"] = extension
 
             classifier = artifact.classifier
             if classifier:
-                qualifiers['classifier'] = classifier
+                qualifiers["classifier"] = classifier
 
             package_url = PackageURL(
-                type='maven',
+                type="maven",
                 namespace=group_id,
                 name=artifact_id,
                 version=version,
@@ -891,19 +860,24 @@ class MavenNexusIndexVisitor(NonPersistentHttpVisitor):
             # instead togther with the filename... especially we could use
             # different REPOs.
             jar_download_url, file_name = build_url_and_filename(
-                group_id, artifact_id, version, extension, classifier)
+                group_id, artifact_id, version, extension, classifier
+            )
 
             # FIXME: should this be set in the yielded URI too
             last_mod = artifact.last_modified
 
             # We yield a pre-visited URI for each JAR
             mock_maven_index_uri = build_url(
-                group_id, artifact_id, version, file_name,
-                base_url='maven-index://repo1.maven.org')
+                group_id,
+                artifact_id,
+                version,
+                file_name,
+                base_url="maven-index://repo1.maven.org",
+            )
 
             artifact_data = artifact.to_dict()
-            artifact_data['download_url'] = jar_download_url
-            artifact_as_json = json.dumps(artifact_data, separators=(',', ':'))
+            artifact_data["download_url"] = jar_download_url
+            artifact_as_json = json.dumps(artifact_data, separators=(",", ":"))
 
             yield URI(
                 # this is the Maven index index URI
@@ -921,7 +895,7 @@ class MavenNexusIndexVisitor(NonPersistentHttpVisitor):
             )
 
             package_url = PackageURL(
-                type='maven',
+                type="maven",
                 namespace=group_id,
                 name=artifact_id,
                 version=version,
@@ -931,7 +905,8 @@ class MavenNexusIndexVisitor(NonPersistentHttpVisitor):
             # the POM of a Jar in the repo. Only for Parent POMs
             # therefore we create a download with the pomextension
             pom_download_url, pom_file_name = build_url_and_filename(
-                group_id, artifact_id, version, extension='pom', classifier='')
+                group_id, artifact_id, version, extension="pom", classifier=""
+            )
             yield URI(
                 # this is the Maven index index URI
                 source_uri=self.uri,
@@ -946,7 +921,7 @@ class MavenNexusIndexVisitor(NonPersistentHttpVisitor):
             )
 
 
-@visit_router.route('https?://jcenter\.bintray\.com/(.+/)*')
+@visit_router.route(r"https?://jcenter\.bintray\.com/(.+/)*")
 class MavenHTMLPageVisitor(HttpVisitor):
     """
     Parse the HTML page and yield all necessary uris from the page and its sub pages.
@@ -955,17 +930,17 @@ class MavenHTMLPageVisitor(HttpVisitor):
     """
 
     def get_uris(self, content):
-        page = BeautifulSoup(content, 'lxml')
-        for pre in page.find_all(name='pre'):
-            for a in pre.find_all(name='a'):
-                url = a.get('href')
+        page = BeautifulSoup(content, "lxml")
+        for pre in page.find_all(name="pre"):
+            for a in pre.find_all(name="a"):
+                url = a.get("href")
                 if not url:
                     continue
                 # Remove : symbol since it's a special char for bintray repo.
-                if url.startswith(':'):
+                if url.startswith(":"):
                     url = url[1:]
                 filename = None  # default is folder, the filename is None.
-                if not url.endswith('/'):
+                if not url.endswith("/"):
                     # a file
                     filename = url
                 yield URI(
@@ -976,11 +951,9 @@ class MavenHTMLPageVisitor(HttpVisitor):
                 )
 
 
-@visit_router.route('https?://.*/maven-metadata\.xml')
+@visit_router.route(r"https?://.*/maven-metadata\.xml")
 class MavenMetaDataVisitor(HttpVisitor):
-    """
-    Parse the maven-metadata.xml file and yield uris of jars and pom.
-    """
+    """Parse the maven-metadata.xml file and yield uris of jars and pom."""
 
     def get_uris(self, content):
         # FIXME this may not be correct. The only thing we can infer from the maven
@@ -988,34 +961,32 @@ class MavenMetaDataVisitor(HttpVisitor):
         # The actual download files likely need to be obtained from directory listing
         # or infered from parsing the POM???
 
-        base_url = self.uri.partition('maven-metadata.xml')[0] + '{version}/'
-        pom_url = base_url + '{artifactId}-{version}.pom'
+        base_url = self.uri.partition("maven-metadata.xml")[0] + "{version}/"
+        pom_url = base_url + "{artifactId}-{version}.pom"
 
         # FIXME: this may not exist and or with another extension?? and this should be PREVISITED
-        jar_url = base_url + '{artifactId}-{version}.jar'
+        jar_url = base_url + "{artifactId}-{version}.jar"
         # FIXME: sources may not exists?? and this should be PREVISITED
-        source_url = base_url + '{artifactId}-{version}-sources.jar'
+        source_url = base_url + "{artifactId}-{version}-sources.jar"
 
         # FIXME: why use BeautifulSoup for valid XML???
-        page = BeautifulSoup(content, 'lxml-xml')
+        page = BeautifulSoup(content, "lxml-xml")
 
-        group_id = page.find(name='groupId')
-        artifact_id = page.find(name='artifactId')
+        group_id = page.find(name="groupId")
+        artifact_id = page.find(name="artifactId")
         if not (group_id and artifact_id):
             return
 
         group_id = group_id.string
         artifact_id = artifact_id.string
 
-        for version in page.find_all('version'):
+        for version in page.find_all("version"):
             version = version.string
 
             # FIXME: we may not get the proper extensions and classifiers and miss the qualifiers
             package_url = PackageURL(
-                type='maven',
-                namespace=group_id,
-                name=artifact_id,
-                version=version).to_string()
+                type="maven", namespace=group_id, name=artifact_id, version=version
+            ).to_string()
 
             # the JAR proper as previsited
             yield URI(
@@ -1043,8 +1014,14 @@ class MavenMetaDataVisitor(HttpVisitor):
 
 
 # TODO: consider switching to HTTPS
-def build_url_and_filename(group_id, artifact_id, version, extension, classifier,
-                           base_repo_url='https://repo1.maven.org/maven2'):
+def build_url_and_filename(
+    group_id,
+    artifact_id,
+    version,
+    extension,
+    classifier,
+    base_repo_url="https://repo1.maven.org/maven2",
+):
     """
     Return a tuple of (url, filename) for the download URL of a Maven
     artifact built from its coordinates.
@@ -1055,23 +1032,25 @@ def build_url_and_filename(group_id, artifact_id, version, extension, classifier
 
 
 # TODO: consider switching to HTTPS
-def build_maven_xml_url(group_id, artifact_id,
-                        base_repo_url='https://repo1.maven.org/maven2'):
+def build_maven_xml_url(
+    group_id, artifact_id, base_repo_url="https://repo1.maven.org/maven2"
+):
     """
     Return a download URL for a Maven artifact built from its
     coordinates.
     """
-    group_id = group_id.replace('.', '/')
-    path = '{group_id}/{artifact_id}'.format(**locals())
-    return '{base_repo_url}/{path}/maven-metadata.xml'.format(**locals())
+    group_id = group_id.replace(".", "/")
+    path = "{group_id}/{artifact_id}".format(**locals())
+    return "{base_repo_url}/{path}/maven-metadata.xml".format(**locals())
 
 
-@visit_router.route('https?://repo1.maven.org/maven2/.*\.pom')
+@visit_router.route(r"https?://repo1.maven.org/maven2/.*\.pom")
 class MavenPOMVisitor(HttpVisitor):
     """
     Visit a POM. The POM XML is stored as data and there is nothing
     special to do for this visitor.
     """
+
     pass
 
 
@@ -1101,38 +1080,40 @@ def is_worthy_artifact(artifact):
     ejb-client      jar         ejb           client      java
     test-jar        jar         jar           tests       java
     """
-    if artifact.version == 'archetypes':
+    if artifact.version == "archetypes":
         # we skip these entirely, they have a different shape
         return
 
-    worthy_ext_pack = set([
-        # packaging, classifier, extension
-        (u'jar', u'sources', u'jar'),
-        (u'jar', None, u'jar'),
-        (u'bundle', None, u'jar'),
-        (u'war', None, u'war'),
-        (u'zip', u'source-release', u'zip'),
-        (u'maven-plugin', None, u'jar'),
-        (u'aar', None, u'aar'),
-        (u'jar', u'sources-commercial', u'jar'),
-        (u'zip', u'src', u'zip'),
-        (u'tar.gz', u'src', u'tar.gz'),
-        (u'jar', None, u'zip'),
-        (u'zip', u'project-src', u'zip'),
-        (u'jar', u'src', u'jar'),
-    ])
+    worthy_ext_pack = set(
+        [
+            # packaging, classifier, extension
+            ("jar", "sources", "jar"),
+            ("jar", None, "jar"),
+            ("bundle", None, "jar"),
+            ("war", None, "war"),
+            ("zip", "source-release", "zip"),
+            ("maven-plugin", None, "jar"),
+            ("aar", None, "aar"),
+            ("jar", "sources-commercial", "jar"),
+            ("zip", "src", "zip"),
+            ("tar.gz", "src", "tar.gz"),
+            ("jar", None, "zip"),
+            ("zip", "project-src", "zip"),
+            ("jar", "src", "jar"),
+        ]
+    )
 
-    return (artifact.packaging,
-            artifact.classifier,
-            artifact.extension,) in worthy_ext_pack
+    return (
+        artifact.packaging,
+        artifact.classifier,
+        artifact.extension,
+    ) in worthy_ext_pack
 
 
 def is_source(classifier):
-    """
-    Return True if the `artifact` Artifact is a source artifact.
+    """Return True if the `artifact` Artifact is a source artifact."""
+    return classifier and ("source" in classifier or "src" in classifier)
 
-    """
-    return classifier and ('source' in classifier or 'src' in classifier)
 
 ########################################################################
 # DOCUMENTAION OF the FIELDS aka. Records:
@@ -1157,56 +1138,54 @@ def is_source(classifier):
 
 
 ENTRY_FIELDS = {
-    'u': 'Artifact UINFO: Unique groupId, artifactId, version, classifier, extension (or packaging). using',
-    'i': 'Artifact INFO: data using | separator',
-    '1': 'Artifact SHA1 checksum, hex encoded as in sha1sum',
-    'm': 'Artifact record last modified, a long as a string representing a Java time for the entry record',
-    'n': 'Artifact name',
-    'd': 'Artifact description',
+    "u": "Artifact UINFO: Unique groupId, artifactId, version, classifier, extension (or packaging). using",
+    "i": "Artifact INFO: data using | separator",
+    "1": "Artifact SHA1 checksum, hex encoded as in sha1sum",
+    "m": "Artifact record last modified, a long as a string representing a Java time for the entry record",
+    "n": "Artifact name",
+    "d": "Artifact description",
 }
 
 # we IGNORE these fields for now. They can be included optionally.
 ENTRY_FIELDS_OTHER = {
     # rarely present, mostly is repos other than central
-    'c': 'Artifact Classes (tokenized on newlines only) a list of LF-separated paths, without .class extension',
-
-    'sha256': 'sha256 of artifact? part of OSGI?',
-
+    "c": "Artifact Classes (tokenized on newlines only) a list of LF-separated paths, without .class extension",
+    "sha256": "sha256 of artifact? part of OSGI?",
     # OSGI stuffs, not always there but could be useful metadata
-    'Bundle-SymbolicName': 'Bundle-SymbolicName (indexed, stored)',
-    'Bundle-Version': 'Bundle-Version (indexed, stored)',
-    'Bundle-Description': 'Bundle-Description (indexed, stored)',
-    'Bundle-Name': 'Bundle-Name (indexed, stored)',
-    'Bundle-License': 'Bundle-License (indexed, stored)',
-    'Bundle-DocURL': 'Bundle-DocURL (indexed, stored)',
-    'Require-Bundle': 'Require-Bundle (indexed, stored)',
+    "Bundle-SymbolicName": "Bundle-SymbolicName (indexed, stored)",
+    "Bundle-Version": "Bundle-Version (indexed, stored)",
+    "Bundle-Description": "Bundle-Description (indexed, stored)",
+    "Bundle-Name": "Bundle-Name (indexed, stored)",
+    "Bundle-License": "Bundle-License (indexed, stored)",
+    "Bundle-DocURL": "Bundle-DocURL (indexed, stored)",
+    "Require-Bundle": "Require-Bundle (indexed, stored)",
 }
 
 # we ignore these fields entirely for now.
 ENTRY_FIELDS_IGNORED = {
-
-    'IDXINFO': '',
-    'DESCRIPTOR': '',
-
-    'allGroups': '',
-    'allGroupsList': '',
-    'rootGroups': '',
-    'rootGroupsList': '',
-
+    "IDXINFO": "",
+    "DESCRIPTOR": "",
+    "allGroups": "",
+    "allGroupsList": "",
+    "rootGroups": "",
+    "rootGroupsList": "",
     # FIXME: we should deal with these
-    'del': 'Deleted marker, will contain UINFO if document is deleted from index',
-
-    'Export-Package': 'Export-Package (indexed, stored)',
-    'Export-Service': 'Export-Service (indexed, stored)',
-    'Import-Package': 'Import-Package (indexed, stored)',
+    "del": "Deleted marker, will contain UINFO if document is deleted from index",
+    "Export-Package": "Export-Package (indexed, stored)",
+    "Export-Service": "Export-Service (indexed, stored)",
+    "Import-Package": "Import-Package (indexed, stored)",
     # maven-plugin stuffs
-    'px': 'MavenPlugin prefix (as keyword, stored)',
-    'gx': 'MavenPlugin goals (as keyword, stored)',
+    "px": "MavenPlugin prefix (as keyword, stored)",
+    "gx": "MavenPlugin goals (as keyword, stored)",
 }
 
 
-def get_artifacts(location, fields=frozenset(ENTRY_FIELDS),
-                  worthyness=is_worthy_artifact, include_all=False):
+def get_artifacts(
+    location,
+    fields=frozenset(ENTRY_FIELDS),
+    worthyness=is_worthy_artifact,
+    include_all=False,
+):
     """
     Yield artifact mappings from a Gzipped Maven nexus index data file
     at location.
@@ -1220,26 +1199,26 @@ def get_artifacts(location, fields=frozenset(ENTRY_FIELDS),
 
 
 _artifact_base_fields = (
-    'group_id',
-    'artifact_id',
-    'version',
-    'packaging',
-    'classifier',
-    'extension',
-    'last_modified',
-    'size',
-    'sha1',
-    'name',
-    'description',
-    'src_exist',
-    'jdoc_exist',
-    'sig_exist',
+    "group_id",
+    "artifact_id",
+    "version",
+    "packaging",
+    "classifier",
+    "extension",
+    "last_modified",
+    "size",
+    "sha1",
+    "name",
+    "description",
+    "src_exist",
+    "jdoc_exist",
+    "sig_exist",
 )
 
 _artifact_extended_fields = (
-    'sha256',
-    'osgi',
-    'classes',
+    "sha256",
+    "osgi",
+    "classes",
 )
 
 # FIXME: named tuples are suboptimal here for a simple dictionary
@@ -1249,11 +1228,12 @@ def to_dict(self):
     return self._asdict()
 
 
-Artifact = namedtuple('Artifact', _artifact_base_fields)
+Artifact = namedtuple("Artifact", _artifact_base_fields)
 Artifact.to_dict = to_dict
 
 ArtifactExtended = namedtuple(
-    'ArtifactExtended', _artifact_base_fields + _artifact_extended_fields)
+    "ArtifactExtended", _artifact_base_fields + _artifact_extended_fields
+)
 ArtifactExtended.to_dict = to_dict
 
 
@@ -1262,15 +1242,14 @@ def build_artifact(entry, include_all=False):
     Return a Maven artifact mapping collected from a single entry
     mapping or None.
     """
-
-    SEP = '|'
-    NA = 'NA'
-    NULL = 'null'
+    SEP = "|"
+    NA = "NA"
+    NULL = "null"
 
     # UINFO
     # See org.apache.maven.index.reader.RecordExpander.expandUinfo
     # See org.apache.maven.index.creator.MinimalArtifactInfoIndexCreator.updateArtifactInfo
-    uinfo = entry.get('u')
+    uinfo = entry.get("u")
     if not uinfo:
         # not much we can do without this
         return
@@ -1300,7 +1279,7 @@ def build_artifact(entry, include_all=False):
     jdoc_exist = False
     sig_exist = False
 
-    info = entry.get('i')
+    info = entry.get("i")
     if info:
         info = info.split(SEP)
 
@@ -1311,7 +1290,7 @@ def build_artifact(entry, include_all=False):
         # this is the artifact last modified
         # create a date/time stamp string from a long as a string
         lm = info[1]
-        if lm and lm.isdigit() and lm != '0':
+        if lm and lm.isdigit() and lm != "0":
             last_modified = java_time_ts(int(lm))
 
         size = info[2]
@@ -1321,7 +1300,7 @@ def build_artifact(entry, include_all=False):
         # not present locally: '0': False,
         # present locally: '1': True, ==> the only one we care for
         # not available: '2': False,
-        PRESENT = '1'
+        PRESENT = "1"
         src_exist = info[3] == PRESENT
         jdoc_exist = info[4] == PRESENT
 
@@ -1329,49 +1308,69 @@ def build_artifact(entry, include_all=False):
             extension = info[6]
         else:
             # FIXME: is this likely incorrect see worthyness check
-            if classifier or packaging in ('pom', 'war', 'ear'):
+            if classifier or packaging in ("pom", "war", "ear"):
                 extension = packaging
             else:
-                extension = 'jar'
+                extension = "jar"
         sig_exist = info[5] == PRESENT
 
     # other MISC fields
-    sha1 = entry.get('1')
-    name = entry.get('n')
-    description = entry.get('d')
+    sha1 = entry.get("1")
+    name = entry.get("n")
+    description = entry.get("d")
 
     if not include_all:
         artifact = Artifact(
-            group_id=gid, artifact_id=aid, version=version,
-            packaging=packaging, classifier=classifier, extension=extension,
-            last_modified=last_modified, size=size, sha1=sha1,
-            name=name, description=description,
-            src_exist=src_exist, jdoc_exist=jdoc_exist, sig_exist=sig_exist,
+            group_id=gid,
+            artifact_id=aid,
+            version=version,
+            packaging=packaging,
+            classifier=classifier,
+            extension=extension,
+            last_modified=last_modified,
+            size=size,
+            sha1=sha1,
+            name=name,
+            description=description,
+            src_exist=src_exist,
+            jdoc_exist=jdoc_exist,
+            sig_exist=sig_exist,
         )
 
     else:
         # TODO: should this be part of the base set?
-        sha256 = entry.get('sha256')
+        sha256 = entry.get("sha256")
 
         # OSGI: Rarely there. Note that we ignore 'Export-', 'Import-', on
         # purpose: these are big and messey for now
         osgi = dict()
         for key, value in entry.items():
-            if key.startswith('Bundle-') and value:
+            if key.startswith("Bundle-") and value:
                 # TODO: could also include 'Require-Bundle'
                 osgi[key] = value.strip()
 
         # Classes: Rarely there, but eventually useful in the future
         # Can be quite big too
-        classes = entry.get('c', '').splitlines(False)
+        classes = entry.get("c", "").splitlines(False)
 
         artifact = ArtifactExtended(
-            group_id=gid, artifact_id=aid, version=version,
-            packaging=packaging, classifier=classifier, extension=extension,
-            last_modified=last_modified, size=size, sha1=sha1,
-            name=name, description=description,
-            src_exist=src_exist, jdoc_exist=jdoc_exist, sig_exist=sig_exist,
-            sha256=sha256, osgi=osgi, classes=classes
+            group_id=gid,
+            artifact_id=aid,
+            version=version,
+            packaging=packaging,
+            classifier=classifier,
+            extension=extension,
+            last_modified=last_modified,
+            size=size,
+            sha1=sha1,
+            name=name,
+            description=description,
+            src_exist=src_exist,
+            jdoc_exist=jdoc_exist,
+            sig_exist=sig_exist,
+            sha256=sha256,
+            osgi=osgi,
+            classes=classes,
         )
 
     return artifact
@@ -1389,7 +1388,7 @@ def get_entries(location, fields=frozenset(ENTRY_FIELDS)):
         keys = set()
         keys_update = keys.update
 
-    with GzipFileWithTrailing(location, 'rb') as compressed:
+    with GzipFileWithTrailing(location, "rb") as compressed:
         # using io.BufferedReader for increased perfs
         with io.BufferedReader(compressed, buffer_size=buffer_size) as nexus_index:
             jstream = java_stream.DataInputStream(nexus_index)
@@ -1411,10 +1410,14 @@ def get_entries(location, fields=frozenset(ENTRY_FIELDS)):
                 except EOFError:
                     if TRACE_DEEP:
                         print(
-                            'Index version: %(_index_version)r last_modified: %(_last_modified)r' % locals())
+                            "Index version: %(_index_version)r last_modified: %(_last_modified)r"
+                            % locals()
+                        )
                         print(
-                            'Processed %(entries_count)d docs. Last entry: %(entry)r' % locals())
-                        print('Unique keys:')
+                            "Processed %(entries_count)d docs. Last entry: %(entry)r"
+                            % locals()
+                        )
+                        print("Unique keys:")
                         for k in sorted(keys):
                             print(k)
                     break
@@ -1427,11 +1430,10 @@ def decode_index_header(jstream):
     and last_updated_date is a an UTC ISO timestamp string or an empty
     string.
     """
-
-#     this.chunkName = chunkName.trim();
-#     this.dataInputStream = new DataInputStream( new GZIPInputStream( inputStream, 2 * 1024 ) );
-#     this.version = ( (int) dataInputStream.readByte() ) & 0xff;
-#     this.timestamp = new Date( dataInputStream.readLong() );
+    #     this.chunkName = chunkName.trim();
+    #     this.dataInputStream = new DataInputStream( new GZIPInputStream( inputStream, 2 * 1024 ) );
+    #     this.version = ( (int) dataInputStream.readByte() ) & 0xff;
+    #     this.timestamp = new Date( dataInputStream.readLong() );
 
     supported_format_version = 1
     # one byte
@@ -1439,7 +1441,7 @@ def decode_index_header(jstream):
     assert supported_format_version == index_version
     # eight byte
     timestamp = jstream.read_long()
-    last_modified = timestamp != -1 and java_time_ts(timestamp) or ''
+    last_modified = timestamp != -1 and java_time_ts(timestamp) or ""
     return int(index_version), last_modified
 
 
@@ -1470,7 +1472,6 @@ def decode_entry(jstream, fields=()):
        - one int which is the length of the UTF string in bytes
        - the utf-8 string proper using Java conventions
     """
-
     read = jstream.read
     read_int = jstream.read_int
     read_byte = jstream.read_byte
@@ -1525,8 +1526,9 @@ def java_time_ts(tm):
     timestamp.
     """
     tzinfo = tz.tzutc()
-    ar = arrow.get(tm / 1000).replace(tzinfo=tzinfo).to('utc')
+    ar = arrow.get(tm / 1000).replace(tzinfo=tzinfo).to("utc")
     return ar.isoformat()
+
 
 ################################################################################
 # These are CLI/shell test and stat utilities
@@ -1534,17 +1536,17 @@ def java_time_ts(tm):
 
 
 def _spit_json(location, target):
-    with open(target, 'w') as t:
-        t.write('[\n')
+    with open(target, "w") as t:
+        t.write("[\n")
         for i, artifact in enumerate(get_artifacts(location)):
             if i % 1000 == 0:
-                print('number or artifacts:', i)
-            t.write(json.dumps(artifact.to_dict(), separators=(',', ':')))
-            t.write(',\n')
+                print("number or artifacts:", i)
+            t.write(json.dumps(artifact.to_dict(), separators=(",", ":")))
+            t.write(",\n")
 
-        t.write(']\n')
+        t.write("]\n")
 
-    print('total number or artifacts:', i)
+    print("total number or artifacts:", i)
 
 
 def _artifact_stats(location):
@@ -1553,6 +1555,7 @@ def _artifact_stats(location):
     at location.
     """
     from collections import Counter
+
     pom_packs = Counter()
     pom_classifs = Counter()
     pom_extensions = Counter()
@@ -1576,27 +1579,27 @@ def _artifact_stats(location):
             pom_worthy += 1
 
         if i % 10000 == 0:
-            print('number or artifacts:', i)
+            print("number or artifacts:", i)
 
     print()
-    print('Total number of artifacts:', i)
-    print('Total number of worthy artifacts:', pom_worthy)
+    print("Total number of artifacts:", i)
+    print("Total number of worthy artifacts:", pom_worthy)
 
-    print('Top packaging:')
+    print("Top packaging:")
     for n, c in pom_packs.most_common():
-        print(n, ':', c)
+        print(n, ":", c)
 
-    print('Top classifiers:')
+    print("Top classifiers:")
     for n, c in pom_classifs.most_common():
-        print(n, ':', c)
+        print(n, ":", c)
 
-    print('Top extensions:')
+    print("Top extensions:")
     for n, c in pom_extensions.most_common():
-        print(n, ':', c)
+        print(n, ":", c)
 
-    print('Top Combos: packaging, classifier, extension')
+    print("Top Combos: packaging, classifier, extension")
     for n, c in combos.most_common():
-        print(n, ':', c)
+        print(n, ":", c)
 
     """
     Latest stats on 2017-08-07:
@@ -1624,6 +1627,7 @@ def _entries_stats(location):
     at location.
     """
     from collections import Counter
+
     field_names = Counter()
     field_names_update = field_names.update
 
@@ -1636,13 +1640,13 @@ def _entries_stats(location):
         field_sets_update([keys])
         if i % 10000 == 0:
             print()
-            print('number of entries:', i)
-            print('field names stats:', field_names)
+            print("number of entries:", i)
+            print("field names stats:", field_names)
 
     print()
-    print('Total number of entries:', i)
+    print("Total number of entries:", i)
     print()
-    print('All field names:', field_names.most_common())
+    print("All field names:", field_names.most_common())
     print()
-    print('All field name sets:', field_sets.most_common())
+    print("All field name sets:", field_sets.most_common())
     print()

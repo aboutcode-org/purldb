@@ -11,7 +11,7 @@
 import pkgutil
 
 
-class Mapper(object):
+class Mapper:
     """
     Abstract base class for mappers. Subclasses must implement the
     get_packages() method and use a routing decorator for the URIs they can
@@ -36,5 +36,5 @@ Minimal way to recursively import all submodules dynamically. If this module is
 imported, all submodules will be imported: this triggers the actual registration
 of mappers. This should stay as the last import in this init module.
 """
-for _, name, _ in pkgutil.walk_packages(__path__, prefix=__name__ + '.'):
+for _, name, _ in pkgutil.walk_packages(__path__, prefix=__name__ + "."):
     __import__(name)

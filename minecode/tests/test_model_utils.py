@@ -10,44 +10,43 @@
 import os
 
 from django.test import TransactionTestCase
+
 from packagedcode.maven import _parse
 
 from minecode.model_utils import merge_or_create_package
 from minecode.model_utils import update_or_create_resource
+from minecode.tests import FIXTURES_REGEN
 from minecode.utils_test import JsonBasedTesting
 from minecode.utils_test import MiningTestCase
-from minecode.tests import FIXTURES_REGEN
 from packagedb.models import Package
 from packagedb.models import Resource
 
 
 class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
-    BASE_DIR = os.path.join(os.path.dirname(__file__), 'testfiles')
+    BASE_DIR = os.path.join(os.path.dirname(__file__), "testfiles")
 
     def setUp(self):
-        pom_loc = self.get_test_loc('maven/pom/pulsar-2.5.1.pom')
-        self.scanned_package = _parse(
-            'maven_pom', 'maven', 'Java', location=pom_loc)
-        self.scanned_package.download_url = 'https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/pulsar-2.5.1.jar'
+        pom_loc = self.get_test_loc("maven/pom/pulsar-2.5.1.pom")
+        self.scanned_package = _parse("maven_pom", "maven", "Java", location=pom_loc)
+        self.scanned_package.download_url = "https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/pulsar-2.5.1.jar"
 
     def test_merge_or_create_package_create_package(self):
         self.assertEqual(0, Package.objects.all().count())
         package, created, merged, map_error = merge_or_create_package(
-            self.scanned_package,
-            visit_level=50
+            self.scanned_package, visit_level=50
         )
         self.assertEqual(1, Package.objects.all().count())
         self.assertEqual(package, Package.objects.all().first())
         self.assertTrue(created)
         self.assertFalse(merged)
-        self.assertEqual('', map_error)
+        self.assertEqual("", map_error)
         self.assertTrue(package.created_date)
         self.assertTrue(package.last_modified_date)
-        expected_loc = self.get_test_loc('model_utils/created_package.json')
+        expected_loc = self.get_test_loc("model_utils/created_package.json")
         self.check_expected_results(
             package.to_dict(),
             expected_loc,
-            fields_to_remove=['package_sets'],
+            fields_to_remove=["package_sets"],
             regen=FIXTURES_REGEN,
         )
 
@@ -55,53 +54,55 @@ class ModelUtilsTestCase(MiningTestCase, JsonBasedTesting):
         # ensure fields get updated
         # ensure history is properly updated
         package = Package.objects.create(
-            type='maven',
-            namespace='org.apache.pulsar',
-            name='pulsar',
-            version='2.5.1',
-            download_url='https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/pulsar-2.5.1.jar',
+            type="maven",
+            namespace="org.apache.pulsar",
+            name="pulsar",
+            version="2.5.1",
+            download_url="https://repo1.maven.org/maven2/org/apache/pulsar/pulsar/2.5.1/pulsar-2.5.1.jar",
         )
-        before_merge_loc = self.get_test_loc('model_utils/before_merge.json')
+        before_merge_loc = self.get_test_loc("model_utils/before_merge.json")
         self.check_expected_results(
             package.to_dict(),
             before_merge_loc,
-            fields_to_remove=['package_sets'],
+            fields_to_remove=["package_sets"],
             regen=FIXTURES_REGEN,
         )
         package, created, merged, map_error = merge_or_create_package(
-            self.scanned_package,
-            visit_level=50
+            self.scanned_package, visit_level=50
         )
         self.assertEqual(1, Package.objects.all().count())
         self.assertEqual(package, Package.objects.all().first())
         self.assertFalse(created)
         self.assertTrue(merged)
-        self.assertEqual('', map_error)
-        expected_loc = self.get_test_loc('model_utils/after_merge.json')
+        self.assertEqual("", map_error)
+        expected_loc = self.get_test_loc("model_utils/after_merge.json")
         self.check_expected_results(
             package.to_dict(),
             expected_loc,
-            fields_to_remove=['package_sets'],
+            fields_to_remove=["package_sets"],
             regen=FIXTURES_REGEN,
         )
         history = package.get_history()
         self.assertEqual(1, len(history))
         entry = history[0]
-        timestamp = entry['timestamp']
-        message = entry['message']
+        timestamp = entry["timestamp"]
+        message = entry["message"]
         self.assertEqual(
-            'Package field values have been updated.',
+            "Package field values have been updated.",
             message,
         )
         last_modified_date_formatted = package.last_modified_date.strftime(
-            "%Y-%m-%d-%H:%M:%S")
+            "%Y-%m-%d-%H:%M:%S"
+        )
         self.assertEqual(timestamp, last_modified_date_formatted)
-        data = entry['data']
-        updated_fields = data['updated_fields']
+        data = entry["data"]
+        updated_fields = data["updated_fields"]
         expected_updated_fields_loc = self.get_test_loc(
-            'model_utils/expected_updated_fields.json')
+            "model_utils/expected_updated_fields.json"
+        )
         self.check_expected_results(
-            updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN)
+            updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN
+        )
 
 
 class UpdateORCreateResourceTest(TransactionTestCase):

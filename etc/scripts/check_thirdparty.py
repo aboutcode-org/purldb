@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
@@ -9,7 +8,6 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 import click
-
 import utils_thirdparty
 
 
@@ -39,11 +37,9 @@ def check_thirdparty_dir(
     wheels,
     sdists,
 ):
-    """
-    Check a thirdparty directory for problems and print these on screen.
-    """
+    """Check a thirdparty directory for problems and print these on screen."""
     # check for problems
-    print(f"==> CHECK FOR PROBLEMS")
+    print("==> CHECK FOR PROBLEMS")
     utils_thirdparty.find_problems(
         dest_dir=dest,
         report_missing_sources=sdists,

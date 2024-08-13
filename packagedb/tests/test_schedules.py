@@ -39,7 +39,5 @@ def test_get_next_execution():
     with patch("datetime.datetime", wraps=datetime.datetime) as dt:
         dt.now.return_value = time_now
 
-        assert expected1 == get_next_execution(
-            watch_interval_days1, last_watch_date1)
-        assert expected2 == get_next_execution(
-            watch_interval_days2, last_watch_date2)
+        assert expected1 == get_next_execution(watch_interval_days1, last_watch_date1)
+        assert expected2 == get_next_execution(watch_interval_days2, last_watch_date2)

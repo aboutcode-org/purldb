@@ -33,16 +33,15 @@ def process_request(purl_str, **kwargs):
     """
     from minecode.model_utils import DEFAULT_PIPELINES
 
-    addon_pipelines = kwargs.get('addon_pipelines', [])
+    addon_pipelines = kwargs.get("addon_pipelines", [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
+    priority = kwargs.get("priority", 0)
 
     package_url = PackageURL.from_string(purl_str)
     if not package_url.version:
         return
 
-    error_msg = map_fetchcode_supported_package(
-        package_url, pipelines, priority)
+    error_msg = map_fetchcode_supported_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg

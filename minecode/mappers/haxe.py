@@ -15,13 +15,12 @@ from minecode import map_router
 from minecode.mappers import Mapper
 
 
-@map_router.route('https://lib.haxe.org/p/[\w\-\.]+/[\w\-\.]+/raw-files/[\w\-\.]+/package.json')
+@map_router.route(
+    r"https://lib.haxe.org/p/[\w\-\.]+/[\w\-\.]+/raw-files/[\w\-\.]+/package.json"
+)
 class HaxePackageJsonMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
-        """
-        Yield Package built from package json file.
-        """
+        """Yield Package built from package json file."""
         # FIXME: JSON deserialization should be handled eventually by the framework
         metadata = json.loads(resource_uri.data)
         return build_packages_with_json(metadata, resource_uri.package_url)

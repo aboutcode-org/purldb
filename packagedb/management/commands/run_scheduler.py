@@ -8,6 +8,7 @@
 #
 
 from django_rq.management.commands import rqscheduler
+
 from packagedb.models import PackageWatch
 from packagedb.schedules import clear_zombie_watch_schedules
 from packagedb.schedules import scheduled_job_exists

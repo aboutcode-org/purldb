@@ -12,14 +12,13 @@ import sys
 
 from minecode import route
 
-
-default_app_config = 'minecode.apps.MinecodeConfig'
+default_app_config = "minecode.apps.MinecodeConfig"
 
 
 sys_platform = str(sys.platform).lower()
-ON_WINDOWS = 'win32' in sys_platform
-ON_MAC = 'darwin' in sys_platform
-ON_LINUX = 'linux' in sys_platform
+ON_WINDOWS = "win32" in sys_platform
+ON_MAC = "darwin" in sys_platform
+ON_LINUX = "linux" in sys_platform
 
 # global instances of our routers
 visit_router = route.Router()

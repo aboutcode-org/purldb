@@ -68,7 +68,7 @@ select = [
     "I",  # isort
     "C9", # McCabe complexity
 ]
-ignore = ["D1", "D203", "D205", "D212", "D400", "D415"]
+ignore = ["D1", "D203", "D205", "D212", "D400", "D415", "E501", "S101", "S113"]
 
 [tool.ruff.lint.isort]
 force-single-line = true

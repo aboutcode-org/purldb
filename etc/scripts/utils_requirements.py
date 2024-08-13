@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
@@ -34,15 +33,16 @@ def get_required_name_versions(requirement_lines, with_unpinned=False):
     Yield required (name, version) tuples given a`requirement_lines` iterable of
     requirement text lines. Only accept requirements pinned to an exact version.
     """
-
     for req_line in requirement_lines:
         req_line = req_line.strip()
         if not req_line or req_line.startswith("#"):
             continue
-        if req_line.startswith("-") or (not with_unpinned and not "==" in req_line):
+        if req_line.startswith("-") or (not with_unpinned and "==" not in req_line):
             print(f"Requirement line is not supported: ignored: {req_line}")
             continue
-        yield get_required_name_version(requirement=req_line, with_unpinned=with_unpinned)
+        yield get_required_name_version(
+            requirement=req_line, with_unpinned=with_unpinned
+        )
 
 
 def get_required_name_version(requirement, with_unpinned=False):
@@ -70,7 +70,9 @@ def get_required_name_version(requirement, with_unpinned=False):
     if with_unpinned:
         version = ""
     else:
-        assert is_pinned and version, f"Requirement version must be pinned: {requirement}"
+        assert (
+            is_pinned and version
+        ), f"Requirement version must be pinned: {requirement}"
     return name, version
 
 
@@ -112,7 +114,9 @@ def get_installed_reqs(site_packages_dir):
     as a text.
     """
     if not os.path.exists(site_packages_dir):
-        raise Exception(f"site_packages directory: {site_packages_dir!r} does not exists")
+        raise Exception(
+            f"site_packages directory: {site_packages_dir!r} does not exists"
+        )
     # Also include these packages in the output with --all: wheel, distribute,
     # setuptools, pip
     args = ["pip", "freeze", "--exclude-editable", "--all", "--path", site_packages_dir]

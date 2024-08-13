@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf8 -*-
 #
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # purldb is a trademark of nexB Inc.
@@ -22,22 +21,23 @@ def sf_net(input_file, output):
     adding new columns and trying to sf_net the data
     """
     download_url_template = (
-        'http://master.dl.sourceforge.net/project'
-        '/%(project_id)s%(filename)s'
+        "http://master.dl.sourceforge.net/project" "/%(project_id)s%(filename)s"
     )
 
-    existing_headers = ('external_id,name,version,license,owners,'
-                        'homepage_url,keywords,description'.split(',')
-                        )
+    existing_headers = (
+        "external_id,name,version,license,owners,"
+        "homepage_url,keywords,description".split(",")
+    )
 
-    new_headers = ('computed_version,release_date_ts,file_download_url,'
-                   'reviewed,curated_name,excluded_reason,curated_owner,'
-                   'owner_type'.split(',')
-                   )
+    new_headers = (
+        "computed_version,release_date_ts,file_download_url,"
+        "reviewed,curated_name,excluded_reason,curated_owner,"
+        "owner_type".split(",")
+    )
 
-    with open(output, 'w') as fo:
+    with open(output, "w") as fo:
         writer = csv.writer(fo, quoting=csv.QUOTE_ALL)
-        with open(input_file, 'r') as fi:
+        with open(input_file) as fi:
             reader = csv.reader(fi)
             for i, l in enumerate(reader):
                 if i == 0:
@@ -48,7 +48,7 @@ def sf_net(input_file, output):
                 project_id = l[0]
                 name = l[1]
                 version_column = l[2]
-                sep = ':  released on '
+                sep = ":  released on "
                 if sep not in version_column:
                     # write as is if we do not have a file release date
                     # separator
@@ -56,23 +56,23 @@ def sf_net(input_file, output):
                     continue
                 filename, release_date_ts = version_column.split(sep, 1)
                 found_version = version.version_hint(filename)
-                l.append(found_version or '')
-                l.append(release_date_ts or '')
+                l.append(found_version or "")
+                l.append(release_date_ts or "")
                 l.append(download_url_template % locals())
-                l.append('')  # reviewed
-                l.append('')  # curated name
-                excluded_reason = ''
-                if '.' in project_id:
-                    excluded_reason = 'mirror or special project'
+                l.append("")  # reviewed
+                l.append("")  # curated name
+                excluded_reason = ""
+                if "." in project_id:
+                    excluded_reason = "mirror or special project"
                 elif not found_version:
-                    excluded_reason = 'no version'
+                    excluded_reason = "no version"
                 elif not good_name(name):
-                    excluded_reason = 'special chars in name'
+                    excluded_reason = "special chars in name"
                 elif not good_filename(project_id, filename, name):
-                    excluded_reason = 'multi component possible'
+                    excluded_reason = "multi component possible"
                 l.append(excluded_reason)
-                l.append('')  # curated_owner
-                l.append('')  # owner_type
+                l.append("")  # curated_owner
+                l.append("")  # owner_type
                 writer.writerow(l)
 
 
@@ -85,9 +85,11 @@ def good_name(s):
     -- there is a punctuation sign string.punctuation
     -- there is non-ascii letters string.letters + string.digit
     """
-    return (s
-            and all(c not in string.punctuation for c in s)
-            and all(c in string.ascii_lowercase for c in s.lower()))
+    return (
+        s
+        and all(c not in string.punctuation for c in s)
+        and all(c in string.ascii_lowercase for c in s.lower())
+    )
 
 
 def good_filename(pid, fn, name):

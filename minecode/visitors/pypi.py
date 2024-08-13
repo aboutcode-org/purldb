@@ -17,10 +17,9 @@ from packageurl import PackageURL
 from minecode import seed
 from minecode import visit_router
 from minecode.utils import get_temp_file
-from minecode.visitors import HttpJsonVisitor
 from minecode.visitors import URI
+from minecode.visitors import HttpJsonVisitor
 from minecode.visitors import Visitor
-
 
 """
 Visitors for Pypi and Pypi-like Python package repositories.
@@ -40,46 +39,43 @@ payload and is ignored for simplicity (which is not super efficient).
 
 
 class PypiSeed(seed.Seeder):
-
     def get_seeds(self):
-        yield 'https://pypi.python.org/pypi/'
+        yield "https://pypi.python.org/pypi/"
 
 
-@visit_router.route('https://pypi.python.org/pypi/')
+@visit_router.route("https://pypi.python.org/pypi/")
 class PypiIndexVisitor(Visitor):
-    """
-    Collect package metadata URIs from the top level pypi index for each package.
-    """
+    """Collect package metadata URIs from the top level pypi index for each package."""
 
     def fetch(self, uri, timeout=None):
-        """
-        Specialized fetching using XML RPCs.
-        """
+        """Specialized fetching using XML RPCs."""
         packages = xmlrpc.client.ServerProxy(uri).list_packages()
         content = list(packages)
 
-        temp_file = get_temp_file('PypiIndexVisitor')
-        with codecs.open(temp_file, mode='wb', encoding='utf-8') as expect:
-            json.dump(content, expect, indent=2, separators=(',', ':'))
+        temp_file = get_temp_file("PypiIndexVisitor")
+        with codecs.open(temp_file, mode="wb", encoding="utf-8") as expect:
+            json.dump(content, expect, indent=2, separators=(",", ":"))
         return temp_file
 
     def dumps(self, content):
-        """
-        The content is huge json and should not be dumped.
-        """
+        """The content is huge json and should not be dumped."""
         return None
 
     def get_uris(self, content):
-        with codecs.open(content, mode='rb', encoding='utf-8') as contentfile:
+        with codecs.open(content, mode="rb", encoding="utf-8") as contentfile:
             packages_list = json.load(contentfile)
 
-            url_template = 'https://pypi.python.org/pypi/{name}/json'
+            url_template = "https://pypi.python.org/pypi/{name}/json"
             for name in packages_list:
-                package_url = PackageURL(type='pypi', name=name).to_string()
-                yield URI(uri=url_template.format(name=name), package_url=package_url, source_uri=self.uri)
+                package_url = PackageURL(type="pypi", name=name).to_string()
+                yield URI(
+                    uri=url_template.format(name=name),
+                    package_url=package_url,
+                    source_uri=self.uri,
+                )
 
 
-@visit_router.route('https://pypi.python.org/pypi/[^/]+/json')
+@visit_router.route("https://pypi.python.org/pypi/[^/]+/json")
 class PypiPackageVisitor(HttpJsonVisitor):
     """
     Collect package metadata URIs for all release of a single Pypi package.
@@ -88,18 +84,22 @@ class PypiPackageVisitor(HttpJsonVisitor):
     """
 
     def get_uris(self, content):
-
-        url_template = 'https://pypi.python.org/pypi/{name}/{release}/json'
-        info = content.get('info', {})
-        name = info.get('name')
+        url_template = "https://pypi.python.org/pypi/{name}/{release}/json"
+        info = content.get("info", {})
+        name = info.get("name")
         if name:
-            for release in content['releases']:
+            for release in content["releases"]:
                 package_url = PackageURL(
-                    type='pypi', name=name, version=release).to_string()
-                yield URI(uri=url_template.format(name=name, release=release), package_url=package_url, source_uri=self.uri)
+                    type="pypi", name=name, version=release
+                ).to_string()
+                yield URI(
+                    uri=url_template.format(name=name, release=release),
+                    package_url=package_url,
+                    source_uri=self.uri,
+                )
 
 
-@visit_router.route('https://pypi.python.org/pypi/[^/]+/[^/]+/json')
+@visit_router.route("https://pypi.python.org/pypi/[^/]+/[^/]+/json")
 class PypiPackageReleaseVisitor(HttpJsonVisitor):
     """
     Collect package download URIs for all packages archives of one Pypi package
@@ -109,23 +109,31 @@ class PypiPackageReleaseVisitor(HttpJsonVisitor):
     def get_uris(self, content):
         # TODO: this is likely best ignored entirely???
         # A download_url may be provided for an off-Pypi-download
-        info = content.get('info', {})
-        name = info.get('name')
+        info = content.get("info", {})
+        name = info.get("name")
         version = None
-        download_url = info.get('download_url')
-        if download_url and download_url != 'UNKNOWN':
-            version = info.get('version')
+        download_url = info.get("download_url")
+        if download_url and download_url != "UNKNOWN":
+            version = info.get("version")
             package_url = PackageURL(
-                type='pypi', name=name, version=version).to_string()
+                type="pypi", name=name, version=version
+            ).to_string()
             yield URI(uri=download_url, package_url=package_url, source_uri=self.uri)
 
         # Common on-Pypi-download URLs are in the urls block
-        for download in content.get('urls', {}):
-            url = download.get('url')
+        for download in content.get("urls", {}):
+            url = download.get("url")
             if not url:
                 continue
             package_url = PackageURL(
-                type='pypi', name=name, version=version).to_string()
-            yield URI(url, package_url=package_url, file_name=download.get('filename'),
-                      size=download.get('size'), date=download.get('upload_time'),
-                      md5=download.get('md5_digest'), source_uri=self.uri)
+                type="pypi", name=name, version=version
+            ).to_string()
+            yield URI(
+                url,
+                package_url=package_url,
+                file_name=download.get("filename"),
+                size=download.get("size"),
+                date=download.get("upload_time"),
+                md5=download.get("md5_digest"),
+                source_uri=self.uri,
+            )

@@ -8,27 +8,27 @@
 #
 
 from django.test import TestCase
+
 from packagedb.api import PackageFilterSet
 from packagedb.filters import parse_query_string_to_lookups
 from packagedb.models import Package
 
 
 class PackageDBFilterTest(TestCase):
-
     def test_scanpipe_filters_package_filterset_search(self):
         p1 = Package.objects.create(
-            type='maven',
-            namespace='org.example',
-            name='foo',
-            version='1.0.0',
-            download_url='https://example.com/foo-1.0.0.jar',
+            type="maven",
+            namespace="org.example",
+            name="foo",
+            version="1.0.0",
+            download_url="https://example.com/foo-1.0.0.jar",
         )
         p2 = Package.objects.create(
-            type='maven',
-            namespace='org.somethingelse',
-            name='foo',
-            version='0.35.7',
-            download_url='https://somethingelse.net/foo-0.35.7.jar',
+            type="maven",
+            namespace="org.somethingelse",
+            name="foo",
+            version="0.35.7",
+            download_url="https://somethingelse.net/foo-0.35.7.jar",
         )
 
         filterset = PackageFilterSet(data={})
@@ -80,6 +80,5 @@ class PackageDBFilterTest(TestCase):
         }
 
         for query_string, expected in inputs.items():
-            lookups = parse_query_string_to_lookups(
-                query_string, "icontains", "name")
+            lookups = parse_query_string_to_lookups(query_string, "icontains", "name")
             self.assertEqual(expected, str(lookups))

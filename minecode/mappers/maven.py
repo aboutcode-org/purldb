@@ -9,18 +9,17 @@
 
 import json
 import logging
-import packageurl
-from packageurl import PackageURL
 
+import packageurl
 from commoncode.text import as_unicode
-from packagedcode.models import PackageData
 from packagedcode.maven import _parse
+from packagedcode.models import PackageData
+from packageurl import PackageURL
 
 from minecode import map_router
 from minecode.mappers import Mapper
 from minecode.utils import parse_date
 from minecode.visitors.maven import Artifact
-
 
 TRACE = False
 
@@ -30,11 +29,12 @@ logger.setLevel(logging.INFO)
 
 if TRACE:
     import sys
+
     logging.basicConfig(stream=sys.stdout)
     logger.setLevel(logging.DEBUG)
 
 
-@map_router.route('maven-index://.*')
+@map_router.route("maven-index://.*")
 class MavenIndexArtifactMapper(Mapper):
     """
     Process the minimal artifacts collected for a Maven Jar or POM in an
@@ -57,7 +57,7 @@ def get_mini_package(data, uri, purl):
     artdata = json.loads(data)
 
     # FIXME: this should a slot in Artifact
-    download_url = artdata.pop('download_url')
+    download_url = artdata.pop("download_url")
     # FIXME: what if this is an ArtifactExtended??
     artifact = Artifact(**artdata)
 
@@ -68,14 +68,13 @@ def get_mini_package(data, uri, purl):
 
     qualifiers = None
     if purl and purl.qualifiers:
-        qualifiers = packageurl.normalize_qualifiers(
-            purl.qualifiers, encode=False)
+        qualifiers = packageurl.normalize_qualifiers(purl.qualifiers, encode=False)
     if qualifiers:
         assert isinstance(qualifiers, dict)
-    logger.debug('get_mini_package: qualifiers: {}'.format(qualifiers))
+    logger.debug(f"get_mini_package: qualifiers: {qualifiers}")
 
     package = PackageData(
-        type='maven',
+        type="maven",
         namespace=artifact.group_id,
         name=artifact.artifact_id,
         version=artifact.version,
@@ -86,42 +85,36 @@ def get_mini_package(data, uri, purl):
         size=artifact.size,
         sha1=artifact.sha1 or None,
     )
-    logger.debug('get_mini_package: package.qualifiers: {}'.format(
-        package.qualifiers))
-    logger.debug(
-        'get_mini_package for uri: {}, package: {}'.format(uri, package))
+    logger.debug(f"get_mini_package: package.qualifiers: {package.qualifiers}")
+    logger.debug(f"get_mini_package for uri: {uri}, package: {package}")
     return package
 
 
 # FIXME this should be valid for any POM
-@map_router.route('https?://repo1.maven.org/maven2/.*\.pom')
+@map_router.route(r"https?://repo1.maven.org/maven2/.*\.pom")
 class MavenPomMapper(Mapper):
-    """
-    Map a proper full POM visited as XML.
-    """
+    """Map a proper full POM visited as XML."""
 
     def get_packages(self, uri, resource_uri):
-
-        logger.debug('MavenPomMapper.get_packages: uri: {}, resource_uri: {}, purl:'
-                     .format(uri, resource_uri.uri, resource_uri.package_url))
+        logger.debug(
+            f"MavenPomMapper.get_packages: uri: {uri}, resource_uri: {resource_uri.uri}, purl:"
+        )
         package = get_package(resource_uri.data, resource_uri.package_url)
         if package:
-            logger.debug('MavenPomMapper.get_packages: uri: {}, package: {}'
-                         .format(uri, package))
+            logger.debug(
+                f"MavenPomMapper.get_packages: uri: {uri}, package: {package}"
+            )
             yield package
 
 
-def get_package(text, package_url=None,
-                baseurl='https://repo1.maven.org/maven2'):
-    """
-    Return a ScannedPackage built from a POM XML string `text`.
-    """
+def get_package(text, package_url=None, baseurl="https://repo1.maven.org/maven2"):
+    """Return a ScannedPackage built from a POM XML string `text`."""
     text = as_unicode(text)
     package = _parse(
-        datasource_id='maven_pom',
-        package_type='maven',
-        primary_language='Java',
-        text=text
+        datasource_id="maven_pom",
+        package_type="maven",
+        primary_language="Java",
+        text=text,
     )
     if package:
         # FIXME: this should be part of the parse call

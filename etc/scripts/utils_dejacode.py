@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
@@ -14,7 +13,6 @@ import zipfile
 
 import requests
 import saneyaml
-
 from packvers import version as packaging_version
 
 """
@@ -26,14 +24,16 @@ DEJACODE_API_URL = os.environ.get("DEJACODE_API_URL", "")
 
 DEJACODE_API_URL_PACKAGES = f"{DEJACODE_API_URL}packages/"
 DEJACODE_API_HEADERS = {
-    "Authorization": "Token {}".format(DEJACODE_API_KEY),
+    "Authorization": f"Token {DEJACODE_API_KEY}",
     "Accept": "application/json; indent=4",
 }
 
 
 def can_do_api_calls():
     if not DEJACODE_API_KEY and DEJACODE_API_URL:
-        print("DejaCode DEJACODE_API_KEY and DEJACODE_API_URL not configured. Doing nothing")
+        print(
+            "DejaCode DEJACODE_API_KEY and DEJACODE_API_URL not configured. Doing nothing"
+        )
         return False
     else:
         return True
@@ -57,9 +57,7 @@ def fetch_dejacode_packages(params):
 
 
 def get_package_data(distribution):
-    """
-    Return a mapping of package data or None for a Distribution `distribution`.
-    """
+    """Return a mapping of package data or None for a Distribution `distribution`."""
     results = fetch_dejacode_packages(distribution.identifiers())
 
     len_results = len(results)
@@ -153,7 +151,8 @@ def find_latest_dejacode_package(distribution):
     with_versions = sorted(with_versions)
     latest_version, latest_package_version = sorted(with_versions)[-1]
     print(
-        f"Found DejaCode latest version: {latest_version} " f"for dist: {distribution.package_url}",
+        f"Found DejaCode latest version: {latest_version} "
+        f"for dist: {distribution.package_url}",
     )
 
     return latest_package_version

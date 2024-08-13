@@ -7,18 +7,13 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import codecs
 import json
-import xmlrpc
 
 from packageurl import PackageURL
 
 from minecode import seed
 from minecode import visit_router
-from minecode.utils import get_temp_file
-from minecode.visitors import HttpJsonVisitor
 from minecode.visitors import URI
-from minecode.visitors import Visitor
 from minecode.visitors import NonPersistentHttpVisitor
 
 """
@@ -47,24 +42,21 @@ apk file name is listed in the index.
 
 
 class FdroidSeed(seed.Seeder):
-
     def get_seeds(self):
-        yield 'https://f-droid.org/repo/index-v2.json'
+        yield "https://f-droid.org/repo/index-v2.json"
 
 
 def build_purl(package_id, version_code, filename):
-    """
-    Return a PackageURL for an F-Droid package.
-    """
+    """Return a PackageURL for an F-Droid package."""
     return PackageURL(
-        type='fdroid',
+        type="fdroid",
         name=package_id,
         version=version_code,
-        qualifiers=dict(filename=filename)
+        qualifiers=dict(filename=filename),
     )
 
 
-@visit_router.route('https://f-droid.org/repo/index-v2.json')
+@visit_router.route("https://f-droid.org/repo/index-v2.json")
 class FdroidIndexVisitor(NonPersistentHttpVisitor):
     """
     Collect package metadata URIs from the F-Droid index for each package.
@@ -72,23 +64,22 @@ class FdroidIndexVisitor(NonPersistentHttpVisitor):
     """
 
     def get_uris(self, content):
-        """
-        Yield a URI for each F-Droid package.
-        """
+        """Yield a URI for each F-Droid package."""
         json_location = content
         with open(json_location) as c:
             content = json.loads(c.read())
 
-        packages = content['packages']
+        packages = content["packages"]
 
         for package_id, package_data in packages.items():
-            purl = PackageURL(type='fdroid', name=package_id).to_string()
+            purl = PackageURL(type="fdroid", name=package_id).to_string()
             yield URI(
                 uri=purl,
                 package_url=purl,
                 source_uri=self.uri,
-                data=json.dumps(package_data, separators=(
-                    ',', ':'), ensure_ascii=False),
+                data=json.dumps(
+                    package_data, separators=(",", ":"), ensure_ascii=False
+                ),
                 # note: visited is True since there nothing more to visit
-                visited=True
+                visited=True,
             )

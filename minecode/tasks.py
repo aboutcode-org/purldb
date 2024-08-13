@@ -29,7 +29,6 @@ def process_scan_results(
     `scan_results_location` and `scan_summary_location` are deleted after the
     indexing process has finished.
     """
-
     with open(scan_results_location) as f:
         scan_data = json.load(f)
     with open(scan_summary_location) as f:
@@ -38,7 +37,7 @@ def process_scan_results(
     try:
         scannable_uri = ScannableURI.objects.get(uuid=scannable_uri_uuid)
     except ScannableURI.DoesNotExist:
-        raise Exception(f'ScannableURI {scannable_uri_uuid} does not exist!')
+        raise Exception(f"ScannableURI {scannable_uri_uuid} does not exist!")
 
     indexing_errors = index_package(
         scannable_uri,

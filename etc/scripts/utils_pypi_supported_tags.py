@@ -76,13 +76,15 @@ _manylinux_arches = {
 
 
 def is_supported_platform_tag(platform_tag):
-    """
-    Return True if the ``platform_tag`` is supported on PyPI.
-    """
+    """Return True if the ``platform_tag`` is supported on PyPI."""
     if platform_tag in _allowed_platforms:
         return True
     m = _macosx_platform_re.match(platform_tag)
-    if m and m.group("major") in _macosx_major_versions and m.group("arch") in _macosx_arches:
+    if (
+        m
+        and m.group("major") in _macosx_major_versions
+        and m.group("arch") in _macosx_arches
+    ):
         return True
     m = _manylinux_platform_re.match(platform_tag)
     if m and m.group("arch") in _manylinux_arches:
@@ -96,7 +98,6 @@ def validate_platforms_for_pypi(platforms):
     a list of unsupported platform tags or an empty list if all tags are
     supported.
     """
-
     # Check that if it's a binary wheel, it's on a supported platform
     invalid_tags = []
     for plat in platforms:

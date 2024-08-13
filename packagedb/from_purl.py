@@ -14,23 +14,20 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from purl2vcs.find_source_repo import get_package_object_from_purl
-from purl2vcs.find_source_repo import get_source_repo
 from packagedb.serializers import PurltoGitRepoResponseSerializer
 from packagedb.serializers import PurltoGitRepoSerializer
+from purl2vcs.find_source_repo import get_package_object_from_purl
+from purl2vcs.find_source_repo import get_source_repo
 
 
 @extend_schema(
     parameters=[
-        OpenApiParameter("package_url", str, "query",
-                         description="package url"),
+        OpenApiParameter("package_url", str, "query", description="package url"),
     ],
     responses={200: PurltoGitRepoResponseSerializer()},
 )
 class FromPurlToGitRepoViewSet(viewsets.ViewSet):
-    """
-    Return a ``git_repo`` from a standard PackageURL.
-    """
+    """Return a ``git_repo`` from a standard PackageURL."""
 
     serializer_class = PurltoGitRepoSerializer
 

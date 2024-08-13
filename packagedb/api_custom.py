@@ -17,6 +17,7 @@ class PageSizePagination(PageNumberPagination):
     For example:
     http://api.example.org/accounts/?page=4&page_size=20
     """
+
     page_size = 20
     max_page_size = 20
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"

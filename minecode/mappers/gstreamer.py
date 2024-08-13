@@ -15,9 +15,10 @@ from minecode import map_router
 from minecode.mappers import Mapper
 
 
-@map_router.route('https://gstreamer.freedesktop.org/src/([\w\-\.]+/)*[\w\-\.]+[.tar\.bz2\\.gz|\.tar\.xz]')
+@map_router.route(
+    "https://gstreamer.freedesktop.org/src/([\\w\\-\\.]+/)*[\\w\\-\\.]+[.tar\\.bz2\\.gz|\\.tar\\.xz]"
+)
 class GstreamerURLMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
         """
         Yield Package built from resource_uri record for a single
@@ -34,17 +35,17 @@ def build_package_from_url(uri, purl=None):
     """
     file_name = fileutils.file_name(uri)
     file_name_without_prefix = file_name
-    prefixes = ('.tar.bz2', '.tar.gz', '.tar.xz')
+    prefixes = (".tar.bz2", ".tar.gz", ".tar.xz")
     for prefix in prefixes:
-        file_name_without_prefix = file_name_without_prefix.replace(prefix, '')
-    if '-' in file_name_without_prefix:
-        project_name, _, version = file_name.rpartition('-')
+        file_name_without_prefix = file_name_without_prefix.replace(prefix, "")
+    if "-" in file_name_without_prefix:
+        project_name, _, version = file_name.rpartition("-")
         common_data = dict(
-            type='gstreamer',
+            type="gstreamer",
             name=project_name,
             version=version,
             download_url=uri,
-            homepage_url='https://gstreamer.freedesktop.org'
+            homepage_url="https://gstreamer.freedesktop.org",
         )
         package = scan_models.Package(**common_data)
         package.set_purl(purl)

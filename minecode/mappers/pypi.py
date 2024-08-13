@@ -17,9 +17,8 @@ from minecode.mappers import Mapper
 from minecode.utils import parse_date
 
 
-@map_router.route('https://pypi.python.org/pypi/[^/]+/[^/]+/json')
+@map_router.route("https://pypi.python.org/pypi/[^/]+/[^/]+/json")
 class PypiPackageMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
         """
         Yield ScannedPackages built from resource_uri record for a single
@@ -44,56 +43,63 @@ def build_packages(metadata, purl=None):
 
     purl: String value of the package url of the ResourceURI object
     """
-    info = metadata['info']
+    info = metadata["info"]
     # mapping of information that are common to all the downloads of a version
-    short_desc = info.get('summary')
-    long_desc = info.get('description')
+    short_desc = info.get("summary")
+    long_desc = info.get("description")
     descriptions = [d for d in (short_desc, long_desc) if d and d.strip()]
-    description = '\n'.join(descriptions)
+    description = "\n".join(descriptions)
     common_data = dict(
-        name=info['name'],
-        version=info['version'],
+        name=info["name"],
+        version=info["version"],
         description=description,
-        homepage_url=info.get('home_page'),
-        bug_tracking_url=info.get('bugtrack_url'),
+        homepage_url=info.get("home_page"),
+        bug_tracking_url=info.get("bugtrack_url"),
     )
 
-    author = info.get('author')
-    email = info.get('author_email')
+    author = info.get("author")
+    email = info.get("author_email")
     if author or email:
-        parties = common_data.get('parties')
+        parties = common_data.get("parties")
         if not parties:
-            common_data['parties'] = []
-        common_data['parties'].append(scan_models.Party(
-            type=scan_models.party_person, name=author, role='author', email=email))
+            common_data["parties"] = []
+        common_data["parties"].append(
+            scan_models.Party(
+                type=scan_models.party_person, name=author, role="author", email=email
+            )
+        )
 
-    maintainer = info.get('maintainer')
-    email = info.get('maintainer_email')
+    maintainer = info.get("maintainer")
+    email = info.get("maintainer_email")
     if maintainer or email:
-        parties = common_data.get('parties')
+        parties = common_data.get("parties")
         if not parties:
-            common_data['parties'] = []
-        common_data['parties'].append(scan_models.Party(
-            type=scan_models.party_person, name=maintainer, role='maintainer', email=email))
+            common_data["parties"] = []
+        common_data["parties"].append(
+            scan_models.Party(
+                type=scan_models.party_person,
+                name=maintainer,
+                role="maintainer",
+                email=email,
+            )
+        )
 
     extracted_license_statement = []
-    lic = info.get('license')
-    if lic and lic != 'UNKNOWN':
+    lic = info.get("license")
+    if lic and lic != "UNKNOWN":
         extracted_license_statement.append(lic)
 
-    classifiers = info.get('classifiers')
+    classifiers = info.get("classifiers")
     if classifiers and not extracted_license_statement:
-        licenses = [
-            lic for lic in classifiers if lic.lower().startswith('license')]
+        licenses = [lic for lic in classifiers if lic.lower().startswith("license")]
         for lic in licenses:
             extracted_license_statement.append(lic)
 
-    common_data['extracted_license_statement'] = extracted_license_statement
+    common_data["extracted_license_statement"] = extracted_license_statement
 
-    kw = info.get('keywords')
+    kw = info.get("keywords")
     if kw:
-        common_data['keywords'] = [k.strip()
-                                   for k in kw.split(',') if k.strip()]
+        common_data["keywords"] = [k.strip() for k in kw.split(",") if k.strip()]
 
     # FIXME: we should either support "extra" data in a ScannedPackage or just ignore this kind of FIXME comments for now
 
@@ -108,37 +114,37 @@ def build_packages(metadata, purl=None):
 
     # A download_url may be provided for off Pypi download: we yield a package if relevant
     # FIXME: do not prioritize the download_url outside Pypi over actual exact Pypi donwload URL
-    download_url = info.get('download_url')
-    if download_url and download_url != 'UNKNOWN':
+    download_url = info.get("download_url")
+    if download_url and download_url != "UNKNOWN":
         download_data = dict(
-            datasource_id='pypi_sdist_pkginfo',
-            type='pypi',
+            datasource_id="pypi_sdist_pkginfo",
+            type="pypi",
             download_url=download_url,
         )
         download_data.update(common_data)
         package = scan_models.PackageData.from_data(download_data)
         # TODO: Consider creating a DatafileHandler for PyPI API metadata
-        package.datasource_id = 'pypi_api_metadata'
+        package.datasource_id = "pypi_api_metadata"
         package.set_purl(purl)
         yield package
 
     # yield a package for each download URL
-    for download in metadata['urls']:
-        url = download.get('url')
+    for download in metadata["urls"]:
+        url = download.get("url")
         if not url:
             continue
 
         download_data = dict(
             download_url=url,
-            size=download.get('size'),
-            release_date=parse_date(download.get('upload_time')),
-            datasource_id='pypi_sdist_pkginfo',
-            type='pypi',
+            size=download.get("size"),
+            release_date=parse_date(download.get("upload_time")),
+            datasource_id="pypi_sdist_pkginfo",
+            type="pypi",
         )
         # TODO: Check for other checksums
-        download_data['md5'] = download.get('md5_digest')
+        download_data["md5"] = download.get("md5_digest")
         download_data.update(common_data)
         package = scan_models.PackageData.from_data(download_data)
-        package.datasource_id = 'pypi_api_metadata'
+        package.datasource_id = "pypi_api_metadata"
         package.set_purl(purl)
         yield package

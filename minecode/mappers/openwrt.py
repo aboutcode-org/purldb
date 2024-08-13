@@ -17,7 +17,6 @@ from minecode import map_router
 from minecode.mappers import Mapper
 from minecode.mappers.debian import get_dependencies
 
-
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
 logger.addHandler(handler)
@@ -29,9 +28,8 @@ OpenWRT IPK package data files are using the Deb822 format.
 """
 
 
-@map_router.route('https://downloads.openwrt.org/.*\.ipk')
+@map_router.route(r"https://downloads.openwrt.org/.*\.ipk")
 class OpenwrtIpkMetadataMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
         """
         Yield ScannedPackage built from resource_uri record for a single package
@@ -48,40 +46,39 @@ def build_packages(metadata, purl=None, uri=None):
     purl: String value of the package url of the ResourceURI object
     """
     common_data = dict(
-        type='openwrt',
-        datasource_id='openwrt_metadata',
-        name=metadata.get('Package'),
-        version=metadata.get('Version'),
-        description=metadata.get('Description'),
-        size=metadata.get('Installed-Size'),
+        type="openwrt",
+        datasource_id="openwrt_metadata",
+        name=metadata.get("Package"),
+        version=metadata.get("Version"),
+        description=metadata.get("Description"),
+        size=metadata.get("Installed-Size"),
     )
 
-    dependencies = get_dependencies(metadata, ['Depends'])
+    dependencies = get_dependencies(metadata, ["Depends"])
     if dependencies:
-        common_data['dependencies'] = dependencies
+        common_data["dependencies"] = dependencies
 
-    maintainers = metadata.get('Maintainer')
+    maintainers = metadata.get("Maintainer")
     if maintainers:
         name, email = debutils.parse_email(maintainers)
         if name:
-            parties = common_data.get('parties')
+            parties = common_data.get("parties")
             if not parties:
-                common_data['parties'] = []
-            party = scan_models.Party(
-                name=name, role='maintainer', email=email)
-            common_data['parties'].append(party)
+                common_data["parties"] = []
+            party = scan_models.Party(name=name, role="maintainer", email=email)
+            common_data["parties"].append(party)
 
-    lic = metadata.get('License')
+    lic = metadata.get("License")
     if lic:
-        common_data['declared_license'] = lic
+        common_data["declared_license"] = lic
 
-    common_data['keywords'] = []
-    section = metadata.get('Section')
+    common_data["keywords"] = []
+    section = metadata.get("Section")
     if section:
-        common_data['keywords'].append(section)
-    architecture = metadata.get('Architecture')
+        common_data["keywords"].append(section)
+    architecture = metadata.get("Architecture")
     if architecture:
-        common_data['keywords'].append(architecture)
+        common_data["keywords"].append(architecture)
     package = scan_models.Package.from_package_data(
         package_data=common_data,
         datafile_path=uri,

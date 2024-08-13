@@ -14,11 +14,9 @@ from packagedcode.models import PackageData
 from minecode import map_router
 
 
-@map_router.route('.+/repomd.xml')
+@map_router.route(".+/repomd.xml")
 def map_repomd_data(uris, resource_uri):
-    """
-    Returns a list of RpmPackage objects collected from visitors.
-    """
+    """Returns a list of RpmPackage objects collected from visitors."""
     if not resource_uri.data:
         return
     packages = []
@@ -26,6 +24,6 @@ def map_repomd_data(uris, resource_uri):
         # 'name' is required for every package
         # FIXME: how could we obtain a package without a name???
         # FIXME: This cannot work unless we use **pkg_data
-        if pkg_data.get('name'):
+        if pkg_data.get("name"):
             packages.append(PackageData(pkg_data))
     return packages

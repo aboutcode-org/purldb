@@ -11,7 +11,6 @@
 # limitations under the License.
 
 import pytest
-
 from utils_pypi_supported_tags import validate_platforms_for_pypi
 
 """

@@ -17,12 +17,10 @@ from django.db import transaction
 # UnusedImport here!
 # But importing the mappers and visitors module triggers routes registration
 from minecode import mappers  # NOQA
-from minecode import visitors  # NOQA
-
 from minecode import seed
-from minecode.models import ResourceURI
+from minecode import visitors  # NOQA
 from minecode.management.commands import VerboseCommand
-
+from minecode.models import ResourceURI
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
@@ -30,12 +28,19 @@ logger.setLevel(logging.INFO)
 
 
 class Command(VerboseCommand):
-    help = ('Insert ResourceURIs records from Seed '
-            'objects with a URI matching a pattern.')
+    help = (
+        "Insert ResourceURIs records from Seed "
+        "objects with a URI matching a pattern."
+    )
 
     def add_arguments(self, parser):
-        parser.add_argument('--pattern', '-p', action='store', dest='pattern',
-                            help='Only add seed URIs matching this regex pattern.')
+        parser.add_argument(
+            "--pattern",
+            "-p",
+            action="store",
+            dest="pattern",
+            help="Only add seed URIs matching this regex pattern.",
+        )
 
     def handle(self, *args, **options):
         """
@@ -44,14 +49,14 @@ class Command(VerboseCommand):
         """
         logger.setLevel(self.get_verbosity(**options))
 
-        pattern = options.get('pattern')
+        pattern = options.get("pattern")
         seeders = seed.get_active_seeders()
 
         counter = 0
         for uri in insert_seed_uris(pattern, seeders=seeders):
-            logger.info('Inserting new seed URI: {}'.format(uri))
+            logger.info(f"Inserting new seed URI: {uri}")
             counter += 1
-        self.stdout.write('Inserted {} seed URIs'.format(counter))
+        self.stdout.write(f"Inserted {counter} seed URIs")
 
 
 SEED_PRIORITY = 100
@@ -66,15 +71,17 @@ def insert_seed_uris(pattern=None, priority=SEED_PRIORITY, seeders=()):
         for seeder in seeders:
             for uri in seeder.get_seeds():
                 if pattern and not re.match(pattern, uri):
-                    logger.info('Skipping seeding for: {}. Pattern {}'
-                                'not matched.'.format(uri, pattern))
+                    logger.info(
+                        f"Skipping seeding for: {uri}. Pattern {pattern}" "not matched."
+                    )
                     continue
 
                 if ResourceURI.objects.filter(uri=uri).exists():
                     needs_revisit = ResourceURI.objects.needs_revisit(
-                        uri=uri, hours=seeder.revisit_after)
+                        uri=uri, hours=seeder.revisit_after
+                    )
                     if not needs_revisit:
-                        logger.info('Revisit not needed for: {}'.format(uri))
+                        logger.info(f"Revisit not needed for: {uri}")
                         continue
 
                 # FIXME: Currently, we update the existing a new ResourceURI
@@ -83,8 +90,7 @@ def insert_seed_uris(pattern=None, priority=SEED_PRIORITY, seeders=()):
                 # to store this datablob on the filesystem and have a single
                 # ResourceURI per `uri` that points to one or more data blobs.
                 seed_uri = ResourceURI.objects.update_or_create(
-                    uri=uri,
-                    priority=priority,
-                    last_visit_date=None)
+                    uri=uri, priority=priority, last_visit_date=None
+                )
                 assert seed_uri
                 yield uri

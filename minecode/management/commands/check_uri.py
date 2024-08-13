@@ -14,12 +14,13 @@ import sys
 
 from django.core.management.base import BaseCommand
 
+from minecode import map_router
+
 # NOTE: mappers and visitors are Unused Import here: But importing the mappers
 # module triggers routes registration
 from minecode import mappers  # NOQA
-from minecode import visitors  # NOQA
-from minecode import map_router
 from minecode import visit_router
+from minecode import visitors  # NOQA
 from minecode.models import ResourceURI
 from minecode.route import NoRouteAvailable
 
@@ -31,53 +32,54 @@ logger.setLevel(logging.INFO)
 
 
 class Command(BaseCommand):
-    help = 'Print diagnostic information on a given URI prefix.'
+    help = "Print diagnostic information on a given URI prefix."
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--uri-prefix',
-            dest='uri_prefix',
-            action='store',
-            help='URI prefix to check.')
+            "--uri-prefix",
+            dest="uri_prefix",
+            action="store",
+            help="URI prefix to check.",
+        )
         parser.add_argument(
-            '--limit',
-            dest='limit',
+            "--limit",
+            dest="limit",
             default=10,
-            action='store',
-            help='Maximum number of records to return.')
+            action="store",
+            help="Maximum number of records to return.",
+        )
         parser.add_argument(
-            '--show-data',
-            dest='show_data',
+            "--show-data",
+            dest="show_data",
             default=False,
-            action='store_true',
-            help='URI prefix to check.')
+            action="store_true",
+            help="URI prefix to check.",
+        )
 
     def handle(self, *args, **options):
-        """
-        Check uris and print diagnostic information as JSON.
-        """
-        uri_prefix = options.get('uri_prefix')
-        limit = options.get('limit', 10)
-        show_data = options.get('show_data')
+        """Check uris and print diagnostic information as JSON."""
+        uri_prefix = options.get("uri_prefix")
+        limit = options.get("limit", 10)
+        show_data = options.get("show_data")
 
         # get the last 10 uris
-        uris = ResourceURI.objects.filter(
-            uri__startswith=uri_prefix).order_by("-id")[:limit]
+        uris = ResourceURI.objects.filter(uri__startswith=uri_prefix).order_by("-id")[
+            :limit
+        ]
 
         # TODO: add if the uri be resolved by visit and/or map router
         for uri in uris:
-
             try:
                 # FIXME: resolve() returns an acutal Visitor object, using module names for now
                 visit_route_resolve = repr(visit_router.resolve(uri.uri))
             except NoRouteAvailable:
-                visit_route_resolve = 'No Route Availible'
+                visit_route_resolve = "No Route Availible"
 
             try:
                 # FIXME: resolve() returns an acutal Mapper object, using module names for now
                 map_route_resolve = repr(map_router.resolve(uri.uri))
             except NoRouteAvailable:
-                map_route_resolve = 'No Route Availible'
+                map_route_resolve = "No Route Availible"
 
             if uri.last_visit_date:
                 last_visit_date = uri.last_visit_date.isoformat()
@@ -94,24 +96,26 @@ class Command(BaseCommand):
             else:
                 wip_date = None
 
-            uri_info = dict([
-                ('id', uri.id),
-                ('uri', uri.uri),
-                ('source_uri', uri.source_uri),
-                ('priority', uri.priority),
-                ('mining_level', uri.mining_level),
-                ('visit_route', visit_route_resolve),
-                ('map_route', map_route_resolve),
-                ('is_visitable', uri.is_visitable),
-                ('is_mappable', uri.is_mappable),
-                ('last_visit_date', last_visit_date),
-                ('last_map_date', last_map_date),
-                ('wip_date', wip_date),
-                ('visit_error', uri.visit_error),
-                ('map_error', uri.map_error),
-            ])
+            uri_info = dict(
+                [
+                    ("id", uri.id),
+                    ("uri", uri.uri),
+                    ("source_uri", uri.source_uri),
+                    ("priority", uri.priority),
+                    ("mining_level", uri.mining_level),
+                    ("visit_route", visit_route_resolve),
+                    ("map_route", map_route_resolve),
+                    ("is_visitable", uri.is_visitable),
+                    ("is_mappable", uri.is_mappable),
+                    ("last_visit_date", last_visit_date),
+                    ("last_map_date", last_map_date),
+                    ("wip_date", wip_date),
+                    ("visit_error", uri.visit_error),
+                    ("map_error", uri.map_error),
+                ]
+            )
 
             if show_data:
-                uri_info.update({'data': uri.data})
+                uri_info.update({"data": uri.data})
 
             print(json.dumps(uri_info, indent=2))

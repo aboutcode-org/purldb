@@ -9,9 +9,9 @@
 
 
 import os
+from unittest.mock import patch
 
 from django.test import TestCase
-from mock import patch
 
 from minecode.utils_test import JsonBasedTesting
 from minecode.visitors import gnu

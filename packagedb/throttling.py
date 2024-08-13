@@ -13,9 +13,7 @@ from rest_framework.views import exception_handler
 
 class StaffUserRateThrottle(UserRateThrottle):
     def allow_request(self, request, view):
-        """
-        Do not apply throttling for superusers and admins.
-        """
+        """Do not apply throttling for superusers and admins."""
         if request.user.is_superuser or request.user.is_staff:
             return True
 
@@ -23,10 +21,7 @@ class StaffUserRateThrottle(UserRateThrottle):
 
 
 def throttled_exception_handler(exception, context):
-    """
-    Return this response whenever a request has been throttled
-    """
-
+    """Return this response whenever a request has been throttled"""
     response = exception_handler(exception, context)
 
     if isinstance(exception, Throttled):

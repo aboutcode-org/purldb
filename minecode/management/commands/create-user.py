@@ -11,14 +11,12 @@ from minecode.management.user_creation import CreateUserCommand
 
 
 class Command(CreateUserCommand):
-    help = 'Create a user and generate an API key for a scan queue worker'
+    help = "Create a user and generate an API key for a scan queue worker"
 
     def handle(self, *args, **options):
-        username = options['username']
-        interactive = options['interactive']
-        verbosity = options['verbosity']
+        username = options["username"]
+        interactive = options["interactive"]
+        verbosity = options["verbosity"]
         self.create_user(
-            username=username,
-            interactive=interactive,
-            verbosity=verbosity
+            username=username, interactive=interactive, verbosity=verbosity
         )

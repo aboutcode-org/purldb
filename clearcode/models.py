@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) nexB Inc. and others. All rights reserved.
 #
@@ -25,9 +24,8 @@ from django.db import models
 
 
 class VirtualFileStore:
-    """
-    Convenience wrapper to access CDitems as if they would be concrete files.
-    """
+    """Convenience wrapper to access CDitems as if they would be concrete files."""
+
     @classmethod
     def walk(self, prefix=None, since=None):
         """
@@ -48,17 +46,17 @@ class CDitemQuerySet(models.QuerySet):
     def known_package_types(self):
         # These are the Package types that can be stored in the PackageDB
         KNOWN_PACKAGE_TYPES = [
-            'composer',
-            'crate',
-            'deb',
-            'debsrc',
-            'gem',
-            'git',
-            'maven',
-            'npm',
-            'nuget',
-            'pypi',
-            'sourcearchive',
+            "composer",
+            "crate",
+            "deb",
+            "debsrc",
+            "gem",
+            "git",
+            "maven",
+            "npm",
+            "nuget",
+            "pypi",
+            "sourcearchive",
         ]
         q_objs = models.Q()
         for package_type in KNOWN_PACKAGE_TYPES:
@@ -66,10 +64,10 @@ class CDitemQuerySet(models.QuerySet):
         return self.filter(q_objs)
 
     def definitions(self):
-        return self.exclude(path__contains='/tool/')
+        return self.exclude(path__contains="/tool/")
 
     def scancode_harvests(self):
-        return self.filter(path__contains='tool/scancode')
+        return self.filter(path__contains="tool/scancode")
 
     def mappable(self):
         return self.filter(last_map_date__isnull=True, map_error__isnull=True)
@@ -81,9 +79,7 @@ class CDitemQuerySet(models.QuerySet):
         return self.mappable().scancode_harvests().known_package_types()
 
     def modified_after(self, date):
-        """
-        Limit the QuerySet to CDitems that were modified after a given `date`.
-        """
+        """Limit the QuerySet to CDitems that were modified after a given `date`."""
         return self.filter(last_modified_date__gt=date)
 
 
@@ -93,8 +89,11 @@ class CDitem(models.Model):
     stored in ClearlyDefined blob storage and the value is a GZipped compressed
     JSON file content, stored as a binary bytes blob.
     """
-    path = models.CharField(primary_key=True, max_length=2048,
-        help_text='Path to the original file in the ClearlyDefined file storage.'
+
+    path = models.CharField(
+        primary_key=True,
+        max_length=2048,
+        help_text="Path to the original file in the ClearlyDefined file storage.",
     )
 
     uuid = models.UUIDField(
@@ -103,12 +102,10 @@ class CDitem(models.Model):
         editable=False,
     )
 
-    content = models.BinaryField(
-        help_text='Actual gzipped JSON content.'
-    )
+    content = models.BinaryField(help_text="Actual gzipped JSON content.")
 
     last_modified_date = models.DateTimeField(
-        help_text='Date and time that this record was last modified.',
+        help_text="Date and time that this record was last modified.",
         auto_now=True,  # Automatically set to now on object save()
     )
 
@@ -116,24 +113,22 @@ class CDitem(models.Model):
         null=True,
         blank=True,
         db_index=True,
-        help_text='Timestamp set to the date of the last mapping. '
-                  'Used to track mapping status.',
+        help_text="Timestamp set to the date of the last mapping. "
+        "Used to track mapping status.",
     )
 
     map_error = models.TextField(
         null=True,
         blank=True,
-        help_text='Mapping errors messages. When present this means the mapping failed.',
+        help_text="Mapping errors messages. When present this means the mapping failed.",
     )
 
     objects = CDitemQuerySet.as_manager()
 
     @property
     def data(self):
-        """
-        Return the data content deserialized from the content field.
-        """
+        """Return the data content deserialized from the content field."""
         uncompressed_content = gzip.decompress(self.content)
         if not uncompressed_content:
-            uncompressed_content = '{}'
+            uncompressed_content = "{}"
         return json.loads(uncompressed_content)

@@ -10,7 +10,6 @@
 from pathlib import Path
 
 import environ
-
 from scancodeio.settings import *
 
 PROJECT_DIR = environ.Path(__file__) - 1
@@ -44,40 +43,40 @@ if not MATCHCODEIO_REQUIRE_AUTHENTICATION:
     )
 
 INSTALLED_APPS += [
-    'clearcode',
-    'clearindex',
-    'matchcode',
-    'minecode',
-    'packagedb',
+    "clearcode",
+    "clearindex",
+    "matchcode",
+    "minecode",
+    "packagedb",
 ]
 
 # Database
 
 DATABASES = {
-    'default': {
-        'ENGINE': env.str('SCANCODEIO_DB_ENGINE', 'django.db.backends.postgresql'),
-        'HOST': env.str('SCANCODEIO_DB_HOST', 'localhost'),
-        'NAME': env.str('SCANCODEIO_DB_NAME', 'matchcodeio'),
-        'USER': env.str('SCANCODEIO_DB_USER', 'matchcodeio'),
-        'PASSWORD': env.str('SCANCODEIO_DB_PASSWORD', 'matchcodeio'),
-        'PORT': env.str('SCANCODEIO_DB_PORT', '5432'),
-        'ATOMIC_REQUESTS': True,
+    "default": {
+        "ENGINE": env.str("SCANCODEIO_DB_ENGINE", "django.db.backends.postgresql"),
+        "HOST": env.str("SCANCODEIO_DB_HOST", "localhost"),
+        "NAME": env.str("SCANCODEIO_DB_NAME", "matchcodeio"),
+        "USER": env.str("SCANCODEIO_DB_USER", "matchcodeio"),
+        "PASSWORD": env.str("SCANCODEIO_DB_PASSWORD", "matchcodeio"),
+        "PORT": env.str("SCANCODEIO_DB_PORT", "5432"),
+        "ATOMIC_REQUESTS": True,
     },
-    'packagedb': {
-        'ENGINE': env.str('PACKAGEDB_DB_ENGINE', 'django.db.backends.postgresql'),
-        'HOST': env.str('PACKAGEDB_DB_HOST', 'localhost'),
-        'NAME': env.str('PACKAGEDB_DB_NAME', 'packagedb'),
-        'USER': env.str('PACKAGEDB_DB_USER', 'packagedb'),
-        'PASSWORD': env.str('PACKAGEDB_DB_PASSWORD', 'packagedb'),
-        'PORT': env.str('PACKAGEDB_DB_PORT', '5432'),
-        'ATOMIC_REQUESTS': True,
-    }
+    "packagedb": {
+        "ENGINE": env.str("PACKAGEDB_DB_ENGINE", "django.db.backends.postgresql"),
+        "HOST": env.str("PACKAGEDB_DB_HOST", "localhost"),
+        "NAME": env.str("PACKAGEDB_DB_NAME", "packagedb"),
+        "USER": env.str("PACKAGEDB_DB_USER", "packagedb"),
+        "PASSWORD": env.str("PACKAGEDB_DB_PASSWORD", "packagedb"),
+        "PORT": env.str("PACKAGEDB_DB_PORT", "5432"),
+        "ATOMIC_REQUESTS": True,
+    },
 }
 
 
 DATABASE_ROUTERS = [
-    'matchcode_project.dbrouter.PackageDBRouter',
-    'matchcode_project.dbrouter.ScancodeIORouter',
+    "matchcode_project.dbrouter.PackageDBRouter",
+    "matchcode_project.dbrouter.ScancodeIORouter",
 ]
 
-ROOT_URLCONF = 'matchcode_project.urls'
+ROOT_URLCONF = "matchcode_project.urls"

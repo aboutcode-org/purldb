@@ -1,11 +1,15 @@
-from dateutil.parser import parse as dateutil_parse
-from minecode.visitors.maven import get_artifacts, is_worthy_artifact, build_url_and_filename
 from packagedcode.maven import get_urls
-from minecode.utils import fetch_http, get_temp_file
 from packagedcode.models import PackageData
 
+from minecode.utils import fetch_http
+from minecode.utils import get_temp_file
+from minecode.visitors.maven import build_url_and_filename
+from minecode.visitors.maven import get_artifacts
+from minecode.visitors.maven import is_worthy_artifact
 
-MAVEN_INDEX_URL = 'https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz'
+MAVEN_INDEX_URL = (
+    "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz"
+)
 
 
 class MavenNexusCollector:
@@ -22,15 +26,13 @@ class MavenNexusCollector:
         `timeout` is a default timeout.
         """
         content = fetch_http(uri, timeout=timeout)
-        temp_file = get_temp_file('NonPersistentHttpVisitor')
-        with open(temp_file, 'wb') as tmp:
+        temp_file = get_temp_file("NonPersistentHttpVisitor")
+        with open(temp_file, "wb") as tmp:
             tmp.write(content)
         return temp_file
 
     def get_packages(self, content=None):
-        """
-        Yield Package objects from maven index
-        """
+        """Yield Package objects from maven index"""
         if content:
             index_location = content
         else:
@@ -49,12 +51,12 @@ class MavenNexusCollector:
                 continue
 
             qualifiers = {}
-            if extension and extension != 'jar':
-                qualifiers['type'] = extension
+            if extension and extension != "jar":
+                qualifiers["type"] = extension
 
             classifier = artifact.classifier
             if classifier:
-                qualifiers['classifier'] = classifier
+                qualifiers["classifier"] = classifier
 
             # FIXME: also use the Artifact.src_exist flags too?
 
@@ -63,7 +65,8 @@ class MavenNexusCollector:
             # instead togther with the filename... especially we could use
             # different REPOs.
             jar_download_url, _ = build_url_and_filename(
-                group_id, artifact_id, version, extension, classifier)
+                group_id, artifact_id, version, extension, classifier
+            )
 
             # FIXME: should this be set in the yielded URI too
             last_mod = artifact.last_modified
@@ -75,12 +78,12 @@ class MavenNexusCollector:
                 qualifiers=qualifiers or None,
             )
 
-            repository_homepage_url = urls['repository_homepage_url']
-            repository_download_url = urls['repository_download_url']
-            api_data_url = urls['api_data_url']
+            repository_homepage_url = urls["repository_homepage_url"]
+            repository_download_url = urls["repository_download_url"]
+            api_data_url = urls["api_data_url"]
 
             yield PackageData(
-                type='maven',
+                type="maven",
                 namespace=group_id,
                 name=artifact_id,
                 version=version,

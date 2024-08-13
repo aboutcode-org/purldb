@@ -8,20 +8,17 @@
 #
 
 import dataclasses
-import json
 import logging
 import traceback
 import xml.etree.ElementTree as ET
+from collections.abc import Iterable
 from datetime import datetime
-from typing import Iterable
-from typing import List
-from typing import Optional
-from typing import Set
 from urllib.parse import urlparse
+
+from django.utils.dateparse import parse_datetime
 
 import requests
 from dateutil import parser as dateparser
-from django.utils.dateparse import parse_datetime
 from packageurl import PackageURL
 
 logger = logging.getLogger(__name__)
@@ -38,7 +35,7 @@ repositories, registries or APIs.
 @dataclasses.dataclass(frozen=True)
 class PackageVersion:
     value: str
-    release_date: Optional[datetime] = None
+    release_date: datetime | None = None
 
     def to_dict(self):
         release_date = self.release_date
@@ -48,8 +45,8 @@ class PackageVersion:
 
 @dataclasses.dataclass
 class VersionResponse:
-    valid_versions: Set[str] = dataclasses.field(default_factory=set)
-    newer_versions: Set[str] = dataclasses.field(default_factory=set)
+    valid_versions: set[str] = dataclasses.field(default_factory=set)
+    newer_versions: set[str] = dataclasses.field(default_factory=set)
 
 
 def get_response(url, content_type="json", headers=None):
@@ -124,7 +121,9 @@ class VersionAPI:
             else:
                 valid_versions.add(version.value)
 
-        return VersionResponse(valid_versions=valid_versions, newer_versions=new_versions)
+        return VersionResponse(
+            valid_versions=valid_versions, newer_versions=new_versions
+        )
 
     def fetch(self, pkg: str) -> Iterable[PackageVersion]:
         """
@@ -135,16 +134,12 @@ class VersionAPI:
 
 
 def remove_debian_default_epoch(version):
-    """
-    Remove the default epoch from a Debian ``version`` string.
-    """
+    """Remove the default epoch from a Debian ``version`` string."""
     return version and version.replace("0:", "")
 
 
 class LaunchpadVersionAPI(VersionAPI):
-    """
-    Fetch versions of Ubuntu debian packages from Launchpad
-    """
+    """Fetch versions of Ubuntu debian packages from Launchpad"""
 
     package_type = "deb"
 
@@ -165,7 +160,9 @@ class LaunchpadVersionAPI(VersionAPI):
 
             for release in entries:
                 source_package_version = release.get("source_package_version")
-                source_package_version = remove_debian_default_epoch(version=source_package_version)
+                source_package_version = remove_debian_default_epoch(
+                    version=source_package_version
+                )
                 date_published = release.get("date_published")
                 release_date = None
                 if date_published and type(date_published) is str:
@@ -182,9 +179,7 @@ class LaunchpadVersionAPI(VersionAPI):
 
 
 class PypiVersionAPI(VersionAPI):
-    """
-    Fetch versions of Python pypi packages from the PyPI API.
-    """
+    """Fetch versions of Python pypi packages from the PyPI API."""
 
     package_type = "pypi"
 
@@ -238,9 +233,7 @@ class PypiVersionAPI(VersionAPI):
 
 
 class CratesVersionAPI(VersionAPI):
-    """
-    Fetch versions of Rust cargo packages from the crates.io API.
-    """
+    """Fetch versions of Rust cargo packages from the crates.io API."""
 
     package_type = "cargo"
 
@@ -255,9 +248,7 @@ class CratesVersionAPI(VersionAPI):
 
 
 class RubyVersionAPI(VersionAPI):
-    """
-    Fetch versions of Rubygems packages from the rubygems API.
-    """
+    """Fetch versions of Rubygems packages from the rubygems API."""
 
     package_type = "gem"
 
@@ -280,9 +271,7 @@ class RubyVersionAPI(VersionAPI):
 
 
 class NpmVersionAPI(VersionAPI):
-    """
-    Fetch versions of npm packages from the npm registry API.
-    """
+    """Fetch versions of npm packages from the npm registry API."""
 
     package_type = "npm"
 
@@ -300,9 +289,7 @@ class NpmVersionAPI(VersionAPI):
 
 
 class DebianVersionAPI(VersionAPI):
-    """
-    Fetch versions of Debian debian packages from the sources.debian.org API
-    """
+    """Fetch versions of Debian debian packages from the sources.debian.org API"""
 
     package_type = "deb"
 
@@ -324,9 +311,7 @@ class DebianVersionAPI(VersionAPI):
 
 
 class MavenVersionAPI(VersionAPI):
-    """
-    Fetch versions of Maven packages from Maven Central maven-metadata.xml data
-    """
+    """Fetch versions of Maven packages from Maven Central maven-metadata.xml data"""
 
     package_type = "maven"
 
@@ -339,7 +324,7 @@ class MavenVersionAPI(VersionAPI):
             yield from self.extract_versions(xml_resp)
 
     @staticmethod
-    def artifact_url(artifact_comps: List[str]) -> str:
+    def artifact_url(artifact_comps: list[str]) -> str:
         try:
             group_id, artifact_id = artifact_comps
         except ValueError:
@@ -365,9 +350,7 @@ class MavenVersionAPI(VersionAPI):
 
 
 class NugetVersionAPI(VersionAPI):
-    """
-    Fetch versions of NuGet packages from the nuget.org API
-    """
+    """Fetch versions of NuGet packages from the nuget.org API"""
 
     package_type = "nuget"
 
@@ -396,16 +379,12 @@ class NugetVersionAPI(VersionAPI):
 
 
 def cleaned_version(version):
-    """
-    Return a ``version`` string stripped from leading "v" prefix.
-    """
+    """Return a ``version`` string stripped from leading "v" prefix."""
     return version.lstrip("vV")
 
 
 class ComposerVersionAPI(VersionAPI):
-    """
-    Fetch versions of PHP Composer packages from the packagist.org API
-    """
+    """Fetch versions of PHP Composer packages from the packagist.org API"""
 
     package_type = "composer"
 
@@ -431,9 +410,7 @@ class ComposerVersionAPI(VersionAPI):
 
 
 class HexVersionAPI(VersionAPI):
-    """
-    Fetch versions of Erlang packages from the hex API
-    """
+    """Fetch versions of Erlang packages from the hex API"""
 
     package_type = "hex"
 
@@ -451,9 +428,7 @@ class HexVersionAPI(VersionAPI):
 
 
 class GoproxyVersionAPI(VersionAPI):
-    """
-    Fetch versions of Go "golang" packages from the Go proxy API
-    """
+    """Fetch versions of Go "golang" packages from the Go proxy API"""
 
     package_type = "golang"
 
@@ -461,7 +436,7 @@ class GoproxyVersionAPI(VersionAPI):
         self.module_name_by_package_name = {}
 
     @staticmethod
-    def trim_go_url_path(url_path: str) -> Optional[str]:
+    def trim_go_url_path(url_path: str) -> str | None:
         """
         Return a trimmed Go `url_path` removing trailing
         package references and keeping only the module
@@ -512,7 +487,9 @@ class GoproxyVersionAPI(VersionAPI):
         return escaped_path
 
     @staticmethod
-    def fetch_version_info(version_info: str, escaped_pkg: str) -> Optional[PackageVersion]:
+    def fetch_version_info(
+        version_info: str, escaped_pkg: str
+    ) -> PackageVersion | None:
         v = version_info.split()
         if not v:
             return None
@@ -534,12 +511,13 @@ class GoproxyVersionAPI(VersionAPI):
                     f"Error while fetching version info for {escaped_pkg}/{escaped_ver} "
                     f"from goproxy:\n{traceback.format_exc()}"
                 )
-            release_date = parse_datetime(response.get("Time", "")) if response else None
+            release_date = (
+                parse_datetime(response.get("Time", "")) if response else None
+            )
 
         return PackageVersion(value=value, release_date=release_date)
 
     def fetch(self, pkg: str) -> Iterable[PackageVersion]:
-
         # escape uppercase in module path
         escaped_pkg = self.escape_path(pkg)
         trimmed_pkg = pkg
@@ -584,7 +562,9 @@ VERSION_API_CLASSES = {
 }
 
 
-VERSION_API_CLASSES_BY_PACKAGE_TYPE = {cls.package_type: cls for cls in VERSION_API_CLASSES}
+VERSION_API_CLASSES_BY_PACKAGE_TYPE = {
+    cls.package_type: cls for cls in VERSION_API_CLASSES
+}
 
 
 VERSION_API_CLASS_BY_PACKAGE_NAMESPACE = {
@@ -617,7 +597,11 @@ def get_api_package_name(purl: PackageURL) -> str:
 
 def get_version_fetcher(package_url):
     if package_url.type == "deb":
-        versions_fetcher: VersionAPI = VERSION_API_CLASS_BY_PACKAGE_NAMESPACE[package_url.namespace]
+        versions_fetcher: VersionAPI = VERSION_API_CLASS_BY_PACKAGE_NAMESPACE[
+            package_url.namespace
+        ]
     else:
-        versions_fetcher: VersionAPI = VERSION_API_CLASSES_BY_PACKAGE_TYPE[package_url.type]
+        versions_fetcher: VersionAPI = VERSION_API_CLASSES_BY_PACKAGE_TYPE[
+            package_url.type
+        ]
     return versions_fetcher

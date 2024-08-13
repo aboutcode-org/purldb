@@ -17,9 +17,8 @@ from minecode.utils import form_vcs_url
 from minecode.utils import parse_date
 
 
-@map_router.route('https://gitlab.com/.*')
+@map_router.route("https://gitlab.com/.*")
 class GitLabMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
         """
         Yield Package built from resource_uri record for a single
@@ -38,20 +37,20 @@ def build_packages_from_json(metadata, purl=None):
     """
     content = json.loads(metadata)
 
-    name = content.get('name')
+    name = content.get("name")
     if name:
         common_data = dict(
-            type='gitlab',
+            type="gitlab",
             name=name,
-            homepage_url=content.get('web_url'),
-            description=content.get('description'),
+            homepage_url=content.get("web_url"),
+            description=content.get("description"),
         )
-        repo_url = content.get('http_url_to_repo')
+        repo_url = content.get("http_url_to_repo")
         if repo_url:
-            repo_url = form_vcs_url('git', repo_url)
-            common_data['vcs_url'] = repo_url
-        common_data['code_view_url'] = repo_url
-        common_data['release_date'] = parse_date(content.get('created_at'))
+            repo_url = form_vcs_url("git", repo_url)
+            common_data["vcs_url"] = repo_url
+        common_data["code_view_url"] = repo_url
+        common_data["release_date"] = parse_date(content.get("created_at"))
         package = scan_models.Package(**common_data)
         package.set_purl(purl)
         yield package

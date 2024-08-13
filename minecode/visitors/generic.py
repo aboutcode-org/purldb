@@ -36,7 +36,7 @@ def map_generic_package(package_url, pipelines, priority=0):
     from minecode.model_utils import add_package_to_scan_queue
     from minecode.model_utils import merge_or_create_package
 
-    download_url = package_url.qualifiers.get('download_url')
+    download_url = package_url.qualifiers.get("download_url")
     package = PackageData(
         type=package_url.type,
         namespace=package_url.namespace,
@@ -69,19 +69,19 @@ def process_request(purl_str, **kwargs):
     """
     from minecode.model_utils import DEFAULT_PIPELINES
 
-    addon_pipelines = kwargs.get('addon_pipelines', [])
+    addon_pipelines = kwargs.get("addon_pipelines", [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
+    priority = kwargs.get("priority", 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)
     except ValueError as e:
-        error = f'error occured when parsing {purl_str}: {e}'
+        error = f"error occured when parsing {purl_str}: {e}"
         return error
 
-    download_url = package_url.qualifiers.get('download_url')
+    download_url = package_url.qualifiers.get("download_url")
     if not download_url:
-        error = f'package_url {purl_str} does not contain a download_url qualifier'
+        error = f"package_url {purl_str} does not contain a download_url qualifier"
         return error
 
     error_msg = map_generic_package(package_url, pipelines, priority)
@@ -183,9 +183,9 @@ def process_request_fetchcode_generic(purl_str, **kwargs):
     """
     from minecode.model_utils import DEFAULT_PIPELINES
 
-    addon_pipelines = kwargs.get('addon_pipelines', [])
+    addon_pipelines = kwargs.get("addon_pipelines", [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
+    priority = kwargs.get("priority", 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)
@@ -193,8 +193,7 @@ def process_request_fetchcode_generic(purl_str, **kwargs):
         error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
-    error_msg = map_fetchcode_supported_package(
-        package_url, pipelines, priority)
+    error_msg = map_fetchcode_supported_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg

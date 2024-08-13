@@ -67,8 +67,7 @@ def get_and_index_new_purls(package_url):
 
     try:
         local_versions = [version_class(version) for version in local_versions]
-        all_versions = [version_class(version.value)
-                        for version in all_versions]
+        all_versions = [version_class(version.value) for version in all_versions]
     except InvalidVersion as e:
         return f"InvalidVersion exception: {e}"
 
@@ -101,8 +100,7 @@ def is_supported_watch_ecosystem(watch):
             watch.watch_error = (
                 f"`{watch.type}` ecosystem is not supported by {error_message}"
             )
-            watch.last_watch_date = datetime.datetime.now(
-                tz=datetime.timezone.utc)
+            watch.last_watch_date = datetime.datetime.now(tz=datetime.timezone.utc)
             watch.save(update_fields=["last_watch_date"])
             return False
 

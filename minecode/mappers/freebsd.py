@@ -8,10 +8,10 @@
 #
 
 
-from io import StringIO
 import os
-import saneyaml
+from io import StringIO
 
+import saneyaml
 from packagedcode.freebsd import CompactManifestHandler
 
 from minecode import map_router
@@ -19,7 +19,7 @@ from minecode.mappers import Mapper
 from minecode.utils import get_temp_dir
 
 
-@map_router.route('https://pkg.freebsd.org/.*packagesite.txz')
+@map_router.route("https://pkg.freebsd.org/.*packagesite.txz")
 class FreeBSDIndexMapper(Mapper):
     def get_packages(self, uri, resource_uri):
         """
@@ -39,15 +39,15 @@ def build_packages(metadata, purl=None):
     buf = StringIO(metadata)
     # The passing metadata is not a well-formatted yaml or json, but each line is a yaml, so read by line and parse with FreeBSDPackage parser.
     for each_line in buf:
-        if each_line and each_line.strip() in ('', '{', '}'):
+        if each_line and each_line.strip() in ("", "{", "}"):
             continue
         content = saneyaml.load(each_line)
-        if content and content.get('name'):
-            temp_dir = get_temp_dir('freebsd_index')
-            location = os.path.join(temp_dir, '+COMPACT_MANIFEST')
-            with open(location, 'w') as manifest:
+        if content and content.get("name"):
+            temp_dir = get_temp_dir("freebsd_index")
+            location = os.path.join(temp_dir, "+COMPACT_MANIFEST")
+            with open(location, "w") as manifest:
                 manifest.write(each_line)
-            with open(location, encoding='utf-8') as loc:
+            with open(location, encoding="utf-8") as loc:
                 yaml_data = saneyaml.load(loc)
             package = CompactManifestHandler._parse(yaml_data=yaml_data)
             package.set_purl(purl)

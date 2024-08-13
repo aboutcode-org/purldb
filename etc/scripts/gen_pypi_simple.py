@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 # SPDX-License-Identifier: BSD-2-Clause-Views AND MIT
 # Copyright (c) 2010 David Wolever <david@wolever.net>. All rights reserved.
@@ -69,7 +68,6 @@ def get_package_name_from_filename(filename):
             raise InvalidDistributionFilename(filename)
 
     elif filename.endswith(wheel_ext):
-
         wheel_info = get_wheel_from_filename(filename)
 
         if not wheel_info:
@@ -105,9 +103,7 @@ def normalize_name(name):
 
 
 def build_per_package_index(pkg_name, packages, base_url):
-    """
-    Return an HTML document as string representing the index for a package
-    """
+    """Return an HTML document as string representing the index for a package"""
     document = []
     header = f"""<!DOCTYPE html>
 <html>
@@ -129,11 +125,9 @@ def build_per_package_index(pkg_name, packages, base_url):
 
 
 def build_links_package_index(packages_by_package_name, base_url):
-    """
-    Return an HTML document as string which is a links index of all packages
-    """
+    """Return an HTML document as string which is a links index of all packages"""
     document = []
-    header = f"""<!DOCTYPE html>
+    header = """<!DOCTYPE html>
 <html>
   <head>
     <title>Links for all packages</title>
@@ -186,7 +180,6 @@ def build_pypi_index(directory, base_url="https://thirdparty.aboutcode.org/pypi"
     NOTE: in addition to the a PyPI simple index.html there is also a links.html
     index file generated which is suitable to use with pip's --find-links
     """
-
     directory = Path(directory)
 
     index_dir = directory / "simple"
@@ -204,7 +197,6 @@ def build_pypi_index(directory, base_url="https://thirdparty.aboutcode.org/pypi"
     ]
 
     for pkg_file in directory.iterdir():
-
         pkg_filename = pkg_file.name
 
         if (

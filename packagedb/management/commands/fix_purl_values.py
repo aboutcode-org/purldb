@@ -7,17 +7,17 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from dateutil.parser import parse as dateutil_parse
-import copy
 import logging
 import sys
 
-from urllib3.util import Retry
+import requests
+from dateutil.parser import parse as dateutil_parse
+from packagedcode.maven import build_filename
+from packagedcode.maven import get_urls
 from packageurl import PackageURL
-from packagedcode.maven import get_urls, build_filename
 from requests import Session
 from requests.adapters import HTTPAdapter
-import requests
+from urllib3.util import Retry
 
 from minecode.management.commands import VerboseCommand
 from minecode.utils import MemorySavingQuerysetIterator
@@ -34,9 +34,9 @@ logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
 
 session = Session()
-session.mount('https://', HTTPAdapter(max_retries=Retry(10)))
+session.mount("https://", HTTPAdapter(max_retries=Retry(10)))
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
 }
 
 
@@ -45,16 +45,18 @@ def get_timestamps_by_links(package_version_page_url):
     response = requests.get(package_version_page_url)
     if response:
         timestamps_by_links = collect_links_from_text(
-            response.text, filter=filter_for_artifacts)
+            response.text, filter=filter_for_artifacts
+        )
         timestamps_by_links = {
-            link: dateutil_parse(timestamp) for link, timestamp in timestamps_by_links.items()
+            link: dateutil_parse(timestamp)
+            for link, timestamp in timestamps_by_links.items()
         }
     return timestamps_by_links
 
 
-class MavenArtifact(object):
-    def __init__(self, namespace, name, version, qualifiers='', ec=[]):
-        type = 'maven'
+class MavenArtifact:
+    def __init__(self, namespace, name, version, qualifiers="", ec=[]):
+        type = "maven"
         self.type = type
         self.namespace = namespace
         self.name = name
@@ -65,7 +67,7 @@ class MavenArtifact(object):
             namespace=namespace,
             name=name,
             version=version,
-            qualifiers=qualifiers
+            qualifiers=qualifiers,
         )
         urls = get_urls(
             namespace=namespace,
@@ -73,19 +75,18 @@ class MavenArtifact(object):
             version=version,
             qualifiers=self.package_url.qualifiers,
         )
-        self.download_url = urls['repository_download_url']
-        self.repository_homepage_url = urls['repository_homepage_url']
-        self.api_data_url = urls['api_data_url']
+        self.download_url = urls["repository_download_url"]
+        self.repository_homepage_url = urls["repository_homepage_url"]
+        self.api_data_url = urls["api_data_url"]
 
         qualifiers_mapping = self.package_url.qualifiers
         filename = build_filename(
             artifact_id=name,
             version=version,
-            extension=qualifiers_mapping.get('type') or 'jar',
-            classifier=qualifiers_mapping.get('classifier'),
+            extension=qualifiers_mapping.get("type") or "jar",
+            classifier=qualifiers_mapping.get("classifier"),
         )
-        timestamps_by_links = get_timestamps_by_links(
-            self.repository_homepage_url)
+        timestamps_by_links = get_timestamps_by_links(self.repository_homepage_url)
         self.release_date = timestamps_by_links.get(filename)
         self.related_artifacts = list(
             self._populate_related_artifacts(
@@ -98,14 +99,14 @@ class MavenArtifact(object):
 
     @classmethod
     def _populate_related_artifacts(cls, namespace, name, version, ec):
-        filtered_ec = [entry for entry in ec if not entry.startswith('.')]
+        filtered_ec = [entry for entry in ec if not entry.startswith(".")]
         for entry in filtered_ec:
-            _, ending = entry.split('-')
-            split_ending = ending.split('.')
+            _, ending = entry.split("-")
+            split_ending = ending.split(".")
             classifier = None
             if len(split_ending) > 0:
                 classifier = split_ending[0]
-                qualifiers = f'classifier={classifier}'
+                qualifiers = f"classifier={classifier}"
                 yield cls(
                     namespace=namespace,
                     name=name,
@@ -115,7 +116,7 @@ class MavenArtifact(object):
 
 
 def query_sha1_on_maven(sha1, timeout=DEFAULT_TIMEOUT):
-    maven_api_search_url = f'https://search.maven.org/solrsearch/select?q=1:{sha1}'
+    maven_api_search_url = f"https://search.maven.org/solrsearch/select?q=1:{sha1}"
     try:
         response = session.get(maven_api_search_url, timeout=timeout)
         response.raise_for_status()
@@ -125,14 +126,14 @@ def query_sha1_on_maven(sha1, timeout=DEFAULT_TIMEOUT):
     if not response.ok:
         return f"API query failed for: {maven_api_search_url}"
     contents = response.json()
-    resp = contents.get('response', {})
+    resp = contents.get("response", {})
     matched_artifacts = []
-    if resp.get('numFound', 0) > 0:
-        for matched_artifact in resp.get('docs', []):
-            namespace = matched_artifact.get('g', '')
-            name = matched_artifact.get('a', '')
-            version = matched_artifact.get('v', '')
-            ec = matched_artifact.get('ec', [])
+    if resp.get("numFound", 0) > 0:
+        for matched_artifact in resp.get("docs", []):
+            namespace = matched_artifact.get("g", "")
+            name = matched_artifact.get("a", "")
+            version = matched_artifact.get("v", "")
+            ec = matched_artifact.get("ec", [])
             if not namespace and name and version:
                 continue
             matched_artifacts.append(
@@ -147,14 +148,14 @@ def query_sha1_on_maven(sha1, timeout=DEFAULT_TIMEOUT):
 
 
 class Command(VerboseCommand):
-    help = 'Update maven Package download_url values'
+    help = "Update maven Package download_url values"
 
     def handle(self, *args, **options):
-        maven_packages = Package.objects.filter(
-            type='maven', sha1__is_null=False)
+        maven_packages = Package.objects.filter(type="maven", sha1__is_null=False)
         maven_packages_count = maven_packages.count()
         logger.info(
-            f'Checking {maven_packages_count:,} Maven Package PackageURL values')
+            f"Checking {maven_packages_count:,} Maven Package PackageURL values"
+        )
         packages_to_delete = []
 
         for package in MemorySavingQuerysetIterator(maven_packages):
@@ -197,8 +198,12 @@ class Command(VerboseCommand):
                     package_different_case.qualifiers = artifact_qualifiers
                     package_different_case.download_url = artifact.download_url
                     package_different_case.release_date = artifact.release_date
-                    package_different_case.repository_homepage_url = artifact.repository_homepage_url
-                    package_different_case.repository_download_url = artifact.repository_download_url
+                    package_different_case.repository_homepage_url = (
+                        artifact.repository_homepage_url
+                    )
+                    package_different_case.repository_download_url = (
+                        artifact.repository_download_url
+                    )
                     package_different_case.api_data_url = artifact.api_data_url
                     package_different_case.sha1 = package.sha1
                     package_different_case.save()

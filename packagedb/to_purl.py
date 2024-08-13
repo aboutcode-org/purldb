@@ -21,8 +21,7 @@ from packagedb.serializers import GoLangPurlSerializer
 
 @extend_schema(
     parameters=[
-        OpenApiParameter("go_package", str, "query",
-                         description="go import package"),
+        OpenApiParameter("go_package", str, "query", description="go import package"),
     ],
     responses={200: GoLangPurlResponseSerializer()},
 )

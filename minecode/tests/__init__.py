@@ -9,5 +9,4 @@
 
 import os
 
-
 FIXTURES_REGEN = os.environ.get("MINECODE_TEST_FIXTURES_REGEN", False)

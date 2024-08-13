@@ -1,29 +1,23 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) nexB, Inc. http://www.nexb.com/ - All rights reserved.
 #
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
+import json
+import logging
 from collections import OrderedDict
 from datetime import date
 from datetime import datetime
-import json
-import logging
 
 from github.MainClass import Github
-from github.Repository import Repository
-from github.Download import Download
 from packageurl import PackageURL
 
 from minecode import priority_router
-from minecode import visit_router, seed
-from minecode.visitors import HttpJsonVisitor
+from minecode import seed
+from minecode import visit_router
 from minecode.visitors import URI
+from minecode.visitors import HttpJsonVisitor
 from minecode.visitors.generic import map_fetchcode_supported_package
-
 
 logger = logging.getLogger(__name__)
 
@@ -35,40 +29,42 @@ if TRACE:
 
 
 class GithubSeed(seed.Seeder):
-
     def get_seeds(self):
-        yield 'https://api.github.com/repositories?since=0'
+        yield "https://api.github.com/repositories?since=0"
 
 
-@visit_router.route('https://api.github.com/repositories\?since=\d+')
+@visit_router.route(r"https://api.github.com/repositories\?since=\d+")
 class GithubReposVisitor(HttpJsonVisitor):
     """
     Visitor to run repositories request to get all repositories by increasing since symbol 100 each loop time.
     Refer to: https://developer.github.com/v3/repos/#list-all-public-repositories
               https://api.github.com/repositories
     """
+
     def get_uris(self, content):
-        repo_request_base = 'https://api.github.com/repositories?since='
+        repo_request_base = "https://api.github.com/repositories?since="
         has_content = False
         if content:
             for entry in content:
                 has_content = True
-                url = entry.get('url')
+                url = entry.get("url")
                 # Take full_name instead of name here since we want to keep more info, especially when forming the package url
                 #     "name": "grit",
                 #     "full_name": "mojombo/grit",
-                name = entry.get('full_name')
+                name = entry.get("full_name")
                 if url:
                     package_url = None
                     if name:
-                        package_url = PackageURL(type='github', name=name).to_string()
+                        package_url = PackageURL(type="github", name=name).to_string()
                     # Yield URI for GithubSingleRepoVisitor use
                     yield URI(uri=url, package_url=package_url, source_uri=self.uri)
         if not has_content:
-            logger.info('The content of the response is empty, the processing might be finished for URI: {}'.format(self.uri))
+            logger.info(
+                f"The content of the response is empty, the processing might be finished for URI: {self.uri}"
+            )
         else:
             uri = self.uri
-            current_id = uri.replace('https://api.github.com/repositories?since=', '')
+            current_id = uri.replace("https://api.github.com/repositories?since=", "")
             current_id = int(current_id)
             # 100 is fixed since each page has 100 entries. Plus 100 means to go from next page.
             new_id = current_id + 100
@@ -76,7 +72,7 @@ class GithubReposVisitor(HttpJsonVisitor):
             yield URI(uri=new_url, source_uri=self.uri)
 
 
-@visit_router.route('https://api.github.com/repos/[\w\-\.]+/[\w\-\.]+')
+@visit_router.route(r"https://api.github.com/repos/[\w\-\.]+/[\w\-\.]+")
 class GithubSingleRepoVisitor(HttpJsonVisitor):
     """
     Visitor to get the json and add more content with GitHub API from one repo.
@@ -89,7 +85,7 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
         The json itself has lots of URL info, the Github API can get content without acccessing the URLs inside the json explicitly.
         The main idea is to fetch download_url...
         """
-        full_name = uri.replace('https://api.github.com/repos/', '')
+        full_name = uri.replace("https://api.github.com/repos/", "")
         g = Github()
         repo = g.get_repo(full_name)
 
@@ -114,12 +110,12 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
         )
 
         if repo.owner:
-            common_data['owner'] = repo.owner.name
+            common_data["owner"] = repo.owner.name
         if repo._issues_url:
-            common_data['issue_url'] = repo._issues_url.value
+            common_data["issue_url"] = repo._issues_url.value
 
         if repo._git_url:
-            common_data['git_url'] = repo._git_url.value
+            common_data["git_url"] = repo._git_url.value
 
         if repo.organization:
             repo.origanization = repo.organization.name
@@ -127,23 +123,25 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
         downloads = []
         if repo.get_downloads():
             for download in list(repo.get_downloads()):
-                downloads.append(OrderedDict(
-                    name=download.name,
-                    url=download.url,
-                    size=download.size,
-                    s3_url=download.s3_url,
-                    created_at=json_serial_date_obj(download.created_at),
-                    download_count=download.download_count,
-                    description=download.description,
-                    redirect=download.redirect,
-                    signature=download.signature,
-                    html_url=download.html_url,
-                    bucket=download.bucket,
-                    acl=download.acl,
-                    accesskeyid=download.accesskeyid,
-                    expirationdate=json_serial_date_obj(download.expirationdate),
-                ))
-        common_data['downloads'] = downloads
+                downloads.append(
+                    OrderedDict(
+                        name=download.name,
+                        url=download.url,
+                        size=download.size,
+                        s3_url=download.s3_url,
+                        created_at=json_serial_date_obj(download.created_at),
+                        download_count=download.download_count,
+                        description=download.description,
+                        redirect=download.redirect,
+                        signature=download.signature,
+                        html_url=download.html_url,
+                        bucket=download.bucket,
+                        acl=download.acl,
+                        accesskeyid=download.accesskeyid,
+                        expirationdate=json_serial_date_obj(download.expirationdate),
+                    )
+                )
+        common_data["downloads"] = downloads
 
         tags = []
         if repo.get_tags():
@@ -154,25 +152,30 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
                     zipball_url=tag.zipball_url,
                 )
                 if tag.commit:
-                    tag_info['sha1'] = tag.commit.sha
+                    tag_info["sha1"] = tag.commit.sha
                 tags.append(tag_info)
-        common_data['tags'] = tags
+        common_data["tags"] = tags
 
-        if not common_data.get('tags') and not common_data.get('downloads'):
+        if not common_data.get("tags") and not common_data.get("downloads"):
             # If there is no downloads and tags, let's make the download_url by forming archive/master.zip at the end
             # For example, the base html is: https://github.com/collectiveidea/calendar_builder
             # The final download_url is https://github.com/collectiveidea/calendar_builder/archive/master.zip
             branches_download_urls = []
-            download_url_bases = '{html_url}/archive/{branch_name}.zip'
+            download_url_bases = "{html_url}/archive/{branch_name}.zip"
             if repo.get_branches():
                 for branch in list(repo.get_branches()):
-                    branches_download_urls.append(download_url_bases.format(html_url=common_data.get('html_url'), branch_name=branch.name))
-            common_data['branches_download_urls'] = branches_download_urls
+                    branches_download_urls.append(
+                        download_url_bases.format(
+                            html_url=common_data.get("html_url"),
+                            branch_name=branch.name,
+                        )
+                    )
+            common_data["branches_download_urls"] = branches_download_urls
 
-        common_data['labels'] = []
+        common_data["labels"] = []
         if repo.get_labels():
             for label in repo.get_labels():
-                common_data['labels'].append(label.name)
+                common_data["labels"].append(label.name)
 
         return json.dumps(common_data)
 
@@ -185,7 +188,7 @@ def json_serial_date_obj(obj):
 
 # Indexing GitHub PURLs requires a GitHub API token.
 # Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
-@priority_router.route('pkg:github/.*')
+@priority_router.route("pkg:github/.*")
 def process_request_dir_listed(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a GitHub Package URL (PURL).
@@ -196,9 +199,9 @@ def process_request_dir_listed(purl_str, **kwargs):
     """
     from minecode.model_utils import DEFAULT_PIPELINES
 
-    addon_pipelines = kwargs.get('addon_pipelines', [])
+    addon_pipelines = kwargs.get("addon_pipelines", [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
+    priority = kwargs.get("priority", 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)

@@ -10,17 +10,16 @@
 import json
 
 from bs4 import BeautifulSoup
-
 from packagedcode import models as scan_models
+
 from minecode import map_router
 from minecode.mappers import Mapper
 
 # FIXME: we should create packages from releases!!!! not from projects
 
 
-@map_router.route('http://projects.eclipse.org/json/project/.*')
+@map_router.route("http://projects.eclipse.org/json/project/.*")
 class EclipseJsonPackageMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
         """
         Yield Package built from resource_uri record for a single
@@ -40,40 +39,39 @@ def build_packages_with_json(metadata, purl=None, uri=None):
     metadata: json metadata content
     purl: String value of the package url of the ResourceURI object
     """
-
-    projects = metadata['projects']
+    projects = metadata["projects"]
     for project, project_metadata in projects.items():
         common_data = dict(
             datasource_id="eclipse_metadata",
-            type='eclipse',
+            type="eclipse",
             name=project,
         )
 
-        descriptions = project_metadata.get('description')
+        descriptions = project_metadata.get("description")
         if descriptions and len(descriptions) > 0:
-            common_data['description'] = descriptions[0].get('value')
+            common_data["description"] = descriptions[0].get("value")
         else:
-            common_data['description'] = project_metadata['title']
+            common_data["description"] = project_metadata["title"]
 
-        homepage_urls = project_metadata.get('website_url')
+        homepage_urls = project_metadata.get("website_url")
         if homepage_urls and len(homepage_urls) > 0:
-            common_data['homepage_url'] = homepage_urls[0].get('url')
+            common_data["homepage_url"] = homepage_urls[0].get("url")
 
-        bug_tracking_urls = project_metadata.get('bugzilla')
+        bug_tracking_urls = project_metadata.get("bugzilla")
         if bug_tracking_urls and len(bug_tracking_urls) > 0:
-            common_data['bug_tracking_url'] = bug_tracking_urls[0].get(
-                'query_url')
+            common_data["bug_tracking_url"] = bug_tracking_urls[0].get("query_url")
 
-        if project_metadata.get('licenses'):
-            common_data['extracted_license_statement'] = [
-                l.get('name') for l in project_metadata.get('licenses', [])]
-            common_data['license_detections'] = []
+        if project_metadata.get("licenses"):
+            common_data["extracted_license_statement"] = [
+                l.get("name") for l in project_metadata.get("licenses", [])
+            ]
+            common_data["license_detections"] = []
 
         # FIXME: this is a download page and NOT a download URL!!!!!
-        for download_url in project_metadata.get('download_url', []):
-            durl = download_url.get('url')
+        for download_url in project_metadata.get("download_url", []):
+            durl = download_url.get("url")
             if durl:
-                common_data['download_url'] = durl
+                common_data["download_url"] = durl
                 package = scan_models.Package.from_package_data(
                     package_data=common_data,
                     datafile_path=uri,
@@ -82,7 +80,7 @@ def build_packages_with_json(metadata, purl=None, uri=None):
                 yield package
 
 
-@map_router.route('https://projects.eclipse.org/projects/.*')
+@map_router.route("https://projects.eclipse.org/projects/.*")
 class EclipseHTMLProjectMapper(Mapper):
     def get_packages(self, uri, resource_uri):
         """
@@ -99,43 +97,45 @@ def build_packages(html_text, purl=None, uri=None):
     Yield Package objects built from `html_text`and the `purl` package URL
     string.
     """
-    page = BeautifulSoup(html_text, 'lxml')
+    page = BeautifulSoup(html_text, "lxml")
     common_data = dict(
         datasource_id="eclipse_html",
-        type='eclipse',
+        type="eclipse",
     )
 
     extracted_license_statement = []
-    for meta in page.find_all(name='meta'):
-        if 'name' in meta.attrs and 'dcterms.title' in meta.attrs.get('name'):
-            common_data['name'] = meta.attrs.get('content')
-        if 'name' in meta.attrs and 'dcterms.description' in meta.attrs.get('name'):
-            common_data['description'] = meta.attrs.get('content')
+    for meta in page.find_all(name="meta"):
+        if "name" in meta.attrs and "dcterms.title" in meta.attrs.get("name"):
+            common_data["name"] = meta.attrs.get("content")
+        if "name" in meta.attrs and "dcterms.description" in meta.attrs.get("name"):
+            common_data["description"] = meta.attrs.get("content")
 
-    for div in page.find_all(name='div'):
-        if 'class' not in div.attrs:
+    for div in page.find_all(name="div"):
+        if "class" not in div.attrs:
             continue
-        if 'field-name-field-project-licenses' in div.attrs.get('class'):
+        if "field-name-field-project-licenses" in div.attrs.get("class"):
             # Visit div element whose class atttribute is field-name-field-project-licenses
-            for a in div.find_all(name='a'):
-                if 'href' not in a.attrs:
+            for a in div.find_all(name="a"):
+                if "href" not in a.attrs:
                     continue
                 license_name = str(a.contents[0])
                 extracted_license_statement.append(license_name)
     if extracted_license_statement:
-        common_data['extracted_license_statement'] = extracted_license_statement
-        common_data['license_detections'] = []
+        common_data["extracted_license_statement"] = extracted_license_statement
+        common_data["license_detections"] = []
 
-    for a in page.find_all(name='a'):
+    for a in page.find_all(name="a"):
         if a.contents:
-            if str(a.contents[0]).strip() == 'Website':
-                common_data['homepage_url'] = a['href']
+            if str(a.contents[0]).strip() == "Website":
+                common_data["homepage_url"] = a["href"]
 
-    for a in page.find_all(name='a'):
+    for a in page.find_all(name="a"):
         if not a.contents:
             continue
-        if str(a.contents[0]).strip() == 'Downloads':
-            download_data = dict(download_url=a['href'],)
+        if str(a.contents[0]).strip() == "Downloads":
+            download_data = dict(
+                download_url=a["href"],
+            )
             download_data.update(common_data)
             package = scan_models.Package.from_package_data(
                 package_data=download_data,
@@ -144,27 +144,27 @@ def build_packages(html_text, purl=None, uri=None):
             package.set_purl(purl)
             yield package
 
-    for div in page.find_all(name='div'):
-        if 'class' not in div.attrs:
+    for div in page.find_all(name="div"):
+        if "class" not in div.attrs:
             continue
-        if 'field-name-field-latest-releases' not in div.attrs.get('class'):
+        if "field-name-field-latest-releases" not in div.attrs.get("class"):
             continue
         # Visit div element whose class attribute is ield-name-field-latest-releases
-        tbody = div.find(name='tbody')
+        tbody = div.find(name="tbody")
         if not tbody:
             continue
 
-        for tr in tbody.find_all(name='tr'):
-            for td in tr.find_all(name='td'):
-                a = td.find(name='a')
+        for tr in tbody.find_all(name="tr"):
+            for td in tr.find_all(name="td"):
+                a = td.find(name="a")
                 if not a:
                     continue
 
-                if 'href' not in a.attrs or 'class' in a.attrs:
+                if "href" not in a.attrs or "class" in a.attrs:
                     continue
 
                 version = a.contents[0]
-                href = a['href']
+                href = a["href"]
                 download_data = dict(
                     version=version,
                     download_url=href,

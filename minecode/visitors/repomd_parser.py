@@ -2,14 +2,10 @@
 #  Copyright (c) 2016 nexB Inc. and others. All rights reserved.
 #
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import json
 import logging
 import os
-
 
 from commoncode import fileutils
 from packagedcode.models import PackageData
@@ -21,7 +17,6 @@ from minecode.utils import fetch_http
 from minecode.utils import get_temp_file
 from minecode.visitors import URI
 from minecode.visitors import repodata
-
 
 logger = logging.getLogger(__name__)
 
@@ -39,40 +34,43 @@ def download(uri):
     """
     name = fileutils.file_name(uri)
     file_ext = fileutils.file_extension(name)
-    name = name.replace(file_ext, '')
+    name = name.replace(file_ext, "")
 
     content = fetch_http(uri)
-    temp_file = get_temp_file(file_name='minecode-fetched-file-' + name, extension=file_ext)
-    with open(temp_file, 'wb') as tmp:
+    temp_file = get_temp_file(
+        file_name="minecode-fetched-file-" + name, extension=file_ext
+    )
+    with open(temp_file, "wb") as tmp:
         tmp.write(content)
     file_name = tmp.name
     return file_name
 
 
 def generate_rpm_objects(package_infos, base_url):
-    """
-    Yield Packages from an iterable of RPM infos given a base_url.
-    """
+    """Yield Packages from an iterable of RPM infos given a base_url."""
     # FIXME: what does package_infos mean? wheer does it come from?
     for infos in package_infos:
         package_data = dict(
             # FIXME: need to add id back? this is id is some hash which is local to the repo.
             # id=infos.get('pkgid'),
-            type='rpm',
-            name=infos.get('name'),
-            version=EVR(epoch=infos.get('epoch'), version=infos.get(
-                'ver'), release=infos.get('rel')).to_string(),
-            description=infos.get('description'),
-            homepage_url=infos.get('url'),
-            download_url=repodata.build_rpm_download_url(
-                base_url, infos.get('href')),
-            extracted_license_statement = infos.get('license', '')
+            type="rpm",
+            name=infos.get("name"),
+            version=EVR(
+                epoch=infos.get("epoch"),
+                version=infos.get("ver"),
+                release=infos.get("rel"),
+            ).to_string(),
+            description=infos.get("description"),
+            homepage_url=infos.get("url"),
+            download_url=repodata.build_rpm_download_url(base_url, infos.get("href")),
+            extracted_license_statement=infos.get("license", ""),
         )
         package = PackageData.from_data(package_data)
-        if infos.get('source_rpm'):
-            src_rpm = PackageData(name=infos.get('source_rpm'))
+        if infos.get("source_rpm"):
+            src_rpm = PackageData(name=infos.get("source_rpm"))
             package.related_packages = [src_rpm]
         yield package
+
 
 # TODO: refactor, this does not make sense, each are different URIs?
 # FIXME: the doc and semantics are cryptic too
@@ -88,17 +86,15 @@ def fetch_repomd_subfile(base_url, repomd_xml, subfile):
     return os.path.join(target_location, os.listdir(target_location)[0])
 
 
-@visit_router.route('.+/repomd.xml')
+@visit_router.route(".+/repomd.xml")
 def collect_rpm_packages_from_repomd(uri):
-    """
-    Collect RPM data from yum repository repomd.xml.
-    """
+    """Collect RPM data from yum repository repomd.xml."""
     base_url = fileutils.parent_directory(fileutils.parent_directory(uri))
     repomd_xml = download(uri)
 
-    filelists_xml = fetch_repomd_subfile(base_url, repomd_xml, 'filelists')
-    primary_xml = fetch_repomd_subfile(base_url, repomd_xml, 'primary')
-    other_xml = fetch_repomd_subfile(base_url, repomd_xml, 'other')
+    filelists_xml = fetch_repomd_subfile(base_url, repomd_xml, "filelists")
+    primary_xml = fetch_repomd_subfile(base_url, repomd_xml, "primary")
+    other_xml = fetch_repomd_subfile(base_url, repomd_xml, "other")
 
     pkg_infos = repodata.get_pkg_infos(filelists_xml, primary_xml, other_xml)
 

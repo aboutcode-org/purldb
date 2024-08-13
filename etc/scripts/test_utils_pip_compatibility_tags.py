@@ -1,4 +1,5 @@
-"""Generate and work with PEP 425 Compatibility Tags.
+"""
+Generate and work with PEP 425 Compatibility Tags.
 
 copied from pip-20.3.1 pip/tests/unit/test_utils_compatibility_tags.py
 download_url: https://raw.githubusercontent.com/pypa/pip/20.3.1/tests/unit/test_utils_compatibility_tags.py
@@ -25,11 +26,10 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from unittest.mock import patch
 import sysconfig
+from unittest.mock import patch
 
 import pytest
-
 import utils_pip_compatibility_tags
 
 
@@ -51,11 +51,9 @@ def test_version_info_to_nodot(version_info, expected):
     assert actual == expected
 
 
-class Testcompatibility_tags(object):
+class Testcompatibility_tags:
     def mock_get_config_var(self, **kwd):
-        """
-        Patch sysconfig.get_config_var for arbitrary keys.
-        """
+        """Patch sysconfig.get_config_var for arbitrary keys."""
         get_config_var = sysconfig.get_config_var
 
         def _mock_get_config_var(var):
@@ -66,9 +64,7 @@ class Testcompatibility_tags(object):
         return _mock_get_config_var
 
     def test_no_hyphen_tag(self):
-        """
-        Test that no tag contains a hyphen.
-        """
+        """Test that no tag contains a hyphen."""
         import pip._internal.utils.compatibility_tags
 
         mock_gcf = self.mock_get_config_var(SOABI="cpython-35m-darwin")
@@ -82,7 +78,7 @@ class Testcompatibility_tags(object):
             assert "-" not in tag.platform
 
 
-class TestManylinux2010Tags(object):
+class TestManylinux2010Tags:
     @pytest.mark.parametrize(
         "manylinux2010,manylinux1",
         [
@@ -91,11 +87,11 @@ class TestManylinux2010Tags(object):
         ],
     )
     def test_manylinux2010_implies_manylinux1(self, manylinux2010, manylinux1):
-        """
-        Specifying manylinux2010 implies manylinux1.
-        """
+        """Specifying manylinux2010 implies manylinux1."""
         groups = {}
-        supported = utils_pip_compatibility_tags.get_supported(platforms=[manylinux2010])
+        supported = utils_pip_compatibility_tags.get_supported(
+            platforms=[manylinux2010]
+        )
         for tag in supported:
             groups.setdefault((tag.interpreter, tag.abi), []).append(tag.platform)
 
@@ -105,7 +101,7 @@ class TestManylinux2010Tags(object):
             assert arches[:2] == [manylinux2010, manylinux1]
 
 
-class TestManylinux2014Tags(object):
+class TestManylinux2014Tags:
     @pytest.mark.parametrize(
         "manylinuxA,manylinuxB",
         [
@@ -114,9 +110,7 @@ class TestManylinux2014Tags(object):
         ],
     )
     def test_manylinuxA_implies_manylinuxB(self, manylinuxA, manylinuxB):
-        """
-        Specifying manylinux2014 implies manylinux2010/manylinux1.
-        """
+        """Specifying manylinux2014 implies manylinux2010/manylinux1."""
         groups = {}
         supported = utils_pip_compatibility_tags.get_supported(platforms=[manylinuxA])
         for tag in supported:

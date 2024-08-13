@@ -12,10 +12,10 @@ from django.test import TestCase
 
 class TestViews(TestCase):
     def test_robots_txt(self):
-        response = self.client.get('/robots.txt')
+        response = self.client.get("/robots.txt")
         assert response.status_code == 200
-        assert response['content-type'] == 'text/plain'
-        assert response.content == b'User-agent: *\nDisallow: *\n'
+        assert response["content-type"] == "text/plain"
+        assert response.content == b"User-agent: *\nDisallow: *\n"
 
         response = self.client.post("/robots.txt")
         assert response.status_code == 405

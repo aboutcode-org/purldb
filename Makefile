@@ -62,15 +62,15 @@ doc8:
 
 valid:
 	@echo "-> Run Ruff format"
-	@${ACTIVATE} ruff format
+	@${ACTIVATE} ruff format -exclude purldb-toolkit/ --exclude purl2vcs
 	@echo "-> Run Ruff linter"
-	@${ACTIVATE} ruff check --fix
+	@${ACTIVATE} ruff check --fix --exclude purldb-toolkit/ --exclude purl2vcs
 
 check:
 	@echo "-> Run Ruff linter validation (pycodestyle, bandit, isort, and more)"
-	@${ACTIVATE} ruff check
+	@${ACTIVATE} ruff check --exclude purldb-toolkit/ --exclude purl2vcs
 	@echo "-> Run Ruff format validation"
-	@${ACTIVATE} ruff format --check
+	@${ACTIVATE} ruff format --check --exclude purldb-toolkit/ --exclude purl2vcs
 	@$(MAKE) doc8
 
 clean:

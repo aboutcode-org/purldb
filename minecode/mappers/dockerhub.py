@@ -15,9 +15,8 @@ from minecode import map_router
 from minecode.mappers import Mapper
 
 
-@map_router.route('https://registry.hub.docker.com/v2/repositories/library/[\w\-\.]+/')
+@map_router.route(r"https://registry.hub.docker.com/v2/repositories/library/[\w\-\.]+/")
 class DockerHubLiraryJsonMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
         """
         Yield Package built from resource_uri record for a single
@@ -26,7 +25,8 @@ class DockerHubLiraryJsonMapper(Mapper):
         """
         metadata = resource_uri.data
         build_packages_from_jsonfile(
-            metadata, resource_uri.uri, resource_uri.package_url)
+            metadata, resource_uri.uri, resource_uri.package_url
+        )
 
 
 def build_packages_from_jsonfile(metadata, uri=None, purl=None):
@@ -37,19 +37,18 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
     purl: String value of the package url of the ResourceURI object
     """
     content = json.loads(metadata)
-    dockhub_library_htmlpage_template = 'https://hub.docker.com/_/{project}'
-    name = content.get('name')
+    dockhub_library_htmlpage_template = "https://hub.docker.com/_/{project}"
+    name = content.get("name")
     if name:
-        short_desc = content.get('description')
-        long_desc = content.get('full_description')
+        short_desc = content.get("description")
+        long_desc = content.get("full_description")
         descriptions = [d for d in (short_desc, long_desc) if d and d.strip()]
-        description = '\n'.join(descriptions)
+        description = "\n".join(descriptions)
         common_data = dict(
-            type='docker',
+            type="docker",
             name=name,
             description=description,
-            homepage_url=dockhub_library_htmlpage_template.format(
-                project=name),
+            homepage_url=dockhub_library_htmlpage_template.format(project=name),
         )
         package = scan_models.Package(**common_data)
         package.set_purl(purl)
