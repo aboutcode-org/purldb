@@ -50,3 +50,62 @@ addopts = [
     "--strict-markers",
     "--doctest-modules"
 ]
+
+[tool.ruff]
+line-length = 88
+extend-exclude = ["migrations", "var"]
+target-version = "py310"
+
+[tool.ruff.lint]
+# Rules: https://docs.astral.sh/ruff/rules/
+select = [
+    "E",  # pycodestyle
+    "W",  # pycodestyle warnings
+    "D",  # pydocstyle
+    "F",  # Pyflakes
+    "UP", # pyupgrade
+    "S",  # flake8-bandit
+    "I",  # isort
+    "C9", # McCabe complexity
+]
+ignore = [
+    "D1",
+    "D203", # one-blank-line-before-class
+    "D205", # blank-line-after-summary
+    "D212", # multi-line-summary-first-line
+    "D400", # ends-in-period
+    "D415", # ends-in-punctuation
+    "E501", # line-too-long
+    # TODO: we want to address these issues in the codebase, then get rid of
+    # the following ignores
+    "C901", # complex-structure
+    "S101", # assert
+    "S103", # bad-file-permissions
+    "S113", # request-without-timeout
+    "S202", # tarfile-unsafe-members
+    "S314", # suspicious-xml-element-tree-usage
+    "S320", # suspicious-xmle-tree-usage
+    "S324", # hashlib-insecure-hash-function
+    "S506", # unsafe-yaml-load
+    "S602", # subprocess-popen-with-shell-equals-true
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+sections = { django = ["django"] }
+section-order = [
+    "future",
+    "standard-library",
+    "django",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.per-file-ignores]
+"**/testfiles/**.py" = ["F821"] # Ignore undefined names from test files
+"matchcode_project/settings.py" = ["F403", "F405"] # Ignore undefined names from star imports and star imports
+"purldb_public_project/settings.py" = ["F403", "F405"]  # Ignore undefined names from star imports and star imports
