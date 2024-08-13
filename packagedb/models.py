@@ -79,8 +79,7 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         paginator = Paginator(self, per_page=per_page)
         for page_number in paginator.page_range:
             page = paginator.page(page_number)
-            for object in page.object_list:
-                yield object
+            yield from page.object_list
 
 
 VCS_CHOICES = [
@@ -94,7 +93,7 @@ VCS_CHOICES = [
 
 class LowerCaseField(models.CharField):
     def __init__(self, *args, **kwargs):
-        super(LowerCaseField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def to_python(self, value):
         return str(value).lower()
@@ -217,8 +216,8 @@ class ExtraDataFieldMixin(models.Model):
     )
 
     def update_extra_data(self, data):
-        """Updates the `extra_data` field with the provided `data` dict."""
-        if type(data) != dict:
+        """Update `extra_data` field with the provided `data` dict."""
+        if type(data) is not dict:
             raise ValueError("Argument `data` value must be a dict()")
 
         self.extra_data.update(data)
@@ -670,7 +669,7 @@ class Package(
                 unsaved_models = []
                 if field == "dependencies":
                     for dep_data in value:
-                        if isinstance(dep_data, (dict, OrderedDict)):
+                        if isinstance(dep_data, dict | OrderedDict):
                             dep = DependentPackage(
                                 package=self,
                                 purl=dep_data.get("purl"),
@@ -692,7 +691,7 @@ class Package(
 
                 if field == "parties":
                     for party_data in value:
-                        if isinstance(party_data, (dict, OrderedDict)):
+                        if isinstance(party_data, dict | OrderedDict):
                             party = Party(
                                 package=self,
                                 type=party_data.get("type"),
@@ -711,7 +710,7 @@ class Package(
 
                 if field == "resources":
                     for resource_data in value:
-                        if isinstance(resource_data, (dict, OrderedDict)):
+                        if isinstance(resource_data, dict | OrderedDict):
                             resource = Resource(
                                 package=self,
                                 path=resource_data.get("path"),
@@ -1377,7 +1376,7 @@ class PackageWatch(models.Model):
         if schedule:
             self.schedule_work_id = self.create_new_job()
 
-        super(PackageWatch, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         """Clear associated watch schedule."""

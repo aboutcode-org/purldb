@@ -16,7 +16,7 @@ Helps to parse 'primary.xml', 'other.xml' and 'filelists.xml' of a given repo.
 
 
 def remove_list_repetitions(input_list):
-    """Removes the repeated items in a list and returns a list with unique values"""
+    """Remove the repeated items in a list and return a list with unique values"""
     output = []
     for item in input_list:
         if item not in output:
@@ -43,7 +43,7 @@ def combine_dicts_using_pkgid(all_dicts):
 
 def combine_list_of_dicts(input_dicts):
     """
-    Combines a list of dictionaries and returns a single dictionary with all the
+    Combine a list of dictionaries and return a single dictionary with all the
     keys and values from all the dictionaries in the list.
     """
     all_dict_items = []
@@ -132,7 +132,7 @@ def get_value_from_tuple_pairs(tuples, key):
 
 def filelistsxml_parser(location):
     """
-    Parses filelists.xml file and yields the data needed to generate RPM objects.
+    Parse filelists.xml file and yield the data needed to generate RPM objects.
 
     <filelists xmlns="http://linux.duke.edu/metadata/filelists" packages="384">
         <package pkgid="36547e200627ea25c4e3fb6f9735d58e682f8e35cd815dceed796c83628e60d5" name="python-ceilometerclient" arch="src">
@@ -177,7 +177,7 @@ def filelistsxml_parser(location):
 
 def primaryxml_parser(location):
     """
-    Parses primary.xml file and yields the data needed to generate RPM objects.
+    Parse primary.xml file and yield the data needed to generate RPM objects.
 
     <package type="rpm">
         <checksum type="sha256" pkgid="YES">36547e200627ea25c4e3fb6f9735d58e682f8e35cd815dceed796c83628e60d5</checksum>
@@ -252,7 +252,7 @@ def primaryxml_parser(location):
 
 def otherxml_parser(location):
     """
-    Parses other.xml file and yields the data needed to generate RPM objects.
+    Parse other.xml file and yield the data needed to generate RPM objects.
 
     <package pkgid="36547e200627ea25c4e3fb6f9735d58e682f8e35cd815dceed796c83628e60d5" name="python-ceilometerclient" arch="src">
         <version epoch="0" ver="1.5.0" rel="1.el7"/>

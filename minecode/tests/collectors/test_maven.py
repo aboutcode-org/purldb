@@ -19,7 +19,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     )
 
     def setUp(self):
-        super(MavenPriorityQueueTests, self).setUp()
+        super().setUp()
 
         self.expected_pom_loc = self.get_test_loc("maven/pom/classworlds-1.1.pom")
         with open(self.expected_pom_loc) as f:

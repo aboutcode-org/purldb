@@ -105,9 +105,9 @@ class RubyGemsApiManyVersionsVisitor(HttpJsonVisitor):
                 self.uri.index("/versions/") + len("/versions/") : -len(".json")
             ]
             version = version_details.get("number")
-            gem_name = "%(name)s-%(version)s" % locals()
+            gem_name = f"{name}-{version}"
             package_url = PackageURL(type="gem", name=name, version=version).to_string()
-            download_url = "https://rubygems.org/downloads/%(gem_name)s.gem" % locals()
+            download_url = f"https://rubygems.org/downloads/{gem_name}.gem"
             yield URI(
                 uri=download_url,
                 source_uri=self.uri,

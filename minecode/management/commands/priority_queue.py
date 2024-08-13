@@ -116,9 +116,6 @@ def process_request(priority_resource_uri, _priority_router=priority_router):
         if priority:
             kwargs["priority"] = priority
         errors = _priority_router.process(purl_to_visit, **kwargs)
-        if TRACE:
-            new_uris_to_visit = list(new_uris_to_visit or [])
-            logger.debug(f"visit_uri: new_uris_to_visit: {new_uris_to_visit}")
 
         return errors
 

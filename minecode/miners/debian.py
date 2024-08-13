@@ -20,6 +20,7 @@ from debian_inspector import debcon
 from packagedcode import models as scan_models
 from packageurl import PackageURL
 
+import minecode.collectors.debian as debian_collector
 from minecode import debutils
 from minecode import ls
 from minecode import map_router
@@ -352,12 +353,12 @@ def parse_description(metadata, purl=None, base_download_url=None):
     if metadata.get("Label"):
         common_data["keywords"] = [metadata.get("Label")]
 
-    vcs_tool, vcs_repo = get_vcs_repo(metadata)
+    vcs_tool, vcs_repo = debian_collector.get_vcs_repo(metadata)
     if vcs_tool and vcs_repo:
         vcs_repo = form_vcs_url(vcs_tool, vcs_repo)
     common_data["vcs_url"] = vcs_repo
 
-    dependencies = get_dependencies(metadata)
+    dependencies = debian_collector.get_dependencies(metadata)
     if dependencies:
         common_data["dependencies"] = dependencies
 
@@ -452,7 +453,7 @@ def build_source_file_packages(metadata, purl=None):
                     )
                     parties.append(party)
 
-        dependencies = get_dependencies(source, ["Build-Depends"])
+        dependencies = debian_collector.get_dependencies(source, ["Build-Depends"])
 
         keywords = set()
         keywords.update(debutils.comma_separated(source.get("Binary", "")))
@@ -478,7 +479,7 @@ def build_source_file_packages(metadata, purl=None):
 
             package["download_url"] = download_url
 
-            vcs_tool, vcs_repo = get_vcs_repo(source)
+            vcs_tool, vcs_repo = debian_collector.get_vcs_repo(source)
             if vcs_tool and vcs_repo:
                 vcs_repo = form_vcs_url(vcs_tool, vcs_repo)
             package["vcs_url"] = vcs_repo
@@ -549,7 +550,7 @@ def parse_packages(metadata, purl=None):
                 party = scan_models.Party(name=name, role="maintainer", email=email)
                 data["parties"].append(party)
 
-        dependencies = get_dependencies(pack)
+        dependencies = debian_collector.get_dependencies(pack)
         if dependencies:
             data["dependencies"] = dependencies
 

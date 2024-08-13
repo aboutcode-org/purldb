@@ -543,5 +543,5 @@ class PackageWatchModelTestCase(TransactionTestCase):
         assert package
         assert (
             Package.objects.filter(download_url="http://a.ab-foobar").get_or_none()
-            == None
+            is None
         )

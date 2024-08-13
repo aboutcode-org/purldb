@@ -119,7 +119,8 @@ class Router:
 
     def route(self, *patterns):
         """
-        Decorator to make a callable 'endpoint' routed to one or more patterns.
+        Return a decorator to make a callable 'endpoint' routed to one or more
+        patterns.
 
         Example:
         -------
@@ -178,7 +179,7 @@ class Router:
             # this can happen when multiple patterns match the same string
             # we raise an exception with enough debugging information
             pats = repr([r.pattern for r in candidates])
-            msg = "%(string)r matches multiple patterns %(pats)r" % locals()
+            msg = f"{string} matches multiple patterns {pats}"
             raise MultipleRoutesDefined(msg)
 
         return candidates[0].endpoint

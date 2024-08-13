@@ -192,7 +192,7 @@ class CpanReadmeVisitors(HttpVisitor):
     def dumps(self, content):
         """Return the json by parsing the readme content"""
         # Handle bytes properly in python3
-        if type(content) == bytes:
+        if type(content) is bytes:
             content = content.decode("utf-8")
 
         lines = content.splitlines()
@@ -240,7 +240,7 @@ def build_packages_from_release_json(metadata, uri=None):
             continue
 
         extracted_license_statement = [
-            l for l in release.get("license", []) if l and l.strip()
+            lic for lic in release.get("license", []) if lic and lic.strip()
         ]
 
         common_data = dict(
@@ -278,7 +278,9 @@ def build_packages_from_release_json(metadata, uri=None):
         # like perl_5. The license here under resources section is the
         # url of license for example: http://dev.perl.org/licenses/ So
         # it's useful to collect both information...
-        license_url = [l for l in resources.get("license", []) if l and l.strip()]
+        license_url = [
+            lic for lic in resources.get("license", []) if lic and lic.strip()
+        ]
         if license_url:
             common_data["extracted_license_statement"].extend(license_url)
 
@@ -355,7 +357,7 @@ def build_packages_from_metafile(metadata, uri=None, purl=None):
     licenses_content = content.get("license")
     extracted_license_statement = []
     if licenses_content:
-        if isinstance(licenses_content, (list,)):
+        if isinstance(licenses_content, list):
             for lic in licenses_content:
                 extracted_license_statement.append(lic)
         else:

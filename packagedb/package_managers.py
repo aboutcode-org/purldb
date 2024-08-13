@@ -58,7 +58,7 @@ def get_response(url, content_type="json", headers=None):
 
     try:
         resp = requests.get(url=url, headers=headers)
-    except:
+    except Exception:
         logger.error(traceback.format_exc())
         return
     if not resp.status_code == 200:

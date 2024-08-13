@@ -137,7 +137,7 @@ def fetch_directory(uri, recurse=True):
         file_name = tmp.name
         ends = not uri.endswith("/") and "/" or ""
         recursive = recurse and "--recursive" or "--no-recursive"
-        cmd = 'rsync --no-motd %(recursive)s -d "%(uri)s%(ends)s"' % locals()
+        cmd = f'rsync --no-motd {recursive} -d "{uri}{ends}"'
         rsync = command.Command(cmd)
         out, err = rsync.execute()
 
@@ -147,6 +147,6 @@ def fetch_directory(uri, recurse=True):
         err = "\n".join([e for e in err])
         rc = rsync.returncode
         if err or rc:
-            raise Exception("%(cmd) failed. rc:%(tc)d err: %(err)s" % locals())
+            raise Exception(f"{cmd} failed. rc:{rc} err: {err}")
         else:
             return file_name

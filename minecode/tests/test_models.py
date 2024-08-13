@@ -371,7 +371,7 @@ class ResourceURIManagerGetMappablesTestCase(TestCase):
         self.assertEqual(2, ResourceURI.objects.get_mappables().count())
         self.resource1.last_map_date = timezone.now()
         self.resource1.save()
-        resource1 = ResourceURI.objects.get(id=self.resource1.id)
+        # resource2 should only be mappable
         self.assertEqual([self.resource2], list(ResourceURI.objects.get_mappables()))
 
     def test_get_mappables__map_error_must_make_a_resourceuri_non_mappable(self):
@@ -381,7 +381,6 @@ class ResourceURIManagerGetMappablesTestCase(TestCase):
         self.resource2.map_error = "Some error happened"
         self.resource1.save()
         self.resource2.save()
-        resource1 = ResourceURI.objects.get(id=self.resource1.id)
         self.assertEqual([], list(ResourceURI.objects.get_mappables()))
 
 
@@ -457,9 +456,7 @@ class ScannableURIModelTestCase(TestCase):
         )
 
     def test_ScannableURI_create_basic_record(self):
-        scannable_uri = ScannableURI.objects.create(
-            uri=self.test_uri, package=self.test_package
-        )
+        ScannableURI.objects.create(uri=self.test_uri, package=self.test_package)
         result = ScannableURI.objects.get(uri=self.test_uri)
         self.assertEqual(self.test_uri, result.uri)
         self.assertEqual(self.test_package, result.package)

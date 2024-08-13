@@ -32,6 +32,8 @@ class BowerTopJsonVisitor(HttpJsonVisitor):
 
     def get_uris(self, content):
         """
+        Yield URIs given `content` from Bower.
+
         The json content is a list with name and url, like the following format:
         ...
           {

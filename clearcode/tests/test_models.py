@@ -39,7 +39,7 @@ class CDitemManagerTestCase(TestCase):
         # This path starts with npm, which is known
         cditem_1 = CDitem.objects.create(path="npm/name/version")
         # asdf is not a proper type
-        cditem_2 = CDitem.objects.create(path="asdf/name/version")
+        CDitem.objects.create(path="asdf/name/version")
         cditems = list(CDitem.objects.known_package_types())
         self.assertEqual(1, len(cditems))
         cditem = cditems[0]
@@ -50,7 +50,7 @@ class CDitemManagerTestCase(TestCase):
             path="composer/packagist/yoast/wordpress-seo/revision/9.5-RC3.json"
         )
         # harvest should not be in cditems
-        harvest = CDitem.objects.create(
+        CDitem.objects.create(
             path="sourcearchive/mavencentral/io.nats/jnats/revision/2.6.6/tool/scancode/3.2.2.json"
         )
         cditems = list(CDitem.objects.definitions())
@@ -63,7 +63,7 @@ class CDitemManagerTestCase(TestCase):
             path="sourcearchive/mavencentral/io.nats/jnats/revision/2.6.6/tool/scancode/3.2.2.json"
         )
         # unexpected_harvest should not be in cditems
-        unexpected_harvest = CDitem.objects.create(
+        CDitem.objects.create(
             path="sourcearchive/mavencentral/io.nats/jnats/revision/2.6.6/tool/licensee/9.13.0.json"
         )
         harvests = list(CDitem.objects.scancode_harvests())
@@ -75,7 +75,8 @@ class CDitemManagerTestCase(TestCase):
         definition_1 = CDitem.objects.create(
             path="sourcearchive/mavencentral/io.nats/jnats/revision/2.6.6.json"
         )
-        definition_2 = CDitem.objects.create(
+        # This should not be mappable
+        CDitem.objects.create(
             path="sourcearchive/mavencentral/io.quarkus/quarkus-jsonb/revision/0.26.1.json",
             last_map_date=timezone.now(),
             map_error="error",
@@ -92,12 +93,14 @@ class CDitemManagerTestCase(TestCase):
         definition_1 = CDitem.objects.create(
             path="sourcearchive/mavencentral/io.nats/jnats/revision/2.6.6.json"
         )
-        definition_2 = CDitem.objects.create(
+        # This should not be mappable
+        CDitem.objects.create(
             path="sourcearchive/mavencentral/io.quarkus/quarkus-jsonb/revision/0.26.1.json",
             last_map_date=timezone.now(),
             map_error="error",
         )
-        harvest = CDitem.objects.create(
+        # This should not be mappable
+        CDitem.objects.create(
             path="sourcearchive/mavencentral/io.nats/jnats/revision/2.6.6/tool/scancode/3.2.2.json"
         )
         mappables = list(CDitem.objects.mappable_definitions())
@@ -109,12 +112,14 @@ class CDitemManagerTestCase(TestCase):
         harvest_1 = CDitem.objects.create(
             path="sourcearchive/mavencentral/io.nats/jnats/revision/2.6.6/tool/scancode/3.2.2.json"
         )
-        harvest_2 = CDitem.objects.create(
+        # This should not be mappable
+        CDitem.objects.create(
             path="sourcearchive/mavencentral/io.cucumber/cucumber-core/revision/5.0.0-RC1/tool/scancode/3.2.2.json",
             last_map_date=timezone.now(),
             map_error="error",
         )
-        definition_1 = CDitem.objects.create(
+        # This should not be mappable
+        CDitem.objects.create(
             path="sourcearchive/mavencentral/io.nats/jnats/revision/2.6.6.json"
         )
         mappables = list(CDitem.objects.mappable_scancode_harvests())

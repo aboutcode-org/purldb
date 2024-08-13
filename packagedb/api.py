@@ -551,7 +551,7 @@ class PackageUpdateSet(viewsets.ViewSet):
                 if package_set:
                     package_set = package_set
 
-            except:
+            except Exception:
                 message = {"update_status": f"No Package Set found for {uuid}"}
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 

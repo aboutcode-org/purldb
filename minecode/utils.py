@@ -48,14 +48,14 @@ def stringify_null_purl_fields(data):
 
 
 def sha1(content):
-    """Returns the sha1 hash of the given content."""
+    """Return the sha1 hash of the given content."""
     h = hashlib.sha1()
     h.update(content)
     return h.hexdigest()
 
 
 def md5(content):
-    """Returns the md5 hash of the given content."""
+    """Return the md5 hash of the given content."""
     h = hashlib.md5()
     h.update(content)
     return h.hexdigest()
@@ -86,14 +86,14 @@ class DataObject:
 
 
 def normalize_trailing_slash(uri):
-    """Appends a trailing slash if the URI is not ending with one already."""
+    """Append a trailing slash if the URI is not ending with one already."""
     if not uri.endswith("/"):
         uri += "/"
     return uri
 
 
 def is_ascii(s):
-    """Returns True is the string is ASCII."""
+    """Return True is the string is ASCII."""
     return all(ord(c) < 128 for c in s)
 
 
@@ -109,7 +109,7 @@ def clean_html_entities(text):
 
 
 def clean_description(text):
-    """Cleans the description text from HTML entities and from extra whitespaces."""
+    """Clean the description text from HTML entities and from extra whitespaces."""
     return " ".join(clean_html_entities(text.strip()).split())
 
 
@@ -212,19 +212,18 @@ def get_http_response(uri, timeout=10):
     requests_args["timeout"] = timeout
 
     if not uri.lower().startswith("http"):
-        raise Exception("get_http_response: Not an HTTP URI: %(uri)r" % locals())
+        raise Exception(f"get_http_response: Not an HTTP URI: {uri}")
 
     try:
         response = requests.get(uri, **requests_args)
     except (ConnectionError, InvalidSchema):
-        logger.error("get_http_response: Download failed for %(uri)r" % locals())
+        logger.error(f"get_http_response: Download failed for {uri}")
         raise
 
     status = response.status_code
     if status != 200:
         raise Exception(
-            "get_http_response: Download failed for %(uri)r "
-            "with %(status)r" % locals()
+            f"get_http_response: Download failed for {uri} " f"with {status}"
         )
     return response
 
@@ -249,8 +248,8 @@ def get_package_sha1(package, field="repository_download_url"):
 
 def fetch_and_write_file_from_url(url):
     """
-    Fetches a file from the `url` and returns the location for the
-    temporary file. Return None if the url is not reachable.
+    Fetch a file from the `url` and return the location for the temporary file.
+    Return None if the url is not reachable.
     """
     response = requests.get(url)
     if not response.ok:
@@ -327,7 +326,7 @@ def extract_file(location):
                 target = event.target
                 break
     except Exception as e:
-        logger.error("extract_file: failed for %(location)r" % locals())
+        logger.error(f"extract_file: failed for {location}")
         raise e
     return target
 
@@ -389,9 +388,8 @@ class MemorySavingQuerysetIterator:
             smaller_queryset = copy.deepcopy(self._base_queryset)[
                 i : i + self.max_obj_num
             ]
-            logger.debug("Grabbing next %s objects from DB" % self.max_obj_num)
-            for obj in smaller_queryset.iterator():
-                yield obj
+            logger.debug(f"Grabbing next {self.max_obj_num} objects from DB")
+            yield from smaller_queryset.iterator()
 
     def __iter__(self):
         return self._generator

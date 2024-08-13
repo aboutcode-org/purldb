@@ -498,17 +498,17 @@ collect_links_and_artifact_timestamps = re.compile(
 
 def check_if_file_name_is_linked_on_page(file_name, links, **kwargs):
     """Return True if `file_name` is in `links`"""
-    return any(l.endswith(file_name) for l in links)
+    return any(link.endswith(file_name) for link in links)
 
 
 def check_if_page_has_pom_files(links, **kwargs):
     """Return True of any entry in `links` ends with .pom."""
-    return any(l.endswith(".pom") for l in links)
+    return any(link.endswith(".pom") for link in links)
 
 
 def check_if_page_has_directories(links, **kwargs):
     """Return True if any entry, excluding "../", ends with /."""
-    return any(l.endswith("/") for l in links if l != "../")
+    return any(link.endswith("/") for link in links if link != "../")
 
 
 def check_if_package_version_page(links, **kwargs):

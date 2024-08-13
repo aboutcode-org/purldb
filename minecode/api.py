@@ -201,7 +201,7 @@ def index_package_scan(request, key):
 
     user_id = signing.loads(key)
     User = get_user_model()
-    user = get_object_or_404(User, id=user_id)
+    get_object_or_404(User, id=user_id)
 
     results = json_data.get("results")
     summary = json_data.get("summary")

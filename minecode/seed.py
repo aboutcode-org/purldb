@@ -45,7 +45,7 @@ def get_active_seeders(seeders=()):
     if not seeders:
         seeders = get_configured_seeders()
     for seeder in seeders:
-        if isinstance(seeder, (bytes, unicode)):
+        if isinstance(seeder, bytes | unicode):
             module_name, _, class_name = seeder.rpartition(".")
             module = importlib.import_module(module_name)
             yield getattr(module, class_name)()

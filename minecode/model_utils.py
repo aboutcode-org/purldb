@@ -153,9 +153,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
                 logger.debug(f"  No existing value: set to new: {new_value}")
 
             if TRACE and replace:
-                logger.debug(
-                    f"  Existing value and replace: set to new: {new_value}"
-                )
+                logger.debug(f"  Existing value and replace: set to new: {new_value}")
 
             if existing_field == "parties":
                 # If `existing_field` is `parties`, then we update the `Party` table
@@ -460,8 +458,8 @@ def merge_or_create_package(scanned_package, visit_level, override=False):
 
 def update_or_create_resource(package, resource_data):
     """
-    Using Resource data from `resource_data`, create or update the
-    corresponding purldb Resource from `package`.
+    Create or update the corresponding purldb Resource from `package` using
+    Resource data from `resource_data`.
 
     Return a 3-tuple of the corresponding purldb Resource of `resource_data`,
     `resource`, as well as booleans representing whether the Resource was

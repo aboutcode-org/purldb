@@ -209,7 +209,7 @@ def update_maven_packages(
         namespace = namespace.lower()
         name = name.lower()
         version = version.lower()
-        normalize_qualifiers = normalize_qualifiers.lower()
+        normalized_qualifiers = normalized_qualifiers.lower()
 
     existing_packages = Package.objects.filter(
         type="maven",
@@ -218,7 +218,7 @@ def update_maven_packages(
         version=version,
         qualifiers=normalized_qualifiers or "",
     )
-    if existing_package.exists():
+    if existing_packages.exists():
         duplicate_packages = []
         for existing_package in existing_packages:
             if existing_package.download_url != maven_package.download_url:

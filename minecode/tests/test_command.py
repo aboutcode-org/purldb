@@ -21,7 +21,7 @@ class CommandTest(MiningTestCase):
     def test_listing_command(self):
         td = self.get_test_loc("command")
         osc = "ls" if not ON_WINDOWS else "dir"
-        c = '%(osc)s "%(td)s"' % locals()
+        c = f'{osc} "{td}"'
         cmd = command.Command(c)
         out, err = cmd.execute()
         err = [e for e in err]

@@ -83,8 +83,8 @@ def generate_rpm_objects(package_infos, base_url):
 
 def fetch_repomd_subfile(base_url, repomd_xml, subfile):
     """
-    Downloads and extract a subfile('filelists.xml.gz', 'primary.xml.gz',
-    'other.xml.gz') of any repodata and returns the subfile location.
+    Download and extract a subfile('filelists.xml.gz', 'primary.xml.gz',
+    'other.xml.gz') of any repodata and return the subfile location.
     """
     url = base_url + repodata.get_url_for_tag(repomd_xml, subfile)
     target_location = extract_file(download(url))
@@ -113,7 +113,7 @@ def collect_rpm_packages_from_repomd(uri):
 
 @map_router.route(".+/repomd.xml")
 def map_repomd_data(uris, resource_uri):
-    """Returns a list of RpmPackage objects collected from visitors."""
+    """Return a list of RpmPackage objects collected from visitors."""
     if not resource_uri.data:
         return
     packages = []

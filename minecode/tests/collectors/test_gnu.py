@@ -24,7 +24,7 @@ class GnuPriorityQueueTests(JsonBasedTesting, TestCase):
     )
 
     def setUp(self):
-        super(GnuPriorityQueueTests, self).setUp()
+        super().setUp()
         glibc_data_loc = self.get_test_loc("gnu/glibc/index.html")
 
         with open(glibc_data_loc) as f:

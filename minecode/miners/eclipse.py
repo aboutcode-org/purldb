@@ -218,7 +218,7 @@ def build_packages_with_json(metadata, purl=None, uri=None):
 
         if project_metadata.get("licenses"):
             common_data["extracted_license_statement"] = [
-                l.get("name") for l in project_metadata.get("licenses", [])
+                lic.get("name") for lic in project_metadata.get("licenses", [])
             ]
             common_data["license_detections"] = []
 

@@ -207,10 +207,9 @@ class BitbucketDownloadMapper(Mapper):
         """Yield Package built from resource_uri record for a single package version."""
         downloads_data = json.loads(resource_uri.data)
         for download_data in downloads_data.get("values", []):
-            for package in build_bitbucket_download_packages(
+            yield from build_bitbucket_download_packages(
                 download_data, resource_uri.package_url
-            ):
-                yield package
+            )
 
 
 def build_bitbucket_download_packages(download_data, purl):
@@ -223,8 +222,8 @@ def build_bitbucket_download_packages(download_data, purl):
     name = purl.name
 
     # FIXME: add these ?
-    filename = download_data.get("name")
-    download_counts = download_data.get("downloads", 0)
+    # filename = download_data.get("name")
+    # download_counts = download_data.get("downloads", 0)
 
     download_url = download_data.get("links", {}).get("self", {}).get("href")
     size = download_data.get("size")

@@ -227,7 +227,7 @@ class NonPersistentHttpVisitor(HttpVisitor):
 
         `timeout` is a default timeout.
         """
-        content = super(NonPersistentHttpVisitor, self).fetch(uri, timeout=timeout)
+        content = super().fetch(uri, timeout=timeout)
         temp_file = get_temp_file("NonPersistentHttpVisitor")
         with open(temp_file, "wb") as tmp:
             tmp.write(content)
@@ -266,8 +266,8 @@ class Mapper:
 
     def get_packages(self, uri, resource_uri):
         """
-        This method must yield ScannedPackage objects (or return a list) built
-        from a resource_uri ResourceURI object.
+        Yield ScannedPackage objects (or return a list) built from a
+        resource_uri ResourceURI object.
         """
         raise NotImplementedError
 

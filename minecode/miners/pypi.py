@@ -61,7 +61,7 @@ class PypiIndexVisitor(Visitor):
         return temp_file
 
     def dumps(self, content):
-        """The content is huge json and should not be dumped."""
+        """Return None as the content is huge json and should not be dumped."""
         return None
 
     def get_uris(self, content):

@@ -136,7 +136,7 @@ ARCHIVE_FILE_EXT_RES = [
 
 
 def strip_extensions(path):
-    """ "Remove well known archive extensions from end of path."""
+    """Remove well known archive extensions from end of path."""
     for rext in ARCHIVE_FILE_EXT_RES:
         path = rext.sub("", path)
     return path

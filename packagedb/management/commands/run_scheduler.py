@@ -29,4 +29,4 @@ class Command(rqscheduler.Command):
     def handle(self, *args, **kwargs):
         clear_zombie_watch_schedules()
         init_watch_scheduled()
-        super(Command, self).handle(*args, **kwargs)
+        super().handle(*args, **kwargs)

@@ -120,9 +120,7 @@ class ResourceAPITestCase(JsonBasedTesting, TestCase):
         self.assertEqual(2, response.data.get("count"))
 
     def test_api_resource_list_endpoint_filters_by_package1_uuid(self):
-        response = self.client.get(
-            f"/api/resources/?package={self.package1.uuid}"
-        )
+        response = self.client.get(f"/api/resources/?package={self.package1.uuid}")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, response.data.get("count"))
@@ -143,9 +141,7 @@ class ResourceAPITestCase(JsonBasedTesting, TestCase):
         self.assertEqual(test_resource.get("type"), self.resource1.type)
 
     def test_api_resource_list_endpoint_filters_by_package2_uuid(self):
-        response = self.client.get(
-            f"/api/resources/?package={self.package2.uuid}"
-        )
+        response = self.client.get(f"/api/resources/?package={self.package2.uuid}")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, response.data.get("count"))
@@ -172,15 +168,8 @@ class ResourceAPITestCase(JsonBasedTesting, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, response.data.get("count"))
 
-    def test_api_resource_list_endpoint_returns_none_when_filtering_by_blank_uuid(self):
-        response = self.client.get("/api/resources/?purl={}".format(""))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(2, response.data.get("count"))
-
     def test_api_resource_list_endpoint_filters_by_package1_purl(self):
-        response = self.client.get(
-            f"/api/resources/?purl={self.package1.package_url}"
-        )
+        response = self.client.get(f"/api/resources/?purl={self.package1.package_url}")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, response.data.get("count"))
@@ -201,9 +190,7 @@ class ResourceAPITestCase(JsonBasedTesting, TestCase):
         self.assertEqual(test_resource.get("type"), self.resource1.type)
 
     def test_api_resource_list_endpoint_filters_by_package2_purl(self):
-        response = self.client.get(
-            f"/api/resources/?purl={self.package2.package_url}"
-        )
+        response = self.client.get(f"/api/resources/?purl={self.package2.package_url}")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, response.data.get("count"))
@@ -407,15 +394,11 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
             if key not in ["type", "namespace", "name"]:
                 continue
 
-            response = self.client.get(
-                f"/api/packages/?{key}={value.lower()}"
-            )
+            response = self.client.get(f"/api/packages/?{key}={value.lower()}")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(1, response.data.get("count"))
 
-            response = self.client.get(
-                f"/api/packages/?{key}={value.upper()}"
-            )
+            response = self.client.get(f"/api/packages/?{key}={value.upper()}")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(1, response.data.get("count"))
 
@@ -794,7 +777,8 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         )
 
     def test_package_api_purl_filter_by_two_purl_values_on_multiple_packages(self):
-        extra_test_package = Package.objects.create(
+        # extra test package
+        Package.objects.create(
             download_url="https://extra-pkg.com/download",
             type="generic",
             name="extra-name",
@@ -981,7 +965,6 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
     def test_package_live(self):
         purl_str = "pkg:maven/org.apache.twill/twill-core@0.12.0"
         download_url = "https://repo1.maven.org/maven2/org/apache/twill/twill-core/0.12.0/twill-core-0.12.0.jar"
-        purl_sources_str = f"{purl_str}?classifier=sources"
         sources_download_url = "https://repo1.maven.org/maven2/org/apache/twill/twill-core/0.12.0/twill-core-0.12.0-sources.jar"
 
         self.assertEqual(0, Package.objects.filter(download_url=download_url).count())
@@ -1017,7 +1000,6 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
     def test_package_live_works_with_purl2vcs(self):
         purl = "pkg:maven/org.elasticsearch.plugin/elasticsearch-scripting-painless-spi@6.8.15"
         download_url = "https://repo1.maven.org/maven2/org/elasticsearch/plugin/elasticsearch-scripting-painless-spi/6.8.15/elasticsearch-scripting-painless-spi-6.8.15.jar"
-        purl_sources_str = f"{purl}?classifier=sources"
         sources_download_url = "https://repo1.maven.org/maven2/org/elasticsearch/plugin/elasticsearch-scripting-painless-spi/6.8.15/elasticsearch-scripting-painless-spi-6.8.15-sources.jar"
 
         self.assertEqual(0, Package.objects.filter(download_url=download_url).count())

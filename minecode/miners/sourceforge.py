@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import json
 import logging
 import re
 
@@ -156,11 +157,11 @@ def build_packages_from_metafile(metadata, purl=None, uri=None):
 
         extracted_license_statement = []
         licenses = categories.get("license") or []
-        for l in licenses:
-            license_name = l.get("fullname")
+        for lic in licenses:
+            license_name = lic.get("fullname")
             # full name is first priority than shortname since shortname is like gpl, it doesn't show detailed gpl version etc.
             if license_name:
-                extracted_license_statement.append(l.get("shortname"))
+                extracted_license_statement.append(lic.get("shortname"))
             if license_name:
                 extracted_license_statement.append(license_name)
         if extracted_license_statement:

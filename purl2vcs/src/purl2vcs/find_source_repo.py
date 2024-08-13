@@ -147,7 +147,7 @@ def get_source_package_and_add_to_package_set(package):
         download_url = get_download_url(str(source_purl))
         if not download_url:
             return
-    except:
+    except Exception:
         logger.error(f"Error getting download_url for {source_purl}")
         return
 

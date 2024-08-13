@@ -30,9 +30,7 @@ class Command(BaseCommand):
                     uri=package_uri, package=package
                 )
                 if created:
-                    self.stdout.write(
-                        f"ScannableURI created for: {package_uri}"
-                    )
+                    self.stdout.write(f"ScannableURI created for: {package_uri}")
             except Exception as e:
                 msg = f"Error creating ScannableURI for: {package_uri}"
                 msg += get_error_message(e)
