@@ -41,8 +41,5 @@ jobs:
                     sudo cp .env /etc/scancodeio
                 displayName: '${{ pyver }} - Configure'
 
-              - script: make check
-                displayName: '${{ pyver }} - Check code style and format'
-
               - script: $(test_suite)
                 displayName: '${{ pyver }} - $(test_suite_label) on ${{ parameters.job_name }}'

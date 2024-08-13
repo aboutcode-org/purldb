@@ -40,3 +40,11 @@ jobs:
           python_versions: ['3.10']
           test_suites:
               all: make check_docs
+
+    - template: etc/ci/azure-posix.yml
+      parameters:
+          job_name: ci_code_style
+          image_name: ubuntu-22.04
+          python_versions: ['3.10']
+          test_suites:
+              all: make check
