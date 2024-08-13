@@ -69,7 +69,6 @@ select = [
     "C9", # McCabe complexity
 ]
 ignore = [
-    "C901", # complex-structure
     "D1",
     "D203", # one-blank-line-before-class
     "D205", # blank-line-after-summary
@@ -77,9 +76,18 @@ ignore = [
     "D400", # ends-in-period
     "D415", # ends-in-punctuation
     "E501", # line-too-long
+    # TODO: we want to address these issues in the codebase, then get rid of
+    # the following ignores
+    "C901", # complex-structure
     "S101", # assert
+    "S103", # bad-file-permissions
     "S113", # request-without-timeout
+    "S202", # tarfile-unsafe-members
+    "S314", # suspicious-xml-element-tree-usage
+    "S320", # suspicious-xmle-tree-usage
     "S324", # hashlib-insecure-hash-function
+    "S506", # unsafe-yaml-load
+    "S602", # subprocess-popen-with-shell-equals-true
 ]
 
 [tool.ruff.lint.isort]
