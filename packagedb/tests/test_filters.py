@@ -23,7 +23,7 @@ class PackageDBFilterTest(TestCase):
             version="1.0.0",
             download_url="https://example.com/foo-1.0.0.jar",
         )
-        p2 = Package.objects.create(
+        Package.objects.create(
             type="maven",
             namespace="org.somethingelse",
             name="foo",

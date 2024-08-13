@@ -74,7 +74,6 @@ class Command(VerboseCommand):
         for row in rows:
             # Look up the package the row is for by using the purl to query the db.
             purl = row["purl"]
-            source_purl = row["source_purl"]
             print(f"Processing packages for: {purl}")
             package = get_package_object_from_purl(package_url=purl)
             if not package:

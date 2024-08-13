@@ -92,7 +92,9 @@ class Command(VerboseCommand):
             try:
                 errors = process_request(importable_uri)
             except Exception as e:
-                errors = f"Error: Failed to process ImportableURI: {repr(importable_uri)}\n"
+                errors = (
+                    f"Error: Failed to process ImportableURI: {repr(importable_uri)}\n"
+                )
                 errors += get_error_message(e)
             finally:
                 if errors:

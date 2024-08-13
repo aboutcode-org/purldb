@@ -153,7 +153,7 @@ def build_packages(purl, data):
         size = file["size"]
         download_url = f"https://f-droid.org/repo/{filename}"
 
-        package_mappping = dict(
+        package_mapping = dict(
             version=version_code,
             download_url=download_url,
             repository_download_url=download_url,

@@ -87,7 +87,9 @@ def build_packages_from_release_json(metadata, uri=None):
         # like perl_5. The license here under resources section is the
         # url of license for example: http://dev.perl.org/licenses/ So
         # it's useful to collect both information...
-        license_url = [lic for lic in resources.get("license", []) if lic and lic.strip()]
+        license_url = [
+            lic for lic in resources.get("license", []) if lic and lic.strip()
+        ]
         if license_url:
             common_data["extracted_license_statement"].extend(license_url)
 

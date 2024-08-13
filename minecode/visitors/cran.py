@@ -3,7 +3,6 @@
 #
 
 
-
 from bs4 import BeautifulSoup
 from packageurl import PackageURL
 

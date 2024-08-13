@@ -230,7 +230,6 @@ class JsonBasedTestingMixin(TestCase):
             ]
 
         if type(data) in (dict, OrderedDict, ReturnDict):
-            normalized_data = {}
             # Remove fields from results and normalize Package UIDs
             for field in fields_to_remove:
                 if field not in data:
@@ -300,7 +299,6 @@ class JsonBasedTesting(JsonBasedTestingMixin, FileBasedTesting):
             ]
 
         if type(data) in (dict, OrderedDict, ReturnDict):
-            normalized_data = {}
             # Remove fields from results and normalize Package UIDs
             for field in fields_to_remove:
                 if field not in data:

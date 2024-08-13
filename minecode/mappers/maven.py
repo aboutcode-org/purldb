@@ -101,9 +101,7 @@ class MavenPomMapper(Mapper):
         )
         package = get_package(resource_uri.data, resource_uri.package_url)
         if package:
-            logger.debug(
-                f"MavenPomMapper.get_packages: uri: {uri}, package: {package}"
-            )
+            logger.debug(f"MavenPomMapper.get_packages: uri: {uri}, package: {package}")
             yield package
 
 

@@ -100,7 +100,9 @@ def index_package(
         declared_license_expression = summary_data.get("declared_license_expression")
         other_license_expressions = summary_data.get("other_license_expressions", [])
         other_license_expressions = [
-            license_expression["value"] for license_expression in other_license_expressions if license_expression["value"]
+            license_expression["value"]
+            for license_expression in other_license_expressions
+            if license_expression["value"]
         ]
         other_license_expression = combine_expressions(other_license_expressions)
 

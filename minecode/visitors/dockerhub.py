@@ -148,7 +148,7 @@ class DockHubGetAllProjectsFromSearchVisitor(HttpJsonVisitor):
         for result in results:
             name = result.get("name")
             # TODO: This will be used when new Package definition is merged.
-            star_count = result.get("star_count")
+            # star_count = result.get("star_count")
             if name:
                 package_url = PackageURL(type="docker", name=name).to_string()
                 yield URI(

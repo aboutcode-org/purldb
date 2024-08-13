@@ -141,11 +141,8 @@ class MatchCodePipelineAPITest(TransactionTestCase):
         self.assertEqual("matching", response.data["runs"][0]["pipeline_name"])
         mock_execute_pipeline_task.assert_called_once()
 
-        created_matching_project_detail_url = response.data["url"]
-        matching_project_uuid = response.data["uuid"]
-        results_url = reverse("matching-results", args=[matching_project_uuid])
-
         # Check that the file was uploaded
+        created_matching_project_detail_url = response.data["url"]
         response = self.csrf_client.get(created_matching_project_detail_url)
         self.assertEqual("test-out.json", response.data["input_sources"][0]["filename"])
 
@@ -165,11 +162,8 @@ class MatchCodePipelineAPITest(TransactionTestCase):
         self.assertEqual("matching", response.data["runs"][0]["pipeline_name"])
         mock_execute_pipeline_task.assert_called_once()
 
-        created_matching_project_detail_url = response.data["url"]
-        matching_project_uuid = response.data["uuid"]
-        results_url = reverse("matching-results", args=[matching_project_uuid])
-
         # Check that the file was uploaded
+        created_matching_project_detail_url = response.data["url"]
         response = self.csrf_client.get(created_matching_project_detail_url)
         input_sources = response.data["input_sources"]
         self.assertEqual(2, len(input_sources))

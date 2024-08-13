@@ -71,9 +71,7 @@ def walk_and_load_from_filesystem(input_dir, cd_root_dir):
 
             # Save to DB
             try:
-                cditem = models.CDitem.objects.create(
-                    path=cditem_rel_path, content=content
-                )
+                models.CDitem.objects.create(path=cditem_rel_path, content=content)
             except IntegrityError:
                 # skip if we already have it in the DB
                 continue

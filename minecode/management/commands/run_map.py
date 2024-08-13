@@ -131,7 +131,9 @@ def map_uri(resource_uri, _map_router=map_router):
             return
 
     except Exception as e:
-        msg = f"Error: Failed to map while processing ResourceURI: {repr(resource_uri)}\n"
+        msg = (
+            f"Error: Failed to map while processing ResourceURI: {repr(resource_uri)}\n"
+        )
         msg += get_error_message(e)
         logger.error(msg)
         # we had an error, so mapped_scanned_packages is an error string
@@ -165,12 +167,12 @@ def map_uri(resource_uri, _map_router=map_router):
                         package=package,
                     )
                     if scannable_uri_created:
-                        logger.debug(
-                            f" + Inserted ScannableURI\t: {package_uri}"
-                        )
+                        logger.debug(f" + Inserted ScannableURI\t: {package_uri}")
 
     except Exception as e:
-        msg = f"Error: Failed to map while processing ResourceURI: {repr(resource_uri)}\n"
+        msg = (
+            f"Error: Failed to map while processing ResourceURI: {repr(resource_uri)}\n"
+        )
         msg += f"While processing scanned_package: {repr(scanned_package)}\n"
         msg += get_error_message(e)
         logger.error(msg)

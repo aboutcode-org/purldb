@@ -153,9 +153,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
                 logger.debug(f"  No existing value: set to new: {new_value}")
 
             if TRACE and replace:
-                logger.debug(
-                    f"  Existing value and replace: set to new: {new_value}"
-                )
+                logger.debug(f"  Existing value and replace: set to new: {new_value}")
 
             if existing_field == "parties":
                 # If `existing_field` is `parties`, then we update the `Party` table

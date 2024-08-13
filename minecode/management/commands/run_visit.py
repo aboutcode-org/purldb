@@ -224,9 +224,7 @@ def visit_uris(
         )
 
         if max_loops and int(visited_counter) > int(max_loops):
-            logger.info(
-                f"Stopping visits after max_loops: {max_loops} visit loops."
-            )
+            logger.info(f"Stopping visits after max_loops: {max_loops} visit loops.")
             break
 
     return visited_counter, inserted_counter
@@ -367,9 +365,7 @@ def visit_uri(
                     break
 
             if max_uris and int(uri_counter_by_visitor[visitor_key]) > int(max_uris):
-                logger.info(
-                    f" ! Breaking after processing max-uris: {max_uris} URIs."
-                )
+                logger.info(f" ! Breaking after processing max-uris: {max_uris} URIs.")
                 break
 
     except Exception as e:

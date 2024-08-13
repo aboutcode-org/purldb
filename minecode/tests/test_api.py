@@ -30,7 +30,9 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
 
     def setUp(self):
         self.scan_queue_worker_user = User.objects.create_user(
-            username="username", email="e@mail.com", password="secret" # NOQA
+            username="username",
+            email="e@mail.com",
+            password="secret",  # NOQA
         )
         scan_queue_workers_group, _ = Group.objects.get_or_create(
             name="scan_queue_workers"
@@ -49,7 +51,7 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         self.staff_user = User.objects.create_user(
             username="staff_username",
             email="staff_e@mail.com",
-            password="secret", # NOQA
+            password="secret",  # NOQA
             is_staff=True,
         )
         self.staff_auth = f"Token {self.staff_user.auth_token.key}"
@@ -60,7 +62,7 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         self.regular_user = User.objects.create_user(
             username="regular_username",
             email="regular_e@mail.com",
-            password="secret", # NOQA
+            password="secret",  # NOQA
         )
         self.regular_auth = f"Token {self.regular_user.auth_token.key}"
         self.regular_client = APIClient(enforce_csrf_checks=True)

@@ -21,7 +21,9 @@ class ThrottleApiTests(APITestCase):
     def setUp(self):
         # create a basic user
         self.user = User.objects.create_user(
-            username="username", email="e@mail.com", password="secret" # NOQA
+            username="username",
+            email="e@mail.com",
+            password="secret",  # NOQA
         )
         self.auth = f"Token {self.user.auth_token.key}"
         self.csrf_client = APIClient(enforce_csrf_checks=True)
@@ -31,7 +33,7 @@ class ThrottleApiTests(APITestCase):
         self.staff_user = User.objects.create_user(
             username="staff_username",
             email="staff_e@mail.com",
-            password="secret", # NOQA
+            password="secret",  # NOQA
             is_staff=True,
         )
         self.staff_auth = f"Token {self.staff_user.auth_token.key}"

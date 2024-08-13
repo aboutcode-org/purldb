@@ -209,7 +209,7 @@ def update_maven_packages(
         namespace = namespace.lower()
         name = name.lower()
         version = version.lower()
-        normalize_qualifiers = normalize_qualifiers.lower()
+        normalized_qualifiers = normalized_qualifiers.lower()
 
     existing_packages = Package.objects.filter(
         type="maven",

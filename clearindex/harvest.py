@@ -94,9 +94,7 @@ def create_from_harvest(package_scan={}, files_data=[], cditem_path=""):
 
     download_url = package_data.get("download_url")
     if not download_url:
-        logger.error(
-            f"Null `download_url` value for `package_data`: {package_data}"
-        )
+        logger.error(f"Null `download_url` value for `package_data`: {package_data}")
         return
 
     # This ugly block is needed until https://github.com/nexB/packagedb/issues/14
@@ -115,9 +113,7 @@ def create_from_harvest(package_scan={}, files_data=[], cditem_path=""):
         merge_packages(
             existing_package=package, new_package_data=package_data, replace=False
         )
-        package.append_to_history(
-            f"Updated package from CDitem harvest: {cditem_path}"
-        )
+        package.append_to_history(f"Updated package from CDitem harvest: {cditem_path}")
 
         logger.info(f"Merged package data from scancode harvest: {package}")
 

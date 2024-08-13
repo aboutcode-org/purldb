@@ -545,7 +545,6 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
         )
 
         before_uri = [p.id for p in ResourceURI.objects.all()]
-        before_pkg = [p.id for p in packagedb.models.Package.objects.all()]
 
         resource_uri = ResourceURI.objects.insert(uri=uri)
 
