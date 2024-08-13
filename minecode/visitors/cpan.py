@@ -183,7 +183,7 @@ class CpanReadmeVisitors(HttpVisitor):
     def dumps(self, content):
         """Return the json by parsing the readme content"""
         # Handle bytes properly in python3
-        if type(content) == bytes:
+        if type(content) is bytes:
             content = content.decode("utf-8")
 
         lines = content.splitlines()

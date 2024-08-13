@@ -22,7 +22,7 @@ class GnuPriorityQueueTests(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), "testfiles")
 
     def setUp(self):
-        super(GnuPriorityQueueTests, self).setUp()
+        super().setUp()
         glibc_data_loc = self.get_test_loc("gnu/glibc/index.html")
 
         with open(glibc_data_loc) as f:

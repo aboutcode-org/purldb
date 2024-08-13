@@ -172,11 +172,6 @@ class ResourceAPITestCase(JsonBasedTesting, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, response.data.get("count"))
 
-    def test_api_resource_list_endpoint_returns_none_when_filtering_by_blank_uuid(self):
-        response = self.client.get("/api/resources/?purl={}".format(""))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(2, response.data.get("count"))
-
     def test_api_resource_list_endpoint_filters_by_package1_purl(self):
         response = self.client.get(
             f"/api/resources/?purl={self.package1.package_url}"

@@ -390,8 +390,7 @@ class MemorySavingQuerysetIterator:
                 i : i + self.max_obj_num
             ]
             logger.debug("Grabbing next %s objects from DB" % self.max_obj_num)
-            for obj in smaller_queryset.iterator():
-                yield obj
+            yield from smaller_queryset.iterator()
 
     def __iter__(self):
         return self._generator

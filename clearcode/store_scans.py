@@ -33,18 +33,18 @@ from clearcode.cdutils import str2coord
 from clearcode.models import CDitem
 
 """
-The input is a bunch of scans from ClearlyDefined and 
-the output is a bunch of git repositories with commited and 
-pushed scans such that we balance the scans roughly evenly accross 
+The input is a bunch of scans from ClearlyDefined and
+the output is a bunch of git repositories with commited and
+pushed scans such that we balance the scans roughly evenly accross
 different repositories.
 
-The primary reason for multiple repositories is size of a single 
-repo. There is a size limit of 5 GB at GitHub and it's difficult 
+The primary reason for multiple repositories is size of a single
+repo. There is a size limit of 5 GB at GitHub and it's difficult
 to work with repositories with million files.
 
-Therefore the approach is to use hashing as a way to name git 
-repositories and directories. We compute hash on the purl of the scanned 
-package and use the first few layers of this hash for the repo and 
+Therefore the approach is to use hashing as a way to name git
+repositories and directories. We compute hash on the purl of the scanned
+package and use the first few layers of this hash for the repo and
 directory names.
 
 Initial processing steps are:
@@ -54,15 +54,15 @@ Initial processing steps are:
 - Then we store the scan using the purl hash and purl as path.
 - Finally commit and push! : )
 
-Because it's not practical to process many repos at once, we organize the 
-processing one repo a time. For this, we iterate over a bunch of records get or compute 
+Because it's not practical to process many repos at once, we organize the
+processing one repo a time. For this, we iterate over a bunch of records get or compute
 the purl hash and process the records that share the same hash.
 
-We are using a short hash that is three characters long using hexadecimal encoding. 
-Therefore we can have 16*16*16 = 4096 repositories where each repo would contain about 
+We are using a short hash that is three characters long using hexadecimal encoding.
+Therefore we can have 16*16*16 = 4096 repositories where each repo would contain about
 25k scan files, if we were to store 100 million scans (which is a high mark).
-For reference one scan should use less than a 100k on average when compressed 
-with gzip or git based on looking at 15 million scans. Each repo should be roughly 
+For reference one scan should use less than a 100k on average when compressed
+with gzip or git based on looking at 15 million scans. Each repo should be roughly
 couple hundred mega bytes big, based on 15 million scans.
 """
 

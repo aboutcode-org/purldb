@@ -99,8 +99,7 @@ def find_ambiguous_packages(
     )
     license_filter = reduce(operator.or_, filter_expression)
 
-    for package in Package.objects.filter(type__in=types).filter(license_filter):
-        yield package
+    yield from Package.objects.filter(type__in=types).filter(license_filter)
 
 
 def dump(packages, json_location):

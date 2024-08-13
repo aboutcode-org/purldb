@@ -41,7 +41,7 @@ class BaseModelTest(MatchcodeTestCase):
     maxDiff = None
 
     def setUp(self):
-        super(BaseModelTest, self).setUp()
+        super().setUp()
 
         self.test_package1, _ = Package.objects.get_or_create(
             filename="abbot-0.12.3.jar",

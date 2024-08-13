@@ -39,28 +39,28 @@ def sf_net(input_file, output):
         writer = csv.writer(fo, quoting=csv.QUOTE_ALL)
         with open(input_file) as fi:
             reader = csv.reader(fi)
-            for i, l in enumerate(reader):
+            for i, row in enumerate(reader):
                 if i == 0:
                     # add headers on first row
-                    l.extend(new_headers)
-                if not l:
+                    row.extend(new_headers)
+                if not row:
                     continue
-                project_id = l[0]
-                name = l[1]
-                version_column = l[2]
+                project_id = row[0]
+                name = row[1]
+                version_column = row[2]
                 sep = ":  released on "
                 if sep not in version_column:
                     # write as is if we do not have a file release date
                     # separator
-                    writer.writerow(l)
+                    writer.writerow(row)
                     continue
                 filename, release_date_ts = version_column.split(sep, 1)
                 found_version = version.version_hint(filename)
-                l.append(found_version or "")
-                l.append(release_date_ts or "")
-                l.append(download_url_template % locals())
-                l.append("")  # reviewed
-                l.append("")  # curated name
+                row.append(found_version or "")
+                row.append(release_date_ts or "")
+                row.append(download_url_template % locals())
+                row.append("")  # reviewed
+                row.append("")  # curated name
                 excluded_reason = ""
                 if "." in project_id:
                     excluded_reason = "mirror or special project"
@@ -70,10 +70,10 @@ def sf_net(input_file, output):
                     excluded_reason = "special chars in name"
                 elif not good_filename(project_id, filename, name):
                     excluded_reason = "multi component possible"
-                l.append(excluded_reason)
-                l.append("")  # curated_owner
-                l.append("")  # owner_type
-                writer.writerow(l)
+                row.append(excluded_reason)
+                row.append("")  # curated_owner
+                row.append("")  # owner_type
+                writer.writerow(row)
 
 
 def good_name(s):

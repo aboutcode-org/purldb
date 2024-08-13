@@ -58,7 +58,7 @@ class GolangPurlViewSet(viewsets.ViewSet):
         go_import = validated_data.get("go_package")
         try:
             purl = get_golang_purl(go_import)
-        except:
+        except Exception:
             return Response(
                 {"errors": "`@` is not supported either in import or go.mod string"},
                 status=status.HTTP_400_BAD_REQUEST,

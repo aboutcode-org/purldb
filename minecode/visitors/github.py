@@ -182,7 +182,7 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
 
 def json_serial_date_obj(obj):
     """JSON serializer for date object"""
-    if obj and isinstance(obj, (datetime, date)):
+    if obj and isinstance(obj, datetime | date):
         return obj.isoformat()
 
 

@@ -492,7 +492,7 @@ class ResourceURI(BaseURI):
         self.normalize_fields()
         self.has_map_error = True if self.map_error else False
         self.has_visit_error = True if self.visit_error else False
-        super(ResourceURI, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class ScannableURIManager(models.Manager):
@@ -790,7 +790,7 @@ class ScannableURI(BaseURI):
         if not self.canonical:
             self.canonical = get_canonical(self.uri)
         self.normalize_fields()
-        super(ScannableURI, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def process_scan_results(
         self, scan_results_location, scan_summary_location, project_extra_data
@@ -971,7 +971,7 @@ class PriorityResourceURI(BaseURI):
     def save(self, *args, **kwargs):
         """Save, adding defaults for computed fields and validating fields."""
         self.normalize_fields()
-        super(PriorityResourceURI, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
@@ -1087,7 +1087,7 @@ class ImportableURI(BaseURI):
     def save(self, *args, **kwargs):
         """Save, adding defaults for computed fields and validating fields."""
         self.normalize_fields()
-        super(ImportableURI, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class ProcessingError(BaseURI):

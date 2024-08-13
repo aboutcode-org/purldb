@@ -903,7 +903,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), "testfiles")
 
     def setUp(self):
-        super(MavenPriorityQueueTests, self).setUp()
+        super().setUp()
 
         self.expected_pom_loc = self.get_test_loc("maven/pom/classworlds-1.1.pom")
         with open(self.expected_pom_loc) as f:

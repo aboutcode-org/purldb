@@ -177,7 +177,7 @@ class NpmPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), "testfiles")
 
     def setUp(self):
-        super(NpmPriorityQueueTests, self).setUp()
+        super().setUp()
         self.expected_json_loc = self.get_test_loc("npm/lodash_package-expected.json")
         with open(self.expected_json_loc) as f:
             self.expected_json_contents = json.load(f)

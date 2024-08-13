@@ -25,7 +25,7 @@ class ConanPriorityQueueTests(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), "testfiles")
 
     def setUp(self):
-        super(ConanPriorityQueueTests, self).setUp()
+        super().setUp()
         self.package_url1 = PackageURL.from_string("pkg:conan/zlib@1.3.1")
         zlib_conanfile_loc = self.get_test_loc("conan/zlib/manifest/conanfile.py")
         zlib_conandata_loc = self.get_test_loc("conan/zlib/manifest/conandata.yml")

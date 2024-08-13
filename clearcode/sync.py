@@ -350,7 +350,7 @@ class Cache:
             remote_etag = response.headers.get("etag")
             if remote_etag and self.etags_cache.get(url) == remote_etag:
                 return True
-        except:
+        except Exception:
             return False
 
     def is_fetched(self, checksum, url):

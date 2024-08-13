@@ -121,7 +121,7 @@ SaneLoader.add_constructor(None, ordered_loader)
 class SaneDumper(SafeDumper):
     def increase_indent(self, flow=False, indentless=False):
         """Ensure that lists items are always indented."""
-        return super(SaneDumper, self).increase_indent(flow, indentless=False)
+        return super().increase_indent(flow, indentless=False)
 
     def ignore_aliases(self, data):
         """Avoid having aliases created from re-used Python objects."""

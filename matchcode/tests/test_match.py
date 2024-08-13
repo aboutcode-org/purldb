@@ -34,7 +34,7 @@ class MatchPackagesTestCase(MatchcodeTestCase):
     def setUp(self):
         # Execute the superclass' setUp method before creating our own
         # DB objects
-        super(MatchPackagesTestCase, self).setUp()
+        super().setUp()
 
         self.test_package1, _ = Package.objects.get_or_create(
             filename="abbot-0.12.3.jar",
@@ -158,7 +158,7 @@ class MatchNestedPackagesTestCase(MatchcodeTestCase):
     def setUp(self):
         # Execute the superclass' setUp method before creating our own
         # DB objects
-        super(MatchNestedPackagesTestCase, self).setUp()
+        super().setUp()
 
         self.test_package1, _ = Package.objects.get_or_create(
             filename="plugin-request-2.4.1.tgz",
@@ -219,7 +219,7 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
     maxDiff = None
 
     def setUp(self):
-        super(DirectoryMatchingTestCase, self).setUp()
+        super().setUp()
 
         self.test_package1, _ = Package.objects.get_or_create(
             filename="abbrev-1.0.3.tgz",

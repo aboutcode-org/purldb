@@ -95,7 +95,7 @@ def build_packages_from_html(metadata, uri=None, purl=None):
                 if key == "Version:":
                     common_data["version"] = value
                 elif key == "URL:":
-                    if type(value) == list and len(value) > 0:
+                    if type(value) is list and len(value) > 0:
                         homepages = []
                         for home_page in value:
                             homepages.append(home_page)
@@ -129,7 +129,7 @@ def build_packages_from_html(metadata, uri=None, purl=None):
                         )
                         common_data["parties"].append(party.to_dict())
                 elif "source" in key or "binaries" in key:
-                    if type(value) == list:
+                    if type(value) is list:
                         for url in value:
                             download_urls.append(get_download_url(url))
                 elif key == "Published:":

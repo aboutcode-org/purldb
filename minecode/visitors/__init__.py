@@ -8,11 +8,8 @@
 #
 
 
-import gzip
 import json
-import os
 import pkgutil
-import tempfile
 from functools import total_ordering
 
 from minecode.utils import fetch_http
@@ -231,7 +228,7 @@ class NonPersistentHttpVisitor(HttpVisitor):
 
         `timeout` is a default timeout.
         """
-        content = super(NonPersistentHttpVisitor, self).fetch(uri, timeout=timeout)
+        content = super().fetch(uri, timeout=timeout)
         temp_file = get_temp_file("NonPersistentHttpVisitor")
         with open(temp_file, "wb") as tmp:
             tmp.write(content)
