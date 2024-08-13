@@ -96,21 +96,27 @@ class TestPackageSetCreation(TestMigrations):
             self.package4,
             self.package5,
         ]
-        self.assertTrue(all(package.package_sets for package in packages_in_package_sets))
+        self.assertTrue(
+            all(package.package_sets for package in packages_in_package_sets)
+        )
 
         package_set1 = PackageSet.objects.get(uuid=self.package_set1)
         self.assertTrue(package_set1)
-        self.assertRaises(PackageSet.DoesNotExist, PackageSet.objects.get, uuid=self.package_set2)
+        self.assertRaises(
+            PackageSet.DoesNotExist, PackageSet.objects.get, uuid=self.package_set2
+        )
         self.assertEqual(1, self.package1.package_sets.count())
         self.assertEqual(1, self.package2.package_sets.count())
         self.assertEqual(package_set1.uuid, self.package1.package_sets.first().uuid)
         self.assertEqual(package_set1.uuid, self.package2.package_sets.first().uuid)
 
-        self.assertEqual(0,  self.package3.package_sets.count())
+        self.assertEqual(0, self.package3.package_sets.count())
 
-        self.assertEqual(1,  self.package4.package_sets.count())
-        self.assertEqual(1,  self.package5.package_sets.count())
-        self.assertEqual(self.package4.package_sets.first(), self.package5.package_sets.first())
+        self.assertEqual(1, self.package4.package_sets.count())
+        self.assertEqual(1, self.package5.package_sets.count())
+        self.assertEqual(
+            self.package4.package_sets.first(), self.package5.package_sets.first()
+        )
         package_set_for_package4_and_package5 = self.package4.package_sets.first()
         self.assertEqual(2, package_set_for_package4_and_package5.packages.count())
 

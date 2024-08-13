@@ -16,18 +16,16 @@ import time
 from django.db import transaction
 from django.utils import timezone
 
+from minecode import map_router
+
 # UnusedImport here!
 # But importing the miners module triggers routes registration
-
 from minecode import miners  # NOQA
-
-from minecode import map_router
-from minecode.models import ResourceURI
-from minecode.management.commands import get_error_message
 from minecode.management.commands import VerboseCommand
+from minecode.management.commands import get_error_message
 from minecode.model_utils import merge_or_create_package
+from minecode.models import ResourceURI
 from minecode.models import ScannableURI
-
 
 TRACE = True
 
@@ -43,9 +41,7 @@ MUST_STOP = False
 
 
 def stop_handler(*args, **kwargs):
-    """
-    Signal handler to set global variable to True.
-    """
+    """Signal handler to set global variable to True."""
     global MUST_STOP
     MUST_STOP = True
 
@@ -57,15 +53,16 @@ MAP_BATCH_SIZE = 10
 
 
 class Command(VerboseCommand):
-    help = 'Run a mapping worker.'
+    help = "Run a mapping worker."
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--exit-on-empty',
-            dest='exit_on_empty',
+            "--exit-on-empty",
+            dest="exit_on_empty",
             default=False,
-            action='store_true',
-            help='Do not loop forever. Exit when the queue is empty.')
+            action="store_true",
+            help="Do not loop forever. Exit when the queue is empty.",
+        )
 
     def handle(self, *args, **options):
         """
@@ -75,26 +72,26 @@ class Command(VerboseCommand):
         global MUST_STOP
 
         logger.setLevel(self.get_verbosity(**options))
-        exit_on_empty = options.get('exit_on_empty')
+        exit_on_empty = options.get("exit_on_empty")
 
         sleeping = False
 
         while True:
             if MUST_STOP:
-                logger.info('Graceful exit of the map loop.')
+                logger.info("Graceful exit of the map loop.")
                 break
 
             mappables = ResourceURI.objects.get_mappables()[:MAP_BATCH_SIZE]
 
             if not mappables:
                 if exit_on_empty:
-                    logger.info('No mappable resource, exiting...')
+                    logger.info("No mappable resource, exiting...")
                     break
 
                 # Only log a single message when we go to sleep
                 if not sleeping:
                     sleeping = True
-                    logger.info('No mappable resource, sleeping...')
+                    logger.info("No mappable resource, sleeping...")
 
                 time.sleep(SLEEP_WHEN_EMPTY)
                 continue
@@ -102,7 +99,7 @@ class Command(VerboseCommand):
             sleeping = False
 
             for resource_uri in mappables:
-                logger.info('Mapping {}'.format(resource_uri))
+                logger.info(f"Mapping {resource_uri}")
                 map_uri(resource_uri)
 
 
@@ -114,16 +111,18 @@ def map_uri(resource_uri, _map_router=map_router):
     # FIXME: returning a string or sequence is UGLY
     try:
         mapped_scanned_packages = _map_router.process(
-            resource_uri.uri, resource_uri=resource_uri)
+            resource_uri.uri, resource_uri=resource_uri
+        )
 
-        logger.debug('map_uri: Package URI: {}'.format(resource_uri.uri))
+        logger.debug(f"map_uri: Package URI: {resource_uri.uri}")
 
         # consume generators
         mapped_scanned_packages = mapped_scanned_packages and list(
-            mapped_scanned_packages)
+            mapped_scanned_packages
+        )
 
         if not mapped_scanned_packages:
-            msg = 'No visited scanned packages returned.'
+            msg = "No visited scanned packages returned."
             logger.error(msg)
             resource_uri.last_map_date = timezone.now()
             resource_uri.map_error = msg
@@ -131,8 +130,7 @@ def map_uri(resource_uri, _map_router=map_router):
             return
 
     except Exception as e:
-        msg = 'Error: Failed to map while processing ResourceURI: {}\n'.format(
-            repr(resource_uri))
+        msg = f"Error: Failed to map while processing ResourceURI: {repr(resource_uri)}\n"
         msg += get_error_message(e)
         logger.error(msg)
         # we had an error, so mapped_scanned_packages is an error string
@@ -144,7 +142,7 @@ def map_uri(resource_uri, _map_router=map_router):
     # if we reached this place, we have mapped_scanned_packages that contains
     # packages in ScanCode models format that these are ready to save to the DB
 
-    map_error = ''
+    map_error = ""
 
     try:
         with transaction.atomic():
@@ -155,7 +153,8 @@ def map_uri(resource_uri, _map_router=map_router):
             for scanned_package in mapped_scanned_packages:
                 visit_level = resource_uri.mining_level
                 package, package_created, _, m_err = merge_or_create_package(
-                    scanned_package, visit_level)
+                    scanned_package, visit_level
+                )
                 map_error += m_err
                 if package_created:
                     # Add this Package to the scan queue
@@ -166,13 +165,12 @@ def map_uri(resource_uri, _map_router=map_router):
                     )
                     if scannable_uri_created:
                         logger.debug(
-                            ' + Inserted ScannableURI\t: {}'.format(package_uri))
+                            f" + Inserted ScannableURI\t: {package_uri}"
+                        )
 
     except Exception as e:
-        msg = 'Error: Failed to map while processing ResourceURI: {}\n'.format(
-            repr(resource_uri))
-        msg += 'While processing scanned_package: {}\n'.format(
-            repr(scanned_package))
+        msg = f"Error: Failed to map while processing ResourceURI: {repr(resource_uri)}\n"
+        msg += f"While processing scanned_package: {repr(scanned_package)}\n"
         msg += get_error_message(e)
         logger.error(msg)
         # this is enough to save the error to the ResourceURI which is done at last

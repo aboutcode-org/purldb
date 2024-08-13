@@ -9,13 +9,13 @@
 
 import logging
 
-from packagedb.models import PackageContentType
-from minecode import priority_router
 import requests
-from packageurl import PackageURL
-from packagedcode.npm import npm_api_url
 from packagedcode.npm import NpmPackageJsonHandler
+from packagedcode.npm import npm_api_url
+from packageurl import PackageURL
 
+from minecode import priority_router
+from packagedb.models import PackageContentType
 
 """
 Collect NPM packages from npm registries.
@@ -63,29 +63,25 @@ def map_npm_package(package_url, pipelines, priority=0):
     )
 
     if not package_json:
-        error = f'Package does not exist on npmjs: {package_url}'
+        error = f"Package does not exist on npmjs: {package_url}"
         logger.error(error)
         return error
 
-    package = NpmPackageJsonHandler._parse(
-        json_data=package_json
-    )
-    package.extra_data['package_content'] = PackageContentType.SOURCE_ARCHIVE
+    package = NpmPackageJsonHandler._parse(json_data=package_json)
+    package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
 
     db_package, _, _, error = merge_or_create_package(package, visit_level=0)
 
     # Submit package for scanning
     if db_package:
         add_package_to_scan_queue(
-            package=db_package,
-            pipelines=pipelines,
-            priority=priority
+            package=db_package, pipelines=pipelines, priority=priority
         )
 
     return error
 
 
-@priority_router.route('pkg:npm/.*')
+@priority_router.route("pkg:npm/.*")
 def process_request(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a npm Package URL (PURL) as a
@@ -97,9 +93,9 @@ def process_request(purl_str, **kwargs):
     """
     from minecode.model_utils import DEFAULT_PIPELINES
 
-    addon_pipelines = kwargs.get('addon_pipelines', [])
+    addon_pipelines = kwargs.get("addon_pipelines", [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
+    priority = kwargs.get("priority", 0)
 
     package_url = PackageURL.from_string(purl_str)
     if not package_url.version:

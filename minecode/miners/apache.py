@@ -2,25 +2,24 @@
 # Copyright (c) 2016 by nexB, Inc. http://www.nexb.com/ - All rights reserved.
 #
 
-from itertools import chain
 import json
 import logging
+from itertools import chain
 
+import packagedcode.models as scan_models
 from commoncode import fileutils
 from packageurl import PackageURL
-import packagedcode.models as scan_models
 
 from minecode import ls
-from minecode import seed
 from minecode import map_router
+from minecode import seed
 from minecode import visit_router
-from minecode.miners import Mapper
-from minecode.miners import HttpVisitor
-from minecode.miners import HttpJsonVisitor
-from minecode.miners import NonPersistentHttpVisitor
 from minecode.miners import URI
+from minecode.miners import HttpJsonVisitor
+from minecode.miners import HttpVisitor
+from minecode.miners import Mapper
+from minecode.miners import NonPersistentHttpVisitor
 from minecode.utils import parse_date
-
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -78,76 +77,84 @@ just based on parsing the find-ls directory listing so bring nothing new.
 
 
 class ApacheSeed(seed.Seeder):
-
     def get_seeds(self):
         # note: this is the same as below and does not list archived files
         # https://archive.apache.org/dist/zzz/find-ls.gz
         # to get these we need to rsync or use other techniques
-        yield 'https://apache.org/dist/zzz/find-ls.gz'
+        yield "https://apache.org/dist/zzz/find-ls.gz"
 
         # FIXME: we cannot relate this to a download  package: disabled for now
         # yield 'https://projects.apache.org/json/foundation/projects.json'
         # yield 'https://projects.apache.org/json/foundation/podlings.json'
 
 
-CHECKSUM_EXTS = '.sha256', '.sha512', '.md5', '.sha', '.sha1',
+CHECKSUM_EXTS = (
+    ".sha256",
+    ".sha512",
+    ".md5",
+    ".sha",
+    ".sha1",
+)
 
 # only keep downloads with certain extensions for some archives, packages and checksums
 ARCHIVE_EXTS = (
     # archives
-    '.jar', '.zip', '.tar.gz', '.tgz', '.tar.bz2', '.war', '.tar.xz', '.tgz', '.tar',
+    ".jar",
+    ".zip",
+    ".tar.gz",
+    ".tgz",
+    ".tar.bz2",
+    ".war",
+    ".tar.xz",
+    ".tgz",
+    ".tar",
     # packages
     # '.deb', '.rpm', '.msi', '.exe',
-    '.whl', '.gem', '.nupkg',
+    ".whl",
+    ".gem",
+    ".nupkg",
     # '.dmg',
     # '.nbm',
 )
 
 IGNORED_PATH_CONTAINS = (
-    'META/',  # #
+    "META/",  # #
     # doc
-    '/documentation/',
-    '/doc/',  # #
-    '-doc.',  # #
-    '-doc-',  # #
-
-    '/docs/',  # #
-    '-docs.',  # #
-    '-docs-',  # #
-
-    'javadoc',  # #
-    'fulldoc',  # #
-    'apidoc',  # #
-    '-manual.',
-    '-asdocs.',  # #
-
+    "/documentation/",
+    "/doc/",  # #
+    "-doc.",  # #
+    "-doc-",  # #
+    "/docs/",  # #
+    "-docs.",  # #
+    "-docs-",  # #
+    "javadoc",  # #
+    "fulldoc",  # #
+    "apidoc",  # #
+    "-manual.",
+    "-asdocs.",  # #
     # eclipse p2/update sites are redundant
     # redundant
-    'updatesite/',  # #
-    'eclipse-update-site',  # #
-    'update/eclipse',  # #
-    'sling/eclipse',  # #
-    'eclipse.site-',
-
+    "updatesite/",  # #
+    "eclipse-update-site",  # #
+    "update/eclipse",  # #
+    "sling/eclipse",  # #
+    "eclipse.site-",
     # large multi-origin binary distributions
-    '-distro.',
-    '-bin-withdeps.',
-    '-bin-with-deps',
-
+    "-distro.",
+    "-bin-withdeps.",
+    "-bin-with-deps",
     # these are larger distributions with third-parties
-    'apache-airavata-distribution',
-    'apache-airavata-server',
-    'apache-mahout-distribution',
-    '/syncope-standalone-',
-
-    'binaries/conda',
-
+    "apache-airavata-distribution",
+    "apache-airavata-server",
+    "apache-mahout-distribution",
+    "/syncope-standalone-",
+    "binaries/conda",
     # obscure
-    'perl/contrib',
+    "perl/contrib",
     # index data
-    'zzz',
+    "zzz",
     # doc
-    'ant/manual'
+    "ant/manual",
 )
 
 
@@ -158,37 +165,41 @@ IGNORED_PATH_CONTAINS = (
 
 
 SOURCE_INDICATORS = (
-    '_src.',
-    '-src.',
-    '-source.',
-    '-sources.',
-    '-source-release',
-    '/source/',
-    '/sources/',
-    '/src/',
-    '_sources.',
+    "_src.",
+    "-src.",
+    "-source.",
+    "-sources.",
+    "-source-release",
+    "/source/",
+    "/sources/",
+    "/src/",
+    "_sources.",
 )
 
 
-BINARY_INDICATORS = (
-)
+BINARY_INDICATORS = ()
 
 
-@visit_router.route('https?://apache.org/dist/zzz/find\-ls\.gz')
+@visit_router.route(r"https?://apache.org/dist/zzz/find\-ls\.gz")
 class ApacheDistIndexVisitor(NonPersistentHttpVisitor):
     """
     Collect URIs for all packages in the "find -ls" index available from Apache
     dist sites.
     """
+
     def get_uris(self, content):
         import gzip
-        with gzip.open(content, 'rt') as f:
+
+        with gzip.open(content, "rt") as f:
             content = f.read()
 
-        url_template = 'https://apache.org/dist/{path}'
+        url_template = "https://apache.org/dist/{path}"
 
-        archive_checksum_extensions = tuple(chain.from_iterable(
-            [[ae + cke for ae in ARCHIVE_EXTS] for cke in CHECKSUM_EXTS]))
+        archive_checksum_extensions = tuple(
+            chain.from_iterable(
+                [[ae + cke for ae in ARCHIVE_EXTS] for cke in CHECKSUM_EXTS]
+            )
+        )
         kept_extensions = archive_checksum_extensions + ARCHIVE_EXTS
 
         for entry in ls.parse_directory_listing(content, from_find=True):
@@ -198,8 +209,9 @@ class ApacheDistIndexVisitor(NonPersistentHttpVisitor):
             path = entry.path
 
             # ignore several downloads
-            if (not path.endswith(kept_extensions)
-                    or any(i in path for i in IGNORED_PATH_CONTAINS)):
+            if not path.endswith(kept_extensions) or any(
+                i in path for i in IGNORED_PATH_CONTAINS
+            ):
                 continue
             # only checksums need further visit, the archive will be scanned only
             is_visited = not path.endswith(CHECKSUM_EXTS)
@@ -209,7 +221,7 @@ class ApacheDistIndexVisitor(NonPersistentHttpVisitor):
                 source_uri=self.uri,
                 uri=url_template.format(path=path),
                 package_url=build_purl(path),
-                size=entry.size
+                size=entry.size,
             )
 
 
@@ -221,30 +233,32 @@ def build_purl(uri):
     """
     # FIXME: this is the essence of collecting name and versions for Apache and
     # this need to be super robust
-    segments = [p for p in uri.split('/') if p]
+    segments = [p for p in uri.split("/") if p]
     version = None
     project_name = segments[0]
     # The path typically contains the version but where is highly inconsistent
     # - bahir/bahir-spark/2.1.1/apache-bahir-2.1.1-src.zip
     # - groovy/2.4.15/sources/apache-groovy-src-2.4.15.zip
     # FIXME: this is not correct
-    if len(segments) > 1 and ('/distribution/' in uri or '/sources/' in uri):
+    if len(segments) > 1 and ("/distribution/" in uri or "/sources/" in uri):
         version = segments[1]
 
     package_url = PackageURL(
-        type='apache',
+        type="apache",
         # TODO: namespace='',
         name=project_name,
-        version=version)
+        version=version,
+    )
 
     return package_url
 
 
-@visit_router.route('https?://(archive\.)apache.org/dist/.*\.(md5|sha1?|sha256|sha512)',)
+@visit_router.route(
+    r"https?://(archive\.)apache.org/dist/.*\.(md5|sha1?|sha256|sha512)",
+)
 class ApacheChecksumVisitor(HttpVisitor):
-    """
-    Collect files that contain archive checksums.
-    """
+    """Collect files that contain archive checksums."""
+
     def dumps(self, content):
         if content:
             # the format can be md5sum-like this way:
@@ -254,7 +268,7 @@ class ApacheChecksumVisitor(HttpVisitor):
             if content:
                 content = content[0]
             else:
-                content = ''
+                content = ""
             return content
 
 
@@ -291,14 +305,16 @@ class ApacheProjectsJsonVisitor(HttpJsonVisitor):
             "shortdesc": "An open source Atom implementation"
         },
     """
+
     def get_uris(self, content):
-        url_template = 'https://projects.apache.org/json/projects/{name}.json'
+        url_template = "https://projects.apache.org/json/projects/{name}.json"
         for project_name, project_meta in content.items():
-            package_url = PackageURL(type='apache', name=project_name)
+            package_url = PackageURL(type="apache", name=project_name)
             yield URI(
                 uri=url_template.format(name=project_name),
                 package_url=package_url.to_string(),
-                date=project_meta.get('created'))
+                date=project_meta.get("created"),
+            )
 
 
 # FIXME: we cannot relate this to a download  package: disabled for now
@@ -309,6 +325,7 @@ class ApacheSingleProjectJsonVisitor(HttpJsonVisitor):
     return any URI as the json contains the project meatadata only, so
     this visitor is getting the json to pass to mapper.
     """
+
     pass
 
 
@@ -328,44 +345,44 @@ class ApachePodlingsJsonVisitor(HttpJsonVisitor):
         "started": "2016-03"
         },
     """
+
     def get_uris(self, content):
         for project_name, project_meta in content.items():
-            if 'homepage' not in project_meta:
+            if "homepage" not in project_meta:
                 continue
 
             package_url = PackageURL(
-                type='apache',
-                namespace='incubator',
-                name=project_name)
+                type="apache", namespace="incubator", name=project_name
+            )
 
             yield URI(
-                uri=project_meta.get('homepage'),
+                uri=project_meta.get("homepage"),
                 package_url=package_url.to_string(),
                 data=project_meta,
                 source_uri=self.uri,
-                visited=True)
+                visited=True,
+            )
 
 
 # common licenses found in JSON
 APACHE_LICENSE_URL = {
-    'http://usefulinc.com/doap/licenses/asl20',
-    'https://usefulinc.com/doap/licenses/asl20',
-    'http://spdx.org/licenses/Apache-2.0',
-    'https://spdx.org/licenses/Apache-2.0',
-    'http://www.apache.org/licenses/LICENSE-2.0',
-    'https://www.apache.org/licenses/LICENSE-2.0',
-    'http://www.apache.org/licenses/LICENSE-2.0.txt',
-    'https://www.apache.org/licenses/LICENSE-2.0.txt',
-    'http://www.apache.org/licenses/',
-    'http://forrest.apache.org/license.html',
-    'https://svn.apache.org/repos/asf/tomee/tomee/trunk/LICENSE',
+    "http://usefulinc.com/doap/licenses/asl20",
+    "https://usefulinc.com/doap/licenses/asl20",
+    "http://spdx.org/licenses/Apache-2.0",
+    "https://spdx.org/licenses/Apache-2.0",
+    "http://www.apache.org/licenses/LICENSE-2.0",
+    "https://www.apache.org/licenses/LICENSE-2.0",
+    "http://www.apache.org/licenses/LICENSE-2.0.txt",
+    "https://www.apache.org/licenses/LICENSE-2.0.txt",
+    "http://www.apache.org/licenses/",
+    "http://forrest.apache.org/license.html",
+    "https://svn.apache.org/repos/asf/tomee/tomee/trunk/LICENSE",
 }
 
 
 # FIXME: this is NOT specific to a download URL but to a project: disabled for now
 # @map_router.route('https://projects.apache.org/json/foundation/projects.json')
 class ApacheProjectJsonMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
         """
         Yield Packages built from resource_uri record for a single
@@ -382,70 +399,79 @@ def build_packages_from_projects(metadata, uri=None):
     Yield as many Package as there are download URLs.
     """
     for project_name, project_meta in metadata.items():
-        short_desc = project_meta.get('shortdesc')
-        long_desc = project_meta.get('description')
+        short_desc = project_meta.get("shortdesc")
+        long_desc = project_meta.get("description")
         descriptions = [d for d in (short_desc, long_desc) if d and d.strip()]
-        description = '\n'.join(descriptions)
+        description = "\n".join(descriptions)
         common_data = dict(
             datasource_id="apache_json",
-            type='apache',
+            type="apache",
             name=project_name,
             description=description,
-            homepage_url=project_meta.get('homepage'),
-            bug_tracking_url=project_meta.get('bug-database'),
-            primary_language=project_meta.get('programming-language'),
+            homepage_url=project_meta.get("homepage"),
+            bug_tracking_url=project_meta.get("bug-database"),
+            primary_language=project_meta.get("programming-language"),
         )
 
         # FIXME: setting the download-page as the download_url is not right
-        if project_meta.get('download-page'):
-            download_url = project_meta.get('download-page')
-            common_data['download_url'] = download_url
-        for repo in project_meta.get('repository', []):
-            common_data['code_view_url'] = repo
+        if project_meta.get("download-page"):
+            download_url = project_meta.get("download-page")
+            common_data["download_url"] = download_url
+        for repo in project_meta.get("repository", []):
+            common_data["code_view_url"] = repo
             # Package code_view_url only support one URL, so break when
             # finding a code_view_url
             break
 
-        maintainers = project_meta.get('maintainer', [])
+        maintainers = project_meta.get("maintainer", [])
         for maintainer in maintainers:
-            mailbox = maintainer.get('mbox', '').replace('mailto:', '')
-            name = maintainer.get('name')
-            party = scan_models.Party(type=scan_models.party_person, name=name, role='maintainer', email=mailbox)
-            parties = common_data.get('parties')
+            mailbox = maintainer.get("mbox", "").replace("mailto:", "")
+            name = maintainer.get("name")
+            party = scan_models.Party(
+                type=scan_models.party_person,
+                name=name,
+                role="maintainer",
+                email=mailbox,
+            )
+            parties = common_data.get("parties")
             if not parties:
-                common_data['parties'] = []
-            common_data['parties'].append(party.to_dict())
+                common_data["parties"] = []
+            common_data["parties"].append(party.to_dict())
 
         # license is just a URL in the json file, for example:
         # http://usefulinc.com/doap/licenses/asl20
-        license_url = project_meta.get('license')
-        common_data['extracted_license_statement'] = license_url
+        license_url = project_meta.get("license")
+        common_data["extracted_license_statement"] = license_url
 
         if license_url in APACHE_LICENSE_URL:
-            common_data['declared_license_expression'] = 'apache-2.0'
-            common_data['declared_license_expression_spdx'] = 'Apache-2.0'
-            common_data['license_detections'] = []
+            common_data["declared_license_expression"] = "apache-2.0"
+            common_data["declared_license_expression_spdx"] = "Apache-2.0"
+            common_data["license_detections"] = []
 
         keywords = []
-        category = project_meta.get('category', '')
-        for kw in category.split(','):
+        category = project_meta.get("category", "")
+        for kw in category.split(","):
             kw = kw.strip()
             if kw:
                 keywords.append(kw)
-        common_data['keywords'] = keywords
+        common_data["keywords"] = keywords
 
-        common_data['primary_language'] = project_meta.get('programming-language')
+        common_data["primary_language"] = project_meta.get("programming-language")
 
         # FIXME: these cannot be related to actual packages with a download URL
-        releases = project_meta.get('release')
+        releases = project_meta.get("release")
         if releases:
             for release in releases:
                 rdata = dict(common_data)
-                rdata['version'] = release.get('revision')
-                if release.get('created') and len(release.get('created')) == 10:
-                    rdata['release_date'] = parse_date(release.get('created'))
+                rdata["version"] = release.get("revision")
+                if release.get("created") and len(release.get("created")) == 10:
+                    rdata["release_date"] = parse_date(release.get("created"))
                 else:
-                    logger.warn('Unexpected date format for release date: {}'.format(release.get('created')))
+                    logger.warn(
+                        "Unexpected date format for release date: {}".format(
+                            release.get("created")
+                        )
+                    )
                 package = scan_models.Package.from_package_data(
                     package_data=rdata,
                     datafile_path=uri,
@@ -453,9 +479,9 @@ def build_packages_from_projects(metadata, uri=None):
                 yield package
         else:
             package = scan_models.Package.from_package_data(
-                    package_data=common_data,
-                    datafile_path=uri,
-                )
+                package_data=common_data,
+                datafile_path=uri,
+            )
             yield package
 
 
@@ -463,7 +489,6 @@ def build_packages_from_projects(metadata, uri=None):
 # FIXME: this is casting too wide a net!
 # @map_router.route('http?://[\w\-\.]+.incubator.apache.org/"')
 class ApachePodlingsMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
         """
         Yield Packages built from resource_uri record for a single
@@ -479,36 +504,33 @@ def build_packages_from_podlings(metadata, purl):
     which is a dictionary keyed by project name and values are project_metadata.
     Yield as many Package as there are download URLs.
     """
-    name = metadata.get('name')
+    name = metadata.get("name")
     if name:
         common_data = dict(
-            type='apache-podling',
+            type="apache-podling",
             name=name,
-            description=metadata.get('description'),
-            homepage_url=metadata.get('homepage'),
+            description=metadata.get("description"),
+            homepage_url=metadata.get("homepage"),
         )
         package = scan_models.Package(**common_data)
         package.set_purl(purl)
         yield package
 
 
-@map_router.route('http?s://(archive\.)?apache\.org/dist/.*')
+@map_router.route(r"http?s://(archive\.)?apache\.org/dist/.*")
 class ApacheDownloadMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
-        """
-        Yield Packages build from a bare download URI or download checksum URI.
-        """
+        """Yield Packages build from a bare download URI or download checksum URI."""
         if uri.endswith(CHECKSUM_EXTS):
             # 1. create a regular package from the URL stripped from its checksum extension
-            archive_uri, _, checksum_type = uri.rpartition('.')
+            archive_uri, _, checksum_type = uri.rpartition(".")
 
             pack = build_package_from_download(archive_uri, resource_uri.package_url)
             # 2. collect the checksum inside the file
             # and attach it to the package
             checksum_value = resource_uri.data.strip()
             if checksum_value:
-                checksum_field_name = 'download_{checksum_type}'.format(**locals())
+                checksum_field_name = "download_{checksum_type}".format(**locals())
                 setattr(pack, checksum_field_name, checksum_value)
                 yield pack
         else:
@@ -531,7 +553,7 @@ def build_package_from_download(uri, purl=None):
             name = purl.name
     # FIXME: use purl data??
     package = scan_models.Package(
-        type='apache',
+        type="apache",
         namespace=purl.namespace,
         name=name,
         version=version,
@@ -543,17 +565,15 @@ def build_package_from_download(uri, purl=None):
 
 # FIXME: there should be only one such method and this one is rather weak
 def get_name_version(uri):
-    """
-    Return name and version extracted from a path.
-    """
+    """Return name and version extracted from a path."""
     # base_url will end being 'https://archive.apache.org/dist' or  'https://apache.org/dist'
     # path is the uri without base url, for example:
     # /groovy/2.4.6/sources/apache-groovy-src-2.4.6.zip
-    _, _, path = uri.partition('apache.org/dist/')
+    _, _, path = uri.partition("apache.org/dist/")
     base_name = fileutils.file_base_name(path)
     version = None
-    package_name = ''
-    name_segments = base_name.split('-')
+    package_name = ""
+    name_segments = base_name.split("-")
     for segment in name_segments:
         try:
             # To test if each split segment with . is integer.
@@ -563,10 +583,10 @@ def get_name_version(uri):
                 # The segment after integer segment should belong to version too.
                 # For example: turbine-4.0-M1, after detecting 4.0,
                 # M1 should be including in version too, so the final version is 4.0-M1
-                version = '-'.join([version, segment])
+                version = "-".join([version, segment])
                 continue
 
-            is_all_int = all(n.isdigit() for n in segment.split('.'))
+            is_all_int = all(n.isdigit() for n in segment.split("."))
             if is_all_int:
                 version = segment
         except ValueError:
@@ -575,6 +595,6 @@ def get_name_version(uri):
             if not package_name:
                 package_name = segment
             else:
-                package_name = ('-').join([package_name, segment])
+                package_name = ("-").join([package_name, segment])
             continue
     return package_name, version

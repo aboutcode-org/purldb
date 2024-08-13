@@ -13,5 +13,5 @@ from django.utils.translation import gettext_lazy as _
 
 
 class MinecodeConfig(AppConfig):
-    name = 'minecode'
-    verbose_name = _('Minecode')
+    name = "minecode"
+    verbose_name = _("Minecode")

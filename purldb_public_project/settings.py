@@ -9,7 +9,6 @@
 
 from purldb_project.settings import *
 
+ROOT_URLCONF = "purldb_public_project.urls"
 
-ROOT_URLCONF = 'purldb_public_project.urls'
-
-WSGI_APPLICATION = 'purldb_public_project.wsgi.application'
+WSGI_APPLICATION = "purldb_public_project.wsgi.application"

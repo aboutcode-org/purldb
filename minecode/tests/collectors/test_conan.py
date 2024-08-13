@@ -9,27 +9,28 @@
 
 
 import os
+from unittest.mock import patch
+
+from django.test import TestCase
 
 import saneyaml
-from django.test import TestCase
-from mock import patch
 from packageurl import PackageURL
 
 import packagedb
-from minecode.utils_test import JsonBasedTesting
 from minecode.collectors import conan
+from minecode.utils_test import JsonBasedTesting
 
 
 class ConanPriorityQueueTests(JsonBasedTesting, TestCase):
-    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
+    test_data_dir = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)), "testfiles"
+    )
 
     def setUp(self):
         super(ConanPriorityQueueTests, self).setUp()
         self.package_url1 = PackageURL.from_string("pkg:conan/zlib@1.3.1")
-        zlib_conanfile_loc = self.get_test_loc(
-            "conan/zlib/manifest/conanfile.py")
-        zlib_conandata_loc = self.get_test_loc(
-            "conan/zlib/manifest/conandata.yml")
+        zlib_conanfile_loc = self.get_test_loc("conan/zlib/manifest/conanfile.py")
+        zlib_conandata_loc = self.get_test_loc("conan/zlib/manifest/conandata.yml")
         zlib_config_loc = self.get_test_loc("conan/zlib/manifest/config.yml")
 
         with open(zlib_conanfile_loc) as f:
@@ -41,8 +42,7 @@ class ConanPriorityQueueTests(JsonBasedTesting, TestCase):
         with open(zlib_conandata_loc) as f:
             self.zlib_conandata_contents = f.read()
 
-        self.zlib_conandata_contents_dict = saneyaml.load(
-            self.zlib_conandata_contents)
+        self.zlib_conandata_contents_dict = saneyaml.load(self.zlib_conandata_contents)
 
     @patch("requests.get")
     def test_get_conan_recipe(self, mock_get):
@@ -101,7 +101,7 @@ class ConanPriorityQueueTests(JsonBasedTesting, TestCase):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(package_count, 0)
 
-        conan.map_conan_package(self.package_url1, ('test_pipelines'))
+        conan.map_conan_package(self.package_url1, ("test_pipelines"))
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(package_count, 1)
         package = packagedb.models.Package.objects.all().first()

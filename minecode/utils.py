@@ -20,15 +20,12 @@ from django.urls import reverse
 from django.utils.encoding import force_str
 
 import arrow
-from arrow.parser import ParserError
 import requests
-from requests.exceptions import InvalidSchema
-from requests.exceptions import ConnectionError
-
+from arrow.parser import ParserError
 from commoncode.fileutils import create_dir
 from extractcode.extract import extract
-
-from minecode.management.commands import get_settings
+from requests.exceptions import ConnectionError
+from requests.exceptions import InvalidSchema
 
 logger = logging.getLogger(__name__)
 # import sys
@@ -41,35 +38,30 @@ def stringify_null_purl_fields(data):
     Modify `data` in place by ensuring `purl` fields are not None. This is useful for
     cleaning data before saving to db.
     """
-    purl_fields = ('type', 'namespace', 'name',
-                   'version', 'qualifiers', 'subpath')
+    purl_fields = ("type", "namespace", "name", "version", "qualifiers", "subpath")
     for field in purl_fields:
         try:
             if not data[field]:
-                data[field] = ''
+                data[field] = ""
         except KeyError:
             continue
 
 
 def sha1(content):
-    """
-    Returns the sha1 hash of the given content.
-    """
+    """Returns the sha1 hash of the given content."""
     h = hashlib.sha1()
     h.update(content)
     return h.hexdigest()
 
 
 def md5(content):
-    """
-    Returns the md5 hash of the given content.
-    """
+    """Returns the md5 hash of the given content."""
     h = hashlib.md5()
     h.update(content)
     return h.hexdigest()
 
 
-class DataObject(object):
+class DataObject:
     """
     A data object, using attributes for storage and a to_dict method to get
     a dict back.
@@ -90,40 +82,35 @@ class DataObject(object):
         return self.__dict__.get(item)
 
     def __eq__(self, other):
-        return (
-            self.to_dict(other.to_dict())
-        )
+        return self.to_dict(other.to_dict())
 
 
 def normalize_trailing_slash(uri):
-    """
-    Appends a trailing slash if the URI is not ending with one already.
-    """
-    if not uri.endswith('/'):
-        uri += '/'
+    """Appends a trailing slash if the URI is not ending with one already."""
+    if not uri.endswith("/"):
+        uri += "/"
     return uri
 
 
 def is_ascii(s):
-    """
-    Returns True is the string is ASCII.
-    """
+    """Returns True is the string is ASCII."""
     return all(ord(c) < 128 for c in s)
 
 
 def clean_html_entities(text):
-    """
-    Reverse of django.utils.html.escape
-    """
-    return text.replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>')\
-               .replace('&quot;', '"').replace('&#39;', "'")
+    """Reverse of django.utils.html.escape"""
+    return (
+        text.replace("&amp;", "&")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&quot;", '"')
+        .replace("&#39;", "'")
+    )
 
 
 def clean_description(text):
-    """
-    Cleans the description text from HTML entities and from extra whitespaces.
-    """
-    return ' '.join(clean_html_entities(text.strip()).split())
+    """Cleans the description text from HTML entities and from extra whitespaces."""
+    return " ".join(clean_html_entities(text.strip()).split())
 
 
 def strip_nbsp(s):
@@ -131,13 +118,13 @@ def strip_nbsp(s):
     Replace non breaking space HTML entities with regular space and strip the
     string.
     """
-    return force_str(s).replace('&nbsp;', ' ').strip()
+    return force_str(s).replace("&nbsp;", " ").strip()
 
 
-CR = '\r'
-LF = '\n'
+CR = "\r"
+LF = "\n"
 CRLF = CR + LF
-CRLF_NO_CR = ' ' + LF
+CRLF_NO_CR = " " + LF
 
 
 def unixlinesep(text, preserve=False):
@@ -167,7 +154,7 @@ def decode_fuzzy_date(s, _self=None):
     """
     import dateutil
 
-    if hasattr(_self, 'testing'):
+    if hasattr(_self, "testing"):
         # fixed base date used only for testing for well defined date offsets
         base = arrow.get(2014, 2, 2)
     else:
@@ -175,39 +162,36 @@ def decode_fuzzy_date(s, _self=None):
         base = arrow.utcnow()
 
     fuzzy = {
-        'Last 30 days': -30,
-        'Last 7 days': -7,
-        'Today': 0,
-        'Yesterday': -1,
+        "Last 30 days": -30,
+        "Last 7 days": -7,
+        "Today": 0,
+        "Yesterday": -1,
     }
 
     formats = [
-        'YYYY-MM-DD HH:mm:ss',
-
-        'MMM DD, YYYY',
-        'MMM D, YYYY',
-
-        'ddd MMM D HH:mm:ss YYYY',
-        'ddd MMM D H:mm:ss YYYY',
-        'ddd MMM DD HH:mm:ss YYYY',
-        'ddd MMM DD H:mm:ss YYYY',
-        'dddd MMM D HH:mm:ss YYYY',
-        'dddd MMM D H:mm:ss YYYY',
-        'dddd MMM DD HH:mm:ss YYYY',
-        'dddd MMM DD H:mm:ss YYYY',
-
-        'MM/DD/YYYY',
+        "YYYY-MM-DD HH:mm:ss",
+        "MMM DD, YYYY",
+        "MMM D, YYYY",
+        "ddd MMM D HH:mm:ss YYYY",
+        "ddd MMM D H:mm:ss YYYY",
+        "ddd MMM DD HH:mm:ss YYYY",
+        "ddd MMM DD H:mm:ss YYYY",
+        "dddd MMM D HH:mm:ss YYYY",
+        "dddd MMM D H:mm:ss YYYY",
+        "dddd MMM DD HH:mm:ss YYYY",
+        "dddd MMM DD H:mm:ss YYYY",
+        "MM/DD/YYYY",
     ]
 
     # normalize spaces
-    s = ' '.join(s.split())
-    if s == 'Earlier this year':
-        ar = base.floor('year')
+    s = " ".join(s.split())
+    if s == "Earlier this year":
+        ar = base.floor("year")
     elif s in fuzzy:
         ar = base.replace(days=fuzzy[s])
     else:
         ar = arrow.get(s, formats)
-        ar = ar.replace(tzinfo=dateutil.tz.tzutc()).to('utc')  # NOQA
+        ar = ar.replace(tzinfo=dateutil.tz.tzutc()).to("utc")  # NOQA
     return ar.isoformat()
 
 
@@ -224,24 +208,24 @@ def get_http_response(uri, timeout=10):
     Fetch and return the response object from an HTTP uri.
     `timeout` is a timeout with precedence over REQUESTS_ARGS settings.
     """
-    requests_args = getattr(settings, 'REQUESTS_ARGS', {})
-    requests_args['timeout'] = timeout
+    requests_args = getattr(settings, "REQUESTS_ARGS", {})
+    requests_args["timeout"] = timeout
 
-    if not uri.lower().startswith('http'):
-        raise Exception(
-            'get_http_response: Not an HTTP URI: %(uri)r' % locals())
+    if not uri.lower().startswith("http"):
+        raise Exception("get_http_response: Not an HTTP URI: %(uri)r" % locals())
 
     try:
         response = requests.get(uri, **requests_args)
-    except (ConnectionError, InvalidSchema) as e:
-        logger.error(
-            'get_http_response: Download failed for %(uri)r' % locals())
+    except (ConnectionError, InvalidSchema):
+        logger.error("get_http_response: Download failed for %(uri)r" % locals())
         raise
 
     status = response.status_code
     if status != 200:
-        raise Exception('get_http_response: Download failed for %(uri)r '
-                        'with %(status)r' % locals())
+        raise Exception(
+            "get_http_response: Download failed for %(uri)r "
+            "with %(status)r" % locals()
+        )
     return response
 
 
@@ -258,7 +242,7 @@ def get_package_sha1(package, field="repository_download_url"):
     # Download archive from URL and calculate sha1
     response = requests.get(download_url)
     if response:
-        sha1_hash = hashlib.new('sha1', response.content)
+        sha1_hash = hashlib.new("sha1", response.content)
         sha1 = sha1_hash.hexdigest()
         return sha1
 
@@ -275,9 +259,8 @@ def fetch_and_write_file_from_url(url):
     metadata_content = response.text
     filename = url.split("/")[-1]
     file_name, _, extension = filename.rpartition(".")
-    temp_metadata_file = get_temp_file(
-        file_name=file_name, extension=extension)
-    with open(temp_metadata_file, 'a') as metadata_file:
+    temp_metadata_file = get_temp_file(file_name=file_name, extension=extension)
+    with open(temp_metadata_file, "a") as metadata_file:
         metadata_file.write(metadata_content)
 
     return temp_metadata_file
@@ -290,24 +273,20 @@ def validate_sha1(sha1):
     Return `sha1` if it is valid, None otherwise.
     """
     if sha1 and len(sha1) != 40:
-        logger.warning(
-            f'Invalid SHA1 length ({len(sha1)}): "{sha1}": SHA1 ignored!'
-        )
+        logger.warning(f'Invalid SHA1 length ({len(sha1)}): "{sha1}": SHA1 ignored!')
         sha1 = None
     return sha1
 
 
-def system_temp_dir(temp_dir=os.getenv('MINECODE_TMP')):
-    """
-    Return the global temp directory..
-    """
+def system_temp_dir(temp_dir=os.getenv("MINECODE_TMP")):
+    """Return the global temp directory.."""
     if not temp_dir:
-        temp_dir = os.path.join(tempfile.gettempdir(), 'minecode')
+        temp_dir = os.path.join(tempfile.gettempdir(), "minecode")
     create_dir(temp_dir)
     return temp_dir
 
 
-def get_temp_dir(base_dir='', prefix=''):
+def get_temp_dir(base_dir="", prefix=""):
     """
     Return the path to base a new unique temporary directory, created under
     the system-wide `system_temp_dir` temp directory and as a subdir of the
@@ -321,14 +300,14 @@ def get_temp_dir(base_dir='', prefix=''):
     return tempfile.mkdtemp(prefix=prefix, dir=base_dir)
 
 
-def get_temp_file(file_name='data', extension='.file', dir_name=''):
+def get_temp_file(file_name="data", extension=".file", dir_name=""):
     """
     Return a file path string to a new, unique and non-existing
     temporary file that can safely be created without a risk of name
     collision.
     """
-    if extension and not extension.startswith('.'):
-        extension = '.' + extension
+    if extension and not extension.startswith("."):
+        extension = "." + extension
 
     file_name = file_name + extension
     # create a new temp dir each time
@@ -338,9 +317,7 @@ def get_temp_file(file_name='data', extension='.file', dir_name=''):
 
 
 def extract_file(location):
-    """
-    Extract file at location returning the extracted location.
-    """
+    """Extract file at location returning the extracted location."""
     target = None
     try:
         for event in extract(location):
@@ -350,18 +327,16 @@ def extract_file(location):
                 target = event.target
                 break
     except Exception as e:
-        logger.error('extract_file: failed for %(location)r' % locals())
+        logger.error("extract_file: failed for %(location)r" % locals())
         raise e
     return target
 
 
 def parse_date(s):
-    """
-    Return date string in YYYY-MM-DD format from a datetime string
-    """
+    """Return date string in YYYY-MM-DD format from a datetime string"""
     if s:
         try:
-            return arrow.get(s).format('YYYY-MM-DD')
+            return arrow.get(s).format("YYYY-MM-DD")
         except ParserError:
             # If we can't parse a date, it's not a big deal as `release_date`
             # is not an important field for us
@@ -369,8 +344,7 @@ def parse_date(s):
 
 
 def is_int(s):
-    """To test if the input para is a int
-    """
+    """To test if the input para is a int"""
     try:
         int(s)
         return True
@@ -384,12 +358,11 @@ def form_vcs_url(vcs_tool, vcs_url, revision_tag_or_branch=None, sub_path=None):
     # <vcs_tool>+<transport>://<host_name>[/<path_to_repository>][@<revision_tag_or_branch>][#<sub_path>]
     if vcs_url:
         if vcs_tool:
-            vcs_url = '+'.join(str(v) for v in [vcs_tool, vcs_url])
+            vcs_url = "+".join(str(v) for v in [vcs_tool, vcs_url])
         if revision_tag_or_branch:
-            vcs_url = '@'.join(str(v)
-                               for v in [vcs_url, revision_tag_or_branch])
+            vcs_url = "@".join(str(v) for v in [vcs_url, revision_tag_or_branch])
         if sub_path:
-            vcs_url = '#'.join(str(v) for v in [vcs_url, sub_path])
+            vcs_url = "#".join(str(v) for v in [vcs_url, sub_path])
     return vcs_url
 
 
@@ -402,7 +375,7 @@ def validate_uuid(uuid_string):
 
 
 # This is from https://stackoverflow.com/questions/4856882/limiting-memory-use-in-a-large-django-queryset/5188179#5188179
-class MemorySavingQuerysetIterator(object):
+class MemorySavingQuerysetIterator:
     def __init__(self, queryset, max_obj_num=1000):
         self._base_queryset = queryset
         self._generator = self._setup()
@@ -414,8 +387,9 @@ class MemorySavingQuerysetIterator(object):
             # the objects we ensure that there are only `max_obj_num` objects in
             # memory at any given time
             smaller_queryset = copy.deepcopy(self._base_queryset)[
-                i:i+self.max_obj_num]
-            logger.debug('Grabbing next %s objects from DB' % self.max_obj_num)
+                i : i + self.max_obj_num
+            ]
+            logger.debug("Grabbing next %s objects from DB" % self.max_obj_num)
             for obj in smaller_queryset.iterator():
                 yield obj
 

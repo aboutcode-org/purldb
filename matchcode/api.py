@@ -9,8 +9,13 @@
 from django.db.models import Q
 from django.forms import widgets
 from django.forms.fields import MultipleChoiceField
+
 from django_filters.filters import MultipleChoiceFilter
 from django_filters.rest_framework import FilterSet
+from matchcode_toolkit.fingerprinting import create_halohash_chunks
+from matchcode_toolkit.fingerprinting import hexstring_to_binarray
+from matchcode_toolkit.fingerprinting import split_fingerprint
+from matchcode_toolkit.halohash import byte_hamming_distance
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.serializers import CharField
@@ -21,49 +26,35 @@ from rest_framework.serializers import ReadOnlyField
 from rest_framework.serializers import Serializer
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from matchcode_toolkit.fingerprinting import create_halohash_chunks
-from matchcode_toolkit.fingerprinting import hexstring_to_binarray
-from matchcode_toolkit.fingerprinting import split_fingerprint
-from matchcode_toolkit.halohash import byte_hamming_distance
-from matchcode.models import ExactFileIndex
-from matchcode.models import ExactPackageArchiveIndex
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
+from matchcode.models import ExactFileIndex
+from matchcode.models import ExactPackageArchiveIndex
 
 
 class BaseFileIndexSerializer(ModelSerializer):
-    sha1 = CharField(source='fingerprint')
+    sha1 = CharField(source="fingerprint")
     package = HyperlinkedRelatedField(
-        view_name='api:package-detail',
-        lookup_field='uuid',
-        read_only=True
+        view_name="api:package-detail", lookup_field="uuid", read_only=True
     )
 
 
 class ExactFileIndexSerializer(BaseFileIndexSerializer):
     class Meta:
         model = ExactFileIndex
-        fields = (
-            'sha1',
-            'package'
-        )
+        fields = ("sha1", "package")
 
 
 class ExactPackageArchiveIndexSerializer(BaseFileIndexSerializer):
     class Meta:
         model = ExactPackageArchiveIndex
-        fields = (
-            'sha1',
-            'package'
-        )
+        fields = ("sha1", "package")
 
 
 class BaseDirectoryIndexSerializer(ModelSerializer):
     fingerprint = ReadOnlyField()
     package = HyperlinkedRelatedField(
-        view_name='api:package-detail',
-        lookup_field='uuid',
-        read_only=True
+        view_name="api:package-detail", lookup_field="uuid", read_only=True
     )
 
 
@@ -71,8 +62,8 @@ class ApproximateDirectoryContentIndexSerializer(BaseDirectoryIndexSerializer):
     class Meta:
         model = ApproximateDirectoryContentIndex
         fields = (
-            'fingerprint',
-            'package',
+            "fingerprint",
+            "package",
         )
 
 
@@ -80,8 +71,8 @@ class ApproximateDirectoryStructureIndexSerializer(BaseDirectoryIndexSerializer)
     class Meta:
         model = ApproximateDirectoryStructureIndex
         fields = (
-            'fingerprint',
-            'package',
+            "fingerprint",
+            "package",
         )
 
 
@@ -89,9 +80,7 @@ class BaseDirectoryIndexMatchSerializer(Serializer):
     fingerprint = CharField()
     matched_fingerprint = CharField()
     package = HyperlinkedRelatedField(
-        view_name='api:package-detail',
-        lookup_field='uuid',
-        read_only=True
+        view_name="api:package-detail", lookup_field="uuid", read_only=True
     )
     similarity_score = FloatField()
 
@@ -104,22 +93,19 @@ class CharMultipleWidget(widgets.TextInput):
 
     def value_from_datadict(self, data, files, name):
         value = widgets.SelectMultiple().value_from_datadict(data, files, name)
-        if not value or value == ['']:
-            return ''
+        if not value or value == [""]:
+            return ""
 
         return value
 
     def format_value(self, value):
-        """
-        Return a value as it should appear when rendered in a template.
-        """
-        return ', '.join(value)
+        """Return a value as it should appear when rendered in a template."""
+        return ", ".join(value)
 
 
 class MultipleCharField(MultipleChoiceField):
-    """
-    Overrides `MultipleChoiceField` to fit in `MultipleCharFilter`.
-    """
+    """Overrides `MultipleChoiceField` to fit in `MultipleCharFilter`."""
+
     widget = CharMultipleWidget
 
     def valid_value(self, value):
@@ -127,9 +113,8 @@ class MultipleCharField(MultipleChoiceField):
 
 
 class MultipleCharFilter(MultipleChoiceFilter):
-    """
-    Filters on multiple values for a CharField type using `?field=a&field=b` URL syntax.
-    """
+    """Filters on multiple values for a CharField type using `?field=a&field=b` URL syntax."""
+
     field_class = MultipleCharField
 
 
@@ -145,7 +130,7 @@ class MultipleCharInFilter(MultipleCharFilter):
 
         predicate = self.get_filter_predicate(value)
         old_field_name = next(iter(predicate))
-        new_field_name = f'{old_field_name}__in'
+        new_field_name = f"{old_field_name}__in"
         predicate[new_field_name] = predicate[old_field_name]
         predicate.pop(old_field_name)
 
@@ -198,9 +183,9 @@ class MultipleFingerprintFilter(MultipleCharFilter):
                     chunk1=chunk1,
                     chunk2=chunk2,
                     chunk3=chunk3,
-                    chunk4=chunk4
+                    chunk4=chunk4,
                 ),
-                Q.OR
+                Q.OR,
             )
 
         return qs.filter(q)
@@ -213,17 +198,13 @@ class BaseFileIndexFilterSet(FilterSet):
 class ExactFileIndexFilterSet(BaseFileIndexFilterSet):
     class Meta:
         model = ExactFileIndex
-        fields = (
-            'sha1',
-        )
+        fields = ("sha1",)
 
 
 class ExactPackageArchiveFilterSet(BaseFileIndexFilterSet):
     class Meta:
         model = ExactPackageArchiveIndex
-        fields = (
-            'sha1',
-        )
+        fields = ("sha1",)
 
 
 class BaseDirectoryIndexFilterSet(FilterSet):
@@ -233,21 +214,17 @@ class BaseDirectoryIndexFilterSet(FilterSet):
 class ApproximateDirectoryContentFilterSet(BaseDirectoryIndexFilterSet):
     class Meta:
         model = ApproximateDirectoryContentIndex
-        fields = (
-            'fingerprint',
-        )
+        fields = ("fingerprint",)
 
 
 class ApproximateDirectoryStructureFilterSet(BaseDirectoryIndexFilterSet):
     class Meta:
         model = ApproximateDirectoryStructureIndex
-        fields = (
-            'fingerprint',
-        )
+        fields = ("fingerprint",)
 
 
 class BaseFileIndexViewSet(ReadOnlyModelViewSet):
-    lookup_field = 'sha1'
+    lookup_field = "sha1"
 
 
 class ExactFileIndexViewSet(BaseFileIndexViewSet):
@@ -263,11 +240,11 @@ class ExactPackageArchiveIndexViewSet(BaseFileIndexViewSet):
 
 
 class BaseDirectoryIndexViewSet(ReadOnlyModelViewSet):
-    lookup_field = 'fingerprint'
+    lookup_field = "fingerprint"
 
     @action(detail=False)
     def match(self, request):
-        fingerprints = request.query_params.getlist('fingerprint')
+        fingerprints = request.query_params.getlist("fingerprint")
         if not fingerprints:
             return Response()
 
@@ -285,17 +262,15 @@ class BaseDirectoryIndexViewSet(ReadOnlyModelViewSet):
                 similarity_score = (128 - hd) / 128
                 results.append(
                     {
-                        'fingerprint': fingerprint,
-                        'matched_fingerprint': fp,
-                        'package': match.package,
-                        'similarity_score': similarity_score,
+                        "fingerprint": fingerprint,
+                        "matched_fingerprint": fp,
+                        "package": match.package,
+                        "similarity_score": similarity_score,
                     }
                 )
 
         serialized_match_results = BaseDirectoryIndexMatchSerializer(
-            results,
-            context={'request': request},
-            many=True
+            results, context={"request": request}, many=True
         )
         return Response(serialized_match_results.data)
 

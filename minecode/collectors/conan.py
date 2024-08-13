@@ -29,9 +29,7 @@ logger.setLevel(logging.INFO)
 
 
 def get_yaml_response(url):
-    """
-    Fetch YAML content from the url and return it as a dictionary.
-    """
+    """Fetch YAML content from the url and return it as a dictionary."""
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -62,8 +60,7 @@ def get_conan_recipe(name, version):
 
     folder = recipe_location.get("folder")
     if not folder:
-        logger.error(
-            f"No folder found for version {version} of package {name}")
+        logger.error(f"No folder found for version {version} of package {name}")
         return None, None
 
     conanfile_py_url = f"{base_index_url}/{name}/{folder}/conanfile.py"
@@ -85,9 +82,7 @@ def get_conan_recipe(name, version):
 
 
 def get_download_info(conandata, version):
-    """
-    Return download_url and SHA256 hash from `conandata.yml`.
-    """
+    """Return download_url and SHA256 hash from `conandata.yml`."""
     sources = conandata.get("sources", {})
     pkg_data = sources.get(version, {})
 
@@ -153,9 +148,9 @@ def process_request(purl_str, **kwargs):
     from minecode.model_utils import DEFAULT_PIPELINES
 
     package_url = PackageURL.from_string(purl_str)
-    addon_pipelines = kwargs.get('addon_pipelines', [])
+    addon_pipelines = kwargs.get("addon_pipelines", [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
+    priority = kwargs.get("priority", 0)
 
     if not package_url.version:
         return

@@ -14,20 +14,20 @@ from packagedb.models import Package
 
 
 def dump_purls(package_type, output):
-    """
-    Dump packagedb purls for ``package_type`` as JSON lines in the ``output`` files
-    """
-    compact_separators = (u',', u':',)
+    """Dump packagedb purls for ``package_type`` as JSON lines in the ``output`` files"""
+    compact_separators = (
+        ",",
+        ":",
+    )
     out = None
     for i, package in enumerate(Package.objects.filter(type=package_type).all()):
         if not output:
             out = open(f"{output}-{i}.json", "w")
-        purl = dict(purl=package.package_url,
-                    download_url=package.download_url)
+        purl = dict(purl=package.package_url, download_url=package.download_url)
         if not i % 500:
             print(f"#{i} purl: {package.package_url}")
         out.write(json.dumps(purl, separators=compact_separators))
-        out.write('\n')
+        out.write("\n")
         if not i % 1000000:
             out.close()
             out = None

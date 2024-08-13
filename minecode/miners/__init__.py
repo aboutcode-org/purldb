@@ -7,9 +7,9 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from functools import total_ordering
 import json
 import pkgutil
+from functools import total_ordering
 
 from minecode.utils import fetch_http
 from minecode.utils import get_temp_file
@@ -17,35 +17,48 @@ from minecode.utils import get_temp_file
 
 # FIXME: use attr or use a plain ResourceURI object insteaad
 @total_ordering
-class URI(object):
+class URI:
     """
     Describe a URI to visit as returned by Visitors subclasses or visit
     functions. This mostly mirrors the ResourceURI models as a plain Python
     object.
     """
+
     __slots__ = (
-        'uri',
-        'source_uri',
-        'package_url',
-        'file_name',
-        'size',
-        'date',
-        'md5',
-        'sha1',
-        'sha256',
-        'priority',
-        'data',
-        'visited',
-        'mining_level',
-        'visit_error'
+        "uri",
+        "source_uri",
+        "package_url",
+        "file_name",
+        "size",
+        "date",
+        "md5",
+        "sha1",
+        "sha256",
+        "priority",
+        "data",
+        "visited",
+        "mining_level",
+        "visit_error",
     )
 
-    def __init__(self,
-                 uri, source_uri=None, package_url=None,
-                 file_name=None, size=None, date=None, md5=None, sha1=None, sha256=None,
-                 priority=0,
-                 data=None, visited=False, mining_level=0, visit_error=None, **kwargs
-                 ):
+    def __init__(
+        self,
+        uri,
+        source_uri=None,
+        package_url=None,
+        file_name=None,
+        size=None,
+        date=None,
+        md5=None,
+        sha1=None,
+        sha256=None,
+        priority=0,
+        data=None,
+        visited=False,
+        mining_level=0,
+        visit_error=None,
+        **kwargs,
+    ):
         """
         Construct a new URI. A URI represents an address and extra information
         about this address at some point in time. `uri` is a mandatory URI
@@ -91,7 +104,7 @@ class URI(object):
         ordered_dict = dict()
         for k in self.__slots__:
             value = getattr(self, k)
-            if value and data_is_json and k == 'data':
+            if value and data_is_json and k == "data":
                 value = json.loads(value)
             ordered_dict[k] = value
         return ordered_dict
@@ -103,19 +116,21 @@ class URI(object):
         return isinstance(other, URI) and self.to_dict() == other.to_dict()
 
     def __lt__(self, other):
-        return (isinstance(other, URI)
-                and self.to_dict().items() < other.to_dict().items())
+        return (
+            isinstance(other, URI) and self.to_dict().items() < other.to_dict().items()
+        )
 
     def __repr__(self):
-        args = [key + '=%(' + key + ')r' for key in self.__slots__
-                if getattr(self, key, None)]
-        return ('URI(' + ', '.join(args) + ')') % self.to_dict()
+        args = [
+            key + "=%(" + key + ")r"
+            for key in self.__slots__
+            if getattr(self, key, None)
+        ]
+        return ("URI(" + ", ".join(args) + ")") % self.to_dict()
 
     @classmethod
     def from_db(cls, resource_uri):
-        """
-        Build a new URI from a ResourceURI model object.
-        """
+        """Build a new URI from a ResourceURI model object."""
         kwargs = {}
         for key in cls.__slots__:
             value = getattr(resource_uri, key, None)
@@ -125,11 +140,12 @@ class URI(object):
         return URI(**kwargs)
 
 
-class Visitor(object):
+class Visitor:
     """
     Abstract base class for visitors. Subclasses must implement the fetch() and
     get_uris() methods and use a routing decorator for the URIs they can handle.
     """
+
     save_data = True
 
     def __call__(self, uri):
@@ -150,9 +166,7 @@ class Visitor(object):
         return uris_to_visit, self.dumps(content_object), None
 
     def fetch(self, uri):
-        """
-        Fetch and return the content content found at a remote URI.
-        """
+        """Fetch and return the content content found at a remote URI."""
         raise NotImplementedError
 
     def get_uris(self, content):
@@ -213,17 +227,14 @@ class NonPersistentHttpVisitor(HttpVisitor):
 
         `timeout` is a default timeout.
         """
-        content = super(NonPersistentHttpVisitor,
-                        self).fetch(uri, timeout=timeout)
-        temp_file = get_temp_file('NonPersistentHttpVisitor')
-        with open(temp_file, 'wb') as tmp:
+        content = super(NonPersistentHttpVisitor, self).fetch(uri, timeout=timeout)
+        temp_file = get_temp_file("NonPersistentHttpVisitor")
+        with open(temp_file, "wb") as tmp:
             tmp.write(content)
         return temp_file
 
     def dumps(self, content):
-        """
-        Return nothing. The content should not be saved.
-        """
+        """Return nothing. The content should not be saved."""
         return None
 
 
@@ -241,12 +252,13 @@ class HttpJsonVisitor(HttpVisitor):
         return json.loads(content)
 
 
-class Mapper(object):
+class Mapper:
     """
     Abstract base class for mappers. Subclasses must implement the
     get_packages() method and use a routing decorator for the URIs they can
     handle.
     """
+
     def __call__(self, uri, resource_uri):
         # Note: we let exceptions bubble up and they will be caught and
         # processed by the worker loop
@@ -265,5 +277,5 @@ Minimal way to recursively import all submodules dynamically. If this module is
 imported, all submodules will be imported: this triggers the actual registration
 of miners. This should stay as the last import in this init module.
 """
-for _, name, _ in pkgutil.walk_packages(__path__, prefix=__name__ + '.'):
+for _, name, _ in pkgutil.walk_packages(__path__, prefix=__name__ + "."):
     __import__(name)

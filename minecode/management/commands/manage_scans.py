@@ -2,19 +2,16 @@
 # Copyright (c) 2018 by nexB, Inc. http://www.nexb.com/ - All rights reserved.
 #
 
-import time
 import logging
 import signal
 import sys
+import time
 
 from django.db import transaction
 from django.utils import timezone
 
-
-from minecode.models import ScannableURI
-
 from minecode.management.commands import VerboseCommand
-
+from minecode.models import ScannableURI
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
@@ -26,39 +23,40 @@ SLEEP_WHEN_EMPTY = 1
 
 
 class ScanningCommand(VerboseCommand):
-    """
-    Base command class for processing ScannableURIs.
-    """
+    """Base command class for processing ScannableURIs."""
+
     # subclasses must override
     logger = None
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--exit-on-empty',
-            dest='exit_on_empty',
+            "--exit-on-empty",
+            dest="exit_on_empty",
             default=False,
-            action='store_true',
-            help='Do not loop forever. Exit when the queue is empty.')
+            action="store_true",
+            help="Do not loop forever. Exit when the queue is empty.",
+        )
 
         parser.add_argument(
-            '--max-uris',
-            dest='max_uris',
+            "--max-uris",
+            dest="max_uris",
             default=0,
-            action='store',
-            help='Limit the number of Scannable URIs processed to a maximum number. '
-                 '0 means no limit. Used only for testing.')
+            action="store",
+            help="Limit the number of Scannable URIs processed to a maximum number. "
+            "0 means no limit. Used only for testing.",
+        )
 
     def handle(self, *args, **options):
-        exit_on_empty = options.get('exit_on_empty')
-        max_uris = options.get('max_uris', 0)
+        exit_on_empty = options.get("exit_on_empty")
+        max_uris = options.get("max_uris", 0)
 
         uris_counter = self.process_scans(
             exit_on_empty=exit_on_empty,
             max_uris=max_uris,
             # Pass options to allow subclasses to add their own options
-            options=options
+            options=options,
         )
-        self.stdout.write('Processed {} ScannableURI.'.format(uris_counter))
+        self.stdout.write(f"Processed {uris_counter} ScannableURI.")
 
     @classmethod
     def process_scans(cls, exit_on_empty=False, max_uris=0, **kwargs):
@@ -77,29 +75,35 @@ class ScanningCommand(VerboseCommand):
             time.sleep(10)
 
             if cls.MUST_STOP:
-                cls.logger.info('Graceful exit of the scan processing loop.')
+                cls.logger.info("Graceful exit of the scan processing loop.")
                 break
 
             if max_uris and uris_counter >= max_uris:
-                cls.logger.info('max_uris requested reached: exiting scan processing loop.')
+                cls.logger.info(
+                    "max_uris requested reached: exiting scan processing loop."
+                )
                 break
 
             scannable_uri = cls.get_next_uri()
 
             if not scannable_uri:
                 if exit_on_empty:
-                    cls.logger.info('exit-on-empty requested: No more scannable URIs, exiting...')
+                    cls.logger.info(
+                        "exit-on-empty requested: No more scannable URIs, exiting..."
+                    )
                     break
 
                 # Only log a single message when we go to sleep
                 if not sleeping:
                     sleeping = True
-                    cls.logger.info('No more scannable URIs, sleeping for at least {} seconds...'.format(SLEEP_WHEN_EMPTY))
+                    cls.logger.info(
+                        f"No more scannable URIs, sleeping for at least {SLEEP_WHEN_EMPTY} seconds..."
+                    )
 
                 time.sleep(SLEEP_WHEN_EMPTY)
                 continue
 
-            cls.logger.info('Processing scannable URI: {}'.format(scannable_uri))
+            cls.logger.info(f"Processing scannable URI: {scannable_uri}")
 
             cls.process_scan(scannable_uri, **kwargs)
             uris_counter += 1
@@ -129,11 +133,12 @@ class ScanningCommand(VerboseCommand):
 
 
 class Command(ScanningCommand):
-
     logger = logger
 
-    help = ('Check scancode.io requested scans for status then fetch and process '
-            'completed scans for indexing and updates.')
+    help = (
+        "Check scancode.io requested scans for status then fetch and process "
+        "completed scans for indexing and updates."
+    )
 
     def handle(self, *args, **options):
         logger.setLevel(self.get_verbosity(**options))
@@ -146,15 +151,24 @@ class Command(ScanningCommand):
         return scannable_uri
 
     @classmethod
-    def process_scan(cls, scannable_uri, get_scan_info_save_loc='', get_scan_data_save_loc='', **kwargs):
+    def process_scan(
+        cls,
+        scannable_uri,
+        get_scan_info_save_loc="",
+        get_scan_data_save_loc="",
+        **kwargs,
+    ):
         """
         Manage a ScannableURI based on its status.
         - For submitted but not completed scans, check the timestamp of when the scan was submitted, if it has been past some time, then we set the scan as timed out
         - For timed out scans, we set that as failed and then create a new one?
         """
-        logger.info('Checking scan for URI: {}'.format(scannable_uri))
+        logger.info(f"Checking scan for URI: {scannable_uri}")
 
-        if scannable_uri.scan_status in (ScannableURI.SCAN_SUBMITTED, ScannableURI.SCAN_IN_PROGRESS):
+        if scannable_uri.scan_status in (
+            ScannableURI.SCAN_SUBMITTED,
+            ScannableURI.SCAN_IN_PROGRESS,
+        ):
             scan_duration = timezone.now() - scannable_uri.scan_date
             scan_duration_hours = scan_duration.seconds / (60 * 60)
 
@@ -162,7 +176,7 @@ class Command(ScanningCommand):
                 scannable_uri.scan_status = ScannableURI.SCAN_TIMEOUT
                 scannable_uri.wip_date = None
                 scannable_uri.save()
-                logger.info('Scan for URI has timed out: {}'.format(scannable_uri))
+                logger.info(f"Scan for URI has timed out: {scannable_uri}")
 
 
 # support graceful death when used as a service

@@ -1,18 +1,19 @@
+import logging
+
+import attr
+import requests
+from debian_inspector.version import Version as DebVersion
+from packagedcode import models as scan_models
 from packagedcode.debian import DebianDscFileHandler
 from packagedcode.debian_copyright import StandaloneDebianCopyrightFileHandler
-from debian_inspector.version import Version as DebVersion
-import requests
+from packageurl import PackageURL
+
 from minecode import priority_router
 from minecode.utils import fetch_and_write_file_from_url
 from minecode.utils import get_package_sha1
-from packagedb.models import make_relationship
 from packagedb.models import PackageContentType
 from packagedb.models import PackageRelation
-from packageurl import PackageURL
-import logging
-from packagedcode import models as scan_models
-import attr
-
+from packagedb.models import make_relationship
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -27,7 +28,7 @@ UBUNTU_BASE_URL = "http://archive.ubuntu.com/ubuntu/pool/main/"
 UBUNTU_METADATA_URL = "http://changelogs.ubuntu.com/changelogs/pool/main/"
 
 
-@priority_router.route('pkg:deb/.*')
+@priority_router.route("pkg:deb/.*")
 def process_request(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a maven Package URL (PURL) as a
@@ -44,9 +45,9 @@ def process_request(purl_str, **kwargs):
     from minecode.model_utils import DEFAULT_PIPELINES
 
     source_purl = kwargs.get("source_purl", None)
-    addon_pipelines = kwargs.get('addon_pipelines', [])
+    addon_pipelines = kwargs.get("addon_pipelines", [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
+    priority = kwargs.get("priority", 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)
@@ -55,7 +56,7 @@ def process_request(purl_str, **kwargs):
             source_package_url = PackageURL.from_string(source_purl)
 
     except ValueError as e:
-        error = f'error occured when parsing purl: {purl_str} source_purl: {source_purl} : {e}'
+        error = f"error occured when parsing purl: {purl_str} source_purl: {source_purl} : {e}"
         return error
 
     has_version = bool(package_url.version)
@@ -80,7 +81,7 @@ def map_debian_package(debian_package, package_content, pipelines, priority=0):
     from minecode.model_utils import merge_or_create_package
 
     db_package = None
-    error = ''
+    error = ""
 
     purl = debian_package.package_url
     if package_content == PackageContentType.BINARY:
@@ -90,8 +91,8 @@ def map_debian_package(debian_package, package_content, pipelines, priority=0):
 
     response = requests.get(download_url)
     if not response.ok:
-        msg = f'Package metadata does not exist on debian: {download_url}'
-        error += msg + '\n'
+        msg = f"Package metadata does not exist on debian: {download_url}"
+        error += msg + "\n"
         logger.error(msg)
         return db_package, error
 
@@ -123,7 +124,7 @@ def map_debian_package(debian_package, package_content, pipelines, priority=0):
     package.download_url = download_url
 
     # Set package_content value
-    package.extra_data['package_content'] = package_content
+    package.extra_data["package_content"] = package_content
 
     # If sha1 exists for an archive, we know we can create the package
     # Use purl info as base and create packages for binary and source package
@@ -132,8 +133,8 @@ def map_debian_package(debian_package, package_content, pipelines, priority=0):
         package.sha1 = sha1
         db_package, _, _, _ = merge_or_create_package(package, visit_level=50)
     else:
-        msg = f'Failed to retrieve package archive: {purl.to_string()} from url: {download_url}'
-        error += msg + '\n'
+        msg = f"Failed to retrieve package archive: {purl.to_string()} from url: {download_url}"
+        error += msg + "\n"
         logger.error(msg)
 
     # Submit package for scanning
@@ -153,13 +154,13 @@ def get_debian_package_metadata(debian_package):
     If there are errors, return None and a string containing the error
     information.
     """
-    error = ''
+    error = ""
 
     metadata_url = debian_package.package_metadata_url
     temp_metadata_file = fetch_and_write_file_from_url(url=metadata_url)
     if not temp_metadata_file:
-        msg = f'Package metadata does not exist on debian: {metadata_url}'
-        error += msg + '\n'
+        msg = f"Package metadata does not exist on debian: {metadata_url}"
+        error += msg + "\n"
         logger.error(msg)
         return None, error
 
@@ -181,13 +182,13 @@ def get_debian_package_copyright(debian_package):
     If there are errors, return None and a string containing the error
     information.
     """
-    error = ''
+    error = ""
 
     metadata_url = debian_package.package_copyright_url
     temp_metadata_file = fetch_and_write_file_from_url(url=metadata_url)
     if not temp_metadata_file:
-        msg = f'Package metadata does not exist on debian: {metadata_url}'
-        error += msg + '\n'
+        msg = f"Package metadata does not exist on debian: {metadata_url}"
+        error += msg + "\n"
         logger.error(msg)
         return None, error
 
@@ -201,15 +202,15 @@ def get_debian_package_copyright(debian_package):
 
 def update_license_copyright_fields(package_from, package_to, replace=True):
     fields_to_update = [
-        'copyright',
-        'holder',
-        'declared_license_expression',
-        'declared_license_expression_spdx',
-        'license_detections',
-        'other_license_expression',
-        'other_license_expression_spdx',
-        'other_license_detections',
-        'extracted_license_statement'
+        "copyright",
+        "holder",
+        "declared_license_expression",
+        "declared_license_expression_spdx",
+        "license_detections",
+        "other_license_expression",
+        "other_license_expression_spdx",
+        "other_license_detections",
+        "extracted_license_statement",
     ]
 
     for field in fields_to_update:
@@ -218,25 +219,27 @@ def update_license_copyright_fields(package_from, package_to, replace=True):
             setattr(package_to, field, value)
 
 
-def map_debian_metadata_binary_and_source(package_url, source_package_url, pipelines, priority=0):
+def map_debian_metadata_binary_and_source(
+    package_url, source_package_url, pipelines, priority=0
+):
     """
     Get metadata for the binary and source release of the Debian package
     `package_url` and save it to the PackageDB.
 
     Return an error string for errors that occur, or empty string if there is no error.
     """
-    error = ''
+    error = ""
 
     if "repository_url" in package_url.qualifiers:
         base_url = package_url.qualifiers["repository_url"]
-    elif package_url.namespace == 'ubuntu':
+    elif package_url.namespace == "ubuntu":
         base_url = UBUNTU_BASE_URL
     else:
         base_url = DEBIAN_BASE_URL
 
     if "api_data_url" in package_url.qualifiers:
         metadata_base_url = package_url.qualifiers["api_data_url"]
-    elif package_url.namespace == 'ubuntu':
+    elif package_url.namespace == "ubuntu":
         metadata_base_url = UBUNTU_METADATA_URL
     else:
         metadata_base_url = DEBIAN_METADATA_URL
@@ -260,7 +263,7 @@ def map_debian_metadata_binary_and_source(package_url, source_package_url, pipel
     if emsg:
         error += emsg
 
-    package_url.qualifiers['classifier'] = 'sources'
+    package_url.qualifiers["classifier"] = "sources"
     source_package, emsg = map_debian_package(
         debian_package,
         PackageContentType.SOURCE_ARCHIVE,
@@ -296,9 +299,7 @@ class DebianPackage:
 
     @classmethod
     def from_purls(cls, package_urls):
-        """
-        Set the directory URLs for metadata and package archives.
-        """
+        """Set the directory URLs for metadata and package archives."""
         debian_package = cls(**package_urls)
         error = debian_package.set_debian_directories()
         return debian_package, error
@@ -318,25 +319,25 @@ class DebianPackage:
 
     @property
     def binary_archive_url(self):
-        """
-        Get the .deb debian binary archive url for this debian package.
-        """
+        """Get the .deb debian binary archive url for this debian package."""
         purl_version = self.package_archive_version
         arch = self.package_url.qualifiers.get("arch")
         if arch:
-            archive_name =f"{self.package_url.name}_{purl_version}_{arch}.deb"
+            archive_name = f"{self.package_url.name}_{purl_version}_{arch}.deb"
         else:
-            archive_name =f"{self.package_url.name}_{purl_version}.deb"
+            archive_name = f"{self.package_url.name}_{purl_version}.deb"
         binary_package_url = self.archive_directory_url + f"{archive_name}"
         return binary_package_url
 
     @property
     def source_archive_url(self):
-        """
-        Get the debian source tarball archive url for this debian package.
-        """
+        """Get the debian source tarball archive url for this debian package."""
         debian_source_archive_formats = [
-            ".tar.xz", ".tar.gz", ".orig.tar.xz", ".orig.tar.gz", ".orig.tar.bz2"
+            ".tar.xz",
+            ".tar.gz",
+            ".orig.tar.xz",
+            ".orig.tar.gz",
+            ".orig.tar.bz2",
         ]
 
         source_version = self.package_archive_version
@@ -349,10 +350,14 @@ class DebianPackage:
 
         for archive_format in debian_source_archive_formats:
             if ".orig" in archive_format:
-                base_version_source = source_version.split('-')[0]
-                archive_name = f"{source_package_name}_{base_version_source}" + archive_format
+                base_version_source = source_version.split("-")[0]
+                archive_name = (
+                    f"{source_package_name}_{base_version_source}" + archive_format
+                )
             else:
-                archive_name = f"{source_package_name}_{source_version}" + archive_format
+                archive_name = (
+                    f"{source_package_name}_{source_version}" + archive_format
+                )
             source_package_url = self.archive_directory_url + archive_name
             response = requests.get(source_package_url)
             if response.ok:
@@ -362,9 +367,7 @@ class DebianPackage:
 
     @property
     def package_metadata_url(self):
-        """
-        Get the .dsc metadata file url for this debian package.
-        """
+        """Get the .dsc metadata file url for this debian package."""
         metadata_version = self.package_archive_version
         if not self.source_package_url:
             metadata_package_name = self.package_url.name
@@ -373,11 +376,17 @@ class DebianPackage:
             if self.source_package_url.version:
                 metadata_version = self.source_package_url.version
 
-        base_version_metadata = metadata_version.split('+')[0]
-        metadata_dsc_package_url = self.archive_directory_url + f"{metadata_package_name}_{base_version_metadata}.dsc"
+        base_version_metadata = metadata_version.split("+")[0]
+        metadata_dsc_package_url = (
+            self.archive_directory_url
+            + f"{metadata_package_name}_{base_version_metadata}.dsc"
+        )
         response = requests.get(metadata_dsc_package_url)
         if not response.ok:
-            metadata_dsc_package_url = self.archive_directory_url + f"{metadata_package_name}_{metadata_version}.dsc"
+            metadata_dsc_package_url = (
+                self.archive_directory_url
+                + f"{metadata_package_name}_{metadata_version}.dsc"
+            )
 
         return metadata_dsc_package_url
 
@@ -401,11 +410,17 @@ class DebianPackage:
             if self.source_package_url.version:
                 metadata_version = self.source_package_url.version
 
-        copyright_package_url = self.metadata_directory_url + f"{metadata_package_name}_{metadata_version}{copyright_file_string}"
+        copyright_package_url = (
+            self.metadata_directory_url
+            + f"{metadata_package_name}_{metadata_version}{copyright_file_string}"
+        )
         response = requests.get(copyright_package_url)
         if not response.ok:
-            base_version_metadata = metadata_version.split('+')[0]
-            copyright_package_url = self.metadata_directory_url + f"{metadata_package_name}_{base_version_metadata}{copyright_file_string}"
+            base_version_metadata = metadata_version.split("+")[0]
+            copyright_package_url = (
+                self.metadata_directory_url
+                + f"{metadata_package_name}_{base_version_metadata}{copyright_file_string}"
+            )
 
         return copyright_package_url
 
@@ -414,22 +429,24 @@ class DebianPackage:
         Compute and set base urls for metadata and archives, to get
         source/binary
         """
-        error = ''
+        error = ""
 
         archive_base_url = self.archive_base_url
         metadata_base_url = self.metadata_base_url
 
         index_folder = None
-        if self.package_url.name.startswith('lib'):
+        if self.package_url.name.startswith("lib"):
             name_wout_lib = self.package_url.name.replace("lib", "")
-            index_folder = 'lib' + name_wout_lib[0]
+            index_folder = "lib" + name_wout_lib[0]
         else:
             index_folder = self.package_url.name[0]
 
         msg = "No directory exists for package at: "
 
         package_directory = f"{archive_base_url}{index_folder}/{self.package_url.name}/"
-        metadata_directory = f"{metadata_base_url}{index_folder}/{self.package_url.name}/"
+        metadata_directory = (
+            f"{metadata_base_url}{index_folder}/{self.package_url.name}/"
+        )
 
         response = requests.get(package_directory)
         if not response.ok:
@@ -437,14 +454,18 @@ class DebianPackage:
                 error = msg + str(package_directory)
                 return error
 
-            if self.source_package_url.name.startswith('lib'):
+            if self.source_package_url.name.startswith("lib"):
                 name_wout_lib = self.source_package_url.name.replace("lib", "")
-                index_folder = 'lib' + name_wout_lib[0]
+                index_folder = "lib" + name_wout_lib[0]
             else:
                 index_folder = self.source_package_url.name[0]
 
-            package_directory = f"{archive_base_url}{index_folder}/{self.source_package_url.name}/"
-            metadata_directory = f"{metadata_base_url}{index_folder}/{self.source_package_url.name}/"
+            package_directory = (
+                f"{archive_base_url}{index_folder}/{self.source_package_url.name}/"
+            )
+            metadata_directory = (
+                f"{metadata_base_url}{index_folder}/{self.source_package_url.name}/"
+            )
 
             response = requests.get(package_directory)
             if not response.ok:
@@ -459,13 +480,11 @@ class DebianPackage:
 
 
 def get_dependencies(data):
-    """
-    Return a list of DependentPackage extracted from a Debian `data` mapping.
-    """
+    """Return a list of DependentPackage extracted from a Debian `data` mapping."""
     scopes = {
-        'Build-Depends': dict(is_runtime=False, is_optional=True),
-        'Depends': dict(is_runtime=True, is_optional=False),
-        'Pre-Depends': dict(is_runtime=True, is_optional=False),
+        "Build-Depends": dict(is_runtime=False, is_optional=True),
+        "Depends": dict(is_runtime=True, is_optional=False),
+        "Pre-Depends": dict(is_runtime=True, is_optional=False),
         # 'Provides': dict(is_runtime=True, is_optional=False),
         # 'Recommends': dict(is_runtime=True, is_optional=True),
         # 'Suggests': dict(is_runtime=True, is_optional=True),
@@ -482,27 +501,29 @@ def get_dependencies(data):
         # break each dep in package names and version constraints
         # FIXME:!!!
         for name in dependencies:
-            purl = PackageURL(type='deb', namespace='debian', name=name)
-            dep = scan_models.DependentPackage(purl=purl.to_string(), score=scope, **flags)
+            purl = PackageURL(type="deb", namespace="debian", name=name)
+            dep = scan_models.DependentPackage(
+                purl=purl.to_string(), score=scope, **flags
+            )
             dep_pkgs.append(dep)
 
     return dep_pkgs
 
 
 def get_vcs_repo(description):
-    """
-    Return a tuple of (vcs_tool, vcs_repo) or (None, None) if no vcs_repo is found.
-    """
+    """Return a tuple of (vcs_tool, vcs_repo) or (None, None) if no vcs_repo is found."""
     repos = []
     for vcs_tool, vcs_repo in description.items():
         vcs_tool = vcs_tool.lower()
-        if not vcs_tool.startswith('vcs-') or vcs_tool.startswith('vcs-browser'):
+        if not vcs_tool.startswith("vcs-") or vcs_tool.startswith("vcs-browser"):
             continue
-        _, _, vcs_tool = vcs_tool.partition('-')
+        _, _, vcs_tool = vcs_tool.partition("-")
         repos.append((vcs_tool, vcs_repo))
 
     if len(repos) > 1:
-        raise TypeError('Debian description with more than one Vcs repos: %(repos)r' % locals())
+        raise TypeError(
+            "Debian description with more than one Vcs repos: %(repos)r" % locals()
+        )
 
     if repos:
         vcs_tool, vcs_repo = repos[0]

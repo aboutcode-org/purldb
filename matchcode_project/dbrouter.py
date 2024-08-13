@@ -8,23 +8,23 @@
 #
 
 
-class PackageDBRouter(object):
+class PackageDBRouter:
     app_labels = [
-        'clearcode',
-        'clearindex',
-        'minecode',
-        'matchcode',
-        'packagedb',
+        "clearcode",
+        "clearindex",
+        "minecode",
+        "matchcode",
+        "packagedb",
     ]
 
     def db_for_read(self, model, **hints):
         if model._meta.app_label in self.app_labels:
-            return 'packagedb'
+            return "packagedb"
         return None
 
     def db_for_write(self, model, **hints):
         if model._meta.app_label in self.app_labels:
-            return 'packagedb'
+            return "packagedb"
         return None
 
     def allow_relation(self, obj1, obj2, **hints):
@@ -37,23 +37,23 @@ class PackageDBRouter(object):
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
         if app_label in self.app_labels:
-            return db == 'packagedb'
+            return db == "packagedb"
         return None
 
 
-class ScancodeIORouter(object):
+class ScancodeIORouter:
     app_labels = [
-        'scanpipe',
+        "scanpipe",
     ]
 
     def db_for_read(self, model, **hints):
         if model._meta.app_label in self.app_labels:
-            return 'default'
+            return "default"
         return None
 
     def db_for_write(self, model, **hints):
         if model._meta.app_label in self.app_labels:
-            return 'default'
+            return "default"
         return None
 
     def allow_relation(self, obj1, obj2, **hints):
@@ -66,5 +66,5 @@ class ScancodeIORouter(object):
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
         if app_label in self.app_labels:
-            return db == 'default'
+            return db == "default"
         return None

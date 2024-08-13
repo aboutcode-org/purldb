@@ -8,13 +8,14 @@
 #
 
 from packageurl import PackageURL
+
 from minecode import priority_router
 from minecode.collectors.generic import map_fetchcode_supported_package
 
 
 # Indexing GitHub PURLs requires a GitHub API token.
 # Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
-@priority_router.route('pkg:github/.*')
+@priority_router.route("pkg:github/.*")
 def process_request_dir_listed(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a GitHub Package URL (PURL).
@@ -25,9 +26,9 @@ def process_request_dir_listed(purl_str, **kwargs):
     """
     from minecode.model_utils import DEFAULT_PIPELINES
 
-    addon_pipelines = kwargs.get('addon_pipelines', [])
+    addon_pipelines = kwargs.get("addon_pipelines", [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
+    priority = kwargs.get("priority", 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)
@@ -35,8 +36,7 @@ def process_request_dir_listed(purl_str, **kwargs):
         error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
-    error_msg = map_fetchcode_supported_package(
-        package_url, pipelines, priority)
+    error_msg = map_fetchcode_supported_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg

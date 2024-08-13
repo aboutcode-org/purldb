@@ -11,14 +11,13 @@ import logging
 import sys
 
 import openpyxl
-from packageurl.contrib.django.utils import purl_to_lookups
 
 from minecode.management.commands import VerboseCommand
 from minecode.model_utils import add_package_to_scan_queue
-from purl2vcs.find_source_repo import add_source_package_to_package_set
-from purl2vcs.find_source_repo import get_package_object_from_purl
 from packagedb.models import Package
 from packagedb.models import PackageContentType
+from purl2vcs.find_source_repo import add_source_package_to_package_set
+from purl2vcs.find_source_repo import get_package_object_from_purl
 
 TRACE = False
 

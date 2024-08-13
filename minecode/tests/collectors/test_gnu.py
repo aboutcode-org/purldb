@@ -9,17 +9,19 @@
 
 
 import os
+from unittest.mock import patch
 
 from django.test import TestCase
-from mock import patch
 
-from minecode.utils_test import JsonBasedTesting
 from minecode.collectors import gnu
+from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
 
 
 class GnuPriorityQueueTests(JsonBasedTesting, TestCase):
-    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
+    test_data_dir = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)), "testfiles"
+    )
 
     def setUp(self):
         super(GnuPriorityQueueTests, self).setUp()

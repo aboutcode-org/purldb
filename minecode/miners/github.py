@@ -7,21 +7,22 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from datetime import date
-from datetime import datetime
 import json
 import logging
+from datetime import date
+from datetime import datetime
 
-from github.MainClass import Github
-from packageurl import PackageURL
 import attr
 import packagedcode.models as scan_models
+from github.MainClass import Github
+from packageurl import PackageURL
 
 from minecode import map_router
-from minecode import visit_router, seed
+from minecode import seed
+from minecode import visit_router
+from minecode.miners import URI
 from minecode.miners import HttpJsonVisitor
 from minecode.miners import Mapper
-from minecode.miners import URI
 from minecode.utils import form_vcs_url
 from minecode.utils import parse_date
 
@@ -35,12 +36,11 @@ if TRACE:
 
 
 class GithubSeed(seed.Seeder):
-
     def get_seeds(self):
-        yield 'https://api.github.com/repositories?since=0'
+        yield "https://api.github.com/repositories?since=0"
 
 
-@visit_router.route('https://api.github.com/repositories\?since=\d+')
+@visit_router.route(r"https://api.github.com/repositories\?since=\d+")
 class GithubReposVisitor(HttpJsonVisitor):
     """
     Visitor to run repositories request to get all repositories by increasing since symbol 100 each loop time.
@@ -49,30 +49,29 @@ class GithubReposVisitor(HttpJsonVisitor):
     """
 
     def get_uris(self, content):
-        repo_request_base = 'https://api.github.com/repositories?since='
+        repo_request_base = "https://api.github.com/repositories?since="
         has_content = False
         if content:
             for entry in content:
                 has_content = True
-                url = entry.get('url')
+                url = entry.get("url")
                 # Take full_name instead of name here since we want to keep more info, especially when forming the package url
                 #     "name": "grit",
                 #     "full_name": "mojombo/grit",
-                name = entry.get('full_name')
+                name = entry.get("full_name")
                 if url:
                     package_url = None
                     if name:
-                        package_url = PackageURL(
-                            type='github', name=name).to_string()
+                        package_url = PackageURL(type="github", name=name).to_string()
                     # Yield URI for GithubSingleRepoVisitor use
                     yield URI(uri=url, package_url=package_url, source_uri=self.uri)
         if not has_content:
             logger.info(
-                'The content of the response is empty, the processing might be finished for URI: {}'.format(self.uri))
+                f"The content of the response is empty, the processing might be finished for URI: {self.uri}"
+            )
         else:
             uri = self.uri
-            current_id = uri.replace(
-                'https://api.github.com/repositories?since=', '')
+            current_id = uri.replace("https://api.github.com/repositories?since=", "")
             current_id = int(current_id)
             # 100 is fixed since each page has 100 entries. Plus 100 means to go from next page.
             new_id = current_id + 100
@@ -80,7 +79,7 @@ class GithubReposVisitor(HttpJsonVisitor):
             yield URI(uri=new_url, source_uri=self.uri)
 
 
-@visit_router.route('https://api.github.com/repos/[\w\-\.]+/[\w\-\.]+')
+@visit_router.route(r"https://api.github.com/repos/[\w\-\.]+/[\w\-\.]+")
 class GithubSingleRepoVisitor(HttpJsonVisitor):
     """
     Visitor to get the json and add more content with GitHub API from one repo.
@@ -93,7 +92,7 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
         The json itself has lots of URL info, the Github API can get content without acccessing the URLs inside the json explicitly.
         The main idea is to fetch download_url...
         """
-        full_name = uri.replace('https://api.github.com/repos/', '')
+        full_name = uri.replace("https://api.github.com/repos/", "")
         g = Github()
         repo = g.get_repo(full_name)
 
@@ -118,12 +117,12 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
         )
 
         if repo.owner:
-            common_data['owner'] = repo.owner.name
+            common_data["owner"] = repo.owner.name
         if repo._issues_url:
-            common_data['issue_url'] = repo._issues_url.value
+            common_data["issue_url"] = repo._issues_url.value
 
         if repo._git_url:
-            common_data['git_url'] = repo._git_url.value
+            common_data["git_url"] = repo._git_url.value
 
         if repo.organization:
             repo.origanization = repo.organization.name
@@ -131,24 +130,25 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
         downloads = []
         if repo.get_downloads():
             for download in list(repo.get_downloads()):
-                downloads.append(dict(
-                    name=download.name,
-                    url=download.url,
-                    size=download.size,
-                    s3_url=download.s3_url,
-                    created_at=json_serial_date_obj(download.created_at),
-                    download_count=download.download_count,
-                    description=download.description,
-                    redirect=download.redirect,
-                    signature=download.signature,
-                    html_url=download.html_url,
-                    bucket=download.bucket,
-                    acl=download.acl,
-                    accesskeyid=download.accesskeyid,
-                    expirationdate=json_serial_date_obj(
-                        download.expirationdate),
-                ))
-        common_data['downloads'] = downloads
+                downloads.append(
+                    dict(
+                        name=download.name,
+                        url=download.url,
+                        size=download.size,
+                        s3_url=download.s3_url,
+                        created_at=json_serial_date_obj(download.created_at),
+                        download_count=download.download_count,
+                        description=download.description,
+                        redirect=download.redirect,
+                        signature=download.signature,
+                        html_url=download.html_url,
+                        bucket=download.bucket,
+                        acl=download.acl,
+                        accesskeyid=download.accesskeyid,
+                        expirationdate=json_serial_date_obj(download.expirationdate),
+                    )
+                )
+        common_data["downloads"] = downloads
 
         tags = []
         if repo.get_tags():
@@ -159,26 +159,30 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
                     zipball_url=tag.zipball_url,
                 )
                 if tag.commit:
-                    tag_info['sha1'] = tag.commit.sha
+                    tag_info["sha1"] = tag.commit.sha
                 tags.append(tag_info)
-        common_data['tags'] = tags
+        common_data["tags"] = tags
 
-        if not common_data.get('tags') and not common_data.get('downloads'):
+        if not common_data.get("tags") and not common_data.get("downloads"):
             # If there is no downloads and tags, let's make the download_url by forming archive/master.zip at the end
             # For example, the base html is: https://github.com/collectiveidea/calendar_builder
             # The final download_url is https://github.com/collectiveidea/calendar_builder/archive/master.zip
             branches_download_urls = []
-            download_url_bases = '{html_url}/archive/{branch_name}.zip'
+            download_url_bases = "{html_url}/archive/{branch_name}.zip"
             if repo.get_branches():
                 for branch in list(repo.get_branches()):
-                    branches_download_urls.append(download_url_bases.format(
-                        html_url=common_data.get('html_url'), branch_name=branch.name))
-            common_data['branches_download_urls'] = branches_download_urls
+                    branches_download_urls.append(
+                        download_url_bases.format(
+                            html_url=common_data.get("html_url"),
+                            branch_name=branch.name,
+                        )
+                    )
+            common_data["branches_download_urls"] = branches_download_urls
 
-        common_data['labels'] = []
+        common_data["labels"] = []
         if repo.get_labels():
             for label in repo.get_labels():
-                common_data['labels'].append(label.name)
+                common_data["labels"].append(label.name)
 
         return json.dumps(common_data)
 
@@ -189,9 +193,8 @@ def json_serial_date_obj(obj):
         return obj.isoformat()
 
 
-@map_router.route('https://api\.github\.com/repos/([^/]+)/([^/]+)')
+@map_router.route(r"https://api\.github\.com/repos/([^/]+)/([^/]+)")
 class GithubMetaFileMapper(Mapper):
-
     def get_packages(self, uri, resource_uri):
         """
         Yield Package built from resource_uri record for a single
@@ -201,7 +204,9 @@ class GithubMetaFileMapper(Mapper):
         visited_data = resource_uri.data
         if not visited_data:
             return
-        return build_github_packages(visited_data, resource_uri.uri, resource_uri.package_url)
+        return build_github_packages(
+            visited_data, resource_uri.uri, resource_uri.package_url
+        )
 
 
 def build_github_packages(visited_data, uri, purl=None):
@@ -213,68 +218,75 @@ def build_github_packages(visited_data, uri, purl=None):
     """
     visited_data = json.loads(visited_data)
 
-    full_name = visited_data['full_name']
+    full_name = visited_data["full_name"]
     namespace, name = split_org_repo(full_name)
     # FIXME: when could this ever happen??
-    assert name == visited_data['name'], 'build_github_packages: Inconsistent name and org for URI: ' + uri
+    assert name == visited_data["name"], (
+        "build_github_packages: Inconsistent name and org for URI: " + uri
+    )
 
-    description = visited_data['description']
+    description = visited_data["description"]
 
-    vcs_url = visited_data.get('git_url'),
+    vcs_url = (visited_data.get("git_url"),)
     if vcs_url:
-        vcs_url = form_vcs_url('git', vcs_url)
+        vcs_url = form_vcs_url("git", vcs_url)
     package = scan_models.Package(
-        type='github',
+        type="github",
         namespace=namespace,
         name=name,
         description=description,
-        primary_language=visited_data.get('language'),
-        homepage_url=visited_data.get('html_url'),
+        primary_language=visited_data.get("language"),
+        homepage_url=visited_data.get("html_url"),
         vcs_url=vcs_url,
         # this size does not make sense
-        size=visited_data.get('size'),
+        size=visited_data.get("size"),
     )
 
-    if visited_data.get('owner'):
+    if visited_data.get("owner"):
         package.parties = [
             scan_models.Party(
                 # FIXME: we can add the org or user URL and we can know if this
                 # is an org or a perrsone too.
                 type=scan_models.party_person,
-                name=visited_data.get('owner'),
-                role='owner')
+                name=visited_data.get("owner"),
+                role="owner",
+            )
         ]
 
     package.set_purl(purl)
 
-    downloads = visited_data.get('downloads') or []
+    downloads = visited_data.get("downloads") or []
     for download in downloads:
-        html_url = download.get('html_url')
+        html_url = download.get("html_url")
         if html_url:
             # make a copy
             package = attr.evolve(package)
             package.download_url = html_url
-            package.size = download.get('size')
-            package.release_date = parse_date(download.get('created_at'))
+            package.size = download.get("size")
+            package.release_date = parse_date(download.get("created_at"))
             yield package
 
-    tags = visited_data.get('tags') or []
+    tags = visited_data.get("tags") or []
     for tag in tags:
         package = attr.evolve(package)
-        package.version = tag.get('name')
-        package_url = PackageURL(type='github', name=package.name,
-                                 namespace=namespace, version=tag.get('name')).to_string()
-        package.sha1 = tag.get('sha1')
-        if tag.get('tarball_url'):
-            package.download_url = tag.get('tarball_url')
+        package.version = tag.get("name")
+        package_url = PackageURL(
+            type="github",
+            name=package.name,
+            namespace=namespace,
+            version=tag.get("name"),
+        ).to_string()
+        package.sha1 = tag.get("sha1")
+        if tag.get("tarball_url"):
+            package.download_url = tag.get("tarball_url")
             package.set_purl(package_url)
             yield package
-        if tag.get('zipball_url'):
-            package.download_url = tag.get('zipball_url')
+        if tag.get("zipball_url"):
+            package.download_url = tag.get("zipball_url")
             package.set_purl(package_url)
             yield package
 
-    branches_download_urls = visited_data.get('branches_download_urls') or []
+    branches_download_urls = visited_data.get("branches_download_urls") or []
     for branches_download_url in branches_download_urls:
         package = attr.evolve(package)
         package.download_url = branches_download_url
@@ -296,11 +308,11 @@ def split_org_repo(url_like):
     >>> split_org_repo('git://github.com/foo/bar.git')
     ('foo', 'bar')
     """
-    segments = [s.strip() for s in url_like.split('/') if s.strip()]
+    segments = [s.strip() for s in url_like.split("/") if s.strip()]
     if not len(segments) >= 2:
-        raise ValueError('Not a GitHub-like URL: {}'.format(url_like))
+        raise ValueError(f"Not a GitHub-like URL: {url_like}")
     org = segments[-2]
     name = segments[-1]
-    if name.endswith('.git'):
-        name, _, _ = name .rpartition('.git')
+    if name.endswith(".git"):
+        name, _, _ = name.rpartition(".git")
     return org, name

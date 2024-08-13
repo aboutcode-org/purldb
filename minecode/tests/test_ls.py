@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf8 -*-
 #
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # purldb is a trademark of nexB Inc.
@@ -12,30 +11,31 @@
 
 import os
 
-from minecode.utils_test import JsonBasedTesting
-from minecode.tests import FIXTURES_REGEN
 from minecode import ls
+from minecode.tests import FIXTURES_REGEN
+from minecode.utils_test import JsonBasedTesting
 
 
 class ParseDirectoryListingTest(JsonBasedTesting):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
-#    maxDiff = None
+    test_data_dir = os.path.join(os.path.dirname(__file__), "testfiles")
+    #    maxDiff = None
 
     def test_remove_inode_works_with_no_space_at_line_start(self):
-        test = '12190083      4 drwxrwxr-x   4 svnwc    svnwc        4096 May  4 15:57 ./perl'
-        expected = u'drwxrwxr-x   4 svnwc    svnwc        4096 May  4 15:57 ./perl'
+        test = "12190083      4 drwxrwxr-x   4 svnwc    svnwc        4096 May  4 15:57 ./perl"
+        expected = "drwxrwxr-x   4 svnwc    svnwc        4096 May  4 15:57 ./perl"
         self.assertEqual(expected, ls.remove_inode(test))
 
     def test_remove_inode_works_even_with_space_at_line_start(self):
-        test = ' 12190083      4 drwxrwxr-x   4 svnwc    svnwc        4096 May  4 15:57 ./perl'
-        expected = u'drwxrwxr-x   4 svnwc    svnwc        4096 May  4 15:57 ./perl'
+        test = " 12190083      4 drwxrwxr-x   4 svnwc    svnwc        4096 May  4 15:57 ./perl"
+        expected = "drwxrwxr-x   4 svnwc    svnwc        4096 May  4 15:57 ./perl"
         self.assertEqual(expected, ls.remove_inode(test))
 
-    def check_listing(self, test_file, expected_file, from_find=True, regen=FIXTURES_REGEN):
+    def check_listing(
+        self, test_file, expected_file, from_find=True, regen=FIXTURES_REGEN
+    ):
         test_file = self.get_test_loc(test_file)
         test_text = open(test_file).read()
-        results = list(ls.parse_directory_listing(
-            test_text, from_find=from_find))
+        results = list(ls.parse_directory_listing(test_text, from_find=from_find))
         for r in results:
             if r.date:
                 # we remove the year in YYYY-MM-DD to avoid date-sensitive test
@@ -47,26 +47,30 @@ class ParseDirectoryListingTest(JsonBasedTesting):
         self.check_expected_results(results, expected_file, regen=regen)
 
     def test_parse_listing_from_findls(self):
-        test_file = 'directories/find-ls'
-        expected_file = 'directories/find-ls-expected.json'
-        self.check_listing(test_file, expected_file,
-                           from_find=True, regen=FIXTURES_REGEN)
+        test_file = "directories/find-ls"
+        expected_file = "directories/find-ls-expected.json"
+        self.check_listing(
+            test_file, expected_file, from_find=True, regen=FIXTURES_REGEN
+        )
 
     def test_parse_listing_from_findls_from_apache_does_not_fail_on_first_line(self):
-        test_file = 'directories/find-ls-apache-start'
-        expected_file = 'directories/find-ls-apache-start-expected.json'
-        self.check_listing(test_file, expected_file,
-                           from_find=True, regen=FIXTURES_REGEN)
+        test_file = "directories/find-ls-apache-start"
+        expected_file = "directories/find-ls-apache-start-expected.json"
+        self.check_listing(
+            test_file, expected_file, from_find=True, regen=FIXTURES_REGEN
+        )
 
     def test_parse_listing_from_lslr(self):
-        test_file = 'directories/ls-lr'
-        expected_file = 'directories/ls-lr-expected.json'
-        self.check_listing(test_file, expected_file,
-                           from_find=False, regen=FIXTURES_REGEN)
+        test_file = "directories/ls-lr"
+        expected_file = "directories/ls-lr-expected.json"
+        self.check_listing(
+            test_file, expected_file, from_find=False, regen=FIXTURES_REGEN
+        )
 
     def test_parse_listing_from_lslr_at_ubuntu(self):
-        test_file = 'directories/ls-lr-ubuntu'
-        expected_file = 'directories/ls-lr-ubuntu-expected.json'
+        test_file = "directories/ls-lr-ubuntu"
+        expected_file = "directories/ls-lr-ubuntu-expected.json"
         self.maxDiff = None
-        self.check_listing(test_file, expected_file,
-                           from_find=False, regen=FIXTURES_REGEN)
+        self.check_listing(
+            test_file, expected_file, from_find=False, regen=FIXTURES_REGEN
+        )

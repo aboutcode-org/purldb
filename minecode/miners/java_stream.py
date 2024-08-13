@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 # The MIT License (MIT)
 #
@@ -23,14 +22,12 @@
 # SOFTWARE.
 
 
-"""
-Reading from Java DataInputStream format.
-"""
+"""Reading from Java DataInputStream format."""
 
 import struct
 
 
-class DataInputStream(object):
+class DataInputStream:
     def __init__(self, stream):
         self.stream = stream
 
@@ -42,14 +39,14 @@ class DataInputStream(object):
         return data
 
     def read_byte(self):
-        return struct.unpack('b', self.read(1))[0]
+        return struct.unpack("b", self.read(1))[0]
 
     def read_long(self):
-        return struct.unpack('>q', self.read(8))[0]
+        return struct.unpack(">q", self.read(8))[0]
 
     def read_utf(self):
-        utf_length = struct.unpack('>H', self.read(2))[0]
+        utf_length = struct.unpack(">H", self.read(2))[0]
         return self.read(utf_length)
 
     def read_int(self):
-        return struct.unpack('>i', self.read(4))[0]
+        return struct.unpack(">i", self.read(4))[0]

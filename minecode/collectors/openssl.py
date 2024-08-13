@@ -8,13 +8,14 @@
 #
 
 from packageurl import PackageURL
-from minecode import priority_router
 
+from minecode import priority_router
 from minecode.collectors.generic import map_fetchcode_supported_package
+
 
 # Indexing OpenSSL PURLs requires a GitHub API token.
 # Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
-@priority_router.route('pkg:openssl/openssl@.*')
+@priority_router.route("pkg:openssl/openssl@.*")
 def process_request_dir_listed(purl_str, **kwargs):
     """
     Process `priority_resource_uri` containing a OpenSSL Package URL (PURL)
@@ -26,9 +27,9 @@ def process_request_dir_listed(purl_str, **kwargs):
     """
     from minecode.model_utils import DEFAULT_PIPELINES
 
-    addon_pipelines = kwargs.get('addon_pipelines', [])
+    addon_pipelines = kwargs.get("addon_pipelines", [])
     pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
-    priority = kwargs.get('priority', 0)
+    priority = kwargs.get("priority", 0)
 
     try:
         package_url = PackageURL.from_string(purl_str)
