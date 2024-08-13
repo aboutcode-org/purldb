@@ -13,7 +13,6 @@ from rest_framework import renderers
 from rest_framework import serializers
 from rest_framework import viewsets
 from rest_framework.decorators import action
-
 from scanpipe.api import ExcludeFromListViewMixin
 from scanpipe.api.serializers import InputSourceSerializer
 from scanpipe.api.serializers import SerializerExcludeFieldsMixin
@@ -80,8 +79,8 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = (
-            'url',
-            'uuid',
+            "url",
+            "uuid",
             "upload_file",
             "input_urls",
             "webhook_url",
@@ -108,9 +107,9 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "codebase_relations_summary",
         ]
         extra_kwargs = {
-            'url': {
-                'view_name': 'matching-detail',
-                'lookup_field': 'pk',
+            "url": {
+                "view_name": "matching-detail",
+                "lookup_field": "pk",
             },
         }
 
@@ -143,20 +142,17 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         """Add support for providing multiple URLs in a single string."""
         return [url for entry in value for url in entry.split()]
 
-    def create(self, validated_data, matching_pipeline_name='matching'):
-        """
-        Create a new `project` with `upload_file`, using the `matching` pipeline
-        """
+    def create(self, validated_data, matching_pipeline_name="matching"):
+        """Create a new `project` with `upload_file`, using the `matching` pipeline"""
         execute_now = True
-        validated_data['name'] = uuid4()
+        validated_data["name"] = uuid4()
         upload_file = validated_data.pop("upload_file", None)
         input_urls = validated_data.pop("input_urls", [])
         webhook_url = validated_data.pop("webhook_url", None)
 
         downloads, errors = fetch_urls(input_urls)
         if errors:
-            raise serializers.ValidationError(
-                "Could not fetch: " + "\n".join(errors))
+            raise serializers.ValidationError("Could not fetch: " + "\n".join(errors))
 
         project = super().create(validated_data)
 
@@ -190,8 +186,8 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = (
-            'url',
-            'uuid',
+            "url",
+            "uuid",
             "input_urls",
             "created_date",
             "input_sources",
@@ -218,9 +214,9 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "codebase_resources_discrepancies",
         ]
         extra_kwargs = {
-            'url': {
-                'view_name': 'd2d-detail',
-                'lookup_field': 'pk',
+            "url": {
+                "view_name": "d2d-detail",
+                "lookup_field": "pk",
             },
         }
 
@@ -255,18 +251,15 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         queryset = project.codebaserelations.all()
         return count_group_by(queryset, "map_type")
 
-    def create(self, validated_data, matching_pipeline_name='d2d'):
-        """
-        Create a new `project` with `input_urls`, using the `d2d` pipeline
-        """
+    def create(self, validated_data, matching_pipeline_name="d2d"):
+        """Create a new `project` with `input_urls`, using the `d2d` pipeline"""
         execute_now = True
-        validated_data['name'] = uuid4()
+        validated_data["name"] = uuid4()
         input_urls = validated_data.pop("input_urls", [])
         errors = check_urls_availability(input_urls)
 
         if errors:
-            raise serializers.ValidationError(
-                "Could not fetch: " + "\n".join(errors))
+            raise serializers.ValidationError("Could not fetch: " + "\n".join(errors))
 
         project = super().create(validated_data)
 
@@ -287,8 +280,11 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         for url in urls:
             project.add_input_source(download_url=url)
 
-        project.add_pipeline(matching_pipeline_name, selected_groups=[
-                             "Java", "Javascript", "Elf", "Go"], execute_now=execute_now)
+        project.add_pipeline(
+            matching_pipeline_name,
+            selected_groups=["Java", "Javascript", "Elf", "Go"],
+            execute_now=execute_now,
+        )
 
         return project
 
@@ -329,6 +325,7 @@ class MatchingViewSet(
         - List of mapping containing details about the runs created for this
           match request.
     """
+
     queryset = Project.objects.all()
     serializer_class = MatchingSerializer
     filterset_class = ProjectFilterSet
@@ -384,6 +381,7 @@ class D2DViewSet(
         - List of mapping containing details about the runs created for this
           match request.
     """
+
     queryset = Project.objects.all()
     serializer_class = D2DSerializer
     filterset_class = ProjectFilterSet

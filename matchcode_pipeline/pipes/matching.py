@@ -113,7 +113,7 @@ def match_purldb_package(
     """
     match_count = 0
     sha1_list = list(resources_by_sha1.keys())
-    results = Package.objects.using('packagedb').filter(sha1__in=sha1_list)
+    results = Package.objects.using("packagedb").filter(sha1__in=sha1_list)
     # Process matched Package data
     for package in results:
         package_data = package.to_dict()
@@ -147,7 +147,7 @@ def match_purldb_resource(
     package_data_by_purldb_urls = package_data_by_purldb_urls or {}
     match_count = 0
     sha1_list = list(resources_by_sha1.keys())
-    results = Resource.objects.using('packagedb').filter(sha1__in=sha1_list)
+    results = Resource.objects.using("packagedb").filter(sha1__in=sha1_list)
     # Process match results
     for resource in results:
         # Get package data
@@ -170,13 +170,15 @@ def match_purldb_resource_approximately(project, resource):
     """Match by approximation a single resource in the PurlDB."""
     fingerprint = resource.extra_data.get("halo1", "")
     results = ApproximateResourceContentIndex.match(
-        fingerprint=fingerprint,
-        resource=resource
+        fingerprint=fingerprint, resource=resource
     )
     for result in results:
         package_data = result.package.to_dict()
         return create_package_from_purldb_data(
-            project, [resource], package_data, flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE
+            project,
+            [resource],
+            package_data,
+            flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE,
         )
 
 
@@ -184,9 +186,7 @@ def match_purldb_directory(project, resource, exact_match=False):
     """Match a single directory resource in the PurlDB."""
     fingerprint = resource.extra_data.get("directory_content", "")
     results = ApproximateDirectoryContentIndex.match(
-        fingerprint=fingerprint,
-        resource=resource,
-        exact_match=exact_match
+        fingerprint=fingerprint, resource=resource, exact_match=exact_match
     )
     for result in results:
         package_data = result.package.to_dict()
@@ -236,14 +236,9 @@ def match_purldb_resources(
 
     if logger:
         if resource_count > 0:
-            logger(
-                f"Matching {resource_count:,d} resources in PurlDB, "
-                "using SHA1"
-            )
+            logger(f"Matching {resource_count:,d} resources in PurlDB, " "using SHA1")
         else:
-            logger(
-                f"Skipping resource matching as there are {resource_count:,d}"
-            )
+            logger(f"Skipping resource matching as there are {resource_count:,d}")
 
     _match_purldb_resources(
         project=project,
@@ -324,11 +319,9 @@ def match_purldb_resources_approximately(project, logger=None):
             resource,
         )
 
-    matched_count = (
-        project.codebaseresources
-        .filter(status=flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE)
-        .count()
-    )
+    matched_count = project.codebaseresources.filter(
+        status=flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE
+    ).count()
     logger(
         f"{matched_count:,d} resource{pluralize(matched_count, 's')} "
         f"approximately matched in PurlDB"
@@ -362,11 +355,7 @@ def match_purldb_directories(project, exact_directory_match=False, logger=None):
     for directory in progress.iter(directory_iterator):
         directory.refresh_from_db()
         if directory.status != flag.MATCHED_TO_PURLDB_DIRECTORY:
-            match_purldb_directory(
-                project,
-                directory,
-                exact_directory_match
-            )
+            match_purldb_directory(project, directory, exact_directory_match)
 
     matched_count = (
         project.codebaseresources.directories()
@@ -381,9 +370,8 @@ def match_purldb_directories(project, exact_directory_match=False, logger=None):
 
 def match_purldb_resources_post_process(project, logger=None):
     """Choose the best package for PurlDB matched resources."""
-    extract_directories = (
-        project.codebaseresources.directories()
-        .filter(path__regex=r"^.*-extract$")
+    extract_directories = project.codebaseresources.directories().filter(
+        path__regex=r"^.*-extract$"
     )
 
     resources = project.codebaseresources.files().filter(
@@ -403,16 +391,12 @@ def match_purldb_resources_post_process(project, logger=None):
     map_count = 0
 
     for directory in progress.iter(resource_iterator):
-        map_count += _match_purldb_resources_post_process(
-            directory.path, resources
-        )
+        map_count += _match_purldb_resources_post_process(directory.path, resources)
 
     logger(f"{map_count:,d} resource processed")
 
 
-def _match_purldb_resources_post_process(
-    directory_path, codebase_resources
-):
+def _match_purldb_resources_post_process(directory_path, codebase_resources):
     # Exclude the content of nested archive.
     interesting_codebase_resources = (
         codebase_resources.filter(path__startswith=directory_path)

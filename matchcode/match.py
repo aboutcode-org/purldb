@@ -10,9 +10,10 @@
 from functools import reduce
 from operator import or_
 
+from django.db.models import Q
+
 import attr
 from commoncode.resource import VirtualCodebase
-from django.db.models import Q
 from matchcode_toolkit.fingerprinting import compute_codebase_directory_fingerprints
 
 from matchcode.models import ApproximateDirectoryContentIndex
@@ -52,10 +53,9 @@ def do_match(codebase, match_type):
 
     The total number of matches found is returned.
     """
-
     matcher = get_matchers().get(match_type)
     if not matcher:
-        raise Exception('Unknown match type: {}'.format(match_type))
+        raise Exception(f"Unknown match type: {match_type}")
     match_count = matcher(codebase)
     return match_count
 
@@ -63,12 +63,8 @@ def do_match(codebase, match_type):
 def run_do_match_from_scan(scan_file_location, match_type):
     vc = VirtualCodebase(
         location=scan_file_location,
-        codebase_attributes=dict(
-            matches=attr.ib(default=attr.Factory(list))
-        ),
-        resource_attributes=dict(
-            matched_to=attr.ib(default=attr.Factory(list))
-        )
+        codebase_attributes=dict(matches=attr.ib(default=attr.Factory(list))),
+        resource_attributes=dict(matched_to=attr.ib(default=attr.Factory(list))),
     )
     vc = compute_codebase_directory_fingerprints(vc)
     do_match(vc, match_type)
@@ -83,9 +79,11 @@ def package_archive_match(codebase):
     """
     match_count = 0
     for resource in codebase.walk(topdown=True):
-        if (resource.is_dir
-                or not resource.is_archive
-                or resource.extra_data.get('matched', False)):
+        if (
+            resource.is_dir
+            or not resource.is_archive
+            or resource.extra_data.get("matched", False)
+        ):
             continue
 
         archive_matches, match_type = get_archive_match(resource)
@@ -107,7 +105,7 @@ def approximate_directory_content_match(codebase):
     """
     match_count = 0
     for resource in codebase.walk(topdown=True):
-        if resource.is_file or resource.extra_data.get('matched', False):
+        if resource.is_file or resource.extra_data.get("matched", False):
             continue
 
         directory_matches, match_type = get_directory_content_match(resource)
@@ -115,8 +113,7 @@ def approximate_directory_content_match(codebase):
             continue
 
         match_count += directory_matches.count()
-        tag_matched_resources(resource, codebase,
-                              directory_matches, match_type)
+        tag_matched_resources(resource, codebase, directory_matches, match_type)
     return match_count
 
 
@@ -128,7 +125,7 @@ def approximate_directory_structure_match(codebase):
     """
     match_count = 0
     for resource in codebase.walk(topdown=True):
-        if resource.is_file or resource.extra_data.get('matched', False):
+        if resource.is_file or resource.extra_data.get("matched", False):
             continue
 
         directory_matches, match_type = get_directory_structure_match(resource)
@@ -136,8 +133,7 @@ def approximate_directory_structure_match(codebase):
             continue
 
         match_count += directory_matches.count()
-        tag_matched_resources(resource, codebase,
-                              directory_matches, match_type)
+        tag_matched_resources(resource, codebase, directory_matches, match_type)
     return match_count
 
 
@@ -149,7 +145,7 @@ def individual_file_match(codebase):
     """
     match_count = 0
     for resource in codebase.walk(topdown=True):
-        if resource.is_dir or resource.extra_data.get('matched', False):
+        if resource.is_dir or resource.extra_data.get("matched", False):
             continue
 
         file_matches, match_type = get_file_match(resource)
@@ -169,7 +165,7 @@ def approximate_file_match(codebase):
     """
     match_count = 0
     for resource in codebase.walk(topdown=True):
-        if resource.is_dir or resource.extra_data.get('matched', False):
+        if resource.is_dir or resource.extra_data.get("matched", False):
             continue
         file_matches, match_type = get_approximate_file_match(resource)
         if not file_matches:
@@ -181,71 +177,56 @@ def approximate_file_match(codebase):
 
 
 def get_directory_content_match(resource):
-    """
-    Match a directory to a Package using its contents
-    """
-    directory_content_fingerprint = resource.extra_data.get(
-        'directory_content', '')
+    """Match a directory to a Package using its contents"""
+    directory_content_fingerprint = resource.extra_data.get("directory_content", "")
     matches = ApproximateDirectoryContentIndex.objects.none()
-    match_type = ''
+    match_type = ""
     if directory_content_fingerprint:
         directory_matches = ApproximateDirectoryContentIndex.match(
-            directory_content_fingerprint,
-            resource
+            directory_content_fingerprint, resource
         )
         matches |= directory_matches
-        match_type = 'approximate-content'
+        match_type = "approximate-content"
     return matches, match_type
 
 
 # TODO: rename match_directory_structure
 def get_directory_structure_match(resource):
-    """
-    Match a directory to a Package using its structure
-    """
-    directory_structure_fingerprint = resource.extra_data.get(
-        'directory_structure', '')
+    """Match a directory to a Package using its structure"""
+    directory_structure_fingerprint = resource.extra_data.get("directory_structure", "")
     matches = ApproximateDirectoryStructureIndex.objects.none()
-    match_type = ''
+    match_type = ""
     if directory_structure_fingerprint:
         directory_matches = ApproximateDirectoryStructureIndex.match(
-            directory_structure_fingerprint,
-            resource
+            directory_structure_fingerprint, resource
         )
         matches |= directory_matches
-        match_type = 'approximate-structure'
+        match_type = "approximate-structure"
     return matches, match_type
 
 
 def get_archive_match(resource):
-    """
-    Match an Archive resource to a Package
-    """
+    """Match an Archive resource to a Package"""
     file_matches = ExactPackageArchiveIndex.match(resource.sha1)
-    return file_matches, 'exact-archive'
+    return file_matches, "exact-archive"
 
 
 def get_file_match(resource):
-    """
-    Match an individual file back to the Package it is from
-    """
+    """Match an individual file back to the Package it is from"""
     file_matches = ExactFileIndex.match(resource.sha1)
-    return file_matches, 'exact-file'
+    return file_matches, "exact-file"
 
 
 def get_approximate_file_match(resource):
-    """
-    Approximately match an individual file back to the Package it is from
-    """
-    if hasattr(resource, 'halo1'):
+    """Approximately match an individual file back to the Package it is from"""
+    if hasattr(resource, "halo1"):
         resource_content_fingerprint = resource.halo1
     else:
-        resource_content_fingerprint = resource.extra_data.get('halo1', '')
+        resource_content_fingerprint = resource.extra_data.get("halo1", "")
     file_matches = ApproximateResourceContentIndex.match(
-        resource_content_fingerprint,
-        resource
+        resource_content_fingerprint, resource
     )
-    return file_matches, 'approximate-file'
+    return file_matches, "approximate-file"
 
 
 def tag_matched_resource(resource, codebase, purl):
@@ -255,7 +236,7 @@ def tag_matched_resource(resource, codebase, purl):
     """
     if purl not in resource.matched_to:
         resource.matched_to.append(purl)
-    resource.extra_data['matched'] = True
+    resource.extra_data["matched"] = True
     resource.save(codebase)
 
 
@@ -268,7 +249,7 @@ def tag_matched_resources(resource, codebase, matches, match_type):
     for match in matches:
         # Prep matched package data and append to `codebase`
         matched_package_info = match.package.to_dict()
-        matched_package_info['match_type'] = match_type
+        matched_package_info["match_type"] = match_type
         codebase.attributes.matches.append(matched_package_info)
 
         purl = match.package.package_url
@@ -280,18 +261,17 @@ def tag_matched_resources(resource, codebase, matches, match_type):
         # by or), then querying the matched packages resources to see if any of
         # those suffixes match a package child resource path
         for child in resource.walk(codebase):
-            query = reduce(or_, (Q(path=suffix)
-                           for suffix in path_suffixes(child.path)), Q())
+            query = reduce(
+                or_, (Q(path=suffix) for suffix in path_suffixes(child.path)), Q()
+            )
             matched_child_resources = match.package.resources.filter(query)
             if len(matched_child_resources) > 0:
                 tag_matched_resource(child, codebase, purl)
 
 
 def path_suffixes(path):
-    """
-    Yield all the suffixes of `path`, starting from the longest (e.g. more segments).
-    """
-    segments = path.strip('/').split('/')
+    """Yield all the suffixes of `path`, starting from the longest (e.g. more segments)."""
+    segments = path.strip("/").split("/")
     suffixes = (segments[i:] for i in range(len(segments)))
     for suffix in suffixes:
-        yield '/'.join(suffix)
+        yield "/".join(suffix)

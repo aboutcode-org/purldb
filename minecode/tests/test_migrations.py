@@ -53,36 +53,36 @@ class TestPopulateHasErrorFields(TestMigrations):
                 "map_error",
                 "has_visit_error",
                 "visit_error",
-            ).order_by('uri')
+            ).order_by("uri")
         )
         expected = [
             {
-                'has_map_error': True,
-                'has_visit_error': True,
-                'map_error': 'error',
-                'uri': 'http://example.com/1',
-                'visit_error': 'error'
+                "has_map_error": True,
+                "has_visit_error": True,
+                "map_error": "error",
+                "uri": "http://example.com/1",
+                "visit_error": "error",
             },
             {
-                'has_map_error': False,
-                'has_visit_error': True,
-                'map_error': None,
-                'uri': 'http://example.com/2',
-                'visit_error': 'error'
+                "has_map_error": False,
+                "has_visit_error": True,
+                "map_error": None,
+                "uri": "http://example.com/2",
+                "visit_error": "error",
             },
             {
-                'has_map_error': True,
-                'has_visit_error': False,
-                'map_error': 'error',
-                'uri': 'http://example.com/3',
-                'visit_error': None
+                "has_map_error": True,
+                "has_visit_error": False,
+                "map_error": "error",
+                "uri": "http://example.com/3",
+                "visit_error": None,
             },
             {
-                'has_map_error': False,
-                'has_visit_error': False,
-                'map_error': None,
-                'uri': 'http://example.com/4',
-                'visit_error': None
+                "has_map_error": False,
+                "has_visit_error": False,
+                "map_error": None,
+                "uri": "http://example.com/4",
+                "visit_error": None,
             },
         ]
         self.assertEqual(results, expected)
@@ -122,57 +122,13 @@ class TestSetIsVisitableForMavenIndexURIs(TestMigrations):
         )
         expected = [
             {
-                'is_visitable': False,
-                'uri': 'maven-index://repo1.maven.org/zone/src/sheaf/logback-sheaf/1.1.7/logback-sheaf-1.1.8.jar'
+                "is_visitable": False,
+                "uri": "maven-index://repo1.maven.org/zone/src/sheaf/logback-sheaf/1.1.7/logback-sheaf-1.1.8.jar",
             },
             {
-                'is_visitable': False,
-                'uri': 'maven-index://repo1.maven.org/zone/src/sheaf/logback-sheaf/1.1.7/logback-sheaf-1.1.7.jar'
-            }
-        ]
-        self.assertEqual(results, expected)
-
-class TestSetIsVisitableForMavenIndexURIs(TestMigrations):
-    app_name = "minecode"
-    migrate_from = "0025_populate_has_error_fields"
-    migrate_to = "0026_set_is_visitable_for_maven_index_uris"
-
-    def setUpBeforeMigration(self, apps):
-        # using get_model to avoid circular import
-        ResourceURI = apps.get_model("minecode", "ResourceURI")
-
-        self.resource_uris = [
-            ResourceURI.objects.create(
-                uri="maven-index://repo1.maven.org/zone/src/sheaf/logback-sheaf/1.1.7/logback-sheaf-1.1.7.jar",
-                is_visitable=True,
-            ),
-            ResourceURI.objects.create(
-                uri="maven-index://repo1.maven.org/zone/src/sheaf/logback-sheaf/1.1.7/logback-sheaf-1.1.8.jar",
-                is_visitable=False,
-            ),
-        ]
-
-        for resource_uri in self.resource_uris:
-            resource_uri.save()
-
-    def test_set_is_visitable_for_maven_index_uris(self):
-        # using get_model to avoid circular import
-        ResourceURI = apps.get_model("minecode", "ResourceURI")
-        results = list(
-            ResourceURI.objects.values(
-                "uri",
-                "is_visitable",
-            ).all()
-        )
-        expected = [
-            {
-                'is_visitable': False,
-                'uri': 'maven-index://repo1.maven.org/zone/src/sheaf/logback-sheaf/1.1.7/logback-sheaf-1.1.8.jar'
+                "is_visitable": False,
+                "uri": "maven-index://repo1.maven.org/zone/src/sheaf/logback-sheaf/1.1.7/logback-sheaf-1.1.7.jar",
             },
-            {
-                'is_visitable': False,
-                'uri': 'maven-index://repo1.maven.org/zone/src/sheaf/logback-sheaf/1.1.7/logback-sheaf-1.1.7.jar'
-            }
         ]
         self.assertEqual(results, expected)
 
@@ -208,10 +164,10 @@ class TestReplaceHttpWithHttpsInMavenURIs(TestMigrations):
         )
         expected = [
             {
-                'uri': 'https://repo1.maven.org/maven2/xyz/upperlevel/command/spigot/spigot-command-api/1.1.1/spigot-command-api-1.1.1.pom'
+                "uri": "https://repo1.maven.org/maven2/xyz/upperlevel/command/spigot/spigot-command-api/1.1.1/spigot-command-api-1.1.1.pom"
             },
             {
-                'uri': 'https://repo1.maven.org/maven2/xyz/upperlevel/command/spigot/spigot-command-api/1.1.1/spigot-command-api-1.1.1.pom'
-            }
+                "uri": "https://repo1.maven.org/maven2/xyz/upperlevel/command/spigot/spigot-command-api/1.1.1/spigot-command-api-1.1.1.pom"
+            },
         ]
         self.assertEqual(results, expected)

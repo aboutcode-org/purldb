@@ -19,7 +19,7 @@ from packageurl.contrib.purl2url import get_download_url, purl2url
 from scancode.api import get_urls as get_urls_from_location
 
 from minecode.model_utils import add_package_to_scan_queue
-from minecode.visitors.maven import get_merged_ancestor_package_from_maven_package
+from minecode.collectors.maven import get_merged_ancestor_package_from_maven_package
 from packagedb.models import Package, PackageContentType, PackageSet
 
 logger = logging.getLogger(__name__)
@@ -147,7 +147,7 @@ def get_source_package_and_add_to_package_set(package):
         download_url = get_download_url(str(source_purl))
         if not download_url:
             return
-    except:
+    except Exception:
         logger.error(f"Error getting download_url for {source_purl}")
         return
 

@@ -8,6 +8,7 @@
 #
 
 from django_rq.management.commands import rqscheduler
+
 from packagedb.models import PackageWatch
 from packagedb.schedules import clear_zombie_watch_schedules
 from packagedb.schedules import scheduled_job_exists
@@ -28,4 +29,4 @@ class Command(rqscheduler.Command):
     def handle(self, *args, **kwargs):
         clear_zombie_watch_schedules()
         init_watch_scheduled()
-        super(Command, self).handle(*args, **kwargs)
+        super().handle(*args, **kwargs)

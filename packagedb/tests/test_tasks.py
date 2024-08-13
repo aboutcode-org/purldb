@@ -10,6 +10,7 @@
 from unittest.mock import patch
 
 from django.test import TestCase
+
 from fetchcode.package_versions import PackageVersion
 
 from minecode.models import PriorityResourceURI

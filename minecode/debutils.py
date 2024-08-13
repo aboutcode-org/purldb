@@ -15,35 +15,29 @@ def parse_email(text):
     """
     if not text:
         return None, None
-    name, _, email = text.partition('<')
-    email = email.strip('>')
+    name, _, email = text.partition("<")
+    email = email.strip(">")
     name = name.strip()
     email = email.strip()
     return name or None, email or None
 
 
 def comma_separated(text):
-    """
-    Return a list of strings from a comma-separated text.
-    """
+    """Return a list of strings from a comma-separated text."""
     if not text:
         return []
-    return [t.strip() for t in text.split(',') if t and t.strip()]
+    return [t.strip() for t in text.split(",") if t and t.strip()]
 
 
 def fold(value):
-    """
-    Return a folded `value` string.
-    """
+    """Return a folded `value` string."""
     if not value:
         return value
-    return ''.join(value.split())
+    return "".join(value.split())
 
 
 def line_separated(value):
-    """
-    Return a list of values from a `value` string using line delimiters.
-    """
+    """Return a list of values from a `value` string using line delimiters."""
     if not value:
         return []
     return [v.strip() for v in value.splitlines(False) if v]

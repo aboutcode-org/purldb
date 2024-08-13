@@ -6,3 +6,13 @@
 # See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
+
+import pkgutil
+
+"""
+Minimal way to recursively import all submodules dynamically. If this module is
+imported, all submodules will be imported: this triggers the actual registration
+of miners. This should stay as the last import in this init module.
+"""
+for _, name, _ in pkgutil.walk_packages(__path__, prefix=__name__ + "."):
+    __import__(name)

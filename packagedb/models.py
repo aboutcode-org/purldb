@@ -13,8 +13,6 @@ import sys
 import uuid
 from collections import OrderedDict
 
-import natsort
-from dateutil.parser import parse as dateutil_parse
 from django.conf import settings
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
@@ -27,14 +25,17 @@ from django.db import transaction
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from rest_framework.authtoken.models import Token
 
+import natsort
+from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
-from packagedb import schedules
 from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
+from rest_framework.authtoken.models import Token
+
+from packagedb import schedules
 
 TRACE = False
 
@@ -44,10 +45,8 @@ logger.setLevel(logging.INFO)
 
 
 def sort_version(packages):
-    """
-    Return the packages sorted by version.
-    """
-    return natsort.natsorted(packages, key=lambda p: p.version.replace('.', '~')+'z')
+    """Return the packages sorted by version."""
+    return natsort.natsorted(packages, key=lambda p: p.version.replace(".", "~") + "z")
 
 
 class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
@@ -57,14 +56,13 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         Return None if the insertion failed when an identical entry already exist.
         """
         package, created = self.get_or_create(
-            download_url=download_url, defaults=extra_fields)
+            download_url=download_url, defaults=extra_fields
+        )
         if created:
             return package
 
     def get_or_none(self, *args, **kwargs):
-        """
-        Return the object matching the given lookup parameters, or None if no match exists.
-        """
+        """Return the object matching the given lookup parameters, or None if no match exists."""
         try:
             return self.get(*args, **kwargs)
         except Package.DoesNotExist:
@@ -81,22 +79,21 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         paginator = Paginator(self, per_page=per_page)
         for page_number in paginator.page_range:
             page = paginator.page(page_number)
-            for object in page.object_list:
-                yield object
+            yield from page.object_list
 
 
 VCS_CHOICES = [
-    ('git', 'git'),
-    ('svn', 'subversion'),
-    ('hg', 'mercurial'),
-    ('bzr', 'bazaar'),
-    ('cvs', 'cvs'),
+    ("git", "git"),
+    ("svn", "subversion"),
+    ("hg", "mercurial"),
+    ("bzr", "bazaar"),
+    ("cvs", "cvs"),
 ]
 
 
 class LowerCaseField(models.CharField):
     def __init__(self, *args, **kwargs):
-        super(LowerCaseField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def to_python(self, value):
         return str(value).lower()
@@ -108,12 +105,13 @@ class HistoryMixin(models.Model):
     is a list containing mappings representing the history for this object. Each
     mapping contains the field "timestamp" and "message".
     """
+
     history = models.JSONField(
         default=list,
         blank=True,
         editable=False,
         help_text=_(
-            'A list of mappings representing the history for this object. '
+            "A list of mappings representing the history for this object. "
             'Each mapping contains the fields "timestamp" and "message".'
         ),
     )
@@ -121,22 +119,20 @@ class HistoryMixin(models.Model):
         null=True,
         blank=True,
         db_index=True,
-        help_text=_('Timestamp set when a Package is created'),
+        help_text=_("Timestamp set when a Package is created"),
     )
     last_modified_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text=_('Timestamp set when a Package is created or modified'),
+        help_text=_("Timestamp set when a Package is created or modified"),
     )
 
     class Meta:
         abstract = True
 
     def append_to_history(self, message, data={}, save=False):
-        """
-        Append the ``message`` string to the history of this object.
-        """
+        """Append the ``message`` string to the history of this object."""
         time = timezone.now()
         timestamp = time.strftime("%Y-%m-%d-%H:%M:%S")
         entry = {
@@ -220,10 +216,8 @@ class ExtraDataFieldMixin(models.Model):
     )
 
     def update_extra_data(self, data):
-        """
-        Updates the `extra_data` field with the provided `data` dict.
-        """
-        if type(data) != dict:
+        """Update `extra_data` field with the provided `data` dict."""
+        if type(data) is not dict:
             raise ValueError("Argument `data` value must be a dict()")
 
         self.extra_data.update(data)
@@ -354,8 +348,7 @@ class AbstractPackage(models.Model):
     copyright = models.TextField(
         blank=True,
         null=True,
-        help_text=_(
-            "Copyright statements for this package. Typically one per line."),
+        help_text=_("Copyright statements for this package. Typically one per line."),
     )
     holder = models.TextField(
         blank=True,
@@ -456,13 +449,13 @@ class PackageContentType(models.IntegerChoices):
 
     # TODO: curation is a special case, based on how the curation identity
     # fields matches with the current package
-    CURATION = 1, 'curation'
-    PATCH = 2, 'patch'
-    SOURCE_REPO = 3, 'source_repo'
-    SOURCE_ARCHIVE = 4, 'source_archive'
-    BINARY = 5, 'binary'
-    TEST = 6, 'test'
-    DOC = 7, 'doc'
+    CURATION = 1, "curation"
+    PATCH = 2, "patch"
+    SOURCE_REPO = 3, "source_repo"
+    SOURCE_ARCHIVE = 4, "source_archive"
+    BINARY = 5, "binary"
+    TEST = 6, "test"
+    DOC = 7, "doc"
 
 
 def get_class_name(obj):
@@ -483,9 +476,11 @@ class Package(
     )
     mining_level = models.PositiveIntegerField(
         default=0,
-        help_text=_('A numeric indication of the highest depth and breadth '
-                    'of package data collected through previous visits. '
-                    'Higher means more and deeper collection.'),
+        help_text=_(
+            "A numeric indication of the highest depth and breadth "
+            "of package data collected through previous visits. "
+            "Higher means more and deeper collection."
+        ),
     )
     keywords = ArrayField(
         base_field=models.TextField(
@@ -495,15 +490,17 @@ class Package(
         default=list,
         blank=True,
         null=True,
-        help_text=_('A list of keywords.'),
+        help_text=_("A list of keywords."),
     )
     root_path = models.CharField(
         max_length=1024,
         blank=True,
         null=True,
-        help_text=_('The path to the root of the package documented in this manifest '
-                    'if any, such as a Maven .pom or a npm package.json parent '
-                    'directory.')
+        help_text=_(
+            "The path to the root of the package documented in this manifest "
+            "if any, such as a Maven .pom or a npm package.json parent "
+            "directory."
+        ),
     )
     source_packages = ArrayField(
         base_field=models.TextField(
@@ -513,31 +510,33 @@ class Package(
         default=list,
         blank=True,
         null=True,
-        help_text=_('A list of source package URLs (aka. "purl") for this package. '
-                    'For instance an SRPM is the "source package" for a binary RPM.'),
+        help_text=_(
+            'A list of source package URLs (aka. "purl") for this package. '
+            'For instance an SRPM is the "source package" for a binary RPM.'
+        ),
     )
     last_indexed_date = models.DateTimeField(
         null=True,
         blank=True,
-        help_text='Timestamp set to the date of the last indexing. Used to track indexing status.'
+        help_text="Timestamp set to the date of the last indexing. Used to track indexing status.",
     )
     index_error = models.TextField(
         null=True,
         blank=True,
-        help_text='Indexing errors messages. When present this means the indexing has failed.',
+        help_text="Indexing errors messages. When present this means the indexing has failed.",
     )
     package_sets = models.ManyToManyField(
-        'PackageSet',
-        related_name='packages',
-        help_text=_(
-            'A set representing the Package sets this Package is a member of.'),
+        "PackageSet",
+        related_name="packages",
+        help_text=_("A set representing the Package sets this Package is a member of."),
     )
     package_content = models.IntegerField(
         null=True,
         choices=PackageContentType.choices,
         help_text=_(
-            'Content of this Package as one of: {}'.format(
-                ', '.join(PackageContentType.labels))
+            "Content of this Package as one of: {}".format(
+                ", ".join(PackageContentType.labels)
+            )
         ),
     )
     summary = models.JSONField(
@@ -545,7 +544,7 @@ class Package(
         blank=True,
         null=True,
         help_text=_(
-            'A mapping containing a summary and license clarity score for this Package'
+            "A mapping containing a summary and license clarity score for this Package"
         ),
     )
 
@@ -553,37 +552,37 @@ class Package(
 
     # TODO: Think about ordering, unique together, indexes, etc.
     class Meta:
-        ordering = ['id']
+        ordering = ["id"]
         unique_together = [
             (
-                'download_url',
-                'type',
-                'namespace',
-                'name',
-                'version',
-                'qualifiers',
-                'subpath'
+                "download_url",
+                "type",
+                "namespace",
+                "name",
+                "version",
+                "qualifiers",
+                "subpath",
             )
         ]
         indexes = [
             # multicolumn index for search on a whole `purl`
-            models.Index(fields=[
-                'type', 'namespace', 'name', 'version', 'qualifiers', 'subpath'
-            ]),
-            models.Index(fields=['type']),
-            models.Index(fields=['namespace']),
-            models.Index(fields=['name']),
-            models.Index(fields=['version']),
-            models.Index(fields=['qualifiers']),
-            models.Index(fields=['subpath']),
-            models.Index(fields=['download_url']),
-            models.Index(fields=['filename']),
-            models.Index(fields=['size']),
-            models.Index(fields=['release_date']),
-            models.Index(fields=['md5']),
-            models.Index(fields=['sha1']),
-            models.Index(fields=['sha256']),
-            models.Index(fields=['sha512']),
+            models.Index(
+                fields=["type", "namespace", "name", "version", "qualifiers", "subpath"]
+            ),
+            models.Index(fields=["type"]),
+            models.Index(fields=["namespace"]),
+            models.Index(fields=["name"]),
+            models.Index(fields=["version"]),
+            models.Index(fields=["qualifiers"]),
+            models.Index(fields=["subpath"]),
+            models.Index(fields=["download_url"]),
+            models.Index(fields=["filename"]),
+            models.Index(fields=["size"]),
+            models.Index(fields=["release_date"]),
+            models.Index(fields=["md5"]),
+            models.Index(fields=["sha1"]),
+            models.Index(fields=["sha256"]),
+            models.Index(fields=["sha512"]),
         ]
 
     def __str__(self):
@@ -596,18 +595,17 @@ class Package(
     @property
     def package_uid(self):
         purl = PackageURL.from_string(self.package_url)
-        purl.qualifiers['uuid'] = str(self.uuid)
+        purl.qualifiers["uuid"] = str(self.uuid)
         return str(purl)
 
     def to_dict(self):
         from packagedb.serializers import PackageMetadataSerializer
+
         package_metadata = PackageMetadataSerializer(self).data
         return package_metadata
 
     def get_all_versions(self):
-        """
-        Return a list of all the versions of this Package.
-        """
+        """Return a list of all the versions of this Package."""
         manager = self.__class__.objects
         queryset = manager.filter(
             name=self.name,
@@ -617,9 +615,7 @@ class Package(
         return queryset
 
     def get_latest_version(self):
-        """
-        Return the latest version of this Package.
-        """
+        """Return the latest version of this Package."""
         sorted_versions = sort_version(self.get_all_versions())
         if sorted_versions:
             return sorted_versions[-1]
@@ -630,14 +626,15 @@ class Package(
         created for this Package. The fingerprints and Resources associated with
         this Package are deleted and recreated from the updated scan data.
         """
-        from minecode.model_utils import add_package_to_scan_queue
         from minecode.model_utils import DEFAULT_PIPELINES
+        from minecode.model_utils import add_package_to_scan_queue
 
-        addon_pipelines = kwargs.get('addon_pipelines', [])
+        addon_pipelines = kwargs.get("addon_pipelines", [])
         pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
 
         add_package_to_scan_queue(
-            self, pipelines=pipelines, reindex_uri=True, priority=100)
+            self, pipelines=pipelines, reindex_uri=True, priority=100
+        )
 
     def update_fields(self, save=False, **values_by_fields):
         """
@@ -661,28 +658,28 @@ class Package(
             if not hasattr(self, field):
                 # Raise exception when we we are given a keyword argument that
                 # doesn't correspond to a Package field
-                raise AttributeError(
-                    f"'{class_name}' has no attribute '{field}'")
+                raise AttributeError(f"'{class_name}' has no attribute '{field}'")
 
             related_model_fields = [
-                'dependencies',
-                'parties',
-                'resources',
+                "dependencies",
+                "parties",
+                "resources",
             ]
             if field in related_model_fields:
                 unsaved_models = []
-                if field == 'dependencies':
+                if field == "dependencies":
                     for dep_data in value:
-                        if isinstance(dep_data, (dict, OrderedDict)):
+                        if isinstance(dep_data, dict | OrderedDict):
                             dep = DependentPackage(
                                 package=self,
-                                purl=dep_data.get('purl'),
+                                purl=dep_data.get("purl"),
                                 extracted_requirement=dep_data.get(
-                                    'extracted_requirement'),
-                                scope=dep_data.get('scope'),
-                                is_runtime=dep_data.get('is_runtime'),
-                                is_optional=dep_data.get('is_optional'),
-                                is_resolved=dep_data.get('is_resolved'),
+                                    "extracted_requirement"
+                                ),
+                                scope=dep_data.get("scope"),
+                                is_runtime=dep_data.get("is_runtime"),
+                                is_optional=dep_data.get("is_optional"),
+                                is_resolved=dep_data.get("is_resolved"),
                             )
                         elif isinstance(dep_data, DependentPackage):
                             dep = dep_data
@@ -692,16 +689,16 @@ class Package(
                             )
                         unsaved_models.append(dep)
 
-                if field == 'parties':
+                if field == "parties":
                     for party_data in value:
-                        if isinstance(party_data, (dict, OrderedDict)):
+                        if isinstance(party_data, dict | OrderedDict):
                             party = Party(
                                 package=self,
-                                type=party_data.get('type'),
-                                role=party_data.get('role'),
-                                name=party_data.get('name'),
-                                email=party_data.get('email'),
-                                url=party_data.get('url'),
+                                type=party_data.get("type"),
+                                role=party_data.get("role"),
+                                name=party_data.get("name"),
+                                email=party_data.get("email"),
+                                url=party_data.get("url"),
                             )
                         elif isinstance(party_data, Party):
                             party = party_data
@@ -711,28 +708,29 @@ class Package(
                             )
                         unsaved_models.append(party)
 
-                if field == 'resources':
+                if field == "resources":
                     for resource_data in value:
-                        if isinstance(resource_data, (dict, OrderedDict)):
+                        if isinstance(resource_data, dict | OrderedDict):
                             resource = Resource(
                                 package=self,
-                                path=resource_data.get('path'),
-                                is_file=resource_data.get('type') == 'file',
-                                name=resource_data.get('name'),
-                                extension=resource_data.get('extension'),
-                                size=resource_data.get('size'),
-                                md5=resource_data.get('md5'),
-                                sha1=resource_data.get('sha1'),
-                                sha256=resource_data.get('sha256'),
-                                mime_type=resource_data.get('mime_type'),
-                                file_type=resource_data.get('file_type'),
+                                path=resource_data.get("path"),
+                                is_file=resource_data.get("type") == "file",
+                                name=resource_data.get("name"),
+                                extension=resource_data.get("extension"),
+                                size=resource_data.get("size"),
+                                md5=resource_data.get("md5"),
+                                sha1=resource_data.get("sha1"),
+                                sha256=resource_data.get("sha256"),
+                                mime_type=resource_data.get("mime_type"),
+                                file_type=resource_data.get("file_type"),
                                 programming_language=resource_data.get(
-                                    'programming_language'),
-                                is_binary=resource_data.get('is_binary'),
-                                is_text=resource_data.get('is_text'),
-                                is_archive=resource_data.get('is_archive'),
-                                is_media=resource_data.get('is_media'),
-                                is_key_file=resource_data.get('is_key_file'),
+                                    "programming_language"
+                                ),
+                                is_binary=resource_data.get("is_binary"),
+                                is_text=resource_data.get("is_text"),
+                                is_archive=resource_data.get("is_archive"),
+                                is_media=resource_data.get("is_media"),
+                                is_key_file=resource_data.get("is_key_file"),
                             )
                             resource.set_scan_results(resource_data)
                         elif isinstance(resource_data, Resource):
@@ -746,20 +744,19 @@ class Package(
                 if unsaved_models:
                     created_models_count = len(unsaved_models)
                     model_count = 0
-                    if field == 'dependencies':
+                    if field == "dependencies":
                         model_count = self.dependencies.all().count()
                         with transaction.atomic():
                             self.dependencies.all().delete()
-                            DependentPackage.objects.bulk_create(
-                                unsaved_models)
+                            DependentPackage.objects.bulk_create(unsaved_models)
 
-                    if field == 'parties':
+                    if field == "parties":
                         model_count = self.parties.all().count()
                         with transaction.atomic():
                             self.parties.all().delete()
                             Party.objects.bulk_create(unsaved_models)
 
-                    if field == 'resources':
+                    if field == "resources":
                         model_count = self.resources.all().count()
                         with transaction.atomic():
                             self.resources.all().delete()
@@ -767,17 +764,17 @@ class Package(
 
                     msg = f"Replaced {model_count} existing entries of field '{field}' with {created_models_count} new entries."
                     self.append_to_history(msg)
-                    replaced_fields.extend([field, 'history'])
+                    replaced_fields.extend([field, "history"])
             else:
                 # Ensure the incoming value is of the correct type
-                if field == 'qualifiers' and isinstance(value, dict):
+                if field == "qualifiers" and isinstance(value, dict):
                     value = normalize_qualifiers(value, encode=True)
 
                 date_fields = [
-                    'created_date',
-                    'last_indexed_date',
-                    'last_modified_date',
-                    'release_date',
+                    "created_date",
+                    "last_indexed_date",
+                    "last_modified_date",
+                    "release_date",
                 ]
                 if field in date_fields and isinstance(value, str):
                     value = dateutil_parse(value)
@@ -802,14 +799,14 @@ class Package(
 
         if updated_fields and history_entries:
             data = {
-                'updated_fields': history_entries,
+                "updated_fields": history_entries,
             }
             self.append_to_history(
-                'Package field values have been updated.',
+                "Package field values have been updated.",
                 data=data,
                 save=save,
             )
-            updated_fields.append('history')
+            updated_fields.append("history")
 
         if replaced_fields:
             updated_fields.extend(replaced_fields)
@@ -821,11 +818,11 @@ class Package(
         return self, updated_fields
 
 
-party_person = 'person'
+party_person = "person"
 # often loosely defined
-party_project = 'project'
+party_project = "project"
 # more formally defined
-party_org = 'organization'
+party_org = "organization"
 PARTY_TYPES = (
     (party_person, party_person),
     (party_project, party_project),
@@ -834,14 +831,13 @@ PARTY_TYPES = (
 
 
 class Party(models.Model):
-    """
-    A party is a person, project or organization related to a package.
-    """
+    """A party is a person, project or organization related to a package."""
+
     package = models.ForeignKey(
         Package,
-        related_name='parties',
+        related_name="parties",
         on_delete=models.CASCADE,
-        help_text=_('The Package that this party is related to')
+        help_text=_("The Package that this party is related to"),
     )
 
     type = models.CharField(
@@ -849,118 +845,114 @@ class Party(models.Model):
         blank=True,
         null=True,
         choices=PARTY_TYPES,
-        help_text=_('the type of this party')
+        help_text=_("the type of this party"),
     )
 
     role = models.CharField(
         max_length=32,
         blank=True,
         null=True,
-        help_text=_('A role for this party. Something such as author, '
-                    'maintainer, contributor, owner, packager, distributor, '
-                    'vendor, developer, owner, etc.')
+        help_text=_(
+            "A role for this party. Something such as author, "
+            "maintainer, contributor, owner, packager, distributor, "
+            "vendor, developer, owner, etc."
+        ),
     )
 
     name = models.CharField(
-        max_length=70,
-        blank=True,
-        null=True,
-        help_text=_('Name of this party.')
+        max_length=70, blank=True, null=True, help_text=_("Name of this party.")
     )
 
     email = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text=_('Email for this party.')
+        max_length=255, blank=True, null=True, help_text=_("Email for this party.")
     )
 
     url = models.CharField(
         max_length=1024,
         blank=True,
         null=True,
-        help_text=_('URL to a primary web page for this party.')
+        help_text=_("URL to a primary web page for this party."),
     )
 
     def to_dict(self):
         from packagedb.serializers import PartySerializer
+
         party_data = PartySerializer(self).data
         return party_data
 
 
 class DependentPackage(models.Model):
-    """
-    An identifiable dependent package package object.
-    """
+    """An identifiable dependent package package object."""
+
     package = models.ForeignKey(
         Package,
-        related_name='dependencies',
+        related_name="dependencies",
         on_delete=models.CASCADE,
-        help_text=_('The Package that this dependent package is related to')
+        help_text=_("The Package that this dependent package is related to"),
     )
 
     purl = models.CharField(
         max_length=2048,
         blank=True,
         null=True,
-        help_text=_('A compact purl package URL')
+        help_text=_("A compact purl package URL"),
     )
 
     extracted_requirement = models.CharField(
         max_length=200,
         blank=True,
         null=True,
-        help_text=_(
-            'A string defining version(s)requirements. Package-type specific.')
+        help_text=_("A string defining version(s)requirements. Package-type specific."),
     )
 
     scope = models.CharField(
         max_length=100,
         blank=True,
         null=True,
-        help_text=_('The scope of this dependency, such as runtime, install, etc. '
-                    'This is package-type specific and is the original scope string.')
+        help_text=_(
+            "The scope of this dependency, such as runtime, install, etc. "
+            "This is package-type specific and is the original scope string."
+        ),
     )
 
     is_runtime = models.BooleanField(
-        default=True,
-        help_text=_('True if this dependency is a runtime dependency.')
+        default=True, help_text=_("True if this dependency is a runtime dependency.")
     )
 
     is_optional = models.BooleanField(
-        default=False,
-        help_text=_('True if this dependency is an optional dependency')
+        default=False, help_text=_("True if this dependency is an optional dependency")
     )
 
     is_resolved = models.BooleanField(
         default=False,
-        help_text=_('True if this dependency version requirement has '
-                    'been resolved and this dependency url points to an '
-                    'exact version.')
+        help_text=_(
+            "True if this dependency version requirement has "
+            "been resolved and this dependency url points to an "
+            "exact version."
+        ),
     )
 
     def to_dict(self):
         from packagedb.serializers import DependentPackageSerializer
+
         depedent_package_data = DependentPackageSerializer(self).data
         return depedent_package_data
 
 
 class AbstractResource(models.Model):
-    """
-    These model fields should be kept in line with scancode.resource.Resource
-    """
+    """These model fields should be kept in line with scancode.resource.Resource"""
 
     path = models.CharField(
         max_length=2000,
         help_text=_(
-            'The full path value of a resource (file or directory) in the archive it is from.'),
+            "The full path value of a resource (file or directory) in the archive it is from."
+        ),
     )
 
     name = models.CharField(
         max_length=255,
         blank=True,
-        help_text=_(
-            "File or directory name of this resource with its extension."),
+        help_text=_("File or directory name of this resource with its extension."),
     )
 
     extension = models.CharField(
@@ -974,7 +966,7 @@ class AbstractResource(models.Model):
     size = models.BigIntegerField(
         blank=True,
         null=True,
-        help_text=_('Size in bytes.'),
+        help_text=_("Size in bytes."),
     )
 
     mime_type = models.CharField(
@@ -998,8 +990,7 @@ class AbstractResource(models.Model):
         max_length=50,
         blank=True,
         null=True,
-        help_text=_(
-            "Programming language of this resource if this is a code file."),
+        help_text=_("Programming language of this resource if this is a code file."),
     )
 
     is_binary = models.BooleanField(default=False)
@@ -1010,17 +1001,16 @@ class AbstractResource(models.Model):
 
     is_file = models.BooleanField(
         default=False,
-        help_text=_(
-            'True if this Resource is a file, False if it is a Directory')
+        help_text=_("True if this Resource is a file, False if it is a Directory"),
     )
 
     @property
     def type(self):
-        return 'file' if self.is_file else 'directory'
+        return "file" if self.is_file else "directory"
 
     @type.setter
     def type(self, value):
-        if value == 'file':
+        if value == "file":
             self.is_file = True
         else:
             self.is_file = False
@@ -1079,8 +1069,7 @@ class ScanFieldsModelMixin(models.Model):
     authors = models.JSONField(
         blank=True,
         default=list,
-        help_text=_(
-            "List of detected authors (and related detection details)."),
+        help_text=_("List of detected authors (and related detection details)."),
     )
     package_data = models.JSONField(
         default=list,
@@ -1137,47 +1126,41 @@ class ScanFieldsModelMixin(models.Model):
 
 
 class Resource(
-    ExtraDataFieldMixin,
-    HashFieldsMixin,
-    ScanFieldsModelMixin,
-    AbstractResource
+    ExtraDataFieldMixin, HashFieldsMixin, ScanFieldsModelMixin, AbstractResource
 ):
     package = models.ForeignKey(
         Package,
-        related_name='resources',
+        related_name="resources",
         on_delete=models.CASCADE,
-        help_text=_('The Package that this Resource is from')
+        help_text=_("The Package that this Resource is from"),
     )
 
     git_sha1 = models.CharField(
         max_length=40,
         blank=True,
         null=True,
-        help_text=_('git SHA1 checksum hex-encoded'),
+        help_text=_("git SHA1 checksum hex-encoded"),
     )
 
     class Meta:
-        unique_together = (
-            ('package', 'path'),
-        )
-        ordering = ('id',)
+        unique_together = (("package", "path"),)
+        ordering = ("id",)
         indexes = [
-            models.Index(fields=['md5']),
-            models.Index(fields=['sha1']),
-            models.Index(fields=['sha256']),
-            models.Index(fields=['sha512']),
-            models.Index(fields=['git_sha1']),
+            models.Index(fields=["md5"]),
+            models.Index(fields=["sha1"]),
+            models.Index(fields=["sha256"]),
+            models.Index(fields=["sha512"]),
+            models.Index(fields=["git_sha1"]),
         ]
 
     @property
     def for_packages(self):
         """Return the list of all Packages associated to this resource."""
-        return [
-            self.package.package_uid or str(self.package)
-        ]
+        return [self.package.package_uid or str(self.package)]
 
     def to_dict(self):
         from packagedb.serializers import ResourceMetadataSerializer
+
         resource_metadata = ResourceMetadataSerializer(self).data
         return resource_metadata
 
@@ -1213,9 +1196,9 @@ class PackageRelation(models.Model):
     relationship = models.CharField(
         max_length=30,
         choices=Relationship.choices,
-        help_text='Relationship between the from and to package '
-                  'URLs such as "source_package" when a package '
-                  'is the source code package for another package.'
+        help_text="Relationship between the from and to package "
+        'URLs such as "source_package" when a package '
+        "is the source code package for another package.",
     )
 
     def __str__(self):
@@ -1226,11 +1209,11 @@ class PackageRelation(models.Model):
 
 
 def make_relationship(
-    from_package, to_package, relationship,
+    from_package,
+    to_package,
+    relationship,
 ):
-    """
-    Create and return the from/to package relathionship if it does exists.
-    """
+    """Create and return the from/to package relathionship if it does exists."""
     pkg, _created = PackageRelation.objects.get_or_create(
         from_package=from_package,
         to_package=to_package,
@@ -1240,9 +1223,8 @@ def make_relationship(
 
 
 class PackageWatch(models.Model):
-    """
-    Model representing a watch on a package to monitor for new versions.
-    """
+    """Model representing a watch on a package to monitor for new versions."""
+
     DEPTH_CHOICES = (
         (1, "Version"),
         (2, "Metadata"),
@@ -1302,14 +1284,14 @@ class PackageWatch(models.Model):
         choices=DEPTH_CHOICES,
         default=3,
         help_text=_(
-            "Depth of data collection from listing versions up to a full scan."),
+            "Depth of data collection from listing versions up to a full scan."
+        ),
     )
 
     watch_interval = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(1, message="Interval must be at least 1 day."),
-            MaxValueValidator(
-                365, message="Interval must be at most 365 days."),
+            MaxValueValidator(365, message="Interval must be at most 365 days."),
         ],
         default=7,
         help_text=_("Number of days to wait between watches of this package."),
@@ -1394,7 +1376,7 @@ class PackageWatch(models.Model):
         if schedule:
             self.schedule_work_id = self.create_new_job()
 
-        super(PackageWatch, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         """Clear associated watch schedule."""
@@ -1417,16 +1399,13 @@ class PackageWatch(models.Model):
 
 
 class PackageSet(models.Model):
-    """
-    A group of related Packages
-    """
+    """A group of related Packages"""
+
     uuid = models.UUIDField(
         verbose_name=_("UUID"),
         default=uuid.uuid4,
         unique=True,
-        help_text=_(
-            'The identifier of the Package set'
-        )
+        help_text=_("The identifier of the Package set"),
     )
 
     def add_to_package_set(self, package):
@@ -1435,15 +1414,13 @@ class PackageSet(models.Model):
     def get_package_set_members(self):
         """Return related Packages"""
         return self.packages.order_by(
-            'package_content',
+            "package_content",
         )
 
 
 class ApiUserManager(UserManager):
     def create_api_user(self, username, first_name="", last_name="", **extra_fields):
-        """
-        Create and return an API-only user. Raise ValidationError.
-        """
+        """Create and return an API-only user. Raise ValidationError."""
         username = self.normalize_email(username)
         email = username
         self._validate_username(email)
@@ -1469,16 +1446,15 @@ class ApiUserManager(UserManager):
         return user
 
     def _validate_username(self, email):
-        """
-        Validate username. If invalid, raise a ValidationError
-        """
+        """Validate username. If invalid, raise a ValidationError"""
         try:
             self.get_by_natural_key(email)
         except models.ObjectDoesNotExist:
             pass
         else:
             raise exceptions.ValidationError(
-                f"Error: This email already exists: {email}")
+                f"Error: This email already exists: {email}"
+            )
 
 
 @receiver(models.signals.post_save, sender=settings.AUTH_USER_MODEL)

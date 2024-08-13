@@ -9,8 +9,8 @@
 
 
 import logging
-from os import getenv
 import traceback
+from os import getenv
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -25,7 +25,7 @@ class VerboseCommand(BaseCommand):
     """
 
     def get_verbosity(self, **options):
-        verbosity = int(options.get('verbosity', 1))
+        verbosity = int(options.get("verbosity", 1))
         levels = {1: logging.INFO, 2: logging.ERROR, 3: logging.DEBUG}
         return levels.get(verbosity, logging.CRITICAL)
 
@@ -42,17 +42,13 @@ class VerboseCommand(BaseCommand):
 
 
 def get_error_message(e):
-    """
-    Return an error message with a traceback given an exception.
-    """
+    """Return an error message with a traceback given an exception."""
     tb = traceback.format_exc()
-    msg = e.__class__.__name__ + ' ' + repr(e)
-    msg += '\n' + tb
+    msg = e.__class__.__name__ + " " + repr(e)
+    msg += "\n" + tb
     return msg
 
 
 def get_settings(var_name):
-    """
-    Return the settings value from the environment or Django settings.
-    """
-    return getenv(var_name) or getattr(settings, var_name, None) or ''
+    """Return the settings value from the environment or Django settings."""
+    return getenv(var_name) or getattr(settings, var_name, None) or ""

@@ -12,9 +12,9 @@ import os
 from datetime import datetime
 from functools import partial
 from unittest import mock
+
 from django.test import TestCase
 
-import pytest
 from dateutil.tz import tzlocal
 from packageurl import PackageURL
 
@@ -34,65 +34,123 @@ TEST_DATA = os.path.join(BASE_DIR, "testfiles", "package_manager_data")
 
 dt_local = partial(datetime, tzinfo=tzlocal())
 
+
 class TestPackageManagers(TestCase):
-
     def test_trim_go_url_path(self):
-        assert GoproxyVersionAPI.trim_go_url_path("https://pkg.go.dev/https://github.com/xx/a/b") == "github.com/xx/a"
-        assert GoproxyVersionAPI.trim_go_url_path("https://github.com/xx/a/b") == "github.com/xx/a"
-
+        assert (
+            GoproxyVersionAPI.trim_go_url_path(
+                "https://pkg.go.dev/https://github.com/xx/a/b"
+            )
+            == "github.com/xx/a"
+        )
+        assert (
+            GoproxyVersionAPI.trim_go_url_path("https://github.com/xx/a/b")
+            == "github.com/xx/a"
+        )
 
     def test_nuget_extract_version(self):
-        with open(os.path.join(TEST_DATA, "nuget-data.json"), "r") as f:
+        with open(os.path.join(TEST_DATA, "nuget-data.json")) as f:
             response = json.load(f)
         results = list(NugetVersionAPI().extract_versions(response))
         expected = [
-            PackageVersion(value="2.1.0", release_date=dt_local(2011, 1, 22, 13, 34, 8, 550000)),
-            PackageVersion(value="3.0.0", release_date=dt_local(2011, 11, 24, 0, 26, 2, 527000)),
-            PackageVersion(value="3.0.3", release_date=dt_local(2011, 11, 27, 13, 50, 2, 63000)),
-            PackageVersion(value="3.0.4", release_date=dt_local(2011, 12, 12, 10, 18, 33, 380000)),
-            PackageVersion(value="3.0.5", release_date=dt_local(2011, 12, 12, 12, 0, 25, 947000)),
-            PackageVersion(value="3.0.6", release_date=dt_local(2012, 1, 2, 21, 10, 43, 403000)),
-            PackageVersion(value="3.4.0", release_date=dt_local(2013, 10, 20, 13, 32, 30, 837000)),
-            PackageVersion(value="3.4.1", release_date=dt_local(2014, 1, 17, 9, 17, 43, 680000)),
-            PackageVersion(value="3.5.0-beta2", release_date=dt_local(2015, 1, 1, 14, 9, 28, 710000)),
-            PackageVersion(value="3.5.0-beta3", release_date=dt_local(2015, 1, 6, 17, 39, 25, 147000)),
-            PackageVersion(value="3.5.0", release_date=dt_local(2015, 1, 14, 2, 1, 58, 853000)),
-            PackageVersion(value="3.5.1", release_date=dt_local(2015, 1, 23, 1, 5, 44, 447000)),
+            PackageVersion(
+                value="2.1.0", release_date=dt_local(2011, 1, 22, 13, 34, 8, 550000)
+            ),
+            PackageVersion(
+                value="3.0.0", release_date=dt_local(2011, 11, 24, 0, 26, 2, 527000)
+            ),
+            PackageVersion(
+                value="3.0.3", release_date=dt_local(2011, 11, 27, 13, 50, 2, 63000)
+            ),
+            PackageVersion(
+                value="3.0.4", release_date=dt_local(2011, 12, 12, 10, 18, 33, 380000)
+            ),
+            PackageVersion(
+                value="3.0.5", release_date=dt_local(2011, 12, 12, 12, 0, 25, 947000)
+            ),
+            PackageVersion(
+                value="3.0.6", release_date=dt_local(2012, 1, 2, 21, 10, 43, 403000)
+            ),
+            PackageVersion(
+                value="3.4.0", release_date=dt_local(2013, 10, 20, 13, 32, 30, 837000)
+            ),
+            PackageVersion(
+                value="3.4.1", release_date=dt_local(2014, 1, 17, 9, 17, 43, 680000)
+            ),
+            PackageVersion(
+                value="3.5.0-beta2",
+                release_date=dt_local(2015, 1, 1, 14, 9, 28, 710000),
+            ),
+            PackageVersion(
+                value="3.5.0-beta3",
+                release_date=dt_local(2015, 1, 6, 17, 39, 25, 147000),
+            ),
+            PackageVersion(
+                value="3.5.0", release_date=dt_local(2015, 1, 14, 2, 1, 58, 853000)
+            ),
+            PackageVersion(
+                value="3.5.1", release_date=dt_local(2015, 1, 23, 1, 5, 44, 447000)
+            ),
         ]
         assert results == expected
-
 
     def test_nuget_extract_version_with_illformed_data(self):
         test_data = {"items": [{"items": [{"catalogEntry": {}}]}]}
         results = list(NugetVersionAPI.extract_versions(test_data))
         assert results == []
 
-
     @mock.patch("packagedb.package_managers.get_response")
     def test_pypi_fetch_data(self, mock_response):
         pypi_api = PypiVersionAPI()
-        with open(os.path.join(TEST_DATA, "pypi.json"), "r") as f:
+        with open(os.path.join(TEST_DATA, "pypi.json")) as f:
             mock_response.return_value = json.load(f)
 
         results = list(pypi_api.fetch("django"))
         expected = [
-            PackageVersion(value="1.1.3", release_date=dt_local(2010, 12, 23, 5, 14, 23, 509436)),
-            PackageVersion(value="1.1.4", release_date=dt_local(2011, 2, 9, 4, 13, 7, 75)),
-            PackageVersion(value="1.10", release_date=dt_local(2016, 8, 1, 18, 32, 16, 280614)),
-            PackageVersion(value="1.10.1", release_date=dt_local(2016, 9, 1, 23, 18, 18, 672706)),
-            PackageVersion(value="1.10.2", release_date=dt_local(2016, 10, 1, 20, 5, 31, 330942)),
-            PackageVersion(value="1.10.3", release_date=dt_local(2016, 11, 1, 13, 57, 16, 55061)),
-            PackageVersion(value="1.10.4", release_date=dt_local(2016, 12, 1, 23, 46, 50, 215935)),
-            PackageVersion(value="1.10.5", release_date=dt_local(2017, 1, 4, 19, 23, 0, 596664)),
-            PackageVersion(value="1.10.6", release_date=dt_local(2017, 3, 1, 13, 37, 40, 243134)),
-            PackageVersion(value="1.10.7", release_date=dt_local(2017, 4, 4, 14, 27, 54, 235551)),
-            PackageVersion(value="1.10.8", release_date=dt_local(2017, 9, 5, 15, 31, 58, 221021)),
-            PackageVersion(value="1.10a1", release_date=dt_local(2016, 5, 20, 12, 24, 59, 952686)),
-            PackageVersion(value="1.10b1", release_date=dt_local(2016, 6, 22, 1, 15, 17, 267637)),
-            PackageVersion(value="1.10rc1", release_date=dt_local(2016, 7, 18, 18, 5, 5, 503584)),
+            PackageVersion(
+                value="1.1.3", release_date=dt_local(2010, 12, 23, 5, 14, 23, 509436)
+            ),
+            PackageVersion(
+                value="1.1.4", release_date=dt_local(2011, 2, 9, 4, 13, 7, 75)
+            ),
+            PackageVersion(
+                value="1.10", release_date=dt_local(2016, 8, 1, 18, 32, 16, 280614)
+            ),
+            PackageVersion(
+                value="1.10.1", release_date=dt_local(2016, 9, 1, 23, 18, 18, 672706)
+            ),
+            PackageVersion(
+                value="1.10.2", release_date=dt_local(2016, 10, 1, 20, 5, 31, 330942)
+            ),
+            PackageVersion(
+                value="1.10.3", release_date=dt_local(2016, 11, 1, 13, 57, 16, 55061)
+            ),
+            PackageVersion(
+                value="1.10.4", release_date=dt_local(2016, 12, 1, 23, 46, 50, 215935)
+            ),
+            PackageVersion(
+                value="1.10.5", release_date=dt_local(2017, 1, 4, 19, 23, 0, 596664)
+            ),
+            PackageVersion(
+                value="1.10.6", release_date=dt_local(2017, 3, 1, 13, 37, 40, 243134)
+            ),
+            PackageVersion(
+                value="1.10.7", release_date=dt_local(2017, 4, 4, 14, 27, 54, 235551)
+            ),
+            PackageVersion(
+                value="1.10.8", release_date=dt_local(2017, 9, 5, 15, 31, 58, 221021)
+            ),
+            PackageVersion(
+                value="1.10a1", release_date=dt_local(2016, 5, 20, 12, 24, 59, 952686)
+            ),
+            PackageVersion(
+                value="1.10b1", release_date=dt_local(2016, 6, 22, 1, 15, 17, 267637)
+            ),
+            PackageVersion(
+                value="1.10rc1", release_date=dt_local(2016, 7, 18, 18, 5, 5, 503584)
+            ),
         ]
         assert results == expected
-
 
     @mock.patch("packagedb.package_managers.get_response")
     def test_pypi_fetch_with_no_release(self, mock_response):
@@ -100,18 +158,20 @@ class TestPackageManagers(TestCase):
         results = list(PypiVersionAPI().fetch("django"))
         assert results == []
 
-
     @mock.patch("packagedb.package_managers.get_response")
-    def test_ruby_fetch_with_no_release(self,mock_response):
-
+    def test_ruby_fetch_with_no_release(self, mock_response):
         with open(os.path.join(TEST_DATA, "gem.json")) as f:
             mock_response.return_value = json.load(f)
 
         results = list(RubyVersionAPI().fetch("rails"))
 
         expected = [
-            PackageVersion(value="7.0.2.3", release_date=dt_local(2022, 3, 8, 17, 50, 52, 496000)),
-            PackageVersion(value="7.0.2.2", release_date=dt_local(2022, 2, 11, 19, 44, 19, 17000)),
+            PackageVersion(
+                value="7.0.2.3", release_date=dt_local(2022, 3, 8, 17, 50, 52, 496000)
+            ),
+            PackageVersion(
+                value="7.0.2.2", release_date=dt_local(2022, 2, 11, 19, 44, 19, 17000)
+            ),
         ]
 
         assert results == expected
@@ -124,7 +184,6 @@ class TestPackageManagers(TestCase):
 
 
 class TestComposerVersionAPI(TestCase):
-
     expected_versions = [
         PackageVersion(value="10.0.0", release_date=dt_local(2019, 7, 23, 7, 6, 3)),
         PackageVersion(value="10.1.0", release_date=dt_local(2019, 10, 1, 8, 18, 18)),
@@ -198,7 +257,9 @@ class TestComposerVersionAPI(TestCase):
         with open(os.path.join(TEST_DATA, "composer.json")) as f:
             mock_response = json.load(f)
 
-        results = list(ComposerVersionAPI().extract_versions(mock_response, "typo3/cms-core"))
+        results = list(
+            ComposerVersionAPI().extract_versions(mock_response, "typo3/cms-core")
+        )
         assert results == self.expected_versions
 
     @mock.patch("packagedb.package_managers.get_response")
@@ -218,7 +279,11 @@ class TestMavenVersionAPI(TestCase):
             mock_response = ET.parse(f)
 
         results = list(MavenVersionAPI().extract_versions(mock_response))
-        expected = [PackageVersion("1.2.2"), PackageVersion("1.2.3"), PackageVersion("1.3.0")]
+        expected = [
+            PackageVersion("1.2.2"),
+            PackageVersion("1.2.3"),
+            PackageVersion("1.3.0"),
+        ]
         assert results == expected
 
     def test_artifact_url(self):
@@ -228,7 +293,9 @@ class TestMavenVersionAPI(TestCase):
         url1 = MavenVersionAPI.artifact_url(eg_comps1)
         url2 = MavenVersionAPI.artifact_url(eg_comps2)
 
-        assert url1 == "https://repo1.maven.org/maven2/org/apache/kafka/maven-metadata.xml"
+        assert (
+            url1 == "https://repo1.maven.org/maven2/org/apache/kafka/maven-metadata.xml"
+        )
         assert (
             url2
             == "https://repo1.maven.org/maven2/apple/msft/windows/mac/oss/exfat-ntfs/maven-metadata.xml"
@@ -259,15 +326,20 @@ class TestMavenVersionAPI(TestCase):
 
 class TestGoproxyVersionAPI(TestCase):
     def test_trim_go_url_path(self):
-
         url1 = "https://pkg.go.dev/github.com/containous/traefik/v2"
-        assert GoproxyVersionAPI.trim_go_url_path(url1) == "github.com/containous/traefik"
+        assert (
+            GoproxyVersionAPI.trim_go_url_path(url1) == "github.com/containous/traefik"
+        )
 
         url2 = "github.com/FerretDB/FerretDB/cmd/ferretdb"
-        assert GoproxyVersionAPI.trim_go_url_path(url2) == "github.com/FerretDB/FerretDB"
+        assert (
+            GoproxyVersionAPI.trim_go_url_path(url2) == "github.com/FerretDB/FerretDB"
+        )
 
         url3 = GoproxyVersionAPI.trim_go_url_path(url2)
-        assert GoproxyVersionAPI.trim_go_url_path(url3) == "github.com/FerretDB/FerretDB"
+        assert (
+            GoproxyVersionAPI.trim_go_url_path(url3) == "github.com/FerretDB/FerretDB"
+        )
 
     def test_escape_path(self):
         path = "github.com/FerretDB/FerretDB"
@@ -276,7 +348,10 @@ class TestGoproxyVersionAPI(TestCase):
 
     @mock.patch("packagedb.package_managers.get_response")
     def test_fetch_version_info(self, mock_response):
-        mock_response.return_value = {"Version": "v0.0.5", "Time": "2022-01-04T13:54:01Z"}
+        mock_response.return_value = {
+            "Version": "v0.0.5",
+            "Time": "2022-01-04T13:54:01Z",
+        }
         result = GoproxyVersionAPI.fetch_version_info(
             "v0.0.5",
             "github.com/!ferret!d!b/!ferret!d!b",
@@ -303,11 +378,21 @@ class TestGoproxyVersionAPI(TestCase):
 
         results = list(GoproxyVersionAPI().fetch("github.com/FerretDB/FerretDB"))
         expected = [
-            PackageVersion(value="v0.0.1", release_date=dt_local(2021, 11, 2, 6, 56, 38)),
-            PackageVersion(value="v0.0.5", release_date=dt_local(2021, 11, 13, 21, 36, 37)),
-            PackageVersion(value="v0.0.3", release_date=dt_local(2021, 11, 19, 20, 31, 22)),
-            PackageVersion(value="v0.0.4", release_date=dt_local(2021, 12, 1, 19, 2, 44)),
-            PackageVersion(value="v0.0.2", release_date=dt_local(2022, 1, 4, 13, 54, 1)),
+            PackageVersion(
+                value="v0.0.1", release_date=dt_local(2021, 11, 2, 6, 56, 38)
+            ),
+            PackageVersion(
+                value="v0.0.5", release_date=dt_local(2021, 11, 13, 21, 36, 37)
+            ),
+            PackageVersion(
+                value="v0.0.3", release_date=dt_local(2021, 11, 19, 20, 31, 22)
+            ),
+            PackageVersion(
+                value="v0.0.4", release_date=dt_local(2021, 12, 1, 19, 2, 44)
+            ),
+            PackageVersion(
+                value="v0.0.2", release_date=dt_local(2022, 1, 4, 13, 54, 1)
+            ),
         ]
         assert results == expected
 
@@ -323,22 +408,49 @@ class TestGoproxyVersionAPI(TestCase):
 
 class TestNugetVersionAPI(TestCase):
     expected_versions = [
-        PackageVersion(value="0.23.0", release_date=dt_local(2018, 1, 17, 9, 32, 59, 283000)),
-        PackageVersion(value="0.24.0", release_date=dt_local(2018, 3, 30, 7, 25, 18, 393000)),
-        PackageVersion(value="1.0.0", release_date=dt_local(2018, 9, 13, 8, 16, 0, 420000)),
-        PackageVersion(value="1.0.1", release_date=dt_local(2020, 1, 17, 15, 31, 41, 857000)),
-        PackageVersion(value="1.0.2", release_date=dt_local(2020, 4, 21, 12, 24, 53, 877000)),
         PackageVersion(
-            value="2.0.0-preview01", release_date=dt_local(2018, 1, 9, 17, 12, 20, 440000)
+            value="0.23.0", release_date=dt_local(2018, 1, 17, 9, 32, 59, 283000)
         ),
-        PackageVersion(value="2.0.0", release_date=dt_local(2018, 9, 27, 13, 33, 15, 370000)),
-        PackageVersion(value="2.1.0", release_date=dt_local(2018, 10, 16, 6, 59, 44, 680000)),
-        PackageVersion(value="2.2.0", release_date=dt_local(2018, 11, 23, 8, 13, 8, 3000)),
-        PackageVersion(value="2.3.0", release_date=dt_local(2019, 6, 27, 14, 27, 31, 613000)),
-        PackageVersion(value="2.4.0", release_date=dt_local(2020, 1, 17, 15, 11, 5, 810000)),
-        PackageVersion(value="2.5.0", release_date=dt_local(2020, 3, 24, 14, 22, 39, 960000)),
-        PackageVersion(value="2.6.0", release_date=dt_local(2020, 3, 27, 11, 6, 27, 500000)),
-        PackageVersion(value="2.7.0", release_date=dt_local(2020, 4, 21, 12, 27, 36, 427000)),
+        PackageVersion(
+            value="0.24.0", release_date=dt_local(2018, 3, 30, 7, 25, 18, 393000)
+        ),
+        PackageVersion(
+            value="1.0.0", release_date=dt_local(2018, 9, 13, 8, 16, 0, 420000)
+        ),
+        PackageVersion(
+            value="1.0.1", release_date=dt_local(2020, 1, 17, 15, 31, 41, 857000)
+        ),
+        PackageVersion(
+            value="1.0.2", release_date=dt_local(2020, 4, 21, 12, 24, 53, 877000)
+        ),
+        PackageVersion(
+            value="2.0.0-preview01",
+            release_date=dt_local(2018, 1, 9, 17, 12, 20, 440000),
+        ),
+        PackageVersion(
+            value="2.0.0", release_date=dt_local(2018, 9, 27, 13, 33, 15, 370000)
+        ),
+        PackageVersion(
+            value="2.1.0", release_date=dt_local(2018, 10, 16, 6, 59, 44, 680000)
+        ),
+        PackageVersion(
+            value="2.2.0", release_date=dt_local(2018, 11, 23, 8, 13, 8, 3000)
+        ),
+        PackageVersion(
+            value="2.3.0", release_date=dt_local(2019, 6, 27, 14, 27, 31, 613000)
+        ),
+        PackageVersion(
+            value="2.4.0", release_date=dt_local(2020, 1, 17, 15, 11, 5, 810000)
+        ),
+        PackageVersion(
+            value="2.5.0", release_date=dt_local(2020, 3, 24, 14, 22, 39, 960000)
+        ),
+        PackageVersion(
+            value="2.6.0", release_date=dt_local(2020, 3, 27, 11, 6, 27, 500000)
+        ),
+        PackageVersion(
+            value="2.7.0", release_date=dt_local(2020, 4, 21, 12, 27, 36, 427000)
+        ),
     ]
 
     def test_extract_versions(self):

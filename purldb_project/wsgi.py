@@ -8,8 +8,8 @@
 #
 
 import os
-from django.core.wsgi import get_wsgi_application
 
+from django.core.wsgi import get_wsgi_application
 
 """
 WSGI config for purldb.
@@ -18,6 +18,6 @@ It exposes the WSGI callable as a module-level variable named ``application``.
 """
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'purldb_project.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "purldb_project.settings")
 
 application = get_wsgi_application()

@@ -7,8 +7,9 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from commoncode import cliutils
 from django.core.management.base import BaseCommand
+
+from commoncode import cliutils
 from fetchcode.package_versions import SUPPORTED_ECOSYSTEMS
 from packageurl import PackageURL
 from univers.version_range import RANGE_CLASS_BY_SCHEMES
@@ -36,8 +37,7 @@ class Command(BaseCommand):
         purl_value = options.get("purl")
 
         packages_qs = (
-            Package.objects.filter(
-                type__in=PRIORITY_QUEUE_SUPPORTED_ECOSYSTEMS)
+            Package.objects.filter(type__in=PRIORITY_QUEUE_SUPPORTED_ECOSYSTEMS)
             .filter(type__in=SUPPORTED_ECOSYSTEMS)
             .distinct("type", "namespace", "name")
             .order_by("type", "namespace", "name")

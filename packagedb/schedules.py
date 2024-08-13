@@ -20,13 +20,10 @@ scheduler = django_rq.get_scheduler()
 
 
 def get_next_execution(watch_interval_days, last_watch_date):
-    """
-    Calculate the next execution time based on the watch_interval_days and last_watch_date.
-    """
+    """Calculate the next execution time based on the watch_interval_days and last_watch_date."""
     current_date_time = datetime.datetime.now(tz=datetime.timezone.utc)
     if last_watch_date:
-        next_execution = last_watch_date + \
-            datetime.timedelta(days=watch_interval_days)
+        next_execution = last_watch_date + datetime.timedelta(days=watch_interval_days)
         if next_execution > current_date_time:
             return next_execution
 
@@ -35,8 +32,8 @@ def get_next_execution(watch_interval_days, last_watch_date):
 
 def schedule_watch(watch):
     """
-    Takes a `PackageWatch` object as input and schedule a
-    recurring job using `rq_scheduler` to watch the package.
+    Schedule a recurring job with a `PackageWatch` object using `rq_scheduler`
+    to watch the package.
     """
     watch_interval = watch.watch_interval
     last_watch_date = watch.last_watch_date
@@ -64,17 +61,14 @@ def clear_job(job):
 
 
 def scheduled_job_exists(job_id):
-    """
-    Check if a scheduled job with the given job ID exists.
-    """
+    """Check if a scheduled job with the given job ID exists."""
     return job_id and (job_id in scheduler)
 
 
 def clear_zombie_watch_schedules(logger=log):
-    """
-    Clear scheduled jobs not associated with any PackageWatch object.
-    """
+    """Clear scheduled jobs not associated with any PackageWatch object."""
     from packagedb.models import PackageWatch
+
     schedule_ids = PackageWatch.objects.all().values_list("schedule_work_id", flat=True)
 
     for job in scheduler.get_jobs():
@@ -84,9 +78,7 @@ def clear_zombie_watch_schedules(logger=log):
 
 
 def is_redis_running(logger=log):
-    """
-    Check the status of the Redis server.
-    """
+    """Check the status of the Redis server."""
     try:
         connection = django_rq.get_connection()
         return connection.ping()
