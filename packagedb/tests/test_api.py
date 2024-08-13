@@ -984,6 +984,9 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         for result in results:
             result.pop("url")
 
+        # sort by filename
+        results = sorted(results, key=lambda x: x["filename"])
+
         fields_to_remove = ["uuid", "resources", "package_sets", "history"]
         self.check_expected_results(
             results, expected, fields_to_remove=fields_to_remove, regen=FIXTURES_REGEN
