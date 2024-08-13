@@ -977,18 +977,16 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             1, Package.objects.filter(download_url=sources_download_url).count()
         )
         expected = self.get_test_loc("api/twill-core-0.12.0.json")
-
-        self.assertEqual(2, len(response.data))
-        # Sort results by name
-        results = sorted(response.data, key=lambda x: x["name"])
-        result = results[0]
+        results = response.data
+        self.assertEqual(2, len(results))
 
         # remove fields
-        result.pop("url")
-        fields_to_remove = ["uuid", "resources", "package_sets", "history"]
+        for result in results:
+            result.pop("url")
 
+        fields_to_remove = ["uuid", "resources", "package_sets", "history"]
         self.check_expected_results(
-            result, expected, fields_to_remove=fields_to_remove, regen=FIXTURES_REGEN
+            results, expected, fields_to_remove=fields_to_remove, regen=FIXTURES_REGEN
         )
 
         # Ensure that the created ScannableURI objects have a priority of 100
