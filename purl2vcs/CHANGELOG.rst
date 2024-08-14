@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v2.0.0
+------
+
+Update import statement from ``minecode.visitors.maven`` to
+``minecode.collectors.maven`` in ``purl2vcs.find_source_repo`` to reflect
+changes in purldb code organization.
+
+
 v1.0.2
 ------
 
