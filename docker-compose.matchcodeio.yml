@@ -30,8 +30,8 @@ services:
     volumes:
       - .env:/opt/scancodeio/.env
       - /etc/scancodeio/:/etc/scancodeio/
-      - workspace:/var/scancodeio/workspace/
-      - static:/var/scancodeio/static/
+      - scancodeio_workspace:/var/scancodeio/workspace/
+      - scancodeio_static:/var/scancodeio/static/
 
   matchcodeio_worker:
     build: .
@@ -47,7 +47,7 @@ services:
     volumes:
       - .env:/opt/scancodeio/.env
       - /etc/scancodeio/:/etc/scancodeio/
-      - workspace:/var/scancodeio/workspace/
+      - scancodeio_workspace:/var/scancodeio/workspace/
     depends_on:
       - matchcodeio_redis
       - matchcodeio_web
@@ -57,7 +57,7 @@ services:
     volumes:
       - ./etc/nginx/matchcodeio-conf.d/:/etc/nginx/conf.d/
       - /var/www/html:/var/www/html
-      - static:/var/scancodeio/static/
+      - scancodeio_static:/var/scancodeio/static/
     depends_on:
       - matchcodeio_web
     restart: always
@@ -81,6 +81,6 @@ networks:
 
 volumes:
   redis_data:
-  static:
-  workspace:
+  scancodeio_static:
+  scancodeio_workspace:
   matchcodeio_db_data:
