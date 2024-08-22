@@ -58,7 +58,9 @@ RUN addgroup --system $APP_USER \
 
 # Create the /var/APP_NAME directory with proper permission for APP_USER
 RUN mkdir -p /var/$APP_NAME \
- && chown $APP_USER:$APP_USER /var/$APP_NAME
+ && chown $APP_USER:$APP_USER /var/$APP_NAME \
+ && mkdir -p /var/scancodeio \
+ && chown $APP_USER:$APP_USER /var/scancodeio
 
 # Setup the work directory and the user as APP_USER for the remaining stages
 WORKDIR $APP_DIR
@@ -71,7 +73,9 @@ ENV PATH $VENV_LOCATION/bin:$PATH
 
 # Create static/ and workspace/ directories
 RUN mkdir -p /var/$APP_NAME/static/ \
- && mkdir -p /var/$APP_NAME/workspace/
+ && mkdir -p /var/$APP_NAME/workspace/ \
+ && mkdir -p /var/scancodeio/static/ \
+ && mkdir -p /var/scancodeio/workspace/
 
 # Install the dependencies before the codebase COPY for proper Docker layer caching
 COPY --chown=$APP_USER:$APP_USER setup.cfg setup.py $APP_DIR/
