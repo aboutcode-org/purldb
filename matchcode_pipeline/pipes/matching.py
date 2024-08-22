@@ -103,7 +103,7 @@ def create_package_from_purldb_data(project, resources, package_data, status):
 
 
 def match_purldb_package(
-    project, resources_by_sha1, enhance_package_data=True, **kwargs
+    project, resources_by_sha1, enhance_package_data=True, chunk_size=1000, **kwargs
 ):
     """
     Given a mapping of lists of CodebaseResources by their sha1 values,
@@ -115,7 +115,7 @@ def match_purldb_package(
     sha1_list = list(resources_by_sha1.keys())
     results = Package.objects.using("packagedb").filter(sha1__in=sha1_list)
     # Process matched Package data
-    for package in results:
+    for package in results.iterator(chunk_size=chunk_size):
         package_data = package.to_dict()
         sha1 = package_data["sha1"]
         resources = resources_by_sha1.get(sha1) or []
@@ -132,7 +132,7 @@ def match_purldb_package(
 
 
 def match_purldb_resource(
-    project, resources_by_sha1, package_data_by_purldb_urls=None, **kwargs
+    project, resources_by_sha1, package_data_by_purldb_urls=None, chunk_size=1000, **kwargs
 ):
     """
     Given a mapping of lists of CodebaseResources by their sha1 values,
@@ -149,7 +149,7 @@ def match_purldb_resource(
     sha1_list = list(resources_by_sha1.keys())
     results = Resource.objects.using("packagedb").filter(sha1__in=sha1_list)
     # Process match results
-    for resource in results:
+    for resource in results.iterator(chunk_size=chunk_size):
         # Get package data
         package_data = resource.package.to_dict()
         sha1 = resource.sha1
@@ -182,13 +182,13 @@ def match_purldb_resource_approximately(project, resource):
         )
 
 
-def match_purldb_directory(project, resource, exact_match=False):
+def match_purldb_directory(project, resource, exact_match=False, chunk_size=1000):
     """Match a single directory resource in the PurlDB."""
     fingerprint = resource.extra_data.get("directory_content", "")
     results = ApproximateDirectoryContentIndex.match(
         fingerprint=fingerprint, resource=resource, exact_match=exact_match
     )
-    for result in results:
+    for result in results.iterator(chunk_size=chunk_size):
         package_data = result.package.to_dict()
         return create_package_from_purldb_data(
             project, [resource], package_data, flag.MATCHED_TO_PURLDB_DIRECTORY
@@ -196,7 +196,7 @@ def match_purldb_directory(project, resource, exact_match=False):
 
 
 def match_sha1s_to_purldb(
-    project, resources_by_sha1, matcher_func, package_data_by_purldb_urls
+    project, resources_by_sha1, matcher_func, package_data_by_purldb_urls, chunk_size
 ):
     """
     Process `resources_by_sha1` with `matcher_func` and return a 3-tuple
@@ -207,6 +207,7 @@ def match_sha1s_to_purldb(
         project=project,
         resources_by_sha1=resources_by_sha1,
         package_data_by_purldb_urls=package_data_by_purldb_urls,
+        chunk_size=chunk_size,
     )
     sha1_count = len(resources_by_sha1)
     # Clear out resources_by_sha1 when we are done with the current batch of
@@ -274,6 +275,7 @@ def _match_purldb_resources(
                 resources_by_sha1=resources_by_sha1,
                 matcher_func=matcher_func,
                 package_data_by_purldb_urls=package_data_by_purldb_urls,
+                chunk_size=chunk_size,
             )
             total_matched_count += matched_count
             total_sha1_count += sha1_count
@@ -284,6 +286,7 @@ def _match_purldb_resources(
             resources_by_sha1=resources_by_sha1,
             matcher_func=matcher_func,
             package_data_by_purldb_urls=package_data_by_purldb_urls,
+            chunk_size=chunk_size,
         )
         total_matched_count += matched_count
         total_sha1_count += sha1_count
