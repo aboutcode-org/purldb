@@ -36,14 +36,6 @@ from packagedb.models import Package
 from packagedb.models import Resource
 
 
-PURLDB_MATCH_FLAGS = [
-    flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE,
-    flag.MATCHED_TO_PURLDB_PACKAGE,
-    flag.MATCHED_TO_PURLDB_RESOURCE,
-    flag.MATCHED_TO_PURLDB_DIRECTORY,
-]
-
-
 def get_project_resources_qs(project, resources):
     """
     Return a queryset of CodebaseResources from `project` containing the
@@ -99,7 +91,13 @@ def create_package_from_purldb_data(project, resources, package_data, status):
     # then subtract the number of already matched CodebaseResources from the
     # total number of CodebaseResources updated. This is to prevent
     # double-counting of CodebaseResources that were matched to purldb
-    matched_resources_count = resources_qs.exclude(status__in=PURLDB_MATCH_FLAGS).update(
+    purldb_statuses = [
+        flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE,
+        flag.MATCHED_TO_PURLDB_DIRECTORY,
+        flag.MATCHED_TO_PURLDB_PACKAGE,
+        flag.MATCHED_TO_PURLDB_RESOURCE,
+    ]
+    matched_resources_count = resources_qs.exclude(status__in=purldb_statuses).update(
         status=status
     )
     return package, matched_resources_count
@@ -232,7 +230,10 @@ def match_purldb_resources(
     """
     resources = (
         project.codebaseresources.files()
-        .no_status(status__in=PURLDB_MATCH_FLAGS)
+        .no_status(status=flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE)
+        .no_status(status=flag.MATCHED_TO_PURLDB_DIRECTORY)
+        .no_status(status=flag.MATCHED_TO_PURLDB_PACKAGE)
+        .no_status(status=flag.MATCHED_TO_PURLDB_RESOURCE)
         .has_value("sha1")
         .filter(is_archive=archives_only)
     )
@@ -289,7 +290,6 @@ def _match_purldb_resources(
             resources_by_sha1=resources_by_sha1,
             matcher_func=matcher_func,
             package_data_by_purldb_urls=package_data_by_purldb_urls,
-            chunk_size=chunk_size,
         )
         total_matched_count += matched_count
         total_sha1_count += sha1_count
@@ -304,7 +304,10 @@ def match_purldb_resources_approximately(project, logger=None):
     # Get table of resources to match on
     resources = (
         project.codebaseresources.filter(is_text=True)
-        .no_status(status__in=PURLDB_MATCH_FLAGS)
+        .no_status(status=flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE)
+        .no_status(status=flag.MATCHED_TO_PURLDB_DIRECTORY)
+        .no_status(status=flag.MATCHED_TO_PURLDB_PACKAGE)
+        .no_status(status=flag.MATCHED_TO_PURLDB_RESOURCE)
     )
     resource_count = resources.count()
 
@@ -342,7 +345,10 @@ def match_purldb_directories(project, exact_directory_match=False, logger=None):
     # number of queries made to purldb.
     directories = (
         project.codebaseresources.directories()
-        .no_status(status__in=PURLDB_MATCH_FLAGS)
+        .no_status(status=flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE)
+        .no_status(status=flag.MATCHED_TO_PURLDB_DIRECTORY)
+        .no_status(status=flag.MATCHED_TO_PURLDB_PACKAGE)
+        .no_status(status=flag.MATCHED_TO_PURLDB_RESOURCE)
         .order_by("path")
     )
     directory_count = directories.count()
