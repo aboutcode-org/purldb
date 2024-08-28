@@ -197,7 +197,7 @@ def match_purldb_directory(project, resource, exact_match=False, chunk_size=1000
 
 
 def match_sha1s_to_purldb(
-    project, resources_by_sha1, matcher_func, package_data_by_purldb_urls, chunk_size
+    project, resources_by_sha1, matcher_func, package_data_by_purldb_urls, chunk_size=1000
 ):
     """
     Process `resources_by_sha1` with `matcher_func` and return a 3-tuple
@@ -290,6 +290,7 @@ def _match_purldb_resources(
             resources_by_sha1=resources_by_sha1,
             matcher_func=matcher_func,
             package_data_by_purldb_urls=package_data_by_purldb_urls,
+            chunk_size=chunk_size,
         )
         total_matched_count += matched_count
         total_sha1_count += sha1_count
