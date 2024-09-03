@@ -12,7 +12,10 @@ import logging
 import sys
 import uuid
 from collections import OrderedDict
+from urllib.parse import urlencode
 
+import natsort
+from dateutil.parser import parse as dateutil_parse
 from django.conf import settings
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
@@ -25,15 +28,15 @@ from django.db import transaction
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
-import natsort
-from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
 from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
 from rest_framework.authtoken.models import Token
+from rest_framework.serializers import BooleanField
+from rest_framework.serializers import CharField
+from rest_framework.serializers import Serializer
 
 from packagedb import schedules
 
@@ -80,6 +83,65 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         for page_number in paginator.page_range:
             page = paginator.page(page_number)
             yield from page.object_list
+
+    # NOTE Based on class PurlValidateResponseSerializer(Serializer).
+    class PurlValidateSerializer(Serializer):
+        valid = BooleanField()
+        exists = BooleanField(required=False)
+        message = CharField()
+        purl = CharField()
+
+    def search(self, query: str = None):
+        """
+        Return a Package queryset searching for the ``query``.
+        - A version is required.
+        - If only a version is provided, no qualifiers value, and the DB contains both the version alone and the version with a qualifiers value, only the version-only record is returned.
+        - If a correct qualifiers value is provided, returns an exact match if the record exists, otherwise no match.
+        - '#' and any characters that follow appear to be ignored, but we have 0 such PURLs in the DB so testing is incomplete.
+        """
+        query = query and query.strip()
+        if not query:
+            return self.none()
+        qs = self
+
+        message_not_valid = "The provided PackageURL is not valid."
+        response = {}
+        response["exists"] = None
+        response["purl"] = query
+        response["valid"] = False
+        response["message"] = message_not_valid
+
+        # validate purl
+        try:
+            package_url = PackageURL.from_string(query)
+        except ValueError:
+            serializer = self.PurlValidateSerializer(
+                response
+            )
+            # print(f"\nserializer.data = {serializer.data}")
+            return serializer.data
+            # return None  #throws error AttributeError: 'NoneType' object has no attribute 'prefetch_related'
+
+        # NOTE No longer used.
+        # purl_attributes = utils.simple_validate_from_string(query)
+
+        # print(f"\npackage_url = {package_url}")
+        # print(f"package_url.type = {package_url.type}")
+        # print(f"package_url.namespace = {package_url.namespace}")
+        # print(f"package_url.name = {package_url.name}")
+        # print(f"package_url.version = {package_url.version}")
+        # print(f"package_url.qualifiers = {package_url.qualifiers}")
+        # print(f"package_url.subpath = {package_url.subpath}")
+
+        qs = qs.filter(
+            (models.Q(namespace=package_url.namespace) | models.Q(namespace="")),
+            (models.Q(subpath=package_url.subpath) | models.Q(subpath="")),
+            type=package_url.type,
+            name=package_url.name,
+            version=package_url.version,
+            qualifiers=urlencode(package_url.qualifiers),
+        )
+        return qs
 
 
 VCS_CHOICES = [

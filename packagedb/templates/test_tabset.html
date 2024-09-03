@@ -1,0 +1,940 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load widget_tweaks %}
+{% load static %}
+{% load json_filters %}
+
+{% block title %}
+PurlDB Package Search
+{% endblock %}
+
+{% block content %}
+    <section class="section pt-0 pb-5">
+        {% include "package_search_box_test_tabset.html" %}
+    </section>
+
+    {% if search %}
+
+        <style>
+            /* Custom styles to handle the visibility of tab content */
+            .tab-content {
+                display: none;
+            }
+            .tab-content.is-active {
+                display: block;
+                border: 0;
+                background-color: #ffffff;
+                padding: 10px;
+            }
+        </style>
+
+        <section class="section pt-5">
+            <div class="details-container">
+                <article class="panel panel-header-only">
+                    <div class="panel-heading py-2 is-size-6" style="background-color: #4b70aa; color: #ffffff;">
+                        {{ purl_attributes.input|default:"&nbsp;" }}
+                    </div>
+                </article>
+
+                <!-- start result count and alert -->
+                {% if validation_errors.valid == False %}
+                <section class="mx-5">
+                    <div class="field is-grouped is-grouped-multiline mt-2 mb-2">
+                        <div class="control">
+                            <div class="tags has-addons">
+                                <span class="tag is-dark is-medium">{{ page_obj.paginator.count|intcomma }} results</span>
+                                <span class="tag is-danger is-medium">The data you submitted &mdash;&nbsp;<strong class="has-text-white">{{ validation_errors.purl|default:"&nbsp;" }}</strong>&nbsp;&mdash; is not a valid Package URL.</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {% else %}
+                <section class="mx-5">
+                    {% if page_obj.paginator.count > 1 %}
+                        <div class="field is-grouped is-grouped-multiline mt-2 mb-2">
+                            <div class="control">
+                                <div class="tags has-addons">
+                                    <span class="tag is-dark is-medium">{{ page_obj.paginator.count|intcomma }} results</span>
+                                    <span class="tag is-primary is-medium has-text-black">The data you submitted &mdash;&nbsp;<strong>{{ purl_attributes.input|default:"&nbsp;" }}</strong>&nbsp;&mdash; is a valid Package URL.</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif page_obj.paginator.count == 1 %}
+                        <div class="field is-grouped is-grouped-multiline mt-2 mb-2">
+                            <div class="control">
+                                <div class="tags has-addons">
+                                    <span class="tag is-dark is-medium">{{ page_obj.paginator.count|intcomma }} result</span>
+                                    <span class="tag is-primary is-medium has-text-black">The data you submitted &mdash;&nbsp;<strong>{{ purl_attributes.input|default:"&nbsp;" }}</strong>&nbsp;&mdash; is a valid Package URL.</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="field is-grouped is-grouped-multiline mt-2 mb-2">
+                            <div class="control">
+                                <div class="tags has-addons">
+                                    <span class="tag is-dark is-medium">{{ page_obj.paginator.count|intcomma }} results</span>
+                                    <span class="tag is-warning is-medium has-text-black">The data you submitted &mdash;&nbsp;<strong>{{ purl_attributes.input|default:"&nbsp;" }}</strong>&nbsp;&mdash; is a valid Package URL, but PurlDB does not contain a responsive record.</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </section>
+                {% endif %}
+                <!-- end result count and alert -->
+
+                <!-- This is the test constructed purl from views.py. -->
+                <div style="text-align: left; font-weight: 600; margin-bottom: 50px;">
+                    {% for value in purl_tooltips %}
+                        {% if value.tooltip_class %}
+                        <span class="{{ value.tooltip_class }}" data-tooltip="{{ value.data_tooltip }}">
+                            {{ value.text }}
+                        </span>
+                        {% else %}
+                        <span>
+                            {{ value.text }}
+                        </span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="tabs is-boxed" id="tabs">
+                    <ul>
+                        <li class="is-active" data-target="tab1"><a>Essentials</a></li>
+                        <li data-target="tab2"><a>purl details (v1)</a></li>
+                        <li data-target="tab2A"><a>purl details (v2)</a></li>
+                        <li data-target="tab3"><a>Additional purl resources</a></li>
+                    </ul>
+                </div>
+
+                <div class="tab-contents"> <!-- NOTE This class is a placeholder and not yet defined -->
+                    <div id="tab1" class="tab-content pb-5 is-active">
+                        <div class="tab-nested-div mb-1 pb-0">
+                            <div class="content ml-3 mr-3 mt-2 pb-1">
+                                <table class="table is-bordered is-narrow is-hoverable is-fullwidth">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 200px; font-weight: 700;">
+                                                Input
+                                            </td>
+                                            <td>
+                                                {{ purl_attributes.input|default:"&nbsp;" }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 200px; font-weight: 700;">
+                                                Status
+                                            </td>
+                                            <td>
+                                                {{ purl_attributes.status|default:"&nbsp;" }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="content ml-3 mr-3 pb-1">
+                                <div class="has-text-weight-bold ml-1 mb-2 pb-0">
+                                    purl components
+                                </div>
+                                <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 200px;">Component</th>
+                                            <th style="width: 100px;">Required</th>
+                                            <th style="width: 310px;">Value</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                scheme
+                                            </td>
+                                            <td>
+                                                Yes
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                {% if purl_attributes.scheme == "MISSING" %}
+                                                    <span style="color: #ff0000;">{{ purl_attributes.scheme|default:"&nbsp;" }}</span>
+                                                {% else %}
+                                                    {{ purl_attributes.scheme|default:"&nbsp;" }}
+                                                {% endif %}
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                The scheme is a constant with the value "pkg", and is followed by a ':' separator.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                type
+                                            </td>
+                                            <td>
+                                                Yes
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                {% if purl_attributes.type == "MISSING" %}
+                                                    <span style="color: #ff0000;">{{ purl_attributes.type|default:"&nbsp;" }}</span>
+                                                {% else %}
+                                                    {{ purl_attributes.type|default:"&nbsp;" }}
+                                                {% endif %}
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                A short code to identify the type of this package. For example: gem for a Rubygem, docker for a container, pypi for a Python Wheel or Egg, maven for a Maven Jar, deb for a Debian package etc.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                namespace
+                                            </td>
+                                            <td>
+                                                No
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                {{ purl_attributes.namespace|default:"&nbsp;" }}
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                Package name prefix, such as Maven groupid, Docker image owner, GitHub user or organization, etc.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                name
+                                            </td>
+                                            <td>
+                                                Yes
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                {% if purl_attributes.name == "MISSING" %}
+                                                    <span style="color: #ff0000;">{{ purl_attributes.name|default:"&nbsp;" }}</span>
+                                                {% else %}
+                                                    {{ purl_attributes.name|default:"&nbsp;" }}
+                                                {% endif %}
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                Name of the package.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                version
+                                            </td>
+                                            <td>
+                                                No
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                {{ purl_attributes.version|default:"&nbsp;" }}
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                Version of the package.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                qualifiers
+                                            </td>
+                                            <td>
+                                                No
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                {{ purl_attributes.qualifiers|default:"&nbsp;" }}
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                Extra qualifying data for a package, such as the name of an OS, architecture, distro, etc.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                subpath
+                                            </td>
+                                            <td>
+                                                No
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                {{ purl_attributes.subpath|default:"&nbsp;" }}
+                                            </td>
+                                            <td style="overflow-wrap: break-word;">
+                                                Extra subpath within a package, relative to the package root.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <strong>[For dev. purposes only]</strong>
+                            <pre>purl_attributes = <br />{{ purl_attributes|pretty_json }}</pre>
+                        </div>
+
+                    </div>
+
+                    <div id="tab2" class="tab-content pb-5">
+
+                        {% if validation_errors.valid == False %}
+                        <section class="mx-3 mt-2 mb-5" style="border: solid 1px #e8e8e8; padding: 10px;">
+                            PurlDB does not contain a responsive record.
+                        </section>
+                        {% else %}
+                        <section class="mx-4 mt-3 mb-5">
+                            {% if page_obj.paginator.count == 0 %}
+                            PurlDB does not contain a responsive record.
+                            {% endif %}
+                        </section>
+                        {% endif %}
+
+                        {% for package in page_obj %}
+                        <div style="background-color: #f5f5f5; border: solid 1px #d8d8d8; border-radius: 5px; padding: 10px; margin-top: 10px;">
+                            <div class="columns">
+                                <div class="column">
+                                    See also the <a href="/api/packages/?purl={{ purl_attributes.input }}" target="_blank">API results</a>.
+                                </div>
+                            </div>
+                            <div class="columns">
+                                <div class="column">
+                                    <label class="label">Filename</label>
+                                    <div class="clipboard">
+                                        {% if package.filename %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                            <span data-tooltip="" class="tooltip-wide">
+                                                <i class="fa fa-clipboard custom-icon"></i>
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.filename|default:"&nbsp;" }}</pre>
+                                        <p class="note">
+                                            The exact file name (typically an archive of some type) of the package. This is usually the name of the file as downloaded from a website.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <label class="label">Download URL</label>
+                                    <div class="clipboard">
+                                        {% if package.download_url %}
+                                            <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                                <span data-tooltip="" class="tooltip-wide">
+                                                    <i class="fa fa-clipboard custom-icon"></i>
+                                                </span>
+                                            </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.download_url|default:"&nbsp;" }}</pre>
+                                        <p class="note">
+                                            The download URL for obtaining the package.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr style="border-top: solid 1px #c0c0c0;" />
+                            <div class="columns">
+                                <div class="column">
+                                    <label class="label">Package URL</label>
+                                    <div class="clipboard">
+                                        <div class="data-display" style="color: #cc0000;">{{ package.package_url|default:"&nbsp;" }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="columns">
+                                <div class="column">
+                                    <label class="label">Type</label>
+                                    <div class="clipboard">
+                                        {% if package.type %}
+                                            <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                                <span data-tooltip="" class="tooltip-wide">
+                                                    <i class="fa fa-clipboard custom-icon"></i>
+                                                </span>
+                                            </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.type|default:"&nbsp;" }}</pre>
+                                        <p class="note">
+                                            A short code to identify the type of this package. For example: gem for a Rubygem, docker for a container, pypi for a Python Wheel or Egg, maven for a Maven Jar, deb for a Debian package etc.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <label class="label">Namespace</label>
+                                    <div class="clipboard">
+                                        {% if package.namespace %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                            <span data-tooltip="" class="tooltip-wide">
+                                                <i class="fa fa-clipboard custom-icon"></i>
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.namespace|default:"&nbsp;" }}</pre>
+                                        <p class="note">
+                                            Package name prefix, such as Maven groupid, Docker image owner, GitHub user or organization etc.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <label class="label">Name</label>
+                                    <div class="clipboard">
+                                        {% if package.name %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                            <span data-tooltip="" class="tooltip-wide">
+                                                <i class="fa fa-clipboard custom-icon"></i>
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.name|default:"&nbsp;" }}</pre>
+                                        <p class="note">
+                                            Name of the package.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="columns">
+                                <div class="column">
+                                    <label class="label">Version</label>
+                                    <div class="clipboard">
+
+                                        {% if package.version %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                            <span data-tooltip="" class="tooltip-wide">
+                                                <i class="fa fa-clipboard custom-icon"></i>
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.version|default:"&nbsp;" }}</pre>
+                                        <p class="note">
+                                            Version of the package.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <label class="label">Qualifiers</label>
+                                    <div class="clipboard">
+                                        {% if package.qualifiers %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                            <span data-tooltip="" class="tooltip-wide">
+                                                <i class="fa fa-clipboard custom-icon"></i>
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.qualifiers|default:"&nbsp;" }}</pre>
+                                        <p class="note">
+                                            Extra qualifying data for a package such as the name of an OS, architecture, distro, etc.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <label class="label">Subpath</label>
+                                    <div class="clipboard">
+                                        {% if package.subpath %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                            <span data-tooltip="" class="tooltip-wide">
+                                                <i class="fa fa-clipboard custom-icon"></i>
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.subpath|default:"&nbsp;" }}</pre>
+                                        <p class="note">
+                                            Extra subpath within a package, relative to the package root.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr style="border-top: solid 1px #c0c0c0;" />
+                            <div class="columns">
+                                <div class="column">
+                                    <label class="label">Homepage URL</label>
+                                    <div class="clipboard">
+                                        {% if package.homepage_url %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                            <span data-tooltip="" class="tooltip-wide">
+                                                <i class="fa fa-clipboard custom-icon"></i>
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.homepage_url|default:"&nbsp;" }}</pre>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <label class="label">Primary Language</label>
+                                    <div class="clipboard">
+                                        {% if package.primary_language %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                            <span data-tooltip="" class="tooltip-wide">
+                                                <i class="fa fa-clipboard custom-icon"></i>
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.primary_language|default:"&nbsp;" }}</pre>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <label class="label">Description</label>
+                                    <div class="clipboard">
+                                        {% if package.description %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                            <span data-tooltip="" class="tooltip-wide">
+                                                <i class="fa fa-clipboard custom-icon"></i>
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.description|default:"&nbsp;" }}</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="columns">
+                                <div class="column">
+                                    <label class="label">UUID</label>
+                                    <div class="clipboard">
+                                        {% if package.uuid %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                            <span data-tooltip="" class="tooltip-wide">
+                                                <i class="fa fa-clipboard custom-icon"></i>
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.uuid|default:"&nbsp;" }}</pre>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <label class="label">ID [for dev. purposes only]</label>
+                                    <div class="clipboard">
+                                        {% if package.id %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.5rem;">
+                                            <span data-tooltip="" class="tooltip-wide">
+                                                <i class="fa fa-clipboard custom-icon"></i>
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.id|default:"&nbsp;" }}</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div id="tab2A" class="tab-content pb-5">
+                        {% if validation_errors.valid == False %}
+                        <section class="mx-3 mt-2 mb-5" style="border: solid 1px #e8e8e8; padding: 10px;">
+                            PurlDB does not contain a responsive record.
+                        </section>
+                        {% else %}
+                        <section class="mx-4 mt-3 mb-5">
+                            {% if page_obj.paginator.count == 0 %}
+                            PurlDB does not contain a responsive record.
+                            {% endif %}
+                        </section>
+                        {% endif %}
+
+                        {% for package in page_obj %}
+
+                        <!-- start field/value table -->
+                        <div class="content ml-3 mr-3 pb-1">
+                            <div class="ml-1 mb-0 pt-0 pb-3">
+                                See also the <a href="/api/packages/?purl={{ purl_attributes.input }}" target="_blank">API results</a>.
+                            </div>
+
+                            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 200px;">Field</th>
+                                        <th style="width: 410px;">Value</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            Filename
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.filename %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.filename|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Download URL
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.download_url %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.download_url|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Package URL
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.package_url %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.package_url|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Type
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.type %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.type|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            A short code to identify the type of this package. For example: gem for a Rubygem, docker for a container, pypi for a Python Wheel or Egg, maven for a Maven Jar, deb for a Debian package etc.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Namespace
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.namespace %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.namespace|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            Package name prefix, such as Maven groupid, Docker image owner, GitHub user or organization, etc.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Name
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.name %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.name|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            Name of the package.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Version
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.version %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.version|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            Version of the package.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Qualifiers
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.qualifiers %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.qualifiers|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            Extra qualifying data for a package, such as the name of an OS, architecture, distro, etc.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Subpath
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.subpath %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.subpath|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            Extra subpath within a package, relative to the package root.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Homepage URL
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.homepage_url %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.homepage_url|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Primary Language
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.primary_language %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.primary_language|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Description
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.description %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.description|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            UUID
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.uuid %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.uuid|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            ID [for dev. purposes only]
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+                                            <div class="clipboard">
+                                                {% if package.id %}
+                                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                        <span data-tooltip="" class="tooltip-wide">
+                                                            <i class="fa fa-clipboard custom-icon"></i>
+                                                        </span>
+                                                    </button>
+                                                {% endif %}
+                                                <div>{{ package.id|default:"&nbsp;" }}</div>
+                                            </div>
+                                        </td>
+                                        <td style="overflow-wrap: break-word;">
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- end field/value table -->
+                        {% endfor %}
+                    </div>
+
+                    <div id="tab3" class="tab-content pb-5">
+                        <div class="columns" style="border: solid 1px transparent; padding-bottom: 10px; padding-top: 10px;">
+                            <div class="column" style="border: solid 1px #e8e8e8; border-radius: 5px; margin: 10px 10px 0px 10px; box-shadow: 5px 5px 5px #cccccc;">
+                                <span class="has-text-weight-bold">GitHub repositories</span>
+                                <div>
+                                    <ul >
+                                        <li>
+                                            <a href="https://github.com/aboutcode-org/purldb" target="_blank">purldb</a>
+                                            <ul>
+                                                <li>
+                                                    <a href="https://aboutcode.readthedocs.io/projects/PURLdb/en/latest/" target="_blank">purldb documentation</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="https://github.com/package-url" target="_blank">package-url</a>
+                                            <ul>
+                                                <li><a href="https://github.com/package-url/governance" target="_blank">governance</a></li>
+                                                <li><a href="https://github.com/package-url/packageurl.rs" target="_blank">packageurl.rs</a></li>
+                                                <li><a href="https://github.com/package-url/packageurl-dotnet" target="_blank">packageurl-dotnet</a></li>
+                                                <li><a href="https://github.com/package-url/packageurl-go" target="_blank">packageurl-go</a></li>
+                                                <li><a href="https://github.com/package-url/packageurl-java" target="_blank">packageurl-java</a></li>
+                                                <li><a href="https://github.com/package-url/packageurl-js" target="_blank">packageurl-js</a></li>
+                                                <li><a href="https://github.com/package-url/packageurl-php" target="_blank">packageurl-php</a></li>
+                                                <li><a href="https://github.com/package-url/packageurl-python" target="_blank">packageurl-python</a></li>
+                                                <li><a href="https://github.com/package-url/packageurl-ruby" target="_blank">packageurl-ruby</a></li>
+                                                <li><a href="https://github.com/package-url/packageurl-swift" target="_blank">packageurl-swift</a></li>
+                                                <li><a href="https://github.com/package-url/purl-spec" target="_blank">purl-spec</a></li>
+                                                <li><a href="https://github.com/package-url/purl-swid-generator-ui" target="_blank">purl-swid-generator-ui</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="https://github.com/aboutcode-org/univers" target="_blank">univers</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://github.com/Ecma-TC54/tg2" target="_blank">Ecma TC54-TG2</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="column" style="border: solid 1px #e8e8e8; border-radius: 5px; margin: 10px 10px 0px 10px; box-shadow: 5px 5px 5px #cccccc;">
+                                <span class="has-text-weight-bold">purl adoption</span>
+                                <div>
+                                    <ul>
+                                        <li>
+                                            <span class="has-text-weight-bold">Ecma specification</span>
+                                            <ul>
+                                                <li>
+                                                    <a href="https://tc54.org/purl/" target="_blank">Package URL specification</a>
+                                                    <ul>
+                                                        <li>
+                                                            <a href="https://ecma-international.org/technical-committees/tc54/" target="_blank">Technical Committee: TC-54</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="https://ecma-international.org/task-groups/tc54-tg2/" target="_blank">Task Group: TC54-TG2</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="https://github.com/Ecma-TC54/tg2" target="_blank">Ecma TC54-TG2 GitHub repository</a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class="has-text-weight-bold">GitHub-generated SBOM files</span>
+                                            <ul>
+                                                <li>
+                                                    <a href="https://github.blog/changelog/2024-06-11-generated-sbom-files-will-now-include-a-package-url-when-a-manifest-file-includes-a-range/" target="_blank">Generated SBOM files will now include a package URL when a manifest file includes a range</a> (2024-06-11)
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class="has-text-weight-bold">Open Source Vulnerability schema</span>
+                                            <ul>
+                                                <li>
+                                                    <a href="https://ossf.github.io/osv-schema/" target="_blank">Open Source Vulnerability format</a> (2024-04-05)
+                                                </li>
+                                                <li>
+                                                    See also <a href="https://github.com/ossf/osv-schema/blob/main/docs/schema.md" target="_blank">the latest Open Source Vulnerability format definition</a>.
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            // JavaScript to handle tab switching
+            document.addEventListener('DOMContentLoaded', () => {
+                const tabs = document.querySelectorAll('.tabs ul li');
+                const contents = document.querySelectorAll('.tab-content');
+
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        // Remove active class from all tabs and tab contents
+                        tabs.forEach(item => item.classList.remove('is-active'));
+                        contents.forEach(content => content.classList.remove('is-active'));
+
+                        // Add active class to clicked tab and corresponding content
+                        tab.classList.add('is-active');
+                        const target = tab.dataset.target;
+                        document.getElementById(target).classList.add('is-active');
+                    });
+                });
+            });
+        </script>
+
+    {% endif %}
+{% endblock %}

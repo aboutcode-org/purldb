@@ -1,0 +1,65 @@
+<nav class="navbar is-dark mb-5 border-bottom-radius" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand ml-3">
+        <a class="navbar-item is-size-4 has-text-weight-bold" href="/">
+            PurlDB<span class="nexb-orange">.</span>io
+        </a>
+    </div>
+    <div class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="{% url 'package_search' %}">
+                Packages
+            </a>
+            <a class="navbar-item" href="{% url 'package_search_test_tabset' %}">
+                test_tabset
+            </a>
+            <a class="navbar-item" href="https://aboutcode.readthedocs.io/projects/PURLdb/" target="_blank">
+                Documentation
+            </a>
+        </div>
+    </div>
+    <div class="navbar-end mr-3">
+        <a class="navbar-item" href="/api" target="_blank">
+            API
+        </a>
+        <div class="navbar-item navbar-item is-cursor-help">
+            <div class="dropdown is-right is-hoverable ">
+                <div class="dropdown-trigger has-text-grey-light">About</div>
+                    <div class="dropdown-menu navbar-hover-div" role="menu">
+                    <div class="dropdown-content">
+                        <div class="dropdown-item about-hover-div">
+
+                            PurlDB is a free and open database of <strong>purls</strong>
+                            (<a href="https://github.com/package-url/purl-spec" target="_blank">Package URLs</a>).
+                            <ul>
+                                <li>
+                                    Live chat at <a href="https://gitter.im/aboutcode-org/discuss" target="_blank">
+                                    https://gitter.im/aboutcode-org/discuss</a>
+                                </li>
+                                <li>
+                                    Source code and support at <a href="https://github.com/aboutcode-org/purldb" target="_blank">https://github.com/aboutcode-org/purldb</a>
+                                </li>
+                                <li>
+                                    Review and add issues at <a href="https://github.com/aboutcode-org/purldb/issues" target="_blank">https://github.com/aboutcode-org/purldb/issues</a>
+                                </li>
+                                <li>
+                                    Docs at <a href="https://aboutcode.readthedocs.io/projects/PURLdb/" target="_blank">
+                                    https://aboutcode.readthedocs.io/projects/PURLdb/</a>
+                                </li>
+                                <li>
+                                    Sponsored by NLnet <a href="https://nlnet.nl/project/vulnerabilitydatabase/" target="_blank">
+                                    https://nlnet.nl/project/vulnerabilitydatabase/</a> for
+                                    <a href="https://www.aboutcode.org/" target="_blank">https://www.aboutcode.org/</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-item navbar-item is-cursor-help">
+            <div class="dropdown-trigger has-text-grey-light">
+            v{{ PURLDB_VERSION }}
+            </div>
+        </div>
+    </div>
+</nav>

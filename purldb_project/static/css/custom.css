@@ -1,0 +1,1150 @@
+tab.Site {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.Site-content {
+    flex: 1;
+}
+
+.nexb-orange {
+    color: #f7bf3c;
+}
+
+.container.max-desktop-width {
+    width: 100%;
+    max-width: 100%;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+a {
+    color: #0066ff;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #0066ff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #0066ff;
+    text-decoration:underline;
+}
+
+a {
+    font-weight: 400;
+}
+
+a.button.paging {
+    color: #0066ff;
+}
+
+a.button.paging:hover {
+    color: #0066ff;
+    text-decoration:underline;
+}
+
+a.button.paging:visited {
+    color: #0066ff;
+}
+
+.button.is-link {
+    background-color: #485fc7;
+    border-color: transparent;
+    color: #fff;
+}
+
+.container.is-fullheight {
+    min-height: 100vh;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer {
+    background-color: #ffffff;
+    padding: 10px 10px 20px 10px;
+    border-top: solid 1px #000000;
+    font-size: 14px;
+    /* This keeps the footer at the bottom of a "short" page. */
+    margin-top: auto;
+}
+
+@media screen and (min-width: 1024px) {
+    .footer {
+        width: 100%;
+    }
+}
+
+.navbar.border-bottom-radius {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+code {
+    padding-left: 30px;
+    color: #cd0000;
+    font-size: 14px;
+}
+
+.inline-code {
+    padding-left: 0px;
+    color: #cd0000;
+    background-color: #ffffff;
+    border: 0;
+    padding: 0;
+    font-family: Consolas;
+}
+
+/* start tabset */
+
+/* 2024-08-25 Sunday 12:41:24.  Comment out for now since I'm experimenting with a simpler approach that actually works with Bulma columns (and a slightly different JavaScript script). */
+
+#tab-content div,
+#tab-content div>div {
+    display: none;
+}
+
+#tab-content div.is-active,
+#tab-content div.is-active>div,
+#tab-content div.is-active>div>div,
+#tab-content div.is-active>div>div>div,
+#tab-content div.is-active>div>div>div>div {
+    display: block;
+    visibility: visible;
+}
+
+#tab-content div {
+    border-bottom: 0;
+}
+
+#tab-content .tab-nested-div {
+    border-bottom: 0;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+.tab-div {
+    border: 0;
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+.tabs.is-boxed ul {
+    padding-left: 20px;
+    border-color: #3298dc;
+}
+
+.tabs li {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.tabs.is-boxed li a {
+    border-top-width: 3px;
+}
+
+.tabs:not(:last-child) {
+    margin-bottom: 0px;
+}
+
+.tabs.is-boxed li a:hover {
+    border: solid 1px #e8e8e8;
+    border-top-width: 3px;
+    background-color: #ffffff;
+    border-color: #e8e8e8;
+    border-bottom-color: #3298dc;
+}
+
+.tabs.is-boxed li.is-active a,
+.tabs.is-boxed li.is-active a:hover {
+    background-color: white;
+    border-top: solid 3px #3298dc;
+    border-bottom-color: transparent !important;
+    color: #000000;
+    border-color: #3298dc;
+}
+
+/* end tabset */
+
+.table.vcio-table tr:last-child td,
+.table.vcio-table td {
+    border: solid 1px #dbdbdb;
+}
+
+.table th {
+    border-color: #000000;
+}
+
+.table.gray-header-border th {
+    border-color: #dbdbdb;
+}
+
+.wrap-strings {
+    word-break: break-word;
+}
+
+.two-col-left {
+    width: 255px;
+    text-align: right !important;
+    font-weight: bold;
+    padding-right: 15px !important;
+    line-height: 20px;
+}
+
+.two-col-right {
+    line-height: 20px;
+}
+
+pre {
+    font-family: Consolas;
+    font-size: 14px; /* 0.875em */
+    color: #cc0000;
+    background-color: #f8f8f8;
+    border: solid 1px #e8e8e8;
+    border-radius: 5px;
+    overflow: visible;
+    white-space: pre-wrap;
+    margin: 10px 0px 0px 0px;
+    padding: 12px;
+    display: block;
+}
+
+pre.data-display {
+    font-family: Consolas;
+    font-size: 14px; /* 0.875em */
+    color: #000000;
+    background-color: #ffffff;
+    border-color: #d8d8d8;
+    word-wrap: break-word; word-break: break-word;
+    /* word-break: break-all; */
+    line-height: 18px;
+
+    /* Add right padding to create room for copy button on hover */
+    padding-right: 50px;
+}
+
+.data-display {
+    font-family: Consolas;
+    font-size: 14px; /* 0.875em */
+    color: #000000;
+    word-wrap: break-word; word-break: break-word;
+    /* word-break: break-all; */
+    line-height: 18px;
+}
+
+.data-display-bg {
+    background-color: #f8f8f8 !important;
+    border-color: #e8e8e8 !important;
+}
+
+.data-container {
+    font-family: Consolas;
+    font-size: 14px; /* 0.875em */
+    color: #000000;
+    word-wrap: break-word; word-break: break-word;
+    /* word-break: break-all; */
+    line-height: 18px;
+    border: solid 1px !important;
+    border-color: #c8c8c8 !important;
+    border-radius: 5px;
+    background-color: #ffffff;
+    padding: 10px;
+    /* margin: 10px; */
+    /* display: inline-block; */
+}
+
+.note {
+    line-height: 18px;
+    padding:5px 5px 5px 5px;
+    font-size: 14px;
+    /* Like DejaCode edit screen: */
+    font-size: .875em;
+}
+
+ul {
+    list-style-type: square;
+}
+
+ul li {
+    background-repeat: no-repeat;
+    margin-left: 20px;
+}
+
+.is-clipped-list ul {
+    list-style-type: none;
+    padding-left: 0px;
+    margin-left: 0px;
+    margin-top: 0px;
+}
+
+.is-clipped-list ul li {
+    margin-left: 0px;
+    line-height: 18px;
+}
+
+.tag:not(body).is-search-label-left {
+    box-shadow: 5px 5px 5px #cccccc;
+    border: solid 1px #b8b8b8;
+    font-weight: bold;
+}
+
+.tag:not(body).is-search-label-right {
+    box-shadow: 5px 5px 5px #cccccc;
+    border: solid 1px #b8b8b8;
+    border-left: 0;
+}
+
+.message a:not(.button):not(.tag):not(.dropdown-item) {
+    color: #0066ff;
+    text-decoration: none;
+}
+
+.message a:not(.button):not(.tag):not(.dropdown-item):hover {
+    color: #0066ff;
+    text-decoration: underline;
+}
+
+.message.is-info {
+    background-color: #ffffff;
+    border: 0;
+    box-shadow: 0 0.5em 1em -0.125em #e8e8e8, 0 0 0 1px #e8e8e8;
+}
+
+.message.is-info .message-header {
+    background-color: #3e8ed0;
+    color: #fff;
+}
+
+.message.is-info .message-body {
+    border-color: #3298dc;
+    color: #000000;
+}
+
+/* This is missing from our local bulma.css file, and is needed for the page-bottom pagination */
+.pagination-list li {
+    list-style: none;
+    margin: 0;
+}
+
+.small_page_button {
+    border: solid 1px #f2f2f2;
+    border-radius: 3px;
+    padding: 0px 6px 0px 6px;
+    background-color: #f8f8f8;
+    color: #cccccc;
+    font-size: 12px;
+}
+
+a.small_page_button {
+    border-color: #99c2ff;
+    background-color: #ffffff;
+    color: #0066ff;
+}
+
+.page_arrow_spacing {
+    padding: 0px 3px 0px 3px;
+}
+
+.panel:not(:last-child).panel-header-only {
+    margin-bottom: 1.0rem;
+}
+
+.column.skinny {
+    padding: 0.10rem;
+    line-height: 17px;
+    background-color: #ffffff;
+    border: solid 1px #e8e8e8;
+    font-size: 14px;
+}
+
+.dropdown-instructions-width {
+    width: 600px;
+}
+
+.dropdown-instructions-box-shadow {
+    box-shadow: 0px 8px 16px 0px #808080;
+}
+
+.dropdown-vuln-list-width {
+    width: 400px;
+}
+
+.dropdown-vuln-dict-width {
+    max-width: 600px;
+}
+
+.width-100-pct {
+    width: 100%;
+}
+
+.search-alert {
+    border: solid 1px #ff9999;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #ffffff;
+    color: #ff0000;
+    z-index: 10;
+}
+
+.navbar-hover-div {
+    border: 0;
+    box-shadow: 0px 8px 16px 0px #808080;
+    min-width: 13rem;
+    padding: 0px;
+}
+
+.details-container {
+    border: 0;
+    border-radius: 6px;
+    box-shadow: 0 0.5em 1em -0.125em rgba(8, 8, 8, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+}
+
+.about-hover-div {
+    width: 500px;
+}
+
+.fa_link_custom {
+    font-size: 10px !important;
+    vertical-align: super;
+    margin-left: 2px;
+}
+
+span.tag.custom {
+    margin: 0px 0px 0px 10px;
+}
+
+/* CSS for dev fixed by headers */
+.dev_fixed_by_headers {
+    border: solid 1px #cccccc;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    color: #000000;
+    font-weight: bold;
+    font-size: 13px;
+    padding: 3px;
+    margin-bottom: 3px;
+    display: block;
+}
+
+.non-floating-purl {
+    position: relative;
+    width: 100%;
+    z-index: 100;
+    margin-bottom: 0px;
+}
+
+.non-floating-purl .table td,
+.non-floating-purl .table tbody tr:last-child td,
+.non-floating-purl .table th {
+    border: solid 1px #dbdbdb;
+    background-color: #ffffff;
+}
+
+.non-vuln {
+    margin-top: -25px;
+}
+
+.non-vuln .table td,
+.non-vuln .table tbody tr:last-child td,
+.non-vuln .table th {
+    border: solid 1px #dbdbdb;
+}
+
+/* Floating container to display the PURL on the Package details page as the user scrolls down. */
+.floating-purl {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    margin-bottom: 0px;
+}
+
+.floating-purl .table td,
+.floating-purl .table tbody tr:last-child td,
+.floating-purl .table th {
+    border: solid 1px #dbdbdb;
+    background-color: #ffffff;
+}
+
+ul.fixed_by_bullet {
+    list-style-type: disc;
+    margin-top: 0.25em;
+    margin-left: 7px;
+    margin-bottom: 0.25em;
+    padding-left: 10px;
+}
+
+ul.fixed_by_bullet ul {
+    list-style-type: disc;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 18px;
+    padding: 0;
+    border: none;
+}
+
+
+
+ul.fixed_by_bullet li {
+    margin-left: 0px;
+    font-family: Arial;
+    font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    /*margin-bottom: 10px;*/
+    margin-bottom: 2px;
+}
+
+ul.fixed_by_bullet li:last-child {
+    margin-left: 0px;
+    font-family: Arial;
+    font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    margin-bottom: 0px;
+}
+
+ul.fixed_by_bullet li li {
+    margin-left: 0px;
+    font-family: Arial;
+    font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    margin-top: 0px;
+    color: #000000;
+}
+
+/* 3rd-level bullets */
+ul.fixed_by_bullet ul ul {
+    list-style-type: disc;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 17px;
+    padding: 0;
+    border: none;
+}
+
+ul.fixed_by_bullet li li li {
+    margin-left: 0px;
+    font-family: Arial;
+    font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    margin-top: 0px;
+    color: #000000;
+}
+
+/* CSS for dev fixed by headers */
+.dev_fixed_by_headers {
+    border: solid 1px #cccccc;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    color: #000000;
+    font-weight: bold;
+    font-size: 13px;
+    padding: 3px;
+    margin-bottom: 3px;
+    display: block;
+}
+
+.non-floating-purl {
+    position: relative;
+    width: 100%;
+    z-index: 100;
+    margin-bottom: 0px;
+}
+
+.non-floating-purl .table td,
+.non-floating-purl .table tbody tr:last-child td,
+.non-floating-purl .table th {
+    border: solid 1px #dbdbdb;
+    background-color: #ffffff;
+}
+
+.non-vuln {
+    margin-top: -25px;
+}
+
+.non-vuln .table td,
+.non-vuln .table tbody tr:last-child td,
+.non-vuln .table th {
+    border: solid 1px #dbdbdb;
+}
+
+/* Floating container to display the PURL on the Package details page as the user scrolls down. */
+.floating-purl {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    margin-bottom: 0px;
+}
+
+.floating-purl .table td,
+.floating-purl .table tbody tr:last-child td,
+.floating-purl .table th {
+    border: solid 1px #dbdbdb;
+    background-color: #ffffff;
+}
+
+/* Emphasis for affected/fixed headings and related references. */
+.affected-fixed {
+    color: #000000;
+    font-weight: 800;
+}
+
+/* Emphasis for not vulnerable. */
+.emphasis-not-vulnerable {
+    background-color: #e6ffe6;
+    word-wrap: break-word; word-break: break-all;
+    display: block;
+}
+
+/* Emphasis for vulnerable. */
+.emphasis-vulnerable {
+    background-color: #ffe6e6;
+}
+
+/* From https://github.com/jgthms/bulma/issues/2040#issuecomment-734507270 (the Bulma GH repo under the author's top-level GH entity).  This helps display the responsive navbar dropdown properly < 1024px width. JMH: some added styles to remove box-shadow and make other adjustnments for the collapsed navbar. */
+@media screen and (max-width: 1024px) {
+    .navbar-menu {
+        align-items: stretch;
+        background-color: transparent;
+        font-size: 0.875rem;
+        display: flex;
+        flex-grow: 1;
+        flex-shrink: 0;
+        padding: 0;
+
+        margin-right: 0px !important;
+
+        .navbar-item.is-active .navbar-dropdown,
+        .navbar-item.is-hoverable:focus .navbar-dropdown,
+        .navbar-item.is-hoverable:focus-within .navbar-dropdown,
+        .navbar-item.is-hoverable:hover .navbar-dropdown {
+            display: block;
+        }
+
+        .navbar-end {
+            justify-content: flex-end;
+            margin-left: auto;
+            align-items: stretch;
+            display: flex;
+
+            .navbar-item.has-dropdown {
+                align-items: stretch;
+            }
+
+            .navbar-item,
+            .navbar-link {
+                align-items: center;
+                display: flex;
+            }
+
+            .navbar-dropdown {
+                border-bottom-left-radius: 6px;
+                border-bottom-right-radius: 6px;
+                border-top: 2px solid #dbdbdb;
+                box-shadow: 0 8px 8px rgba(10, 10, 10, 0.1);
+                display: none;
+                font-size: 0.875rem;
+                left: 0;
+                min-width: 100%;
+                position: absolute;
+                top: 100%;
+                z-index: 20;
+            }
+        }
+    }
+
+    /* Make sure the 'About' navbar link hovering div appears left-aligned on narrower screens so it's visible rather than forced beyond the left-hand screen edge. */
+    .dropdown.is-right .dropdown-menu {
+        left: 0;
+        right: auto;
+    }
+
+    /* Remove the collapsed menu's right-hand dark bar, inherited because of how Bulma handles this process. */
+    div.navbar-end.mr-3 {
+        margin-right: 0 !important;
+    }
+
+    .navbar-item,
+    .navbar-item:active,
+    .navbar-item:focus,
+    .navbar-item:visited {
+        color: #ffffff;
+        background-color: transparent;
+        align-items: stretch;
+        display: flex;
+    }
+
+    div.navbar-start {
+        width: 100%;
+    }
+
+    a.navbar-item:focus {
+      background-color: transparent;
+      color: #ffffff;
+    }
+
+    a.navbar-item:hover {
+        color: #ffffff;
+        background-color: #000000;
+    }
+
+}
+
+@media screen and (max-width: 1023px) {
+    .navbar-menu {
+        box-shadow: none;
+    }
+}
+
+/* ================================================================================================================================== */
+/* ================================================================================================================================== */
+
+/* Copied for clipboard.js from https://github.com/aboutcode-org/dejacode/blob/0f01d2b4f79dbd92575ec51d3f21f29a4894a498/dejacode/static/css/dejacode_bootstrap.css#L166 */
+/* -- clipboard.js -- */
+.clipboard {
+    position: relative;
+  }
+  .btn-clipboard,
+  .btn-expend {
+    position: absolute;
+    display: none;
+    top: .375rem;
+    top: 0.9rem;
+    right: 0;
+    z-index: 10;
+    color: #000000;
+    color: #0066ff;
+    cursor: pointer;
+    background-color: transparent;
+
+    border: solid 1px #b8b8b8;
+    border-radius: 3px;
+    /* padding: 5px 7px 5px 7px !important; */
+
+    border: 0;
+    border-radius: 0;
+    padding: 0 !important;
+
+  }
+  dd .btn-clipboard {
+    right: 1rem;
+  }
+  dd .btn-expend {
+    right: 3.1rem;
+  }
+  .clipboard:hover .btn-clipboard,
+  .btn-clipboard:focus,
+  .clipboard:hover .btn-expend,
+  .btn-expend:focus {
+    display: block;
+  }
+  .btn-clipboard:hover,
+  .btn-expend:hover {
+    background-color: #f2f2f2;
+    background-color: transparent;
+    border: solid 1px #808080;
+    border: 0;
+    color: #000000;
+    color: #ff0000;
+    color: #0066ff;
+  }
+
+/* ================================================================================================================================== */
+/* ================================================================================================================================== */
+
+/* 2024-09-02 Monday 17:32:03.  Try this */
+/* .btn-clipboard:hover span[data-tooltip]::after {
+    border: solid 1px #ff0000;
+} */
+
+
+
+
+
+
+
+
+
+
+
+  /* ============================== */
+
+  /* 2024-09-02 Monday 13:18:11.  Try this */
+
+  /* .btn-clipboard:hover span[data-tooltip]::after,
+  .btn-clipboard.tooltip-visible span[data-tooltip]::after {
+      opacity: 1;
+      visibility: visible;
+      display: block;
+  } */
+
+  /* ----------------------------------------------------------------------- */
+
+  /* 2024-09-02 Monday 12:50:15.  Try this instead of the block just above. */
+
+  /* .btn-clipboard {
+    position: relative;
+    position: absolute;
+}
+
+
+.btn-clipboard span[data-tooltip]::before,
+.btn-clipboard span[data-tooltip]::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.btn-clipboard span[data-tooltip]::before {
+    border-style: solid;
+    border-width: 6px 6px 0 6px;
+    border-color: #333 transparent transparent transparent;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%);
+    z-index: 1001;
+} */
+
+
+/* .btn-clipboard span[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+
+    bottom: 125%;
+    left: 50%;
+
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    padding: 0px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+} */
+
+/* .btn-clipboard:hover span[data-tooltip]::after,
+.btn-clipboard.tooltip-visible span[data-tooltip]::after {
+    opacity: 1;
+    visibility: visible;
+} */
+
+/* .btn-clipboard span[data-tooltip]::after {
+    content: attr(data-tooltip);
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    bottom: calc(100% + 16px);
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+.btn-clipboard:hover span[data-tooltip]::before,
+.btn-clipboard:hover span[data-tooltip]::after,
+.btn-clipboard.tooltip-visible span[data-tooltip]::before,
+.btn-clipboard.tooltip-visible span[data-tooltip]::after {
+    visibility: visible;
+    opacity: 1;
+} */
+
+  /* ----------------------------------------------------------------------- */
+
+/* 2024-09-02 Monday 16:56:19.  Try this */
+
+/* .btn-clipboard {
+    position: relative;
+    position: absolute;
+}
+
+.btn-clipboard span[data-tooltip]::before,
+.btn-clipboard span[data-tooltip]::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.btn-clipboard span[data-tooltip]::before {
+    border-style: solid;
+    border-width: 6px 6px 0 6px;
+    border-color: #333 transparent transparent transparent;
+    bottom: 100%;
+    transform: translateX(-50%);
+    z-index: 1001;
+}
+
+.btn-clipboard span[data-tooltip]::after {
+    content: attr(data-tooltip);
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    bottom: calc(100% + 6px);
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+.btn-clipboard:hover span[data-tooltip]::before,
+.btn-clipboard:hover span[data-tooltip]::after,
+.btn-clipboard.tooltip-visible span[data-tooltip]::before,
+.btn-clipboard.tooltip-visible span[data-tooltip]::after,
+.btn-clipboard span.tooltip-success.is-active::before,
+.btn-clipboard span.tooltip-success.is-active::after {
+    visibility: visible;
+    opacity: 1;
+} */
+
+/* Ensure the icon remains visible */
+.btn-clipboard span .custom-icon {
+    position: relative;
+    z-index: 1002;
+}
+
+  /* ----------------------------------------------------------------------- */
+
+  /* 2024-08-27 Tuesday 11:03:51.  Adjust for display inside div inside td. */
+  .btn-clipboard-adjust {
+    top: -0.1rem;
+    background-color: #ffffff;
+  }
+  .btn-clipboard-adjust:hover {
+    background-color: #e8e8e8;
+  }
+
+  .results-message-red {
+    /* border: solid 2px #ffb3b3; */
+    /* border: solid 1px #d8d8d8; */
+    background-color: #ffe6e6;
+    border-radius: 5px;
+    padding: 10px;
+    padding: 5px;
+    margin: 20px 0px 50px 0px;
+    margin: 5px 0px 40px 0px;
+    margin: 0px 0px 5px 0px;
+    color: #000000;
+  }
+
+  .results-message-green {
+    /* border: solid 2px #00e6ac; */
+    /* border: solid 1px #d8d8d8; */
+    background-color: #99ffe6;
+    border-radius: 5px;
+    padding: 10px;
+    padding: 5px;
+    margin: 20px 0px 50px 0px;
+    margin: 5px 0px 40px 0px;
+    margin: 0px 0px 5px 0px;
+    color: #000000;
+  }
+
+  .results-message-yellow {
+    /* border: solid 2px #ffeb99; */
+    /* border: solid 1px #d8d8d8; */
+    background-color: #ffffcc;
+    border-radius: 5px;
+    padding: 10px;
+    padding: 5px;
+    margin: 20px 0px 50px 0px;
+    margin: 5px 0px 40px 0px;
+    margin: 0px 0px 5px 0px;
+    color: #000000;
+  }
+
+  .bold-white {
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .positive {
+    background-color: #00cc99;
+    color: #000000;
+  }
+
+  /* Makes the placeholder darker in Firefox. */
+  ::placeholder {
+    opacity: 1;
+ }
+
+/* ================================================================================================================================== */
+/* ================================================================================================================================== */
+
+ /* For the clipboard.js/copy-to-clipboard tooltips */
+
+/* Base tooltip styles */
+/* [data-tooltip] {
+    position: relative;
+    cursor: pointer;
+  } */
+
+  /* [data-tooltip]::before,
+  [data-tooltip]::after {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    visibility: visible !important;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  } */
+
+  /* Tooltip text */
+  /* [data-tooltip]::before {
+    content: attr(data-tooltip);
+    background-color: #333;
+    background-color: #000000 !important;
+    color: #fff;
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 6px !important;
+    white-space: nowrap;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+  } */
+
+  /* Tooltip arrow */
+  /* [data-tooltip]::after {
+    content: "";
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+    bottom: 75%;
+    left: 50%;
+    transform: translateX(-50%);
+  } */
+
+
+  /* Show tooltip on hover */
+  /* 2024-09-02 Monday 12:19:54.  Seems to have no effect on the latest tooltip */
+  /* [data-tooltip]:hover::before,
+  [data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+  } */
+
+  /* Custom width classes */
+  [data-tooltip].tooltip-wide::before {
+    width: 200px !important;
+    white-space: normal;
+    border-radius: 5px !important;
+    background-color: #000000 !important;
+    text-align: center;
+    padding: 5px !important;
+  }
+
+  [data-tooltip].tooltip-wide-error::before {
+    width: 200px !important;
+    white-space: normal;
+    border-radius: 5px !important;
+    background-color: #ff0000 !important;
+    text-align: center;
+    padding: 5px !important;
+  }
+
+  [data-tooltip].tooltip-wide-success::before {
+    width: 200px !important;
+    white-space: normal;
+    border-radius: 5px !important;
+    background-color: #009900 !important;
+    text-align: center;
+    padding: 5px !important;
+  }
+
+  [data-tooltip].tooltip-narrow::before {
+    width: 100px !important;
+    white-space: normal;
+    /* border: solid 1px #0000; */
+    border-radius: 5px !important;
+    background-color: #000000 !important;
+    text-align: center;
+    padding: 5px !important;
+  }
+
+  [data-tooltip].tooltip-narrow-success::before {
+    width: 100px !important;
+    white-space: normal;
+    border-radius: 5px !important;
+    background-color: #009900 !important;
+    text-align: center;
+    padding: 5px !important;
+  }
+
+  /* or maybe this? */
+  /* [data-tooltip].tooltip-narrow-success::before {
+    visibility: visible;
+    opacity: 1;
+  } */
+
+/* ================================================================================================================================== */
+/* ================================================================================================================================== */
+
+  .fa .fa-copy {
+    color: #ff0000 !important;
+    background-color: #ff0000 !important;
+  }
+  .fa .fa-copy:hover {
+    color: #0000cc !important;
+    background-color: #0000cc !important;
+  }
+
+  /* Scale the clippy.svg used by clipboard.js */
+  .small-svg {
+    height: 16px;
+    width: 14px;
+    background-color: transparent;
+    fill: #0000cc !important;
+
+    transition: fill 0.3s ease;
+}
+.small-svg:hover {
+    color: #ff0000 !important;
+    fill: #00ff00 !important;
+}
+
+.custom-icon {
+    color: #000000;
+    font-size: 24px;
+    font-size: 16px !important;
+    transition: color 0.3s ease;
+}
+
+.custom-icon:hover {
+    color: #808080;
+}
+
+/* Keep tooltip visible until user clicks elsewhere on page. */
+.btn-clipboard span[data-tooltip]:not(.tooltip-visible)::after {
+    display: none;
+    display: block !important;
+    visibility: visible !important;
+}
+
+.btn-clipboard span[data-tooltip].tooltip-visible::after {
+    display: block;
+    display: block !important;
+    visibility: visible !important;
+}

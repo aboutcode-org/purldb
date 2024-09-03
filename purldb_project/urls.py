@@ -11,7 +11,6 @@ from django.conf.urls import include
 from django.urls import path
 from django.views.generic import RedirectView
 from django.views.generic.base import TemplateView
-
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework import routers
@@ -29,6 +28,9 @@ from packagedb.api import PurlValidateViewSet
 from packagedb.api import ResourceViewSet
 from packagedb.from_purl import api_from_purl_router
 from packagedb.to_purl import api_to_purl_router
+from packagedb.views import HomePage
+from packagedb.views import PackageSearch
+from packagedb.views import PackageSearchTestTabset
 
 api_router = routers.DefaultRouter()
 api_router.register("packages", PackageViewSet)
@@ -55,7 +57,6 @@ urlpatterns = [
     path("api/", include((api_router.urls, "api"))),
     path("api/to_purl/", include((api_to_purl_router.urls, "api_to"))),
     path("api/from_purl/", include((api_from_purl_router.urls, "api_from"))),
-    path("", RedirectView.as_view(url="api/")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/",
@@ -66,5 +67,20 @@ urlpatterns = [
         "api/scan_queue/index_package_scan/<str:key>/",
         index_package_scan,
         name="index_package_scan",
+    ),
+    path(
+        "",
+        HomePage.as_view(),
+        name="home",
+    ),
+    path(
+        "packages/search",
+        PackageSearch.as_view(),
+        name="package_search",
+    ),
+    path(
+        "packages/search_test_tabset",
+        PackageSearchTestTabset.as_view(),
+        name="package_search_test_tabset",
     ),
 ]

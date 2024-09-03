@@ -1,0 +1,443 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load widget_tweaks %}
+{% load static %}
+{% load json_filters %}
+
+{% block title %}
+PurlDB Package Search
+{% endblock %}
+
+{% block content %}
+    <section class="section pt-0 pb-5">
+        {% include "package_search_box.html" %}
+    </section>
+
+    {% if search %}
+
+    <!-- start result count and alert -->
+    {% if validation_errors.valid == False %}
+
+    <section class="mx-5">
+        <div>0 results</div>
+
+        <div class="results-message-red">
+            The data you submitted &mdash; <strong>"{{ validation_errors.purl }}"</strong> &mdash; is not a valid PackageURL.
+        </div>
+    </section>
+
+    {% else %}
+    <section class="mx-5">
+        {% if page_obj.paginator.count > 1 %}
+        <div>
+            {{ page_obj.paginator.count|intcomma }} results
+        </div>
+
+        <div class="results-message-green">
+            The data you submitted &mdash; <strong>"{{ purl_attributes.input|default:"&nbsp;" }}"</strong> &mdash; is a valid PackageURL.
+        </div>
+        {% elif page_obj.paginator.count == 1 %}
+        <div>
+            {{ page_obj.paginator.count|intcomma }} result
+        </div>
+
+        <div class="results-message-green">
+            The data you submitted &mdash; <strong>"{{ purl_attributes.input|default:"&nbsp;" }}"</strong> &mdash; is a valid PackageURL.
+        </div>
+        {% else %}
+        <div>
+        {{ page_obj.paginator.count|intcomma }} results
+        </div>
+
+        <div class="results-message-yellow">
+            The data you submitted &mdash; <strong>"{{ purl_attributes.input|default:"&nbsp;" }}"</strong> &mdash; is a valid PackageURL, but PurlDB does not contain a responsive record.
+        </div>
+        {% endif %}
+
+    </section>
+
+    {% endif %}
+    <!-- end result count and alert -->
+
+    <!-- start edited tabset from VCIO -->
+    <section class="section pt-0">
+        <span style="color: #ff0000;">START</span>
+        <div class="details-container">
+            <article class="panel panel-header-only">
+                <div class="panel-heading py-2 is-size-6" style="background-color: #4d5966; color: #ffffff;">
+                    {{ purl_attributes.input|default:"&nbsp;" }}
+                    {% if page_obj.paginator.count > 0 %}
+                    <span style="font-weight: 500; background-color: #ffffff; color: #000000; font-size: 14px; border-radius: 3px; padding: 3px 5px 3px 5px; margin: 3px 0px 3px 0px; display: inline-block;">(<a href="/api/packages/?purl={{ purl_attributes.input }}" target="_blank">see also API results</a>)</span>
+                    {% endif %}
+                </div>
+            </article>
+
+            <div class="pl-3 pr-3 mb-5 floating-purl pb-0">
+                <table class="table vcio-table width-100-pct mt-2">
+                    <tbody>
+                        <tr>
+                            <td style="width: 200px; font-weight: 700;">
+                                Input
+                            </td>
+                            <td>
+                                {{ purl_attributes.input|default:"&nbsp;" }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 200px; font-weight: 700;">
+                                Status
+                            </td>
+                            <td>
+                                {{ purl_attributes.status|default:"&nbsp;" }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="content ml-3 mr-3 pb-1">
+                <div class="has-text-weight-bold ml-1 mb-0 pb-0">
+                    PURL components
+                </div>
+                <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th style="width: 200px;">Component</th>
+                            <th style="width: 310px;">Value</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                scheme
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                {{ purl_attributes.scheme|default:"&nbsp;" }}
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                The scheme is a constant with the value "pkg", and is followed by a ':' separator.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                type
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                {{ purl_attributes.type|default:"&nbsp;" }}
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                A short code to identify the type of this package. For example: gem for a Rubygem, docker for a container, pypi for a Python Wheel or Egg, maven for a Maven Jar, deb for a Debian package etc.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                namespace
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                {{ purl_attributes.namespace|default:"&nbsp;" }}
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                Package name prefix, such as Maven groupid, Docker image owner, GitHub user or organization, etc.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                name
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                {{ purl_attributes.name|default:"&nbsp;" }}
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                Name of the package.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                version
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                {{ purl_attributes.version|default:"&nbsp;" }}
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                Version of the package.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                qualifiers
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                {{ purl_attributes.qualifiers|default:"&nbsp;" }}
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                Extra qualifying data for a package, such as the name of an OS, architecture, distro, etc.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                subpath
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                {{ purl_attributes.subpath|default:"&nbsp;" }}
+                            </td>
+                            <td style="overflow-wrap: break-word;">
+                                Extra subpath within a package, relative to the package root.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            {% for package in page_obj %}
+                <div class="columns">
+                    <div class="column is-6">
+                        <div class="col">
+                            <label class="label">Filename</label>
+                            <pre class="data-display">{{ package.filename|default:"&nbsp;" }}</pre>
+                            <div class="note">
+                                The exact file name (typically an archive of some type) of the package. This is usually the name of the file as downloaded from a website.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-6">
+                        <div class="col">
+                            <label class="label">Download URL</label>
+                            <div class="clipboard">
+                                {% if package.download_url %}
+                                    <button class="btn-clipboard px-0" data-bs-toggle="tooltip" title="Copy to clipboard" style="right: 0.5rem;"><i class="fa fa-copy"></i></button>
+                                {% endif %}
+                                <pre class="data-display">{{ package.download_url|default:"&nbsp;" }}</pre>
+                            </div>
+                            <div class="note">
+                                The download URL for obtaining the package.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table vcio-table width-100-pct mt-2">
+                    <tbody>
+                        <tr>
+                            <td style="width: 50%; font-weight: 700;">
+                                Input
+                            </td>
+                            <td>
+                                {{ purl_attributes.input|default:"&nbsp;" }}
+
+                                <div class="clipboard">
+                                    {% if purl_attributes.input %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" title="Copy to clipboard" style="right: 0.5rem;"><i class="fa fa-copy"></i></button>
+                                    {% endif %}
+                                    <pre class="data-display">{{ purl_attributes.input|default:"&nbsp;" }}</pre>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 700;">
+                                Status
+                            </td>
+                            <td>
+                                {{ purl_attributes.status|default:"&nbsp;" }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 700;">
+                                Status
+                            </td>
+                            <td>
+                                <div class="clipboard">
+                                    {% if purl_attributes.input %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" title="Copy to clipboard" style="right: 0.5rem;"><i class="fa fa-copy"></i></button>
+                                    {% endif %}
+                                    <pre class="data-display">{{ purl_attributes.input|default:"&nbsp;" }}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            {% endfor %}
+
+        </div>
+        <span style="color: #ff0000;">END</span>
+    </section>
+
+    <!-- end edited tabset from VCIO -->
+
+        <!-- {# if validation_errors.valid == False #}
+        {# else #} -->
+        {% if validation_errors.valid != False %}
+            {% for package in page_obj %}
+            OK from here down.
+            <div class='panel ml-5 mr-5' style="margin-bottom: 50px; box-shadow: 5px 5px 5px #909090;">
+                <div class='panel-heading py-2 is-size-6' style="background-color: #4d5966; color: #ffffff; border: solid 1px #4d5966;">
+                    <p>{{ package.package_url|default:"&nbsp;" }} <span style="font-weight: 500; background-color: #ffffff; color: #000000; font-size: 14px; border-radius: 3px; padding: 3px 5px 3px 5px; margin: 3px 0px 3px 0px; display: inline-block;">(<a href="/api/packages/?purl={{ package.package_url }}" target="_blank">see also API results</a>)</span></p>
+                </div>
+                <div class="panel-block" style="background-color: #e8e8e8; border: solid 1px #d8d8d8;">
+                    <div class="pb-3 width-100-pct">
+                        <div class="columns">
+                            <div class="column is-6">
+                                <div class="col">
+                                    <label class="label">Filename</label>
+                                    <pre class="data-display">{{ package.filename|default:"&nbsp;" }}</pre>
+                                    <div class="note">
+                                        The exact file name (typically an archive of some type) of the package. This is usually the name of the file as downloaded from a website.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-6">
+                                <div class="col">
+                                    <label class="label">Download URL</label>
+                                    <div class="clipboard">
+                                        {% if package.download_url %}
+                                            <button class="btn-clipboard px-0" data-bs-toggle="tooltip" title="Copy to clipboard" style="right: 0.5rem;"><i class="fa fa-copy"></i></button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.download_url|default:"&nbsp;" }}</pre>
+                                    </div>
+                                    <div class="note">
+                                        The download URL for obtaining the package.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="border-top: solid 1px #000000;" />
+                        <div class="columns">
+                            <div class="column is-12">
+                                <label class="label">Package URL</label>
+                                <div class="ml-3 data-display" style="color: #cc0066;">{{ package.package_url|default:"&nbsp;" }}</div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="col">
+                                    <label class="label">Type</label>
+                                    <pre class="data-display">{{ package.type|default:"&nbsp;" }}</pre>
+                                    <div class="note">
+                                        A short code to identify the type of this package. For example: gem for a Rubygem, docker for a container, pypi for a Python Wheel or Egg, maven for a Maven Jar, deb for a Debian package etc.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="col">
+                                    <label class="label">Namespace</label>
+                                    <pre class="data-display">{{ package.namespace|default:"&nbsp;" }}</pre>
+                                    <div class="note">
+                                        Package name prefix, such as Maven groupid, Docker image owner, GitHub user or organization etc.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="col">
+                                    <label class="label">Name</label>
+                                    <pre class="data-display">{{ package.name|default:"&nbsp;" }}</pre>
+                                    <div class="note">
+                                        Name of the package.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="col">
+                                    <label class="label">Version</label>
+                                    <pre class="data-display">{{ package.version|default:"&nbsp;" }}</pre>
+                                </div>
+                                <div class="note">
+                                    Version of the package.
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="col">
+                                    <label class="label">Qualifiers</label>
+                                    <pre class="data-display">{{ package.qualifiers|default:"&nbsp;" }}</pre>
+                                </div>
+                                <div class="note">
+                                    Extra qualifying data for a package such as the name of an OS, architecture, distro, etc.
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="col">
+                                    <label class="label">Subpath</label>
+                                    <pre class="data-display">{{ package.subpath|default:"&nbsp;" }}</pre>
+                                </div>
+                                <div class="note">
+                                    Extra subpath within a package, relative to the package root.
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="border-top: solid 1px #000000;" />
+                        <div class="columns">
+                            <div class="column">
+                                <div class="col">
+                                    <label class="label">Homepage URL</label>
+                                    <div class="clipboard">
+                                        {% if package.homepage_url %}
+                                        <button class="btn-clipboard px-0" data-bs-toggle="tooltip" title="Copy to clipboard" style="right: 0.5rem;"><i class="fa fa-copy"></i></button>
+                                        {% endif %}
+                                        <pre class="data-display">{{ package.homepage_url|default:"&nbsp;" }}</pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="col">
+                                    <label class="label">Primary Language</label>
+                                    <pre class="data-display">{{ package.primary_language|default:"&nbsp;" }}</pre>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="col">
+                                    <label class="label">Description</label>
+                                    <pre class="data-display">{{ package.description|default:"&nbsp;" }}</pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr style="border-top: solid 1px #000000;" />
+
+                        <div class="columns">
+                            <div class="column">
+                                <div class="col">
+                                    <label class="label">UUID</label>
+                                    <div class="ml-3 data-display" style="color: #cc0066;">{{ package.uuid|default:"&nbsp;" }}</div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="col">
+                                    <label class="label">ID [for dev. purposes only]</label>
+                                    <div class="ml-3 data-display" style="color: #cc0066;">{{ package.id|default:"&nbsp;" }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+            {% if page_obj.paginator.count > 0 %}
+
+                <div class="is-max-desktop mb-3">
+                    <section class="mx-5">
+                        <div class="is-flex" style="justify-content: space-between;">
+                            {% if page_obj.paginator.count > 1 %}
+                            <div>
+                                {{ page_obj.paginator.count|intcomma }} results
+                            </div>
+                            {% else %}
+                            <div>
+                                {{ page_obj.paginator.count|intcomma }} result
+                            </div>
+                            {% endif%}
+                            {% if is_paginated %}
+                            {% include 'includes/pagination.html' with page_obj=page_obj %}
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+
+            {% endif%}
+        {% endif %}
+        <script src="{% static 'js/main.js' %}" crossorigin="anonymous"></script>
+    {% endif %}
+{% endblock %}
