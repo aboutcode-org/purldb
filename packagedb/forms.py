@@ -11,10 +11,11 @@ from django import forms
 
 
 class PackageSearchForm(forms.Form):
-
     search = forms.CharField(
         required=True,
         widget=forms.TextInput(
-            attrs={"placeholder": "pkg:maven/org.elasticsearch/elasticsearch@7.17.9?classifier=sources"},
+            attrs={
+                "placeholder": "pkg:maven/org.elasticsearch/elasticsearch@7.17.9?classifier=sources"
+            },
         ),
     )

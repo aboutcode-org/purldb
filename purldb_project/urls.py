@@ -9,8 +9,8 @@
 
 from django.conf.urls import include
 from django.urls import path
-from django.views.generic import RedirectView
 from django.views.generic.base import TemplateView
+
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework import routers

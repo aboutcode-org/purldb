@@ -6,11 +6,8 @@
 # See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
-import json
-from typing import Optional
 from urllib.parse import urlsplit as _urlsplit
 
-from django.core.exceptions import ValidationError
 from django.shortcuts import render
 from django.views import View
 from django.views.generic.list import ListView
@@ -29,7 +26,9 @@ class HomePage(View):
         context = {
             "package_search_form": PackageSearchForm(request_query),
         }
-        return render(request=request, template_name=self.template_name, context=context)
+        return render(
+            request=request, template_name=self.template_name, context=context
+        )
 
 
 class PackageSearch(ListView):
@@ -46,7 +45,9 @@ class PackageSearch(ListView):
         context["search"] = request_query.get("search")
 
         if self.validation_errors:
-            context['validation_errors'] = self.validation_errors  # Pass the errors to the context
+            context["validation_errors"] = (
+                self.validation_errors
+            )  # Pass the errors to the context
         context["purl_attributes"] = self.parse_purl(request_query.get("search"))
         return context
 
@@ -57,11 +58,7 @@ class PackageSearch(ListView):
         if isinstance(result, dict):  # If result is a validation error dictionary
             self.validation_errors = result  # Store errors in the instance attribute
             return self.model.objects.none()  # Return an empty queryset
-        return (
-            result
-            .prefetch_related()
-            .order_by("version")
-        )
+        return result.prefetch_related().order_by("version")
 
     def parse_purl(self, query):
         purl_error_message = "PURL parsing under development."
@@ -102,24 +99,48 @@ class PackageSearchTestTabset(ListView):
         context["search"] = request_query.get("search")
 
         # Tooltips for each input purl component.
-        tooltip_default = "has-tooltip-multiline has-tooltip-black has-tooltip-arrow tooltip-narrow"
+        tooltip_default = (
+            "has-tooltip-multiline has-tooltip-black has-tooltip-arrow tooltip-narrow"
+        )
         tooltip_error = "has-text-danger has-tooltip-multiline has-tooltip-danger has-tooltip-arrow tooltip-wide-error"
         purl_tooltips = [
-            {"text": "pkg:", "tooltip_class": tooltip_default, "data_tooltip": "scheme"},
+            {
+                "text": "pkg:",
+                "tooltip_class": tooltip_default,
+                "data_tooltip": "scheme",
+            },
             {"text": "maven", "tooltip_class": tooltip_default, "data_tooltip": "type"},
             {"text": "/"},
-            {"text": "org.elasticsearch", "tooltip_class": tooltip_error, "data_tooltip": "namespace"},
+            {
+                "text": "org.elasticsearch",
+                "tooltip_class": tooltip_error,
+                "data_tooltip": "namespace",
+            },
             {"text": "/"},
-            {"text": "elasticsearch", "tooltip_class": tooltip_default, "data_tooltip": "name"},
+            {
+                "text": "elasticsearch",
+                "tooltip_class": tooltip_default,
+                "data_tooltip": "name",
+            },
             {"text": "@"},
-            {"text": "7.17.9", "tooltip_class": tooltip_default, "data_tooltip": "version"},
+            {
+                "text": "7.17.9",
+                "tooltip_class": tooltip_default,
+                "data_tooltip": "version",
+            },
             {"text": "?"},
-            {"text": "classifier=sources", "tooltip_class": tooltip_default, "data_tooltip": "qualifiers"},
+            {
+                "text": "classifier=sources",
+                "tooltip_class": tooltip_default,
+                "data_tooltip": "qualifiers",
+            },
         ]
         context["purl_tooltips"] = purl_tooltips
 
         if self.validation_errors:
-            context['validation_errors'] = self.validation_errors  # Pass the errors to the context
+            context["validation_errors"] = (
+                self.validation_errors
+            )  # Pass the errors to the context
         context["purl_attributes"] = self.parse_purl(request_query.get("search"))
         return context
 
@@ -130,11 +151,7 @@ class PackageSearchTestTabset(ListView):
             self.validation_errors = result  # Store errors in the instance attribute
             return self.model.objects.none()  # Return an empty queryset
 
-        return (
-            result
-            .prefetch_related()
-            .order_by("version")
-        )
+        return result.prefetch_related().order_by("version")
 
     def parse_purl(self, query):
         # purl_error_message = "The input purl is valid."
@@ -160,7 +177,9 @@ class PackageSearchTestTabset(ListView):
 
         if query:
             if not sep or scheme != "pkg":
-                purl_error_message = "The input purl is missing the required 'scheme' component."
+                purl_error_message = (
+                    "The input purl is missing the required 'scheme' component."
+                )
             else:
                 purl_pkg_scheme_component = "pkg:"
                 # TODO 2024-09-03 Tuesday 14:03:59.  Add this here after redefining default as ""?
@@ -186,7 +205,9 @@ class PackageSearchTestTabset(ListView):
 
         if scheme == "pkg":
             if not type or not sep:
-                purl_error_message = "The input purl is missing the required 'type' component."
+                purl_error_message = (
+                    "The input purl is missing the required 'type' component."
+                )
             else:
                 purl_type = type
         else:
@@ -234,7 +255,7 @@ class PackageSearchTestTabset(ListView):
 
         purl_namespace = ""
         # From original code:
-        namespace: Optional[str] = ""
+        namespace: str | None = ""
         # NPM purl have a namespace in the path
         # and the namespace in an npm purl is
         # different from others because it starts with `@`
@@ -304,22 +325,24 @@ class PackageSearchTestTabset(ListView):
 
         # print(f"\nname = {name}")
 
-        if purl_pkg_scheme_component == 'pkg:' and purl_type != "MISSING":
+        if purl_pkg_scheme_component == "pkg:" and purl_type != "MISSING":
             if not name:
-                purl_error_message = "The input purl is missing the required 'name' component."
+                purl_error_message = (
+                    "The input purl is missing the required 'name' component."
+                )
             else:
                 purl_name = name
-        elif purl_pkg_scheme_component == 'MISSING' and purl_type != "MISSING":
+        elif purl_pkg_scheme_component == "MISSING" and purl_type != "MISSING":
             if not name:
                 purl_error_message = "The input purl is missing the required 'scheme' and 'name' components."
             else:
                 purl_name = name
-        elif purl_pkg_scheme_component == 'MISSING' and purl_type == "MISSING":
+        elif purl_pkg_scheme_component == "MISSING" and purl_type == "MISSING":
             if not name:
                 purl_error_message = "The input purl is missing the required 'scheme', 'type' and 'name' components."
             else:
                 purl_name = name
-        elif purl_pkg_scheme_component == 'pkg:' and purl_type == "MISSING":
+        elif purl_pkg_scheme_component == "pkg:" and purl_type == "MISSING":
             if not name:
                 purl_error_message = "The input purl is missing the required 'type' and 'name' components."
             else:
@@ -374,6 +397,6 @@ class PackageSearchTestTabset(ListView):
         print(f"purl_attributes['version'] = {purl_attributes['version']}")
         print(f"purl_attributes['qualifiers'] = {purl_attributes['qualifiers']}")
         print(f"purl_attributes['subpath'] = {purl_attributes['subpath']}")
-        print(f"")
+        print("")
 
         return purl_attributes
