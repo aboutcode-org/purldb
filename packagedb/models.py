@@ -14,8 +14,6 @@ import uuid
 from collections import OrderedDict
 from urllib.parse import urlencode
 
-import natsort
-from dateutil.parser import parse as dateutil_parse
 from django.conf import settings
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
@@ -28,6 +26,9 @@ from django.db import transaction
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
+import natsort
+from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
 from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
