@@ -14,8 +14,6 @@ import uuid
 from collections import OrderedDict
 from urllib.parse import urlencode
 
-import natsort
-from dateutil.parser import parse as dateutil_parse
 from django.conf import settings
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
@@ -28,6 +26,9 @@ from django.db import transaction
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
+import natsort
+from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
 from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
@@ -86,7 +87,6 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
             page = paginator.page(page_number)
             yield from page.object_list
 
-
     # Based on class PurlValidateResponseSerializer(Serializer).  Added here because when added to serializers.py and imported raises a circular import error.
     class PurlValidateErrorSerializer(Serializer):
         valid = BooleanField()
@@ -123,8 +123,12 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
             return serializer.data
 
         qs = qs.filter(
-            models.Q(namespace=package_url.namespace) if package_url.namespace else (models.Q(namespace="")),
-            models.Q(subpath=package_url.subpath) if package_url.subpath else (models.Q(subpath="")),
+            models.Q(namespace=package_url.namespace)
+            if package_url.namespace
+            else (models.Q(namespace="")),
+            models.Q(subpath=package_url.subpath)
+            if package_url.subpath
+            else (models.Q(subpath="")),
             type=package_url.type,
             name=package_url.name,
             version=package_url.version,
@@ -156,13 +160,23 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         try:
             packageurl_from_string = PackageURL.from_string(query)
             if print_to_console:
-                print(f"\n- models.py PackageQuerySet get_packageurl_from_string() query = {packageurl_from_string}")
+                print(
+                    f"\n- models.py PackageQuerySet get_packageurl_from_string() query = {packageurl_from_string}"
+                )
                 print(f"\npackageurl_from_string.type = {packageurl_from_string.type}")
-                print(f"- packageurl_from_string.namespace = {packageurl_from_string.namespace}")
+                print(
+                    f"- packageurl_from_string.namespace = {packageurl_from_string.namespace}"
+                )
                 print(f"- packageurl_from_string.name = {packageurl_from_string.name}")
-                print(f"- packageurl_from_string.version = {packageurl_from_string.version}")
-                print(f"- packageurl_from_string.qualifiers = {packageurl_from_string.qualifiers}")
-                print(f"- packageurl_from_string.subpath = {packageurl_from_string.subpath}")
+                print(
+                    f"- packageurl_from_string.version = {packageurl_from_string.version}"
+                )
+                print(
+                    f"- packageurl_from_string.qualifiers = {packageurl_from_string.qualifiers}"
+                )
+                print(
+                    f"- packageurl_from_string.subpath = {packageurl_from_string.subpath}"
+                )
 
             return packageurl_from_string
 
