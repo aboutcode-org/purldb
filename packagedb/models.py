@@ -14,6 +14,8 @@ import uuid
 from collections import OrderedDict
 from urllib.parse import urlencode
 
+import natsort
+from dateutil.parser import parse as dateutil_parse
 from django.conf import settings
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
@@ -26,9 +28,6 @@ from django.db import transaction
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
-import natsort
-from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
 from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
@@ -97,7 +96,9 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
 
     def search(self, query: str = None):
         """
-        Return a Package queryset searching for the ``query``.  A version is required.  Returns an exact match if the record(s) exist(s), otherwise no match.
+        Return a Package queryset searching for the ``query``.  A version is
+        required.  Returns an exact match if the record(s) exist(s), otherwise
+        no match.
         """
         query = query and query.strip()
         if not query:
@@ -150,9 +151,7 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         return qs
 
     def get_packageurl_from_string(self, query: str = None):
-        """
-        Vet with packageurl-python __init__.py from_string().
-        """
+        """Vet with packageurl-python __init__.py from_string()."""
         query = query and query.strip()
         if not query:
             return self.none()
