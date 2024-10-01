@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load widget_tweaks %}
+{% load static %}
+{% load json_filters %}
+
+{% block title %}
+Validated purl details
+{% endblock %}
+
+{% block content %}
+<section class="section pt-0 pb-5">
+    {% include "validate_purl_input.html" %}
+</section>
+
+{% if search %}
+{% if is_paginated %}
+<div class="is-max-desktop mb-3">
+    <section class="mx-5">
+        <div class="is-flex" style="justify-content: space-between;">
+            {% include 'includes/pagination.html' with page_obj=page_obj %}
+        </div>
+    </section>
+</div>
+{% endif %}
+
+<section class="section pt-0">
+    <div class="container details-container">
+        <article class="panel panel-header-only is-primary">
+            <div class="panel-heading py-2 has-text-black is-size-6">
+                Validated purl details
+                {% if page_obj.paginator.count == 1 %}
+                <span class="has-text-black">(1 record)</span>
+                {% elif page_obj.paginator.count > 1 %}
+                <span class="ml-1 has-text-black">({{ page_obj.paginator.count }} records)</span>
+                {% endif %}
+            </div>
+        </article>
+        <div class="content ml-4 mr-4 mt-3 mb-4">
+            See also the <a href="/api/packages/?purl={{ parse_purl_attributes.input|urlencode }}" target="_blank">API results</a>.
+        </div>
+
+        {% for package in page_obj %}
+
+        <div class="content ml-4 mr-4 mt-3 mb-5">
+            <table class="table is-narrow is-hoverable is-fullwidth">
+                <thead>
+                    <tr>
+                        <th style="width: 225px; border-bottom: solid 2px #000000;">Field</th>
+                        <th style="border-bottom: solid 2px #000000;">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tooltip in purl_details_tooltips %}
+                    <tr>
+                        <td>
+                            <div>
+                                <span class="tooltip" style="position: relative;">
+                                    {% if tooltip.data_tooltip %}
+                                    <a href="#" class="tooltip-trigger">{{ tooltip.text }}</a>
+                                    <div class="{{ tooltip.tooltip_class }}">
+                                        {{ tooltip.data_tooltip | safe }}
+                                    </div>
+                                    {% else %}
+                                    {{ tooltip.text }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="clipboard">
+
+                                {% if tooltip.attribute == 'package_url' and package.package_url %}
+                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                    <span data-tooltip="" class="tooltip-wide">
+                                        <i class="fa fa-clipboard custom-icon"></i>
+                                    </span>
+                                </button>
+                                <div>{{ package.package_url|default:"&mdash;" }}</div>
+
+                                {% elif tooltip.attribute == 'filename' and package.filename %}
+                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                    <span data-tooltip="" class="tooltip-wide">
+                                        <i class="fa fa-clipboard custom-icon"></i>
+                                    </span>
+                                </button>
+                                <div>{{ package.filename|default:"&mdash;" }}</div>
+
+                                {% elif tooltip.attribute == 'download_url' and package.download_url %}
+                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                    <span data-tooltip="" class="tooltip-wide">
+                                        <i class="fa fa-clipboard custom-icon"></i>
+                                    </span>
+                                </button>
+                                <div><a href="{{ package.download_url }}">{{ package.download_url|default:"&mdash;" }}</a></div>
+
+                                {% elif tooltip.attribute == 'homepage_url' and package.homepage_url %}
+                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                    <span data-tooltip="" class="tooltip-wide">
+                                        <i class="fa fa-clipboard custom-icon"></i>
+                                    </span>
+                                </button>
+                                <div><a href="{{ package.homepage_url }}">{{ package.homepage_url|default:"&mdash;" }}</a></div>
+
+                                {% elif tooltip.attribute == 'primary_language' and package.primary_language %}
+                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                    <span data-tooltip="" class="tooltip-wide">
+                                        <i class="fa fa-clipboard custom-icon"></i>
+                                    </span>
+                                </button>
+                                <div>{{ package.primary_language|default:"&mdash;" }}</div>
+
+                                {% elif tooltip.attribute == 'description' and package.description %}
+                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                    <span data-tooltip="" class="tooltip-wide">
+                                        <i class="fa fa-clipboard custom-icon"></i>
+                                    </span>
+                                </button>
+                                <div>{{ package.description|default:"&mdash;" }}</div>
+
+                                {% elif tooltip.attribute == 'type' and package.type %}
+                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                    <span data-tooltip="" class="tooltip-wide">
+                                        <i class="fa fa-clipboard custom-icon"></i>
+                                    </span>
+                                </button>
+                                <div>{{ package.type|default:"&mdash;" }}</div>
+
+                                {% elif tooltip.attribute == 'name' and package.name %}
+                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                    <span data-tooltip="" class="tooltip-wide">
+                                        <i class="fa fa-clipboard custom-icon"></i>
+                                    </span>
+                                </button>
+                                <div>{{ package.name|default:"&mdash;" }}</div>
+
+                                {% elif tooltip.attribute == 'version' and package.version %}
+                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                    <span data-tooltip="" class="tooltip-wide">
+                                        <i class="fa fa-clipboard custom-icon"></i>
+                                    </span>
+                                </button>
+                                <div>{{ package.version|default:"&mdash;" }}</div>
+
+                                {% elif tooltip.attribute == 'release_date' and package.release_date %}
+                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                    <span data-tooltip="" class="tooltip-wide">
+                                        <i class="fa fa-clipboard custom-icon"></i>
+                                    </span>
+                                </button>
+                                <div>{{ package.release_date|default:"&mdash;" }}</div>
+
+                                {% elif tooltip.attribute == 'declared_license_expression' and package.declared_license_expression %}
+                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                    <span data-tooltip="" class="tooltip-wide">
+                                        <i class="fa fa-clipboard custom-icon"></i>
+                                    </span>
+                                </button>
+                                <div>{{ package.declared_license_expression|default:"&mdash;" }}</div>
+
+                                {% else %}
+                                &mdash;
+                                {% endif %}
+
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <div style="color: #ff0000; font-size: 15px; margin-left: 25px; margin-bottom: 10px;">{{ package.package_url|default:"&mdash;" }} &mdash; id = {{ package.id|default:"&mdash;" }}</div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+</section>
+
+{% endif %}
+{% endblock %}

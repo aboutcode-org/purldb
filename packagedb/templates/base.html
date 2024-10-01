@@ -13,12 +13,11 @@
     <link rel="stylesheet" href="{% static 'css/bulma-tooltip.css' %}" />
 
     <script src="{% static 'js/clipboard-2.0.0.min.js' %}" integrity="sha384-5tfO0soa+FisnuBhaHP2VmPXQG/JZ8dLcRL43IkJFzbsXTXT6zIX8q8sIT0VSe2G" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     {% block extrahead %}{% endblock %}
 </head>
 <body class="Site">
-    <div class="container max-desktop-width is-fullheight">
+    <div class="container is-max-widescreen">
         {% include "navbar.html" %}
         {% block content %}{% endblock %}
         {% include "footer.html" %}
@@ -32,7 +31,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             // Set initial data-tooltip value
             document.querySelectorAll('.btn-clipboard').forEach(button => {
-                // Next line is just for dev.
                 console.info('span:', button.querySelector('span'));
                 const span = button.querySelector('span');
                 if (span && !span.getAttribute('data-tooltip')) {
@@ -51,18 +49,9 @@
             clip.on("success", function (clip) {
                 const button = clip.trigger;
                 const span = button.querySelector('span');
-                // Change tooltip text
                 span.setAttribute('data-tooltip', 'Copied!');
                 span.setAttribute('class', 'tooltip-narrow-success');
-                //span.setAttribute('visibility', 'visible');
-                //2024-09-02 Monday 12:08:55.  Try this instead.
-                //span.classList.add('tooltip-visible');
-                //Does not keep tooltip visible.  Try this instead.
-                //span.classList.add('is-active');
                 span.classList.add('has-tooltip-active');
-                //how about this?
-                //span.setAttribute('style', 'visibility: visible; opacity: 1;');
-                // Try this
                 button.classList.add('tooltip-visible');
                 clip.clearSelection()
             });
@@ -71,46 +60,9 @@
                 console.error('Failed to copy: ', e);
                 const span = e.trigger.querySelector('span');
                 span.setAttribute('data-tooltip', 'Failed to copy');
-                //Keep visible
-                //span.classList.add('tooltip-visible');
-                //Does not keep tooltip visible.  Try this instead.
-                //span.classList.add('is-active');
-                //Try this
-                //button.classList.add('tooltip-visible');
             });
 
-            // Reset button/tooltip to default state.
-            function resetButtonAndTooltip(button) {
-                button.style.display = 'none';
-                const span = button.querySelector('span');
-                if (span) {
-                    const defaultTooltip = span.getAttribute('data-original-tooltip') || 'Copy to clipboard';
-                    span.setAttribute('data-tooltip', defaultTooltip);
-                    span.setAttribute('class', 'tooltip-narrow');
-                    //Reset to not visible
-                    //span.classList.remove('tooltip-visible');
-                    //Does not keep tooltip visible.  Try this instead.
-                    //span.classList.remove('is-active');
-
-                    //Try this
-                    //button.classList.remove('tooltip-visible');
-                }
-            }
-
-            // Add click event listener to document.
-            document.addEventListener('click', function(event) {
-                const clickedButton = event.target.closest('.btn-clipboard');
-                //Next line is just for dev.
-                console.info('clickedButton:', clickedButton);
-                document.querySelectorAll('.btn-clipboard').forEach(button => {
-                    if (button !== clickedButton) {
-                        resetButtonAndTooltip(button);
-                    }
-                });
-            });
-
-            // Display button when mouse enters the copyable area -- includes "Note" area below textbox/pre.
-            // TODO Is 'span is null' still an issue?
+            // Display button when mouse enters the copyable area.
             document.querySelectorAll('.btn-clipboard').forEach(button => {
                 const span = button.querySelector('span');
                 if (span) {
@@ -130,8 +82,51 @@
                     el.classList.add('has-tooltip-left');
                 }
             });
-        });
+
+
+            //<!-- Tooltips that can contain clickable links. -->
+            const tooltipTriggers = document.querySelectorAll('.tooltip-trigger');
+
+            function hideTooltipWithDelay(tooltipContent) {
+                setTimeout(() => {
+                    if (!tooltipContent.matches(':hover') && !tooltipContent.previousElementSibling.matches(':hover')) {
+                         tooltipContent.style.display = 'none';
+                    }
+                }, 200); // Delay to allow the user to hover over the tooltip
+            }
+
+            tooltipTriggers.forEach(trigger => {
+                trigger.addEventListener('mouseenter', function() {
+                    const tooltipContent = this.nextElementSibling;
+
+                    if (tooltipContent) {
+                       tooltipContent.style.display = 'block';
+                    }
+                });
+
+                trigger.addEventListener('mouseleave', function() {
+                    const tooltipContent = this.nextElementSibling;
+
+                    if (tooltipContent) {
+                        hideTooltipWithDelay(tooltipContent);
+                    }
+                });
+            });
+
+            // Keep the tooltip visible when the user hovers over the tooltip itself
+            document.querySelectorAll('.tooltip-content').forEach(content => {
+                content.addEventListener('mouseenter', function() {
+                    this.style.display = 'block';
+                });
+
+                content.addEventListener('mouseleave', function() {
+                    hideTooltipWithDelay(this);
+                });
+            });
+
+          });
     </script>
+
     {% endblock %}
 </body>
 </html>

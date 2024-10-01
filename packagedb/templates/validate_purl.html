@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load widget_tweaks %}
+{% load static %}
+{% load json_filters %}
+
+{% block title %}
+Validate purl
+{% endblock %}
+
+{% block content %}
+<section class="section pt-0 pb-5">
+    {% include "validate_purl_input.html" %}
+</section>
+
+{% if search %}
+
+<section class="section pt-0">
+    <div class="container details-container">
+        {% if validation_errors.valid == False %}
+        <article class="panel panel-header-only is-danger">
+            <div class="panel-heading py-2 has-text-white is-size-6">
+                purl components
+            </div>
+        </article>
+        {% else %}
+        {% if page_obj.paginator.count >= 1 %}
+        <article class="panel panel-header-only is-primary">
+            <div class="panel-heading py-2 has-text-black is-size-6">
+                purl components
+            </div>
+        </article>
+        {% else %}
+        <article class="panel panel-header-only is-primary">
+            <div class="panel-heading py-2 has-text-black is-size-6">
+                purl components
+            </div>
+        </article>
+        {% endif %}
+        {% endif %}
+
+        {% if validation_errors.valid == False %}
+        <div class="content ml-4 mr-4 mt-3 mb-4">
+            {% if validation_errors.error_details %}
+            The data you submitted <span class="has-text-danger has-text-weight-bold">is not a valid Package URL &ndash; {{ validation_errors.error_details }}</span>
+            {% else %}
+            The data you submitted <span class="has-text-danger has-text-weight-bold">is not a valid Package URL.</span>
+            {% endif %}
+        </div>
+        {% else %}
+        {% if page_obj.paginator.count >= 1 %}
+        <div class="content ml-4 mr-4 mt-3 mb-4">
+            The data you submitted <span class="has-text-primary has-text-weight-bold">is a valid Package URL.</span>
+            {% if validation_errors.valid != False %}
+            (See <a href="{% url 'validated_purl_details' %}?search={{ parse_purl_attributes.input|urlencode }} " target="_blank">package details</a>.)
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="content ml-4 mr-4 mt-3 mb-4">
+            <span class="has-text-primary has-text-weight-bold">The data you submitted is a valid Package URL</span> &mdash; but PurlDB does not contain the package.
+        </div>
+        {% endif %}
+        {% endif %}
+
+        <div class="content ml-4 mr-4 mt-3 mb-4">
+            <div class="columns">
+                <div class="column">
+                    <table class="table is-narrow is-hoverable is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th style="width: 150px; border-bottom: solid 2px #000000;">Component</th>
+                                <th style="width: 130px; border-bottom: solid 2px #000000;">Required</th>
+                                <th style="border-bottom: solid 2px #000000;">Value</th>
+                                <th style="width: 500px; border-bottom: solid 2px #000000;"><span class="dev-color">packageurl-python <span class="dev-color-nested">from_string()</span> value</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tooltip in purl_components_tooltips %}
+                            <tr>
+                                <td>
+                                    <div>
+                                        <span class="tooltip" style="position: relative;">
+                                            {% if tooltip.data_tooltip %}
+                                            <a href="#" class="tooltip-trigger">{{ tooltip.text }}</a>
+                                            <div class="{{ tooltip.tooltip_class }}">
+                                                {{ tooltip.data_tooltip | safe }}
+                                            </div>
+                                            {% else %}
+                                            {{ tooltip.text }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if tooltip.required %}
+                                    &#x2714;
+                                    {% else %}
+                                    &mdash;
+                                    {% endif %}
+                                </td>
+                                <td style="overflow-wrap: break-word;">
+                                    <div class="clipboard">
+                                        {% if tooltip.attribute == 'scheme' and parse_purl_attributes.scheme %}
+
+                                            {% if parse_purl_attributes.scheme == "MISSING" %}
+                                                <span style="color: #ff0000;">{{ parse_purl_attributes.scheme|default:"&nbsp;" }}</span>
+                                            {% else %}
+                                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                    <span data-tooltip="" class="tooltip-wide">
+                                                        <i class="fa fa-clipboard custom-icon"></i>
+                                                    </span>
+                                                </button>
+                                                <div>{{ parse_purl_attributes.scheme|default:"&nbsp;" }}</div>
+                                            {% endif %}
+
+                                        {% elif tooltip.attribute == 'type' and parse_purl_attributes.type %}
+                                            {% if parse_purl_attributes.type == "MISSING" %}
+                                                <span style="color: #ff0000;">{{ parse_purl_attributes.type|default:"&nbsp;" }}</span>
+                                            {% else %}
+                                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                    <span data-tooltip="" class="tooltip-wide">
+                                                        <i class="fa fa-clipboard custom-icon"></i>
+                                                    </span>
+                                                </button>
+                                                <div>{{ parse_purl_attributes.type|default:"&nbsp;" }}</div>
+                                            {% endif %}
+
+                                        {% elif tooltip.attribute == 'namespace' and parse_purl_attributes.namespace %}
+                                            <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                <span data-tooltip="" class="tooltip-wide">
+                                                    <i class="fa fa-clipboard custom-icon"></i>
+                                                </span>
+                                            </button>
+                                            <div>{{ parse_purl_attributes.namespace|default:"&nbsp;" }}</div>
+
+                                        {% elif tooltip.attribute == 'name' and parse_purl_attributes.name %}
+                                            {% if parse_purl_attributes.name == "MISSING" %}
+                                                <span style="color: #ff0000;">{{ parse_purl_attributes.name|default:"&nbsp;" }}</span>
+                                            {% else %}
+                                                <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                    <span data-tooltip="" class="tooltip-wide">
+                                                        <i class="fa fa-clipboard custom-icon"></i>
+                                                    </span>
+                                                </button>
+                                                <div>{{ parse_purl_attributes.name|default:"&nbsp;" }}</div>
+                                            {% endif %}
+
+                                        {% elif tooltip.attribute == 'version' and parse_purl_attributes.version %}
+                                            <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                <span data-tooltip="" class="tooltip-wide">
+                                                    <i class="fa fa-clipboard custom-icon"></i>
+                                                </span>
+                                            </button>
+                                            <div>{{ parse_purl_attributes.version|default:"&nbsp;" }}</div>
+
+                                        {% elif tooltip.attribute == 'qualifiers' and parse_purl_attributes.qualifiers %}
+                                            <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                <span data-tooltip="" class="tooltip-wide">
+                                                    <i class="fa fa-clipboard custom-icon"></i>
+                                                </span>
+                                            </button>
+                                            <div>{{ parse_purl_attributes.qualifiers|default:"&nbsp;" }}</div>
+
+                                        {% elif tooltip.attribute == 'subpath' and parse_purl_attributes.subpath %}
+                                            <button class="btn-clipboard px-0" data-bs-toggle="tooltip" style="right: 0.0rem; top: 0.2rem;">
+                                                <span data-tooltip="" class="tooltip-wide">
+                                                    <i class="fa fa-clipboard custom-icon"></i>
+                                                </span>
+                                            </button>
+                                            <div>{{ parse_purl_attributes.subpath|default:"&mdash;" }}</div>
+
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="dev-color">
+                                    {% if packageurl_from_string %}
+                                    {% if tooltip.text == 'scheme' %}
+                                    <span style="font-style: italic;">from_string() does not return the 'scheme' component</span>
+
+                                    {% elif tooltip.text == 'type' and packageurl_from_string.type %}
+                                    {{ packageurl_from_string.type }}
+
+                                    {% elif tooltip.text == 'namespace' and packageurl_from_string.namespace %}
+                                    {{ packageurl_from_string.namespace }}
+
+                                    {% elif tooltip.text == 'name' and packageurl_from_string.name %}
+                                    {{ packageurl_from_string.name }}
+
+                                    {% elif tooltip.text == 'version' and packageurl_from_string.version %}
+                                    {{ packageurl_from_string.version }}
+
+                                    {% elif tooltip.text == 'qualifiers' and packageurl_from_string.qualifiers %}
+                                    {{ packageurl_from_string.qualifiers }}
+
+                                    {% elif tooltip.text == 'subpath' and packageurl_from_string.subpath %}
+                                    {{ packageurl_from_string.subpath }}
+
+                                    {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endif %}
+{% endblock %}

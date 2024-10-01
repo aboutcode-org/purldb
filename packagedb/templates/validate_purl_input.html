@@ -1,7 +1,7 @@
 {% load widget_tweaks %}
-<article class='panel is-info'>
-    <div class='panel-heading py-2 is-size-6'>
-        Search for packages
+<article class='panel'>
+    <div class='panel-heading py-2 is-size-6' style="background-color: #4b70aa; color: #ffffff;">
+        Validate a Package URL
         <div class="dropdown is-hoverable has-text-weight-normal">
             <div class="dropdown-trigger">
                 <i class="fa fa-question-circle ml-2"></i>
@@ -10,16 +10,22 @@
                 <div class="dropdown-content dropdown-instructions-box-shadow">
                     <div class="dropdown-item">
                         <div>
-                            Search for packages by
+                            Validate a
                             <a
                                 href="https://github.com/package-url/purl-spec"
                                 target="_blank">
                                 Package URL
                             </a>
-                            (aka <strong>purl</strong>) such as <strong>pkg:openssl/openssl@3.0.6</strong>
-                            or <strong>pkg:generic/barebox@2024.04.0</strong>.
-                            <br />
-                            <div class="mt-2">Note: While 'version' is not a required attribute for a purl to be syntactically correct, a 'version' value <strong>is</strong> required to find a record in the PurlDB database.</div>
+                            (aka 'purl') such as
+                            <ul>
+                                <li>
+                                    pkg:openssl/openssl@3.3.1
+                                </li>
+                                <li>
+                                    pkg:github/10up/elasticpress@5.1.3
+                                </li>
+                            </ul>
+                            <div class="mt-2">Note: While 'version' is not a required attribute for a purl to be syntactically correct, <span class="has-text-danger">a 'version' value is required to find a record in the PurlDB database</span>.</div>
                         </div>
                     </div>
                 </div>
@@ -29,7 +35,7 @@
     <div class="panel-block">
         <div class="pb-3 width-100-pct">
             <form
-                action="{% url 'package_search' %}"
+                action="{% url 'validate_purl' %}"
                 method="get"
                 name="package_search_form"
             >
@@ -39,7 +45,7 @@
                     </div>
                     <div class="control">
                         <button class="button is-link" type="submit" id="submit_pkg">
-                            Search
+                            Validate
                         </button>
                     </div>
                 </div>

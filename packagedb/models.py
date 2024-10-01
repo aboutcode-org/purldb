@@ -14,6 +14,8 @@ import uuid
 from collections import OrderedDict
 from urllib.parse import urlencode
 
+import natsort
+from dateutil.parser import parse as dateutil_parse
 from django.conf import settings
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
@@ -26,9 +28,6 @@ from django.db import transaction
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
-import natsort
-from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
 from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
@@ -46,6 +45,8 @@ TRACE = False
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
+
+print_to_console = False
 
 
 def sort_version(packages):
@@ -85,20 +86,18 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
             page = paginator.page(page_number)
             yield from page.object_list
 
-    # NOTE Based on class PurlValidateResponseSerializer(Serializer).
-    class PurlValidateSerializer(Serializer):
+
+    # Based on class PurlValidateResponseSerializer(Serializer).  Added here because when added to serializers.py and imported raises a circular import error.
+    class PurlValidateErrorSerializer(Serializer):
         valid = BooleanField()
         exists = BooleanField(required=False)
         message = CharField()
         purl = CharField()
+        error_details = CharField()
 
     def search(self, query: str = None):
         """
-        Return a Package queryset searching for the ``query``.
-        - A version is required.
-        - If only a version is provided, no qualifiers value, and the DB contains both the version alone and the version with a qualifiers value, only the version-only record is returned.
-        - If a correct qualifiers value is provided, returns an exact match if the record exists, otherwise no match.
-        - '#' and any characters that follow appear to be ignored, but we have 0 such PURLs in the DB so testing is incomplete.
+        Return a Package queryset searching for the ``query``.  A version is required.  Returns an exact match if the record(s) exist(s), otherwise no match.
         """
         query = query and query.strip()
         if not query:
@@ -111,36 +110,67 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         response["purl"] = query
         response["valid"] = False
         response["message"] = message_not_valid
+        response["error_details"] = None
 
-        # validate purl
         try:
             package_url = PackageURL.from_string(query)
-        except ValueError:
-            serializer = self.PurlValidateSerializer(response)
-            # print(f"\nserializer.data = {serializer.data}")
+        except ValueError as e:
+            if print_to_console:
+                print(f"\nInput: {query}")
+                print(f"\nValueError: {e}")
+            response["error_details"] = e
+            serializer = self.PurlValidateErrorSerializer(response)
             return serializer.data
-            # return None  #throws error AttributeError: 'NoneType' object has no attribute 'prefetch_related'
-
-        # NOTE No longer used.
-        # purl_attributes = utils.simple_validate_from_string(query)
-
-        # print(f"\npackage_url = {package_url}")
-        # print(f"package_url.type = {package_url.type}")
-        # print(f"package_url.namespace = {package_url.namespace}")
-        # print(f"package_url.name = {package_url.name}")
-        # print(f"package_url.version = {package_url.version}")
-        # print(f"package_url.qualifiers = {package_url.qualifiers}")
-        # print(f"package_url.subpath = {package_url.subpath}")
 
         qs = qs.filter(
-            (models.Q(namespace=package_url.namespace) | models.Q(namespace="")),
-            (models.Q(subpath=package_url.subpath) | models.Q(subpath="")),
+            models.Q(namespace=package_url.namespace) if package_url.namespace else (models.Q(namespace="")),
+            models.Q(subpath=package_url.subpath) if package_url.subpath else (models.Q(subpath="")),
             type=package_url.type,
             name=package_url.name,
             version=package_url.version,
             qualifiers=urlencode(package_url.qualifiers),
         )
+
+        if print_to_console:
+            print(f"\nmodels.py PackageQuerySet search() qs.query = {qs.query}")
+            print(f"\nlist(qs): {list(qs)}")
+            for abc in list(qs):
+                print(f"- abc = {abc}")
+                print(f"- abc.type = {abc.type}")
+                print(f"- abc.namespace = {abc.namespace}")
+                print(f"- abc.name = {abc.name}")
+                print(f"- abc.version = {abc.version}")
+                print(f"- abc.qualifiers = {abc.qualifiers}")
+                print(f"- abc.subpath = {abc.subpath}")
+
         return qs
+
+    def get_packageurl_from_string(self, query: str = None):
+        """
+        Vet with packageurl-python __init__.py from_string().
+        """
+        query = query and query.strip()
+        if not query:
+            return self.none()
+
+        try:
+            packageurl_from_string = PackageURL.from_string(query)
+            if print_to_console:
+                print(f"\n- models.py PackageQuerySet get_packageurl_from_string() query = {packageurl_from_string}")
+                print(f"\npackageurl_from_string.type = {packageurl_from_string.type}")
+                print(f"- packageurl_from_string.namespace = {packageurl_from_string.namespace}")
+                print(f"- packageurl_from_string.name = {packageurl_from_string.name}")
+                print(f"- packageurl_from_string.version = {packageurl_from_string.version}")
+                print(f"- packageurl_from_string.qualifiers = {packageurl_from_string.qualifiers}")
+                print(f"- packageurl_from_string.subpath = {packageurl_from_string.subpath}")
+
+            return packageurl_from_string
+
+        except ValueError as e:
+            if print_to_console:
+                print(f"\nInput: {query}")
+                print(f"\nValueError: {e}")
+            return None
 
 
 VCS_CHOICES = [

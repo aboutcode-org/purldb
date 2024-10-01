@@ -6,6 +6,7 @@
 # See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
+import json
 from urllib.parse import urlsplit as _urlsplit
 
 from django.shortcuts import render
@@ -16,6 +17,8 @@ from packagedb import models
 from packagedb.forms import PackageSearchForm
 
 PAGE_SIZE = 20
+
+print_to_console = False
 
 
 class HomePage(View):
@@ -31,9 +34,9 @@ class HomePage(View):
         )
 
 
-class PackageSearch(ListView):
+class ValidatePurl(ListView):
     model = models.Package
-    template_name = "packages.html"
+    template_name = "validate_purl.html"
     ordering = ["type", "namespace", "name", "version", "qualifiers", "subpath"]
     paginate_by = PAGE_SIZE
     validation_errors = None
@@ -44,359 +47,369 @@ class PackageSearch(ListView):
         context["package_search_form"] = PackageSearchForm(request_query)
         context["search"] = request_query.get("search")
 
-        if self.validation_errors:
-            context["validation_errors"] = (
-                self.validation_errors
-            )  # Pass the errors to the context
-        context["purl_attributes"] = self.parse_purl(request_query.get("search"))
-        return context
+        if print_to_console:
+            print(f"\nviews.py ValidatePurl() get_context_data context['search'] = {context['search']}")
 
-    def get_queryset(self, query=None):
-        query = query or self.request.GET.get("search") or ""
-        result = self.model.objects.search(query)
+        context["packageurl_from_string"] = self.check_packageurl_from_string(request_query.get("search"))
 
-        if isinstance(result, dict):  # If result is a validation error dictionary
-            self.validation_errors = result  # Store errors in the instance attribute
-            return self.model.objects.none()  # Return an empty queryset
-        return result.prefetch_related().order_by("version")
-
-    def parse_purl(self, query):
-        purl_error_message = "PURL parsing under development."
-        purl_pkg_scheme_component = "AAA"
-        purl_type = "BBB"
-        purl_namespace = "CCC"
-        purl_name = "DDD"
-        purl_version = "EEE"
-        purl_qualifiers = "FFF"
-        purl_subpath = "GGG"
-
-        purl_attributes = {}
-        purl_attributes["input"] = query
-        purl_attributes["status"] = purl_error_message
-        purl_attributes["scheme"] = purl_pkg_scheme_component
-        purl_attributes["type"] = purl_type
-        purl_attributes["namespace"] = purl_namespace
-        purl_attributes["name"] = purl_name
-        purl_attributes["version"] = purl_version
-        purl_attributes["qualifiers"] = purl_qualifiers
-        purl_attributes["subpath"] = purl_subpath
-
-        return purl_attributes
-
-
-# NOTE Test a tabset alternative.  Update: per feedback, no tabset, but keep this class' parse_purl() method for the next iteration incorporating the Thur. tech talk feedback.
-class PackageSearchTestTabset(ListView):
-    model = models.Package
-    template_name = "test_tabset.html"
-    ordering = ["type", "namespace", "name", "version", "qualifiers", "subpath"]
-    paginate_by = PAGE_SIZE
-    validation_errors = None
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        request_query = self.request.GET
-        context["package_search_form"] = PackageSearchForm(request_query)
-        context["search"] = request_query.get("search")
-
-        # Tooltips for each input purl component.
-        tooltip_default = (
-            "has-tooltip-multiline has-tooltip-black has-tooltip-arrow tooltip-narrow"
-        )
-        tooltip_error = "has-text-danger has-tooltip-multiline has-tooltip-danger has-tooltip-arrow tooltip-wide-error"
-        purl_tooltips = [
+        purl_components_tooltips = [
             {
-                "text": "pkg:",
-                "tooltip_class": tooltip_default,
-                "data_tooltip": "scheme",
+                "text": "scheme",
+                "attribute": "scheme",
+                "tooltip_class": "tooltip-content",
+                "required": True,
+                "data_tooltip": "The scheme is a constant with the value 'pkg', and is followed by a ':' separator."
             },
-            {"text": "maven", "tooltip_class": tooltip_default, "data_tooltip": "type"},
-            {"text": "/"},
             {
-                "text": "org.elasticsearch",
-                "tooltip_class": tooltip_error,
-                "data_tooltip": "namespace",
+                "text": "type",
+                "attribute": "type",
+                "tooltip_class": "tooltip-content",
+                "required": True,
+                "data_tooltip": "A short code to identify the type of this package. For example: gem for a Rubygem, docker for a container, pypi for a Python Wheel or Egg, maven for a Maven Jar, deb for a Debian package etc."
             },
-            {"text": "/"},
             {
-                "text": "elasticsearch",
-                "tooltip_class": tooltip_default,
-                "data_tooltip": "name",
+                "text": "namespace",
+                "attribute": "namespace",
+                "tooltip_class": "tooltip-content",
+                "required": False,
+                "data_tooltip": "Package name prefix, such as Maven groupid, Docker image owner, GitHub user or organization, etc."
             },
-            {"text": "@"},
             {
-                "text": "7.17.9",
-                "tooltip_class": tooltip_default,
-                "data_tooltip": "version",
+                "text": "name",
+                "attribute": "name",
+                "tooltip_class": "tooltip-content",
+                "required": True,
+                "data_tooltip": "Name of the package."
             },
-            {"text": "?"},
             {
-                "text": "classifier=sources",
-                "tooltip_class": tooltip_default,
-                "data_tooltip": "qualifiers",
+                "text": "version",
+                "attribute": "version",
+                "tooltip_class": "tooltip-content",
+                "required": False,
+                "data_tooltip": "Version of the package."
+            },
+            {
+                "text": "qualifiers",
+                "attribute": "qualifiers",
+                "tooltip_class": "tooltip-content",
+                "required": False,
+                "data_tooltip": "Extra qualifying data for a package, such as the name of an OS, architecture, distro, etc."
+            },
+            {
+                "text": "subpath",
+                "attribute": "subpath",
+                "tooltip_class": "tooltip-content",
+                "required": False,
+                "data_tooltip": "Extra subpath within a package, relative to the package root."
             },
         ]
-        context["purl_tooltips"] = purl_tooltips
+        context["purl_components_tooltips"] = purl_components_tooltips
 
         if self.validation_errors:
             context["validation_errors"] = (
                 self.validation_errors
-            )  # Pass the errors to the context
-        context["purl_attributes"] = self.parse_purl(request_query.get("search"))
+            )
+        context["parse_purl_attributes"] = parse_purl(request_query.get("search"))
+        if print_to_console:
+            print(f"\ncontext = \n{context}\n")
+
         return context
 
     def get_queryset(self, query=None):
         query = query or self.request.GET.get("search") or ""
+        if print_to_console:
+            print(f"\nviews.py ValidatePurl() get_queryset query = {query}")
         result = self.model.objects.search(query)
         if isinstance(result, dict):  # If result is a validation error dictionary
             self.validation_errors = result  # Store errors in the instance attribute
+            if print_to_console:
+                print(f"\n==> result = {json.dumps(result, indent=4)}")
             return self.model.objects.none()  # Return an empty queryset
 
         return result.prefetch_related().order_by("version")
 
-    def parse_purl(self, query):
-        # purl_error_message = "The input purl is valid."
-        purl_error_message = ""
-        purl_pkg_scheme_component = "AAA"
-        purl_type = "BBB"
-        purl_namespace = "CCC"
-        purl_name = "DDD"
-        purl_version = "EEE"
-        purl_qualifiers = "FFF"
-        purl_subpath = "GGG"
 
-        if not query:
-            return
+    def check_packageurl_from_string(self, query=None):
+        query = query or self.request.GET.get("search") or ""
+        if print_to_console:
+            print(f"\nviews.py ValidatePurl check_packageurl_from_string() query = {query}")
+        result = self.model.objects.get_packageurl_from_string(query)
 
-        scheme, sep, remainder = query.partition(":")
-        # print(f"scheme = {scheme}")
-        # print(f"sep = {sep}")
-        # print(f"remainder01 = {remainder}")
+        return result
 
-        # ==> scheme component ===
-        purl_pkg_scheme_component = "MISSING"
 
-        if query:
-            if not sep or scheme != "pkg":
-                purl_error_message = (
-                    "The input purl is missing the required 'scheme' component."
-                )
-            else:
-                purl_pkg_scheme_component = "pkg:"
-                # TODO 2024-09-03 Tuesday 14:03:59.  Add this here after redefining default as ""?
-                purl_error_message = "The input purl is valid."
+class ValidatedPurlDetails(ListView):
+    model = models.Package
+    template_name = "validated_purl_details.html"
+    ordering = ["type", "namespace", "name", "version", "qualifiers", "subpath"]
+    paginate_by = PAGE_SIZE
+    validation_errors = None
 
-        # print(f"\npurl_error_message_pkg = {purl_error_message}")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        request_query = self.request.GET
+        context["package_search_form"] = PackageSearchForm(request_query)
+        context["search"] = request_query.get("search")
 
-        # ==> type component ===
-        purl_type = "MISSING"
+        if self.validation_errors:
+            context["validation_errors"] = (
+                self.validation_errors
+            )
 
-        # From original code:
-        # this strip '/, // and /// as possible in :// or :///
-        # TODO 2024-09-03 Tuesday 15:08:12.  Why do we do this for just 1 leading '/'?
-        # remainder = remainder.strip().lstrip("/")
-        # Try this instead w/o left stripping and vet results.
+        context["parse_purl_attributes"] = parse_purl(request_query.get("search"))
 
-        # print(f"\nremainder02 = {remainder}")
+        purl_details_tooltips = [
+            {
+                "text": "Package URL",
+                "attribute": "package_url",
+                "tooltip_class": "tooltip-content",
+                "data_tooltip": "A Package URL (&quot;purl&quot;) is a URL string used to identify and locate a software package in a mostly universal and uniform way across programming languages, package managers, packaging conventions, tools, APIs and databases."
+            },
+            {
+                "text": "Filename",
+                "attribute": "filename",
+                "tooltip_class": "tooltip-content",
+                "data_tooltip": "The exact file name (typically an archive of some type) of the package. This is usually the name of the file as downloaded from a website."
+            },
+            {
+                "text": "Download URL",
+                "attribute": "download_url",
+                "tooltip_class": "tooltip-content",
+                "data_tooltip": "The download URL for obtaining the package."
+            },
+            {
+                "text": "Homepage URL",
+                "attribute": "homepage_url",
+                "tooltip_class": "tooltip-content",
+                "data_tooltip": "Homepage URL"
+            },
+            {
+                "text": "Primary language",
+                "attribute": "primary_language",
+                "tooltip_class": "tooltip-content",
+                "data_tooltip": "The primary programming language associated with the package."
+            },
+            {
+                "text": "Description",
+                "attribute": "description",
+                "tooltip_class": "tooltip-content",
+                "data_tooltip": "Freeform description, preferably as provided by the author(s)."
+            },
 
-        type, sep, remainder = remainder.partition("/")  # NOQA
-        # print(f"\ntype = {type}")
-        # print(f"sep = {sep}")
-        # print(f"remainder03 = {remainder}")
+            {
+                "text": "Type",
+                "attribute": "type",
+                "tooltip_class": "tooltip-content",
+                "data_tooltip": "A short code to identify the type of this package. For example: gem for a Rubygem, docker for a container, pypi for a Python Wheel or Egg, maven for a Maven Jar, deb for a Debian package, etc."
+            },
 
-        if scheme == "pkg":
-            if not type or not sep:
-                purl_error_message = (
-                    "The input purl is missing the required 'type' component."
-                )
-            else:
-                purl_type = type
+            {
+                "text": "Name",
+                "attribute": "name",
+                "tooltip_class": "tooltip-content",
+                "data_tooltip": "Name of the package."
+            },
+            {
+                "text": "Version",
+                "attribute": "version",
+                "tooltip_class": "tooltip-content",
+                "data_tooltip": "Version of the package."
+            },
+            {
+                "text": "Release date",
+                "attribute": "release_date",
+                "tooltip_class": "tooltip-content",
+                "data_tooltip": "The date that the package file was created, or when it was posted to its original download source."
+            },
+            {
+                "text": "Declared license expression",
+                "attribute": "declared_license_expression",
+                "tooltip_class": "tooltip-content",
+                "data_tooltip": "A license expression derived from statements in the manifest or key files of a software project, such as the NOTICE, COPYING, README and LICENSE files."
+            },
+        ]
+        context["purl_details_tooltips"] = purl_details_tooltips
+
+        if print_to_console:
+            print(f"\ncontext = {context}")
+
+        return context
+
+    def get_queryset(self, query=None):
+        query = query or self.request.GET.get("search") or ""
+        if print_to_console:
+            print(f"\nValidatePurlDetails() get_queryset query = {query}")
+
+        result = self.model.objects.search(query)
+        if isinstance(result, dict):  # If result is a validation error dictionary
+            self.validation_errors = result  # Store errors in the instance attribute
+            print(f"\nValidatedPurlDetails.get_queryset() result = {json.dumps(result, indent=4)}")
+            return self.model.objects.none()  # Return an empty queryset
+
+        return result.prefetch_related().order_by("version")
+
+
+def parse_purl(query):
+    if print_to_console:
+        print(f"\nviews.py parse_purl() query = {query}")
+
+    purl_error_message = ""
+    purl_pkg_scheme_component = "AAA"
+    purl_type = "BBB"
+    purl_namespace = "CCC"
+    purl_name = "DDD"
+    purl_version = "EEE"
+    purl_qualifiers = "FFF"
+    purl_subpath = "GGG"
+
+    if not query:
+        return
+
+    scheme, sep, remainder = query.partition(":")
+
+    # ==> scheme component ===
+    purl_pkg_scheme_component = "MISSING"
+    if query:
+        if not sep or scheme != "pkg":
+            purl_error_message = (
+                "The input purl is missing the required 'scheme' component."
+            )
         else:
-            if not type or not sep:
-                purl_error_message = "The input purl is missing the required 'scheme' and 'type' components."
-            else:
-                purl_type = type
-        # print(f"\npurl_error_message_type = {purl_error_message}")
+            purl_pkg_scheme_component = "pkg:"
+            purl_error_message = "The input purl is valid."
 
-        type = type.lower()
+    # ==> type component ===
+    purl_type = "MISSING"
+    # https://github.com/package-url/purl-spec/blob/version-range-spec/PURL-SPECIFICATION.rst#rules-for-each-purl-component:
+    # purl parsers must accept URLs such as 'pkg://' and must ignore the '//'.
+    remainder = remainder.strip().lstrip("/")
+    type, sep, remainder = remainder.partition("/")  # NOQA
+    if print_to_console:
+        print(f"\ntype = {type}")
+        print(f"sep = {sep}")
+        print(f"remainder03 = {remainder}")
 
-        # ==> user:pass@host:port code block ===
-        # TODO ==> REMEMBER TO COME BACK TO THIS:
-        # Note that 'path' is defined just below and if not the following 'path' definition fails -- UnboundLocalError: local variable 'path' referenced before assignment
+    if scheme == "pkg":
+        if not type or not sep:
+            purl_error_message = (
+                "The input purl is missing the required 'type' component."
+            )
+        else:
+            purl_type = type
+    else:
+        if not type or not sep:
+            purl_error_message = "The input purl is missing the required 'scheme' and 'type' components."
+        else:
+            purl_type = type
 
-        scheme, authority, path, qualifiers_str, subpath = _urlsplit(
-            url=remainder, scheme="", allow_fragments=True
+    type = type.lower()
+
+    # ==> user:pass@host:port code block ===
+    scheme, authority, path, qualifiers_str, subpath = _urlsplit(
+        url=remainder, scheme="", allow_fragments=True
+    )
+
+    if scheme or authority:
+        msg = (
+            f'\n\tInvalid purl {repr(query)} cannot contain a "user:pass@host:port" '
+            f"\n\tURL Authority component: {repr(authority)}."
         )
-        # print(f"\n==> after _urlsplit:")
-        # print(f"==> scheme = {scheme}")
-        # print(f"==> authority = {authority}")
-        # print(f"==> path = {path}")
-        # print(f"==> qualifiers_str = {qualifiers_str}")
-        # print(f"==> subpath = {subpath}")
+        if print_to_console:
+            print(f"ValueError = {ValueError(msg)}")
 
-        # if scheme or authority:
-        #     msg = (
-        #         f'Invalid purl {repr(purl)} cannot contain a "user:pass@host:port" '
-        #         f"URL Authority component: {repr(authority)}."
-        #     )
-        #     raise ValueError(msg)
+    # ==> namespace component ===
+    namespace_01 = ""
+    sep_01 = ""
+    path_01 = ""
+    path = path.lstrip("/")
+    purl_namespace = ""
+    namespace: str | None = ""
+    # NPM purls have a namespace in the path and the namespace in an npm purl
+    # is different from others because it starts with `@` so we need to handle
+    # this case separately.
+    if type == "npm" and path.startswith("@"):
+        namespace, sep, path = path.partition("/")
+    else:
+        namespace_01, sep_01, path_01 = path.rpartition("/")
+        namespace = namespace_01
 
-        # ==> namespace component ===
-        # TEST Temp test definitions
-        namespace_01 = ""
-        sep_01 = ""
-        path_01 = ""
+    purl_namespace = namespace
+    remainder, sep, version = path.rpartition("@")
+    if not sep:
+        remainder = version
+        version = None
 
-        # print(f"\n==> path before [path = path.lstrip('/')] = {path}")
+    purl_version = version
 
-        path = path.lstrip("/")
+    # ==> name component ===
+    purl_name = "MISSING"
+    ns_name = remainder.strip().strip("/")
+    ns_name_parts = ns_name.split("/")
+    ns_name_parts = [seg for seg in ns_name_parts if seg and seg.strip()]
+    name = ""
 
-        # 2024-08-28 Wednesday 15:12:56.
-        # print(f"==> starting path for namespace and version = {path}")
+    if not namespace and len(ns_name_parts) > 1:
+        name = ns_name_parts[-1]
+        ns = ns_name_parts[0:-1]
+        namespace = "/".join(ns)
+    elif namespace and len(ns_name_parts) > 1:
+        name = ns_name_parts[-1]
+    # This is in the original code:
+    elif len(ns_name_parts) == 1:
+        name = ns_name_parts[0]
 
-        purl_namespace = ""
-        # From original code:
-        namespace: str | None = ""
-        # NPM purl have a namespace in the path
-        # and the namespace in an npm purl is
-        # different from others because it starts with `@`
-        # so we need to handle this case separately
-        if type == "npm" and path.startswith("@"):
-            namespace, sep, path = path.partition("/")
-            # print(f"\nnamespace = {namespace}")
-            # print(f"sep = {sep}")
-            # print(f"path = {path}")
-
-        # TEST 2024-08-28 Wednesday 15:58:54.  Can we grab the namespace when it's not npm/@mynamespace?
+    if purl_pkg_scheme_component == "pkg:" and purl_type != "MISSING":
+        if not name:
+            purl_error_message = (
+                "The input purl is missing the required 'name' component."
+            )
         else:
-            # namespace_01, sep_01, path_01 = path.partition("/")
+            purl_name = name
+    elif purl_pkg_scheme_component == "MISSING" and purl_type != "MISSING":
+        if not name:
+            purl_error_message = "The input purl is missing the required 'scheme' and 'name' components."
+        else:
+            purl_name = name
+    elif purl_pkg_scheme_component == "MISSING" and purl_type == "MISSING":
+        if not name:
+            purl_error_message = "The input purl is missing the required 'scheme', 'type' and 'name' components."
+        else:
+            purl_name = name
+    elif purl_pkg_scheme_component == "pkg:" and purl_type == "MISSING":
+        if not name:
+            purl_error_message = "The input purl is missing the required 'type' and 'name' components."
+        else:
+            purl_name = name
 
-            # path_01 = path.partition("/")
-            # path_01 = path.rpartition("/")
-            namespace_01, sep_01, path_01 = path.rpartition("/")
+    # ==> qualifiers component ===
+    purl_qualifiers = ""
+    purl_qualifiers = qualifiers_str
 
-            # 2024-08-28 Wednesday 16:56:27.  Try this:
-            namespace = namespace_01
+    # ==> subpath component ===
+    purl_subpath = ""
+    purl_subpath = subpath
 
-        # print(f"==> namespace = {namespace}")
-        # print(f"==> sep = {sep}")
-        # print(f"==> path = {path}")
-        # print("---")
-        # print(f"==> namespace_01 = {namespace_01}")
-        # print(f"==> sep_01 = {sep_01}")
-        # print(f"==> path_01 = {path_01}")
+    parse_purl_attributes = {}
+    parse_purl_attributes["input"] = query
+    parse_purl_attributes["status"] = purl_error_message
+    parse_purl_attributes["scheme"] = purl_pkg_scheme_component
+    parse_purl_attributes["type"] = purl_type
+    parse_purl_attributes["namespace"] = purl_namespace
+    parse_purl_attributes["name"] = purl_name
+    parse_purl_attributes["version"] = purl_version
+    parse_purl_attributes["qualifiers"] = purl_qualifiers
+    parse_purl_attributes["subpath"] = purl_subpath
 
-        purl_namespace = namespace
-        # print("=======")
-
-        remainder, sep, version = path.rpartition("@")
-        # print(f"\nremainder = {remainder}")
-        # print(f"sep = {sep}")
-        # print(f"version = {version}")
-        if not sep:
-            remainder = version
-            version = None
-
-        # TODO Define version here?
-        purl_version = version
-
-        # print(f"==> remainder04 = {remainder}")
-        # print(f"==> sep = {sep}")
-        # print(f"==> version = {version}")
-
-        # ==> name component ===
-        purl_name = "MISSING"
-
-        ns_name = remainder.strip().strip("/")
-        ns_name_parts = ns_name.split("/")
-        ns_name_parts = [seg for seg in ns_name_parts if seg and seg.strip()]
-        # print(f"\n==> ns_name = {ns_name}")
-        # print(f"\n==> ns_name_parts = {ns_name_parts}")
-        name = ""
-
-        if not namespace and len(ns_name_parts) > 1:
-            name = ns_name_parts[-1]
-            ns = ns_name_parts[0:-1]
-            namespace = "/".join(ns)
-        elif namespace and len(ns_name_parts) > 1:
-            name = ns_name_parts[-1]
-        # This is in the original code:
-        elif len(ns_name_parts) == 1:
-            name = ns_name_parts[0]
-
-        # print(f"\nname = {name}")
-
-        if purl_pkg_scheme_component == "pkg:" and purl_type != "MISSING":
-            if not name:
-                purl_error_message = (
-                    "The input purl is missing the required 'name' component."
-                )
-            else:
-                purl_name = name
-        elif purl_pkg_scheme_component == "MISSING" and purl_type != "MISSING":
-            if not name:
-                purl_error_message = "The input purl is missing the required 'scheme' and 'name' components."
-            else:
-                purl_name = name
-        elif purl_pkg_scheme_component == "MISSING" and purl_type == "MISSING":
-            if not name:
-                purl_error_message = "The input purl is missing the required 'scheme', 'type' and 'name' components."
-            else:
-                purl_name = name
-        elif purl_pkg_scheme_component == "pkg:" and purl_type == "MISSING":
-            if not name:
-                purl_error_message = "The input purl is missing the required 'type' and 'name' components."
-            else:
-                purl_name = name
-
-        # ==> qualifiers component ===
-        purl_qualifiers = ""
-        # temp
-        purl_qualifiers = qualifiers_str
-
-        # to come
-
-        # ==> subpath component ===
-        purl_subpath = ""
-        # temp
-        purl_subpath = subpath
-
-        # to come
-
-        # print(f"\n1. -- scheme = {scheme}")
-        # print(f"1A. -- purl_pkg_scheme_component = {purl_pkg_scheme_component}")
-        # print(f"2. -- type = {type}")
-        # print(f"2A. -- purl_type = {purl_type}")
-        # print(f"3. -- namespace = {namespace}")
-        # print(f"3A. -- purl_namespace = {purl_namespace}")
-        # print(f"4. -- name = {name}")
-        # print(f"4A. -- purl_name = {purl_name}")
-        # # purl_qualifiers
-        # # purl_subpath
-
-        # print(f"\npurl_error_message_name = {purl_error_message}")
-
-        # ===================================================================
-
-        purl_attributes = {}
-        purl_attributes["input"] = query
-        purl_attributes["status"] = purl_error_message
-        purl_attributes["scheme"] = purl_pkg_scheme_component
-        purl_attributes["type"] = purl_type
-        purl_attributes["namespace"] = purl_namespace
-        purl_attributes["name"] = purl_name
-        purl_attributes["version"] = purl_version
-        purl_attributes["qualifiers"] = purl_qualifiers
-        purl_attributes["subpath"] = purl_subpath
-
-        print(f"\npurl_attributes['input'] = {purl_attributes['input']}")
-        print(f"purl_attributes['status'] = {purl_attributes['status']}")
-        print(f"purl_attributes['scheme'] = {purl_attributes['scheme']}")
-        print(f"purl_attributes['type'] = {purl_attributes['type']}")
-        print(f"purl_attributes['namespace'] = {purl_attributes['namespace']}")
-        print(f"purl_attributes['name'] = {purl_attributes['name']}")
-        print(f"purl_attributes['version'] = {purl_attributes['version']}")
-        print(f"purl_attributes['qualifiers'] = {purl_attributes['qualifiers']}")
-        print(f"purl_attributes['subpath'] = {purl_attributes['subpath']}")
+    if print_to_console:
+        print(f"\nparse_purl_attributes['input'] = {parse_purl_attributes['input']}")
+        print(f"\nparse_purl_attributes['status'] = {parse_purl_attributes['status']}")
+        print(f"\nparse_purl_attributes['scheme'] = {parse_purl_attributes['scheme']}")
+        print(f"parse_purl_attributes['type'] = {parse_purl_attributes['type']}")
+        print(f"parse_purl_attributes['namespace'] = {parse_purl_attributes['namespace']}")
+        print(f"parse_purl_attributes['name'] = {parse_purl_attributes['name']}")
+        print(f"parse_purl_attributes['version'] = {parse_purl_attributes['version']}")
+        print(f"parse_purl_attributes['qualifiers'] = {parse_purl_attributes['qualifiers']}")
+        print(f"parse_purl_attributes['subpath'] = {parse_purl_attributes['subpath']}")
         print("")
 
-        return purl_attributes
+    return parse_purl_attributes

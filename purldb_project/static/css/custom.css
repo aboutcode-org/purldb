@@ -12,8 +12,15 @@ tab.Site {
     color: #f7bf3c;
 }
 
-.container.max-desktop-width {
+
+/* Not full-screen -- looks better than full-screen..  */
+
+.container.is-max-widescreen {
+    max-width: 1152px;
     width: 100%;
+}
+
+.container {
     max-width: 100%;
 }
 
@@ -103,77 +110,6 @@ code {
     font-family: Consolas;
 }
 
-/* start tabset */
-
-/* 2024-08-25 Sunday 12:41:24.  Comment out for now since I'm experimenting with a simpler approach that actually works with Bulma columns (and a slightly different JavaScript script). */
-
-#tab-content div,
-#tab-content div>div {
-    display: none;
-}
-
-#tab-content div.is-active,
-#tab-content div.is-active>div,
-#tab-content div.is-active>div>div,
-#tab-content div.is-active>div>div>div,
-#tab-content div.is-active>div>div>div>div {
-    display: block;
-    visibility: visible;
-}
-
-#tab-content div {
-    border-bottom: 0;
-}
-
-#tab-content .tab-nested-div {
-    border-bottom: 0;
-    margin-bottom: 0px;
-    padding-bottom: 0px;
-}
-
-.tab-div {
-    border: 0;
-    background-color: #ffffff;
-    padding: 10px;
-}
-
-.tabs.is-boxed ul {
-    padding-left: 20px;
-    border-color: #3298dc;
-}
-
-.tabs li {
-    margin-left: 0px;
-    margin-right: 0px;
-}
-
-.tabs.is-boxed li a {
-    border-top-width: 3px;
-}
-
-.tabs:not(:last-child) {
-    margin-bottom: 0px;
-}
-
-.tabs.is-boxed li a:hover {
-    border: solid 1px #e8e8e8;
-    border-top-width: 3px;
-    background-color: #ffffff;
-    border-color: #e8e8e8;
-    border-bottom-color: #3298dc;
-}
-
-.tabs.is-boxed li.is-active a,
-.tabs.is-boxed li.is-active a:hover {
-    background-color: white;
-    border-top: solid 3px #3298dc;
-    border-bottom-color: transparent !important;
-    color: #000000;
-    border-color: #3298dc;
-}
-
-/* end tabset */
-
 .table.vcio-table tr:last-child td,
 .table.vcio-table td {
     border: solid 1px #dbdbdb;
@@ -223,8 +159,8 @@ pre.data-display {
     color: #000000;
     background-color: #ffffff;
     border-color: #d8d8d8;
-    word-wrap: break-word; word-break: break-word;
-    /* word-break: break-all; */
+    word-wrap: break-word;
+    word-break: break-word;
     line-height: 18px;
 
     /* Add right padding to create room for copy button on hover */
@@ -235,8 +171,8 @@ pre.data-display {
     font-family: Consolas;
     font-size: 14px; /* 0.875em */
     color: #000000;
-    word-wrap: break-word; word-break: break-word;
-    /* word-break: break-all; */
+    word-wrap: break-word;
+    word-break: break-word;
     line-height: 18px;
 }
 
@@ -249,16 +185,14 @@ pre.data-display {
     font-family: Consolas;
     font-size: 14px; /* 0.875em */
     color: #000000;
-    word-wrap: break-word; word-break: break-word;
-    /* word-break: break-all; */
+    word-wrap: break-word;
+    word-break: break-word;
     line-height: 18px;
     border: solid 1px !important;
     border-color: #c8c8c8 !important;
     border-radius: 5px;
     background-color: #ffffff;
     padding: 10px;
-    /* margin: 10px; */
-    /* display: inline-block; */
 }
 
 .note {
@@ -354,7 +288,8 @@ a.small_page_button {
 }
 
 .panel:not(:last-child).panel-header-only {
-    margin-bottom: 1.0rem;
+    /* Adjust so "See only" in details html is closer to the bottom of the colored title bar. */
+    margin-bottom: 0.75rem;
 }
 
 .column.skinny {
@@ -403,6 +338,7 @@ a.small_page_button {
 
 .details-container {
     border: 0;
+    border: solid 1px #d8d8d8;
     border-radius: 6px;
     box-shadow: 0 0.5em 1em -0.125em rgba(8, 8, 8, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
 }
@@ -495,17 +431,14 @@ ul.fixed_by_bullet ul {
 
 ul.fixed_by_bullet li {
     margin-left: 0px;
-    font-family: Arial;
     font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
     font-size: 13px;
     font-weight: normal;
-    /*margin-bottom: 10px;*/
     margin-bottom: 2px;
 }
 
 ul.fixed_by_bullet li:last-child {
     margin-left: 0px;
-    font-family: Arial;
     font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
     font-size: 13px;
     font-weight: normal;
@@ -514,7 +447,6 @@ ul.fixed_by_bullet li:last-child {
 
 ul.fixed_by_bullet li li {
     margin-left: 0px;
-    font-family: Arial;
     font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
     font-size: 13px;
     font-weight: normal;
@@ -534,7 +466,6 @@ ul.fixed_by_bullet ul ul {
 
 ul.fixed_by_bullet li li li {
     margin-left: 0px;
-    font-family: Arial;
     font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
     font-size: 13px;
     font-weight: normal;
@@ -708,8 +639,7 @@ ul.fixed_by_bullet li li li {
     }
 }
 
-/* ================================================================================================================================== */
-/* ================================================================================================================================== */
+/* ================================================================ clipboard ================================================================ */
 
 /* Copied for clipboard.js from https://github.com/aboutcode-org/dejacode/blob/0f01d2b4f79dbd92575ec51d3f21f29a4894a498/dejacode/static/css/dejacode_bootstrap.css#L166 */
 /* -- clipboard.js -- */
@@ -720,19 +650,12 @@ ul.fixed_by_bullet li li li {
   .btn-expend {
     position: absolute;
     display: none;
-    top: .375rem;
     top: 0.9rem;
     right: 0;
     z-index: 10;
-    color: #000000;
     color: #0066ff;
     cursor: pointer;
     background-color: transparent;
-
-    border: solid 1px #b8b8b8;
-    border-radius: 3px;
-    /* padding: 5px 7px 5px 7px !important; */
-
     border: 0;
     border-radius: 0;
     padding: 0 !important;
@@ -752,172 +675,11 @@ ul.fixed_by_bullet li li li {
   }
   .btn-clipboard:hover,
   .btn-expend:hover {
-    background-color: #f2f2f2;
     background-color: transparent;
     border: solid 1px #808080;
     border: 0;
-    color: #000000;
-    color: #ff0000;
     color: #0066ff;
   }
-
-/* ================================================================================================================================== */
-/* ================================================================================================================================== */
-
-/* 2024-09-02 Monday 17:32:03.  Try this */
-/* .btn-clipboard:hover span[data-tooltip]::after {
-    border: solid 1px #ff0000;
-} */
-
-
-
-
-
-
-
-
-
-
-
-  /* ============================== */
-
-  /* 2024-09-02 Monday 13:18:11.  Try this */
-
-  /* .btn-clipboard:hover span[data-tooltip]::after,
-  .btn-clipboard.tooltip-visible span[data-tooltip]::after {
-      opacity: 1;
-      visibility: visible;
-      display: block;
-  } */
-
-  /* ----------------------------------------------------------------------- */
-
-  /* 2024-09-02 Monday 12:50:15.  Try this instead of the block just above. */
-
-  /* .btn-clipboard {
-    position: relative;
-    position: absolute;
-}
-
-
-.btn-clipboard span[data-tooltip]::before,
-.btn-clipboard span[data-tooltip]::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s, visibility 0.3s;
-}
-
-.btn-clipboard span[data-tooltip]::before {
-    border-style: solid;
-    border-width: 6px 6px 0 6px;
-    border-color: #333 transparent transparent transparent;
-    bottom: calc(100% + 10px);
-    transform: translateX(-50%);
-    z-index: 1001;
-} */
-
-
-/* .btn-clipboard span[data-tooltip]::after {
-    content: attr(data-tooltip);
-    position: absolute;
-
-    bottom: 125%;
-    left: 50%;
-
-    transform: translateX(-50%);
-    background-color: #333;
-    color: white;
-    padding: 5px 10px;
-    padding: 0px;
-    border-radius: 4px;
-    font-size: 14px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
-} */
-
-/* .btn-clipboard:hover span[data-tooltip]::after,
-.btn-clipboard.tooltip-visible span[data-tooltip]::after {
-    opacity: 1;
-    visibility: visible;
-} */
-
-/* .btn-clipboard span[data-tooltip]::after {
-    content: attr(data-tooltip);
-    background-color: #333;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 14px;
-    white-space: nowrap;
-    bottom: calc(100% + 16px);
-    transform: translateX(-50%);
-    z-index: 1000;
-}
-
-.btn-clipboard:hover span[data-tooltip]::before,
-.btn-clipboard:hover span[data-tooltip]::after,
-.btn-clipboard.tooltip-visible span[data-tooltip]::before,
-.btn-clipboard.tooltip-visible span[data-tooltip]::after {
-    visibility: visible;
-    opacity: 1;
-} */
-
-  /* ----------------------------------------------------------------------- */
-
-/* 2024-09-02 Monday 16:56:19.  Try this */
-
-/* .btn-clipboard {
-    position: relative;
-    position: absolute;
-}
-
-.btn-clipboard span[data-tooltip]::before,
-.btn-clipboard span[data-tooltip]::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s, visibility 0.3s;
-}
-
-.btn-clipboard span[data-tooltip]::before {
-    border-style: solid;
-    border-width: 6px 6px 0 6px;
-    border-color: #333 transparent transparent transparent;
-    bottom: 100%;
-    transform: translateX(-50%);
-    z-index: 1001;
-}
-
-.btn-clipboard span[data-tooltip]::after {
-    content: attr(data-tooltip);
-    background-color: #333;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 14px;
-    white-space: nowrap;
-    bottom: calc(100% + 6px);
-    transform: translateX(-50%);
-    z-index: 1000;
-}
-
-.btn-clipboard:hover span[data-tooltip]::before,
-.btn-clipboard:hover span[data-tooltip]::after,
-.btn-clipboard.tooltip-visible span[data-tooltip]::before,
-.btn-clipboard.tooltip-visible span[data-tooltip]::after,
-.btn-clipboard span.tooltip-success.is-active::before,
-.btn-clipboard span.tooltip-success.is-active::after {
-    visibility: visible;
-    opacity: 1;
-} */
 
 /* Ensure the icon remains visible */
 .btn-clipboard span .custom-icon {
@@ -925,9 +687,7 @@ ul.fixed_by_bullet li li li {
     z-index: 1002;
 }
 
-  /* ----------------------------------------------------------------------- */
-
-  /* 2024-08-27 Tuesday 11:03:51.  Adjust for display inside div inside td. */
+  /* Adjust for display inside div inside td. */
   .btn-clipboard-adjust {
     top: -0.1rem;
     background-color: #ffffff;
@@ -937,40 +697,25 @@ ul.fixed_by_bullet li li li {
   }
 
   .results-message-red {
-    /* border: solid 2px #ffb3b3; */
-    /* border: solid 1px #d8d8d8; */
     background-color: #ffe6e6;
     border-radius: 5px;
-    padding: 10px;
     padding: 5px;
-    margin: 20px 0px 50px 0px;
-    margin: 5px 0px 40px 0px;
     margin: 0px 0px 5px 0px;
     color: #000000;
   }
 
   .results-message-green {
-    /* border: solid 2px #00e6ac; */
-    /* border: solid 1px #d8d8d8; */
     background-color: #99ffe6;
     border-radius: 5px;
-    padding: 10px;
     padding: 5px;
-    margin: 20px 0px 50px 0px;
-    margin: 5px 0px 40px 0px;
     margin: 0px 0px 5px 0px;
     color: #000000;
   }
 
   .results-message-yellow {
-    /* border: solid 2px #ffeb99; */
-    /* border: solid 1px #d8d8d8; */
     background-color: #ffffcc;
     border-radius: 5px;
-    padding: 10px;
     padding: 5px;
-    margin: 20px 0px 50px 0px;
-    margin: 5px 0px 40px 0px;
     margin: 0px 0px 5px 0px;
     color: #000000;
   }
@@ -989,62 +734,6 @@ ul.fixed_by_bullet li li li {
   ::placeholder {
     opacity: 1;
  }
-
-/* ================================================================================================================================== */
-/* ================================================================================================================================== */
-
- /* For the clipboard.js/copy-to-clipboard tooltips */
-
-/* Base tooltip styles */
-/* [data-tooltip] {
-    position: relative;
-    cursor: pointer;
-  } */
-
-  /* [data-tooltip]::before,
-  [data-tooltip]::after {
-    position: absolute;
-    opacity: 0;
-    visibility: hidden;
-    visibility: visible !important;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-  } */
-
-  /* Tooltip text */
-  /* [data-tooltip]::before {
-    content: attr(data-tooltip);
-    background-color: #333;
-    background-color: #000000 !important;
-    color: #fff;
-    text-align: center;
-    padding: 5px 10px;
-    border-radius: 6px !important;
-    white-space: nowrap;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-  } */
-
-  /* Tooltip arrow */
-  /* [data-tooltip]::after {
-    content: "";
-    border-width: 5px;
-    border-style: solid;
-    border-color: #333 transparent transparent transparent;
-    bottom: 75%;
-    left: 50%;
-    transform: translateX(-50%);
-  } */
-
-
-  /* Show tooltip on hover */
-  /* 2024-09-02 Monday 12:19:54.  Seems to have no effect on the latest tooltip */
-  /* [data-tooltip]:hover::before,
-  [data-tooltip]:hover::after {
-    opacity: 1;
-    visibility: visible;
-  } */
 
   /* Custom width classes */
   [data-tooltip].tooltip-wide::before {
@@ -1077,7 +766,6 @@ ul.fixed_by_bullet li li li {
   [data-tooltip].tooltip-narrow::before {
     width: 100px !important;
     white-space: normal;
-    /* border: solid 1px #0000; */
     border-radius: 5px !important;
     background-color: #000000 !important;
     text-align: center;
@@ -1092,15 +780,6 @@ ul.fixed_by_bullet li li li {
     text-align: center;
     padding: 5px !important;
   }
-
-  /* or maybe this? */
-  /* [data-tooltip].tooltip-narrow-success::before {
-    visibility: visible;
-    opacity: 1;
-  } */
-
-/* ================================================================================================================================== */
-/* ================================================================================================================================== */
 
   .fa .fa-copy {
     color: #ff0000 !important;
@@ -1127,7 +806,6 @@ ul.fixed_by_bullet li li li {
 
 .custom-icon {
     color: #000000;
-    font-size: 24px;
     font-size: 16px !important;
     transition: color 0.3s ease;
 }
@@ -1138,13 +816,80 @@ ul.fixed_by_bullet li li li {
 
 /* Keep tooltip visible until user clicks elsewhere on page. */
 .btn-clipboard span[data-tooltip]:not(.tooltip-visible)::after {
-    display: none;
     display: block !important;
     visibility: visible !important;
 }
 
 .btn-clipboard span[data-tooltip].tooltip-visible::after {
-    display: block;
     display: block !important;
     visibility: visible !important;
 }
+
+  /* Used for the field in validate and validate-details templates. */
+  .tooltip-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    background-color: #000;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 10;
+    width: 300px;
+    font-size: 14px;
+
+    top: -40px; /* Vertical offset to appear above the text */
+    top: 50%;
+
+    right: 0; /* Align the tooltip with the right edge of the text */
+    right: -5px;
+
+    transform: translateX(100%); /* Shift the tooltip 100% to the right of the text */
+    transform: translateX(100%) translateY(-50%);
+}
+
+/* Tooltip arrow */
+.tooltip-content::after {
+    content: "";
+    position: absolute;
+    /* top: 100%;*/  /* Arrow will appear at the bottom of the tooltip */
+    /* left: 50%; */
+    top: 50%;  /* Arrow will appear on the left side of the tooltip */
+    right: 100%;
+    transform: translateY(-50%); /* Vertically center the arrow */
+    border-width: 5px;
+    border-style: solid;
+    /* border-color: transparent transparent transparent #000000;*/ /* Left side arrow pointing right */
+    border-color: transparent #000000 transparent transparent;  /* Left side arrow pointing left */
+  }
+/* end test arrow */
+
+  .tooltip:hover .tooltip-content {
+    display: block;
+  }
+
+  .tooltip-trigger {
+    color: #000000 !important;
+    border-bottom: dotted 1px #202020;
+  }
+
+  .tooltip-trigger:hover {
+    color: #ff8800 !important;
+    text-decoration: none;
+  }
+
+  .tooltip-trigger:hover + .tooltip-content {
+    display: block;
+  }
+
+  .tooltip-internal-link {
+    color: #66ffff !important;
+  }
+
+  .dev-color {
+    color: #888888;
+  }
+
+  .dev-color-nested {
+    color: #993399;
+  }

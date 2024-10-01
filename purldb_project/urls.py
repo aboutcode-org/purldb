@@ -10,7 +10,6 @@
 from django.conf.urls import include
 from django.urls import path
 from django.views.generic.base import TemplateView
-
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework import routers
@@ -29,8 +28,8 @@ from packagedb.api import ResourceViewSet
 from packagedb.from_purl import api_from_purl_router
 from packagedb.to_purl import api_to_purl_router
 from packagedb.views import HomePage
-from packagedb.views import PackageSearch
-from packagedb.views import PackageSearchTestTabset
+from packagedb.views import ValidatedPurlDetails
+from packagedb.views import ValidatePurl
 
 api_router = routers.DefaultRouter()
 api_router.register("packages", PackageViewSet)
@@ -74,13 +73,13 @@ urlpatterns = [
         name="home",
     ),
     path(
-        "packages/search",
-        PackageSearch.as_view(),
-        name="package_search",
+        "packages/validate_purl",
+        ValidatePurl.as_view(),
+        name="validate_purl",
     ),
     path(
-        "packages/search_test_tabset",
-        PackageSearchTestTabset.as_view(),
-        name="package_search_test_tabset",
+        "packages/validated_purl_details",
+        ValidatedPurlDetails.as_view(),
+        name="validated_purl_details",
     ),
 ]
