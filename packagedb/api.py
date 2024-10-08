@@ -258,7 +258,7 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
             d = {f"{field}__in": value}
             lookups |= Q(**d)
 
-        qs = Resource.objects.filter(lookups)
+        qs = Resource.objects.filter(lookups).prefetch_related("package")
         paginated_qs = self.paginate_queryset(qs)
         serializer = ResourceAPISerializer(
             paginated_qs, many=True, context={"request": request}

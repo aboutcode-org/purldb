@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from django.conf import settings
 from django.conf.urls import include
 from django.urls import path
 from django.views.generic import RedirectView
@@ -68,3 +69,6 @@ urlpatterns = [
         name="index_package_scan",
     ),
 ]
+
+if settings.DEBUG and settings.DEBUG_TOOLBAR:
+    urlpatterns.append(path("__debug__/", include("debug_toolbar.urls")))
