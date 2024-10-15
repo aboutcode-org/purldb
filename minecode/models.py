@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import datetime
 import logging
 import sys
 import uuid
@@ -653,6 +654,14 @@ class ScannableURIManager(models.Manager):
                 recent[extra_value] = getattr(scauri, extra_value)
             yield recent
 
+    def get_outstanding_scannable_uris(self):
+        """
+        Return ScannableURIs that are older than a day from when this
+        queryset is called and that are being worked on.
+        """
+        time_delta = datetime.datetime.now() - datetime.timedelta(days=1)
+        return self.filter(scan_date__lte=time_delta, wip_date__isnull=False)
+
 
 class ScannableURI(BaseURI):
     """
@@ -817,6 +826,17 @@ class ScannableURI(BaseURI):
             job_timeout=1200,
         )
         return job
+
+    def reset(self):
+        """
+        Reset fields such that a ScannableURI can be sent off for scanning again
+        """
+        self.scan_status = ScannableURI.SCAN_NEW
+        self.scan_error = None
+        self.index_error = None
+        self.scan_date = None
+        self.wip_date = None
+        self.save()
 
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
