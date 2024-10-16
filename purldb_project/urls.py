@@ -10,7 +10,6 @@
 from django.conf import settings
 from django.conf.urls import include
 from django.urls import path
-from django.views.generic import RedirectView
 from django.views.generic.base import TemplateView
 
 from drf_spectacular.views import SpectacularAPIView
@@ -30,6 +29,9 @@ from packagedb.api import PurlValidateViewSet
 from packagedb.api import ResourceViewSet
 from packagedb.from_purl import api_from_purl_router
 from packagedb.to_purl import api_to_purl_router
+from packagedb.views import HomePage
+from packagedb.views import ValidatedPurlDetails
+from packagedb.views import ValidatePurl
 
 api_router = routers.DefaultRouter()
 api_router.register("packages", PackageViewSet)
@@ -56,7 +58,6 @@ urlpatterns = [
     path("api/", include((api_router.urls, "api"))),
     path("api/to_purl/", include((api_to_purl_router.urls, "api_to"))),
     path("api/from_purl/", include((api_from_purl_router.urls, "api_from"))),
-    path("", RedirectView.as_view(url="api/")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/",
@@ -67,6 +68,21 @@ urlpatterns = [
         "api/scan_queue/index_package_scan/<str:key>/",
         index_package_scan,
         name="index_package_scan",
+    ),
+    path(
+        "",
+        HomePage.as_view(),
+        name="home",
+    ),
+    path(
+        "packages/validate_purl",
+        ValidatePurl.as_view(),
+        name="validate_purl",
+    ),
+    path(
+        "packages/validated_purl_details",
+        ValidatedPurlDetails.as_view(),
+        name="validated_purl_details",
     ),
 ]
 

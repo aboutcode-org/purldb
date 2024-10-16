@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}
+PurlDB Home
+{% endblock %}
+
+{% block content %}
+    <section class="section pt-0">
+        {% include "validate_purl_input.html" %}
+    </section>
+
+    <div></div>
+{% endblock %}

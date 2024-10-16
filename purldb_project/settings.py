@@ -79,6 +79,7 @@ INSTALLED_APPS = (
     "drf_spectacular",
     "rest_framework.authtoken",
     "django_rq",
+    "widget_tweaks",
 )
 
 MIDDLEWARE = (
@@ -132,6 +133,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
                 "django.template.context_processors.static",
+                "purldb_project.context_processors.versions",
             ],
         },
     },

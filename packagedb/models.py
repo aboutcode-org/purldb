@@ -12,6 +12,7 @@ import logging
 import sys
 import uuid
 from collections import OrderedDict
+from urllib.parse import urlencode
 
 from django.conf import settings
 from django.contrib.auth.models import UserManager
@@ -34,6 +35,9 @@ from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
 from rest_framework.authtoken.models import Token
+from rest_framework.serializers import BooleanField
+from rest_framework.serializers import CharField
+from rest_framework.serializers import Serializer
 
 from packagedb import schedules
 
@@ -42,6 +46,8 @@ TRACE = False
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
+
+print_to_console = False
 
 
 def sort_version(packages):
@@ -80,6 +86,105 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         for page_number in paginator.page_range:
             page = paginator.page(page_number)
             yield from page.object_list
+
+    # Based on class PurlValidateResponseSerializer(Serializer).  Added here because when added to serializers.py and imported raises a circular import error.
+    class PurlValidateErrorSerializer(Serializer):
+        valid = BooleanField()
+        exists = BooleanField(required=False)
+        message = CharField()
+        purl = CharField()
+        error_details = CharField()
+
+    def search(self, query: str = None):
+        """
+        Return a Package queryset searching for the ``query``.  A version is
+        required.  Returns an exact match if the record(s) exist(s), otherwise
+        no match.
+        """
+        query = query and query.strip()
+        if not query:
+            return self.none()
+        qs = self
+
+        message_not_valid = "The provided PackageURL is not valid."
+        response = {}
+        response["exists"] = None
+        response["purl"] = query
+        response["valid"] = False
+        response["message"] = message_not_valid
+        response["error_details"] = None
+
+        try:
+            package_url = PackageURL.from_string(query)
+        except ValueError as e:
+            if print_to_console:
+                print(f"\nInput: {query}")
+                print(f"\nValueError: {e}")
+            response["error_details"] = e
+            serializer = self.PurlValidateErrorSerializer(response)
+            return serializer.data
+
+        qs = qs.filter(
+            models.Q(namespace=package_url.namespace)
+            if package_url.namespace
+            else (models.Q(namespace="")),
+            models.Q(subpath=package_url.subpath)
+            if package_url.subpath
+            else (models.Q(subpath="")),
+            type=package_url.type,
+            name=package_url.name,
+            version=package_url.version,
+            qualifiers=urlencode(package_url.qualifiers),
+        )
+
+        if print_to_console:
+            print(f"\nmodels.py PackageQuerySet search() qs.query = {qs.query}")
+            print(f"\nlist(qs): {list(qs)}")
+            for abc in list(qs):
+                print(f"- abc = {abc}")
+                print(f"- abc.type = {abc.type}")
+                print(f"- abc.namespace = {abc.namespace}")
+                print(f"- abc.name = {abc.name}")
+                print(f"- abc.version = {abc.version}")
+                print(f"- abc.qualifiers = {abc.qualifiers}")
+                print(f"- abc.subpath = {abc.subpath}")
+
+        return qs
+
+    def get_packageurl_from_string(self, query: str = None):
+        """Vet with packageurl-python __init__.py from_string()."""
+        query = query and query.strip()
+        if not query:
+            return self.none()
+
+        try:
+            packageurl_from_string = PackageURL.from_string(query)
+            if print_to_console:
+                print(
+                    f"\n- models.py PackageQuerySet get_packageurl_from_string() query = {packageurl_from_string}"
+                )
+                print(f"\npackageurl_from_string.type = {packageurl_from_string.type}")
+                print(
+                    f"- packageurl_from_string.namespace = {packageurl_from_string.namespace}"
+                )
+                print(f"- packageurl_from_string.name = {packageurl_from_string.name}")
+                print(
+                    f"- packageurl_from_string.version = {packageurl_from_string.version}"
+                )
+                print(
+                    f"- packageurl_from_string.qualifiers = {packageurl_from_string.qualifiers}"
+                )
+                print(
+                    f"- packageurl_from_string.subpath = {packageurl_from_string.subpath}"
+                )
+
+            return packageurl_from_string
+
+        except ValueError as e:
+            if print_to_console:
+                print(f"\nInput: {query}")
+                print(f"\nValueError: {e}")
+            return None
 
 
 VCS_CHOICES = [

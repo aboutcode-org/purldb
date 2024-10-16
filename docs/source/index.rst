@@ -1,9 +1,9 @@
-Welcome to PurlDB documentation!
-=========================================
+Welcome to the PurlDB documentation!
+====================================
 
 
-PurlDB aka. ``Package URL Database`` is a database of software package metadata keyed by Package-URL
-or purl that offers information and indentication services about software packages.
+`PurlDB <https://github.com/aboutcode-org/purldb>`__ aka. ``Package URL Database`` is a database of software package metadata keyed by a `Package-URL
+or purl <https://github.com/package-url>`__ that offers information and indentication services about software packages.
 
 A purl or Package-URL is an attempt to standardize existing approaches to reliably identify and
 locate software packages in general and Free and Open Source Software (FOSS) packages in
@@ -30,8 +30,8 @@ This what PurlDB is all about and it offers:
   software supply chain.
 
 
-What can you do PurlDB?
-------------------------
+What can you do with PurlDB?
+----------------------------
 
 - Build a comprehensive open source software packages knowledge base. This includes the extensive
   scan of package code for origin, dependencies, embedded packages and licenses.

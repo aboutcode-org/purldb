@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}PurlDB.io{% endblock %}</title>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" />
+
+    <link rel="stylesheet" href="{% static 'css/bulma.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bulma-tooltip.css' %}" />
+
+    <script src="{% static 'js/clipboard-2.0.0.min.js' %}" integrity="sha384-5tfO0soa+FisnuBhaHP2VmPXQG/JZ8dLcRL43IkJFzbsXTXT6zIX8q8sIT0VSe2G" crossorigin="anonymous"></script>
+
+    {% block extrahead %}{% endblock %}
+</head>
+<body class="Site">
+    <div class="container is-max-widescreen">
+        {% include "navbar.html" %}
+        {% block content %}{% endblock %}
+        {% include "footer.html" %}
+    </div>
+
+    {% block scripts %}
+    {% endblock %}
+
+    {% block javascript %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set initial data-tooltip value
+            document.querySelectorAll('.btn-clipboard').forEach(button => {
+                console.info('span:', button.querySelector('span'));
+                const span = button.querySelector('span');
+                if (span && !span.getAttribute('data-tooltip')) {
+                    span.setAttribute('data-tooltip', 'Copy to clipboard');
+                    span.setAttribute('class', 'tooltip-narrow');
+                }
+            });
+
+            // clipboard.js
+            let clip = new ClipboardJS(".btn-clipboard", {
+                target: function (trigger) {
+                    return trigger.nextElementSibling
+                }
+            });
+
+            clip.on("success", function (clip) {
+                const button = clip.trigger;
+                const span = button.querySelector('span');
+                span.setAttribute('data-tooltip', 'Copied!');
+                span.setAttribute('class', 'tooltip-narrow-success');
+                span.classList.add('has-tooltip-active');
+                button.classList.add('tooltip-visible');
+                clip.clearSelection()
+            });
+
+            clip.on("error", function (e) {
+                console.error('Failed to copy: ', e);
+                const span = e.trigger.querySelector('span');
+                span.setAttribute('data-tooltip', 'Failed to copy');
+            });
+
+            // Display button when mouse enters the copyable area.
+            document.querySelectorAll('.btn-clipboard').forEach(button => {
+                const span = button.querySelector('span');
+                if (span) {
+                    span.setAttribute('data-original-tooltip', span.getAttribute('data-tooltip'));
+                    button.nextElementSibling.addEventListener('mouseenter', () => {
+                        button.style.display = '';
+                    });
+                }
+            });
+
+            //Adjust tooltip position when close to page left/right border.
+            document.querySelectorAll('.has-tooltip-multiline').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.left < 100) {
+                    el.classList.add('has-tooltip-right');
+                } else if (rect.right > window.innerWidth - 100) {
+                    el.classList.add('has-tooltip-left');
+                }
+            });
+
+
+            //<!-- Tooltips that can contain clickable links. -->
+            const tooltipTriggers = document.querySelectorAll('.tooltip-trigger');
+
+            function hideTooltipWithDelay(tooltipContent) {
+                setTimeout(() => {
+                    if (!tooltipContent.matches(':hover') && !tooltipContent.previousElementSibling.matches(':hover')) {
+                         tooltipContent.style.display = 'none';
+                    }
+                }, 200); // Delay to allow the user to hover over the tooltip
+            }
+
+            tooltipTriggers.forEach(trigger => {
+                trigger.addEventListener('mouseenter', function() {
+                    const tooltipContent = this.nextElementSibling;
+
+                    if (tooltipContent) {
+                       tooltipContent.style.display = 'block';
+                    }
+                });
+
+                trigger.addEventListener('mouseleave', function() {
+                    const tooltipContent = this.nextElementSibling;
+
+                    if (tooltipContent) {
+                        hideTooltipWithDelay(tooltipContent);
+                    }
+                });
+            });
+
+            // Keep the tooltip visible when the user hovers over the tooltip itself
+            document.querySelectorAll('.tooltip-content').forEach(content => {
+                content.addEventListener('mouseenter', function() {
+                    this.style.display = 'block';
+                });
+
+                content.addEventListener('mouseleave', function() {
+                    hideTooltipWithDelay(this);
+                });
+            });
+
+          });
+    </script>
+
+    {% endblock %}
+</body>
+</html>
