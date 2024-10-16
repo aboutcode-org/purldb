@@ -24,17 +24,20 @@ if TRACE:
 
 
 class Command(VerboseCommand):
-    help = "Check for outstanding ScannableURIs and requeue them."
+    help = "Check for outstanding ScannableURIs and reset them."
 
     def handle(self, *args, **options):
         """
-        Check for outstanding ScannableURIs and requeue them.
+        Check for outstanding ScannableURIs and reset them.
         """
+        reset_outstanding_scannableuris()
 
-        outstanding_scannable_uris = ScannableURI.objects.get_outstanding_scannable_resource_uris()
-        if outstanding_scannable_uris.exists():
-            logger.info(f"Resetting {outstanding_scannable_uris.count()} ScannableURIs")
-            for scannable_uri in outstanding_scannable_uris:
-                if TRACE:
-                    logger.debug(f"Resetting ScannableURI for: {scannable_uri}")
-                scannable_uri.reset()
+
+def reset_outstanding_scannableuris():
+    outstanding_scannable_uris = ScannableURI.objects.get_outstanding_scannable_uris()
+    if outstanding_scannable_uris.exists():
+        logger.info(f"Resetting {outstanding_scannable_uris.count()} ScannableURIs")
+        for scannable_uri in outstanding_scannable_uris:
+            if TRACE:
+                logger.debug(f"Resetting ScannableURI for: {scannable_uri}")
+            scannable_uri.reset()
