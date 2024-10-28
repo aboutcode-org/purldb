@@ -11,6 +11,7 @@ import binascii
 import logging
 import sys
 from collections import defaultdict
+from collections import namedtuple
 from datetime import datetime
 from difflib import SequenceMatcher
 
@@ -25,6 +26,7 @@ from matchcode_toolkit.halohash import byte_hamming_distance
 
 from minecode.management.commands import get_error_message
 from packagedb.models import Package
+from packagedb.models import Resource
 
 TRACE = False
 
@@ -390,3 +392,97 @@ class ApproximateDirectoryContentIndex(ApproximateMatchingHashMixin):
 
 class ApproximateResourceContentIndex(ApproximateMatchingHashMixin):
     pass
+
+
+HailstormMatch = namedtuple("HailstormMatch", ["package", "fingerprints", "fingerprints_count"])
+
+
+class HailstormIndex(models.Model):
+    package = models.ForeignKey(
+        Package,
+        help_text="The Package that this Hailstorm fingerprint is from",
+        null=False,
+        on_delete=models.CASCADE,
+    )
+
+    resource = models.ForeignKey(
+        Resource,
+        help_text="The Package that this Hailstorm fingerprint is from",
+        null=False,
+        on_delete=models.CASCADE,
+    )
+
+    fingerprint = models.BinaryField(
+        max_length=16,
+        db_index=True,
+        help_text="Binary form of a Hailstorm fingerprint",
+        null=False,
+        blank=False,
+    )
+
+    @classmethod
+    def index(cls, fingerprint, resource, package):
+        """
+        Index the string `fingerprint` into the ApproximateMatchingHashMixin
+        model
+
+        Return a 2-tuple of the corresponding ApproximateMatchingHashMixin
+        created from `fingerprint` and a boolean, which represents whether the
+        fingerprint was created or not.
+        """
+        try:
+            hi, created = cls.objects.get_or_create(
+                package=package,
+                resource=resource,
+                fingerprint=fingerprint
+            )
+            if created:
+                logger.info(
+                    f"{datetime.utcnow().isoformat()} - Inserted {hi.__class__.__name__} "
+                    f"for Resource {resource.path} from Package {package.download_url}:\t{fingerprint}"
+                )
+                return hi, created
+        except Exception as e:
+            msg = "Error creating HailstormIndex:\n"
+            msg += get_error_message(e)
+            package.index_error = msg
+            package.save()
+            logger.error(msg)
+
+    @classmethod
+    def match(cls, fingerprints, resource, package):
+        """Return a list of matched Packages"""
+        if TRACE:
+            logger_debug(
+                cls.__name__,
+                "match:",
+                "fingerprints:",
+                fingerprints,
+                "resource:",
+                resource,
+            )
+
+        if not fingerprints:
+            return cls.objects.none()
+
+        # Step 0: get all fingerprint records that match what the input
+        fps = cls.objects.filter(fingerprint__in=fingerprints)
+
+        # Step 1: count Packages whose fingerprints appear
+        # Step 1.1: get Packages that show up in the query
+        packages = [f.package for f in fps.iterator()]
+
+        # Step 1.2: group matched Packages and fingerprints with count
+        matches = []
+        for package in packages:
+            match_fingerprints = fps.filter(package=package)
+            matches.append(
+                HailstormMatch(
+                    package=package,
+                    fingerprints=match_fingerprints,
+                    fingerprints_count=match_fingerprints.count()
+                )
+            )
+
+        # Step 2: order Packages by fingerprints_count and return
+        return matches.sort(key=lambda x: x.fingerprints_count, reverse=True)

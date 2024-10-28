@@ -12,6 +12,7 @@ from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import ExactFileIndex
+from matchcode.models import HailstormIndex
 from minecode.management.commands import get_error_message
 from minecode.model_utils import update_or_create_resource
 from minecode.models import ScannableURI
@@ -38,6 +39,7 @@ def index_package_files(package, scan_data, reindex=False):
         package.approximatedirectorystructureindex_set.all().delete()
         package.approximateresourcecontentindex_set.all().delete()
         package.exactfileindex_set.all().delete()
+        package.hailstormhashindex_set.all().delete()
         package.resources.all().delete()
 
     scan_index_errors = []
@@ -60,6 +62,7 @@ def index_package_files(package, scan_data, reindex=False):
                 "directory_structure", ""
             )
             halo1 = resource_extra_data.get("halo1", "")
+            hailstorm = resource_extra_data.get("hailstorm", [])
 
             if directory_content_fingerprint:
                 _, _ = ApproximateDirectoryContentIndex.index(
@@ -81,6 +84,14 @@ def index_package_files(package, scan_data, reindex=False):
                     resource_path=path,
                     package=package,
                 )
+
+            if hailstorm:
+                for fingerprint in hailstorm:
+                    _, _ = HailstormIndex.index(
+                        fingerprint=fingerprint,
+                        resource=r,
+                        package=package,
+                    )
 
     except Exception as e:
         msg = get_error_message(e)
