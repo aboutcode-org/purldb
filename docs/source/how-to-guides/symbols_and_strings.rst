@@ -9,7 +9,7 @@ from codebase resources.
 
 .. note::
     This tutorial assumes that you have a working installation of PurlDB.
-    If you don't, please refer to the `installation <../purldb/overview.html#installation>`_ page.
+    If you don't, please refer to the `installation <https://aboutcode.readthedocs.io/projects/PURLdb/en/latest/getting-started/install.html>`_ page.
 
 
 Problem
