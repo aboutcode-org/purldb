@@ -25,8 +25,8 @@ from collections import defaultdict
 from django.db.models import Q
 from django.template.defaultfilters import pluralize
 
+from aboutcode.pipeline import LoopProgress
 from scanpipe import pipes
-from scanpipe.pipes import LoopProgress
 from scanpipe.pipes import flag
 from scanpipe.pipes import js
 
