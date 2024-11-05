@@ -36,17 +36,20 @@
     "license_detections":[
       {
         "license_expression":"bsd-new",
+        "license_expression_spdx":"BSD-3-Clause",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"bsd-new",
+            "spdx_license_expression":"BSD-3-Clause",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"bsd-new",
-            "rule_identifier":"bsd-new_89.RULE",
             "rule_relevance":99,
+            "rule_identifier":"bsd-new_89.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/bsd-new_89.RULE",
             "matched_text":"license bsd"
           }
@@ -60,13 +63,19 @@
     "extracted_license_statement":"- bsd\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDJ-1.00@1.00?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDJ-1.00@1.00"
   },
   {
@@ -106,17 +115,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -130,13 +142,19 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Win32-Snarl-0.03@0.03?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Win32-Snarl-0.03@0.03"
   },
   {
@@ -176,17 +194,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -200,13 +221,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDJ-1.03@1.03?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDJ-1.03@1.03"
   },
   {
@@ -246,17 +273,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -270,13 +300,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-1.09@1.09?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-1.09@1.09"
   },
   {
@@ -316,17 +352,20 @@
     "license_detections":[
       {
         "license_expression":"bsd-new",
+        "license_expression_spdx":"BSD-3-Clause",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"bsd-new",
+            "spdx_license_expression":"BSD-3-Clause",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"bsd-new",
-            "rule_identifier":"bsd-new_89.RULE",
             "rule_relevance":99,
+            "rule_identifier":"bsd-new_89.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/bsd-new_89.RULE",
             "matched_text":"license bsd"
           }
@@ -340,13 +379,19 @@
     "extracted_license_statement":"- bsd\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDJ-1.01@1.01?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDJ-1.01@1.01"
   },
   {
@@ -386,17 +431,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -410,13 +458,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/WWW-Jawbone-Up-1.32.1@1.32.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.1@1.32.1"
   },
   {
@@ -456,17 +510,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -480,13 +537,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-MPD-0.02@0.02?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-MPD-0.02@0.02"
   },
   {
@@ -526,17 +589,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -550,13 +616,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDJ-1.07@1.07?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDJ-1.07@1.07"
   },
   {
@@ -596,17 +668,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -620,13 +695,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Dancer-Plugin-IRCNotice-0.03@0.03?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.03@0.03"
   },
   {
@@ -666,17 +747,20 @@
     "license_detections":[
       {
         "license_expression":"bsd-new",
+        "license_expression_spdx":"BSD-3-Clause",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"bsd-new",
+            "spdx_license_expression":"BSD-3-Clause",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"bsd-new",
-            "rule_identifier":"bsd-new_89.RULE",
             "rule_relevance":99,
+            "rule_identifier":"bsd-new_89.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/bsd-new_89.RULE",
             "matched_text":"license bsd"
           }
@@ -690,13 +774,19 @@
     "extracted_license_statement":"- bsd\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-MPD-0.06@0.06?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-MPD-0.06@0.06"
   },
   {
@@ -736,17 +826,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -760,13 +853,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-Sybil-0.1@0.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-Sybil-0.1@0.1"
   },
   {
@@ -806,17 +905,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -830,13 +932,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-0.02@0.02?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-0.02@0.02"
   },
   {
@@ -876,17 +984,20 @@
     "license_detections":[
       {
         "license_expression":"unknown",
+        "license_expression_spdx":"LicenseRef-scancode-unknown",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"unknown",
+            "spdx_license_expression":"LicenseRef-scancode-unknown",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"5-undetected",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"5-undetected",
-            "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "rule_relevance":100,
+            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
             "matched_text":"license - unknown"
           }
@@ -900,13 +1011,19 @@
     "extracted_license_statement":"- unknown\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-0.01@0.01?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-0.01@0.01"
   },
   {
@@ -946,17 +1063,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -970,13 +1090,19 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Win32-Snarl-withoutworldwriteables@0.04?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Win32-Snarl-withoutworldwriteables@0.04"
   },
   {
@@ -1016,17 +1142,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -1040,13 +1169,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Dancer-Plugin-IRCNotice-0.06@0.06?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.06@0.06"
   },
   {
@@ -1086,17 +1221,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -1110,13 +1248,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDJ-1.09@1.09?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDJ-1.09@1.09"
   },
   {
@@ -1156,17 +1300,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -1180,13 +1327,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/WWW-Jawbone-Up-1.32.4@1.32.4?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.4@1.32.4"
   },
   {
@@ -1226,17 +1379,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -1250,13 +1406,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-0.04@0.04?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-0.04@0.04"
   },
   {
@@ -1296,17 +1458,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -1320,13 +1485,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDSync-0.01@0.01?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDSync-0.01@0.01"
   },
   {
@@ -1366,17 +1537,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -1390,13 +1564,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Dancer-Plugin-IRCNotice-0.05@0.05?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.05@0.05"
   },
   {
@@ -1436,17 +1616,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -1460,13 +1643,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/WWW-Jawbone-Up-1.32.2@1.32.2?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.2@1.32.2"
   },
   {
@@ -1506,17 +1695,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -1530,13 +1722,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-MPD-0.05@0.05?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-MPD-0.05@0.05"
   },
   {
@@ -1576,17 +1774,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -1600,13 +1801,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/WWW-Jawbone-Up-1.32.3@1.32.3?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.3@1.32.3"
   },
   {
@@ -1646,17 +1853,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -1670,13 +1880,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Dancer-Plugin-IRCNotice-0.04@0.04?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.04@0.04"
   },
   {
@@ -1716,17 +1932,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -1740,13 +1959,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDJ-1.02@1.02?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDJ-1.02@1.02"
   },
   {
@@ -1786,17 +2011,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -1810,13 +2038,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/WWW-Jawbone-Up-1.32.0@1.32.0?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/WWW-Jawbone-Up-1.32.0@1.32.0"
   },
   {
@@ -1856,17 +2090,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -1880,13 +2117,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Dancer-Plugin-IRCNotice-0.01@0.01?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.01@0.01"
   },
   {
@@ -1926,17 +2169,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -1950,13 +2196,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-1.08@1.08?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-1.08@1.08"
   },
   {
@@ -1996,17 +2248,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -2020,13 +2275,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDJ-1.05@1.05?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDJ-1.05@1.05"
   },
   {
@@ -2066,17 +2327,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -2090,13 +2354,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDJ-1.08@1.08?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDJ-1.08@1.08"
   },
   {
@@ -2136,17 +2406,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -2160,13 +2433,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-MPD-0.04@0.04?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-MPD-0.04@0.04"
   },
   {
@@ -2206,17 +2485,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -2230,13 +2512,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-0.05@0.05?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-0.05@0.05"
   },
   {
@@ -2276,17 +2564,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -2300,13 +2591,19 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/win32-snarl-1.01@0.04?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/win32-snarl-1.01@0.04"
   },
   {
@@ -2346,17 +2643,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -2370,13 +2670,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-Sybil-0.4@0.4?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-Sybil-0.4@0.4"
   },
   {
@@ -2416,17 +2722,20 @@
     "license_detections":[
       {
         "license_expression":"bsd-new",
+        "license_expression_spdx":"BSD-3-Clause",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"bsd-new",
+            "spdx_license_expression":"BSD-3-Clause",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"bsd-new",
-            "rule_identifier":"bsd-new_89.RULE",
             "rule_relevance":99,
+            "rule_identifier":"bsd-new_89.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/bsd-new_89.RULE",
             "matched_text":"license bsd"
           }
@@ -2440,13 +2749,19 @@
     "extracted_license_statement":"- bsd\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-1.10@1.10?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-1.10@1.10"
   },
   {
@@ -2486,17 +2801,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -2510,13 +2828,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-1.1@1.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-1.1@1.1"
   },
   {
@@ -2556,17 +2880,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -2580,13 +2907,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-1.07@1.07?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-1.07@1.07"
   },
   {
@@ -2626,17 +2959,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -2650,13 +2986,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-1.06@1.06?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-1.06@1.06"
   },
   {
@@ -2696,17 +3038,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -2720,13 +3065,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Dancer-Plugin-IRCNotice-0.02@0.02?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Dancer-Plugin-IRCNotice-0.02@0.02"
   },
   {
@@ -2766,17 +3117,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -2790,13 +3144,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDJ-1.04@1.04?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDJ-1.04@1.04"
   },
   {
@@ -2836,17 +3196,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -2860,13 +3223,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDJ-1.06@1.06?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDJ-1.06@1.06"
   },
   {
@@ -2906,17 +3275,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -2930,13 +3302,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-MPD-0.01@0.01?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-MPD-0.01@0.01"
   },
   {
@@ -2976,17 +3354,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -3000,13 +3381,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-MPD-0.03@0.03?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-MPD-0.03@0.03"
   },
   {
@@ -3046,17 +3433,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -3070,13 +3460,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-0.03@0.03?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-0.03@0.03"
   },
   {
@@ -3116,17 +3512,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -3140,13 +3539,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-0.02-withoutworldwriteables@0.02?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-0.02-withoutworldwriteables@0.02"
   },
   {
@@ -3186,17 +3591,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -3210,13 +3618,19 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Win32-Snarl-1.00@0.04?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Win32-Snarl-1.00@0.04"
   },
   {
@@ -3256,17 +3670,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -3280,13 +3697,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-Sybil-0.2@0.2?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-Sybil-0.2@0.2"
   },
   {
@@ -3326,17 +3749,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -3350,13 +3776,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-Sybil-0.3@0.3?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-Sybil-0.3@0.3"
   },
   {
@@ -3396,17 +3828,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -3420,13 +3855,19 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Win32-Snarl-0.01@0.01?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Win32-Snarl-0.01@0.01"
   },
   {
@@ -3466,17 +3907,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -3490,13 +3934,19 @@
     "extracted_license_statement":"- perl_5\n- http://dev.perl.org/licenses/\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Win32-Snarl-0.02@0.02?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Win32-Snarl-0.02@0.02"
   },
   {
@@ -3536,17 +3986,20 @@
     "license_detections":[
       {
         "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+        "license_expression_spdx":"Artistic-1.0-Perl OR GPL-1.0-or-later",
         "matches":[
           {
-            "score":90.0,
+            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
+            "spdx_license_expression":"Artistic-1.0-Perl OR GPL-1.0-or-later",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"2-aho",
+            "score":90.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"2-aho",
-            "license_expression":"artistic-perl-1.0 OR gpl-1.0-plus",
-            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_relevance":90,
+            "rule_identifier":"artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/artistic-perl-1.0_or_gpl-1.0-plus_20.RULE",
             "matched_text":"license perl_5"
           }
@@ -3560,13 +4013,19 @@
     "extracted_license_statement":"- perl_5\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-Snarl-1.09-TRIAL@1.09?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-Snarl-1.09-TRIAL@1.09"
   },
   {
@@ -3606,17 +4065,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -3630,13 +4092,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/Net-MPD-0.07@0.07?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/Net-MPD-0.07@0.07"
   },
   {
@@ -3676,17 +4144,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-1b937028f397e2c5fe4eb6a0abd781ab80f9eeff",
             "rule_url":null,
             "matched_text":"mit"
           }
@@ -3700,13 +4171,19 @@
     "extracted_license_statement":"- mit\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-MPDSync-0.02@0.02?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-MPDSync-0.02@0.02"
   },
   {
@@ -3746,17 +4223,20 @@
     "license_detections":[
       {
         "license_expression":"bsd-new",
+        "license_expression_spdx":"BSD-3-Clause",
         "matches":[
           {
-            "score":99.0,
+            "license_expression":"bsd-new",
+            "spdx_license_expression":"BSD-3-Clause",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":99.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"bsd-new",
-            "rule_identifier":"bsd-new_89.RULE",
             "rule_relevance":99,
+            "rule_identifier":"bsd-new_89.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/bsd-new_89.RULE",
             "matched_text":"license bsd"
           }
@@ -3770,13 +4250,19 @@
     "extracted_license_statement":"- bsd\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:cpan/App-Sybil-0.5@0.5?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000"
+    ],
+    "datasource_ids":[
+      "cpan_release_json"
+    ],
     "purl":"pkg:cpan/App-Sybil-0.5@0.5"
   }
 ]

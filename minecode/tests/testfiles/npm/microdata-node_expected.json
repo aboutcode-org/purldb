@@ -46,17 +46,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -71,6 +74,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -80,6 +85,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -90,6 +96,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -100,6 +107,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -110,6 +118,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -120,6 +129,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -130,6 +140,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -140,6 +151,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -150,6 +162,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -160,6 +173,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -170,6 +184,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -180,6 +195,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -190,6 +206,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -200,6 +217,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -210,6 +228,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -267,17 +286,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -292,6 +314,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -301,6 +325,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -311,6 +336,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -321,6 +347,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -331,6 +358,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -341,6 +369,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -351,6 +380,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -361,6 +391,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -371,6 +402,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -381,6 +413,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -391,6 +424,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -401,6 +435,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -411,6 +446,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -421,6 +457,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -431,6 +468,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -441,6 +479,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -498,17 +537,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -523,6 +565,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -532,6 +576,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -542,6 +587,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -552,6 +598,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -562,6 +609,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -572,6 +620,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -582,6 +631,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -639,17 +689,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -664,6 +717,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -673,6 +728,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -683,6 +739,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -693,6 +750,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -703,6 +761,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -713,6 +772,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -723,6 +783,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -733,6 +794,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -790,17 +852,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -815,6 +880,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -824,6 +891,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -834,6 +902,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -844,6 +913,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -854,6 +924,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -864,6 +935,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -874,6 +946,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -884,6 +957,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -894,6 +968,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -904,6 +979,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -961,17 +1037,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -986,6 +1065,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -995,6 +1076,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1005,6 +1087,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1015,6 +1098,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1025,6 +1109,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1035,6 +1120,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1045,6 +1131,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -1102,17 +1189,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -1127,6 +1217,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -1136,6 +1228,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1146,6 +1239,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1156,6 +1250,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1166,6 +1261,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1176,6 +1272,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1186,6 +1283,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -1243,17 +1341,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -1268,6 +1369,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -1277,6 +1380,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1287,6 +1391,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1297,6 +1402,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1307,6 +1413,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1317,6 +1424,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1327,6 +1435,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -1384,17 +1493,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -1409,6 +1521,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -1418,6 +1532,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1428,6 +1543,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1438,6 +1554,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1448,6 +1565,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1458,6 +1576,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1468,6 +1587,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -1525,17 +1645,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -1550,6 +1673,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -1559,6 +1684,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1569,6 +1695,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1579,6 +1706,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1589,6 +1717,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1599,6 +1728,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1609,6 +1739,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -1666,17 +1797,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -1691,6 +1825,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -1700,6 +1836,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1710,6 +1847,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1720,6 +1858,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1730,6 +1869,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1740,6 +1880,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1750,6 +1891,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1760,6 +1902,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1770,6 +1913,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1780,6 +1924,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1790,6 +1935,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1800,6 +1946,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1810,6 +1957,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1820,6 +1968,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -1877,17 +2026,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -1902,6 +2054,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -1911,6 +2065,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1921,6 +2076,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1931,6 +2087,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1941,6 +2098,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1951,6 +2109,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1961,6 +2120,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1971,6 +2131,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1981,6 +2142,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -1991,6 +2153,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2001,6 +2164,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2011,6 +2175,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2021,6 +2186,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2031,6 +2197,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -2088,17 +2255,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2113,6 +2283,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -2122,6 +2294,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2132,6 +2305,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2142,6 +2316,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2152,6 +2327,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2162,6 +2338,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2172,6 +2349,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2182,6 +2360,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2192,6 +2371,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2202,6 +2382,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2212,6 +2393,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2222,6 +2404,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2232,6 +2415,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2242,6 +2426,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2252,6 +2437,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -2309,17 +2495,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2334,6 +2523,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -2343,6 +2534,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2353,6 +2545,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2363,6 +2556,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2373,6 +2567,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2383,6 +2578,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2393,6 +2589,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2403,6 +2600,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2413,6 +2611,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2423,6 +2622,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2433,6 +2633,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2443,6 +2644,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2453,6 +2655,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2463,6 +2666,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2473,6 +2677,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2483,6 +2688,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -2540,17 +2746,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2565,6 +2774,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -2574,6 +2785,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2584,6 +2796,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2594,6 +2807,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2604,6 +2818,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2614,6 +2829,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2624,6 +2840,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2634,6 +2851,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2644,6 +2862,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2654,6 +2873,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -2711,17 +2931,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2736,6 +2959,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -2745,6 +2970,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2755,6 +2981,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2765,6 +2992,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2775,6 +3003,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2785,6 +3014,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2795,6 +3025,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2805,6 +3036,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2815,6 +3047,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2825,6 +3058,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -2882,17 +3116,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -2907,6 +3144,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -2916,6 +3155,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2926,6 +3166,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2936,6 +3177,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2946,6 +3188,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -2956,6 +3199,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -3013,17 +3257,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -3038,6 +3285,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -3047,6 +3296,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3057,6 +3307,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3067,6 +3318,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3077,6 +3329,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3087,6 +3340,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -3144,17 +3398,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -3169,6 +3426,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -3178,6 +3437,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3188,6 +3448,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3198,6 +3459,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3208,6 +3470,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3218,6 +3481,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -3275,17 +3539,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -3300,6 +3567,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -3309,6 +3578,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3319,6 +3589,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3329,6 +3600,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3339,6 +3611,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3349,6 +3622,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -3406,17 +3680,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -3431,6 +3708,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -3440,6 +3719,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3450,6 +3730,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3460,6 +3741,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3470,6 +3752,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -3527,17 +3810,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -3552,6 +3838,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -3561,6 +3849,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3571,6 +3860,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3581,6 +3871,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3591,6 +3882,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3601,6 +3893,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -3658,17 +3951,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -3683,6 +3979,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -3692,6 +3990,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3702,6 +4001,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3712,6 +4012,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3722,6 +4023,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -3779,17 +4081,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -3804,6 +4109,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -3813,6 +4120,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3823,6 +4131,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3833,6 +4142,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3843,6 +4153,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3853,6 +4164,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3863,6 +4175,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3873,6 +4186,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3883,6 +4197,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3893,6 +4208,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3903,6 +4219,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3913,6 +4230,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3923,6 +4241,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3933,6 +4252,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3943,6 +4263,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -3953,6 +4274,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -4010,17 +4332,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -4035,6 +4360,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -4044,6 +4371,7 @@
         "is_runtime":true,
         "is_optional":false,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -4054,6 +4382,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -4064,6 +4393,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -4074,6 +4404,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -4084,6 +4415,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -4094,6 +4426,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }
@@ -4151,17 +4484,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -4176,6 +4512,8 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[
       {
@@ -4185,6 +4523,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -4195,6 +4534,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -4205,6 +4545,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -4215,6 +4556,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       },
@@ -4225,6 +4567,7 @@
         "is_runtime":false,
         "is_optional":true,
         "is_resolved":false,
+        "is_direct":true,
         "resolved_package":{},
         "extra_data":{}
       }

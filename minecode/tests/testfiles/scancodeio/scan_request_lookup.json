@@ -12,7 +12,7 @@
             "input_sources": [
                 {
                     "filename": "wagon-api-20040705.181715.jar",
-                    "source": "https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar"
+                    "download_url": "https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar"
                 }
             ],
             "next_run": null,

@@ -1,0 +1,116 @@
+[build-system]
+requires = [ "flot>=0.7.0" ]
+build-backend = "flot.buildapi"
+
+[project]
+name = "purl2vcs"
+# keep version same as purldb for now
+version = "2.0.0"
+description = "purl2vcs is an add-on library working with the PurlDB to find the version control system (VCS) URL of a package and detect the commit, tags and path for a given version."
+readme = "README.rst"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.8"
+authors = [
+    { name = "nexB. Inc. and others", email = "info@aboutcode.org" },
+]
+keywords = [
+    "package-url",
+    "purl",
+    "git",
+    "version",
+    "hg",
+    "svn",
+    "tag",
+    "commit",
+    "open source",
+    "scan",
+    "package",
+    "dependency",
+    "sca",
+]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+]
+
+
+dependencies = [
+    # get packagedb, purldb, minecode and related module for now from this single package
+    "purldb",
+    "requests >= 2.7.0",
+    "scancode-toolkit >= 32.0.0",
+    "packageurl_python >= 0.9.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/aboutcode-org/purldb"
+
+
+[project.optional-dependencies]
+
+testing = [
+    "flot",
+    "pytest >= 6, != 7.0.0",
+    "pytest-xdist >= 2",
+    "aboutcode-toolkit >= 7.0.2",
+    "pycodestyle >= 2.8.0",
+    "twine",
+    "black",
+    "isort",
+    "pytest-rerunfailures",
+    "bump-my-version",
+]
+
+[tool.bumpversion]
+current_version = "1.0.0"
+allow_dirty = true
+
+files = [
+    { filename = "pyproject.toml" },
+
+]
+
+
+[tool.flot]
+wheel_path_prefixes_to_strip = [ "src" ]
+
+includes = [
+    "src/**/*",
+]
+
+excludes = [
+    # Python compiled files
+    "**/*.py[cod]",
+    "**/*.egg-info",
+    # Various junk and temp files
+    "**/.DS_Store",
+    "**/*~",
+    "**/.*.sw[po]",
+    "**/.ve",
+    "**/*.bak",
+    "**/.ipynb_checkpoints",
+]
+
+metadata_files = [
+    "apache-2.0.LICENSE",
+    "NOTICE",
+    "CHANGELOG.rst",
+    "README.rst",
+    "CODE_OF_CONDUCT.rst",
+]
+
+editable_paths = [ "src", "tests" ]
+
+sdist_extra_includes = [
+    "tests/**/*",
+]

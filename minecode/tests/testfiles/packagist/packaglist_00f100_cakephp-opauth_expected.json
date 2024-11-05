@@ -35,7 +35,7 @@
     "homepage_url":"http://opauth.org",
     "download_url":"https://api.github.com/repos/00F100/cakephp-opauth/zipball/c82879adc50afb5a5e95436ef057dfefffe02607",
     "size":null,
-    "sha1":"",
+    "sha1":null,
     "md5":null,
     "sha256":null,
     "sha512":null,
@@ -49,17 +49,20 @@
     "license_detections":[
       {
         "license_expression":"mit",
+        "license_expression_spdx":"MIT",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"mit",
+            "spdx_license_expression":"MIT",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-spdx-id",
-            "license_expression":"mit",
-            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
             "rule_url":null,
             "matched_text":"MIT"
           }
@@ -73,13 +76,17 @@
     "extracted_license_statement":"- MIT\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:composer/00f100/cakephp-opauth@dev-master?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "php_composer_json"
+    ],
     "purl":"pkg:composer/00f100/cakephp-opauth@dev-master"
   }
 ]

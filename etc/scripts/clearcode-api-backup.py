@@ -151,10 +151,6 @@ def run_api_backup(api_root_url, extra_payload=None):
         objects = get_all_objects_from_endpoint(endpoint_url, extra_payload=extra_payload)
         print('{} {} collected.'.format(len(objects), endpoint_name))
 
-        collect_extra_conditions = [
-            extra_payload.get('last_modified_date'),
-        ]
-
         results[endpoint_name] += objects
 
     timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')

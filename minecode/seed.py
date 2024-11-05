@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -18,7 +18,7 @@ except NameError:  # pragma: nocover
     unicode = str  # NOQA
 
 
-class Seeder(object):
+class Seeder:
     """
     Abstract base class for seeding URIs to visit. Each visitor should create a
     subclass of Seeder and implement the get_seeds method to yield the top levle
@@ -31,9 +31,7 @@ class Seeder(object):
     revisit_after = 240  # hours
 
     def get_seeds(self):
-        """
-        Yield seed URIs strings. Subclass must override.
-        """
+        """Yield seed URIs strings. Subclass must override."""
         raise NotImplementedError()
 
 
@@ -47,8 +45,8 @@ def get_active_seeders(seeders=()):
     if not seeders:
         seeders = get_configured_seeders()
     for seeder in seeders:
-        if isinstance(seeder, (bytes, unicode)):
-            module_name, _, class_name = seeder.rpartition('.')
+        if isinstance(seeder, bytes | unicode):
+            module_name, _, class_name = seeder.rpartition(".")
             module = importlib.import_module(module_name)
             yield getattr(module, class_name)()
         else:
@@ -62,5 +60,6 @@ def get_configured_seeders():
     environment.
     """
     from minecode.management.commands import get_settings
+
     # ACTIVE_VISITOR_SEEDS is a list of fully qualified Seeder subclass strings
-    return get_settings('ACTIVE_SEEDERS') or []
+    return get_settings("ACTIVE_SEEDERS") or []

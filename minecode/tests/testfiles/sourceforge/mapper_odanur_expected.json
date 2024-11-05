@@ -18,8 +18,8 @@
         "url":"https://sourceforge.net/u/ignaciopl/"
       }
     ],
-    "keywords":null,
-    "homepage_url":"",
+    "keywords":[],
+    "homepage_url":null,
     "download_url":null,
     "size":null,
     "sha1":null,
@@ -40,13 +40,17 @@
     "extracted_license_statement":null,
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:sourceforge/odanur?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "sourceforge_metadata"
+    ],
     "purl":"pkg:sourceforge/odanur"
   }
 ]

@@ -5,52 +5,46 @@
 # These jobs are using VMs with Azure-provided Python builds
 ################################################################################
 
+resources:
+  containers:
+    - container: postgres
+      image: postgres:13
+      env:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+      ports:
+        - 5432:5432
+
 jobs:
 
     - template: etc/ci/azure-posix.yml
       parameters:
           job_name: ubuntu20_cpython
           image_name: ubuntu-20.04
-          python_versions: ['3.7', '3.8', '3.9', '3.10', '3.11']
+          python_versions: ['3.10', '3.11', '3.12']
           test_suites:
-              all: venv/bin/pytest -n 2 -vvs
+              all: make test
 
     - template: etc/ci/azure-posix.yml
       parameters:
           job_name: ubuntu22_cpython
           image_name: ubuntu-22.04
-          python_versions: ['3.7', '3.8', '3.9', '3.10', '3.11']
+          python_versions: ['3.10', '3.11', '3.12']
           test_suites:
-              all: venv/bin/pytest -n 2 -vvs
+              all: make test
 
     - template: etc/ci/azure-posix.yml
       parameters:
-          job_name: macos11_cpython
-          image_name: macos-11
-          python_versions: ['3.7', '3.8', '3.9', '3.10', '3.11']
+          job_name: ci_documentation
+          image_name: ubuntu-22.04
+          python_versions: ['3.10']
           test_suites:
-              all: venv/bin/pytest -n 2 -vvs
+              all: make check_docs
 
     - template: etc/ci/azure-posix.yml
       parameters:
-          job_name: macos12_cpython
-          image_name: macos-12
-          python_versions: ['3.7', '3.8', '3.9', '3.10', '3.11']
+          job_name: ci_code_style
+          image_name: ubuntu-22.04
+          python_versions: ['3.10']
           test_suites:
-              all: venv/bin/pytest -n 2 -vvs
-
-    - template: etc/ci/azure-win.yml
-      parameters:
-          job_name: win2019_cpython
-          image_name: windows-2019
-          python_versions: ['3.7', '3.8', '3.9', '3.10', '3.11']
-          test_suites:
-              all: venv\Scripts\pytest -n 2 -vvs
-
-    - template: etc/ci/azure-win.yml
-      parameters:
-          job_name: win2022_cpython
-          image_name: windows-2022
-          python_versions: ['3.7', '3.8', '3.9', '3.10', '3.11']
-          test_suites:
-              all: venv\Scripts\pytest -n 2 -vvs
+              all: make check

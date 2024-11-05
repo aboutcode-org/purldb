@@ -28,17 +28,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -52,13 +55,17 @@
     "extracted_license_statement":"- Eclipse Public License 1.0\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo"
   },
   {
@@ -90,17 +97,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -114,13 +124,17 @@
     "extracted_license_statement":"- Eclipse Public License 1.0\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.6.4?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.6.4"
   },
   {
@@ -152,17 +166,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -176,13 +193,17 @@
     "extracted_license_statement":"- Eclipse Public License 1.0\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.6.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.6.0"
   },
   {
@@ -214,17 +235,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -238,13 +262,17 @@
     "extracted_license_statement":"- Eclipse Public License 1.0\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.5.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.5.0"
   },
   {
@@ -276,17 +304,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -300,13 +331,17 @@
     "extracted_license_statement":"- Eclipse Public License 1.0\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.4.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.4.0"
   },
   {
@@ -338,17 +373,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -362,13 +400,17 @@
     "extracted_license_statement":"- Eclipse Public License 1.0\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.3.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.3.0"
   },
   {
@@ -400,17 +442,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -424,13 +469,17 @@
     "extracted_license_statement":"- Eclipse Public License 1.0\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.2.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.2.0"
   },
   {
@@ -462,17 +511,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -486,13 +538,17 @@
     "extracted_license_statement":"- Eclipse Public License 1.0\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.1.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.1.0"
   },
   {
@@ -524,17 +580,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -548,13 +607,17 @@
     "extracted_license_statement":"- Eclipse Public License 1.0\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@3.0.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@3.0.0"
   },
   {
@@ -586,17 +649,20 @@
     "license_detections":[
       {
         "license_expression":"epl-1.0",
+        "license_expression_spdx":"EPL-1.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"epl-1.0",
+            "spdx_license_expression":"EPL-1.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":5,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"epl-1.0",
-            "rule_identifier":"epl-1.0_1.RULE",
             "rule_relevance":100,
+            "rule_identifier":"epl-1.0_1.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/epl-1.0_1.RULE",
             "matched_text":"Eclipse Public License 1.0"
           }
@@ -610,13 +676,17 @@
     "extracted_license_statement":"- Eclipse Public License 1.0\n",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:eclipse/Acceleo@0.8.0?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "eclipse_html"
+    ],
     "purl":"pkg:eclipse/Acceleo@0.8.0"
   }
 ]

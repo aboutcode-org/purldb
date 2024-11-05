@@ -3,29 +3,28 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-
-from datetime import timedelta
 import logging
 import sys
+import uuid
+from datetime import timedelta
 
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+import django_rq
 
 from minecode import map_router
-from minecode import visit_router
 
 # UnusedImport here!
-# But importing the mappers and visitors module triggers routes registration
-from minecode import mappers  # NOQA
-from minecode import visitors  # NOQA
-
+# But importing the miners module triggers routes registration
+from minecode import miners  # NOQA
+from minecode import visit_router
 from packagedb.models import Package
-
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
@@ -44,13 +43,11 @@ def get_canonical(uri):
     in the URI it is removed from the canonical output.
     """
     import urlpy
+
     normalized = urlpy.parse(uri).canonical().defrag().sanitize().punycode()
     # Taken from an old version of urlpy (latest does not have the PORTS dict
     # See: https://github.com/seomoz/url-py/blob/1d0efdda102cc48ce9dbcc41154296cea1d28c1f/url.py#L46
-    PORTS = {
-        'http': 80,
-        'https': 443
-    }
+    PORTS = {"http": 80, "https": 443}
     if normalized.port == PORTS.get(normalized.scheme, None):
         normalized.remove_default_port()
     return normalized.unicode
@@ -61,46 +58,47 @@ class BaseURI(models.Model):
     A base abstract model to store URI for crawling, scanning and indexing.
     Also used as a processing "to do" queue for visiting and mapping these URIs.
     """
+
     uri = models.CharField(
         max_length=2048,
         db_index=True,
-        help_text='URI for this resource. This is the unmodified original URI.',
+        help_text="URI for this resource. This is the unmodified original URI.",
     )
 
     canonical = models.CharField(
         max_length=3000,
         db_index=True,
-        help_text='Canonical form of the URI for this resource that must be '
-                  'unique across all ResourceURI.',
+        help_text="Canonical form of the URI for this resource that must be "
+        "unique across all ResourceURI.",
     )
 
     source_uri = models.CharField(
         max_length=2048,
         null=True,
         blank=True,
-        help_text='Optional: real source remote URI for this visit.'
-        'For example for a package repository index is a typical source '
-        'via which a first level of package data is fetched. And it is '
-        'not the URI in the uri field. It is just the source of the fetch'
-        'Or the source may be a mirror URI used for fetching.'
+        help_text="Optional: real source remote URI for this visit."
+        "For example for a package repository index is a typical source "
+        "via which a first level of package data is fetched. And it is "
+        "not the URI in the uri field. It is just the source of the fetch"
+        "Or the source may be a mirror URI used for fetching.",
     )
 
     priority = models.PositiveIntegerField(
         # Using default because NULL is ordered first on Postgres.
         default=0,
         db_index=True,
-        help_text='Absolute procdssing priority of a URI (default to zero), '
-                  'higher number means higher priority, zero means lowest '
-                  'priority.',
+        help_text="Absolute procdssing priority of a URI (default to zero), "
+        "higher number means higher priority, zero means lowest "
+        "priority.",
     )
 
     wip_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text='Work In Progress. This is a timestamp set at the start of a '
-                  'visit or mapping or indexing or null when no processing is '
-                  'in progress.',
+        help_text="Work In Progress. This is a timestamp set at the start of a "
+        "visit or mapping or indexing or null when no processing is "
+        "in progress.",
     )
 
     file_name = models.CharField(
@@ -108,8 +106,8 @@ class BaseURI(models.Model):
         null=True,
         blank=True,
         db_index=True,
-        help_text='File name of a resource sometimes part of the URI proper '
-                  'and sometimes only available through an HTTP header.',
+        help_text="File name of a resource sometimes part of the URI proper "
+        "and sometimes only available through an HTTP header.",
     )
 
     # FIXME: 2147483647 is the max size which means we cannot store more than 2GB files
@@ -117,7 +115,7 @@ class BaseURI(models.Model):
         null=True,
         blank=True,
         db_index=True,
-        help_text='Size in bytes of the file represented by this ResourceURI.',
+        help_text="Size in bytes of the file represented by this ResourceURI.",
     )
 
     sha1 = models.CharField(
@@ -125,8 +123,8 @@ class BaseURI(models.Model):
         null=True,
         blank=True,
         db_index=True,
-        help_text='SHA1 checksum hex-encoded (as in the sha1sum command) of the '
-                  'content of the file represented by this ResourceURI.',
+        help_text="SHA1 checksum hex-encoded (as in the sha1sum command) of the "
+        "content of the file represented by this ResourceURI.",
     )
 
     md5 = models.CharField(
@@ -134,8 +132,8 @@ class BaseURI(models.Model):
         null=True,
         blank=True,
         db_index=True,
-        help_text='MD5 checksum hex-encoded (as in the md5sum command) of the '
-                  'content of the file represented by this ResourceURI.',
+        help_text="MD5 checksum hex-encoded (as in the md5sum command) of the "
+        "content of the file represented by this ResourceURI.",
     )
 
     sha256 = models.CharField(
@@ -143,18 +141,18 @@ class BaseURI(models.Model):
         null=True,
         blank=True,
         db_index=True,
-        help_text='SHA256 checksum hex-encoded (as in the sha256sum command) of the '
-                  'content of the file represented by this ResourceURI.',
+        help_text="SHA256 checksum hex-encoded (as in the sha256sum command) of the "
+        "content of the file represented by this ResourceURI.",
     )
 
     last_modified_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text='Timestamp set to the last modified date of the remote '
-                  'resource represented by this URI such as the modified date '
-                  'of a file, the lastmod value on a sitemap or the modified '
-                  'date returned by an HTTP resource.',
+        help_text="Timestamp set to the last modified date of the remote "
+        "resource represented by this URI such as the modified date "
+        "of a file, the lastmod value on a sitemap or the modified "
+        "date returned by an HTTP resource.",
     )
 
     class Meta:
@@ -174,15 +172,14 @@ class BaseURI(models.Model):
         sha1 = self.sha1
         if sha1 and len(sha1) != 40:
             logger.warning(
-                'ResourceURI.normalize_fields() for URI: "{}" - '
-                'Invalid SHA1 length: "{}": SHA1 ignored!'
-                .format(self.uri, sha1))
+                f'ResourceURI.normalize_fields() for URI: "{self.uri}" - '
+                f'Invalid SHA1 length: "{sha1}": SHA1 ignored!'
+            )
             self.sha1 = None
 
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
 class ResourceURIManager(models.Manager):
-
     def insert(self, uri, **extra_fields):
         """
         Create and return a new ResourceURI after computing its canonical URI
@@ -234,15 +231,11 @@ class ResourceURIManager(models.Manager):
         return self.filter(wip_date__isnull=True, last_visit_date__isnull=False)
 
     def successfully_visited(self):
-        """
-        Limit the QuerySet to ResourceURIs that were visited successfully.
-        """
+        """Limit the QuerySet to ResourceURIs that were visited successfully."""
         return self.visited().filter(has_visit_error=False)
 
     def unsuccessfully_visited(self):
-        """
-        Limit the QuerySet to ResourceURIs that were visited with errors.
-        """
+        """Limit the QuerySet to ResourceURIs that were visited with errors."""
         return self.visited().filter(has_visit_error=True)
 
     def get_revisitables(self, hours):
@@ -250,12 +243,11 @@ class ResourceURIManager(models.Manager):
         Limit the QuerySet to ResourceURIs that have not been visited since the number
         of `hours`, and therefore considered revisitable.
         """
-        revisitables = self.visited().filter(
-            last_visit_date__lt=timezone.now() - timedelta(hours=hours)
-        ).exclude(
-            is_mappable=True, last_map_date__isnull=True
-        ).exclude(
-            is_visitable=False
+        revisitables = (
+            self.visited()
+            .filter(last_visit_date__lt=timezone.now() - timedelta(hours=hours))
+            .exclude(is_mappable=True, last_map_date__isnull=True)
+            .exclude(is_visitable=False)
         )
         return revisitables
 
@@ -277,7 +269,7 @@ class ResourceURIManager(models.Manager):
             visitables = never_visited
 
         # NOTE: this matches an index for efficient ordering
-        visitables = visitables.order_by('-priority', '-uri')
+        visitables = visitables.order_by("-priority", "-uri")
         return visitables
 
     def get_next_visitable(self):
@@ -294,7 +286,6 @@ class ResourceURIManager(models.Manager):
         ResourceURI. ResourceURI that have not yet been visited are
         sorted by decreasing priority.
         """
-
         # We use select_for_update to ensure an atomic query. We ignore
         # locked rows by using skip_locked=True available since Django
         # 1.11.
@@ -316,7 +307,7 @@ class ResourceURIManager(models.Manager):
         # Mark the URI as wip: Callers mark this done by resetting
         # wip_date to null
         resource_uri.wip_date = timezone.now()
-        resource_uri.save(update_fields=['wip_date'])
+        resource_uri.save(update_fields=["wip_date"])
         return resource_uri
 
     def never_mapped(self):
@@ -324,7 +315,9 @@ class ResourceURIManager(models.Manager):
         Limit the QuerySet to ResourceURIs that have never been mapped.
         This is usually the state of a ResourceURI after its succesful visit.
         """
-        return self.successfully_visited().filter(last_map_date__isnull=True, wip_date__isnull=True)
+        return self.successfully_visited().filter(
+            last_map_date__isnull=True, wip_date__isnull=True
+        )
 
     def mapped(self):
         """
@@ -334,15 +327,11 @@ class ResourceURIManager(models.Manager):
         return self.filter(wip_date__isnull=True, last_map_date__isnull=False)
 
     def successfully_mapped(self):
-        """
-        Limit the QuerySet to ResourceURIs that were mapped successfully.
-        """
+        """Limit the QuerySet to ResourceURIs that were mapped successfully."""
         return self.mapped().filter(has_map_error=False)
 
     def unsuccessfully_mapped(self):
-        """
-        Limit the QuerySet to ResourceURIs that were mapped with errors.
-        """
+        """Limit the QuerySet to ResourceURIs that were mapped with errors."""
         return self.mapped().filter(has_map_error=True)
 
     def get_mappables(self):
@@ -353,7 +342,7 @@ class ResourceURIManager(models.Manager):
         """
         qs = self.never_mapped().filter(is_mappable__exact=True, has_map_error=False)
         # NOTE: this matches an index for efficient ordering
-        qs = qs.order_by('-priority')
+        qs = qs.order_by("-priority")
         return qs
 
 
@@ -376,9 +365,9 @@ class ResourceURI(BaseURI):
 
     mining_level = models.PositiveIntegerField(
         default=0,
-        help_text='A numeric indication of the depth and breadth of data '
-                  'collected through this ResourceURI visit. Higher means '
-                  'more and deeper data.',
+        help_text="A numeric indication of the depth and breadth of data "
+        "collected through this ResourceURI visit. Higher means "
+        "more and deeper data.",
     )
 
     # This is a text blob that contains either HTML, JSON or anything
@@ -387,9 +376,9 @@ class ResourceURI(BaseURI):
     data = models.TextField(
         null=True,
         blank=True,
-        help_text='Text content of the file represented by this '
-                  'ResourceURI. This contains the data that was fetched or '
-                  'extracted from a remote ResourceURI such as HTML or JSON.',
+        help_text="Text content of the file represented by this "
+        "ResourceURI. This contains the data that was fetched or "
+        "extracted from a remote ResourceURI such as HTML or JSON.",
     )
 
     package_url = models.CharField(
@@ -397,105 +386,99 @@ class ResourceURI(BaseURI):
         null=True,
         blank=True,
         db_index=True,
-        help_text="""Package URL for this resource. It stands for a package "mostly universal" URL."""
+        help_text="""Package URL for this resource. It stands for a package "mostly universal" URL.""",
     )
 
     last_visit_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text='Timestamp set to the date of the last visit.  Used to track visit status.',
+        help_text="Timestamp set to the date of the last visit.  Used to track visit status.",
     )
 
     is_visitable = models.BooleanField(
         db_index=True,
         default=False,
-        help_text='When set to True (Yes), this field indicates that '
-                  'this URI is visitable in the sense that there is a visitor '
-                  'route available to process it.'
+        help_text="When set to True (Yes), this field indicates that "
+        "this URI is visitable in the sense that there is a visitor "
+        "route available to process it.",
     )
 
     has_visit_error = models.BooleanField(
         db_index=True,
         default=False,
-        help_text='When set to True (Yes), this field indicates that '
-                  'an error has occured when visiting this URI.'
+        help_text="When set to True (Yes), this field indicates that "
+        "an error has occured when visiting this URI.",
     )
 
     visit_error = models.TextField(
         null=True,
         blank=True,
-        help_text='Visit errors messages. When present this means the visit failed.',
+        help_text="Visit errors messages. When present this means the visit failed.",
     )
 
     last_map_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text='Timestamp set to the date of the last mapping. '
-                  'Used to track mapping status.',
+        help_text="Timestamp set to the date of the last mapping. "
+        "Used to track mapping status.",
     )
 
     is_mappable = models.BooleanField(
         db_index=True,
         default=False,
-        help_text='When set to True (Yes), this field indicates that '
-        'this URI is mappable in the sense that there is a mapper '
-        'route available to process it.'
+        help_text="When set to True (Yes), this field indicates that "
+        "this URI is mappable in the sense that there is a mapper "
+        "route available to process it.",
     )
 
     has_map_error = models.BooleanField(
         db_index=True,
         default=False,
-        help_text='When set to True (Yes), this field indicates that '
-                  'an error has occured when mapping this URI.'
+        help_text="When set to True (Yes), this field indicates that "
+        "an error has occured when mapping this URI.",
     )
 
     map_error = models.TextField(
         null=True,
         blank=True,
-        help_text='Mapping errors messages. When present this means the mapping failed.',
+        help_text="Mapping errors messages. When present this means the mapping failed.",
     )
 
     objects = ResourceURIManager()
 
     class Meta:
-        verbose_name = 'Resource URI'
-        unique_together = ['canonical', 'last_visit_date']
+        verbose_name = "Resource URI"
+        unique_together = ["canonical", "last_visit_date"]
 
         indexes = [
             # to get the next visitable
             models.Index(
                 fields=[
-                    'is_visitable',
-                    'last_visit_date',
-                    'wip_date',
-                    'has_visit_error',
+                    "is_visitable",
+                    "last_visit_date",
+                    "wip_date",
+                    "has_visit_error",
                 ]
             ),
             # to get the next mappable
             models.Index(
                 fields=[
-                    'is_mappable',
-                    'last_visit_date',
-                    'wip_date',
-                    'last_map_date',
-                    'has_visit_error',
-                    'has_map_error',
+                    "is_mappable",
+                    "last_visit_date",
+                    "wip_date",
+                    "last_map_date",
+                    "has_visit_error",
+                    "has_map_error",
                 ]
             ),
             # ordered by for the main queue query e.g. '-priority'
-            models.Index(
-                fields=[
-                    '-priority'
-                ]
-            )
+            models.Index(fields=["-priority"]),
         ]
 
     def _set_defauts(self):
-        """
-        Set defaults for computed fields.
-        """
+        """Set defaults for computed fields."""
         uri = self.uri
         if not self.canonical:
             self.canonical = get_canonical(uri)
@@ -503,14 +486,12 @@ class ResourceURI(BaseURI):
         self.is_mappable = map_router.is_routable(uri)
 
     def save(self, *args, **kwargs):
-        """
-        Save, adding defaults for computed fields and validating fields.
-        """
+        """Save, adding defaults for computed fields and validating fields."""
         self._set_defauts()
         self.normalize_fields()
         self.has_map_error = True if self.map_error else False
         self.has_visit_error = True if self.visit_error else False
-        super(ResourceURI, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class ScannableURIManager(models.Manager):
@@ -520,10 +501,9 @@ class ScannableURIManager(models.Manager):
         Note: this does not evaluate the query set and does not lock the
         database for update.
         """
-        qs = self.filter(scan_status__exact=ScannableURI.SCAN_NEW,
-                         scan_error=None)
+        qs = self.filter(scan_status__exact=ScannableURI.SCAN_NEW, scan_error=None)
         # NOTE: this matches an index for efficient ordering
-        qs = qs.order_by('-priority')
+        qs = qs.order_by("-priority")
         return qs
 
     def get_next_scannable(self):
@@ -582,7 +562,7 @@ class ScannableURIManager(models.Manager):
         # Mark the URI as wip: Callers mark this done by resetting
         # wip_date to null
         canidate_uri.wip_date = timezone.now()
-        canidate_uri.save(update_fields=['wip_date'])
+        canidate_uri.save(update_fields=["wip_date"])
         return canidate_uri
 
     def get_processables(self):
@@ -593,15 +573,17 @@ class ScannableURIManager(models.Manager):
         Note: this does not evaluate the query set and does not lock the
         database for update.
         """
-        qs = self.filter(scan_status__in=[
+        qs = self.filter(
+            scan_status__in=[
                 ScannableURI.SCAN_SUBMITTED,
                 ScannableURI.SCAN_IN_PROGRESS,
-                ScannableURI.SCAN_COMPLETED
+                ScannableURI.SCAN_COMPLETED,
             ],
-            wip_date=None, scan_error=None,
+            wip_date=None,
+            scan_error=None,
         )
         # NOTE: this matches an index for efficient ordering
-        qs = qs.order_by('-scan_status', '-priority')
+        qs = qs.order_by("-scan_status", "-priority")
         return qs
 
     def get_next_processable(self):
@@ -614,6 +596,62 @@ class ScannableURIManager(models.Manager):
         transaction.atomic block.
         """
         return self.__get_next_candidate(self.get_processables())
+
+    def statistics(self):
+        """Return a statistics mapping with summary counts of ScannableURI grouped by status."""
+        statuses = list(
+            self.values("scan_status")
+            .annotate(count=models.Count("scan_status"))
+            .order_by("scan_status"),
+        )
+        for stat in statuses:
+            stat["scan_status"] = ScannableURI.SCAN_STATUSES_BY_CODE[
+                stat["scan_status"]
+            ]
+        stats = {
+            "total": self.count(),
+            "processables": self.get_processables().count(),
+            "scannables": self.get_scannables().count(),
+            "by_status": statuses,
+        }
+
+        most_recent = dict(
+            most_recent_submitted=self._recent(scan_status=ScannableURI.SCAN_SUBMITTED),
+            most_recent_indexed=self._recent(scan_status=ScannableURI.SCAN_INDEXED),
+            most_recent_failed=self._recent(
+                scan_status=ScannableURI.SCAN_FAILED,
+                extra_value="scan_error",
+            ),
+            most_recent_in_progress=self._recent(
+                scan_status=ScannableURI.SCAN_IN_PROGRESS
+            ),
+            most_recent_completed=self._recent(scan_status=ScannableURI.SCAN_COMPLETED),
+            most_recent_index_errors=self._recent(
+                scan_status=ScannableURI.SCAN_INDEX_FAILED,
+                extra_value="index_error",
+            ),
+        )
+        stats.update(most_recent)
+        return stats
+
+    def _recent(self, scan_status, extra_value=None, most_recent=10):
+        """
+        Yield mappings of the ``most_recent`` PURL and download URL with a given
+        ``scan_status``.
+        Include an optional ``extra value`` field name.
+        """
+        recent_uris = self.filter(scan_status=scan_status).order_by("-scan_date")[
+            :most_recent
+        ]
+        for scauri in recent_uris:
+            recent = dict(
+                # this is NOT a field requiring this loop
+                package_url=scauri.package.package_url,
+                download_url=scauri.package.download_url,
+            )
+            if extra_value:
+                recent[extra_value] = getattr(scauri, extra_value)
+            yield recent
 
 
 class ScannableURI(BaseURI):
@@ -649,27 +687,25 @@ class ScannableURI(BaseURI):
         - update the matching index for the PackageDB as needed with fingerprints from the scan
         - set status and timestamps as needed
     """
-    scan_request_date = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True,
-        help_text='Timestamp set to the date when a scan was requested.  Used to track scan status.',
+
+    uuid = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
     )
 
-    last_status_poll_date = models.DateTimeField(
+    scan_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text='Timestamp set to the date of the last status poll. '
-                  'Used to track the scan polling.',
+        help_text="Timestamp set to the date when a scan was taken by a worker",
     )
 
-    scan_uuid = models.CharField(
-        max_length=36,
+    pipelines = models.JSONField(
+        default=list,
         blank=True,
-        null=True,
-        db_index=True,
-        help_text='UUID of a scan for this URI in ScanCode.io.',
+        editable=False,
+        help_text="A list of ScanCode.io pipeline names to be run for this scan",
     )
 
     SCAN_NEW = 0
@@ -682,55 +718,51 @@ class ScannableURI(BaseURI):
     SCAN_INDEX_FAILED = 7
 
     SCAN_STATUS_CHOICES = [
-        (SCAN_NEW, 'new'),
-        (SCAN_SUBMITTED, 'submitted'),
-        (SCAN_IN_PROGRESS, 'in progress'),
-        (SCAN_COMPLETED, 'scanned'),
-        (SCAN_INDEXED, 'indexed'),
-        (SCAN_FAILED, 'failed'),
-        (SCAN_TIMEOUT, 'timeout'),
-        (SCAN_INDEX_FAILED, 'scan index failed'),
+        (SCAN_NEW, "new"),
+        (SCAN_SUBMITTED, "submitted"),
+        (SCAN_IN_PROGRESS, "in progress"),
+        (SCAN_COMPLETED, "scanned"),
+        (SCAN_INDEXED, "indexed"),
+        (SCAN_FAILED, "failed"),
+        (SCAN_TIMEOUT, "timeout"),
+        (SCAN_INDEX_FAILED, "scan index failed"),
     ]
 
     SCAN_STATUSES_BY_CODE = dict(SCAN_STATUS_CHOICES)
+
+    SCAN_STATUS_CODES_BY_SCAN_STATUS = {
+        status: code for code, status in SCAN_STATUS_CHOICES
+    }
 
     scan_status = models.IntegerField(
         default=SCAN_NEW,
         choices=SCAN_STATUS_CHOICES,
         db_index=True,
-        help_text='Status of the scan for this URI.',
+        help_text="Status of the scan for this URI.",
     )
 
-    rescan_uri = models.BooleanField(
+    reindex_uri = models.BooleanField(
         default=False,
         null=True,
         blank=True,
-        help_text='Flag indicating whether or not this URI should be rescanned and reindexed.',
-    )
-
-    scan_uuid = models.CharField(
-        max_length=36,
-        blank=True,
-        null=True,
-        db_index=True,
-        help_text='UUID of a scan for this URI in ScanCode.io.',
+        help_text="Flag indicating whether or not this URI should be rescanned and reindexed.",
     )
 
     scan_error = models.TextField(
         null=True,
         blank=True,
-        help_text='Scan errors messages. When present this means the scan failed.',
+        help_text="Scan errors messages. When present this means the scan failed.",
     )
 
     index_error = models.TextField(
         null=True,
         blank=True,
-        help_text='Indexing errors messages. When present this means the indexing failed.',
+        help_text="Indexing errors messages. When present this means the indexing failed.",
     )
 
     package = models.ForeignKey(
         Package,
-        help_text='The Package that this ScannableURI is for',
+        help_text="The Package that this ScannableURI is for",
         on_delete=models.CASCADE,
         null=False,
     )
@@ -738,39 +770,53 @@ class ScannableURI(BaseURI):
     objects = ScannableURIManager()
 
     class Meta:
-        verbose_name = 'Scannable URI'
-        unique_together = ['canonical', 'scan_uuid']
+        verbose_name = "Scannable URI"
 
         indexes = [
             # to get the scannables
             models.Index(
-                fields=['scan_status', 'scan_request_date', 'last_status_poll_date', ]),
+                fields=[
+                    "scan_status",
+                    "scan_date",
+                ]
+            ),
             # ordered by for the main queue query e.g. '-priority'
-            models.Index(
-                fields=['-priority'])
+            models.Index(fields=["-priority"]),
         ]
 
     def save(self, *args, **kwargs):
-        """
-        Save, adding defaults for computed fields and validating fields.
-        """
+        """Save, adding defaults for computed fields and validating fields."""
         if not self.canonical:
             self.canonical = get_canonical(self.uri)
         self.normalize_fields()
-        super(ScannableURI, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
-    def rescan(self):
-        """
-        Reset fields such that a ScannableURI can be sent off for scanning again
-        """
-        self.rescan_uri = True
-        self.scan_status = ScannableURI.SCAN_NEW
-        self.scan_error = None
-        self.index_error = None
-        self.scan_uuid = None
-        self.scan_request_date = None
-        self.priority = 100
+    def process_scan_results(
+        self, scan_results_location, scan_summary_location, project_extra_data
+    ):
+        from minecode import tasks
+
+        self.scan_status = self.SCAN_COMPLETED
         self.save()
+
+        if not settings.PURLDB_ASYNC:
+            tasks.process_scan_results(
+                scannable_uri_uuid=self.uuid,
+                scan_results_location=scan_results_location,
+                scan_summary_location=scan_summary_location,
+                project_extra_data=project_extra_data,
+            )
+            return
+
+        job = django_rq.enqueue(
+            tasks.process_scan_results,
+            scannable_uri_uuid=self.uuid,
+            scan_results_location=scan_results_location,
+            scan_summary_location=scan_summary_location,
+            project_extra_data=project_extra_data,
+            job_timeout=1200,
+        )
+        return job
 
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
@@ -784,26 +830,17 @@ class PriorityResourceURIManager(models.Manager):
         """
         # TODO: be able to create a request for an existing purl if the previous request has been completed already
 
-        priority_resource_uris = self.filter(
-            uri=uri,
-            package_url=uri,
-            **extra_fields
-        )
-        if (
-            priority_resource_uris.count() == 0
-            or all(p.processed_date for p in priority_resource_uris)
+        priority_resource_uris = self.filter(uri=uri, package_url=uri, **extra_fields)
+        if priority_resource_uris.count() == 0 or all(
+            p.processed_date for p in priority_resource_uris
         ):
             priority_resource_uri = self.create(
-                uri=uri,
-                package_url=uri,
-                **extra_fields
+                uri=uri, package_url=uri, **extra_fields
             )
             return priority_resource_uri
 
     def in_progress(self):
-        """
-        Limit the QuerySet to PriorityResourceURI being processed.
-        """
+        """Limit the QuerySet to PriorityResourceURI being processed."""
         return self.filter(wip_date__isnull=False)
 
     def never_processed(self):
@@ -811,17 +848,12 @@ class PriorityResourceURIManager(models.Manager):
         Limit the QuerySet to PriorityResourceURIs that have never been processed.
         This is usually the state of a PriorityResourceURI after upon creation.
         """
-        return self.filter(
-            processed_date__isnull=True,
-            wip_date__isnull=True
-        ).order_by(
-            'request_date'
+        return self.filter(processed_date__isnull=True, wip_date__isnull=True).order_by(
+            "request_date"
         )
 
     def get_requests(self):
-        """
-        Return an ordered query set of all processable PriorityResourceURIs.
-        """
+        """Return an ordered query set of all processable PriorityResourceURIs."""
         never_processed = self.never_processed()
         return never_processed
 
@@ -835,11 +867,13 @@ class PriorityResourceURIManager(models.Manager):
         NOTE: this method can only be called from within a transaction.atomic
         block.
         """
-        priority_resource_uri = self.get_requests().select_for_update(skip_locked=True).first()
+        priority_resource_uri = (
+            self.get_requests().select_for_update(skip_locked=True).first()
+        )
         if not priority_resource_uri:
             return
         priority_resource_uri.wip_date = timezone.now()
-        priority_resource_uri.save(update_fields=['wip_date'])
+        priority_resource_uri.save(update_fields=["wip_date"])
         return priority_resource_uri
 
 
@@ -864,15 +898,15 @@ class PriorityResourceURI(BaseURI):
         max_length=2048,
         null=True,
         blank=True,
-        help_text='URI for this resource. This is the unmodified original URI.',
+        help_text="URI for this resource. This is the unmodified original URI.",
     )
 
     canonical = models.CharField(
         max_length=3000,
         null=True,
         blank=True,
-        help_text='Canonical form of the URI for this resource that must be '
-                  'unique across all ResourceURI.',
+        help_text="Canonical form of the URI for this resource that must be "
+        "unique across all ResourceURI.",
     )
 
     # This is a text blob that contains either HTML, JSON or anything
@@ -881,9 +915,9 @@ class PriorityResourceURI(BaseURI):
     data = models.TextField(
         null=True,
         blank=True,
-        help_text='Text content of the file represented by this '
-                  'ResourceURI. This contains the data that was fetched or '
-                  'extracted from a remote ResourceURI such as HTML or JSON.',
+        help_text="Text content of the file represented by this "
+        "ResourceURI. This contains the data that was fetched or "
+        "extracted from a remote ResourceURI such as HTML or JSON.",
     )
 
     package_url = models.CharField(
@@ -891,47 +925,52 @@ class PriorityResourceURI(BaseURI):
         null=True,
         blank=True,
         db_index=True,
-        help_text="""Package URL for this resource. It stands for a package "mostly universal" URL."""
+        help_text="""Package URL for this resource. It stands for a package "mostly universal" URL.""",
     )
 
     request_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text='Timestamp set to the date of when this Package info was requested.',
+        help_text="Timestamp set to the date of when this Package info was requested.",
     )
 
     processed_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text='Timestamp set to the date of when this Package info was requested.',
+        help_text="Timestamp set to the date of when this Package info was requested.",
     )
 
     has_processing_error = models.BooleanField(
         db_index=True,
         default=False,
-        help_text='When set to True (Yes), this field indicates that '
-                  'an error has occured when processing this URI.'
+        help_text="When set to True (Yes), this field indicates that "
+        "an error has occured when processing this URI.",
     )
 
     processing_error = models.TextField(
         null=True,
         blank=True,
-        help_text='Processing errors messages. When present this means the processing failed.',
+        help_text="Processing errors messages. When present this means the processing failed.",
+    )
+
+    addon_pipelines = models.JSONField(
+        default=list,
+        blank=True,
+        editable=False,
+        help_text="A list of addon ScanCode.io pipeline to run.",
     )
 
     objects = PriorityResourceURIManager()
 
     class Meta:
-        verbose_name = 'Priority Resource URI'
+        verbose_name = "Priority Resource URI"
 
     def save(self, *args, **kwargs):
-        """
-        Save, adding defaults for computed fields and validating fields.
-        """
+        """Save, adding defaults for computed fields and validating fields."""
         self.normalize_fields()
-        super(PriorityResourceURI, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 # TODO: Use the QuerySet.as_manager() for more flexibility and chaining.
@@ -943,26 +982,17 @@ class ImportableURIManager(models.Manager):
         """
         # TODO: be able to create a request for an existing purl if the previous request has been completed already
 
-        importable_uris = self.filter(
-            uri=uri,
-            **extra_fields
-        )
-        if (
-            importable_uris.count() == 0
-            or all(p.processed_date for p in importable_uris)
+        importable_uris = self.filter(uri=uri, **extra_fields)
+        if importable_uris.count() == 0 or all(
+            p.processed_date for p in importable_uris
         ):
             importable_uri = self.create(
-                uri=uri,
-                data=data,
-                package_url=package_url,
-                **extra_fields
+                uri=uri, data=data, package_url=package_url, **extra_fields
             )
             return importable_uri
 
     def in_progress(self):
-        """
-        Limit the QuerySet to ImportableURI being processed.
-        """
+        """Limit the QuerySet to ImportableURI being processed."""
         return self.filter(wip_date__isnull=False)
 
     def never_processed(self):
@@ -970,17 +1000,12 @@ class ImportableURIManager(models.Manager):
         Limit the QuerySet to ImportableURIs that have never been processed.
         This is usually the state of a ImportableURI after upon creation.
         """
-        return self.filter(
-            processed_date__isnull=True,
-            wip_date__isnull=True
-        ).order_by(
-            'request_date'
+        return self.filter(processed_date__isnull=True, wip_date__isnull=True).order_by(
+            "request_date"
         )
 
     def get_requests(self):
-        """
-        Return an ordered query set of all processable ImportableURIs.
-        """
+        """Return an ordered query set of all processable ImportableURIs."""
         never_processed = self.never_processed()
         return never_processed
 
@@ -998,12 +1023,13 @@ class ImportableURIManager(models.Manager):
         if not importable_uri:
             return
         importable_uri.wip_date = timezone.now()
-        importable_uri.save(update_fields=['wip_date'])
+        importable_uri.save(update_fields=["wip_date"])
         return importable_uri
 
 
 # TODO: have a second queue for crawling maven repo, that tracks which pages and namespaces we visited
 # when we hit the point of a package page, we add it to the queue that creates skinny packages for the package we visited.
+
 
 class ImportableURI(BaseURI):
     package_url = models.CharField(
@@ -1011,7 +1037,7 @@ class ImportableURI(BaseURI):
         null=True,
         blank=True,
         db_index=True,
-        help_text="""Package URL for this resource. It stands for a package "mostly universal" URL."""
+        help_text="""Package URL for this resource. It stands for a package "mostly universal" URL.""",
     )
 
     # This is a text blob that contains either HTML, JSON or anything
@@ -1020,46 +1046,67 @@ class ImportableURI(BaseURI):
     data = models.TextField(
         null=True,
         blank=True,
-        help_text='Text content of the file represented by this '
-                  'ResourceURI. This contains the data that was fetched or '
-                  'extracted from a remote ResourceURI such as HTML or JSON.',
+        help_text="Text content of the file represented by this "
+        "ResourceURI. This contains the data that was fetched or "
+        "extracted from a remote ResourceURI such as HTML or JSON.",
     )
 
     request_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text='Timestamp set to the date of when this Package info was requested.',
+        help_text="Timestamp set to the date of when this Package info was requested.",
     )
 
     processed_date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text='Timestamp set to the date of when this Package info was processed.',
+        help_text="Timestamp set to the date of when this Package info was processed.",
     )
 
     has_processing_error = models.BooleanField(
         db_index=True,
         default=False,
-        help_text='When set to True (Yes), this field indicates that '
-                  'an error has occured when processing this URI.'
+        help_text="When set to True (Yes), this field indicates that "
+        "an error has occured when processing this URI.",
     )
 
     processing_error = models.TextField(
         null=True,
         blank=True,
-        help_text='Processing errors messages. When present this means the processing failed.',
+        help_text="Processing errors messages. When present this means the processing failed.",
     )
 
     objects = ImportableURIManager()
 
     class Meta:
-        verbose_name = 'Importable URI'
+        verbose_name = "Importable URI"
 
     def save(self, *args, **kwargs):
-        """
-        Save, adding defaults for computed fields and validating fields.
-        """
+        """Save, adding defaults for computed fields and validating fields."""
         self.normalize_fields()
-        super(ImportableURI, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
+
+
+class ProcessingError(BaseURI):
+    service = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        help_text="The name of the service running where the error occured.",
+    )
+
+    date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text="Timestamp set to the date of when this error occured.",
+    )
+
+    error_message = models.TextField(
+        null=True, blank=True, help_text="The message associated with this error"
+    )
+
+    class Meta:
+        verbose_name = "Processing Error"

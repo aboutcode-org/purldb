@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -19,23 +19,22 @@ class Command(VerboseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--input-dir',
-            dest='input_dir',
+            "--input-dir",
+            dest="input_dir",
             default=None,
             type=str,
-            help='Load content from this input directory that contains a tree of gzip-compressed JSON CD files')
+            help="Load content from this input directory that contains a tree of gzip-compressed JSON CD files",
+        )
         parser.add_argument(
-            '--cd-root-dir',
-            dest='cd_root_dir',
+            "--cd-root-dir",
+            dest="cd_root_dir",
             default=None,
             type=str,
-            help='Specify root directory that contains a tree of gzip-compressed JSON CD files')
+            help="Specify root directory that contains a tree of gzip-compressed JSON CD files",
+        )
 
     def handle(self, *args, **options):
-        input_dir = options.get('input_dir')
-        cd_root_dir = options.get('cd_root_dir')
+        input_dir = options.get("input_dir")
+        cd_root_dir = options.get("cd_root_dir")
 
-        load(
-            input_dir=input_dir,
-            cd_root_dir=cd_root_dir
-        )
+        load(input_dir=input_dir, cd_root_dir=cd_root_dir)

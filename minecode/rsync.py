@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 # logger.setLevel(logging.DEBUG)
 
-RSYNC_COMMAND = 'rsync'
+RSYNC_COMMAND = "rsync"
 
 
 def modules(input_file):
@@ -38,22 +38,22 @@ def modules(input_file):
         for line in inp:
             if not line:
                 continue
-            if line.startswith(' '):
+            if line.startswith(" "):
                 # this is the motd section
                 continue
             line = line.strip()
             if line:
-                name, _desc = line.split('\t', 1)
+                name, _desc = line.split("\t", 1)
                 yield name.strip()
 
 
-octals = re.compile(r'#(\d{3})').findall
+octals = re.compile(r"#(\d{3})").findall
 
 
 def decode_path(p):
     """Decode an rsync path with octal encodings"""
     for oc in set(octals(p)):
-        p = p.replace('#' + oc, octal2char(oc))
+        p = p.replace("#" + oc, octal2char(oc))
     return p
 
 
@@ -63,12 +63,11 @@ def octal2char(s):
 
 
 def decode_ts(s):
-    """
-    Convert an rsync timestamp (which is local tz) to an UTC ISO timestamp.
-    """
+    """Convert an rsync timestamp (which is local tz) to an UTC ISO timestamp."""
     tzinfo = tz.tzutc()
-    ar = arrow.get(s, 'YYYY/MM/DD HH:mm:ss').replace(tzinfo=tzinfo).to('utc')
+    ar = arrow.get(s, "YYYY/MM/DD HH:mm:ss").replace(tzinfo=tzinfo).to("utc")
     return ar.isoformat()
+
 
 # note: there is a large number of possible file types, but we do not care for
 # them: only files and dirs matter; And links, block, pipes, fifo, etc do not.
@@ -76,17 +75,17 @@ def decode_ts(s):
 
 
 rsync_line = re.compile(
-    r'^(?P<type>[\-d])'
-    r'(?P<perm>.{9})'
-    r' +'
-    r'(?P<size>[\d,]+)'
-    r' '
-    r'(?P<ts>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2})'  # YYYY/MM/DD HH:mm:ss
-    r' +'
-    r'(?P<path>.+$)'
+    r"^(?P<type>[\-d])"
+    r"(?P<perm>.{9})"
+    r" +"
+    r"(?P<size>[\d,]+)"
+    r" "
+    r"(?P<ts>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2})"  # YYYY/MM/DD HH:mm:ss
+    r" +"
+    r"(?P<path>.+$)"
 ).match
 
-Entry = collections.namedtuple('Entry', 'type perm size date path')
+Entry = collections.namedtuple("Entry", "type perm size date path")
 
 
 def entry(line):
@@ -94,20 +93,20 @@ def entry(line):
     Return an Entry constructed from an rsync directory listing line. Assumes
     universal line endings.
     """
-    line = line.rstrip('\n')
+    line = line.rstrip("\n")
     if not line:
         return
-    if 'skipping directory' in line:
+    if "skipping directory" in line:
         return
     rline = rsync_line(line)
     if not rline:
         return
-    typ = rline.group('type')
-    perm = rline.group('perm')
-    size = int(rline.group('size').replace(',', ''))
-    ts = rline.group('ts')
+    typ = rline.group("type")
+    perm = rline.group("perm")
+    size = int(rline.group("size").replace(",", ""))
+    ts = rline.group("ts")
     date = decode_ts(ts)
-    path = rline.group('path')
+    path = rline.group("path")
     path = decode_path(path)
     return dict(Entry(typ, perm, size, date, path)._asdict())
 
@@ -133,21 +132,21 @@ def fetch_directory(uri, recurse=True):
     Return the location of a tempfile containing an rsync dir listing for uri.
     Recursive if recurse is True. Raise an Exception with error details.
     """
-    temp_file = get_temp_file(file_name='minecode-rsync-dir-', extension='.rsync')
-    with open(temp_file, 'w') as tmp:
+    temp_file = get_temp_file(file_name="minecode-rsync-dir-", extension=".rsync")
+    with open(temp_file, "w") as tmp:
         file_name = tmp.name
-        ends = not uri.endswith('/') and '/' or ''
-        recursive = recurse and '--recursive' or '--no-recursive'
-        cmd = 'rsync --no-motd %(recursive)s -d "%(uri)s%(ends)s"' % locals()
+        ends = not uri.endswith("/") and "/" or ""
+        recursive = recurse and "--recursive" or "--no-recursive"
+        cmd = f'rsync --no-motd {recursive} -d "{uri}{ends}"'
         rsync = command.Command(cmd)
         out, err = rsync.execute()
 
         for o in out:
             tmp.write(o)
 
-        err = '\n'.join([e for e in err])
+        err = "\n".join([e for e in err])
         rc = rsync.returncode
         if err or rc:
-            raise Exception('%(cmd) failed. rc:%(tc)d err: %(err)s' % locals())
+            raise Exception(f"{cmd} failed. rc:{rc} err: {err}")
         else:
             return file_name

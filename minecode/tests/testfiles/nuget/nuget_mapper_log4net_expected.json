@@ -22,23 +22,26 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"apache-2.0_176.RULE",
             "rule_relevance":100,
+            "rule_identifier":"apache-2.0_176.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_176.RULE",
             "matched_text":"Apache-2.0 License"
           }
@@ -52,13 +55,19 @@
     "extracted_license_statement":"Apache-2.0 License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.8?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.8"
   },
   {
@@ -84,23 +93,26 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"apache-2.0_176.RULE",
             "rule_relevance":100,
+            "rule_identifier":"apache-2.0_176.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_176.RULE",
             "matched_text":"Apache-2.0 License"
           }
@@ -114,13 +126,19 @@
     "extracted_license_statement":"Apache-2.0 License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.7?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.7"
   },
   {
@@ -146,23 +164,26 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"apache-2.0_176.RULE",
             "rule_relevance":100,
+            "rule_identifier":"apache-2.0_176.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_176.RULE",
             "matched_text":"Apache-2.0 License"
           }
@@ -176,13 +197,19 @@
     "extracted_license_statement":"Apache-2.0 License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.6?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.6"
   },
   {
@@ -208,23 +235,26 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"apache-2.0_176.RULE",
             "rule_relevance":100,
+            "rule_identifier":"apache-2.0_176.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_176.RULE",
             "matched_text":"Apache-2.0 License"
           }
@@ -238,13 +268,19 @@
     "extracted_license_statement":"Apache-2.0 License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.5?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.5"
   },
   {
@@ -270,23 +306,26 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"apache-2.0_176.RULE",
             "rule_relevance":100,
+            "rule_identifier":"apache-2.0_176.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_176.RULE",
             "matched_text":"Apache-2.0 License"
           }
@@ -300,13 +339,19 @@
     "extracted_license_statement":"Apache-2.0 License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.4?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.4"
   },
   {
@@ -332,23 +377,26 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"apache-2.0_176.RULE",
             "rule_relevance":100,
+            "rule_identifier":"apache-2.0_176.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_176.RULE",
             "matched_text":"Apache-2.0 License"
           }
@@ -362,13 +410,19 @@
     "extracted_license_statement":"Apache-2.0 License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.3?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.3"
   },
   {
@@ -394,23 +448,26 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"apache-2.0_176.RULE",
             "rule_relevance":100,
+            "rule_identifier":"apache-2.0_176.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_176.RULE",
             "matched_text":"Apache-2.0 License"
           }
@@ -424,13 +481,19 @@
     "extracted_license_statement":"Apache-2.0 License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.2?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.2"
   },
   {
@@ -456,23 +519,26 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"apache-2.0_176.RULE",
             "rule_relevance":100,
+            "rule_identifier":"apache-2.0_176.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_176.RULE",
             "matched_text":"Apache-2.0 License"
           }
@@ -486,13 +552,19 @@
     "extracted_license_statement":"Apache-2.0 License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.1?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.1"
   },
   {
@@ -518,23 +590,26 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"apache-2.0_176.RULE",
             "rule_relevance":100,
+            "rule_identifier":"apache-2.0_176.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_176.RULE",
             "matched_text":"Apache-2.0 License"
           }
@@ -548,13 +623,19 @@
     "extracted_license_statement":"Apache-2.0 License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@2.0.0?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@2.0.0"
   },
   {
@@ -580,23 +661,26 @@
     "code_view_url":null,
     "vcs_url":null,
     "copyright":"Copyright 2004-2017 The Apache Software Foundation",
-    "holder":null,
+    "holder":"The Apache Software Foundation",
     "declared_license_expression":"apache-2.0",
     "declared_license_expression_spdx":"Apache-2.0",
     "license_detections":[
       {
         "license_expression":"apache-2.0",
+        "license_expression_spdx":"Apache-2.0",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"apache-2.0",
+            "spdx_license_expression":"Apache-2.0",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":4,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"apache-2.0",
-            "rule_identifier":"apache-2.0_176.RULE",
             "rule_relevance":100,
+            "rule_identifier":"apache-2.0_176.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_176.RULE",
             "matched_text":"Apache-2.0 License"
           }
@@ -610,13 +694,19 @@
     "extracted_license_statement":"Apache-2.0 License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:nuget/log4net@1.2.10?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://www.nuget.org/packages/log4net"
+    ],
+    "datasource_ids":[
+      "nuget_metadata_json"
+    ],
     "purl":"pkg:nuget/log4net@1.2.10"
   }
 ]

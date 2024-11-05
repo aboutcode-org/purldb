@@ -22,23 +22,26 @@
     "code_view_url":"https://github.com/openssl/openssl",
     "vcs_url":"git+https://github.com/openssl/openssl.git",
     "copyright":"Copyright (c) 1998-2018 The OpenSSL Project\nCopyright (c) 1995-1998 Eric A. Young, Tim J. Hudson\nAll rights reserved.",
-    "holder":null,
+    "holder":"The OpenSSL Project\nEric A. Young, Tim J. Hudson",
     "declared_license_expression":"openssl-ssleay",
     "declared_license_expression_spdx":"OpenSSL",
     "license_detections":[
       {
         "license_expression":"openssl-ssleay",
+        "license_expression_spdx":"OpenSSL",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"openssl-ssleay",
+            "spdx_license_expression":"OpenSSL",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"openssl-ssleay",
-            "rule_identifier":"openssl-ssleay_2.RULE",
             "rule_relevance":100,
+            "rule_identifier":"openssl-ssleay_2.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/openssl-ssleay_2.RULE",
             "matched_text":"OpenSSL License"
           }
@@ -52,13 +55,19 @@
     "extracted_license_statement":"OpenSSL License",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:generic/openssl-1.0.2-stable-SNAP-20180518.tar.gz@1.0.2-stable-SNAP-20180518?uuid=fixed-uid-done-for-testing-5642512d1758",
-    "datafile_paths":[],
-    "datasource_ids":[],
+    "datafile_paths":[
+      "https://ftp.openssl.org/snapshot/openssl-1.0.2-stable-SNAP-20180518.tar.gz"
+    ],
+    "datasource_ids":[
+      "openssl_metadeta"
+    ],
     "purl":"pkg:generic/openssl-1.0.2-stable-SNAP-20180518.tar.gz@1.0.2-stable-SNAP-20180518"
   }
 ]

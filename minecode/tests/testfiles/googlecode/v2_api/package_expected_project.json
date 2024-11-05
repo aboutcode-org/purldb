@@ -35,17 +35,20 @@
     "license_detections":[
       {
         "license_expression":"gpl-2.0",
+        "license_expression_spdx":"GPL-2.0-only",
         "matches":[
           {
-            "score":50.0,
+            "license_expression":"gpl-2.0",
+            "spdx_license_expression":"GPL-2.0-only",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"1-hash",
+            "score":50.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"1-hash",
-            "license_expression":"gpl-2.0",
-            "rule_identifier":"gpl2_bare_word_only.RULE",
             "rule_relevance":50,
+            "rule_identifier":"gpl2_bare_word_only.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl2_bare_word_only.RULE",
             "matched_text":"gpl2"
           }
@@ -59,13 +62,17 @@
     "extracted_license_statement":"gpl2",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:googlecode/hg4j?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "googlecode_api_json"
+    ],
     "purl":"pkg:googlecode/hg4j"
   }
 ]

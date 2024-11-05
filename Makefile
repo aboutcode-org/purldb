@@ -3,14 +3,15 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
 # Python version can be specified with `$ PYTHON_EXE=python3.x make conf`
 PYTHON_EXE?=python3
 VENV=venv
-MANAGE=${VENV}/bin/python manage.py
+MANAGE=${VENV}/bin/python manage_purldb.py
+MATCHCODE_MANAGE=${VENV}/bin/python manage_matchcode.py
 ACTIVATE?=. ${VENV}/bin/activate;
 VIRTUALENV_PYZ=../etc/thirdparty/virtualenv.pyz
 # Do not depend on Python to generate the SECRET_KEY
@@ -19,6 +20,7 @@ GET_SECRET_KEY=`base64 /dev/urandom | head -c50`
 ENV_FILE=.env
 # Customize with `$ make postgres PACKAGEDB_DB_PASSWORD=YOUR_PASSWORD`
 PACKAGEDB_DB_PASSWORD=packagedb
+MATCHCODEIO_DB_PASSWORD=matchcodeio
 
 # Use sudo for postgres, but only on Linux
 UNAME := $(shell uname)
@@ -34,11 +36,13 @@ virtualenv:
 
 conf:
 	@echo "-> Install dependencies"
-	@./configure
+	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure
 
 dev:
 	@echo "-> Configure and install development dependencies"
-	@./configure --dev
+	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --dev
+	@echo "-> Configure and install documentation dependencies"
+	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --docs
 
 envfile:
 	@echo "-> Create the .env file and generate a secret key"
@@ -46,31 +50,32 @@ envfile:
 	@mkdir -p $(shell dirname ${ENV_FILE}) && touch ${ENV_FILE}
 	@echo SECRET_KEY=\"${GET_SECRET_KEY}\" > ${ENV_FILE}
 
-isort:
-	@echo "-> Apply isort changes to ensure proper imports ordering"
-	${VENV}/bin/isort .
-
-black:
-	@echo "-> Apply black code formatter"
-	${VENV}/bin/black .
+envfile_testing: envfile
+	@echo PACKAGEDB_DB_USER=\"postgres\" >> ${ENV_FILE}
+	@echo PACKAGEDB_DB_PASSWORD=\"postgres\" >> ${ENV_FILE}
+	@echo SCANCODEIO_DB_USER=\"postgres\" >> ${ENV_FILE}
+	@echo SCANCODEIO_DB_PASSWORD=\"postgres\" >> ${ENV_FILE}
 
 doc8:
 	@echo "-> Run doc8 validation"
 	@${ACTIVATE} doc8 --max-line-length 100 --ignore-path docs/_build/ --quiet docs/
 
-valid: isort black
+valid:
+	@echo "-> Run Ruff format"
+	@${ACTIVATE} ruff format  --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
+	@echo "-> Run Ruff linter"
+	@${ACTIVATE} ruff check --fix --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
 
 check:
-	@echo "-> Run pycodestyle (PEP8) validation"
-	@${ACTIVATE} pycodestyle --max-line-length=100 --exclude=venv,lib,thirdparty,docs,migrations,settings.py .
-	@echo "-> Run isort imports ordering validation"
-	@${ACTIVATE} isort --check-only .
-	@echo "-> Run black validation"
-	@${ACTIVATE} black --check ${BLACK_ARGS}
+	@echo "-> Run Ruff linter validation (pycodestyle, bandit, isort, and more)"
+	@${ACTIVATE} ruff check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
+	@echo "-> Run Ruff format validation"
+	@${ACTIVATE} ruff format --check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
+	@$(MAKE) doc8
 
 clean:
 	@echo "-> Clean the Python env"
-	@./configure --clean
+	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --clean
 
 migrate:
 	@echo "-> Apply database migrations"
@@ -87,8 +92,22 @@ postgres:
 	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=packagedb packagedb
 	@$(MAKE) migrate
 
+postgres_matchcodeio:
+	@echo "-> Configure PostgreSQL database"
+	@echo "-> Create database user 'matchcodeio'"
+	${SUDO_POSTGRES} createuser --no-createrole --no-superuser --login --inherit --createdb matchcodeio || true
+	${SUDO_POSTGRES} psql -c "alter user matchcodeio with encrypted password '${MATCHCODEIO_DB_PASSWORD}';" || true
+	@echo "-> Drop 'matchcodeio' database"
+	${SUDO_POSTGRES} dropdb matchcodeio || true
+	@echo "-> Create 'matchcodeio' database"
+	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=matchcodeio matchcodeio
+	${MATCHCODE_MANAGE} migrate
+
 run:
 	${MANAGE} runserver 8001 --insecure
+
+run_matchcodeio:
+	${MATCHCODE_MANAGE} runserver 8002 --insecure
 
 seed:
 	${MANAGE} seed
@@ -99,16 +118,13 @@ run_visit: seed
 run_map:
 	${MANAGE} run_map
 
-request_scans:
-	${MANAGE} request_scans
-
-process_scans:
-	${MANAGE} process_scans
-
 test:
 	@echo "-> Run the test suite"
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode-toolkit
-	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs matchcode-toolkit --ignore matchcode-toolkit/src/matchcode_toolkit/pipelines
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode_pipeline --ignore matchcode_project --ignore purldb-toolkit --ignore packagedb/tests/test_throttling.py
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=matchcode_project.settings ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline
+	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs purldb-toolkit/
+	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs purl2vcs
 
 shell:
 	${MANAGE} shell
@@ -131,7 +147,13 @@ bump:
 
 docs:
 	rm -rf docs/_build/
-	@${ACTIVATE} sphinx-build docs/ docs/_build/
+	@${ACTIVATE} sphinx-build docs/source docs/_build/
+
+check_docs:
+	@echo "Check Sphinx Documentation build minimally"
+	@${ACTIVATE} sphinx-build -E -W docs/source build
+	@echo "Check for documentation style errors"
+	@${ACTIVATE} doc8 --max-line-length 100 docs/source --ignore D000 --quiet
 
 docker-images:
 	@echo "-> Build Docker services"

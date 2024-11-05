@@ -41,12 +41,14 @@
     "notice_text":null,
     "source_packages":[],
     "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "dependencies":[],
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
-    "datasource_id":null,
+    "datasource_id":"cpan_readme",
     "purl":"pkg:cpan/Mojolicious::Plugin::Nour::Config%20-%20Robustly%20imports%20config%20from%20a%0A./config%20sub-directory%20loaded%20with%20nested%20YAML%20files@version%200.09"
   }
 ]

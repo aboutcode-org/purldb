@@ -1,6 +1,6 @@
 The purldb
 ==========
-This repo consists of four main tools:
+This repo consists of these main tools:
 
 - PackageDB that is the reference model (based on ScanCode toolkit)
   that contains package data with purl (Package URLs) being a first
@@ -8,7 +8,10 @@ This repo consists of four main tools:
 - MineCode that contains utilities to mine package repositories
 - MatchCode that contains utilities to index package metadata and resources for
   matching
+- MatchCode.io that provides package matching functionalities for codebases
 - ClearCode that contains utilities to mine Clearlydefined for package data
+- purldb-toolkit CLI utility and library to use the PurlDB, its API and various
+  related libraries.
 
 These are designed to be used first for reference such that one can query for
 packages by purl and validate purl existence.
@@ -17,191 +20,186 @@ In the future, the collected packages will be used as reference for dependency
 resolution, as a reference knowledge base for all package data, as a reference
 for vulnerable range resolution and more.
 
-
-Installation
-------------
-Requirements
-############
-* Debian-based Linux distribution
-* Python 3.8 or later
-* Postgres 13
-* git
-* scancode-toolkit runtime dependencies (https://scancode-toolkit.readthedocs.io/en/stable/getting-started/install.html#install-prerequisites)
-* ``libpq-dev``
-*     If you are using Debian or Ubuntu : ``sudo apt install libpq-dev``
-*     If you are using Fedora: ``sudo dnf install libpq-devel``
-
-Once the prerequisites have been installed, set up PurlDB with the following commands:
-::
-
-    git clone https://github.com/nexb/purldb
-    cd purldb
-    make dev
-    make envfile
-    make postgres
-
-Once PurlDB and the database has been set up, run tests to ensure functionality:
-::
-
-    make test
-
-
-Usage
------
-Start the PurlDB server by running:
-::
-
-    make run
-
-To start visiting upstream package repositories for package metadata:
-::
-
-    make run_visit
-
-To populate the PackageDB using visited package metadata:
-::
-
-    make run_map
-
-Populating Package Resource Data
---------------------------------
-
-The Resources of Packages can be collected using the scan queue. By default, a
-scan request will be created for each mapped Package.
-
-The following environment variables will have to be set for the scan queue
-commands to work:
-::
-
-    SCANCODEIO_URL=<ScanCode.io API URL>
-    SCANCODEIO_API_KEY=<ScanCode.io API Key>
-
-``matchcode-toolkit`` will also have to be installed in the same environment as
-ScanCode.io. If running ScanCode.io in a virtual environment from a git
-checkout, you can install ``matchcode-toolkit`` in editable mode:
-::
-
-    pip install -e <Path to purldb/matchcode-toolkit>
-
-Otherwise, you can create a wheel from ``matchcode-toolkit`` and install it in
-the ScanCode.io virutal environment or modify the ScanCode.io Dockerfile to
-install the ``matchcode-toolkit`` wheel.
-
-To build the ``matchcode-toolkit`` wheel:
-::
-
-    # From the matchcode-toolkit directory
-    python setup.py bdist_wheel
-
-The wheel ``matchcode_toolkit-0.0.1-py3-none-any.whl`` will be created in the
-``matchcode-toolkit/dist/`` directory.
-
-The scan queue is run using two commands:
-::
-
-    make request_scans
-
-``request_scans`` will send a Package scan request to a configured ScanCode.io
-instance. ScanCode.io will download, extract, and scan the files of the
-requested Package.
-::
-
-    make process_scans
-
-``process_scans`` will poll ScanCode.io for the status of the Package scans
-requested by ``request_scans``. When a Package scan on ScanCode.io is ready,
-``process_scans`` will use that data to create Resources and populate the
-MatchCode directory fingerprint indices.
-
-Package Resource data can also be gathered by running ClearCode, where Package
-scan data from clearlydefined is collected and its results are used to create
-Packages and Resources.
-::
-
-    make clearsync
-
-After some ClearlyDefined harvests and definitions have been obtained, run
-``clearindex`` to create Packages and Resources from the harvests and
-definitions.
-::
-
-    make clearindex
-
-The Package and Package Resource information will be used to create the matching indices.
-
-Once the PackageDB has been populated, run the following command to create the
-matching indices from the collected Package data:
-::
-
-    make index_packages
-
-
-API Endpoints
+Documentation
 -------------
 
-* ``api/packages``
-
-  * Contains all of the Packages stored in the PackageDB
-
-* ``api/resources``
-
-  * Contains all of the Resources stored in the PackageDB
-
-* ``api/cditems``
-
-  * Contains the visited ClearlyDefined harvests or definitions
-
-* ``api/approximate_directory_content_index``
-
-  * Contains the directory content fingerprints for Packages with Resources
-  * Used to check if a directory and the files under it is from a known Package using the SHA1 values of the files
-
-* ``api/approximate_directory_structure_index``
-
-  * Contains the directory structure fingerprints for Packages with Resources
-  * Used to check if a directory and the files under it is from a known Package using the name of the files
-
-* ``api/exact_file_index``
-
-  * Contains the SHA1 values of Package Resources
-  * Used to check the SHA1 values of files from a scan to see what Packages also has that file
-
-* ``api/exact_package_archive_index``
-
-  * Contains the SHA1 values of Package archives
-  * Used to check the SHA1 values of archives from a scan to determine if they are known Packages
+See https://aboutcode.readthedocs.io/projects/PURLdb/en/latest/ for PurlDB
+documentation.
 
 
-Funding
--------
+Acknowledgements, Funding, Support and Sponsoring
+--------------------------------------------------------
 
-This project was funded through the NGI Assure Fund https://nlnet.nl/assure, a
-fund established by NLnet https://nlnet.nl/ with financial support from the
-European Commission's Next Generation Internet programme, under the aegis of DG
+This project is funded, supported and sponsored by:
+
+- Generous support and contributions from users like you!
+- the European Commission NGI programme
+- the NLnet Foundation 
+- the Swiss State Secretariat for Education, Research and Innovation (SERI)
+- Google, including the Google Summer of Code and the Google Seasons of Doc programmes
+- Mercedes-Benz Group
+- Microsoft and Microsoft Azure
+- AboutCode ASBL
+- nexB Inc. 
+
+
+
+|europa|   |dgconnect| 
+
+|ngi|   |nlnet|   
+
+|aboutcode|  |nexb|
+
+
+This project was funded through the NGI0 Discovery Fund, a fund established by NLnet with financial
+support from the European Commission's Next Generation Internet programme, under the aegis of DG
+Communications Networks, Content and Technology under grant agreement No 825322.
+
+|ngidiscovery| https://nlnet.nl/project/vulnerabilitydatabase/
+
+
+
+This project is funded through the NGI0 Entrust Fund, a fund established by NLnet with financial
+support from the European Commission's Next Generation Internet programme, under the aegis of DG
+Communications Networks, Content and Technology under grant agreement No 101069594.
+
+|ngizeroentrust| https://nlnet.nl/project/FederatedSoftwareMetadata/
+
+
+This project was funded through the NGI0 Commons Fund, a fund established by NLnet with financial
+support from the European Commission's Next Generation Internet programme, under the aegis of DG
+Communications Networks, Content and Technology under grant agreement No 101135429. Additional
+funding is made available by the Swiss State Secretariat for Education, Research and Innovation
+(SERI). 
+
+|ngizerocommons| |swiss| https://nlnet.nl/project/FederatedCodeNext/
+
+
+This project was funded through the NGI0 Entrust Fund, a fund established by NLnet with financial
+support from the European Commission's Next Generation Internet programme, under the aegis of DG
+Communications Networks, Content and Technology under grant agreement No 101069594. 
+
+|ngizeroentrust| https://nlnet.nl/project/Back2source/
+
+
+This project was funded through the NGI0 Core Fund, a fund established by NLnet with financial
+support from the European Commission's Next Generation Internet programme, under the aegis of DG
+Communications Networks, Content and Technology under grant agreement No 101092990.
+
+|ngizerocore| https://nlnet.nl/project/Back2source-next/
+
+
+This project was funded through the NGI0 Core Fund, a fund established by NLnet with financial
+support from the European Commission's Next Generation Internet programme, under the aegis of DG
+Communications Networks, Content and Technology under grant agreement No 101092990. 
+
+|ngizerocore| https://nlnet.nl/project/FastScan/
+
+
+This project was funded through the NGI0 Commons Fund, a fund established by NLnet with financial
+support from the European Commission's Next Generation Internet programme, under the aegis of DG
+Communications Networks, Content and Technology under grant agreement No 101135429. Additional
+funding is made available by the Swiss State Secretariat for Education, Research and Innovation
+(SERI).
+
+|ngizerocommons| |swiss| https://nlnet.nl/project/MassiveFOSSscan/
+
+
+This project was funded through the NGI Assure Fund, a fund established by NLnet with financial
+support from the European Commission's Next Generation Internet programme, under the aegis of DG
 Communications Networks, Content and Technology under grant agreement No 957073.
 
-This project is also funded through grants from the Google Summer of Code
-program, continuing support and sponsoring from nexB Inc. and generous
-donations from multiple sponsors.
+|ngiassure| https://nlnet.nl/project/FOSS-supplychain/
 
 
-License
--------
+This project was funded through the NGI0 Entrust Fund, a fund established by NLnet with financial
+support from the European Commission's Next Generation Internet programme, under the aegis of DG
+Communications Networks, Content and Technology under grant agreement No 101069594.
 
-Copyright (c) nexB Inc. and others. All rights reserved.
+|ngizeroentrust| https://nlnet.nl/project/FOSS-supplychain-II/
 
-purldb is a trademark of nexB Inc.
 
-SPDX-License-Identifier: Apache-2.0 AND CC-BY-SA-4.0
+This project was funded through the NGI0 Entrust Fund, a fund established by NLnet with financial
+support from the European Commission's Next Generation Internet programme, under the aegis of DG
+Communications Networks, Content and Technology under grant agreement No 101069594. 
 
-purldb software is licensed under the Apache License version 2.0.
+|ngizeroentrust| https://nlnet.nl/project/purl2all/
 
-purldb data is licensed collectively under CC-BY-SA-4.0.
 
-See https://www.apache.org/licenses/LICENSE-2.0 for the license text.
+This project was funded through the NGI0 Entrust Fund, a fund established by NLnet with financial
+support from the European Commission's Next Generation Internet programme, under the aegis of DG
+Communications Networks, Content and Technology under grant agreement No 101069594. 
 
-See https://creativecommons.org/licenses/by-sa/4.0/legalcode for the license text.
+|ngizeroentrust| https://nlnet.nl/project/purl2sym/
 
-See https://github.com/nexB/purldb for support or download.
 
-See https://aboutcode.org for more information about nexB OSS projects.
+.. |nlnet| image:: https://nlnet.nl/logo/banner.png
+    :target: https://nlnet.nl
+    :height: 50
+    :alt: NLnet foundation logo
+
+.. |ngi| image:: https://ngi.eu/wp-content/uploads/thegem-logos/logo_8269bc6efcf731d34b6385775d76511d_1x.png
+    :target: https://ngi.eu35
+    :height: 50
+    :alt: NGI logo
+
+.. |nexb| image:: https://nexb.com/wp-content/uploads/2022/04/nexB.svg
+    :target: https://nexb.com
+    :height: 30
+    :alt: nexB logo
+
+.. |europa| image:: https://ngi.eu/wp-content/uploads/sites/77/2017/10/bandiera_stelle.png
+    :target: http://ec.europa.eu/index_en.htm
+    :height: 40
+    :alt: Europa logo
+
+.. |aboutcode| image:: https://aboutcode.org/wp-content/uploads/2023/10/AboutCode.svg
+    :target: https://aboutcode.org/
+    :height: 30
+    :alt: AboutCode logo
+
+.. |swiss| image:: https://www.sbfi.admin.ch/sbfi/en/_jcr_content/logo/image.imagespooler.png/1493119032540/logo.png
+    :target: https://www.sbfi.admin.ch/sbfi/en/home/seri/seri.html
+    :height: 40
+    :alt: Swiss logo
+
+.. |dgconnect| image:: https://commission.europa.eu/themes/contrib/oe_theme/dist/ec/images/logo/positive/logo-ec--en.svg
+    :target: https://commission.europa.eu/about-european-commission/departments-and-executive-agencies/communications-networks-content-and-technology_en
+    :height: 40
+    :alt: EC DG Connect logo
+
+.. |ngizerocore| image:: https://nlnet.nl/image/logos/NGI0_tag.svg
+    :target: https://nlnet.nl/core
+    :height: 40
+    :alt: NGI Zero Core Logo
+
+.. |ngizerocommons| image:: https://nlnet.nl/image/logos/NGI0_tag.svg
+    :target: https://nlnet.nl/commonsfund/
+    :height: 40
+    :alt: NGI Zero Commons Logo
+
+.. |ngizeropet| image:: https://nlnet.nl/image/logos/NGI0PET_tag.svg
+    :target: https://nlnet.nl/PET
+    :height: 40
+    :alt: NGI Zero PET logo
+
+.. |ngizeroentrust| image:: https://nlnet.nl/image/logos/NGI0Entrust_tag.svg
+    :target: https://nlnet.nl/entrust
+    :height: 38
+    :alt: NGI Zero Entrust logo
+
+.. |ngiassure| image:: https://nlnet.nl/image/logos/NGIAssure_tag.svg
+    :target: https://nlnet.nl/image/logos/NGIAssure_tag.svg
+    :height: 32
+    :alt: NGI Assure logo
+
+.. |ngidiscovery| image:: https://nlnet.nl/image/logos/NGI0Discovery_tag.svg
+    :target: https://nlnet.nl/discovery/
+    :height: 40
+    :alt: NGI Discovery logo
+
+
+
+
+
+

@@ -2,56 +2,235 @@
   "headers": [
     {
       "tool_name": "scancode-toolkit",
-      "tool_version": "3.2.2rc3",
+      "tool_version": "31.2.2",
       "options": {
         "input": [
-          "/tmp/test/nested/"
+          "underscore"
         ],
         "--info": true,
-        "--json-pp": "/tmp/test/nested.json",
-        "--package": true,
-        "--processes": "2"
+        "--json-pp": "nested.json",
+        "--package": true
       },
       "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/nexB/scancode-toolkit/ for support and download.",
-      "start_timestamp": "2020-11-07T201514.714422",
-      "end_timestamp": "2020-11-07T201519.082743",
-      "duration": 4.36833381652832,
+      "start_timestamp": "2022-12-01T211637.050383",
+      "end_timestamp": "2022-12-01T211640.918285",
+      "output_format_version": "2.0.0",
+      "duration": 3.86792254447937,
       "message": null,
       "errors": [],
+      "warnings": [],
       "extra_data": {
+        "system_environment": {
+          "operating_system": "linux",
+          "cpu_architecture": "64",
+          "platform": "Linux-5.15.39-3-pve-x86_64-with-glibc2.35",
+          "platform_version": "#2 SMP PVE 5.15.39-3 (Wed, 27 Jul 2022 13:45:39 +0200)",
+          "python_version": "3.10.5 (main, Jul 30 2022, 06:09:26) [GCC 9.4.0]"
+        },
+        "spdx_license_list_version": "3.17",
         "files_count": 11
       }
     }
   ],
-  "files": [
+  "dependencies": [
     {
-      "path": "nested",
-      "type": "directory",
-      "name": "nested",
-      "base_name": "nested",
-      "extension": "",
-      "size": 0,
-      "date": null,
+      "purl": "pkg:npm/%40ahooksjs/use-request",
+      "extracted_requirement": "^2.0.0",
+      "scope": "dependencies",
+      "is_runtime": true,
+      "is_optional": false,
+      "is_resolved": false,
+      "resolved_package": {},
+      "extra_data": {},
+      "dependency_uid": "pkg:npm/%40ahooksjs/use-request?uuid=5de47a99-bc15-4ba5-93f3-21049734572c",
+      "for_package_uid": "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4",
+      "datafile_path": "underscore/node_modules/package/package.json",
+      "datasource_id": "npm_package_json"
+    },
+    {
+      "purl": "pkg:npm/umi-request",
+      "extracted_requirement": "^1.2.14",
+      "scope": "dependencies",
+      "is_runtime": true,
+      "is_optional": false,
+      "is_resolved": false,
+      "resolved_package": {},
+      "extra_data": {},
+      "dependency_uid": "pkg:npm/umi-request?uuid=5dfea107-7408-4721-bdab-1b34606fb796",
+      "for_package_uid": "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4",
+      "datafile_path": "underscore/node_modules/package/package.json",
+      "datasource_id": "npm_package_json"
+    },
+    {
+      "purl": "pkg:npm/umi",
+      "extracted_requirement": "3.x",
+      "scope": "peerDependencies",
+      "is_runtime": true,
+      "is_optional": false,
+      "is_resolved": false,
+      "resolved_package": {},
+      "extra_data": {},
+      "dependency_uid": "pkg:npm/umi?uuid=7e759ff0-b8d0-4f4c-a3ce-225c658f5bb8",
+      "for_package_uid": "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4",
+      "datafile_path": "underscore/node_modules/package/package.json",
+      "datasource_id": "npm_package_json"
+    }
+  ],
+  "packages": [
+    {
+      "type": "npm",
+      "namespace": "@types",
+      "name": "underscore",
+      "version": "1.10.9",
+      "qualifiers": {},
+      "subpath": null,
+      "primary_language": "JavaScript",
+      "description": "TypeScript definitions for Underscore",
+      "release_date": null,
+      "parties": [
+        {
+          "type": "person",
+          "role": "contributor",
+          "name": "Boris Yankov",
+          "email": null,
+          "url": "https://github.com/borisyankov"
+        },
+        {
+          "type": "person",
+          "role": "contributor",
+          "name": "Josh Baldwin",
+          "email": null,
+          "url": "https://github.com/jbaldwin"
+        },
+        {
+          "type": "person",
+          "role": "contributor",
+          "name": "Christopher Currens",
+          "email": null,
+          "url": "https://github.com/ccurrens"
+        },
+        {
+          "type": "person",
+          "role": "contributor",
+          "name": "Ard Timmerman",
+          "email": null,
+          "url": "https://github.com/confususs"
+        },
+        {
+          "type": "person",
+          "role": "contributor",
+          "name": "Julian Gonggrijp",
+          "email": null,
+          "url": "https://github.com/jgonggrijp"
+        },
+        {
+          "type": "person",
+          "role": "contributor",
+          "name": "Florian Keller",
+          "email": null,
+          "url": "https://github.com/ffflorian"
+        },
+        {
+          "type": "person",
+          "role": "contributor",
+          "name": "Regev Brody",
+          "email": null,
+          "url": "https://github.com/regevbr"
+        },
+        {
+          "type": "person",
+          "role": "contributor",
+          "name": "Piotr B\u0142a\u017cejewicz",
+          "email": null,
+          "url": "https://github.com/peterblazejewicz"
+        },
+        {
+          "type": "person",
+          "role": "contributor",
+          "name": "Michael Ness",
+          "email": null,
+          "url": "https://github.com/reubenrybnik"
+        }
+      ],
+      "keywords": [],
+      "homepage_url": null,
+      "download_url": "https://registry.npmjs.org/@types/underscore/-/underscore-1.10.9.tgz",
+      "size": null,
       "sha1": null,
       "md5": null,
       "sha256": null,
-      "mime_type": null,
-      "file_type": null,
-      "programming_language": null,
-      "is_binary": false,
-      "is_text": false,
-      "is_archive": false,
-      "is_media": false,
-      "is_source": false,
-      "is_script": false,
-      "packages": [],
-      "files_count": 11,
-      "dirs_count": 5,
-      "size_count": 244503,
-      "scan_errors": []
+      "sha512": null,
+      "bug_tracking_url": null,
+      "code_view_url": null,
+      "vcs_url": "git+https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "copyright": null,
+      "license_expression": "mit",
+      "declared_license": [
+        "MIT"
+      ],
+      "notice_text": null,
+      "source_packages": [],
+      "extra_data": {},
+      "repository_homepage_url": "https://www.npmjs.com/package/@types/underscore",
+      "repository_download_url": "https://registry.npmjs.org/@types/underscore/-/underscore-1.10.9.tgz",
+      "api_data_url": "https://registry.npmjs.org/@types%2funderscore",
+      "package_uid": "pkg:npm/%40types/underscore@1.10.9?uuid=420db78a-625f-4622-b1a0-93d1ea853194",
+      "datafile_paths": [
+        "underscore/package.json"
+      ],
+      "datasource_ids": [
+        "npm_package_json"
+      ],
+      "purl": "pkg:npm/%40types/underscore@1.10.9"
     },
     {
-      "path": "nested/underscore",
+      "type": "npm",
+      "namespace": "@umijs",
+      "name": "plugin-request",
+      "version": "2.4.1",
+      "qualifiers": {},
+      "subpath": null,
+      "primary_language": "JavaScript",
+      "description": "@umijs/plugin-request",
+      "release_date": null,
+      "parties": [],
+      "keywords": [
+        "umi"
+      ],
+      "homepage_url": "https://github.com/umijs/plugins/tree/master/packages/plugin-request#readme",
+      "download_url": "https://registry.npmjs.org/@umijs/plugin-request/-/plugin-request-2.4.1.tgz",
+      "size": null,
+      "sha1": null,
+      "md5": null,
+      "sha256": null,
+      "sha512": null,
+      "bug_tracking_url": "http://github.com/umijs/plugins/issues",
+      "code_view_url": null,
+      "vcs_url": "git+https://github.com/umijs/plugins",
+      "copyright": null,
+      "license_expression": "mit",
+      "declared_license": [
+        "MIT"
+      ],
+      "notice_text": null,
+      "source_packages": [],
+      "extra_data": {},
+      "repository_homepage_url": "https://www.npmjs.com/package/@umijs/plugin-request",
+      "repository_download_url": "https://registry.npmjs.org/@umijs/plugin-request/-/plugin-request-2.4.1.tgz",
+      "api_data_url": "https://registry.npmjs.org/@umijs%2fplugin-request",
+      "package_uid": "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4",
+      "datafile_paths": [
+        "underscore/node_modules/package/package.json"
+      ],
+      "datasource_ids": [
+        "npm_package_json"
+      ],
+      "purl": "pkg:npm/%40umijs/plugin-request@2.4.1"
+    }
+  ],
+  "files": [
+    {
+      "path": "underscore",
       "type": "directory",
       "name": "underscore",
       "base_name": "underscore",
@@ -70,14 +249,15 @@
       "is_media": false,
       "is_source": false,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [],
       "files_count": 11,
       "dirs_count": 4,
       "size_count": 244503,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/index.d.ts",
+      "path": "underscore/index.d.ts",
       "type": "file",
       "name": "index.d.ts",
       "base_name": "index.d",
@@ -96,14 +276,17 @@
       "is_media": false,
       "is_source": true,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [
+        "pkg:npm/%40types/underscore@1.10.9?uuid=420db78a-625f-4622-b1a0-93d1ea853194"
+      ],
       "files_count": 0,
       "dirs_count": 0,
       "size_count": 0,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/LICENSE",
+      "path": "underscore/LICENSE",
       "type": "file",
       "name": "LICENSE",
       "base_name": "LICENSE",
@@ -122,14 +305,17 @@
       "is_media": false,
       "is_source": false,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [
+        "pkg:npm/%40types/underscore@1.10.9?uuid=420db78a-625f-4622-b1a0-93d1ea853194"
+      ],
       "files_count": 0,
       "dirs_count": 0,
       "size_count": 0,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/package.json",
+      "path": "underscore/package.json",
       "type": "file",
       "name": "package.json",
       "base_name": "package",
@@ -148,7 +334,7 @@
       "is_media": false,
       "is_source": false,
       "is_script": false,
-      "packages": [
+      "package_data": [
         {
           "type": "npm",
           "namespace": "@types",
@@ -241,15 +427,19 @@
             "MIT"
           ],
           "notice_text": null,
-          "root_path": "nested/underscore",
-          "dependencies": [],
-          "contains_source_code": null,
           "source_packages": [],
-          "purl": "pkg:npm/%40types/underscore@1.10.9",
+          "file_references": [],
+          "extra_data": {},
+          "dependencies": [],
           "repository_homepage_url": "https://www.npmjs.com/package/@types/underscore",
           "repository_download_url": "https://registry.npmjs.org/@types/underscore/-/underscore-1.10.9.tgz",
-          "api_data_url": "https://registry.npmjs.org/@types%2funderscore"
+          "api_data_url": "https://registry.npmjs.org/@types%2funderscore",
+          "datasource_id": "npm_package_json",
+          "purl": "pkg:npm/%40types/underscore@1.10.9"
         }
+      ],
+      "for_packages": [
+        "pkg:npm/%40types/underscore@1.10.9?uuid=420db78a-625f-4622-b1a0-93d1ea853194"
       ],
       "files_count": 0,
       "dirs_count": 0,
@@ -257,7 +447,7 @@
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/README.md",
+      "path": "underscore/README.md",
       "type": "file",
       "name": "README.md",
       "base_name": "README",
@@ -276,14 +466,17 @@
       "is_media": false,
       "is_source": false,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [
+        "pkg:npm/%40types/underscore@1.10.9?uuid=420db78a-625f-4622-b1a0-93d1ea853194"
+      ],
       "files_count": 0,
       "dirs_count": 0,
       "size_count": 0,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/node_modules",
+      "path": "underscore/node_modules",
       "type": "directory",
       "name": "node_modules",
       "base_name": "node_modules",
@@ -302,14 +495,15 @@
       "is_media": false,
       "is_source": false,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [],
       "files_count": 7,
       "dirs_count": 3,
       "size_count": 28432,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/node_modules/package",
+      "path": "underscore/node_modules/package",
       "type": "directory",
       "name": "package",
       "base_name": "package",
@@ -328,14 +522,15 @@
       "is_media": false,
       "is_source": false,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [],
       "files_count": 7,
       "dirs_count": 2,
       "size_count": 28432,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/node_modules/package/CHANGELOG.md",
+      "path": "underscore/node_modules/package/CHANGELOG.md",
       "type": "file",
       "name": "CHANGELOG.md",
       "base_name": "CHANGELOG",
@@ -354,14 +549,17 @@
       "is_media": false,
       "is_source": false,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [
+        "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
+      ],
       "files_count": 0,
       "dirs_count": 0,
       "size_count": 0,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/node_modules/package/package.json",
+      "path": "underscore/node_modules/package/package.json",
       "type": "file",
       "name": "package.json",
       "base_name": "package",
@@ -380,7 +578,7 @@
       "is_media": false,
       "is_source": false,
       "is_script": false,
-      "packages": [
+      "package_data": [
         {
           "type": "npm",
           "namespace": "@umijs",
@@ -411,40 +609,50 @@
             "MIT"
           ],
           "notice_text": null,
-          "root_path": "nested/underscore/node_modules/package",
+          "source_packages": [],
+          "file_references": [],
+          "extra_data": {},
           "dependencies": [
             {
               "purl": "pkg:npm/%40ahooksjs/use-request",
-              "requirement": "^2.0.0",
+              "extracted_requirement": "^2.0.0",
               "scope": "dependencies",
               "is_runtime": true,
               "is_optional": false,
-              "is_resolved": false
+              "is_resolved": false,
+              "resolved_package": {},
+              "extra_data": {}
             },
             {
               "purl": "pkg:npm/umi-request",
-              "requirement": "^1.2.14",
+              "extracted_requirement": "^1.2.14",
               "scope": "dependencies",
               "is_runtime": true,
               "is_optional": false,
-              "is_resolved": false
+              "is_resolved": false,
+              "resolved_package": {},
+              "extra_data": {}
             },
             {
               "purl": "pkg:npm/umi",
-              "requirement": "3.x",
+              "extracted_requirement": "3.x",
               "scope": "peerDependencies",
               "is_runtime": true,
               "is_optional": false,
-              "is_resolved": false
+              "is_resolved": false,
+              "resolved_package": {},
+              "extra_data": {}
             }
           ],
-          "contains_source_code": null,
-          "source_packages": [],
-          "purl": "pkg:npm/%40umijs/plugin-request@2.4.1",
           "repository_homepage_url": "https://www.npmjs.com/package/@umijs/plugin-request",
           "repository_download_url": "https://registry.npmjs.org/@umijs/plugin-request/-/plugin-request-2.4.1.tgz",
-          "api_data_url": "https://registry.npmjs.org/@umijs%2fplugin-request"
+          "api_data_url": "https://registry.npmjs.org/@umijs%2fplugin-request",
+          "datasource_id": "npm_package_json",
+          "purl": "pkg:npm/%40umijs/plugin-request@2.4.1"
         }
+      ],
+      "for_packages": [
+        "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
       ],
       "files_count": 0,
       "dirs_count": 0,
@@ -452,7 +660,7 @@
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/node_modules/package/README.md",
+      "path": "underscore/node_modules/package/README.md",
       "type": "file",
       "name": "README.md",
       "base_name": "README",
@@ -471,14 +679,17 @@
       "is_media": false,
       "is_source": false,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [
+        "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
+      ],
       "files_count": 0,
       "dirs_count": 0,
       "size_count": 0,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/node_modules/package/lib",
+      "path": "underscore/node_modules/package/lib",
       "type": "directory",
       "name": "lib",
       "base_name": "lib",
@@ -497,14 +708,17 @@
       "is_media": false,
       "is_source": false,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [
+        "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
+      ],
       "files_count": 2,
       "dirs_count": 0,
       "size_count": 13964,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/node_modules/package/lib/index.js",
+      "path": "underscore/node_modules/package/lib/index.js",
       "type": "file",
       "name": "index.js",
       "base_name": "index",
@@ -523,14 +737,17 @@
       "is_media": false,
       "is_source": true,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [
+        "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
+      ],
       "files_count": 0,
       "dirs_count": 0,
       "size_count": 0,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/node_modules/package/lib/request.js",
+      "path": "underscore/node_modules/package/lib/request.js",
       "type": "file",
       "name": "request.js",
       "base_name": "request",
@@ -549,14 +766,17 @@
       "is_media": false,
       "is_source": true,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [
+        "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
+      ],
       "files_count": 0,
       "dirs_count": 0,
       "size_count": 0,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/node_modules/package/src",
+      "path": "underscore/node_modules/package/src",
       "type": "directory",
       "name": "src",
       "base_name": "src",
@@ -575,14 +795,17 @@
       "is_media": false,
       "is_source": false,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [
+        "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
+      ],
       "files_count": 2,
       "dirs_count": 0,
       "size_count": 10081,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/node_modules/package/src/index.ts",
+      "path": "underscore/node_modules/package/src/index.ts",
       "type": "file",
       "name": "index.ts",
       "base_name": "index",
@@ -601,14 +824,17 @@
       "is_media": false,
       "is_source": true,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [
+        "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
+      ],
       "files_count": 0,
       "dirs_count": 0,
       "size_count": 0,
       "scan_errors": []
     },
     {
-      "path": "nested/underscore/node_modules/package/src/request.ts",
+      "path": "underscore/node_modules/package/src/request.ts",
       "type": "file",
       "name": "request.ts",
       "base_name": "request",
@@ -627,7 +853,10 @@
       "is_media": false,
       "is_source": true,
       "is_script": false,
-      "packages": [],
+      "package_data": [],
+      "for_packages": [
+        "pkg:npm/%40umijs/plugin-request@2.4.1?uuid=923ada0a-c8f6-41f1-8b9c-04e2a8537ef4"
+      ],
       "files_count": 0,
       "dirs_count": 0,
       "size_count": 0,

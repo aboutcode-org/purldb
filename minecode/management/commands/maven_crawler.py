@@ -3,16 +3,15 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
 import logging
 import sys
 
+from minecode.collectors.maven import crawl_maven_repo_from_root
 from minecode.management.commands import VerboseCommand
-from minecode.visitors.maven import crawl_maven_repo_from_root
-
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
@@ -24,8 +23,8 @@ if TRACE:
 
 
 class Command(VerboseCommand):
-    help = 'Run a Package request queue.'
+    help = "Run a Package request queue."
 
     def handle(self, *args, **options):
-        maven_root_url = 'https://repo.maven.apache.org/maven2'
+        maven_root_url = "https://repo.maven.apache.org/maven2"
         crawl_maven_repo_from_root(root_url=maven_root_url)

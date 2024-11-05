@@ -3,27 +3,28 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from collections import defaultdict
-from datetime import datetime
 import binascii
 import logging
 import sys
+from collections import defaultdict
+from datetime import datetime
+from difflib import SequenceMatcher
 
 from django.db import models
 from django.forms.models import model_to_dict
 from django.utils.translation import gettext_lazy as _
 
-from minecode.management.commands import get_error_message
 from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode_toolkit.fingerprinting import split_fingerprint
 from matchcode_toolkit.halohash import byte_hamming_distance
-from packagedb.models import Package
 
+from minecode.management.commands import get_error_message
+from packagedb.models import Package
 
 TRACE = False
 
@@ -38,7 +39,7 @@ logger.setLevel(level)
 
 
 def logger_debug(*args):
-    return logger.debug(' '.join(isinstance(a, str) and a or repr(a) for a in args))
+    return logger.debug(" ".join(isinstance(a, str) and a or repr(a) for a in args))
 
 
 ###############################################################################
@@ -48,14 +49,14 @@ class BaseFileIndex(models.Model):
     sha1 = models.BinaryField(
         max_length=20,
         db_index=True,
-        help_text='Binary form of a SHA1 checksum in lowercase hex for a file',
+        help_text="Binary form of a SHA1 checksum in lowercase hex for a file",
         null=False,
         blank=False,
     )
 
     package = models.ForeignKey(
         Package,
-        help_text='The Package that this file is from',
+        help_text="The Package that this file is from",
         null=False,
         on_delete=models.CASCADE,
     )
@@ -67,22 +68,14 @@ class BaseFileIndex(models.Model):
     def index(cls, sha1, package):
         try:
             sha1_bin = hexstring_to_binarray(sha1)
-            bfi, created = cls.objects.get_or_create(
-                package=package,
-                sha1=sha1_bin
-            )
+            bfi, created = cls.objects.get_or_create(package=package, sha1=sha1_bin)
             if created:
                 logger.info(
-                    '{} - Inserted {} for Package {}:\t{}'.format(
-                        datetime.utcnow().isoformat(),
-                        bfi.__class__.__name__,
-                        package.download_url,
-                        sha1
-                    )
+                    f"{datetime.utcnow().isoformat()} - Inserted {bfi.__class__.__name__} for Package {package.download_url}:\t{sha1}"
                 )
             return bfi, created
         except Exception as e:
-            msg = f'Error creating {bfi.__class__.__name__}:\n'
+            msg = "Error creating FileIndex:\n"
             msg += get_error_message(e)
             package.index_error = msg
             package.save()
@@ -90,11 +83,9 @@ class BaseFileIndex(models.Model):
 
     @classmethod
     def match(cls, sha1):
-        """
-        Return a list of matched Packages that contains a file with a SHA1 value of `sha1`
-        """
+        """Return a list of matched Packages that contains a file with a SHA1 value of `sha1`"""
         if TRACE:
-            logger_debug(cls.__name__, 'match:', 'sha1:', sha1)
+            logger_debug(cls.__name__, "match:", "sha1:", sha1)
 
         if not sha1:
             return cls.objects.none()
@@ -105,11 +96,11 @@ class BaseFileIndex(models.Model):
             for match in matches:
                 package = match.package
                 dct = model_to_dict(package)
-                logger_debug(cls.__name__, 'match:', 'matched_file:', dct)
+                logger_debug(cls.__name__, "match:", "matched_file:", dct)
         return matches
 
     def fingerprint(self):
-        return binascii.hexlify(self.sha1).decode('utf-8')
+        return binascii.hexlify(self.sha1).decode("utf-8")
 
 
 class ExactPackageArchiveIndex(BaseFileIndex):
@@ -134,77 +125,78 @@ def bah128_ranges(indexed_elements_count, range_ratio=0.05):
     """
     return (
         int(indexed_elements_count * (1 - range_ratio)),
-        int(indexed_elements_count * (1 + range_ratio))
+        int(indexed_elements_count * (1 + range_ratio)),
     )
 
 
-class BaseDirectoryIndex(models.Model):
+class ApproximateMatchingHashMixin(models.Model):
     indexed_elements_count = models.IntegerField(
-        help_text='Number of elements that went into the fingerprint',
+        help_text="Number of elements that went into the fingerprint",
     )
 
     chunk1 = models.BinaryField(
         max_length=4,
         db_index=True,
-        help_text='Binary form of the first 8 (0-7) hex digits of the fingerprint',
+        help_text="Binary form of the first 8 (0-7) hex digits of the fingerprint",
         null=False,
-        blank=False
+        blank=False,
     )
 
     chunk2 = models.BinaryField(
         max_length=4,
         db_index=True,
-        help_text='Binary form of the second 8 (8-15) hex digits of the fingerprint',
+        help_text="Binary form of the second 8 (8-15) hex digits of the fingerprint",
         null=False,
-        blank=False
+        blank=False,
     )
 
     chunk3 = models.BinaryField(
         max_length=4,
         db_index=True,
-        help_text='Binary form of the third 8 (16-23) hex digits of the fingerprint',
+        help_text="Binary form of the third 8 (16-23) hex digits of the fingerprint",
         null=False,
-        blank=False
+        blank=False,
     )
 
     chunk4 = models.BinaryField(
         max_length=4,
         db_index=True,
-        help_text='Binary form of the fourth 8 (24-32) hex digits of the fingerprint',
+        help_text="Binary form of the fourth 8 (24-32) hex digits of the fingerprint",
         null=False,
-        blank=False
+        blank=False,
     )
 
     package = models.ForeignKey(
         Package,
-        help_text='The Package that this directory is a part of',
+        help_text="The Package that this resource is a part of",
         null=False,
         on_delete=models.CASCADE,
     )
 
     path = models.CharField(
         max_length=2000,
-        help_text=_('The full path value of this directory'),
+        help_text=_("The full path value of this resource"),
     )
 
     class Meta:
         abstract = True
-        unique_together = ['chunk1', 'chunk2', 'chunk3', 'chunk4', 'package', 'path']
+        unique_together = ["chunk1", "chunk2", "chunk3", "chunk4", "package", "path"]
 
     def __str__(self):
         return self.fingerprint()
 
     @classmethod
-    def index(cls, directory_fingerprint, resource_path, package):
+    def index(cls, fingerprint, resource_path, package):
         """
-        Index the string `directory_fingerprint` into the BaseDirectoryIndex model
+        Index the string `fingerprint` into the ApproximateMatchingHashMixin
+        model
 
-        Return a 2-tuple of the corresponding BaseDirectoryIndex created from
-        `directory_fingerprint` and a boolean, which represents whether the
+        Return a 2-tuple of the corresponding ApproximateMatchingHashMixin
+        created from `fingerprint` and a boolean, which represents whether the
         fingerprint was created or not.
         """
         try:
-            indexed_elements_count, fp = split_fingerprint(directory_fingerprint)
+            indexed_elements_count, fp = split_fingerprint(fingerprint)
             fp_chunk1, fp_chunk2, fp_chunk3, fp_chunk4 = create_halohash_chunks(fp)
             bdi, created = cls.objects.get_or_create(
                 indexed_elements_count=indexed_elements_count,
@@ -217,59 +209,59 @@ class BaseDirectoryIndex(models.Model):
             )
             if created:
                 logger.info(
-                    '{} - Inserted {} for Package {}:\t{}'.format(
-                        datetime.utcnow().isoformat(),
-                        bdi.__class__.__name__,
-                        package.download_url,
-                        directory_fingerprint
-                    )
+                    f"{datetime.utcnow().isoformat()} - Inserted {bdi.__class__.__name__} for Package {package.download_url}:\t{fingerprint}"
                 )
             return bdi, created
         except Exception as e:
-            msg = f'Error creating {bdi.__class__.__name__}:\n'
+            msg = "Error creating ApproximateMatchingHashMixin:\n"
             msg += get_error_message(e)
             package.index_error = msg
             package.save()
             logger.error(msg)
 
     @classmethod
-    def match(cls, directory_fingerprint):
-        """
-        Return a list of matched Packages
-        """
+    def match(cls, fingerprint, resource=None, exact_match=False):
+        """Return a list of matched Packages"""
         if TRACE:
-            logger_debug(cls.__name__, 'match:', 'directory_fingerprint:', directory_fingerprint)
+            logger_debug(
+                cls.__name__,
+                "match:",
+                "fingerprint:",
+                fingerprint,
+                "resource:",
+                resource,
+            )
 
-        if not directory_fingerprint:
+        if not fingerprint:
             return cls.objects.none()
 
-        # Step 1: find fingerprints with matching chunks
-        indexed_elements_count, bah128 = split_fingerprint(directory_fingerprint)
+        indexed_elements_count, bah128 = split_fingerprint(fingerprint)
         chunk1, chunk2, chunk3, chunk4 = create_halohash_chunks(bah128)
+
+        # Step 0: if exact only, then return a filter
+        if exact_match:
+            matches = cls.objects.filter(
+                indexed_elements_count=indexed_elements_count,
+                chunk1=chunk1,
+                chunk2=chunk2,
+                chunk3=chunk3,
+                chunk4=chunk4,
+            )
+            return matches
+
+        # Step 1: find fingerprints with matching chunks
         range = bah128_ranges(indexed_elements_count)
         matches = cls.objects.filter(
-            models.Q(
-                indexed_elements_count__range=range,
-                chunk1=chunk1
-            ) |
-            models.Q(
-                indexed_elements_count__range=range,
-                chunk2=chunk2
-            ) |
-            models.Q(
-                indexed_elements_count__range=range,
-                chunk3=chunk3
-            ) |
-            models.Q(
-                indexed_elements_count__range=range,
-                chunk4=chunk4
-            )
+            models.Q(indexed_elements_count__range=range, chunk1=chunk1)
+            | models.Q(indexed_elements_count__range=range, chunk2=chunk2)
+            | models.Q(indexed_elements_count__range=range, chunk3=chunk3)
+            | models.Q(indexed_elements_count__range=range, chunk4=chunk4)
         )
 
         if TRACE:
             for match in matches:
                 dct = model_to_dict(match)
-                logger_debug(cls.__name__, 'match:', 'matched_package:', dct)
+                logger_debug(cls.__name__, "match:", "matched_package:", dct)
 
         # Step 2: calculate Hamming distance of all matches
 
@@ -294,22 +286,83 @@ class BaseDirectoryIndex(models.Model):
 
         # Step 3: order matches from lowest Hamming distance to highest Hamming distance
         # TODO: consider limiting matches for brevity
-        good_matches = cls.objects.none()
-        for hamming_distance, match in sorted(matches_by_hamming_distance.items()):
-            if hamming_distance == 0:
-                # If we have an exact match, return and disregard others
-                good_matches |= match
-                break
-            else:
-                # If we don't have an exact match, add all close matches we have
-                good_matches |= match
+        hamming_distances_and_matches = []
+        for hamming_distance, matches in sorted(matches_by_hamming_distance.items()):
+            hamming_distances_and_matches.append((hamming_distance, matches))
 
         if TRACE:
-            for match in good_matches:
-                dct = model_to_dict(match)
-                logger_debug(cls.__name__, 'match:', 'good_matched_package:', dct)
+            for hamming_distance, matches in hamming_distances_and_matches:
+                for match in matches:
+                    dct = model_to_dict(match)
+                    logger_debug(
+                        cls.__name__,
+                        "match:",
+                        "step_3_hamming_distance:",
+                        hamming_distance,
+                        "step_3_matched_package:",
+                        dct,
+                    )
 
-        return good_matches
+        # Step 4: use file heuristics to rank matches from step 3
+
+        # If we are not given resource data, return the matches we have
+        if not (resource and hamming_distances_and_matches):
+            remaining_matches = cls.objects.none()
+            if hamming_distances_and_matches:
+                for _, matches in hamming_distances_and_matches:
+                    remaining_matches |= matches
+            return remaining_matches
+
+        resource_size = resource.size
+        matches_by_rank_attributes = defaultdict(list)
+        for hamming_distance, matches in hamming_distances_and_matches:
+            for match in matches:
+                matched_resource = match.package.resources.get(path=match.path)
+
+                if TRACE:
+                    logger_debug(
+                        cls.__name__,
+                        "match:",
+                        "step_4_matched_resource:",
+                        matched_resource,
+                    )
+
+                # Compute size and name difference
+                if matched_resource.is_file:
+                    size_difference = abs(resource_size - matched_resource.size)
+                else:
+                    # TODO: index number of files in a directory so we can use
+                    # that for size comparison. For now, we are going to
+                    # disregard size as a factor.
+                    size_difference = 0
+                name_sequence_matcher = SequenceMatcher(
+                    a=resource.name, b=matched_resource.name
+                )
+                name_difference = 1 - name_sequence_matcher.ratio()
+                rank_attributes = (hamming_distance, size_difference, name_difference)
+                matches_by_rank_attributes[rank_attributes].append(match)
+
+                if TRACE:
+                    logger_debug(
+                        cls.__name__,
+                        "match:",
+                        "step_4_size_difference:",
+                        size_difference,
+                        "step_4_name_difference:",
+                        name_difference,
+                    )
+
+        # Order these from low to high (low being low difference/very similar)), first by hamming distance, then by size difference, and finally by name difference.
+        ranked_attributes = sorted(matches_by_rank_attributes)
+        best_ranked_attributes = ranked_attributes[0]
+        ranked_matches = matches_by_rank_attributes[best_ranked_attributes]
+
+        if TRACE:
+            dct = model_to_dict(match)
+            logger_debug(cls.__name__, "match:", "step_4_best_match:", dct)
+
+        matches = cls.objects.filter(pk__in=[match.pk for match in ranked_matches])
+        return matches
 
     def get_chunks(self):
         chunk1 = binascii.hexlify(self.chunk1)
@@ -319,15 +372,21 @@ class BaseDirectoryIndex(models.Model):
         return chunk1, chunk2, chunk3, chunk4
 
     def fingerprint(self):
-        indexed_element_count_as_hex_bytes = b'%08x' % self.indexed_elements_count
+        indexed_element_count_as_hex_bytes = b"%08x" % self.indexed_elements_count
         chunk1, chunk2, chunk3, chunk4 = self.get_chunks()
-        fingerprint = indexed_element_count_as_hex_bytes + chunk1 + chunk2 + chunk3 + chunk4
-        return fingerprint.decode('utf-8')
+        fingerprint = (
+            indexed_element_count_as_hex_bytes + chunk1 + chunk2 + chunk3 + chunk4
+        )
+        return fingerprint.decode("utf-8")
 
 
-class ApproximateDirectoryStructureIndex(BaseDirectoryIndex):
+class ApproximateDirectoryStructureIndex(ApproximateMatchingHashMixin):
     pass
 
 
-class ApproximateDirectoryContentIndex(BaseDirectoryIndex):
+class ApproximateDirectoryContentIndex(ApproximateMatchingHashMixin):
+    pass
+
+
+class ApproximateResourceContentIndex(ApproximateMatchingHashMixin):
     pass

@@ -3,15 +3,14 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
 
-from functools import wraps
 import inspect
 import re
-
+from functools import wraps
 
 """
 Given a URI regex (or some string), this module can route execution to a
@@ -36,7 +35,7 @@ limited to HTTP.
 """
 
 
-class Rule(object):
+class Rule:
     """
     A rule is a mapping between a pattern (typically a URI) and a callable
     (typically a function).
@@ -44,11 +43,12 @@ class Rule(object):
     (typically a URI) for the rule to be considered, i.e. for the endpoint to
     be resolved and eventually invoked for a given string (typically a URI).
     """
+
     def __init__(self, pattern, endpoint):
         # To ensure the pattern will match entirely, we wrap the pattern
         # with start of line ^ and  end of line $.
-        self.pattern = pattern.lstrip('^').rstrip('$')
-        self.pattern_match = re.compile('^' + self.pattern + '$').match
+        self.pattern = pattern.lstrip("^").rstrip("$")
+        self.pattern_match = re.compile("^" + self.pattern + "$").match
 
         # ensure the endpoint is callable
         assert callable(endpoint)
@@ -60,35 +60,26 @@ class Rule(object):
         self.endpoint = endpoint
 
     def __repr__(self):
-        return 'Rule(r"""{}""", {}.{})'.format(
-            self.pattern, self.endpoint.__module__, self.endpoint.__name__)
+        return f'Rule(r"""{self.pattern}""", {self.endpoint.__module__}.{self.endpoint.__name__})'
 
     def match(self, string):
-        """
-        Match a string with the rule pattern, return True is matching.
-        """
+        """Match a string with the rule pattern, return True is matching."""
         return self.pattern_match(string)
 
 
 class RouteAlreadyDefined(TypeError):
-    """
-    Raised when this route Rule already exists in the route map.
-    """
+    """Raised when this route Rule already exists in the route map."""
 
 
 class NoRouteAvailable(TypeError):
-    """
-    Raised when there are no route available.
-    """
+    """Raised when there are no route available."""
 
 
 class MultipleRoutesDefined(TypeError):
-    """
-    Raised when there are more than one route possible.
-    """
+    """Raised when there are more than one route possible."""
 
 
-class Router(object):
+class Router:
     """
     A router is:
     - a container for a route map, consisting of several rules, stored in an
@@ -101,10 +92,9 @@ class Router(object):
     Multiple routers can co-exist as needed, such as a router to collect,
     another to fetch, etc.
     """
+
     def __init__(self, route_map=None):
-        """
-        'route_map' is an ordered mapping of pattern -> Rule.
-        """
+        """'route_map' is an ordered mapping of pattern -> Rule."""
         self.route_map = route_map or dict()
         # lazy cached pre-compiled regex match() for all route patterns
         self._is_routable = None
@@ -129,14 +119,18 @@ class Router(object):
 
     def route(self, *patterns):
         """
-        Decorator to make a callable 'endpoint' routed to one or more patterns.
+        Return a decorator to make a callable 'endpoint' routed to one or more
+        patterns.
 
         Example:
+        -------
         >>> my_router = Router()
         >>> @my_router.route('http://nexb.com', 'http://deja.com')
         ... def somefunc(uri):
         ...    pass
+
         """
+
         def decorator(endpoint):
             assert patterns
             for pat in patterns:
@@ -145,6 +139,7 @@ class Router(object):
             @wraps(endpoint)
             def decorated(*args, **kwargs):
                 return self.process(*args, **kwargs)
+
             return decorated
 
         return decorator
@@ -184,7 +179,7 @@ class Router(object):
             # this can happen when multiple patterns match the same string
             # we raise an exception with enough debugging information
             pats = repr([r.pattern for r in candidates])
-            msg = '%(string)r matches multiple patterns %(pats)r' % locals()
+            msg = f"{string} matches multiple patterns {pats}"
             raise MultipleRoutesDefined(msg)
 
         return candidates[0].endpoint
@@ -199,7 +194,7 @@ class Router(object):
 
         if not self._is_routable:
             # build an alternation regex
-            routables = '^(' + '|'.join(pat for pat in self.route_map) + ')$'
+            routables = "^(" + "|".join(pat for pat in self.route_map) + ")$"
             self._is_routable = re.compile(routables, re.UNICODE).match
 
         return bool(self._is_routable(string))

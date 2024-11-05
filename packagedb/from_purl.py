@@ -1,0 +1,63 @@
+#
+# Copyright (c) nexB Inc. and others. All rights reserved.
+# purldb is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
+#
+
+from drf_spectacular.utils import OpenApiParameter
+from drf_spectacular.utils import extend_schema
+from rest_framework import routers
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.response import Response
+
+from packagedb.serializers import PurltoGitRepoResponseSerializer
+from packagedb.serializers import PurltoGitRepoSerializer
+from purl2vcs.find_source_repo import get_package_object_from_purl
+from purl2vcs.find_source_repo import get_source_repo
+
+
+@extend_schema(
+    parameters=[
+        OpenApiParameter("package_url", str, "query", description="package url"),
+    ],
+    responses={200: PurltoGitRepoResponseSerializer()},
+)
+class FromPurlToGitRepoViewSet(viewsets.ViewSet):
+    """Return a ``git_repo`` from a standard PackageURL."""
+
+    serializer_class = PurltoGitRepoSerializer
+
+    def get_view_name(self):
+        return "Purl2Git"
+
+    def list(self, request):
+        serializer = self.serializer_class(data=request.query_params)
+        response = {}
+
+        if not serializer.is_valid():
+            return Response(
+                {"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        validated_data = serializer.validated_data
+        package_url = validated_data.get("package_url")
+        package = get_package_object_from_purl(package_url=package_url)
+        if not package:
+            return Response(
+                {"errors": f"{package_url} does not exist in this database"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        source_repo = get_source_repo(package=package)
+        response["git_repo"] = str(source_repo)
+        serializer = PurltoGitRepoResponseSerializer(
+            response, context={"request": request}
+        )
+        return Response(serializer.data)
+
+
+api_from_purl_router = routers.DefaultRouter()
+api_from_purl_router.register("purl2git", FromPurlToGitRepoViewSet, "purl2git")

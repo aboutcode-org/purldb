@@ -3,47 +3,46 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
 
 import re
 
-
-VERSION_PATTERNS_REGEX = [re.compile(x, re.IGNORECASE) for x in [
-    # v123413.feature_111.22.11.121
-    'v\d+\.feature\_(\d+\.){1,3}\d+',
-
-    # YYYY-MM-DD_12345
-    '\d{4}-\d{2}-\d{2}_\d+',
-
-    # FIXME: this a single regex that should be split
-    '(M?(v\d+(\-|\_))?\d+\.){1,3}\d+[A-Za-z0-9]*'
-    '((\.|\-|_|~)(b|B|rc|r|v|RC|alpha|beta|m|pre|vm|G)?\d+((\-|\.)\d+)?)?'
-    '('
-    '(\.|\-)'
-    '('
-    '('
-    '(alpha|dev|beta|rc|final|pre)'
-    '(\-|\_)\d+[A-Za-z]?(\-RELEASE)?'
-    ')'
-    '|alpha'
-    '|dev(\.\d+\.\d+)?'
-    '|beta|final|release|fixed'
-    '|(cr\d(\_\d*)?)'
-    ')'
-    ')?',
-
-    '[A-Za-z]?(\d+\_){1,3}\d+\_?[A-Za-z]{0,2}\d+',
-    '(b|rc|r|v|RC|alpha|beta|m|pre|revision-)\d+(\-\d+)?',
-    'current|previous|latest|alpha|beta',
-    '\d+-\d+-\d+-\d+',
-    '\d{4}-\d{2}-\d{2}',
-    '\d+-\d+-\d+',
-    '(\d(\-|\_)){1,2}\d',
-    '\d{5,14}',
-]]
+VERSION_PATTERNS_REGEX = [
+    re.compile(x, re.IGNORECASE)
+    for x in [
+        # v123413.feature_111.22.11.121
+        r"v\d+\.feature\_(\d+\.){1,3}\d+",
+        # YYYY-MM-DD_12345
+        r"\d{4}-\d{2}-\d{2}_\d+",
+        # FIXME: this a single regex that should be split
+        r"(M?(v\d+(\-|\_))?\d+\.){1,3}\d+[A-Za-z0-9]*"
+        r"((\.|\-|_|~)(b|B|rc|r|v|RC|alpha|beta|m|pre|vm|G)?\d+((\-|\.)\d+)?)?"
+        "("
+        r"(\.|\-)"
+        "("
+        "("
+        "(alpha|dev|beta|rc|final|pre)"
+        r"(\-|\_)\d+[A-Za-z]?(\-RELEASE)?"
+        ")"
+        "|alpha"
+        r"|dev(\.\d+\.\d+)?"
+        "|beta|final|release|fixed"
+        r"|(cr\d(\_\d*)?)"
+        ")"
+        ")?",
+        r"[A-Za-z]?(\d+\_){1,3}\d+\_?[A-Za-z]{0,2}\d+",
+        r"(b|rc|r|v|RC|alpha|beta|m|pre|revision-)\d+(\-\d+)?",
+        "current|previous|latest|alpha|beta",
+        r"\d+-\d+-\d+-\d+",
+        r"\d{4}-\d{2}-\d{2}",
+        r"\d+-\d+-\d+",
+        r"(\d(\-|\_)){1,2}\d",
+        r"\d{5,14}",
+    ]
+]
 
 
 def version_hint(path, ignore_pre_releases=False, remove_v_prefix=False):
@@ -58,7 +57,7 @@ def version_hint(path, ignore_pre_releases=False, remove_v_prefix=False):
     if not stripped:
         return
     for pattern in VERSION_PATTERNS_REGEX:
-        segments = stripped.split('/')
+        segments = stripped.split("/")
         # skip the first path segment unless there's only one segment
         first_segment = 1 if len(segments) > 1 else 0
         interesting_segments = segments[first_segment:]
@@ -70,13 +69,21 @@ def version_hint(path, ignore_pre_releases=False, remove_v_prefix=False):
                 fixed = fix_packages_version(path, vs)
                 if ignore_pre_releases:
                     fixed = strip_pre_releases(fixed)
-                if remove_v_prefix and fixed.startswith('v'):
+                if remove_v_prefix and fixed.startswith("v"):
                     fixed = fixed[1:]
                 return fixed
 
 
-NON_VERSION_TAGS = ('win32', 'am64', 'x86_64', 'i386', 'i586', 'i586', 'x86',
-                    'macosx',)
+NON_VERSION_TAGS = (
+    "win32",
+    "am64",
+    "x86_64",
+    "i386",
+    "i586",
+    "i586",
+    "x86",
+    "macosx",
+)
 
 NON_VT_RES = [re.compile(re.escape(t), re.IGNORECASE) for t in NON_VERSION_TAGS]
 
@@ -84,32 +91,65 @@ NON_VT_RES = [re.compile(re.escape(t), re.IGNORECASE) for t in NON_VERSION_TAGS]
 def strip_version_tags(path):
     """Remove well known tags that are not part of the version."""
     for ret in NON_VT_RES:
-        path = ret.sub('', path)
+        path = ret.sub("", path)
     return path
 
 
 ARCHIVE_FILE_EXTENSIONS = (
-    '.7z', '.7zip', '.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz',
-    '.tbz2', '.tz', '.txz', '.zip', '.rar', '.tar', '.gz', '.bz2', '.jar',
-    '.tar.lzma', '.war', '.lib', '.a', '.ear', '.sar', '.tlz',
-    '.xz', '.lzma', '.exe', '.rpm', '.deb', '.msi', '.z', '.pkg',
+    ".7z",
+    ".7zip",
+    ".tar.gz",
+    ".tar.bz2",
+    ".tar.xz",
+    ".tgz",
+    ".tbz",
+    ".tbz2",
+    ".tz",
+    ".txz",
+    ".zip",
+    ".rar",
+    ".tar",
+    ".gz",
+    ".bz2",
+    ".jar",
+    ".tar.lzma",
+    ".war",
+    ".lib",
+    ".a",
+    ".ear",
+    ".sar",
+    ".tlz",
+    ".xz",
+    ".lzma",
+    ".exe",
+    ".rpm",
+    ".deb",
+    ".msi",
+    ".z",
+    ".pkg",
 )
 
 
-ARCHIVE_FILE_EXT_RES = [re.compile(re.escape(e) + '$', re.IGNORECASE)
-                        for e in ARCHIVE_FILE_EXTENSIONS]
+ARCHIVE_FILE_EXT_RES = [
+    re.compile(re.escape(e) + "$", re.IGNORECASE) for e in ARCHIVE_FILE_EXTENSIONS
+]
 
 
 def strip_extensions(path):
-    """"Remove well known archive extensions from end of path."""
+    """Remove well known archive extensions from end of path."""
     for rext in ARCHIVE_FILE_EXT_RES:
-        path = rext.sub('', path)
+        path = rext.sub("", path)
     return path
 
 
 # these extensions are used for common RPMs and Deb packages
 
-PACKAGE_EXTENSIONS = ('.deb', '.rpm', '.srpm', '.diff.gz',)
+PACKAGE_EXTENSIONS = (
+    ".deb",
+    ".rpm",
+    ".srpm",
+    ".diff.gz",
+)
 
 
 def fix_packages_version(path, version_string):
@@ -119,8 +159,8 @@ def fix_packages_version(path, version_string):
     becomes 1.2.4 instead of 1.2.4-1
     """
     if path.endswith(PACKAGE_EXTENSIONS):
-        if version_string.count('-') == 1:
-            left, _right = version_string.split('-')
+        if version_string.count("-") == 1:
+            left, _right = version_string.split("-")
             return left
     # return as-is in all other cases
     return version_string
@@ -129,9 +169,14 @@ def fix_packages_version(path, version_string):
 PRE_RELEASE_TAGS = []
 
 
-for pt in ('pre', 'rc', 'alpha', 'beta', 'b1', 'b2', 'b3', 'b4', 'b5'):
+for pt in ("pre", "rc", "alpha", "beta", "b1", "b2", "b3", "b4", "b5"):
     # common punctuation prefixes before the tag
-    for pp in ('_', '-', '.', '~',):
+    for pp in (
+        "_",
+        "-",
+        ".",
+        "~",
+    ):
         # variants with prefix before the bare variant
         PRE_RELEASE_TAGS.append(pp + pt.upper())
         PRE_RELEASE_TAGS.append(pp + pt)
@@ -141,9 +186,7 @@ for pt in ('pre', 'rc', 'alpha', 'beta', 'b1', 'b2', 'b3', 'b4', 'b5'):
 
 
 def strip_pre_releases(version_string):
-    """
-    Return a version string stripped from alpha, beta, rc and pre parts.
-    """
+    """Return a version string stripped from alpha, beta, rc and pre parts."""
     if not any(t in version_string for t in PRE_RELEASE_TAGS):
         return version_string
     for tag in PRE_RELEASE_TAGS:

@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-# -*- coding: utf8 -*-
 #
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -22,58 +21,59 @@ def sf_net(input_file, output):
     adding new columns and trying to sf_net the data
     """
     download_url_template = (
-        'http://master.dl.sourceforge.net/project'
-        '/%(project_id)s%(filename)s'
+        "http://master.dl.sourceforge.net/project" "/%(project_id)s%(filename)s"
     )
 
-    existing_headers = ('external_id,name,version,license,owners,'
-                        'homepage_url,keywords,description'.split(',')
-                        )
+    existing_headers = (
+        "external_id,name,version,license,owners,"
+        "homepage_url,keywords,description".split(",")
+    )
 
-    new_headers = ('computed_version,release_date_ts,file_download_url,'
-                   'reviewed,curated_name,excluded_reason,curated_owner,'
-                   'owner_type'.split(',')
-                   )
+    new_headers = (
+        "computed_version,release_date_ts,file_download_url,"
+        "reviewed,curated_name,excluded_reason,curated_owner,"
+        "owner_type".split(",")
+    )
 
-    with open(output, 'w') as fo:
+    with open(output, "w") as fo:
         writer = csv.writer(fo, quoting=csv.QUOTE_ALL)
-        with open(input_file, 'r') as fi:
+        with open(input_file) as fi:
             reader = csv.reader(fi)
-            for i, l in enumerate(reader):
+            for i, row in enumerate(reader):
                 if i == 0:
                     # add headers on first row
-                    l.extend(new_headers)
-                if not l:
+                    row.extend(new_headers)
+                if not row:
                     continue
-                project_id = l[0]
-                name = l[1]
-                version_column = l[2]
-                sep = ':  released on '
+                project_id = row[0]
+                name = row[1]
+                version_column = row[2]
+                sep = ":  released on "
                 if sep not in version_column:
                     # write as is if we do not have a file release date
                     # separator
-                    writer.writerow(l)
+                    writer.writerow(row)
                     continue
                 filename, release_date_ts = version_column.split(sep, 1)
                 found_version = version.version_hint(filename)
-                l.append(found_version or '')
-                l.append(release_date_ts or '')
-                l.append(download_url_template % locals())
-                l.append('')  # reviewed
-                l.append('')  # curated name
-                excluded_reason = ''
-                if '.' in project_id:
-                    excluded_reason = 'mirror or special project'
+                row.append(found_version or "")
+                row.append(release_date_ts or "")
+                row.append(download_url_template % locals())
+                row.append("")  # reviewed
+                row.append("")  # curated name
+                excluded_reason = ""
+                if "." in project_id:
+                    excluded_reason = "mirror or special project"
                 elif not found_version:
-                    excluded_reason = 'no version'
+                    excluded_reason = "no version"
                 elif not good_name(name):
-                    excluded_reason = 'special chars in name'
+                    excluded_reason = "special chars in name"
                 elif not good_filename(project_id, filename, name):
-                    excluded_reason = 'multi component possible'
-                l.append(excluded_reason)
-                l.append('')  # curated_owner
-                l.append('')  # owner_type
-                writer.writerow(l)
+                    excluded_reason = "multi component possible"
+                row.append(excluded_reason)
+                row.append("")  # curated_owner
+                row.append("")  # owner_type
+                writer.writerow(row)
 
 
 def good_name(s):
@@ -85,9 +85,11 @@ def good_name(s):
     -- there is a punctuation sign string.punctuation
     -- there is non-ascii letters string.letters + string.digit
     """
-    return (s
-            and all(c not in string.punctuation for c in s)
-            and all(c in string.ascii_lowercase for c in s.lower()))
+    return (
+        s
+        and all(c not in string.punctuation for c in s)
+        and all(c in string.ascii_lowercase for c in s.lower())
+    )
 
 
 def good_filename(pid, fn, name):

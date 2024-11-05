@@ -3,106 +3,115 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import codecs
 import json
 import os
 from io import StringIO
-
-from mock import patch
+from unittest.mock import patch
 
 from django.core import management
 from django.test import TestCase as DjangoTestCase
 
 import packagedb
-
-from minecode.utils_test import mocked_requests_get
-from minecode.utils_test import JsonBasedTesting
-
 from minecode.management.commands.check_licenses import find_ambiguous_packages
 from minecode.management.commands.run_map import map_uri
 from minecode.management.commands.run_visit import visit_uri
-
 from minecode.models import ResourceURI
+from minecode.tests import FIXTURES_REGEN
+from minecode.utils_test import JsonBasedTesting
+from minecode.utils_test import mocked_requests_get
 
 
 class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(os.path.dirname(__file__), 'testfiles')
+    test_data_dir = os.path.join(os.path.dirname(__file__), "testfiles")
 
     def test_find_ambiguous_packages_declared_license(self):
         packagedb.models.Package.objects.create(
-            download_url='http://example.com',
-            name='Foo',
-            declared_license_expression='apache-2.0 and unknown',
-            type='maven'
+            download_url="http://example.com",
+            name="Foo",
+            declared_license_expression="apache-2.0 and unknown",
+            type="maven",
         )
         packages = [p.to_dict() for p in find_ambiguous_packages()]
-        expected_loc = self.get_test_loc('housekeeping/declared_license_search_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        expected_loc = self.get_test_loc(
+            "housekeeping/declared_license_search_expected.json"
+        )
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_find_ambiguous_packages_license_expression(self):
         packagedb.models.Package.objects.create(
-            download_url='http://example.com',
-            name='Foo',
-            declared_license_expression='apache-2.0 and unknown',
-            type='maven'
+            download_url="http://example.com",
+            name="Foo",
+            declared_license_expression="apache-2.0 and unknown",
+            type="maven",
         )
         packages = [p.to_dict() for p in find_ambiguous_packages()]
 
-        expected_loc = self.get_test_loc('housekeeping/license_expression_search_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        expected_loc = self.get_test_loc(
+            "housekeeping/license_expression_search_expected.json"
+        )
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_find_ambiguous_packages_license_expression_ignore_uppercase(self):
         packagedb.models.Package.objects.create(
-            download_url='http://example.com',
-            name='Foo',
-            declared_license_expression='Unknown',
-            type='maven'
+            download_url="http://example.com",
+            name="Foo",
+            declared_license_expression="Unknown",
+            type="maven",
         )
         packages = [p.to_dict() for p in find_ambiguous_packages()]
 
-        expected_loc = self.get_test_loc('housekeeping/ignore_upper_case_search_expected.json')
+        expected_loc = self.get_test_loc(
+            "housekeeping/ignore_upper_case_search_expected.json"
+        )
 
-        self.check_expected_results(packages, expected_loc, regen=False)
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_run_check_licenses_command(self):
         packagedb.models.Package.objects.create(
-            download_url='http://example.com',
-            name='Foo',
-            declared_license_expression='apache-2.0 and unknown',
-            type='maven'
+            download_url="http://example.com",
+            name="Foo",
+            declared_license_expression="apache-2.0 and unknown",
+            type="maven",
         )
         results_loc = self.get_temp_file()
-        expected_loc = self.get_test_loc('housekeeping/example_expected.json')
+        expected_loc = self.get_test_loc("housekeeping/example_expected.json")
 
         output = StringIO()
-        management.call_command('check_licenses', '-o', results_loc, stdout=output)
-        self.assertTrue('Visited 1 packages\nFound 1 possible packages\nFound packages dumped to:' in output.getvalue())
+        management.call_command("check_licenses", "-o", results_loc, stdout=output)
+        self.assertTrue(
+            "Visited 1 packages\nFound 1 possible packages\nFound packages dumped to:"
+            in output.getvalue()
+        )
 
         with open(results_loc) as results:
             res = json.load(results)
-        self.check_expected_results(res, expected_loc, regen=False)
+        self.check_expected_results(res, expected_loc, regen=FIXTURES_REGEN)
 
     def test_run_check_licenses_command_with_empty_package(self):
         output = StringIO()
         results_loc = self.get_temp_file()
-        management.call_command('check_licenses', '-o', results_loc, stdout=output)
-        self.assertTrue('Visited 0 packages\nFound 0 possible packages' in output.getvalue())
+        management.call_command("check_licenses", "-o", results_loc, stdout=output)
+        self.assertTrue(
+            "Visited 0 packages\nFound 0 possible packages" in output.getvalue()
+        )
 
     def test_visit_and_map_using_pom(self):
-        uri = 'http://repo1.maven.org/maven2/org/bytesoft/bytejta-supports/0.5.0-ALPHA4/bytejta-supports-0.5.0-ALPHA4.pom'
-        test_loc = self.get_test_loc('housekeeping/bytejta-supports-0.5.0-ALPHA4.pom')
+        uri = "http://repo1.maven.org/maven2/org/bytesoft/bytejta-supports/0.5.0-ALPHA4/bytejta-supports-0.5.0-ALPHA4.pom"
+        test_loc = self.get_test_loc("housekeeping/bytejta-supports-0.5.0-ALPHA4.pom")
 
         resource_uri = ResourceURI.objects.insert(uri=uri)
 
-        with patch('requests.get') as mock_http_get:
+        with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             # visit test proper: this should insert all the test_uris
             visit_uri(resource_uri)
             map_uri(resource_uri)
         packages = [p.to_dict() for p in find_ambiguous_packages()]
-        expected_loc = self.get_test_loc('housekeeping/bytejta-supports-0.5.0-ALPHA4.pom_search_expected.json')
-        self.check_expected_results(packages, expected_loc, regen=False)
+        expected_loc = self.get_test_loc(
+            "housekeeping/bytejta-supports-0.5.0-ALPHA4.pom_search_expected.json"
+        )
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

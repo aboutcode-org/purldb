@@ -28,17 +28,20 @@
     "license_detections":[
       {
         "license_expression":"unknown",
+        "license_expression_spdx":"LicenseRef-scancode-unknown",
         "matches":[
           {
-            "score":100.0,
+            "license_expression":"unknown",
+            "spdx_license_expression":"LicenseRef-scancode-unknown",
+            "from_file":null,
             "start_line":1,
             "end_line":1,
+            "matcher":"5-undetected",
+            "score":100.0,
             "matched_length":1,
             "match_coverage":100.0,
-            "matcher":"5-undetected",
-            "license_expression":"unknown",
-            "rule_identifier":"package-manifest-unknown-edabd365d4e6152ed089bbc8e86ca362d6b1c07e",
             "rule_relevance":100,
+            "rule_identifier":"package-manifest-unknown-edabd365d4e6152ed089bbc8e86ca362d6b1c07e",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-edabd365d4e6152ed089bbc8e86ca362d6b1c07e",
             "matched_text":"license asf20"
           }
@@ -52,13 +55,17 @@
     "extracted_license_statement":"asf20",
     "notice_text":null,
     "source_packages":[],
+    "is_private":false,
+    "is_virtual":false,
     "extra_data":{},
     "repository_homepage_url":null,
     "repository_download_url":null,
     "api_data_url":null,
     "package_uid":"pkg:googlecode/apache-extras.org/124799961-qian?uuid=fixed-uid-done-for-testing-5642512d1758",
     "datafile_paths":[],
-    "datasource_ids":[],
+    "datasource_ids":[
+      "googlecode_json"
+    ],
     "purl":"pkg:googlecode/apache-extras.org/124799961-qian"
   }
 ]

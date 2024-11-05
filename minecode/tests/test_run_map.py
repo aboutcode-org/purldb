@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -15,35 +15,38 @@ from django.utils import timezone
 
 from packagedcode.models import Package as ScannedPackage
 
+import packagedb
 from minecode.management.commands.run_map import map_uri
 from minecode.model_utils import merge_packages
 from minecode.models import ResourceURI
 from minecode.models import ScannableURI
 from minecode.route import Router
+from minecode.tests import FIXTURES_REGEN
 from minecode.utils_test import JsonBasedTesting
 from minecode.utils_test import MiningTestCase
-import packagedb
 
 
 class RunMapTest(JsonBasedTesting, MiningTestCase):
-    BASE_DIR = os.path.join(os.path.dirname(__file__), 'testfiles')
+    BASE_DIR = os.path.join(os.path.dirname(__file__), "testfiles")
     maxDiff = None
 
     def test_map_uri(self):
         # setup
         # build a mock mapper and register it in a router
-        uri = 'http://testdomap.com'
+        uri = "http://testdomap.com"
 
         def mock_mapper(uri, resource_uri):
-            return [ScannedPackage(
-                type='maven',
-                namespace='org.apache.spark',
-                name='spark-streaming_2.10',
-                version='1.2.0',
-                qualifiers=dict(extension='pom'),
-                download_url='http://testdomap.com',
-                sha1='beef'
-            )]
+            return [
+                ScannedPackage(
+                    type="maven",
+                    namespace="org.apache.spark",
+                    name="spark-streaming_2.10",
+                    version="1.2.0",
+                    qualifiers=dict(extension="pom"),
+                    download_url="http://testdomap.com",
+                    sha1="beef",
+                )
+            ]
 
         router = Router()
         router.append(uri, mock_mapper)
@@ -55,31 +58,37 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         resource_uri = ResourceURI.objects.insert(
             uri=uri,
             last_visit_date=timezone.now(),
-            package_url='pkg:maven/org.apache.spark/spark-streaming_2.10@1.2.0?extension=pom')
+            package_url="pkg:maven/org.apache.spark/spark-streaming_2.10@1.2.0?extension=pom",
+        )
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
         resource_uri.save()
 
         # ensure that we are clear of Package before
         before = packagedb.models.Package.objects.filter(
-            download_url='http://testdomap.com')
+            download_url="http://testdomap.com"
+        )
         self.assertEqual(0, before.count())
 
         # test proper
         map_uri(resource_uri, _map_router=router)
         mapped = packagedb.models.Package.objects.filter(
-            download_url='http://testdomap.com')
+            download_url="http://testdomap.com"
+        )
         self.assertEqual(1, mapped.count())
         mapped_package = mapped.first()
-        self.assertEqual('pkg:maven/org.apache.spark/spark-streaming_2.10@1.2.0?extension=pom', mapped_package.package_url)
+        self.assertEqual(
+            "pkg:maven/org.apache.spark/spark-streaming_2.10@1.2.0?extension=pom",
+            mapped_package.package_url,
+        )
 
         # test history
         history = mapped_package.get_history()
         self.assertIsNotNone(history)
         self.assertEqual(1, len(history))
         entry = history[0]
-        message = entry.get('message')
-        self.assertEqual('New Package created from URI: {}'.format(uri), message)
+        message = entry.get("message")
+        self.assertEqual(f"New Package created from URI: {uri}", message)
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
@@ -87,13 +96,13 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertFalse(resource_uri.last_map_date is None)
 
         # check that a ScannableURI has been created
-        scannable = ScannableURI.objects.filter(uri='http://testdomap.com')
+        scannable = ScannableURI.objects.filter(uri="http://testdomap.com")
         self.assertEqual(1, scannable.count())
 
     def test_map_uri_continues_after_raised_exception(self):
         # setup
         # build a mock mapper and register it in a router
-        uri = 'http://nexb_visit.com'
+        uri = "http://nexb_visit.com"
 
         def mock_mapper(uri, resource_uri):
             raise Exception()
@@ -106,20 +115,23 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
 
         # seed ResourceURI with a uri
         resource_uri = ResourceURI.objects.insert(
-            uri=uri, last_visit_date=timezone.now())
+            uri=uri, last_visit_date=timezone.now()
+        )
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
         resource_uri.save()
 
         # ensure that we are clear of Package before
         before = packagedb.models.Package.objects.filter(
-            download_url='http://testdomap.com')
+            download_url="http://testdomap.com"
+        )
         self.assertEqual(0, before.count())
 
         # test proper
         map_uri(resource_uri, _map_router=router)
         mapped = packagedb.models.Package.objects.filter(
-            download_url='http://testdomap.com')
+            download_url="http://testdomap.com"
+        )
         self.assertEqual(0, mapped.count())
 
         # check that the ResourceURI status has been updated correctly
@@ -129,16 +141,16 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertTrue(resource_uri.map_error is not None)
 
         # check that a ScannableURI has not been created
-        scannable = ScannableURI.objects.filter(uri='http://testdomap.com')
+        scannable = ScannableURI.objects.filter(uri="http://testdomap.com")
         self.assertEqual(0, scannable.count())
 
     def test_map_uri_continues_if_unknown_type_in_package_iterator(self):
         # setup
         # build a mock mapper and register it in a router
-        uri = 'http://nexb_visit.com'
+        uri = "http://nexb_visit.com"
 
         def mock_mapper(uri, resource_uri):
-            return ['some string']
+            return ["some string"]
 
         router = Router()
         router.append(uri, mock_mapper)
@@ -148,44 +160,45 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
 
         # seed ResourceURI with a uri
         resource_uri = ResourceURI.objects.insert(
-            uri=uri, last_visit_date=timezone.now())
+            uri=uri, last_visit_date=timezone.now()
+        )
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
         resource_uri.save()
 
         # ensure that we are clear of Package before
         before = packagedb.models.Package.objects.filter(
-            download_url='http://testdomap.com')
+            download_url="http://testdomap.com"
+        )
         self.assertEqual(0, before.count())
 
         # test proper
         map_uri(resource_uri, _map_router=router)
         mapped = packagedb.models.Package.objects.filter(
-            download_url='http://testdomap.com')
+            download_url="http://testdomap.com"
+        )
         self.assertEqual(0, mapped.count())
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
         self.assertEqual(None, resource_uri.wip_date)
         self.assertFalse(resource_uri.last_map_date is None)
-        self.assertTrue('Not a ScanCode PackageData type' in resource_uri.map_error)
+        self.assertTrue("Not a ScanCode PackageData type" in resource_uri.map_error)
 
         # check that a ScannableURI has not been created
-        scannable = ScannableURI.objects.filter(uri='http://testdomap.com')
+        scannable = ScannableURI.objects.filter(uri="http://testdomap.com")
         self.assertEqual(0, scannable.count())
 
     def test_map_uri_continues_if_no_download_url_in_package_iterator(self):
         # setup
         # build a mock mapper and register it in a router
-        uri = 'http://nexb_visit.com'
+        uri = "http://nexb_visit.com"
 
         class MP(ScannedPackage):
             pass
 
         def mock_mapper(uri, resource_uri):
-            return [
-                MP(type='generic', name='foo', sha1='beef')
-            ]
+            return [MP(type="generic", name="foo", sha1="beef")]
 
         router = Router()
         router.append(uri, mock_mapper)
@@ -195,50 +208,50 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
 
         # seed ResourceURI with a uri
         resource_uri = ResourceURI.objects.insert(
-            uri=uri, last_visit_date=timezone.now())
+            uri=uri, last_visit_date=timezone.now()
+        )
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
         resource_uri.save()
 
         # ensure that we are clear of Package before
         before = packagedb.models.Package.objects.filter(
-            download_url='http://testdomap.com')
+            download_url="http://testdomap.com"
+        )
         self.assertEqual(0, before.count())
 
         # test proper
         map_uri(resource_uri, _map_router=router)
         mapped = packagedb.models.Package.objects.filter(
-            download_url='http://testdomap.com')
+            download_url="http://testdomap.com"
+        )
         self.assertEqual(0, mapped.count())
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
         self.assertEqual(None, resource_uri.wip_date)
         self.assertFalse(resource_uri.last_map_date is None)
-        self.assertTrue('No download_url for package' in resource_uri.map_error)
+        self.assertTrue("No download_url for package" in resource_uri.map_error)
 
         # check that a ScannableURI has not been created
-        scannable = ScannableURI.objects.filter(uri='http://testdomap.com')
+        scannable = ScannableURI.objects.filter(uri="http://testdomap.com")
         self.assertEqual(0, scannable.count())
 
     def test_map_uri_continues_after_raised_exception_in_package_iterator(self):
         # setup
         # build a mock mapper and register it in a router
-        uri = 'http://nexb_visit.com'
+        uri = "http://nexb_visit.com"
 
         class MP(ScannedPackage):
-
             def to_dict(self, **kwargs):
-                raise Exception('ScannedPackage issue')
+                raise Exception("ScannedPackage issue")
 
             def __getattribute__(self, item):
-                raise Exception('ScannedPackage issue')
+                raise Exception("ScannedPackage issue")
                 return ScannedPackage.__getattribute__(self, item)
 
         def mock_mapper(uri, resource_uri):
-            return [
-                MP(type='generic', name='foo', download_url=uri, sha1='beef')
-            ]
+            return [MP(type="generic", name="foo", download_url=uri, sha1="beef")]
 
         router = Router()
         router.append(uri, mock_mapper)
@@ -248,77 +261,80 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
 
         # seed ResourceURI with a uri
         resource_uri = ResourceURI.objects.insert(
-            uri=uri, last_visit_date=timezone.now())
+            uri=uri, last_visit_date=timezone.now()
+        )
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
         resource_uri.save()
 
         # ensure that we are clear of Package before
         before = packagedb.models.Package.objects.filter(
-            download_url='http://testdomap.com')
+            download_url="http://testdomap.com"
+        )
         self.assertEqual(0, before.count())
 
         # test proper
         map_uri(resource_uri, _map_router=router)
         mapped = packagedb.models.Package.objects.filter(
-            download_url='http://testdomap.com')
+            download_url="http://testdomap.com"
+        )
         self.assertEqual(0, mapped.count())
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
         self.assertEqual(None, resource_uri.wip_date)
         self.assertFalse(resource_uri.last_map_date is None)
-        self.assertTrue('ScannedPackage issue' in resource_uri.map_error)
-        self.assertTrue('Failed to map while' in resource_uri.map_error)
+        self.assertTrue("ScannedPackage issue" in resource_uri.map_error)
+        self.assertTrue("Failed to map while" in resource_uri.map_error)
 
         # check that a ScannableURI has not been created
-        scannable = ScannableURI.objects.filter(uri='http://testdomap.com')
+        scannable = ScannableURI.objects.filter(uri="http://testdomap.com")
         self.assertEqual(0, scannable.count())
 
     def test_map_uri_with_no_route_defined_does_not_map(self):
         # setup
         # build a mock mapper and register it in a router
-        uri = 'http://nexb_visit.com'
+        uri = "http://nexb_visit.com"
 
         def mock_mapper(uri, resource_uri):
             return [
                 ScannedPackage(
-                    uri='http://test.com',
-                    type='generic',
-                    name='testpack',
+                    uri="http://test.com",
+                    type="generic",
+                    name="testpack",
                 )
             ]
 
         router = Router()
-        router.append('http://nexb.com', mock_mapper)
+        router.append("http://nexb.com", mock_mapper)
         resource_uri = ResourceURI.objects.create(uri=uri)
 
         # test proper
         map_uri(resource_uri, _map_router=router)
         try:
-            ResourceURI.objects.get(uri='http://test.com')
-            self.fail('URI should not have been created')
+            ResourceURI.objects.get(uri="http://test.com")
+            self.fail("URI should not have been created")
         except ResourceURI.DoesNotExist:
             pass
 
     def test_run_map_command(self):
         output = StringIO()
-        management.call_command('run_map', exit_on_empty=True, stdout=output)
-        self.assertEquals('', output.getvalue())
+        management.call_command("run_map", exit_on_empty=True, stdout=output)
+        self.assertEqual("", output.getvalue())
 
     def test_map_uri_does_update_with_same_mining_level(self):
         # setup
         # build a mock mapper and register it in a router
-        download_url = 'http://testdomap2.com'
+        download_url = "http://testdomap2.com"
         new_p = ScannedPackage(
-            type='generic',
-            name='pack',
-            version='0.2',
-            description='Description Updated',
-            download_url=download_url
+            type="generic",
+            name="pack",
+            version="0.2",
+            description="Description Updated",
+            download_url=download_url,
         )
 
-        uri = 'http://testdomap2.com'
+        uri = "http://testdomap2.com"
 
         def mock_mapper(uri, resource_uri):
             return [new_p]
@@ -331,9 +347,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
 
         # seed ResourceURI with a uri
         resource_uri = ResourceURI.objects.insert(
-            uri=uri,
-            last_visit_date=timezone.now(),
-            mining_level=0
+            uri=uri, last_visit_date=timezone.now(), mining_level=0
         )
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
@@ -342,12 +356,12 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         # ensure that we have an existing Package before
         packagedb.models.Package.objects.insert(
             mining_level=0,
-            type='generic',
-            name='pack',
-            version='0.1',
-            description='Description Existing',
+            type="generic",
+            name="pack",
+            version="0.1",
+            description="Description Existing",
             download_url=download_url,
-            sha1='beef',
+            sha1="beef",
         )
 
         # test proper
@@ -362,14 +376,16 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertIsNotNone(history)
         self.assertEqual(1, len(history))
         entry = history[0]
-        message = entry.get('message')
-        self.assertEqual('Package field values have been updated.', message)
-        data = entry.get('data')
-        updated_fields = data.get('updated_fields')
+        message = entry.get("message")
+        self.assertEqual("Package field values have been updated.", message)
+        data = entry.get("data")
+        updated_fields = data.get("updated_fields")
         expected_updated_fields_loc = self.get_test_loc(
-            'run_map/test_map_uri_does_update_with_same_mining_level_expected_updated_fields.json'
+            "run_map/test_map_uri_does_update_with_same_mining_level_expected_updated_fields.json"
         )
-        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=False)
+        self.check_expected_results(
+            updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN
+        )
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
@@ -377,9 +393,11 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertFalse(resource_uri.last_map_date is None)
 
         # check that the Package has been updated correctly
-        expected_loc = self.get_test_loc('run_map/test_map_uri_does_update_with_same_mining_level-expected.json')
+        expected_loc = self.get_test_loc(
+            "run_map/test_map_uri_does_update_with_same_mining_level-expected.json"
+        )
         result = mapped_package.to_dict()
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
         # Since we manually insert a Package without using `map_uri`, a
         # ScannableURI should not have been created. An update to a package
@@ -390,17 +408,17 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
     def test_map_uri_update_only_empties_with_lesser_new_mining_level(self):
         # setup
         # build a mock mapper and register it in a router
-        download_url = 'http://testdomap3.com'
+        download_url = "http://testdomap3.com"
         new_p = ScannedPackage(
-            type='generic',
-            name='pack',
-            version='0.2',
-            description='Description Updated',
+            type="generic",
+            name="pack",
+            version="0.2",
+            description="Description Updated",
             download_url=download_url,
-            sha1='feed'
+            sha1="feed",
         )
 
-        uri = 'http://nexb_visit.com'
+        uri = "http://nexb_visit.com"
 
         def mock_mapper(uri, resource_uri):
             return [new_p]
@@ -413,9 +431,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
 
         # seed ResourceURI with a uri
         resource_uri = ResourceURI.objects.insert(
-            uri=uri,
-            last_visit_date=timezone.now(),
-            mining_level=0
+            uri=uri, last_visit_date=timezone.now(), mining_level=0
         )
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
@@ -425,12 +441,12 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         packagedb.models.Package.objects.insert(
             # NOTE: existing is 10, new is 0
             mining_level=10,
-            type='generic',
-            name='pack',
-            version='0.1',
-            description='',
+            type="generic",
+            name="pack",
+            version="0.1",
+            description="",
             download_url=download_url,
-            sha1='',
+            sha1="",
         )
 
         # test proper
@@ -444,21 +460,17 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertIsNotNone(history)
         self.assertEqual(1, len(history))
         entry = history[0]
-        message = entry.get('message')
-        self.assertEqual('Package field values have been updated.', message)
-        data = entry.get('data')
-        updated_fields = data.get('updated_fields')
+        message = entry.get("message")
+        self.assertEqual("Package field values have been updated.", message)
+        data = entry.get("data")
+        updated_fields = data.get("updated_fields")
         expected_updated_fields = [
             {
-                'field': 'description',
-                'new_value': 'Description Updated',
-                'old_value': ''
+                "field": "description",
+                "new_value": "Description Updated",
+                "old_value": "",
             },
-            {
-                'field': 'sha1',
-                'new_value': 'feed',
-                'old_value': ''
-            }
+            {"field": "sha1", "new_value": "feed", "old_value": ""},
         ]
         self.assertEqual(expected_updated_fields, updated_fields)
 
@@ -468,9 +480,11 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertFalse(resource_uri.last_map_date is None)
 
         # check that the Package has been updated correctly
-        expected_loc = self.get_test_loc('run_map/test_map_uri_update_only_empties_with_lesser_new_mining_level-expected.json')
+        expected_loc = self.get_test_loc(
+            "run_map/test_map_uri_update_only_empties_with_lesser_new_mining_level-expected.json"
+        )
         result = mapped[0].to_dict()
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
         # Since we manually insert a Package without using `map_uri`, a
         # ScannableURI should not have been created. An update to a package
@@ -481,16 +495,16 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
     def test_map_uri_replace_with_new_with_higher_new_mining_level(self):
         # setup
         # build a mock mapper and register it in a router
-        download_url = 'http://testdomap4.com'
+        download_url = "http://testdomap4.com"
         new_p = ScannedPackage(
-            type='generic',
-            name='pack2',
-            version='0.2',
-            description='Description Updated',
-            download_url=download_url
+            type="generic",
+            name="pack2",
+            version="0.2",
+            description="Description Updated",
+            download_url=download_url,
         )
 
-        uri = 'http://nexb_visit.com'
+        uri = "http://nexb_visit.com"
 
         def mock_mapper(uri, resource_uri):
             return [new_p]
@@ -503,9 +517,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
 
         # seed ResourceURI with a uri
         resource_uri = ResourceURI.objects.insert(
-            uri=uri,
-            last_visit_date=timezone.now(),
-            mining_level=10
+            uri=uri, last_visit_date=timezone.now(), mining_level=10
         )
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
@@ -515,12 +527,12 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         packagedb.models.Package.objects.insert(
             # NOTE: existing is 5, new is 10
             mining_level=5,
-            name='pack',
-            version='0.1',
-            description='',
+            name="pack",
+            version="0.1",
+            description="",
             download_url=download_url,
-            type='generic',
-            sha1='beef',
+            type="generic",
+            sha1="beef",
         )
 
         # test proper
@@ -534,15 +546,16 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertIsNotNone(history)
         self.assertEqual(1, len(history))
         entry = history[0]
-        message = entry.get('message')
-        self.assertEqual('Package field values have been updated.', message)
-        data = entry.get('data')
-        updated_fields = data.get('updated_fields')
+        message = entry.get("message")
+        self.assertEqual("Package field values have been updated.", message)
+        data = entry.get("data")
+        updated_fields = data.get("updated_fields")
         expected_updated_fields_loc = self.get_test_loc(
-            'run_map/test_map_uri_replace_with_new_with_higher_new_mining_level_expected_updated_fields.json'
+            "run_map/test_map_uri_replace_with_new_with_higher_new_mining_level_expected_updated_fields.json"
         )
-        self.check_expected_results(updated_fields, expected_updated_fields_loc, regen=False)
-
+        self.check_expected_results(
+            updated_fields, expected_updated_fields_loc, regen=FIXTURES_REGEN
+        )
 
         # check that the ResourceURI status has been updated correctly
         resource_uri = ResourceURI.objects.get(uri=uri)
@@ -550,9 +563,11 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertFalse(resource_uri.last_map_date is None)
 
         # check that the Package has been updated correctly
-        expected_loc = self.get_test_loc('run_map/test_map_uri_replace_with_new_with_higher_new_mining_level-expected.json')
+        expected_loc = self.get_test_loc(
+            "run_map/test_map_uri_replace_with_new_with_higher_new_mining_level-expected.json"
+        )
         result = mapped[0].to_dict()
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
         # Since we manually insert a Package without using `map_uri`, a
         # ScannableURI should not have been created. An update to a package
@@ -561,67 +576,71 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         self.assertEqual(0, scannable.count())
 
     def test_merge_packages_no_replace(self):
-        download_url = 'http://testdomap3.com'
+        download_url = "http://testdomap3.com"
         existing_package, _created = packagedb.models.Package.objects.get_or_create(
-            type='generic',
-            name='pack',
-            version='0.1',
-            description='',
+            type="generic",
+            name="pack",
+            version="0.1",
+            description="",
             download_url=download_url,
-            sha1='beef',
+            sha1="beef",
         )
         new_package_data = ScannedPackage(
-            type='generic',
-            name='pack',
-            version='0.2',
-            description='Description Updated',
-            download_url=download_url
+            type="generic",
+            name="pack",
+            version="0.2",
+            description="Description Updated",
+            download_url=download_url,
         ).to_dict()
         merge_packages(existing_package, new_package_data, replace=False)
-        expected_loc = self.get_test_loc('run_map/test_merge_packages_no_replace-expected.json')
+        expected_loc = self.get_test_loc(
+            "run_map/test_merge_packages_no_replace-expected.json"
+        )
         result = existing_package.to_dict()
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_merge_packages_with_replace(self):
-        download_url = 'http://testdomap3.com'
+        download_url = "http://testdomap3.com"
         existing_package, _created = packagedb.models.Package.objects.get_or_create(
-            type='generic',
-            name='pack',
-            version='0.1',
-            description='',
+            type="generic",
+            name="pack",
+            version="0.1",
+            description="",
             download_url=download_url,
-            sha1='beef',
+            sha1="beef",
         )
         new_package_data = ScannedPackage(
-            type='generic',
-            name='pack',
-            version='0.2',
-            description='Description Updated',
+            type="generic",
+            name="pack",
+            version="0.2",
+            description="Description Updated",
             download_url=download_url,
         ).to_dict()
         merge_packages(existing_package, new_package_data, replace=True)
-        expected_loc = self.get_test_loc('run_map/test_merge_packages_with_replace-expected.json')
+        expected_loc = self.get_test_loc(
+            "run_map/test_merge_packages_with_replace-expected.json"
+        )
         result = existing_package.to_dict()
-        self.check_expected_results(result, expected_loc, regen=False)
+        self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_merge_packages_different_sha1(self):
-        download_url = 'http://testdomap3.com'
+        download_url = "http://testdomap3.com"
         existing_package, _created = packagedb.models.Package.objects.get_or_create(
-            type='generic',
-            name='pack',
-            version='0.1',
-            description='',
+            type="generic",
+            name="pack",
+            version="0.1",
+            description="",
             download_url=download_url,
-            sha1='beef',
+            sha1="beef",
         )
         new_package_data = ScannedPackage(
-            type='generic',
-            name='pack',
-            version='0.2',
-            description='Description Updated',
+            type="generic",
+            name="pack",
+            version="0.2",
+            description="Description Updated",
             download_url=download_url,
-            sha1='feed'
+            sha1="feed",
         ).to_dict()
         with self.assertRaises(Exception) as e:
             merge_packages(existing_package, new_package_data)
-            self.assertTrue('Mismatched sha1' in e.exception)
+            self.assertTrue("Mismatched sha1" in e.exception)

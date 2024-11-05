@@ -10,7 +10,7 @@
     "path":"groovy/.revision",
     "type":"f",
     "size":6,
-    "date":"2023-05",
+    "date":"-05-29",
     "target":null
   },
   {
@@ -31,63 +31,63 @@
     "path":"groovy/2.4.6/distribution/apache-groovy-binary-2.4.6.zip",
     "type":"f",
     "size":36461535,
-    "date":"2023-02",
+    "date":"-02-18",
     "target":null
   },
   {
     "path":"groovy/2.4.6/distribution/apache-groovy-binary-2.4.6.zip.asc",
     "type":"f",
     "size":473,
-    "date":"2023-02",
+    "date":"-02-18",
     "target":null
   },
   {
     "path":"groovy/2.4.6/distribution/apache-groovy-binary-2.4.6.zip.md5",
     "type":"f",
     "size":65,
-    "date":"2023-02",
+    "date":"-02-18",
     "target":null
   },
   {
     "path":"groovy/2.4.6/distribution/apache-groovy-docs-2.4.6.zip",
     "type":"f",
     "size":14763401,
-    "date":"2023-02",
+    "date":"-02-18",
     "target":null
   },
   {
     "path":"groovy/2.4.6/distribution/apache-groovy-docs-2.4.6.zip.asc",
     "type":"f",
     "size":473,
-    "date":"2023-02",
+    "date":"-02-18",
     "target":null
   },
   {
     "path":"groovy/2.4.6/distribution/apache-groovy-docs-2.4.6.zip.md5",
     "type":"f",
     "size":63,
-    "date":"2023-02",
+    "date":"-02-18",
     "target":null
   },
   {
     "path":"groovy/2.4.6/distribution/apache-groovy-sdk-2.4.6.zip",
     "type":"f",
     "size":58195864,
-    "date":"2023-02",
+    "date":"-02-18",
     "target":null
   },
   {
     "path":"groovy/2.4.6/distribution/apache-groovy-sdk-2.4.6.zip.asc",
     "type":"f",
     "size":473,
-    "date":"2023-02",
+    "date":"-02-18",
     "target":null
   },
   {
     "path":"groovy/2.4.6/distribution/apache-groovy-sdk-2.4.6.zip.md5",
     "type":"f",
     "size":62,
-    "date":"2023-02",
+    "date":"-02-18",
     "target":null
   },
   {
@@ -101,28 +101,28 @@
     "path":"groovy/2.4.6/sources/apache-groovy-src-2.4.6.zip",
     "type":"f",
     "size":6907454,
-    "date":"2022-12",
+    "date":"-12-18",
     "target":null
   },
   {
     "path":"groovy/2.4.6/sources/apache-groovy-src-2.4.6.zip.asc",
     "type":"f",
     "size":473,
-    "date":"2023-02",
+    "date":"-02-18",
     "target":null
   },
   {
     "path":"groovy/2.4.6/sources/apache-groovy-src-2.4.6.zip.md5",
     "type":"f",
     "size":62,
-    "date":"2023-02",
+    "date":"-02-18",
     "target":null
   },
   {
     "path":"groovy/KEYS",
     "type":"f",
     "size":6788,
-    "date":"2015-07",
+    "date":"-07-16",
     "target":null
   }
 ]

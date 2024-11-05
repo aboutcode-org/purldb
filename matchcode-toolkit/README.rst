@@ -1,8 +1,9 @@
 MatchCode toolkit
 =================
+
 MatchCode toolkit is a Python library that provides the directory fingerprinting
-functionality for `ScanCode toolkit <https://github.com/nexB/scancode-toolkit>`_
-and `ScanCode.io <https://github.com/nexB/scancode.io>`_ by implementing the
+functionality for `ScanCode toolkit <https://github.com/aboutcode-org/scancode-toolkit>`_
+and `ScanCode.io <https://github.com/aboutcode-org/scancode.io>`_ by implementing the
 HaloHash algorithm and using it in ScanCode toolkit and ScanCode.io plugins and
 pipelines.
 
@@ -29,7 +30,8 @@ A checkout of this repo can also be installed into an environment using pip's
 or built into a wheel and then installed:
 ::
 
-  python setup.py bdist_wheel # The built wheel will be in the dist/ directory
+  pip install flot
+  flot --wheel --sdist # The built wheel will be in the dist/ directory
   pip install matchcode_toolkit-*-py3-none-any.whl
 
 
@@ -46,27 +48,10 @@ Resources and computes those values for directories.
 
 
 MatchCode toolkit provides the ``scan_and_fingerprint_package`` pipeline for
-ScanCode.io. This is the same as the ``scan_package`` pipeline, but has the
+ScanCode.io. This is the same as the ``scan_single_package`` pipeline, but has the
 added step of computing fingerprints for directories.
 
+.. note::
 
-License
--------
-
-SPDX-License-Identifier: Apache-2.0
-
-The ScanCode.io software is licensed under the Apache License version 2.0.
-Data generated with ScanCode.io is provided as-is without warranties.
-ScanCode is a trademark of nexB Inc.
-
-You may not use this software except in compliance with the License.
-You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License.
-
-Data Generated with ScanCode.io is provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-ScanCode.io should be considered or used as legal advice. Consult an Attorney
-for any legal advice.
+    MatchCode toolkit has moved to its own repo at https://github.com/aboutcode-org/matchcode-toolkit
+    from its previous location https://github.com/aboutcode-org/purldb/tree/main/matchcode-toolkit

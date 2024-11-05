@@ -3,7 +3,7 @@
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
@@ -16,15 +16,13 @@ from django.db import transaction
 from django.utils import timezone
 
 # UnusedImport here!
-# But importing the mappers and visitors module triggers routes registration
-from minecode import visitors  # NOQA
+# But importing the collectors module triggers routes registration
+from minecode import collectors  # NOQA
 from minecode import priority_router
-from minecode.management.commands import get_error_message
 from minecode.management.commands import VerboseCommand
+from minecode.management.commands import get_error_message
 from minecode.models import PriorityResourceURI
-from minecode.models import ScannableURI
 from minecode.route import NoRouteAvailable
-
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout)
@@ -41,9 +39,7 @@ MUST_STOP = False
 
 
 def stop_handler(*args, **kwargs):
-    """
-    Signal handler to set global variable to True.
-    """
+    """Signal handler to set global variable to True."""
     global MUST_STOP
     MUST_STOP = True
 
@@ -52,7 +48,7 @@ signal.signal(signal.SIGTERM, stop_handler)
 
 
 class Command(VerboseCommand):
-    help = 'Run a Package request queue.'
+    help = "Run a Package request queue."
 
     def handle(self, *args, **options):
         """
@@ -60,7 +56,6 @@ class Command(VerboseCommand):
         processing. Loops forever and sleeps a short while if there are
         no PriorityResourceURI left to process.
         """
-
         global MUST_STOP
 
         sleeping = False
@@ -68,7 +63,7 @@ class Command(VerboseCommand):
 
         while True:
             if MUST_STOP:
-                logger.info('Graceful exit of the request queue.')
+                logger.info("Graceful exit of the request queue.")
                 break
 
             with transaction.atomic():
@@ -78,7 +73,7 @@ class Command(VerboseCommand):
                 # Only log a single message when we go to sleep
                 if not sleeping:
                     sleeping = True
-                    logger.info('No more processable request, sleeping...')
+                    logger.info("No more processable request, sleeping...")
 
                 time.sleep(SLEEP_WHEN_EMPTY)
                 continue
@@ -86,12 +81,11 @@ class Command(VerboseCommand):
             sleeping = False
 
             # process request
-            logger.info('Processing {}'.format(priority_resource_uri))
+            logger.info(f"Processing {priority_resource_uri}")
             try:
                 errors = process_request(priority_resource_uri)
             except Exception as e:
-                errors = 'Error: Failed to process PriorityResourceURI: {}\n'.format(
-                    repr(priority_resource_uri))
+                errors = f"Error: Failed to process PriorityResourceURI: {repr(priority_resource_uri)}\n"
                 errors += get_error_message(e)
             finally:
                 if errors:
@@ -105,34 +99,28 @@ class Command(VerboseCommand):
         return processed_counter
 
 
-def add_package_to_scan_queue(package):
-    """
-    Add a Package `package` to the scan queue
-    """
-    uri = package.download_url
-    _, scannable_uri_created = ScannableURI.objects.get_or_create(
-        uri=uri,
-        package=package,
-    )
-    if scannable_uri_created:
-        logger.debug(' + Inserted ScannableURI\t: {}'.format(uri))
-
-
 def process_request(priority_resource_uri, _priority_router=priority_router):
     purl_to_visit = priority_resource_uri.uri
+    source_purl = priority_resource_uri.source_uri
+    addon_pipelines = priority_resource_uri.addon_pipelines
+    priority = priority_resource_uri.priority
+
     try:
         if TRACE:
-            logger.debug('visit_uri: uri: {}'.format(purl_to_visit))
-
-        errors = _priority_router.process(purl_to_visit)
-        if TRACE:
-            new_uris_to_visit = list(new_uris_to_visit or [])
-            logger.debug('visit_uri: new_uris_to_visit: {}'.format(new_uris_to_visit))
+            logger.debug(f"visit_uri: uri: {purl_to_visit}")
+        kwargs = dict()
+        if source_purl:
+            kwargs["source_purl"] = source_purl
+        if addon_pipelines:
+            kwargs["addon_pipelines"] = addon_pipelines
+        if priority:
+            kwargs["priority"] = priority
+        errors = _priority_router.process(purl_to_visit, **kwargs)
 
         return errors
 
     except NoRouteAvailable:
-        error = f'No route available for {purl_to_visit}'
+        error = f"No route available for {purl_to_visit}"
         logger.error(error)
         # TODO: For now, when a route is not yet supported, we keep a value for
         # the wip_date value so the instance is not back in the queue. It will
