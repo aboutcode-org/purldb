@@ -131,7 +131,7 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "total": base_qs.count(),
             "is_runtime": base_qs.filter(is_runtime=True).count(),
             "is_optional": base_qs.filter(is_optional=True).count(),
-            "is_resolved": base_qs.filter(is_resolved=True).count(),
+            "is_pinned": base_qs.filter(is_pinned=True).count(),
         }
 
     def get_codebase_relations_summary(self, project):
@@ -244,7 +244,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "total": base_qs.count(),
             "is_runtime": base_qs.filter(is_runtime=True).count(),
             "is_optional": base_qs.filter(is_optional=True).count(),
-            "is_resolved": base_qs.filter(is_resolved=True).count(),
+            "is_pinned": base_qs.filter(is_pinned=True).count(),
         }
 
     def get_codebase_relations_summary(self, project):

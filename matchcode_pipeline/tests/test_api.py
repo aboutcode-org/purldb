@@ -92,7 +92,7 @@ class MatchCodePipelineAPITest(TransactionTestCase):
             "total": 1,
             "is_runtime": 1,
             "is_optional": 0,
-            "is_resolved": 0,
+            "is_pinned": 0,
         }
         self.assertEqual(expected, response.data["discovered_dependencies_summary"])
 

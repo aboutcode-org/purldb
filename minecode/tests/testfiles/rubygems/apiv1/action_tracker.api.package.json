@@ -40,7 +40,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -115,7 +115,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -190,7 +190,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -265,7 +265,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -340,7 +340,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -415,7 +415,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -490,7 +490,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -565,7 +565,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -640,7 +640,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -715,7 +715,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -790,7 +790,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -865,7 +865,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -940,7 +940,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -1015,7 +1015,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -1090,7 +1090,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -1165,7 +1165,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -1240,7 +1240,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -1315,7 +1315,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -1390,7 +1390,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -1465,7 +1465,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -1540,7 +1540,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,

@@ -137,7 +137,7 @@ class DependentPackageSerializer(ModelSerializer):
             "scope",
             "is_runtime",
             "is_optional",
-            "is_resolved",
+            "is_pinned",
         )
 
 

@@ -82,7 +82,7 @@
             "scope": "install",
             "is_runtime": true,
             "is_optional": false,
-            "is_resolved": false,
+            "is_pinned": false,
             "dependency_uid": "pkg:pypi/dask?uuid=e656b571-7d3f-46d1-b95b-8f037aef9692",
             "for_package_uid": "pkg:deb/debian/adduser@3.118?uuid=610bed29-ce39-40e7-92d6-fd8b",
             "datafile_path": "daglib-0.3.2.tar.gz-extract/daglib-0.3.2/PKG-INFO",
