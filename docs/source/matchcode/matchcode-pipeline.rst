@@ -7,9 +7,8 @@ code matching on an archive of files.
 
 .. note::
     This tutorial assumes that you have a working installation of PurlDB. If you
-    don't, please refer to the `installation
-    <https://aboutcode.readthedocs.io/projects/PURLdb/en/latest/how-to-guides/installation.html>`_
-    page.
+    don't, please refer to the :ref:`installation`page.
+    
 Throughout this tutorial, we will use ``pkg:npm/deep-equal@1.0.1`` and a
 modified copy of ``index.js`` from it.
 
