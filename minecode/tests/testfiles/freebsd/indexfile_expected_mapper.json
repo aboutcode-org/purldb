@@ -164,7 +164,7 @@
         "matches":[
           {
             "license_expression":"gpl-2.0",
-            "spdx_license_expression":"GPL-2.0-only",
+            "license_expression_spdx":"GPL-2.0-only",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -244,7 +244,7 @@
         "matches":[
           {
             "license_expression":"gpl-3.0",
-            "spdx_license_expression":"GPL-3.0-only",
+            "license_expression_spdx":"GPL-3.0-only",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -325,7 +325,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -979,7 +979,7 @@
         "matches":[
           {
             "license_expression":"gpl-1.0",
-            "spdx_license_expression":"GPL-1.0-only",
+            "license_expression_spdx":"GPL-1.0-only",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -1061,7 +1061,7 @@
         "matches":[
           {
             "license_expression":"gpl-2.0",
-            "spdx_license_expression":"GPL-2.0-only",
+            "license_expression_spdx":"GPL-2.0-only",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -1141,7 +1141,7 @@
         "matches":[
           {
             "license_expression":"mit",
-            "spdx_license_expression":"MIT",
+            "license_expression_spdx":"MIT",
             "from_file":null,
             "start_line":1,
             "end_line":1,

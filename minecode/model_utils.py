@@ -201,7 +201,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
                         scope=dependency["scope"],
                         is_runtime=dependency["is_runtime"],
                         is_optional=dependency["is_optional"],
-                        is_resolved=dependency["is_resolved"],
+                        is_pinned=dependency["is_pinned"],
                     )
                 entry = dict(
                     field=existing_field,
@@ -442,7 +442,7 @@ def merge_or_create_package(scanned_package, visit_level, override=False):
                 scope=dependency.scope,
                 is_runtime=dependency.is_runtime,
                 is_optional=dependency.is_optional,
-                is_resolved=dependency.is_resolved,
+                is_pinned=dependency.is_pinned,
             )
 
         time = timezone.now()
