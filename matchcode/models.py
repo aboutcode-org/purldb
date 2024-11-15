@@ -23,7 +23,7 @@ from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode_toolkit.fingerprinting import split_fingerprint
 from matchcode_toolkit.halohash import byte_hamming_distance
-
+from licensedcode
 from minecode.management.commands import get_error_message
 from packagedb.models import Package
 from packagedb.models import Resource
@@ -44,23 +44,28 @@ def logger_debug(*args):
     return logger.debug(" ".join(isinstance(a, str) and a or repr(a) for a in args))
 
 
+class PackageRelatedMixin(models.Model):
+    package = models.ForeignKey(
+        Package,
+        help_text="The Package that this file is from",
+        null=False,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        abstract = True
+
+
 ###############################################################################
 # FILE MATCHING
 ###############################################################################
-class BaseFileIndex(models.Model):
+class BaseFileIndex(PackageRelatedMixin, models.Model):
     sha1 = models.BinaryField(
         max_length=20,
         db_index=True,
         help_text="Binary form of a SHA1 checksum in lowercase hex for a file",
         null=False,
         blank=False,
-    )
-
-    package = models.ForeignKey(
-        Package,
-        help_text="The Package that this file is from",
-        null=False,
-        on_delete=models.CASCADE,
     )
 
     class Meta:
@@ -131,7 +136,7 @@ def bah128_ranges(indexed_elements_count, range_ratio=0.05):
     )
 
 
-class ApproximateMatchingHashMixin(models.Model):
+class ApproximateMatchingHashMixin(PackageRelatedMixin, models.Model):
     indexed_elements_count = models.IntegerField(
         help_text="Number of elements that went into the fingerprint",
     )
@@ -166,13 +171,6 @@ class ApproximateMatchingHashMixin(models.Model):
         help_text="Binary form of the fourth 8 (24-32) hex digits of the fingerprint",
         null=False,
         blank=False,
-    )
-
-    package = models.ForeignKey(
-        Package,
-        help_text="The Package that this resource is a part of",
-        null=False,
-        on_delete=models.CASCADE,
     )
 
     path = models.CharField(
@@ -397,14 +395,7 @@ class ApproximateResourceContentIndex(ApproximateMatchingHashMixin):
 SnippetMatch = namedtuple("SnippetMatch", ["package", "fingerprints", "fingerprints_count"])
 
 
-class SnippetIndex(models.Model):
-    package = models.ForeignKey(
-        Package,
-        help_text="The Package that this snippet fingerprint is from",
-        null=False,
-        on_delete=models.CASCADE,
-    )
-
+class SnippetIndex(PackageRelatedMixin, models.Model):
     resource = models.ForeignKey(
         Resource,
         help_text="The Package that this snippet fingerprint is from",
@@ -420,8 +411,16 @@ class SnippetIndex(models.Model):
         blank=False,
     )
 
+    position = models.PositiveIntegerField(
+        null=False,
+        blank=False,
+    )
+
+    # TODO: add start position field
+    # TODO: window length must be constant so we can calculate offsets
+
     @classmethod
-    def index(cls, fingerprint, resource, package):
+    def index(cls, fingerprint, position, resource, package):
         """
         Index the string `fingerprint` into the SnippetIndex model.
 
@@ -432,6 +431,7 @@ class SnippetIndex(models.Model):
         try:
             hi, created = cls.objects.get_or_create(
                 package=package,
+                position=position,
                 resource=resource,
                 fingerprint=fingerprint
             )
@@ -484,3 +484,7 @@ class SnippetIndex(models.Model):
             )
 
         return matches
+
+
+class ApproximateFileIndex(ApproximateMatchingHashMixin, models.Model):
+    pass
