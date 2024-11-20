@@ -1,7 +1,7 @@
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-FROM --platform=linux/amd64 python:3.12-slim
+FROM python:3.12-slim
 
 LABEL org.opencontainers.image.source="https://github.com/aboutcode-org/purldb"
 LABEL org.opencontainers.image.description="PurlDB"
@@ -71,7 +71,9 @@ ENV PATH $VENV_LOCATION/bin:$PATH
 
 # Create static/ and workspace/ directories
 RUN mkdir -p /var/$APP_NAME/static/ \
- && mkdir -p /var/$APP_NAME/workspace/
+ && mkdir -p /var/$APP_NAME/workspace/ \
+ && mkdir -p /var/scancodeio/static/ \
+ && mkdir -p /var/scancodeio/workspace/
 
 # Install the dependencies before the codebase COPY for proper Docker layer caching
 COPY --chown=$APP_USER:$APP_USER setup.cfg setup.py $APP_DIR/
