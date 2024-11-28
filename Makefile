@@ -16,11 +16,18 @@ ACTIVATE?=. ${VENV}/bin/activate;
 VIRTUALENV_PYZ=../etc/thirdparty/virtualenv.pyz
 # Do not depend on Python to generate the SECRET_KEY
 GET_SECRET_KEY=`base64 /dev/urandom | head -c50`
+
 # Customize with `$ make envfile ENV_FILE=/etc/purldb/.env`
 ENV_FILE=.env
+
 # Customize with `$ make postgres PACKAGEDB_DB_PASSWORD=YOUR_PASSWORD`
 PACKAGEDB_DB_PASSWORD=packagedb
 MATCHCODEIO_DB_PASSWORD=matchcodeio
+SCANCODEIO_DB_PASSWORD=scancodeio
+
+# Django settings shortcuts
+DJSM_PDB=DJANGO_SETTINGS_MODULE=purldb_project.settings
+DJSM_MAT=DJANGO_SETTINGS_MODULE=matchcode_project.settings
 
 # Use sudo for postgres, but only on Linux
 UNAME := $(shell uname)
@@ -50,7 +57,7 @@ envfile:
 	@mkdir -p $(shell dirname ${ENV_FILE}) && touch ${ENV_FILE}
 	@echo SECRET_KEY=\"${GET_SECRET_KEY}\" > ${ENV_FILE}
 
-envfile_testing: envfile
+envfile_testing: envfile	
 	@echo PACKAGEDB_DB_USER=\"postgres\" >> ${ENV_FILE}
 	@echo PACKAGEDB_DB_PASSWORD=\"postgres\" >> ${ENV_FILE}
 	@echo SCANCODEIO_DB_USER=\"postgres\" >> ${ENV_FILE}
@@ -102,7 +109,7 @@ postgres_matchcodeio:
 	@echo "-> Create 'matchcodeio' database"
 	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=matchcodeio matchcodeio
 	${MATCHCODE_MANAGE} migrate
-
+	
 run:
 	${MANAGE} runserver 8001 --insecure
 
@@ -118,13 +125,21 @@ run_visit: seed
 run_map:
 	${MANAGE} run_map
 
-test:
-	@echo "-> Run the test suite"
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode_pipeline --ignore matchcode_project --ignore purldb-toolkit --ignore packagedb/tests/test_throttling.py
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=matchcode_project.settings ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline
+test_purldb:
+	${ACTIVATE} ${DJSM_PDB} ${PYTHON_EXE} -m pytest -vvs minecode packagedb purl2vcs purldb_project purldb_public_project --ignore packagedb/tests/test_throttling.py 
+	${ACTIVATE} ${DJSM_PDB} ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
+
+test_toolkit:
 	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs purldb-toolkit/
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs purl2vcs
+
+test_clearcode:        # create
+
+	${ACTIVATE} ${DJSM_PDB} ${PYTHON_EXE} -m pytest -vvs clearcode clearindex
+
+test_matchcode:
+	${ACTIVATE} ${DJSM_MAT} ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline matchcode_toolkit matchcode
+
+test: test_purldb test_matchcode test_toolkit test_clearcode
 
 shell:
 	${MANAGE} shell
@@ -164,4 +179,4 @@ docker-images:
 	@mkdir -p dist/
 	@docker save minecode minecode_minecode nginx | gzip > dist/minecode-images-`git describe --tags`.tar.gz
 
-.PHONY: virtualenv conf dev envfile isort black doc8 valid check clean migrate postgres run test shell clearsync clearindex index_packages bump docs docker-images
+.PHONY: virtualenv conf dev envfile isort black doc8 valid check clean migrate postgres run test shell clearsync clearindex index_packages bump docs docker-images test_purldb test_matchcode test_toolkit test_clearcode
