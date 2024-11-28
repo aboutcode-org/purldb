@@ -44,7 +44,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"kmod-ipv6",
@@ -52,7 +52,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"kmod-sit",
@@ -60,7 +60,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       }
     ],
     "contains_source_code":null,

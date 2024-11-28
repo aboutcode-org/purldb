@@ -32,7 +32,7 @@
         "matches":[
           {
             "license_expression":"epl-1.0",
-            "spdx_license_expression":"EPL-1.0",
+            "license_expression_spdx":"EPL-1.0",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -101,7 +101,7 @@
         "matches":[
           {
             "license_expression":"epl-1.0",
-            "spdx_license_expression":"EPL-1.0",
+            "license_expression_spdx":"EPL-1.0",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -170,7 +170,7 @@
         "matches":[
           {
             "license_expression":"epl-1.0",
-            "spdx_license_expression":"EPL-1.0",
+            "license_expression_spdx":"EPL-1.0",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -239,7 +239,7 @@
         "matches":[
           {
             "license_expression":"epl-1.0",
-            "spdx_license_expression":"EPL-1.0",
+            "license_expression_spdx":"EPL-1.0",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -308,7 +308,7 @@
         "matches":[
           {
             "license_expression":"epl-1.0",
-            "spdx_license_expression":"EPL-1.0",
+            "license_expression_spdx":"EPL-1.0",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -377,7 +377,7 @@
         "matches":[
           {
             "license_expression":"epl-1.0",
-            "spdx_license_expression":"EPL-1.0",
+            "license_expression_spdx":"EPL-1.0",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -446,7 +446,7 @@
         "matches":[
           {
             "license_expression":"epl-1.0",
-            "spdx_license_expression":"EPL-1.0",
+            "license_expression_spdx":"EPL-1.0",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -515,7 +515,7 @@
         "matches":[
           {
             "license_expression":"epl-1.0",
-            "spdx_license_expression":"EPL-1.0",
+            "license_expression_spdx":"EPL-1.0",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -584,7 +584,7 @@
         "matches":[
           {
             "license_expression":"epl-1.0",
-            "spdx_license_expression":"EPL-1.0",
+            "license_expression_spdx":"EPL-1.0",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -653,7 +653,7 @@
         "matches":[
           {
             "license_expression":"epl-1.0",
-            "spdx_license_expression":"EPL-1.0",
+            "license_expression_spdx":"EPL-1.0",
             "from_file":null,
             "start_line":1,
             "end_line":1,
