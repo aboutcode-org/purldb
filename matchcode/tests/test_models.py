@@ -470,10 +470,10 @@ class SnippetIndexTestCase(MatchcodeTestCase):
             version="1.0.0",
             download_url="inflate.com/inflate.tar.gz",
         )
-        self.test_resource, _ = Resource.objects.get_or_create(
+        self.test_resource1, _ = Resource.objects.get_or_create(
             path="adler32.c", name="adler32.c", package=self.test_package
         )
-        self.test_resource_snippets = list(
+        self.test_resource_snippets1 = list(
             enumerate(
                 [
                     "bbb63027903332f0c41b7b26b9bfb50b",
@@ -516,12 +516,53 @@ class SnippetIndexTestCase(MatchcodeTestCase):
                 ]
             )
         )
-        for position, fingerprint in self.test_resource_snippets:
+        for position, fingerprint in self.test_resource_snippets1:
             fingerprint = hexstring_to_binarray(fingerprint)
             SnippetIndex.index(
                 fingerprint=fingerprint,
                 position=position,
-                resource=self.test_resource,
+                resource=self.test_resource1,
+                package=self.test_package,
+            )
+
+        self.test_resource2, _ = Resource.objects.get_or_create(
+            path="adler32.h", name="adler32.h", package=self.test_package
+        )
+        self.test_resource_snippets2 = list(
+            enumerate(
+                [
+                    "bbb63027903332f0c41b7b26b9bfb50b",
+                    "54cf1197bf1109b4ce2a3455c1c48285",
+                    "6d4c7e4377089d1ddcc8c90132ac9730",
+                    "1e579e94829907c3d2401db94f9b6df8",
+                    "ec89d3e7ac59e858d97ce1ad730f7547",
+                    "f3c31ef3249345c3e44c5aea28414aff",
+                    "e49dc8a3fecfe4bb2ef237bb56e856c8",
+                    "e2a16b88325f9b5717b578c9f5207e07",
+                    "e28f3e5020594773551a29c39ee4c286",
+                    "ae9095ef88ac8288c7514b771ed5ddc8",
+                    "01e7fd588d9cd71e30935c597827ce0a",
+                    "a54443952d1ce6e731d8980d7b0c754f",
+                    "c244ee379eacca3f8799bb94890bd41c",
+                    "67913cbdbf8802d7c19a442132ada51b",
+                    "b9e5ed3d9a79a4d71d04a6d59589e9c8",
+                    "7a10694fe6dadc4f0ff002119d29eac9",
+                    "e0fc19761f570e9657324d21b7150a3b",
+                    "498885acf844eda1f65af9e746deaff7",
+                    "16e774a453769c012ca1e7f3685b4111",
+                    "eeb97a9c94bb5c7a8cac39fdea7e7ec2",
+                    "5faefb98693a882708b497c90885e44d",
+                    "5ca14da77615896d30deb89635c39a53",
+                    "628c96760664a4b74d689a398b496403",
+                ]
+            )
+        )
+        for position, fingerprint in self.test_resource_snippets2:
+            fingerprint = hexstring_to_binarray(fingerprint)
+            SnippetIndex.index(
+                fingerprint=fingerprint,
+                position=position,
+                resource=self.test_resource2,
                 package=self.test_package,
             )
 
@@ -630,12 +671,146 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         results = SnippetIndex.match(
             fingerprints=test_snippets, resource=test_resource, package=test_package
         )
-        expected_fingerprints = [
-            hexstring_to_binarray("16e774a453769c012ca1e7f3685b4111"),
-            hexstring_to_binarray("498885acf844eda1f65af9e746deaff7"),
-        ]
-        self.assertEqual(1, len(results))
+        assert len(results) == 1
         result = results[0]
-        self.assertEqual(self.test_package, result.package)
-        fingerprints = [s.fingerprint for s in result.fingerprints]
-        self.assertEqual(sorted(expected_fingerprints), sorted(fingerprints))
+        assert result.package == self.test_package
+        fingerprints = [s.fingerprint.hex() for s in result.fingerprints]
+
+        expected_fingerprints = [
+            "16e774a453769c012ca1e7f3685b4111",
+            "16e774a453769c012ca1e7f3685b4111",
+            "498885acf844eda1f65af9e746deaff7",
+            "498885acf844eda1f65af9e746deaff7",
+        ]
+
+        assert sorted(fingerprints) == sorted(expected_fingerprints)
+
+    def test_SnippetIndexTestCase_match_resource_does_rank_base_on_count_of_zero_hamming(
+        self,
+    ):
+        test_package, _ = Package.objects.get_or_create(
+            filename="test_package.tar.gz",
+            sha1="beefbeef",
+            type="generic",
+            name="test_package",
+            version="1.0.0",
+            download_url="test_package.com/test_package.tar.gz",
+        )
+        test_resource, _ = Resource.objects.get_or_create(
+            path="zutil.c", name="zutil.c", package=test_package
+        )
+        # tuples of positions, value
+        test_snippets = list(
+            enumerate(
+                [
+                    "bbb63027903332f0c41b7b26b9bfb50b",
+                    "54cf1197bf1109b4ce2a3455c1c48285",
+                    "6d4c7e4377089d1ddcc8c90132ac9730",
+                    "1e579e94829907c3d2401db94f9b6df8",
+                    "ec89d3e7ac59e858d97ce1ad730f7547",
+                    "f3c31ef3249345c3e44c5aea28414dff",
+                    "5f1ba9111c115dc88bdc1ceddce789ef",
+                    "2f12c505c1e1ec3fa184877c8f1cb838",
+                    "a7858f3e1c246064223868c9858f8317",
+                    "b7c21f7ebb4abec9169eb533154a5097",
+                    "f5139ce5161976ff729a953b8780133d",
+                    "c1975628430b6fda66b638481403cca5",
+                    "83a4d8bea3052c3bfde90ed3aaba79ac",
+                    "3c4df460f6a4817daf8638f3b2009cb9",
+                    "3290d45ca11c75f84d72ccfdfcca9515",
+                    "bd9b873dd011bb94ba21b449e0886bca",
+                    "c51b042fb4aa9dbee729f120d1caa9ad",
+                    "3aaa73fb0dbbd0443f7f77d96322b522",
+                    "80a509a0b8d81b8167e4bce3bdaf83bf",
+                    "4a79d250f6c4aa117bf47244fc0222be",
+                    "e49dc8a3fecfe4bb2ef237bb56e85dc8",
+                    "e2a16b88325f9b5717b578c9f5207e07",
+                    "e28f3e5020594773551a29c39ee4c286",
+                    "ae9095ef88ac8288c7514b771ed5ddc8",
+                    "01e7fd588d9cd71e30935c597827ce0a",
+                    "a54443952d1ce6e731d8980d7b0c714f",
+                    "c244ee379eacca3f8799bb94890bd41c",
+                    "67913cbdbf8802d7c19a442132ada51b",
+                    "b9e5ed3d9a79a4d71d04a6d59589e9c8",
+                ]
+            )
+        )
+        test_snippets = [
+            (pos, hexstring_to_binarray(snippet)) for pos, snippet in test_snippets
+        ]
+        results = SnippetIndex.match_resources(
+            fingerprints=test_snippets,
+            resource=test_resource,
+            package=test_package,
+            top=None,
+        )
+        assert len(results) == 2
+        result1 = results[0]
+        assert result1.resource == self.test_resource1
+        assert result1.fingerprints_count == 29
+
+        result2 = results[1]
+        assert result2.resource == self.test_resource2
+        assert result2.fingerprints_count == 12
+
+    def test_SnippetIndexTestCase_match_resource_return_only_top_match(self):
+        test_package, _ = Package.objects.get_or_create(
+            filename="test_package.tar.gz",
+            sha1="beefbeef",
+            type="generic",
+            name="test_package",
+            version="1.0.0",
+            download_url="test_package.com/test_package.tar.gz",
+        )
+        test_resource, _ = Resource.objects.get_or_create(
+            path="zutil.c", name="zutil.c", package=test_package
+        )
+        # tuples of positions, value
+        test_snippets = list(
+            enumerate(
+                [
+                    "bbb63027903332f0c41b7b26b9bfb50b",
+                    "54cf1197bf1109b4ce2a3455c1c48285",
+                    "6d4c7e4377089d1ddcc8c90132ac9730",
+                    "1e579e94829907c3d2401db94f9b6df8",
+                    "ec89d3e7ac59e858d97ce1ad730f7547",
+                    "f3c31ef3249345c3e44c5aea28414dff",
+                    "5f1ba9111c115dc88bdc1ceddce789ef",
+                    "2f12c505c1e1ec3fa184877c8f1cb838",
+                    "a7858f3e1c246064223868c9858f8317",
+                    "b7c21f7ebb4abec9169eb533154a5097",
+                    "f5139ce5161976ff729a953b8780133d",
+                    "c1975628430b6fda66b638481403cca5",
+                    "83a4d8bea3052c3bfde90ed3aaba79ac",
+                    "3c4df460f6a4817daf8638f3b2009cb9",
+                    "3290d45ca11c75f84d72ccfdfcca9515",
+                    "bd9b873dd011bb94ba21b449e0886bca",
+                    "c51b042fb4aa9dbee729f120d1caa9ad",
+                    "3aaa73fb0dbbd0443f7f77d96322b522",
+                    "80a509a0b8d81b8167e4bce3bdaf83bf",
+                    "4a79d250f6c4aa117bf47244fc0222be",
+                    "e49dc8a3fecfe4bb2ef237bb56e85dc8",
+                    "e2a16b88325f9b5717b578c9f5207e07",
+                    "e28f3e5020594773551a29c39ee4c286",
+                    "ae9095ef88ac8288c7514b771ed5ddc8",
+                    "01e7fd588d9cd71e30935c597827ce0a",
+                    "a54443952d1ce6e731d8980d7b0c714f",
+                    "c244ee379eacca3f8799bb94890bd41c",
+                    "67913cbdbf8802d7c19a442132ada51b",
+                    "b9e5ed3d9a79a4d71d04a6d59589e9c8",
+                ]
+            )
+        )
+        test_snippets = [
+            (pos, hexstring_to_binarray(snippet)) for pos, snippet in test_snippets
+        ]
+        results = SnippetIndex.match_resources(
+            fingerprints=test_snippets,
+            resource=test_resource,
+            package=test_package,
+            top=1,
+        )
+        assert len(results) == 1
+        result1 = results[0]
+        assert result1.resource == self.test_resource1
+        assert result1.fingerprints_count == 29
