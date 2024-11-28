@@ -23,7 +23,7 @@ from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode_toolkit.fingerprinting import split_fingerprint
 from matchcode_toolkit.halohash import byte_hamming_distance
-from licensedcode
+
 from minecode.management.commands import get_error_message
 from packagedb.models import Package
 from packagedb.models import Resource
@@ -392,7 +392,9 @@ class ApproximateResourceContentIndex(ApproximateMatchingHashMixin):
     pass
 
 
-SnippetMatch = namedtuple("SnippetMatch", ["package", "fingerprints", "fingerprints_count"])
+SnippetMatch = namedtuple(
+    "SnippetMatch", ["package", "fingerprints", "fingerprints_count"]
+)
 
 
 class SnippetIndex(PackageRelatedMixin, models.Model):
@@ -414,6 +416,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
     position = models.PositiveIntegerField(
         null=False,
         blank=False,
+        default=0,
     )
 
     # TODO: add start position field
@@ -433,7 +436,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
                 package=package,
                 position=position,
                 resource=resource,
-                fingerprint=fingerprint
+                fingerprint=fingerprint,
             )
             if created:
                 logger.info(
@@ -463,9 +466,10 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
 
         if not fingerprints:
             return cls.objects.none()
+        only_fings = [fing for pos, fing in fingerprints]
 
-        # Step 0: get all fingerprint records that match what the input
-        fps = cls.objects.filter(fingerprint__in=fingerprints)
+        # Step 0: get all fingerprint records that match whis the input
+        fps = cls.objects.filter(fingerprint__in=only_fings)
 
         # Step 1: count Packages whose fingerprints appear
         # Step 1.1: get Packages that show up in the query
@@ -479,7 +483,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
                 SnippetMatch(
                     package=package,
                     fingerprints=match_fingerprints,
-                    fingerprints_count=match_fingerprints.count()
+                    fingerprints_count=match_fingerprints.count(),
                 )
             )
 
