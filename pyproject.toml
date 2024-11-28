@@ -88,6 +88,8 @@ ignore = [
     "S324", # hashlib-insecure-hash-function
     "S506", # unsafe-yaml-load
     "S602", # subprocess-popen-with-shell-equals-true
+	"E203",
+	"D200",
 ]
 
 [tool.ruff.lint.isort]
