@@ -58,7 +58,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"dh-autoreconf",
@@ -66,7 +66,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       }
     ],
     "contains_source_code":null,
@@ -135,7 +135,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"dh-autoreconf",
@@ -143,7 +143,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       }
     ],
     "contains_source_code":null,
@@ -212,7 +212,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"dh-autoreconf",
@@ -220,7 +220,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       }
     ],
     "contains_source_code":null,
@@ -275,7 +275,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       }
     ],
     "contains_source_code":null,
@@ -330,7 +330,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       }
     ],
     "contains_source_code":null,
@@ -385,7 +385,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       }
     ],
     "contains_source_code":null,

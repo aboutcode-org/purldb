@@ -423,7 +423,7 @@ class PackageModelTestCase(TransactionTestCase):
                 scope="runtime",
                 is_runtime=True,
                 is_optional=False,
-                is_resolved=True,
+                is_pinned=True,
             )
         ]
         _, updated_fields = p5.update_fields(dependencies=dependencies)
@@ -446,7 +446,7 @@ class PackageModelTestCase(TransactionTestCase):
                 scope="runtime",
                 is_runtime=True,
                 is_optional=False,
-                is_resolved=True,
+                is_pinned=True,
             )
         ]
         _, updated_fields = p6.update_fields(dependencies=dependencies)

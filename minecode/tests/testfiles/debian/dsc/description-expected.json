@@ -41,7 +41,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"dh-buildinfo",
@@ -49,7 +49,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"quilt",
@@ -57,7 +57,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"autotools-dev",
@@ -65,7 +65,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"libsdl1.2-dev",
@@ -73,7 +73,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"libsdl-net1.2-dev",
@@ -81,7 +81,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"libopenal-dev",
@@ -89,7 +89,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       }
     ],
     "contains_source_code":null,
@@ -141,7 +141,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"dh-buildinfo",
@@ -149,7 +149,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"quilt",
@@ -157,7 +157,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"autotools-dev",
@@ -165,7 +165,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"libsdl1.2-dev",
@@ -173,7 +173,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"libsdl-net1.2-dev",
@@ -181,7 +181,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       },
       {
         "purl":"libopenal-dev",
@@ -189,7 +189,7 @@
         "scope":null,
         "is_runtime":true,
         "is_optional":false,
-        "is_resolved":false
+        "is_pinned":false
       }
     ],
     "contains_source_code":null,

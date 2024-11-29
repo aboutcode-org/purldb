@@ -402,7 +402,7 @@
               "scope": "dependencies",
               "is_runtime": true,
               "is_optional": false,
-              "is_resolved": false,
+              "is_pinned": false,
               "resolved_package": {},
               "extra_data": {}
             },
@@ -412,7 +412,7 @@
               "scope": "dependencies",
               "is_runtime": true,
               "is_optional": false,
-              "is_resolved": false,
+              "is_pinned": false,
               "resolved_package": {},
               "extra_data": {}
             },
@@ -422,7 +422,7 @@
               "scope": "peerDependencies",
               "is_runtime": true,
               "is_optional": false,
-              "is_resolved": false,
+              "is_pinned": false,
               "resolved_package": {},
               "extra_data": {}
             }

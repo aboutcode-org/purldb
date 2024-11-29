@@ -177,7 +177,7 @@ An API endpoint that provides the ability to list and get packages.
                         "scope": "compile",
                         "is_runtime": false,
                         "is_optional": true,
-                        "is_resolved": true
+                        "is_pinned": true
                     },
                     {
                         "purl": "pkg:maven/org.elasticsearch/elasticsearch-core@7.17.9",
@@ -185,7 +185,7 @@ An API endpoint that provides the ability to list and get packages.
                         "scope": "compile",
                         "is_runtime": false,
                         "is_optional": true,
-                        "is_resolved": true
+                        "is_pinned": true
                     }
                 ],
                 "resources": "https://public.purldb.io/api/packages/0bbdcf88-ad07-4970-9272-7d5f4c82cc7b/resources/",
@@ -321,7 +321,7 @@ The package details view returns all information available about a package.
                 "scope": "compile",
                 "is_runtime": false,
                 "is_optional": true,
-                "is_resolved": true
+                "is_pinned": true
             },
             {
                 "purl": "pkg:maven/org.elasticsearch/elasticsearch-core@7.17.9",
@@ -329,7 +329,7 @@ The package details view returns all information available about a package.
                 "scope": "compile",
                 "is_runtime": false,
                 "is_optional": true,
-                "is_resolved": true
+                "is_pinned": true
             }
         ],
         "resources": "https://public.purldb.io/api/packages/0bbdcf88-ad07-4970-9272-7d5f4c82cc7b/resources/",
@@ -506,7 +506,7 @@ Using cURL to get enhanced package data:
                 "scope": "compile",
                 "is_runtime": false,
                 "is_optional": true,
-                "is_resolved": true
+                "is_pinned": true
             },
             {
                 "purl": "pkg:maven/org.elasticsearch/elasticsearch-core@7.17.9",
@@ -514,7 +514,7 @@ Using cURL to get enhanced package data:
                 "scope": "compile",
                 "is_runtime": false,
                 "is_optional": true,
-                "is_resolved": true
+                "is_pinned": true
             }
         ],
         "package_uid": "pkg:maven/org.elasticsearch/elasticsearch-cli@7.17.9?uuid=0bbdcf88-ad07-4970-9272-7d5f4c82cc7b",
@@ -855,7 +855,7 @@ package. Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/l
                     "scope": "dependencies",
                     "is_runtime": true,
                     "is_optional": false,
-                    "is_resolved": false
+                    "is_pinned": false
                 },
                 {
                     "purl": "pkg:npm/mocha",
@@ -863,7 +863,7 @@ package. Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/l
                     "scope": "devDependencies",
                     "is_runtime": false,
                     "is_optional": true,
-                    "is_resolved": false
+                    "is_pinned": false
                 },
                 {
                     "purl": "pkg:npm/should",
@@ -871,7 +871,7 @@ package. Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/l
                     "scope": "devDependencies",
                     "is_runtime": false,
                     "is_optional": true,
-                    "is_resolved": false
+                    "is_pinned": false
                 },
                 {
                     "purl": "pkg:npm/supertest",
@@ -879,7 +879,7 @@ package. Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/l
                     "scope": "devDependencies",
                     "is_runtime": false,
                     "is_optional": true,
-                    "is_resolved": false
+                    "is_pinned": false
                 }
             ],
             "resources": "https://public.purldb.io/api/packages/4f3a57de-e367-43c6-a7f1-51633d0ecd45/resources/",
@@ -1190,7 +1190,7 @@ Return a list of package sets and the package data of packages within
                                 "scope": "compile",
                                 "is_runtime": false,
                                 "is_optional": true,
-                                "is_resolved": false
+                                "is_pinned": false
                             },
                             {
                                 "purl": "pkg:maven/org.opendaylight.yangtools/concepts",
@@ -1198,7 +1198,7 @@ Return a list of package sets and the package data of packages within
                                 "scope": "compile",
                                 "is_runtime": false,
                                 "is_optional": true,
-                                "is_resolved": false
+                                "is_pinned": false
                             },
                             {
                                 "purl": "pkg:maven/org.opendaylight.yangtools/yang-common",
@@ -1206,7 +1206,7 @@ Return a list of package sets and the package data of packages within
                                 "scope": "compile",
                                 "is_runtime": false,
                                 "is_optional": true,
-                                "is_resolved": false
+                                "is_pinned": false
                             },
                             {
                                 "purl": "pkg:maven/org.opendaylight.yangtools/yang-data-api",
@@ -1214,7 +1214,7 @@ Return a list of package sets and the package data of packages within
                                 "scope": "compile",
                                 "is_runtime": false,
                                 "is_optional": true,
-                                "is_resolved": false
+                                "is_pinned": false
                             },
                             {
                                 "purl": "pkg:maven/org.opendaylight.yangtools/yang-data-spi",
@@ -1222,7 +1222,7 @@ Return a list of package sets and the package data of packages within
                                 "scope": "compile",
                                 "is_runtime": false,
                                 "is_optional": true,
-                                "is_resolved": false
+                                "is_pinned": false
                             },
                             {
                                 "purl": "pkg:maven/org.opendaylight.yangtools/yang-model-api",
@@ -1230,7 +1230,7 @@ Return a list of package sets and the package data of packages within
                                 "scope": "compile",
                                 "is_runtime": false,
                                 "is_optional": true,
-                                "is_resolved": false
+                                "is_pinned": false
                             },
                             {
                                 "purl": "pkg:maven/org.opendaylight.yangtools/yang-model-spi",
@@ -1238,7 +1238,7 @@ Return a list of package sets and the package data of packages within
                                 "scope": "compile",
                                 "is_runtime": false,
                                 "is_optional": true,
-                                "is_resolved": false
+                                "is_pinned": false
                             },
                             {
                                 "purl": "pkg:maven/org.opendaylight.yangtools/yang-parser-api",
@@ -1246,7 +1246,7 @@ Return a list of package sets and the package data of packages within
                                 "scope": "compile",
                                 "is_runtime": false,
                                 "is_optional": true,
-                                "is_resolved": false
+                                "is_pinned": false
                             },
                             {
                                 "purl": "pkg:maven/org.opendaylight.yangtools/rfc8528-data-api",
@@ -1254,7 +1254,7 @@ Return a list of package sets and the package data of packages within
                                 "scope": "compile",
                                 "is_runtime": false,
                                 "is_optional": true,
-                                "is_resolved": false
+                                "is_pinned": false
                             },
                             {
                                 "purl": "pkg:maven/org.opendaylight.yangtools/rfc8528-model-api",
@@ -1262,7 +1262,7 @@ Return a list of package sets and the package data of packages within
                                 "scope": "compile",
                                 "is_runtime": false,
                                 "is_optional": true,
-                                "is_resolved": false
+                                "is_pinned": false
                             }
                         ],
                         "resources": "https://public.purldb.io/api/packages/8a433f5e-372c-4fe1-9fc3-1027ecc9678b/resources/",

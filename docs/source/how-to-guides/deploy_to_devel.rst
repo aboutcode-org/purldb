@@ -262,7 +262,7 @@ present in the binary and not present in the sources.
             "total": 0,
             "is_runtime": 0,
             "is_optional": 0,
-            "is_resolved": 0
+            "is_pinned": 0
         },
         "codebase_relations_summary": {
             "java_to_class": 34,
