@@ -552,7 +552,6 @@ class Package(
 
     # TODO: Think about ordering, unique together, indexes, etc.
     class Meta:
-        ordering = ["id"]
         unique_together = [
             (
                 "download_url",
@@ -1144,7 +1143,6 @@ class Resource(
 
     class Meta:
         unique_together = (("package", "path"),)
-        ordering = ("id",)
         indexes = [
             models.Index(fields=["md5"]),
             models.Index(fields=["sha1"]),
