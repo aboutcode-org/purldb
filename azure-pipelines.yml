@@ -39,7 +39,7 @@ jobs:
           image_name: ubuntu-22.04
           python_versions: ['3.10']
           test_suites:
-              all: make check_docs
+              all: make docs check_docs
 
     - template: etc/ci/azure-posix.yml
       parameters:
