@@ -32,7 +32,7 @@
         "matches":[
           {
             "license_expression":"unknown",
-            "spdx_license_expression":"LicenseRef-scancode-unknown",
+            "license_expression_spdx":"LicenseRef-scancode-unknown",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -99,7 +99,7 @@
         "matches":[
           {
             "license_expression":"proprietary-license",
-            "spdx_license_expression":"LicenseRef-scancode-proprietary-license",
+            "license_expression_spdx":"LicenseRef-scancode-proprietary-license",
             "from_file":null,
             "start_line":1,
             "end_line":1,
@@ -166,7 +166,7 @@
         "matches":[
           {
             "license_expression":"proprietary-license",
-            "spdx_license_expression":"LicenseRef-scancode-proprietary-license",
+            "license_expression_spdx":"LicenseRef-scancode-proprietary-license",
             "from_file":null,
             "start_line":1,
             "end_line":1,
