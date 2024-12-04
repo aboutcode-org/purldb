@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 by nexB, Inc. http://www.nexb.com/ - All rights reserved.
+# Copyright (c) by nexB, Inc. http://www.nexb.com/ - All rights reserved.
 #
 
 import logging
@@ -12,6 +12,7 @@ from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import ExactFileIndex
+from matchcode.models import SnippetIndex
 from minecode.management.commands import get_error_message
 from minecode.model_utils import update_or_create_resource
 from minecode.models import ScannableURI
@@ -38,6 +39,7 @@ def index_package_files(package, scan_data, reindex=False):
         package.approximatedirectorystructureindex_set.all().delete()
         package.approximateresourcecontentindex_set.all().delete()
         package.exactfileindex_set.all().delete()
+        package.snippetindex.all().delete()
         package.resources.all().delete()
 
     scan_index_errors = []
@@ -53,20 +55,20 @@ def index_package_files(package, scan_data, reindex=False):
                 _, _ = ExactFileIndex.index(sha1=sha1, package=package)
 
             resource_extra_data = resource.get("extra_data", {})
+
             directory_content_fingerprint = resource_extra_data.get(
                 "directory_content", ""
             )
-            directory_structure_fingerprint = resource_extra_data.get(
-                "directory_structure", ""
-            )
-            halo1 = resource_extra_data.get("halo1", "")
-
             if directory_content_fingerprint:
                 _, _ = ApproximateDirectoryContentIndex.index(
                     fingerprint=directory_content_fingerprint,
                     resource_path=path,
                     package=package,
                 )
+
+            directory_structure_fingerprint = resource_extra_data.get(
+                "directory_structure", ""
+            )
 
             if directory_structure_fingerprint:
                 _, _ = ApproximateDirectoryStructureIndex.index(
@@ -75,12 +77,25 @@ def index_package_files(package, scan_data, reindex=False):
                     package=package,
                 )
 
+            halo1 = resource_extra_data.get("halo1", "")
             if halo1:
                 _, _ = ApproximateResourceContentIndex.index(
                     fingerprint=halo1,
                     resource_path=path,
                     package=package,
                 )
+
+            snippets = resource_extra_data.get("snippets", [])
+            if snippets:
+                for s in snippets:
+                    snippet = s["snippet"]
+                    position = s["position"]
+                    _, _ = SnippetIndex.index(
+                        fingerprint=snippet,
+                        position=position,
+                        resource=r,
+                        package=package,
+                    )
 
     except Exception as e:
         msg = get_error_message(e)
