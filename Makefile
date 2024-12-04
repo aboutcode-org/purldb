@@ -57,15 +57,11 @@ envfile:
 	@mkdir -p $(shell dirname ${ENV_FILE}) && touch ${ENV_FILE}
 	@echo SECRET_KEY=\"${GET_SECRET_KEY}\" > ${ENV_FILE}
 
-envfile_testing: envfile	
+envfile_testing: envfile
 	@echo PACKAGEDB_DB_USER=\"postgres\" >> ${ENV_FILE}
 	@echo PACKAGEDB_DB_PASSWORD=\"postgres\" >> ${ENV_FILE}
 	@echo SCANCODEIO_DB_USER=\"postgres\" >> ${ENV_FILE}
 	@echo SCANCODEIO_DB_PASSWORD=\"postgres\" >> ${ENV_FILE}
-
-doc8:
-	@echo "-> Run doc8 validation"
-	@${ACTIVATE} doc8 --max-line-length 100 --ignore-path docs/_build/ --quiet docs/
 
 valid:
 	@echo "-> Run Ruff format"
@@ -73,12 +69,11 @@ valid:
 	@echo "-> Run Ruff linter"
 	@${ACTIVATE} ruff check --fix --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
 
-check:
+check: check_docs
 	@echo "-> Run Ruff linter validation (pycodestyle, bandit, isort, and more)"
 	@${ACTIVATE} ruff check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
 	@echo "-> Run Ruff format validation"
 	@${ACTIVATE} ruff format --check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
-	@$(MAKE) doc8
 
 clean:
 	@echo "-> Clean the Python env"
@@ -126,14 +121,13 @@ run_map:
 	${MANAGE} run_map
 
 test_purldb:
-	${ACTIVATE} ${DJSM_PDB} ${PYTHON_EXE} -m pytest -vvs minecode packagedb purl2vcs purldb_project purldb_public_project --ignore packagedb/tests/test_throttling.py 
-	${ACTIVATE} ${DJSM_PDB} ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
+	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf minecode packagedb purl2vcs purldb_project purldb_public_project --ignore packagedb/tests/test_throttling.py 
+	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf packagedb/tests/test_throttling.py
 
 test_toolkit:
-	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs purldb-toolkit/
+	${ACTIVATE} pytest -vvs purldb-toolkit/
 
-test_clearcode:        # create
-
+test_clearcode:
 	${ACTIVATE} ${DJSM_PDB} ${PYTHON_EXE} -m pytest -vvs clearcode clearindex
 
 test_matchcode:
@@ -168,7 +162,7 @@ check_docs:
 	@echo "Check Sphinx Documentation build minimally"
 	@${ACTIVATE} sphinx-build -E -W docs/source build
 	@echo "Check for documentation style errors"
-	@${ACTIVATE} doc8 --max-line-length 100 docs/source --ignore D000 --quiet
+	@${ACTIVATE} doc8 --max-line-length 100 docs/source --ignore-path docs/_build/ --ignore D000 --quiet
 
 docker-images:
 	@echo "-> Build Docker services"
@@ -179,4 +173,5 @@ docker-images:
 	@mkdir -p dist/
 	@docker save minecode minecode_minecode nginx | gzip > dist/minecode-images-`git describe --tags`.tar.gz
 
-.PHONY: virtualenv conf dev envfile isort black doc8 valid check clean migrate postgres run test shell clearsync clearindex index_packages bump docs docker-images test_purldb test_matchcode test_toolkit test_clearcode
+# keep this sorted
+.PHONY: black bump check check_docs clean `clearindex clearsync conf dev docker-images docs envfile envfile_testing index_packages isort migrate postgres postgres_matchcodeio priority_queue run run_map run_matchcodeio run_visit seed shell test test_clearcode test_matchcode test_purldb test_toolkit valid virtualenv
