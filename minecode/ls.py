@@ -182,10 +182,7 @@ def parse_directory_listing(dir_listing, from_find=False):
             # this is likely a directory line from an ls -LR listing. Strip
             # trailing colon and keep track of the base directory
             if not line.endswith(":"):
-                raise Exception(
-                    "Unknown directory listing line format: #%(ln)d: %(line)r"
-                    % locals()
-                )
+                raise Exception(f"Unknown directory listing line format: #{ln}: {line}")
             base_dir = line.strip(":")
             continue
 
