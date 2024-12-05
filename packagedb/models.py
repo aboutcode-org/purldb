@@ -174,6 +174,7 @@ class HashFieldsMixin(models.Model):
         max_length=32,
         blank=True,
         null=True,
+        db_index=True,
         help_text=_("MD5 checksum hex-encoded, as in md5sum."),
     )
     sha1 = models.CharField(
@@ -181,6 +182,7 @@ class HashFieldsMixin(models.Model):
         max_length=40,
         blank=True,
         null=True,
+        db_index=True,
         help_text=_("SHA1 checksum hex-encoded, as in sha1sum."),
     )
     sha256 = models.CharField(
@@ -188,6 +190,7 @@ class HashFieldsMixin(models.Model):
         max_length=64,
         blank=True,
         null=True,
+        db_index=True,
         help_text=_("SHA256 checksum hex-encoded, as in sha256sum."),
     )
     sha512 = models.CharField(
@@ -195,6 +198,7 @@ class HashFieldsMixin(models.Model):
         max_length=128,
         blank=True,
         null=True,
+        db_index=True,
         help_text=_("SHA512 checksum hex-encoded, as in sha512sum."),
     )
 
@@ -552,6 +556,7 @@ class Package(
 
     # TODO: Think about ordering, unique together, indexes, etc.
     class Meta:
+        ordering = ["id"]
         unique_together = [
             (
                 "download_url",
@@ -1143,6 +1148,7 @@ class Resource(
 
     class Meta:
         unique_together = (("package", "path"),)
+        ordering = ("id",)
         indexes = [
             models.Index(fields=["md5"]),
             models.Index(fields=["sha1"]),

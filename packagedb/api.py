@@ -258,12 +258,18 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
             d = {f"{field}__in": value}
             lookups |= Q(**d)
 
-        qs = Resource.objects.filter(lookups).select_related("package").defer("package__history")
+        qs = (
+            Resource.objects.filter(lookups)
+            .select_related("package")
+            .only("package__uuid")
+            .order_by()
+        )
         paginated_qs = self.paginate_queryset(qs)
         serializer = ResourceAPISerializer(
             paginated_qs, many=True, context={"request": request}
         )
-        return self.get_paginated_response(serializer.data)
+        paginated_response = self.get_paginated_response(serializer.data)
+        return paginated_response
 
 
 class MultiplePackageURLFilter(MultipleCharFilter):
@@ -485,7 +491,7 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
             )
 
         # Query to get the full Package objects with the earliest release_date for each sha1
-        qs = Package.objects.filter(lookups)
+        qs = Package.objects.filter(lookups).order_by()
         paginated_qs = self.paginate_queryset(qs)
         if enhance_package_data:
             serialized_package_data = [
