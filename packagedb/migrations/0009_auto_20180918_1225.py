@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('scope', models.CharField(blank=True, help_text='The scope of this dependency, such as runtime, install, etc. This is package-type specific and is the original scope string.', max_length=100, null=True)),
                 ('is_runtime', models.BooleanField(default=True, help_text='True if this dependency is a runtime dependency.')),
                 ('is_optional', models.BooleanField(default=False, help_text='True if this dependency is an optional dependency')),
-                ('is_pinned', models.BooleanField(default=False, help_text='True if this dependency version requirement has been resolved and this dependency url points to an exact version.')),
+                ('is_resolved', models.BooleanField(default=False, help_text='True if this dependency version requirement has been resolved and this dependency url points to an exact version.')),
             ],
         ),
         migrations.CreateModel(
