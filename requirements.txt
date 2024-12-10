@@ -168,4 +168,4 @@ wheel==0.43.0
 wrapt==1.16.0
 XlsxWriter==3.2.0
 xmltodict==0.13.0
-zipp==3.20
+zipp==3.21.0
