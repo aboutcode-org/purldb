@@ -32,9 +32,9 @@ django-crispy-forms==2.3
 django-environ==0.11.2
 django-filter==24.3
 django-probes==1.7.0
+djangorestframework==3.15.2
 django-rq==2.10.2
 django-taggit==6.1.0
-djangorestframework==3.15.2
 dockerfile-parse==2.0.1
 dparse2==0.7.0
 drf-spectacular==0.27.2
@@ -100,7 +100,6 @@ ply==3.11
 psycopg==3.2.3
 psycopg-binary==3.2.3
 publicsuffix2==2.20191221
-py-serializable==1.1.2
 pyahocorasick==2.1.0
 pycparser==2.22
 pyelftools==0.31
@@ -112,6 +111,7 @@ PyJWT==2.9.0
 pymaven-patch==0.3.2
 PyNaCl==1.5.0
 pyparsing==3.2.0
+py-serializable==1.1.2
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python-inspector==0.12.1
@@ -130,8 +130,8 @@ rq==1.16.2
 rq-scheduler==0.13.1
 rubymarshal==1.0.3
 saneyaml==0.6.1
-scancode-toolkit==32.3.0
 scancodeio @ git+https://github.com/aboutcode-org/scancode.io.git@a670c4e2de3bcffba7040c29be18dad5734dfe0a
+scancode-toolkit==32.3.0
 semantic-version==2.10.0
 semver==3.0.2
 setuptools==72.1.0
