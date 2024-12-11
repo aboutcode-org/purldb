@@ -48,6 +48,7 @@ from minecode.models import PriorityResourceURI
 from minecode.route import NoRouteAvailable
 from packagedb.filters import PackageSearchFilter
 from packagedb.models import Package
+from packagedb.models import PackageActivity
 from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
 from packagedb.models import PackageWatch
@@ -59,6 +60,7 @@ from packagedb.serializers import CollectPackageSerializer
 from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import IndexPackagesResponseSerializer
 from packagedb.serializers import IndexPackagesSerializer
+from packagedb.serializers import PackageActivitySerializer
 from packagedb.serializers import PackageAPISerializer
 from packagedb.serializers import PackageSetAPISerializer
 from packagedb.serializers import PackageWatchAPISerializer
@@ -1409,3 +1411,9 @@ VERSION_CLASS_BY_PACKAGE_TYPE = {
     pkg_type: range_class.version_class
     for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()
 }
+
+
+class PackageActivityViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = PackageActivity.objects.get_queryset().order_by("-creation_date")
+    serializer_class = PackageActivitySerializer
+    lookup_field = "uuid"
