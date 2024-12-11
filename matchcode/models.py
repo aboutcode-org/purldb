@@ -25,7 +25,7 @@ from licensedcode.spans import Span
 from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode_toolkit.fingerprinting import split_fingerprint
-from matchcode_toolkit.halohash import byte_hamming_distance
+from samecode.halohash import byte_hamming_distance
 
 from minecode.management.commands import get_error_message
 from packagedb.models import Package

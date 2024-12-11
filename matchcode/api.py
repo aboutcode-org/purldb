@@ -15,7 +15,7 @@ from django_filters.rest_framework import FilterSet
 from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode_toolkit.fingerprinting import split_fingerprint
-from matchcode_toolkit.halohash import byte_hamming_distance
+from samecode.halohash import byte_hamming_distance
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.serializers import CharField
