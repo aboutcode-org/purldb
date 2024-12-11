@@ -11,7 +11,7 @@
 from django.core.management.base import BaseCommand
 
 from aboutcode.federatedcode.client import subscribe_package
-
+from purldb_project import settings
 
 class Command(BaseCommand):
     help = "Subscribe package for their metadata update from FederatedCode."
@@ -24,8 +24,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         purl = options.get("purl")
 
-        federatedcode_host = "http://127.0.0.1:8000/"
-        remote_username = "purldb"
+        federatedcode_host = settings.FEDERATEDCODE_HOST_URL
+        remote_username = settings.FEDERATEDCODE_PURLDB_REMOTE_USERNAME
+
+        if not (federatedcode_host and remote_username):
+            raise ValueError("FederatedCode env variable not configured.")
 
         response = subscribe_package(federatedcode_host, remote_username, purl)
 
