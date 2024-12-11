@@ -17,6 +17,7 @@ from django.forms import widgets
 from django.forms.fields import MultipleChoiceField
 
 import django_filters
+from aboutcode.federatedcode.contrib.django import utils
 from django_filters.filters import Filter
 from django_filters.filters import MultipleChoiceFilter
 from django_filters.filters import OrderingFilter
@@ -34,6 +35,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
+from rest_framework.views import APIView
 from univers.version_constraint import InvalidConstraintsError
 from univers.version_range import RANGE_CLASS_BY_SCHEMES
 from univers.version_range import VersionRange
@@ -1417,3 +1419,24 @@ class PackageActivityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PackageActivity.objects.get_queryset().order_by("-creation_date")
     serializer_class = PackageActivitySerializer
     lookup_field = "uuid"
+
+
+class PackageActivityListenerView(APIView):
+    def post(self, request):
+        activity_type = utils.get_package_activity_type(request.data)
+        content = utils.get_package_activity_content(request.data)
+        author = utils.get_package_activity_author(request.data)
+        update_date = utils.get_package_activity_update_date(request.data)
+
+        if content and activity_type.lower() == "create":
+            PackageActivity.objects.create(
+                author=author,
+                content=content,
+                activity_update_date=update_date,
+            )
+            return Response(status=status.HTTP_200_OK)
+
+        return Response(
+            {"error": "Invalid JSON"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
