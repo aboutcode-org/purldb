@@ -269,6 +269,7 @@ class ApproximateMatchingHashMixin(PackageRelatedMixin, models.Model):
 
         # Step 2: calculate Hamming distance of all matches
 
+        hamming_distance_threshold = 10
         # Store all close matches in a dictionary of querysets
         matches_by_hamming_distance = defaultdict(cls.objects.none)
         for match in matches:
@@ -281,7 +282,8 @@ class ApproximateMatchingHashMixin(PackageRelatedMixin, models.Model):
             hd = byte_hamming_distance(bah128, match_bah128)
 
             # TODO: try other thresholds if this is too restrictive
-            if hd < 8:
+            # TODO: rank matches instead of having threshold
+            if hd < hamming_distance_threshold:
                 # Save match to `matches_by_hamming_distance` by adding the matched object
                 # to the queryset
                 matches_by_hamming_distance[hd] |= cls.objects.filter(pk=match.pk)
