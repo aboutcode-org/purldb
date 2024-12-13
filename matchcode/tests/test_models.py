@@ -871,7 +871,12 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         )
         fingerprints = get_file_fingerprint_hashes(test_file_loc)
         snippets = fingerprints["snippets"]
-        match = SnippetIndex.match(
+        matches = SnippetIndex.match(
             fingerprints=snippets,
         )
-
+        assert len(matches) == 1
+        match = matches[0]
+        assert match.resource == self.test_resource1
+        assert match.package == self.test_package1
+        assert match.fingerprints_count == 58
+        assert match.similarity == 0.9666666666666667
