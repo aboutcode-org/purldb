@@ -11,7 +11,9 @@
 from django.core.management.base import BaseCommand
 
 from aboutcode.federatedcode.client import subscribe_package
+
 from purldb_project import settings
+
 
 class Command(BaseCommand):
     help = "Subscribe package for their metadata update from FederatedCode."
