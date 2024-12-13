@@ -408,8 +408,10 @@ class PackageSnippetMatch(NamedTuple):
 
 class ResourceSnippetMatch(NamedTuple):
     resource: Resource
+    package: Package
     fingerprints: list["SnippetIndex"]
     fingerprints_count: int
+    similarity: float
 
 
 class SnippetIndex(PackageRelatedMixin, models.Model):
@@ -446,11 +448,12 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         was created or not.
         """
         try:
+            fp = hexstring_to_binarray(fingerprint)
             hi, created = cls.objects.get_or_create(
                 package=package,
                 position=position,
                 resource=resource,
-                fingerprint=fingerprint,
+                fingerprint=fp,
             )
             if created:
                 logger.info(
@@ -466,7 +469,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
             logger.error(msg)
 
     @classmethod
-    def match(cls, fingerprints, resource, package):
+    def match(cls, fingerprints):
         """
         Return a list of PackageSnippetMatch for matched Package.
         """
@@ -476,36 +479,41 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
                 "match:",
                 "fingerprints:",
                 fingerprints,
-                "resource:",
-                resource,
-                "purl:",
-                package.package_url,
+
             )
 
         if not fingerprints:
             return cls.objects.none()
 
         # strip positions
-        only_fings = [fing for _pos, fing in fingerprints]
+        only_fings = [hexstring_to_binarray(fing["snippet"]) for fing in fingerprints]
 
         # Step 0: get all fingerprint records that match whith the input
         matched_fps = cls.objects.filter(fingerprint__in=only_fings)
 
-        # Step 1: count Packages whose fingerprints appear
-        # Step 1.1: get Packages that show up in the query
-        packages = set(f.package for f in matched_fps.iterator())
+        # Step 1: get Resources that show up in the query
+        resources = set(f.resource for f in matched_fps.iterator())
 
-        # Step 1.2: group matched Packages and fingerprints with count
-        matches = []
-        for package in packages:
-            match_fingerprints = matched_fps.filter(package=package)
-            matches.append(
-                PackageSnippetMatch(
-                    package=package,
-                    fingerprints=match_fingerprints,
-                    fingerprints_count=match_fingerprints.count(),
+        # Step 2: see which Resource we most match to by calculating jaccard coefficient of our fingerprints against the others
+        matches_by_jc = defaultdict(list)
+        for r in resources:
+            r_snippets = SnippetIndex.objects.filter(resource=r)
+            matching_snippets = r_snippets.filter(fingerprint__in=only_fings)
+            jc = len(matching_snippets) / ((len(fingerprints) + len(r_snippets)) / 2)
+            matches_by_jc[jc].append(
+                ResourceSnippetMatch(
+                    resource=r,
+                    package=r.package,
+                    fingerprints=matching_snippets,
+                    fingerprints_count=matching_snippets.count(),
+                    similarity=jc
                 )
             )
+
+        # Step 3: order results from highest coefficient to lowest
+        matches = []
+        for jc, m in sorted(matches_by_jc.items(), reverse=True):
+            matches.extend(m)
 
         return matches
 
