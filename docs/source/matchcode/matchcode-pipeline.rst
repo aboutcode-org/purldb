@@ -1,5 +1,6 @@
-Code Matching
-=============
+===========================
+  Code Matching pipeline
+===========================
 
 The aim of this tutorial is to show how to use the MatchCode.io API to perform
 code matching on an archive of files.
@@ -7,8 +8,10 @@ code matching on an archive of files.
 
 .. note::
     This tutorial assumes that you have a working installation of PurlDB. If you
+
     don't, please refer to the :ref:`installation`page.
     
+
 Throughout this tutorial, we will use ``pkg:npm/deep-equal@1.0.1`` and a
 modified copy of ``index.js`` from it.
 

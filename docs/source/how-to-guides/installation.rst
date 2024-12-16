@@ -1,14 +1,16 @@
+
 .. _installation:
+
 
 Installation
 ============
 
-This article will detail the steps needed to set up a PurlDB instance with
-MatchCode and package scanning using Docker.
+This article details the steps needed to set up a PurlDB instance with MatchCode and package
+scanning using Docker.
 
-MatchCode.io requires that it is installed and running alongside an instance of
-PurlDB, as it needs direct access to PurlDB's data. This is done by running the
-PurlDB and MatchCode.io services on the same Docker network.
+MatchCode.io requires that it is installed and running alongside an instance of PurlDB, as it needs
+direct access to PurlDB's data. This is done by running the PurlDB and MatchCode.io services on the
+same Docker network.
 
 .. code-block:: console
 

@@ -174,6 +174,7 @@ class HashFieldsMixin(models.Model):
         max_length=32,
         blank=True,
         null=True,
+        db_index=True,
         help_text=_("MD5 checksum hex-encoded, as in md5sum."),
     )
     sha1 = models.CharField(
@@ -181,6 +182,7 @@ class HashFieldsMixin(models.Model):
         max_length=40,
         blank=True,
         null=True,
+        db_index=True,
         help_text=_("SHA1 checksum hex-encoded, as in sha1sum."),
     )
     sha256 = models.CharField(
@@ -188,6 +190,7 @@ class HashFieldsMixin(models.Model):
         max_length=64,
         blank=True,
         null=True,
+        db_index=True,
         help_text=_("SHA256 checksum hex-encoded, as in sha256sum."),
     )
     sha512 = models.CharField(
@@ -195,6 +198,7 @@ class HashFieldsMixin(models.Model):
         max_length=128,
         blank=True,
         null=True,
+        db_index=True,
         help_text=_("SHA512 checksum hex-encoded, as in sha512sum."),
     )
 
@@ -679,7 +683,7 @@ class Package(
                                 scope=dep_data.get("scope"),
                                 is_runtime=dep_data.get("is_runtime"),
                                 is_optional=dep_data.get("is_optional"),
-                                is_resolved=dep_data.get("is_resolved"),
+                                is_pinned=dep_data.get("is_pinned"),
                             )
                         elif isinstance(dep_data, DependentPackage):
                             dep = dep_data
@@ -923,7 +927,7 @@ class DependentPackage(models.Model):
         default=False, help_text=_("True if this dependency is an optional dependency")
     )
 
-    is_resolved = models.BooleanField(
+    is_pinned = models.BooleanField(
         default=False,
         help_text=_(
             "True if this dependency version requirement has "

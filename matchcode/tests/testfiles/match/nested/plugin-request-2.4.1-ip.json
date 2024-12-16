@@ -135,7 +135,7 @@
               "scope": "dependencies",
               "is_runtime": true,
               "is_optional": false,
-              "is_resolved": false
+              "is_pinned": false
             },
             {
               "purl": "pkg:npm/umi-request",
@@ -143,7 +143,7 @@
               "scope": "dependencies",
               "is_runtime": true,
               "is_optional": false,
-              "is_resolved": false
+              "is_pinned": false
             },
             {
               "purl": "pkg:npm/umi",
@@ -151,7 +151,7 @@
               "scope": "peerDependencies",
               "is_runtime": true,
               "is_optional": false,
-              "is_resolved": false
+              "is_pinned": false
             }
           ],
           "contains_source_code": null,

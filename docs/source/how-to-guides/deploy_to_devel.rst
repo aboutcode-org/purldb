@@ -13,7 +13,9 @@ directly or through a command line purlcli tool sub-command.
 
 .. note::
     This tutorial assumes that you have a working installation of PurlDB and MatchCode.io
+
     If you don't, please refer to the :ref:`installation` page.
+
 
 
 Why mapping binary back to sources?
@@ -262,7 +264,7 @@ present in the binary and not present in the sources.
             "total": 0,
             "is_runtime": 0,
             "is_optional": 0,
-            "is_resolved": 0
+            "is_pinned": 0
         },
         "codebase_relations_summary": {
             "java_to_class": 34,

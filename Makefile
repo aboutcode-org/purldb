@@ -16,11 +16,18 @@ ACTIVATE?=. ${VENV}/bin/activate;
 VIRTUALENV_PYZ=../etc/thirdparty/virtualenv.pyz
 # Do not depend on Python to generate the SECRET_KEY
 GET_SECRET_KEY=`base64 /dev/urandom | head -c50`
+
 # Customize with `$ make envfile ENV_FILE=/etc/purldb/.env`
 ENV_FILE=.env
+
 # Customize with `$ make postgres PACKAGEDB_DB_PASSWORD=YOUR_PASSWORD`
 PACKAGEDB_DB_PASSWORD=packagedb
 MATCHCODEIO_DB_PASSWORD=matchcodeio
+SCANCODEIO_DB_PASSWORD=scancodeio
+
+# Django settings shortcuts
+DJSM_PDB=DJANGO_SETTINGS_MODULE=purldb_project.settings
+DJSM_MAT=DJANGO_SETTINGS_MODULE=matchcode_project.settings
 
 # Use sudo for postgres, but only on Linux
 UNAME := $(shell uname)
@@ -56,22 +63,17 @@ envfile_testing: envfile
 	@echo SCANCODEIO_DB_USER=\"postgres\" >> ${ENV_FILE}
 	@echo SCANCODEIO_DB_PASSWORD=\"postgres\" >> ${ENV_FILE}
 
-doc8:
-	@echo "-> Run doc8 validation"
-	@${ACTIVATE} doc8 --max-line-length 100 --ignore-path docs/_build/ --quiet docs/
-
 valid:
 	@echo "-> Run Ruff format"
 	@${ACTIVATE} ruff format  --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
 	@echo "-> Run Ruff linter"
 	@${ACTIVATE} ruff check --fix --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
 
-check:
+check: check_docs
 	@echo "-> Run Ruff linter validation (pycodestyle, bandit, isort, and more)"
 	@${ACTIVATE} ruff check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
 	@echo "-> Run Ruff format validation"
 	@${ACTIVATE} ruff format --check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
-	@$(MAKE) doc8
 
 clean:
 	@echo "-> Clean the Python env"
@@ -102,7 +104,7 @@ postgres_matchcodeio:
 	@echo "-> Create 'matchcodeio' database"
 	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=matchcodeio matchcodeio
 	${MATCHCODE_MANAGE} migrate
-
+	
 run:
 	${MANAGE} runserver 8001 --insecure
 
@@ -118,13 +120,20 @@ run_visit: seed
 run_map:
 	${MANAGE} run_map
 
-test:
-	@echo "-> Run the test suite"
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs --ignore matchcode_pipeline --ignore matchcode_project --ignore purldb-toolkit --ignore packagedb/tests/test_throttling.py
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs packagedb/tests/test_throttling.py
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=matchcode_project.settings ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline
-	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs purldb-toolkit/
-	${ACTIVATE} DJANGO_SETTINGS_MODULE=purldb_project.settings ${PYTHON_EXE} -m pytest -vvs purl2vcs
+test_purldb:
+	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf minecode packagedb purl2vcs purldb_project purldb_public_project --ignore packagedb/tests/test_throttling.py 
+	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf packagedb/tests/test_throttling.py
+
+test_toolkit:
+	${ACTIVATE} pytest -vvs purldb-toolkit/
+
+test_clearcode:
+	${ACTIVATE} ${DJSM_PDB} ${PYTHON_EXE} -m pytest -vvs clearcode clearindex
+
+test_matchcode:
+	${ACTIVATE} ${DJSM_MAT} ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline matchcode-toolkit matchcode
+
+test: test_purldb test_matchcode test_toolkit test_clearcode
 
 shell:
 	${MANAGE} shell
@@ -153,7 +162,7 @@ check_docs:
 	@echo "Check Sphinx Documentation build minimally"
 	@${ACTIVATE} sphinx-build -E -W docs/source build
 	@echo "Check for documentation style errors"
-	@${ACTIVATE} doc8 --max-line-length 100 docs/source --ignore D000 --quiet
+	@${ACTIVATE} doc8 --max-line-length 100 docs/source --ignore-path docs/_build/ --ignore D000 --quiet
 
 docker-images:
 	@echo "-> Build Docker services"
@@ -164,4 +173,5 @@ docker-images:
 	@mkdir -p dist/
 	@docker save minecode minecode_minecode nginx | gzip > dist/minecode-images-`git describe --tags`.tar.gz
 
-.PHONY: virtualenv conf dev envfile isort black doc8 valid check clean migrate postgres run test shell clearsync clearindex index_packages bump docs docker-images
+# keep this sorted
+.PHONY: black bump check check_docs clean `clearindex clearsync conf dev docker-images docs envfile envfile_testing index_packages isort migrate postgres postgres_matchcodeio priority_queue run run_map run_matchcodeio run_visit seed shell test test_clearcode test_matchcode test_purldb test_toolkit valid virtualenv
