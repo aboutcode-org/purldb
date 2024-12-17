@@ -496,7 +496,9 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         # Step 1.2: group matched Packages and fingerprints with count
         matches = []
         for package in packages:
-            match_fingerprints = matched_fps.filter(package=package)
+            match_fingerprints = matched_fps.filter(package=package).distinct(
+                "fingerprint"
+            )
             matches.append(
                 PackageSnippetMatch(
                     package=package,
@@ -538,9 +540,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         matches_by_jc = defaultdict(list)
         for r in resources:
             # Get unique snippet fingerprints for this Resource
-            r_snippets = (
-                SnippetIndex.objects.filter(resource=r).distinct("fingerprint")
-            )
+            r_snippets = SnippetIndex.objects.filter(resource=r).distinct("fingerprint")
             matching_snippets = r_snippets.filter(fingerprint__in=only_fings)
             r_snippets_count = r_snippets.count()
             matching_snippets_count = matching_snippets.count()
