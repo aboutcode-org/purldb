@@ -10,7 +10,6 @@
 import binascii
 import logging
 import sys
-from collections import Counter
 from collections import defaultdict
 from datetime import datetime
 from difflib import SequenceMatcher
@@ -479,7 +478,47 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
                 "match:",
                 "fingerprints:",
                 fingerprints,
+            )
 
+        if not fingerprints:
+            return cls.objects.none()
+
+        # strip positions
+        only_fings = [hexstring_to_binarray(fing["snippet"]) for fing in fingerprints]
+
+        # Step 0: get all fingerprint records that match whith the input
+        matched_fps = cls.objects.filter(fingerprint__in=only_fings)
+
+        # Step 1: count Packages whose fingerprints appear
+        # Step 1.1: get Packages that show up in the query
+        packages = set(f.package for f in matched_fps.iterator())
+
+        # Step 1.2: group matched Packages and fingerprints with count
+        matches = []
+        for package in packages:
+            match_fingerprints = matched_fps.filter(package=package)
+            matches.append(
+                PackageSnippetMatch(
+                    package=package,
+                    fingerprints=match_fingerprints,
+                    fingerprints_count=match_fingerprints.count(),
+                )
+            )
+
+        return matches
+
+    @classmethod
+    def match_resources(cls, fingerprints, top=None):
+        """
+        Return a list of ResourceSnippetMatch for matched Resources.
+        Only return the ``top`` matches, or all matches if ``top`` is zero.
+        """
+        if TRACE:
+            logger_debug(
+                cls.__name__,
+                "match:",
+                "fingerprints:",
+                fingerprints,
             )
 
         if not fingerprints:
@@ -495,18 +534,26 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         resources = set(f.resource for f in matched_fps.iterator())
 
         # Step 2: see which Resource we most match to by calculating jaccard coefficient of our fingerprints against the others
+        fingerprints_length = len(only_fings)
         matches_by_jc = defaultdict(list)
         for r in resources:
-            r_snippets = SnippetIndex.objects.filter(resource=r)
+            # Get unique snippet fingerprints for this Resource
+            r_snippets = (
+                SnippetIndex.objects.filter(resource=r).distinct("fingerprint")
+            )
             matching_snippets = r_snippets.filter(fingerprint__in=only_fings)
-            jc = len(matching_snippets) / ((len(fingerprints) + len(r_snippets)) / 2)
+            r_snippets_count = r_snippets.count()
+            matching_snippets_count = matching_snippets.count()
+            jc = matching_snippets_count / (
+                (r_snippets_count + fingerprints_length) - matching_snippets_count
+            )
             matches_by_jc[jc].append(
                 ResourceSnippetMatch(
                     resource=r,
                     package=r.package,
                     fingerprints=matching_snippets,
-                    fingerprints_count=matching_snippets.count(),
-                    similarity=jc
+                    fingerprints_count=matching_snippets_count,
+                    similarity=jc,
                 )
             )
 
@@ -515,55 +562,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         for jc, m in sorted(matches_by_jc.items(), reverse=True):
             matches.extend(m)
 
-        return matches
-
-    @classmethod
-    def match_resources(cls, fingerprints, resource, package, top=None):
-        """
-        Return a list of ResourceSnippetMatch for matched Resources.
-        Only return the ``top`` matches, or all matches if ``top`` is zero.
-        """
-        if TRACE:
-            logger_debug(
-                cls.__name__,
-                "match:",
-                "fingerprints:",
-                fingerprints,
-                "resource:",
-                resource,
-                "purl:",
-                package.package_url,
-            )
-
-        if not fingerprints:
-            return cls.objects.none()
-
-        # strip positions
-        only_fings = [fing for _pos, fing in fingerprints]
-
-        # Step 0: get all fingerprint records that match whith the input
-        matched_fps = cls.objects.filter(fingerprint__in=only_fings)
-
-        # Step 1: count Resource whose fingerprints were matched
-        # Step 1.1: get Resource  that show up in the query
-        hits_by_resource = Counter()
-        for matched_fp in matched_fps.iterator():
-            hits_by_resource[matched_fp.resource] += 1
-
-        # Step 1.2: group and rank matched Resources based on matched fingerprint count
-        # discard matches beyond "top"
-        matches = []
-        for resource, hits in hits_by_resource.most_common(n=top):
-            matched_fingerprints = matched_fps.filter(resource=resource)
-            matches.append(
-                ResourceSnippetMatch(
-                    resource=resource,
-                    fingerprints=matched_fingerprints,
-                    fingerprints_count=hits,
-                )
-            )
-
-        return matches
+        return matches[:top]
 
 
 class ApproximateFileIndex(ApproximateMatchingHashMixin, models.Model):
