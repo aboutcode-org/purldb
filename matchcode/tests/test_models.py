@@ -457,365 +457,6 @@ class MatchcodeModelUtilsTestCase(MatchcodeTestCase):
         self.assertEqual(expected_chunk4, chunk4)
 
 
-# class SnippetIndexTestCase(MatchcodeTestCase):
-#     def setUp(self):
-#         super(MatchcodeTestCase, self).setUp()
-
-#         # Add approximate file resource
-#         self.test_package, _ = Package.objects.get_or_create(
-#             filename="inflate.tar.gz",
-#             sha1="deadfeed",
-#             type="generic",
-#             name="inflate",
-#             version="1.0.0",
-#             download_url="inflate.com/inflate.tar.gz",
-#         )
-#         self.test_resource1, _ = Resource.objects.get_or_create(
-#             path="adler32.c", name="adler32.c", package=self.test_package
-#         )
-#         self.test_resource_snippets1 = list(
-#             enumerate(
-#                 [
-#                     "bbb63027903332f0c41b7b26b9bfb50b",
-#                     "54cf1197bf1109b4ce2a3455c1c48285",
-#                     "6d4c7e4377089d1ddcc8c90132ac9730",
-#                     "1e579e94829907c3d2401db94f9b6df8",
-#                     "ec89d3e7ac59e858d97ce1ad730f7547",
-#                     "f3c31ef3249345c3e44c5aea28414dff",
-#                     "5f1ba9111c115dc88bdc1ceddce789ef",
-#                     "2f12c505c1e1ec3fa184877c8f1cb838",
-#                     "a7858f3e1c246064223868c9858f8317",
-#                     "b7c21f7ebb4abec9169eb533154a5097",
-#                     "f5139ce5161976ff729a953b8780133d",
-#                     "c1975628430b6fda66b638481403cca5",
-#                     "83a4d8bea3052c3bfde90ed3aaba79ac",
-#                     "3c4df460f6a4817daf8638f3b2009cb9",
-#                     "3290d45ca11c75f84d72ccfdfcca9515",
-#                     "bd9b873dd011bb94ba21b449e0886bca",
-#                     "c51b042fb4aa9dbee729f120d1caa9ad",
-#                     "3aaa73fb0dbbd0443f7f77d96322b522",
-#                     "80a509a0b8d81b8167e4bce3bdaf83bf",
-#                     "4a79d250f6c4aa117bf47244fc0222be",
-#                     "e49dc8a3fecfe4bb2ef237bb56e85dc8",
-#                     "e2a16b88325f9b5717b578c9f5207e07",
-#                     "e28f3e5020594773551a29c39ee4c286",
-#                     "ae9095ef88ac8288c7514b771ed5ddc8",
-#                     "01e7fd588d9cd71e30935c597827ce0a",
-#                     "a54443952d1ce6e731d8980d7b0c714f",
-#                     "c244ee379eacca3f8799bb94890bd41c",
-#                     "67913cbdbf8802d7c19a442132ada51b",
-#                     "b9e5ed3d9a79a4d71d04a6d59589e9c8",
-#                     "7a10694fe6dadc4f0ff002119d29eac9",
-#                     "e0fc19761f570e9657324d21b7150a3b",
-#                     "498885acf844eda1f65af9e746deaff7",
-#                     "16e774a453769c012ca1e7f3685b4111",
-#                     "eeb97a9c94bb5c7a8cac39fdea7e7ec2",
-#                     "5faefb98693a882708b497c90885e84d",
-#                     "5ca14da77615896d30deb89635c39a53",
-#                     "628c96760664a4b74d689a398b496e03",
-#                 ]
-#             )
-#         )
-#         for position, fingerprint in self.test_resource_snippets1:
-#             fingerprint = hexstring_to_binarray(fingerprint)
-#             SnippetIndex.index(
-#                 fingerprint=fingerprint,
-#                 position=position,
-#                 resource=self.test_resource1,
-#                 package=self.test_package,
-#             )
-
-#         self.test_resource2, _ = Resource.objects.get_or_create(
-#             path="adler32.h", name="adler32.h", package=self.test_package
-#         )
-#         self.test_resource_snippets2 = list(
-#             enumerate(
-#                 [
-#                     "bbb63027903332f0c41b7b26b9bfb50b",
-#                     "54cf1197bf1109b4ce2a3455c1c48285",
-#                     "6d4c7e4377089d1ddcc8c90132ac9730",
-#                     "1e579e94829907c3d2401db94f9b6df8",
-#                     "ec89d3e7ac59e858d97ce1ad730f7547",
-#                     "f3c31ef3249345c3e44c5aea28414aff",
-#                     "e49dc8a3fecfe4bb2ef237bb56e856c8",
-#                     "e2a16b88325f9b5717b578c9f5207e07",
-#                     "e28f3e5020594773551a29c39ee4c286",
-#                     "ae9095ef88ac8288c7514b771ed5ddc8",
-#                     "01e7fd588d9cd71e30935c597827ce0a",
-#                     "a54443952d1ce6e731d8980d7b0c754f",
-#                     "c244ee379eacca3f8799bb94890bd41c",
-#                     "67913cbdbf8802d7c19a442132ada51b",
-#                     "b9e5ed3d9a79a4d71d04a6d59589e9c8",
-#                     "7a10694fe6dadc4f0ff002119d29eac9",
-#                     "e0fc19761f570e9657324d21b7150a3b",
-#                     "498885acf844eda1f65af9e746deaff7",
-#                     "16e774a453769c012ca1e7f3685b4111",
-#                     "eeb97a9c94bb5c7a8cac39fdea7e7ec2",
-#                     "5faefb98693a882708b497c90885e44d",
-#                     "5ca14da77615896d30deb89635c39a53",
-#                     "628c96760664a4b74d689a398b496403",
-#                 ]
-#             )
-#         )
-#         for position, fingerprint in self.test_resource_snippets2:
-#             fingerprint = hexstring_to_binarray(fingerprint)
-#             SnippetIndex.index(
-#                 fingerprint=fingerprint,
-#                 position=position,
-#                 resource=self.test_resource2,
-#                 package=self.test_package,
-#             )
-
-#     def test_SnippetIndexTestCase_match(self):
-#         test_package, _ = Package.objects.get_or_create(
-#             filename="test_package.tar.gz",
-#             sha1="beefbeef",
-#             type="generic",
-#             name="test_package",
-#             version="1.0.0",
-#             download_url="test_package.com/test_package.tar.gz",
-#         )
-#         test_resource, _ = Resource.objects.get_or_create(
-#             path="zutil.c", name="zutil.c", package=test_package
-#         )
-#         # tuples of positions, value
-#         test_snippets = list(
-#             enumerate(
-#                 [
-#                     "7ed5cafd44fea6cb1e84f519c5a995f3",
-#                     "9f02df2c2c765ed4b9a60af7f5dc6825",
-#                     "e643cdd412d46ba058e2be3105b5503d",
-#                     "090dc3f8751b3c79923d0f2430e1821d",
-#                     "7b3294908e4bbd6390106fe6d920268f",
-#                     "4bc9c74165dfd635fee5c3164f2407d8",
-#                     "b0efbe1869beb1a203a95b18d47ef1e6",
-#                     "34af742c2a696d0a6bd23e5c96143aa4",
-#                     "855b779d81fe76ace1afd9cffaaa03b5",
-#                     "2381aeb9b5cd04dc4f52a1d5e06797e6",
-#                     "ad117fdd56136e90282025198a1ed5f5",
-#                     "ce064a8d30610687babebfc3c74f2215",
-#                     "fe12a3cb12a41359a3f7ea23a8297fca",
-#                     "1a2f0e65b2d77fb79ed95749083e0356",
-#                     "945e4a298b851a0fa86853d1fd234d22",
-#                     "e4cda232353cd78069d7d6a1d11ccfc3",
-#                     "ab64048739c06b77fbf69f0622a824a0",
-#                     "fb91eeb4a8b9895e051ec98b649303ff",
-#                     "a07afc7552c7af2f861a114c19718c12",
-#                     "c7f68becaa86ac416555dcc13de3f7b6",
-#                     "7be2af5b15ac4debe2c9233fe3bdf5e2",
-#                     "e4085cc7580f1f933f524c1742dffc7a",
-#                     "1bd5c87d7fb5558b1fcd10ef2e0432f8",
-#                     "fd6a83abd283b4e5ac268f21a2147453",
-#                     "5a4d0897b9711c02f865d97034338979",
-#                     "f6bcbd48d1e7ffbb78164cd2660ca0cc",
-#                     "83ac23f7ee69540adfc64dba65045012",
-#                     "435d4e0805e1015f58bedb643ce1ad3a",
-#                     "53b627e84a0fde8342a7c9a5cae51335",
-#                     "9b34c5bb0ac43bc9f131315c8fa028c3",
-#                     "8456aa69be29d00cf9dfeb7ae9ccfcdf",
-#                     "e79c82b208711f5f49f421718ef172c6",
-#                     "7ac46a9dbd8c68652d347960cc3f640a",
-#                     "2a6e0b066785d0e1feee19a60d4685f6",
-#                     "e4c4d99fc98a4cc09f28a291a5212093",
-#                     "1d64eede99cb6abe784678938f64a12c",
-#                     "f517d7a22774aeec45c109920b255ae6",
-#                     "1cdf29098d96d12c8c59acf2304ab1fe",
-#                     "d2b74ca2087e6e527701c663eefd29bc",
-#                     "a14974b34a547b1a52af07f590f641d1",
-#                     "03a6666b52bba552442e73adfbcfccb5",
-#                     "4cca0e8f81f8fe812eb7861495020ff8",
-#                     "d9db0fb7358173072bc319707d3e8a33",
-#                     "2310e0cb39cc317dbaf0bfcca72f0aca",
-#                     "b6a661bd80f1140a07c511a9ffffb492",
-#                     "0399fade7fca27b568404b073b2eca1c",
-#                     "52cfc5757c1f45567ca90a2958a64e22",
-#                     "f76edad8fa6dc73e843ab228a46ff4aa",
-#                     "a0877ef600c0b7da27e226e7815bd96d",
-#                     "dd94cb42ea765f5a3dc74c7116b8112f",
-#                     "6f62a6a03341268dabc94c8265aab4a3",
-#                     "d2d90d0a0b8841fdde1e9342ae34e612",
-#                     "6e8a953486842b17faabbe58aed2d28b",
-#                     "5a0e16ed296adc58912f12deb8e43cca",
-#                     "5a04295313ead9f4b5e43a19e57209c9",
-#                     "ac3d0c06b8855189986c2d4a11be7180",
-#                     "9f61d026adad0c3ac52ee1db8ebb1761",
-#                     "163c3e2d2a76b4cffbcec4e7e41340b0",
-#                     "eb22bfcb167a605f63f1c0e84b4a243c",
-#                     "c8a523c143b8fecfaecb8788d94f896f",
-#                     "fd12f7d058933f7def30e7c0575b2512",
-#                     "cf6dd6d8d3a9fe684606d10e63b3755d",
-#                     "e989d1b2ef98bfa40bbccc486ed5e965",
-#                     "498885acf844eda1f65af9e746deaff7",
-#                     "16e774a453769c012ca1e7f3685b4111",
-#                     "8963c86e132ae1710491ba552e17d322",
-#                     "83ee9b95f621713d817fc5ef847a3129",
-#                     "0afbd0d74b172a8dd08a1b17002400b1",
-#                     "498901c2be17e44805910ac978c854b5",
-#                     "58931feaad814e884e3e95bb89bdbf5c",
-#                     "4a50fed3cb3b2e08962fce9d37ec1faa",
-#                     "b24f2d699d5c3643f5d30427c4fa9223",
-#                     "8a576adf5638a477ec06940132a1f583",
-#                     "b4f309a79529c0103fa356f3552e49bf",
-#                     "ea41586642fc658861578736941b1786",
-#                     "b2a8540ad8659f91150764f4bad6bfae",
-#                     "7a27d2e62d8aad623cfc4f3ceb831ba4",
-#                     "3aaaa507050eae336d7e870b043cb18c",
-#                     "603e64a10d74410e4673bf4bddc3a100",
-#                     "75ad6a60f72125a9e9f0b8bf129731e6",
-#                 ]
-#             )
-#         )
-#         test_snippets = [
-#             (pos, hexstring_to_binarray(snippet)) for pos, snippet in test_snippets
-#         ]
-#         results = SnippetIndex.match(
-#             fingerprints=test_snippets, resource=test_resource, package=test_package
-#         )
-#         assert len(results) == 1
-#         result = results[0]
-#         assert result.package == self.test_package
-#         fingerprints = [s.fingerprint.hex() for s in result.fingerprints]
-
-#         expected_fingerprints = [
-#             "16e774a453769c012ca1e7f3685b4111",
-#             "16e774a453769c012ca1e7f3685b4111",
-#             "498885acf844eda1f65af9e746deaff7",
-#             "498885acf844eda1f65af9e746deaff7",
-#         ]
-
-#         assert sorted(fingerprints) == sorted(expected_fingerprints)
-
-#     def test_SnippetIndexTestCase_match_resource_does_rank_base_on_count_of_zero_hamming(
-#         self,
-#     ):
-#         test_package, _ = Package.objects.get_or_create(
-#             filename="test_package.tar.gz",
-#             sha1="beefbeef",
-#             type="generic",
-#             name="test_package",
-#             version="1.0.0",
-#             download_url="test_package.com/test_package.tar.gz",
-#         )
-#         test_resource, _ = Resource.objects.get_or_create(
-#             path="zutil.c", name="zutil.c", package=test_package
-#         )
-#         # tuples of positions, value
-#         test_snippets = list(
-#             enumerate(
-#                 [
-#                     "bbb63027903332f0c41b7b26b9bfb50b",
-#                     "54cf1197bf1109b4ce2a3455c1c48285",
-#                     "6d4c7e4377089d1ddcc8c90132ac9730",
-#                     "1e579e94829907c3d2401db94f9b6df8",
-#                     "ec89d3e7ac59e858d97ce1ad730f7547",
-#                     "f3c31ef3249345c3e44c5aea28414dff",
-#                     "5f1ba9111c115dc88bdc1ceddce789ef",
-#                     "2f12c505c1e1ec3fa184877c8f1cb838",
-#                     "a7858f3e1c246064223868c9858f8317",
-#                     "b7c21f7ebb4abec9169eb533154a5097",
-#                     "f5139ce5161976ff729a953b8780133d",
-#                     "c1975628430b6fda66b638481403cca5",
-#                     "83a4d8bea3052c3bfde90ed3aaba79ac",
-#                     "3c4df460f6a4817daf8638f3b2009cb9",
-#                     "3290d45ca11c75f84d72ccfdfcca9515",
-#                     "bd9b873dd011bb94ba21b449e0886bca",
-#                     "c51b042fb4aa9dbee729f120d1caa9ad",
-#                     "3aaa73fb0dbbd0443f7f77d96322b522",
-#                     "80a509a0b8d81b8167e4bce3bdaf83bf",
-#                     "4a79d250f6c4aa117bf47244fc0222be",
-#                     "e49dc8a3fecfe4bb2ef237bb56e85dc8",
-#                     "e2a16b88325f9b5717b578c9f5207e07",
-#                     "e28f3e5020594773551a29c39ee4c286",
-#                     "ae9095ef88ac8288c7514b771ed5ddc8",
-#                     "01e7fd588d9cd71e30935c597827ce0a",
-#                     "a54443952d1ce6e731d8980d7b0c714f",
-#                     "c244ee379eacca3f8799bb94890bd41c",
-#                     "67913cbdbf8802d7c19a442132ada51b",
-#                     "b9e5ed3d9a79a4d71d04a6d59589e9c8",
-#                 ]
-#             )
-#         )
-#         test_snippets = [
-#             (pos, hexstring_to_binarray(snippet)) for pos, snippet in test_snippets
-#         ]
-#         results = SnippetIndex.match_resources(
-#             fingerprints=test_snippets,
-#             resource=test_resource,
-#             package=test_package,
-#             top=None,
-#         )
-#         assert len(results) == 2
-#         result1 = results[0]
-#         assert result1.resource == self.test_resource1
-#         assert result1.fingerprints_count == 29
-
-#         result2 = results[1]
-#         assert result2.resource == self.test_resource2
-#         assert result2.fingerprints_count == 12
-
-#     def test_SnippetIndexTestCase_match_resource_return_only_top_match(self):
-#         test_package, _ = Package.objects.get_or_create(
-#             filename="test_package.tar.gz",
-#             sha1="beefbeef",
-#             type="generic",
-#             name="test_package",
-#             version="1.0.0",
-#             download_url="test_package.com/test_package.tar.gz",
-#         )
-#         test_resource, _ = Resource.objects.get_or_create(
-#             path="zutil.c", name="zutil.c", package=test_package
-#         )
-#         # tuples of positions, value
-#         test_snippets = list(
-#             enumerate(
-#                 [
-#                     "bbb63027903332f0c41b7b26b9bfb50b",
-#                     "54cf1197bf1109b4ce2a3455c1c48285",
-#                     "6d4c7e4377089d1ddcc8c90132ac9730",
-#                     "1e579e94829907c3d2401db94f9b6df8",
-#                     "ec89d3e7ac59e858d97ce1ad730f7547",
-#                     "f3c31ef3249345c3e44c5aea28414dff",
-#                     "5f1ba9111c115dc88bdc1ceddce789ef",
-#                     "2f12c505c1e1ec3fa184877c8f1cb838",
-#                     "a7858f3e1c246064223868c9858f8317",
-#                     "b7c21f7ebb4abec9169eb533154a5097",
-#                     "f5139ce5161976ff729a953b8780133d",
-#                     "c1975628430b6fda66b638481403cca5",
-#                     "83a4d8bea3052c3bfde90ed3aaba79ac",
-#                     "3c4df460f6a4817daf8638f3b2009cb9",
-#                     "3290d45ca11c75f84d72ccfdfcca9515",
-#                     "bd9b873dd011bb94ba21b449e0886bca",
-#                     "c51b042fb4aa9dbee729f120d1caa9ad",
-#                     "3aaa73fb0dbbd0443f7f77d96322b522",
-#                     "80a509a0b8d81b8167e4bce3bdaf83bf",
-#                     "4a79d250f6c4aa117bf47244fc0222be",
-#                     "e49dc8a3fecfe4bb2ef237bb56e85dc8",
-#                     "e2a16b88325f9b5717b578c9f5207e07",
-#                     "e28f3e5020594773551a29c39ee4c286",
-#                     "ae9095ef88ac8288c7514b771ed5ddc8",
-#                     "01e7fd588d9cd71e30935c597827ce0a",
-#                     "a54443952d1ce6e731d8980d7b0c714f",
-#                     "c244ee379eacca3f8799bb94890bd41c",
-#                     "67913cbdbf8802d7c19a442132ada51b",
-#                     "b9e5ed3d9a79a4d71d04a6d59589e9c8",
-#                 ]
-#             )
-#         )
-#         test_snippets = [
-#             (pos, hexstring_to_binarray(snippet)) for pos, snippet in test_snippets
-#         ]
-#         results = SnippetIndex.match_resources(
-#             fingerprints=test_snippets,
-#             resource=test_resource,
-#             package=test_package,
-#             top=1,
-#         )
-#         assert len(results) == 1
-#         result1 = results[0]
-#         assert result1.resource == self.test_resource1
-#         assert result1.fingerprints_count == 29
-
-
 class SnippetIndexTestCase(MatchcodeTestCase):
     BASE_DIR = os.path.join(os.path.dirname(__file__), "testfiles")
 
@@ -840,13 +481,14 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         test_resource1_loc = self.get_test_loc(
             "match/approximate-file-matching/index.js"
         )
-        fingerprints = get_file_fingerprint_hashes(test_resource1_loc, include_ngrams=True)
+        fingerprints = get_file_fingerprint_hashes(
+            test_resource1_loc, include_ngrams=True
+        )
 
         self.test_resource1_snippets = fingerprints["snippets"]
         for snippet in self.test_resource1_snippets:
             fingerprint = snippet["snippet"]
             position = snippet["position"]
-            ngrams = snippet["ngrams"]
             SnippetIndex.index(
                 fingerprint,
                 position,
@@ -854,7 +496,31 @@ class SnippetIndexTestCase(MatchcodeTestCase):
                 self.test_package1,
             )
 
-    def test_SnippetIndex_match(self):
+        self.test_resource2, _ = Resource.objects.get_or_create(
+            path="package/index-2.js",
+            name="index-2",
+            extension="js",
+            package=self.test_package1,
+        )
+        test_resource2_loc = self.get_test_loc(
+            "match/approximate-file-matching/index-2.js"
+        )
+        fingerprints2 = get_file_fingerprint_hashes(
+            test_resource2_loc, include_ngrams=True
+        )
+
+        self.test_resource2_snippets = fingerprints2["snippets"]
+        for snippet in self.test_resource2_snippets:
+            fingerprint = snippet["snippet"]
+            position = snippet["position"]
+            SnippetIndex.index(
+                fingerprint,
+                position,
+                self.test_resource2,
+                self.test_package1,
+            )
+
+    def test_SnippetIndexTestCase_match(self):
         test_file_loc = self.get_test_loc(
             "match/approximate-file-matching/index-modified.js"
         )
@@ -871,12 +537,333 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         )
         fingerprints = get_file_fingerprint_hashes(test_file_loc)
         snippets = fingerprints["snippets"]
-        matches = SnippetIndex.match(
+        results = SnippetIndex.match(fingerprints=snippets)
+        assert len(results) == 1
+        result = results[0]
+        assert result.package == self.test_package1
+        fingerprints = [s.fingerprint.hex() for s in result.fingerprints]
+        expected_fingerprints = [
+            "414eb6dbc410b7db13c5261d38d2415c",
+            "a3f09e6beedcded219df8593450b03d3",
+            "88dbb2466f4158774dd1445697bf08cd",
+            "6c852b29e58a20bdbffdd3c3d39de4ca",
+            "a82c31729d82b8adff02c273ac0b07eb",
+            "ba0d298d9bab393b33121e3990f4c306",
+            "86d683c2d96246662570b512fce610ba",
+            "30704943d266bdb18eafc677873e9822",
+            "e27959753347f81acd578caffa57966d",
+            "ff0f5b8aba10817a04493b277619db54",
+            "5f7c78add17179b391825516483c2d31",
+            "73881c41e7004a29746ad40052537473",
+            "2e2e4e5e18477aaee1125a2cb12b6485",
+            "721404f59a9fd12f820e3484c32c8ee7",
+            "0fc763be3b308fae5a52001e7efc4090",
+            "858afa72b0b2085ad5130e9882fdeedc",
+            "cdfa7520a8b905b0f7d3cdcff1ef9b32",
+            "bdb40a475b3b0a5fb530005408637b6b",
+            "5794339ebf262545567070edc0d53303",
+            "5014a7286f940ecb7cb514a08fe30d39",
+            "2142ebacc010c03395ea0a7154ef7541",
+            "535db56c916b267cb5f8935b46c8c56b",
+            "66a0f9a75b66e53c082bb2df58dbf328",
+            "4ce5bee5d7ed3434eb68d5d80a4dab22",
+            "ac02d66ba0ae0ecd3153c1020f844b52",
+            "8b8902668a5cce6833cc5ced43db899c",
+            "cfbef533ed1368ce056ab096ba615138",
+            "1e46a0e582eef335fba50714141c27dc",
+            "95a0911958836ece77ef2d5d2cefca23",
+            "aabe725b62af9dde68c43239cf4c1ea8",
+            "bc031cbb660864a64b3d9ac33c4bc4a7",
+            "3b15b5f5bda3c9f4a9805e250c5798aa",
+            "eb85e29dd6d2085bd7becd81edbec443",
+            "e25b8cc23b00525615a64b2f1529631c",
+            "d1f334cf76e48d847f4f5767717dba77",
+            "3c09ebac8c21673d983a93e00cf6c95a",
+            "522023f5ce1d48f65e947821132122e9",
+            "6f895585fb5f35be5ac4e7d3365d2b7e",
+            "32a2a558e27c87650e5162202f0196df",
+            "b48c0453e4a625cda1878c5460bb926c",
+            "af7cfcc143fa9f4453f50d8a9aade620",
+            "2bee81b8c34d62fc9a12a4a62721f9f3",
+            "26259a72175bb019ea58bd86ea604991",
+            "f889ec2655204b44d46003190ca74553",
+            "940e3b3b98650d3ed71ec6e1363f4c61",
+            "aa55727f4d7380bc04244accf9d0a577",
+            "ed07fae33a9889fc6538086e96cc41a3",
+            "a8860e6ff83c23f994724757cd0b6eb3",
+            "938d957a337ceacb3de0ae8bcda9e2de",
+            "d0cd21fe86af6e9486d02b192c616d16",
+            "cb46aa07c44b27e4f1a78740bdf3617a",
+            "5f9344fe7b73af75892066cad7501987",
+            "2d8743da741362e5e0841bb5379914bb",
+            "10d99030ca0909ccb3a32c9d635f3253",
+            "1f4c27fe6d93ac4f1d9b60f79475dd3c",
+            "95d4dd4aeadf8aaadac0bb640bba4e71",
+            "ed52227dfd8f9ef7c09d7b6420c6802d",
+            "6786630e87ed9f1fcd0f2de19d69132f",
+            "414eb6dbc410b7db13c5261d38d2415c",
+            "a3f09e6beedcded219df8593450b03d3",
+            "88dbb2466f4158774dd1445697bf08cd",
+            "6c852b29e58a20bdbffdd3c3d39de4ca",
+            "a82c31729d82b8adff02c273ac0b07eb",
+            "ba0d298d9bab393b33121e3990f4c306",
+            "86d683c2d96246662570b512fce610ba",
+            "30704943d266bdb18eafc677873e9822",
+            "e27959753347f81acd578caffa57966d",
+            "ff0f5b8aba10817a04493b277619db54",
+            "5f7c78add17179b391825516483c2d31",
+            "73881c41e7004a29746ad40052537473",
+            "2e2e4e5e18477aaee1125a2cb12b6485",
+            "721404f59a9fd12f820e3484c32c8ee7",
+            "0fc763be3b308fae5a52001e7efc4090",
+            "858afa72b0b2085ad5130e9882fdeedc",
+            "cdfa7520a8b905b0f7d3cdcff1ef9b32",
+            "bdb40a475b3b0a5fb530005408637b6b",
+            "5794339ebf262545567070edc0d53303",
+            "5014a7286f940ecb7cb514a08fe30d39",
+            "2142ebacc010c03395ea0a7154ef7541",
+            "535db56c916b267cb5f8935b46c8c56b",
+            "66a0f9a75b66e53c082bb2df58dbf328",
+            "4ce5bee5d7ed3434eb68d5d80a4dab22",
+            "ac02d66ba0ae0ecd3153c1020f844b52",
+            "6c852b29e58a20bdbffdd3c3d39de4ca",
+            "a82c31729d82b8adff02c273ac0b07eb",
+            "ba0d298d9bab393b33121e3990f4c306",
+            "86d683c2d96246662570b512fce610ba",
+            "30704943d266bdb18eafc677873e9822",
+            "e27959753347f81acd578caffa57966d",
+            "ff0f5b8aba10817a04493b277619db54",
+            "5f7c78add17179b391825516483c2d31",
+            "73881c41e7004a29746ad40052537473",
+            "2e2e4e5e18477aaee1125a2cb12b6485",
+            "721404f59a9fd12f820e3484c32c8ee7",
+            "0fc763be3b308fae5a52001e7efc4090",
+            "858afa72b0b2085ad5130e9882fdeedc",
+            "cdfa7520a8b905b0f7d3cdcff1ef9b32",
+            "bdb40a475b3b0a5fb530005408637b6b",
+            "5794339ebf262545567070edc0d53303",
+            "5014a7286f940ecb7cb514a08fe30d39",
+            "2142ebacc010c03395ea0a7154ef7541",
+            "535db56c916b267cb5f8935b46c8c56b",
+            "66a0f9a75b66e53c082bb2df58dbf328",
+            "4ce5bee5d7ed3434eb68d5d80a4dab22",
+            "ac02d66ba0ae0ecd3153c1020f844b52",
+            "8b8902668a5cce6833cc5ced43db899c",
+            "cfbef533ed1368ce056ab096ba615138",
+            "1e46a0e582eef335fba50714141c27dc",
+            "95a0911958836ece77ef2d5d2cefca23",
+            "aabe725b62af9dde68c43239cf4c1ea8",
+            "bc031cbb660864a64b3d9ac33c4bc4a7",
+            "3b15b5f5bda3c9f4a9805e250c5798aa",
+            "eb85e29dd6d2085bd7becd81edbec443",
+            "e25b8cc23b00525615a64b2f1529631c",
+            "d1f334cf76e48d847f4f5767717dba77",
+            "3c09ebac8c21673d983a93e00cf6c95a",
+            "522023f5ce1d48f65e947821132122e9",
+            "6f895585fb5f35be5ac4e7d3365d2b7e",
+            "32a2a558e27c87650e5162202f0196df",
+            "b48c0453e4a625cda1878c5460bb926c",
+            "af7cfcc143fa9f4453f50d8a9aade620",
+            "2bee81b8c34d62fc9a12a4a62721f9f3",
+            "26259a72175bb019ea58bd86ea604991",
+            "f889ec2655204b44d46003190ca74553",
+            "940e3b3b98650d3ed71ec6e1363f4c61",
+            "aa55727f4d7380bc04244accf9d0a577",
+            "ed07fae33a9889fc6538086e96cc41a3",
+            "a8860e6ff83c23f994724757cd0b6eb3",
+            "938d957a337ceacb3de0ae8bcda9e2de",
+            "d0cd21fe86af6e9486d02b192c616d16",
+            "cb46aa07c44b27e4f1a78740bdf3617a",
+            "5f9344fe7b73af75892066cad7501987",
+            "2d8743da741362e5e0841bb5379914bb",
+            "10d99030ca0909ccb3a32c9d635f3253",
+            "1f4c27fe6d93ac4f1d9b60f79475dd3c",
+            "95d4dd4aeadf8aaadac0bb640bba4e71",
+            "ed52227dfd8f9ef7c09d7b6420c6802d",
+            "6786630e87ed9f1fcd0f2de19d69132f",
+        ]
+
+        assert sorted(fingerprints) == sorted(expected_fingerprints)
+
+    def test_SnippetIndex_match_resources(self):
+        test_file_loc = self.get_test_loc(
+            "match/approximate-file-matching/index-modified.js"
+        )
+        test_package, _ = Package.objects.get_or_create(
+            filename="test_package.tar.gz",
+            sha1="beefbeef",
+            type="generic",
+            name="test_package",
+            version="1.0.0",
+            download_url="test_package.com/test_package.tar.gz",
+        )
+        test_resource, _ = Resource.objects.get_or_create(
+            path="zutil.c", name="zutil.c", package=test_package
+        )
+        fingerprints = get_file_fingerprint_hashes(test_file_loc)
+        snippets = fingerprints["snippets"]
+        matches = SnippetIndex.match_resources(
             fingerprints=snippets,
+        )
+        assert len(matches) == 2
+        match = matches[0]
+        assert match.resource == self.test_resource1
+        assert match.package == self.test_package1
+        expected_fingerprints = [
+            "414eb6dbc410b7db13c5261d38d2415c",
+            "a3f09e6beedcded219df8593450b03d3",
+            "88dbb2466f4158774dd1445697bf08cd",
+            "6c852b29e58a20bdbffdd3c3d39de4ca",
+            "a82c31729d82b8adff02c273ac0b07eb",
+            "ba0d298d9bab393b33121e3990f4c306",
+            "86d683c2d96246662570b512fce610ba",
+            "30704943d266bdb18eafc677873e9822",
+            "e27959753347f81acd578caffa57966d",
+            "ff0f5b8aba10817a04493b277619db54",
+            "5f7c78add17179b391825516483c2d31",
+            "73881c41e7004a29746ad40052537473",
+            "2e2e4e5e18477aaee1125a2cb12b6485",
+            "721404f59a9fd12f820e3484c32c8ee7",
+            "0fc763be3b308fae5a52001e7efc4090",
+            "858afa72b0b2085ad5130e9882fdeedc",
+            "cdfa7520a8b905b0f7d3cdcff1ef9b32",
+            "bdb40a475b3b0a5fb530005408637b6b",
+            "5794339ebf262545567070edc0d53303",
+            "5014a7286f940ecb7cb514a08fe30d39",
+            "2142ebacc010c03395ea0a7154ef7541",
+            "535db56c916b267cb5f8935b46c8c56b",
+            "66a0f9a75b66e53c082bb2df58dbf328",
+            "4ce5bee5d7ed3434eb68d5d80a4dab22",
+            "ac02d66ba0ae0ecd3153c1020f844b52",
+            "8b8902668a5cce6833cc5ced43db899c",
+            "cfbef533ed1368ce056ab096ba615138",
+            "1e46a0e582eef335fba50714141c27dc",
+            "95a0911958836ece77ef2d5d2cefca23",
+            "aabe725b62af9dde68c43239cf4c1ea8",
+            "bc031cbb660864a64b3d9ac33c4bc4a7",
+            "3b15b5f5bda3c9f4a9805e250c5798aa",
+            "eb85e29dd6d2085bd7becd81edbec443",
+            "e25b8cc23b00525615a64b2f1529631c",
+            "d1f334cf76e48d847f4f5767717dba77",
+            "3c09ebac8c21673d983a93e00cf6c95a",
+            "522023f5ce1d48f65e947821132122e9",
+            "6f895585fb5f35be5ac4e7d3365d2b7e",
+            "32a2a558e27c87650e5162202f0196df",
+            "b48c0453e4a625cda1878c5460bb926c",
+            "af7cfcc143fa9f4453f50d8a9aade620",
+            "2bee81b8c34d62fc9a12a4a62721f9f3",
+            "26259a72175bb019ea58bd86ea604991",
+            "f889ec2655204b44d46003190ca74553",
+            "940e3b3b98650d3ed71ec6e1363f4c61",
+            "aa55727f4d7380bc04244accf9d0a577",
+            "ed07fae33a9889fc6538086e96cc41a3",
+            "a8860e6ff83c23f994724757cd0b6eb3",
+            "938d957a337ceacb3de0ae8bcda9e2de",
+            "d0cd21fe86af6e9486d02b192c616d16",
+            "cb46aa07c44b27e4f1a78740bdf3617a",
+            "5f9344fe7b73af75892066cad7501987",
+            "2d8743da741362e5e0841bb5379914bb",
+            "10d99030ca0909ccb3a32c9d635f3253",
+            "1f4c27fe6d93ac4f1d9b60f79475dd3c",
+            "95d4dd4aeadf8aaadac0bb640bba4e71",
+            "ed52227dfd8f9ef7c09d7b6420c6802d",
+            "6786630e87ed9f1fcd0f2de19d69132f",
+        ]
+        result_fingerprints = [
+            snippet.fingerprint.hex() for snippet in match.fingerprints
+        ]
+        assert sorted(result_fingerprints) == sorted(expected_fingerprints)
+        assert match.fingerprints_count == 58
+        assert match.similarity == 0.9354838709677419
+
+    def test_SnippetIndexTestCase_match_resource_return_only_top_match(self):
+        test_file_loc = self.get_test_loc(
+            "match/approximate-file-matching/index-modified.js"
+        )
+        test_package, _ = Package.objects.get_or_create(
+            filename="test_package.tar.gz",
+            sha1="beefbeef",
+            type="generic",
+            name="test_package",
+            version="1.0.0",
+            download_url="test_package.com/test_package.tar.gz",
+        )
+        test_resource, _ = Resource.objects.get_or_create(
+            path="zutil.c", name="zutil.c", package=test_package
+        )
+        fingerprints = get_file_fingerprint_hashes(test_file_loc)
+        snippets = fingerprints["snippets"]
+        matches = SnippetIndex.match_resources(
+            fingerprints=snippets,
+            top=1,
         )
         assert len(matches) == 1
         match = matches[0]
         assert match.resource == self.test_resource1
         assert match.package == self.test_package1
+        expected_fingerprints = [
+            "414eb6dbc410b7db13c5261d38d2415c",
+            "a3f09e6beedcded219df8593450b03d3",
+            "88dbb2466f4158774dd1445697bf08cd",
+            "6c852b29e58a20bdbffdd3c3d39de4ca",
+            "a82c31729d82b8adff02c273ac0b07eb",
+            "ba0d298d9bab393b33121e3990f4c306",
+            "86d683c2d96246662570b512fce610ba",
+            "30704943d266bdb18eafc677873e9822",
+            "e27959753347f81acd578caffa57966d",
+            "ff0f5b8aba10817a04493b277619db54",
+            "5f7c78add17179b391825516483c2d31",
+            "73881c41e7004a29746ad40052537473",
+            "2e2e4e5e18477aaee1125a2cb12b6485",
+            "721404f59a9fd12f820e3484c32c8ee7",
+            "0fc763be3b308fae5a52001e7efc4090",
+            "858afa72b0b2085ad5130e9882fdeedc",
+            "cdfa7520a8b905b0f7d3cdcff1ef9b32",
+            "bdb40a475b3b0a5fb530005408637b6b",
+            "5794339ebf262545567070edc0d53303",
+            "5014a7286f940ecb7cb514a08fe30d39",
+            "2142ebacc010c03395ea0a7154ef7541",
+            "535db56c916b267cb5f8935b46c8c56b",
+            "66a0f9a75b66e53c082bb2df58dbf328",
+            "4ce5bee5d7ed3434eb68d5d80a4dab22",
+            "ac02d66ba0ae0ecd3153c1020f844b52",
+            "8b8902668a5cce6833cc5ced43db899c",
+            "cfbef533ed1368ce056ab096ba615138",
+            "1e46a0e582eef335fba50714141c27dc",
+            "95a0911958836ece77ef2d5d2cefca23",
+            "aabe725b62af9dde68c43239cf4c1ea8",
+            "bc031cbb660864a64b3d9ac33c4bc4a7",
+            "3b15b5f5bda3c9f4a9805e250c5798aa",
+            "eb85e29dd6d2085bd7becd81edbec443",
+            "e25b8cc23b00525615a64b2f1529631c",
+            "d1f334cf76e48d847f4f5767717dba77",
+            "3c09ebac8c21673d983a93e00cf6c95a",
+            "522023f5ce1d48f65e947821132122e9",
+            "6f895585fb5f35be5ac4e7d3365d2b7e",
+            "32a2a558e27c87650e5162202f0196df",
+            "b48c0453e4a625cda1878c5460bb926c",
+            "af7cfcc143fa9f4453f50d8a9aade620",
+            "2bee81b8c34d62fc9a12a4a62721f9f3",
+            "26259a72175bb019ea58bd86ea604991",
+            "f889ec2655204b44d46003190ca74553",
+            "940e3b3b98650d3ed71ec6e1363f4c61",
+            "aa55727f4d7380bc04244accf9d0a577",
+            "ed07fae33a9889fc6538086e96cc41a3",
+            "a8860e6ff83c23f994724757cd0b6eb3",
+            "938d957a337ceacb3de0ae8bcda9e2de",
+            "d0cd21fe86af6e9486d02b192c616d16",
+            "cb46aa07c44b27e4f1a78740bdf3617a",
+            "5f9344fe7b73af75892066cad7501987",
+            "2d8743da741362e5e0841bb5379914bb",
+            "10d99030ca0909ccb3a32c9d635f3253",
+            "1f4c27fe6d93ac4f1d9b60f79475dd3c",
+            "95d4dd4aeadf8aaadac0bb640bba4e71",
+            "ed52227dfd8f9ef7c09d7b6420c6802d",
+            "6786630e87ed9f1fcd0f2de19d69132f",
+        ]
+        result_fingerprints = [
+            snippet.fingerprint.hex() for snippet in match.fingerprints
+        ]
+        assert sorted(result_fingerprints) == sorted(expected_fingerprints)
         assert match.fingerprints_count == 58
-        assert match.similarity == 0.9666666666666667
+        assert match.similarity == 0.9354838709677419
