@@ -126,7 +126,7 @@ int ZEXPORT inflateResetKeep(z_streamp strm) {
     return Z_OK;
 }
 
-int ZEXPORT inflateReset(z_streamp strm) {
+int ZEXPORT something_else(z_streamp strm) {
     struct inflate_state FAR *state;
 
     if (inflateStateCheck(strm)) return Z_STREAM_ERROR;
@@ -135,88 +135,6 @@ int ZEXPORT inflateReset(z_streamp strm) {
     state->whave = 0;
     state->wnext = 0;
     return inflateResetKeep(strm);
-}
-
-int ZEXPORT inflateReset2(z_streamp strm, int windowBits) {
-    int wrap;
-    struct inflate_state FAR *state;
-
-    /* get the state */
-    if (inflateStateCheck(strm)) return Z_STREAM_ERROR;
-    state = (struct inflate_state FAR *)strm->state;
-
-    /* extract wrap request from windowBits parameter */
-    if (windowBits < 0) {
-        if (windowBits < -15)
-            return Z_STREAM_ERROR;
-        wrap = 0;
-        windowBits = -windowBits;
-    }
-    else {
-        wrap = (windowBits >> 4) + 5;
-#ifdef GUNZIP
-        if (windowBits < 48)
-            windowBits &= 15;
-#endif
-    }
-
-    /* set number of window bits, free window if different */
-    if (windowBits && (windowBits < 8 || windowBits > 15))
-        return Z_STREAM_ERROR;
-    if (state->window != Z_NULL && state->wbits != (unsigned)windowBits) {
-        ZFREE(strm, state->window);
-        state->window = Z_NULL;
-    }
-
-    /* update state and reset the rest of it */
-    state->wrap = wrap;
-    state->wbits = (unsigned)windowBits;
-    return inflateReset(strm);
-}
-
-int ZEXPORT inflateInit2_(z_streamp strm, int windowBits,
-                          const char *version, int stream_size) {
-    int ret;
-    struct inflate_state FAR *state;
-
-    if (version == Z_NULL || version[0] != ZLIB_VERSION[0] ||
-        stream_size != (int)(sizeof(z_stream)))
-        return Z_VERSION_ERROR;
-    if (strm == Z_NULL) return Z_STREAM_ERROR;
-    strm->msg = Z_NULL;                 /* in case we return an error */
-    if (strm->zalloc == (alloc_func)0) {
-#ifdef Z_SOLO
-        return Z_STREAM_ERROR;
-#else
-        strm->zalloc = zcalloc;
-        strm->opaque = (voidpf)0;
-#endif
-    }
-    if (strm->zfree == (free_func)0)
-#ifdef Z_SOLO
-        return Z_STREAM_ERROR;
-#else
-        strm->zfree = zcfree;
-#endif
-    state = (struct inflate_state FAR *)
-            ZALLOC(strm, 1, sizeof(struct inflate_state));
-    if (state == Z_NULL) return Z_MEM_ERROR;
-    Tracev((stderr, "inflate: allocated\n"));
-    strm->state = (struct internal_state FAR *)state;
-    state->strm = strm;
-    state->window = Z_NULL;
-    state->mode = HEAD;     /* to pass state test in inflateReset2() */
-    ret = inflateReset2(strm, windowBits);
-    if (ret != Z_OK) {
-        ZFREE(strm, state);
-        strm->state = Z_NULL;
-    }
-    return ret;
-}
-
-int ZEXPORT inflateInit_(z_streamp strm, const char *version,
-                         int stream_size) {
-    return inflateInit2_(strm, DEF_WBITS, version, stream_size);
 }
 
 int ZEXPORT inflatePrime(z_streamp strm, int bits, int value) {
