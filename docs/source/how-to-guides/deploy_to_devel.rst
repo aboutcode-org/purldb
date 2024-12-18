@@ -13,7 +13,9 @@ directly or through a command line purlcli tool sub-command.
 
 .. note::
     This tutorial assumes that you have a working installation of PurlDB and MatchCode.io
-    If you don't, please refer to the `installation <../how-to-guides/installation.html#installation>`_ page.
+
+    If you don't, please refer to the :ref:`installation` page.
+
 
 
 Why mapping binary back to sources?
