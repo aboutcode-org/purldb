@@ -25,6 +25,7 @@ from rest_framework.serializers import SerializerMethodField
 
 from packagedb.models import DependentPackage
 from packagedb.models import Package
+from packagedb.models import PackageActivity
 from packagedb.models import PackageSet
 from packagedb.models import PackageWatch
 from packagedb.models import Party
@@ -554,3 +555,20 @@ def is_supported_sort_field(field):
 
     # A field could have a leading `-`
     return field.lstrip("-") in PACKAGE_FILTER_SORT_FIELDS
+
+
+class PackageActivitySerializer(ModelSerializer):
+    url = HyperlinkedIdentityField(
+        view_name="api:packageactivity-detail", lookup_field="uuid"
+    )
+
+    class Meta:
+        model = PackageActivity
+        fields = [
+            "url",
+            "author",
+            "content",
+            "activity_update_date",
+            "creation_date",
+            "is_processed",
+        ]

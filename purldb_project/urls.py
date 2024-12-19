@@ -22,6 +22,8 @@ from matchcode.api import ApproximateDirectoryStructureIndexViewSet
 from minecode.api import ScannableURIViewSet
 from minecode.api import index_package_scan
 from packagedb.api import CollectViewSet
+from packagedb.api import PackageActivityListenerView
+from packagedb.api import PackageActivityViewSet
 from packagedb.api import PackageSetViewSet
 from packagedb.api import PackageUpdateSet
 from packagedb.api import PackageViewSet
@@ -46,6 +48,7 @@ api_router.register(
 api_router.register(
     "approximate_directory_structure_index", ApproximateDirectoryStructureIndexViewSet
 )
+api_router.register("package_activity", PackageActivityViewSet)
 
 
 urlpatterns = [
@@ -69,6 +72,16 @@ urlpatterns = [
         name="index_package_scan",
     ),
 ]
+
+
+# Endpoint to receive updates related to subscribed packages
+urlpatterns.append(
+    path(
+        "api/users/@purldb/inbox",
+        PackageActivityListenerView.as_view(),
+        name="package_activity_listener",
+    ),
+)
 
 if settings.DEBUG and settings.DEBUG_TOOLBAR:
     urlpatterns.append(path("__debug__/", include("debug_toolbar.urls")))

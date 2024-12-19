@@ -322,3 +322,10 @@ PURLDB_ASYNC = env.bool("PURLDB_ASYNC", default=False)
 if not PURLDB_ASYNC:
     for queue_config in RQ_QUEUES.values():
         queue_config["ASYNC"] = False
+
+# FederatedCode integration
+
+FEDERATEDCODE_HOST_URL = env.str("FEDERATEDCODE_HOST_URL", default="")
+FEDERATEDCODE_PURLDB_REMOTE_USERNAME = env.str(
+    "FEDERATEDCODE_PURLDB_REMOTE_USERNAME", default="purldb"
+)
