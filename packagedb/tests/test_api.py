@@ -25,6 +25,7 @@ from minecode.models import ScannableURI
 from minecode.tests import FIXTURES_REGEN
 from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
+from packagedb.models import PackageActivity
 from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
 from packagedb.models import PackageWatch
@@ -1705,3 +1706,65 @@ class ToGolangPurlTestCase(TestCase):
         )
         expected = "pkg:golang/github.com/gorilla/mux@v1.7.3"
         self.assertEqual(expected, response.data["package_url"])
+
+
+class PackageActivityAPITestCase(JsonBasedTesting, TestCase):
+    def setUp(self):
+        self.data = {
+            "@context": [
+                "https://www.w3.org/ns/activitystreams",
+                "https://www.aboutcode.org/ns/federatedcode",
+            ],
+            "type": "Create",
+            "actor": {
+                "id": "https://127.0.0.1:8000/api/v0/purls/@pkg:npm/atlasboard/",
+                "type": "Package",
+                "name": "root",
+                "purl": "pkg:npm/atlasboard",
+                "inbox": "https://127.0.0.1:8000/api/v0/purls/@pkg:npm/atlasboard/inbox",
+                "outbox": "https://127.0.0.1:8000/api/v0/purls/@pkg:npm/atlasboard/outbox",
+                "followers": "https://127.0.0.1:8000/api/v0/purls/@pkg:npm/atlasboard/followers/",
+                "publicKey": {
+                    "id": "https://127.0.0.1:8000/api/v0/purls/@pkg:npm/atlasboard/",
+                    "owner": "https://127.0.0.1:8000/api/v0/users/@root",
+                    "publicKeyPem": "-----BEGIN PUBLIC KEY-----...-----END PUBLIC KEY-----",
+                },
+            },
+            "object": {
+                "id": "https://127.0.0.1:8000/notes/f9d10718-c6a2-4414-a96c-6cfcafe17be9",
+                "type": "Note",
+                "author": "pkg:npm/atlasboard@127.0.0.1:8000",
+                "content": "purl: pkg:npm/atlasboard@1.1.11\nscans:\n  - tool: pkg:pypi/scancode-toolkit\n    file_name: scancodeio.json\n",
+                "update_date": "2024-12-19 10:49:26.201915+00:00",
+            },
+            "to": [],
+            "cc": "https://www.w3.org/ns/activitystreams#Public",
+        }
+        self.client = APIClient()
+
+    def test_api_package_activity_listener_inbox_endpoint(self):
+        response = self.client.post(
+            "/api/users/@purldb/inbox", data=self.data, format="json"
+        )
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+
+    def test_api_package_activity_creation(self):
+        package_activity_count = PackageActivity.objects.count()
+        self.assertEqual(0, package_activity_count)
+
+        response = self.client.post(
+            "/api/users/@purldb/inbox", data=self.data, format="json"
+        )
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+
+        package_activity_count = PackageActivity.objects.count()
+        self.assertEqual(1, package_activity_count)
+
+    def test_api_package_activity_endpoint(self):
+        response = self.client.post(
+            "/api/users/@purldb/inbox", data=self.data, format="json"
+        )
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+
+        package_activity = self.client.get("/api/package_activity/")
+        self.assertEqual(1, package_activity.data.get("count"))
