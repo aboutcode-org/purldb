@@ -78,6 +78,8 @@ check: check_docs
 clean:
 	@echo "-> Clean the Python env"
 	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --clean
+	rm -rf .venv/ .*cache/ *.egg-info/ build/ dist/
+	find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
 migrate:
 	@echo "-> Apply database migrations"

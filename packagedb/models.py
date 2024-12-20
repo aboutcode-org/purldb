@@ -27,6 +27,9 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 import natsort
+from aboutcode.federatedcode.contrib.django.models import (
+    FederatedCodePackageActivityMixin,
+)
 from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
 from packagedcode.models import normalize_qualifiers
@@ -1466,3 +1469,22 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
     """Create an API key token on user creation, using the signal system."""
     if created:
         Token.objects.get_or_create(user_id=instance.pk)
+
+
+class PackageActivity(FederatedCodePackageActivityMixin):
+    """Record of package activity from a FederatedCode."""
+
+    uuid = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+        help_text=_("The identifier of the package activity"),
+    )
+    creation_date = models.DateTimeField(
+        auto_now_add=True,
+        help_text=_("Timestamp indicating when this object was created."),
+    )
+
+    is_processed = models.BooleanField(
+        default=False, help_text=_("True if this activity has been processed.")
+    )
