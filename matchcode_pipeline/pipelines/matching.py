@@ -56,6 +56,7 @@ class Matching(ScanCodebase, LoadInventory):
             cls.match_directories_to_purldb,
             cls.match_resources_to_purldb,
             cls.match_resources_approximately,
+            cls.match_resources_snippets,
             cls.match_purldb_resources_post_process,
             cls.remove_packages_without_resources,
         )
@@ -111,6 +112,10 @@ class Matching(ScanCodebase, LoadInventory):
             project=self.project,
             logger=self.log,
         )
+
+    def match_resources_snippets(self):
+        """Match snippets from selected text files in PurlDB"""
+        matching.match_purldb_resources_snippets(project=self.project, logger=self.log,)
 
     def match_purldb_resources_post_process(self):
         """Choose the best package for PurlDB matched resources."""
