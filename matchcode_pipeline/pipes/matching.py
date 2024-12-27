@@ -192,14 +192,14 @@ def match_purldb_resource_snippets(resource):
     )
     result_mappings = []
     for result in results:
-        resource = result.resource.path
+        path = result.resource.path
         package = str(result.package)
         fingerprints = [f.fingerprint.hex() for f in result.fingerprints]
         fingerprints_count = result.fingerprints_count
         similarity = result.similarity
         result_mappings.append(
             {
-                "resource": resource,
+                "path": path,
                 "package": package,
                 "fingerprints": fingerprints,
                 "fingerprints_count": fingerprints_count,
