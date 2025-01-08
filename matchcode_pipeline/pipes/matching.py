@@ -184,7 +184,7 @@ def match_purldb_resource_approximately(project, resource):
         )
 
 
-def match_purldb_resource_snippets(resource):
+def match_purldb_resource_snippets(project, resource):
     """Match by approximation a single resource in the PurlDB."""
     fingerprints = resource.extra_data.get("snippets", "")
     results = SnippetIndex.match_resources(
@@ -192,22 +192,29 @@ def match_purldb_resource_snippets(resource):
     )
     result_mappings = []
     for result in results:
-        path = result.resource.path
-        package = str(result.package)
         fingerprints = [f.fingerprint.hex() for f in result.fingerprints]
         fingerprints_count = result.fingerprints_count
         similarity = result.similarity
         result_mappings.append(
             {
-                "path": path,
-                "package": package,
+                "matched_resource": result.resource,
+                "matched_package": result.package,
                 "fingerprints": fingerprints,
                 "fingerprints_count": fingerprints_count,
                 "similarity": similarity,
             }
         )
     if result_mappings:
-        resource.status = "snippet-matched-to-purldb-resource"
+        for result_mapping in result_mappings:
+            matched_package = result_mapping["matched_package"]
+            matched_package_data = matched_package.to_dict()
+            create_package_from_purldb_data(
+                project, [resource], matched_package_data, "snippet-matched-to-purldb-resource"
+            )
+            result_mapping["matched_package"] = str(matched_package)
+            matched_resource = result_mapping["matched_resource"]
+            result_mapping["matched_resource"] = matched_resource.path
+        # resource.status = "snippet-matched-to-purldb-resource"
         save_resource_fingerprints(resource,{"matched_snippets": result_mappings})
 
 
@@ -378,7 +385,7 @@ def match_purldb_resources_snippets(project, logger=None):
     progress = LoopProgress(resource_count, logger)
 
     for resource in progress.iter(resource_iterator):
-        match_purldb_resource_snippets(resource)
+        match_purldb_resource_snippets(project, resource)
 
     matched_count = project.codebaseresources.filter(
         status="snippet-matched-to-purldb-resource"
