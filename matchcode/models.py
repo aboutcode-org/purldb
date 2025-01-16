@@ -11,6 +11,7 @@ import binascii
 import logging
 import sys
 from collections import defaultdict
+from copy import deepcopy
 from datetime import datetime
 from difflib import SequenceMatcher
 from typing import NamedTuple
@@ -510,7 +511,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         return matches
 
     @classmethod
-    def match_resources(cls, fingerprints, top=None):
+    def match_resources(cls, fingerprints, top=None, **kwargs):
         """
         Return a list of ResourceSnippetMatch for matched Resources.
         Only return the ``top`` matches, or all matches if ``top`` is zero.
@@ -526,8 +527,29 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         if not fingerprints:
             return cls.objects.none()
 
-        # strip positions
-        only_fings = [hexstring_to_binarray(fing["snippet"]) for fing in fingerprints]
+        # map fingerprints to spans
+        # after we have our matched fingerprints, we can go  back and get the
+        # spans that they were for When we hhave the spans that we matched to,
+        # we need to consolidate these spans, a lot of spans will be contained
+        # in the other
+        extended_file_fragment_matches_by_fingerprints = defaultdict(list)
+        for fp in fingerprints:
+            snippet = fp["snippet"]
+            start_pos = fp["start_pos"]
+            end_pos = fp["end_pos"]
+            resource = kwargs.get("resource")
+            qspan = Span([start_pos, end_pos])
+            effm = ExtendedFileFragmentMatch(
+                match=snippet, qspan=qspan, ispan=Span(), resource=resource
+            )
+            extended_file_fragment_matches_by_fingerprints[snippet].append(effm)
+
+        only_fings = [
+            hexstring_to_binarray(fing)
+            for fing in extended_file_fragment_matches_by_fingerprints.keys()
+        ]
+
+        # TODO: track matched package and package resource in ExtendedFileFragmentMatch
 
         # Step 0: get all fingerprint records that match whith the input
         matched_fps = cls.objects.filter(fingerprint__in=only_fings)
@@ -547,15 +569,24 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
             jc = matching_snippets_count / (
                 (r_snippets_count + fingerprints_length) - matching_snippets_count
             )
-            matches_by_jc[jc].append(
-                ResourceSnippetMatch(
-                    resource=r,
-                    package=r.package,
-                    fingerprints=matching_snippets,
-                    fingerprints_count=matching_snippets_count,
-                    similarity=jc,
-                )
-            )
+            for matching_snippet in matching_snippets:
+                fp = matching_snippet.fingerprint.hex()
+                match_templates = extended_file_fragment_matches_by_fingerprints.get(fp)
+                for match_template in match_templates:
+                    match_copy = deepcopy(match_template)
+                    match_copy.iresource = r
+                    match_copy.ipackage = r.package
+                    match_copy.istart = matching_snippet.position
+                    match_copy.iend = (
+                        matching_snippet.position + 15
+                    )  # TODO: use variable here instead of magic number
+                    match_copy.match = fp
+                    matches_by_jc[jc].append(match_copy)
+
+        # TODO: we do not track position so we do not know if we have a long or short match, or if the matches overlap
+        # We need have start position and end position, we need to have a function that combines overlapping matches into a span of matches
+        # This should be aligned between the query and index side
+        # we need to have a list of matched position in ascending order
 
         # Step 3: order results from highest coefficient to lowest
         matches = []
@@ -591,12 +622,18 @@ class ExtendedFileFragmentMatch:
     index-related variables on the right hand side.
     """
 
+    match = attr.ib(type=str, metadata=dict(help="value of matched file fragment"))
+
     qresource = attr.ib(
         type=Resource, metadata=dict(help="matched from query-side Resource")
     )
 
     iresource = attr.ib(
         type=Resource, metadata=dict(help="matched to index-side Resource")
+    )
+
+    ipackage = attr.ib(
+        type=Package, metadata=dict(help="matched to index-side Package")
     )
 
     qspan = attr.ib(

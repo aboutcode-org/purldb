@@ -7,6 +7,8 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import logging
+import sys
 from functools import reduce
 from operator import or_
 
@@ -21,6 +23,22 @@ from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import ExactFileIndex
 from matchcode.models import ExactPackageArchiveIndex
+
+TRACE = False
+
+if TRACE:
+    level = logging.DEBUG
+else:
+    level = logging.ERROR
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(stream=sys.stdout)
+logger.setLevel(level)
+
+
+def logger_debug(*args):
+    return logger.debug(" ".join(isinstance(a, str) and a or repr(a) for a in args))
+
 
 """
 These functions are convenience functions to run matching on a Codebase or
@@ -275,3 +293,181 @@ def path_suffixes(path):
     suffixes = (segments[i:] for i in range(len(segments)))
     for suffix in suffixes:
         yield "/".join(suffix)
+
+
+def merge_matches(matches, max_dist=None, trace=TRACE):
+    """
+    Return a list of merged LicenseMatch matches given a `matches` list of
+    LicenseMatch. Merging is a "lossless" operation that combines two or more
+    matches to the same rule and that are in sequence of increasing query and
+    index positions in a single new match.
+    """
+    # shortcut for single matches
+    if len(matches) < 2:
+        return matches
+
+    # only merge matches from the same package - package resource combination
+    # sort by package, resource, sort on start, longer high, longer match, matcher type
+    sorter = lambda m: (
+        m.ipackage,
+        m.iresource,
+        m.qspan.start,
+        -m.hilen(),
+        -m.len(),
+        m.matcher_order,
+    )
+    matches.sort(key=sorter)
+
+    if trace:
+        print("merge_matches: number of matches to process:", len(matches))
+
+    if max_dist is None:
+        # Using window length
+        # TODO: expose window length variable and reference that here
+        max_dist = 16
+
+    # compare two matches in the sorted sequence: current and next
+    i = 0
+    while i < len(matches) - 1:
+        j = i + 1
+        while j < len(matches):
+            current_match = matches[i]
+            next_match = matches[j]
+
+            # if we have two equal ispans and some overlap
+            # keep the shortest/densest match in qspan e.g. the smallest magnitude of the two
+            if current_match.ispan == next_match.ispan and current_match.overlap(
+                next_match
+            ):
+                cqmag = current_match.qspan.magnitude()
+                nqmag = next_match.qspan.magnitude()
+                if cqmag <= nqmag:
+                    if trace:
+                        logger_debug(
+                            "    ---> ###merge_matches: "
+                            "current ispan EQUALS next ispan, current qmagnitude smaller, "
+                            "del next"
+                        )
+
+                    del matches[j]
+                    continue
+                else:
+                    if trace:
+                        logger_debug(
+                            "    ---> ###merge_matches: "
+                            "current ispan EQUALS next ispan, next qmagnitude smaller, "
+                            "del current"
+                        )
+
+                    del matches[i]
+                    i -= 1
+                    break
+
+            # remove contained matches
+            if current_match.qcontains(next_match):
+                if trace:
+                    logger_debug(
+                        "    ---> ###merge_matches: "
+                        "next CONTAINED in current, "
+                        "del next"
+                    )
+
+                del matches[j]
+                continue
+
+            # remove contained matches the other way
+            if next_match.qcontains(current_match):
+                if trace:
+                    logger_debug(
+                        "    ---> ###merge_matches: "
+                        "current CONTAINED in next, "
+                        "del current"
+                    )
+
+                del matches[i]
+                i -= 1
+                break
+
+            # FIXME: qsurround is too weak. We want to check also isurround
+            # merge surrounded
+            if current_match.surround(next_match):
+                new_match = current_match.combine(next_match)
+                if len(new_match.qspan) == len(new_match.ispan):
+                    # the merged matched is likely aligned
+                    current_match.update(next_match)
+                    if trace:
+                        logger_debug(
+                            "    ---> ###merge_matches: "
+                            "current SURROUNDS next, "
+                            "merged as new:",
+                            current_match,
+                        )
+
+                    del matches[j]
+                    continue
+
+            # FIXME: qsurround is too weak. We want to check also isurround
+            # merge surrounded the other way too: merge in current
+            if next_match.surround(current_match):
+                new_match = current_match.combine(next_match)
+                if len(new_match.qspan) == len(new_match.ispan):
+                    # the merged matched is likely aligned
+                    next_match.update(current_match)
+                    if trace:
+                        logger_debug(
+                            "    ---> ###merge_matches: "
+                            "next SURROUNDS current, "
+                            "merged as new:",
+                            current_match,
+                        )
+
+                    del matches[i]
+                    i -= 1
+                    break
+
+            # FIXME: what about the distance??
+
+            # next_match is strictly in increasing sequence: merge in current
+            if next_match.is_after(current_match):
+                current_match.update(next_match)
+                if trace:
+                    logger_debug(
+                        "    ---> ###merge_matches: "
+                        "next follows current, "
+                        "merged as new:",
+                        current_match,
+                    )
+
+                del matches[j]
+                continue
+
+            # next_match overlaps
+            # Check increasing sequence and overlap importance to decide merge
+            if (
+                current_match.qstart <= next_match.qstart
+                and current_match.qend <= next_match.qend
+                and current_match.istart <= next_match.istart
+                and current_match.iend <= next_match.iend
+            ):
+                qoverlap = current_match.qspan.overlap(next_match.qspan)
+                if qoverlap:
+                    ioverlap = current_match.ispan.overlap(next_match.ispan)
+                    # only merge if overlaps are equals (otherwise they are not aligned)
+                    if qoverlap == ioverlap:
+                        current_match.update(next_match)
+
+                        if trace:
+                            logger_debug(
+                                "    ---> ###merge_matches: "
+                                "next overlaps in sequence current, "
+                                "merged as new:",
+                                current_match,
+                            )
+
+                        del matches[j]
+                        continue
+
+            j += 1
+        i += 1
+    print(matches)
+    return matches

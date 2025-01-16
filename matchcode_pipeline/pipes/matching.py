@@ -33,9 +33,9 @@ from scanpipe.pipes.matchcode import save_resource_fingerprints
 
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateResourceContentIndex
+from matchcode.models import SnippetIndex
 from packagedb.models import Package
 from packagedb.models import Resource
-from matchcode.models import SnippetIndex
 
 
 def get_project_resources_qs(project, resources):
@@ -188,7 +188,8 @@ def match_purldb_resource_snippets(project, resource):
     """Match by approximation a single resource in the PurlDB."""
     fingerprints = resource.extra_data.get("snippets", "")
     results = SnippetIndex.match_resources(
-        fingerprints=fingerprints
+        fingerprints=fingerprints,
+        resource=resource,
     )
     result_mappings = []
     for result in results:
@@ -209,13 +210,16 @@ def match_purldb_resource_snippets(project, resource):
             matched_package = result_mapping["matched_package"]
             matched_package_data = matched_package.to_dict()
             create_package_from_purldb_data(
-                project, [resource], matched_package_data, "snippet-matched-to-purldb-resource"
+                project,
+                [resource],
+                matched_package_data,
+                "snippet-matched-to-purldb-resource",
             )
             result_mapping["matched_package"] = str(matched_package)
             matched_resource = result_mapping["matched_resource"]
             result_mapping["matched_resource"] = matched_resource.path
         # resource.status = "snippet-matched-to-purldb-resource"
-        save_resource_fingerprints(resource,{"matched_snippets": result_mappings})
+        save_resource_fingerprints(resource, {"matched_snippets": result_mappings})
 
 
 def match_purldb_directory(project, resource, exact_match=False):
