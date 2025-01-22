@@ -308,13 +308,13 @@ def merge_matches(matches, max_dist=None, trace=TRACE):
 
     # only merge matches from the same package - package resource combination
     # sort by package, resource, sort on start, longer high, longer match, matcher type
+    # TODO: consider each element in matches to be part of the same iresource
+
     sorter = lambda m: (
         m.ipackage,
         m.iresource,
         m.qspan.start,
-        -m.hilen(),
         -m.len(),
-        m.matcher_order,
     )
     matches.sort(key=sorter)
 
@@ -336,138 +336,24 @@ def merge_matches(matches, max_dist=None, trace=TRACE):
 
             # if we have two equal ispans and some overlap
             # keep the shortest/densest match in qspan e.g. the smallest magnitude of the two
-            if current_match.ispan == next_match.ispan and current_match.overlap(
-                next_match
+            # or distance within max_dist
+            if (
+                current_match.overlap(next_match)
+                or current_match.qcontains(next_match)
+                or current_match.qdistance_to(next_match) < max_dist
             ):
-                cqmag = current_match.qspan.magnitude()
-                nqmag = next_match.qspan.magnitude()
-                if cqmag <= nqmag:
-                    if trace:
-                        logger_debug(
-                            "    ---> ###merge_matches: "
-                            "current ispan EQUALS next ispan, current qmagnitude smaller, "
-                            "del next"
-                        )
-
-                    del matches[j]
-                    continue
-                else:
-                    if trace:
-                        logger_debug(
-                            "    ---> ###merge_matches: "
-                            "current ispan EQUALS next ispan, next qmagnitude smaller, "
-                            "del current"
-                        )
-
-                    del matches[i]
-                    i -= 1
-                    break
-
-            # remove contained matches
-            if current_match.qcontains(next_match):
-                if trace:
-                    logger_debug(
-                        "    ---> ###merge_matches: "
-                        "next CONTAINED in current, "
-                        "del next"
-                    )
-
-                del matches[j]
-                continue
-
-            # remove contained matches the other way
-            if next_match.qcontains(current_match):
-                if trace:
-                    logger_debug(
-                        "    ---> ###merge_matches: "
-                        "current CONTAINED in next, "
-                        "del current"
-                    )
-
-                del matches[i]
-                i -= 1
-                break
-
-            # FIXME: qsurround is too weak. We want to check also isurround
-            # merge surrounded
-            if current_match.surround(next_match):
-                new_match = current_match.combine(next_match)
-                if len(new_match.qspan) == len(new_match.ispan):
-                    # the merged matched is likely aligned
-                    current_match.update(next_match)
-                    if trace:
-                        logger_debug(
-                            "    ---> ###merge_matches: "
-                            "current SURROUNDS next, "
-                            "merged as new:",
-                            current_match,
-                        )
-
-                    del matches[j]
-                    continue
-
-            # FIXME: qsurround is too weak. We want to check also isurround
-            # merge surrounded the other way too: merge in current
-            if next_match.surround(current_match):
-                new_match = current_match.combine(next_match)
-                if len(new_match.qspan) == len(new_match.ispan):
-                    # the merged matched is likely aligned
-                    next_match.update(current_match)
-                    if trace:
-                        logger_debug(
-                            "    ---> ###merge_matches: "
-                            "next SURROUNDS current, "
-                            "merged as new:",
-                            current_match,
-                        )
-
-                    del matches[i]
-                    i -= 1
-                    break
-
-            # FIXME: what about the distance??
-
-            # next_match is strictly in increasing sequence: merge in current
-            if next_match.is_after(current_match):
                 current_match.update(next_match)
                 if trace:
                     logger_debug(
                         "    ---> ###merge_matches: "
-                        "next follows current, "
+                        "current overlaps, qcontains, or qdistance_to < max_dist to next_match, "
                         "merged as new:",
                         current_match,
                     )
-
                 del matches[j]
                 continue
-
-            # next_match overlaps
-            # Check increasing sequence and overlap importance to decide merge
-            if (
-                current_match.qstart <= next_match.qstart
-                and current_match.qend <= next_match.qend
-                and current_match.istart <= next_match.istart
-                and current_match.iend <= next_match.iend
-            ):
-                qoverlap = current_match.qspan.overlap(next_match.qspan)
-                if qoverlap:
-                    ioverlap = current_match.ispan.overlap(next_match.ispan)
-                    # only merge if overlaps are equals (otherwise they are not aligned)
-                    if qoverlap == ioverlap:
-                        current_match.update(next_match)
-
-                        if trace:
-                            logger_debug(
-                                "    ---> ###merge_matches: "
-                                "next overlaps in sequence current, "
-                                "merged as new:",
-                                current_match,
-                            )
-
-                        del matches[j]
-                        continue
-
+            else:
+                break
             j += 1
         i += 1
-    print(matches)
     return matches

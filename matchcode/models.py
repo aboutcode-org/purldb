@@ -516,6 +516,8 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         Return a list of ResourceSnippetMatch for matched Resources.
         Only return the ``top`` matches, or all matches if ``top`` is zero.
         """
+        from matchcode.match import merge_matches
+
         if TRACE:
             logger_debug(
                 cls.__name__,
@@ -538,11 +540,10 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
             start_pos = fp["start_pos"]
             end_pos = fp["end_pos"]
             resource = kwargs.get("resource")
-            qspan = Span([start_pos, end_pos])
-            effm = ExtendedFileFragmentMatch(
-                match=snippet, qspan=qspan, ispan=Span(), resource=resource
+            qspan = Span(start_pos, end_pos)
+            extended_file_fragment_matches_by_fingerprints[snippet].append(
+                ExtendedFileFragmentMatch(qspan=qspan, qresource=resource)
             )
-            extended_file_fragment_matches_by_fingerprints[snippet].append(effm)
 
         only_fings = [
             hexstring_to_binarray(fing)
@@ -576,11 +577,6 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
                     match_copy = deepcopy(match_template)
                     match_copy.iresource = r
                     match_copy.ipackage = r.package
-                    match_copy.istart = matching_snippet.position
-                    match_copy.iend = (
-                        matching_snippet.position + 15
-                    )  # TODO: use variable here instead of magic number
-                    match_copy.match = fp
                     matches_by_jc[jc].append(match_copy)
 
         # TODO: we do not track position so we do not know if we have a long or short match, or if the matches overlap
@@ -591,7 +587,8 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         # Step 3: order results from highest coefficient to lowest
         matches = []
         for jc, m in sorted(matches_by_jc.items(), reverse=True):
-            matches.extend(m)
+            merged_matches = merge_matches(m)
+            matches.extend(merged_matches)
 
         return matches[:top]
 
@@ -622,30 +619,27 @@ class ExtendedFileFragmentMatch:
     index-related variables on the right hand side.
     """
 
-    match = attr.ib(type=str, metadata=dict(help="value of matched file fragment"))
-
     qresource = attr.ib(
-        type=Resource, metadata=dict(help="matched from query-side Resource")
+        default=None,
+        type=Resource,
+        metadata=dict(help="matched from query-side Resource"),
     )
 
     iresource = attr.ib(
-        type=Resource, metadata=dict(help="matched to index-side Resource")
+        default=None,
+        type=Resource,
+        metadata=dict(help="matched to index-side Resource"),
     )
 
     ipackage = attr.ib(
-        type=Package, metadata=dict(help="matched to index-side Package")
+        default=None, type=Package, metadata=dict(help="matched to index-side Package")
     )
 
     qspan = attr.ib(
+        default=None,
         metadata=dict(
             help="query matched Span, start at zero which is the query Resource start."
-        )
-    )
-
-    ispan = attr.ib(
-        metadata=dict(
-            help="index side matched Span, start at zero which is the indexed Resource start."
-        )
+        ),
     )
 
     start_line = attr.ib(default=0, metadata=dict(help="match start line, 1-based"))
@@ -654,20 +648,14 @@ class ExtendedFileFragmentMatch:
 
     def __repr__(self):
         qreg = (self.qstart, self.qend)
-        ireg = (self.istart, self.iend)
         return (
             f"ExtendedFileFragmentMatch: "
             f"qres: {self.qresource!r}, "
             f"ires: {self.iresource!r}, "
             f"lines={self.lines()!r}, "
-            f"sc={self.score()!r}, "
-            f"cov={self.coverage()!r}, "
             f"len={self.len()}, "
-            f"rlen={self.rule.length}, "
             f"qreg={qreg!r}, "
-            f"ireg={ireg!r}"
             f"qspan={self.qspan}"
-            f"ispan={self.ispan}"
         )
 
     # NOTE: we implement all rich comparison operators with some inlining for performance reasons,
@@ -680,7 +668,6 @@ class ExtendedFileFragmentMatch:
         return (
             isinstance(other, ExtendedFileFragmentMatch)
             and self.qspan == other.qspan
-            and self.ispan == other.ispan
             and self.iresource == other.iresource
         )
 
@@ -691,7 +678,6 @@ class ExtendedFileFragmentMatch:
         return (
             not isinstance(other, ExtendedFileFragmentMatch)
             or self.qspan != other.qspan
-            or self.ispan != other.ispan
             or self.iresource != other.iresource
         )
 
@@ -706,9 +692,7 @@ class ExtendedFileFragmentMatch:
             return NotImplemented
 
         return self.qstart < other.qstart or (
-            self.qspan == other.qspan
-            and self.ispan == other.ispan
-            and self.iresource == other.iresource
+            self.qspan == other.qspan and self.iresource == other.iresource
         )
 
     def __gt__(self, other):
@@ -722,9 +706,7 @@ class ExtendedFileFragmentMatch:
             return NotImplemented
 
         return self.qstart > other.qstart or (
-            self.qspan == other.qspan
-            and self.ispan == other.ispan
-            and self.iresource == other.iresource
+            self.qspan == other.qspan and self.iresource == other.iresource
         )
 
     def lines(self, line_by_pos=None):
@@ -753,19 +735,11 @@ class ExtendedFileFragmentMatch:
         """
         return len(self.qspan)
 
-    @property
-    def istart(self):
-        return self.ispan.start
-
-    @property
-    def iend(self):
-        return self.ispan.end
-
     def __contains__(self, other):
         """
         Return True if qspan contains other.qspan and ispan contains other.ispan.
         """
-        return other.qspan in self.qspan and other.ispan in self.ispan
+        return other.qspan in self.qspan
 
     def qcontains(self, other):
         """
@@ -781,194 +755,33 @@ class ExtendedFileFragmentMatch:
         """
         return self.qspan.distance_to(other.qspan)
 
-    def idistance_to(self, other):
-        """
-        Return the absolute ispan distance from self to other match.
-        Overlapping matches have a zero distance.
-        Non-overlapping touching matches have a distance of one.
-        """
-        return self.ispan.distance_to(other.ispan)
-
     def overlap(self, other):
         """
         Return the number of overlapping positions with other.
         """
         return self.qspan.overlap(other.qspan)
 
-    def _icoverage(self):
-        """
-        Return the coverage of this match to the matched rule as a float between
-        0 and 1.
-        """
-        if not self.rule.length:
-            return 0
-        return self.len() / self.rule.length
-
-    def coverage(self):
-        """
-        Return the coverage of this match to the matched index Resource as a rounded float
-        between 0 and 100.
-        """
-        return round(self._icoverage() * 100, 2)
-
-    def qmagnitude(self):
-        """
-        Return the maximal query length represented by this match start and end in the query
-        Resource. This number represents the full extent of the matched query region.
-
-        If the match is a contiguous match without any gaps in its range:
-        - Then the magnitude is the same as the length of the match
-
-        If the match is not a contiguous match with gaps in its range:
-        - Then the magnitude will be greater than the matched length accounting for the gaps.
-        match with gaps between its matched tokens.
-        """
-        # The query side of the match may not be contiguous. Therefore we need to compute the real
-        # portion query length including alltokens that is included in this match, for both matched
-        # and unmatched tokens.
-
-        query = self.query
-        qspan = self.qspan
-        qmagnitude = self.qregion_len()
-
-        # Compute a count of unknown tokens that are inside the matched
-        # range, ignoring end position of the query span: unknowns here do
-        # not matter as they are never in the match but they influence the
-        # score.
-        unknowns_pos = qspan & query.unknowns_span
-        qspe = qspan.end
-        unknowns_pos = (pos for pos in unknowns_pos if pos != qspe)
-        qry_unkxpos = query.unknowns_by_pos
-        unknowns_in_match = sum(qry_unkxpos[pos] for pos in unknowns_pos)
-
-        # update the magnitude by adding the count of unknowns in the match.
-        # This number represents the full extent of the matched query region
-        # including matched, unmatched and unknown tokens.
-        qmagnitude += unknowns_in_match
-
-        return qmagnitude
-
-    def is_continuous(self):
-        """
-        Return True if the all the matched tokens of this match are continuous
-        without any extra unmatched known or unkwown words, or stopwords.
-        """
-        return self.len() == self.qregion_len() == self.qmagnitude()
-
-    def qregion(self):
-        """
-        Return the maximal positions Span representing this match from
-        start to end as query positions, including matched and unmatched tokens.
-        """
-        return Span(self.qstart, self.qend)
-
-    def qregion_len(self):
-        """
-        Return the maximal number of positions represented by this match start
-        and end region of query positions including matched and unmatched
-        tokens.
-        """
-        return self.qspan.magnitude()
-
-    def qregion_lines(self):
-        """
-        Return the maximal lines Span that this match query regions covers.
-        """
-        return Span(self.start_line, self.end_line)
-
-    def qregion_lines_len(self):
-        """
-        Return the maximal number of lines that this match query regions covers.
-        """
-        return self.end_line - self.start_line + 1
-
-    def qdensity(self):
-        """
-        Return the query density of this match as a ratio of its length to its qmagnitude, a float
-        between 0 and 1. A dense match has all its matched query tokens contiguous and a maximum
-        qdensity of one. A sparse low qdensity match has some non-contiguous matched query tokens
-        interspersed between matched query tokens. An empty match has a zero qdensity.
-        """
-        mlen = self.len()
-        if not mlen:
-            return 0
-        qmagnitude = self.qmagnitude()
-        if not qmagnitude:
-            return 0
-        return mlen / qmagnitude
-
-    def idensity(self):
-        """
-        Return the ispan density of this match as a ratio of its rule-side matched length to its
-        rule side magnitude. This is a float between 0 and 1. A dense match has all its matched rule
-        tokens contiguous and a maximum idensity of one. A sparse low idensity match has some non-
-        contiguous matched rule tokens interspersed between matched rule tokens. An empty match has
-        a zero qdensity.
-        """
-        return self.ispan.density()
-
     def score(self):
         """
         Return the score for this match as a rounded float between 0 and 100.
 
-        The score is an indication of the confidence that a match is good. It is computed from the
-        number of matched tokens, the number of query tokens in the matched range (including
-        unknowns and unmatched) and the matched rule relevance.
+        This represents the percentage of tokens/positions matched
         """
-        qmagnitude = self.qmagnitude()
-
-        # Compute the score as the ration of the matched query length to the
-        # qmagnitude, e.g. the length of the matched region
-        if not qmagnitude:
-            return 0
-
-        # FIXME: this should exposed as an q/icoverage() method instead
-        query_coverage = self.len() / qmagnitude
-        index_coverage = self._icoverage()
-        if query_coverage < 1 and index_coverage < 1:
-            # use coverage in this case
-            return round(index_coverage * 100, 2)
-        return round(query_coverage * index_coverage * 100, 2)
-
-    def surround(self, other):
-        """
-        Return True if this match query span surrounds other other match query
-        span.
-
-        This is different from containment. A matched query region can surround
-        another matched query region and have no positions in common with the
-        surrounded match.
-        """
-        return self.qstart <= other.qstart and self.qend >= other.qend
-
-    def is_after(self, other):
-        """Return True if this match spans are strictly after other match spans."""
-        return self.qspan.is_after(other.qspan) and self.ispan.is_after(other.ispan)
+        return NotImplemented
 
     def combine(self, other):
         """Return a new match object combining self and an other match."""
-        if self.rule != other.rule:
+        if self.iresource != other.iresource or self.ipackage != other.ipackage:
             raise TypeError(
-                "Cannot combine matches with different rules: "
+                "Cannot combine matches with different ipackage-iresource combination: "
                 f"from: {self!r}, to: {other!r}"
             )
 
-        if other.matcher not in self.matcher:
-            newmatcher = " ".join([self.matcher, other.matcher])
-            newmatcher_order = max([self.matcher_order, other.matcher_order])
-        else:
-            newmatcher = self.matcher
-            newmatcher_order = self.matcher_order
-
         combined = ExtendedFileFragmentMatch(
-            rule=self.rule,
+            qresource=self.qresource,
+            ipackage=self.ipackage,
+            iresource=self.iresource,
             qspan=Span(self.qspan | other.qspan),
-            ispan=Span(self.ispan | other.ispan),
-            hispan=Span(self.hispan | other.hispan),
-            query_run_start=min(self.query_run_start, other.query_run_start),
-            matcher=newmatcher,
-            matcher_order=newmatcher_order,
-            query=self.query,
         )
         return combined
 
@@ -976,14 +789,4 @@ class ExtendedFileFragmentMatch:
         """Update self with other match and return the updated self in place."""
         combined = self.combine(other)
         self.qspan = combined.qspan
-        self.ispan = combined.ispan
         return self
-
-    def itokens(self, idx):
-        """Return the sequence of matched itoken ids."""
-        ispan = self.ispan
-        rid = self.rule.rid
-        if rid is not None:
-            for pos, token in enumerate(idx.tids_by_rid[rid]):
-                if pos in ispan:
-                    yield token
