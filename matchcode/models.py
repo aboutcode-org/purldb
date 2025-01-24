@@ -577,6 +577,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
                     match_copy = deepcopy(match_template)
                     match_copy.iresource = r
                     match_copy.ipackage = r.package
+                    match_copy.score = jc
                     matches_by_jc[jc].append(match_copy)
 
         # TODO: we do not track position so we do not know if we have a long or short match, or if the matches overlap
@@ -645,6 +646,13 @@ class ExtendedFileFragmentMatch:
     start_line = attr.ib(default=0, metadata=dict(help="match start line, 1-based"))
 
     end_line = attr.ib(default=0, metadata=dict(help="match end line, 1-based"))
+
+    score = attr.ib(
+        default=0,
+        metadata=dict(
+            help="a float that represents the Jaccard index of this match against the index-side Resource"
+        ),
+    )
 
     def __repr__(self):
         qreg = (self.qstart, self.qend)
@@ -760,14 +768,6 @@ class ExtendedFileFragmentMatch:
         Return the number of overlapping positions with other.
         """
         return self.qspan.overlap(other.qspan)
-
-    def score(self):
-        """
-        Return the score for this match as a rounded float between 0 and 100.
-
-        This represents the percentage of tokens/positions matched
-        """
-        return NotImplemented
 
     def combine(self, other):
         """Return a new match object combining self and an other match."""
