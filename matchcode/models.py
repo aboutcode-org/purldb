@@ -15,6 +15,7 @@ from copy import deepcopy
 from datetime import datetime
 from difflib import SequenceMatcher
 from typing import NamedTuple
+from itertools import groupby
 
 from django.db import models
 from django.forms.models import model_to_dict
@@ -414,6 +415,24 @@ class ResourceSnippetMatch(NamedTuple):
     similarity: float
 
 
+class ResourceSnippetMatch2(NamedTuple):
+    package: Package
+    resource: Resource
+    similarity: float
+    match_detections: list["Span"]
+
+    def to_dict(self):
+        match_detections = []
+        for md in self.match_detections:
+            match_detections.extend(list(md))
+        return {
+            "package": str(self.package),
+            "resource": self.resource.path,
+            "similarity": self.similarity,
+            "match_detections": match_detections,
+        }
+
+
 class SnippetIndex(PackageRelatedMixin, models.Model):
     resource = models.ForeignKey(
         Resource,
@@ -577,7 +596,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
                     match_copy = deepcopy(match_template)
                     match_copy.iresource = r
                     match_copy.ipackage = r.package
-                    match_copy.score = jc
+                    match_copy.similarity = jc
                     matches_by_jc[jc].append(match_copy)
 
         # TODO: we do not track position so we do not know if we have a long or short match, or if the matches overlap
@@ -587,11 +606,65 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
 
         # Step 3: order results from highest coefficient to lowest
         matches = []
-        for jc, m in sorted(matches_by_jc.items(), reverse=True):
-            merged_matches = merge_matches(m)
+        for match in matches_by_jc.values():
+            merged_matches = merge_matches(match)
             matches.extend(merged_matches)
 
-        return matches[:top]
+        # Step 4: group matches by ipackage and iresource, then spans
+        sorter = lambda m: (
+            m.ipackage,
+            m.iresource,
+            m.similarity,
+            m.qspan.start,
+            -m.len(),
+        )
+        matches.sort(key=sorter)
+        matches_by_ipackage_iresource = groupby(matches, key=sorter)
+        final_matches = []
+        prev_ipackage = None
+        prev_iresource = None
+        match_detections = []
+        for (ipackage, iresource, similarity, _, _), grouped_matches in matches_by_ipackage_iresource:
+            if not prev_ipackage:
+                prev_ipackage = ipackage
+            if not prev_iresource:
+                prev_iresource = iresource
+
+            package_changed = ipackage != prev_ipackage
+            resource_changed = iresource != prev_iresource
+            if package_changed or resource_changed:
+                # finish up match_detections for this ipackage or iresource and create ResourceSnippetMatch
+                if package_changed:
+                    ipkg = prev_ipackage
+                if resource_changed:
+                    ires = prev_iresource
+                m = ResourceSnippetMatch2(
+                    package=ipkg,
+                    resource=ires,
+                    similarity=similarity,
+                    match_detections=match_detections
+                )
+                final_matches.append(m)
+                match_detections = []
+
+            for match in grouped_matches:
+                m = match.qspan.subspans()
+                match_detections.extend(m)
+
+            prev_ipackage = ipackage
+            prev_iresource = iresource
+
+        if match_detections:
+            # we are out of the loop but not reported what was left over
+            m = ResourceSnippetMatch2(
+                package=prev_ipackage,
+                resource=prev_iresource,
+                similarity=similarity,
+                match_detections=match_detections
+            )
+            final_matches.append(m)
+
+        return final_matches[:top]
 
 
 class ApproximateFileIndex(ApproximateMatchingHashMixin, models.Model):
@@ -647,7 +720,7 @@ class ExtendedFileFragmentMatch:
 
     end_line = attr.ib(default=0, metadata=dict(help="match end line, 1-based"))
 
-    score = attr.ib(
+    similarity = attr.ib(
         default=0,
         metadata=dict(
             help="a float that represents the Jaccard index of this match against the index-side Resource"

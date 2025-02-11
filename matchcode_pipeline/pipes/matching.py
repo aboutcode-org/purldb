@@ -191,31 +191,19 @@ def match_purldb_resource_snippets(project, resource):
         fingerprints=fingerprints,
         resource=resource,
     )
-    result_mappings = []
-    for result in results:
-        result_mappings.append(
-            {
-                "matched_resource": result.iresource,
-                "matched_package": result.ipackage,
-                "similarity": result.score,
-                "qspan": list(result.qspan),
-            }
-        )
-    if result_mappings:
-        for result_mapping in result_mappings:
-            matched_package = result_mapping["matched_package"]
-            matched_package_data = matched_package.to_dict()
+    if results:
+        matched_snippets = []
+        for result in results:
+            matched_package_data = result.package.to_dict()
             create_package_from_purldb_data(
                 project,
                 [resource],
                 matched_package_data,
                 "snippet-matched-to-purldb-resource",
             )
-            result_mapping["matched_package"] = str(matched_package)
-            matched_resource = result_mapping["matched_resource"]
-            result_mapping["matched_resource"] = matched_resource.path
-        # resource.status = "snippet-matched-to-purldb-resource"
-        save_resource_fingerprints(resource, {"matched_snippets": result_mappings})
+            results_mapping = result.to_dict()
+            matched_snippets.append(results_mapping)
+        save_resource_fingerprints(resource, {"matched_snippets": matched_snippets})
 
 
 def match_purldb_directory(project, resource, exact_match=False):
