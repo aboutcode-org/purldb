@@ -14,8 +14,8 @@ from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime
 from difflib import SequenceMatcher
-from typing import NamedTuple
 from itertools import groupby
+from typing import NamedTuple
 
 from django.db import models
 from django.forms.models import model_to_dict
@@ -408,14 +408,6 @@ class PackageSnippetMatch(NamedTuple):
 
 
 class ResourceSnippetMatch(NamedTuple):
-    resource: Resource
-    package: Package
-    fingerprints: list["SnippetIndex"]
-    fingerprints_count: int
-    similarity: float
-
-
-class ResourceSnippetMatch2(NamedTuple):
     package: Package
     resource: Resource
     similarity: float
@@ -579,7 +571,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
 
         # Step 2: see which Resource we most match to by calculating jaccard coefficient of our fingerprints against the others
         fingerprints_length = len(only_fings)
-        matches_by_jc = defaultdict(list)
+        matches = []
         for r in resources:
             # Get unique snippet fingerprints for this Resource
             r_snippets = SnippetIndex.objects.filter(resource=r).distinct("fingerprint")
@@ -597,20 +589,14 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
                     match_copy.iresource = r
                     match_copy.ipackage = r.package
                     match_copy.similarity = jc
-                    matches_by_jc[jc].append(match_copy)
+                    matches.append(match_copy)
 
         # TODO: we do not track position so we do not know if we have a long or short match, or if the matches overlap
         # We need have start position and end position, we need to have a function that combines overlapping matches into a span of matches
         # This should be aligned between the query and index side
         # we need to have a list of matched position in ascending order
 
-        # Step 3: order results from highest coefficient to lowest
-        matches = []
-        for match in matches_by_jc.values():
-            merged_matches = merge_matches(match)
-            matches.extend(merged_matches)
-
-        # Step 4: group matches by ipackage and iresource, then spans
+        # Step 3: group matches by ipackage and iresource, then spans
         sorter = lambda m: (
             m.ipackage,
             m.iresource,
@@ -623,8 +609,15 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         final_matches = []
         prev_ipackage = None
         prev_iresource = None
+        similarity = 0.0
         match_detections = []
-        for (ipackage, iresource, similarity, _, _), grouped_matches in matches_by_ipackage_iresource:
+        for (
+            ipackage,
+            iresource,
+            similarity,
+            _,
+            _,
+        ), grouped_matches in matches_by_ipackage_iresource:
             if not prev_ipackage:
                 prev_ipackage = ipackage
             if not prev_iresource:
@@ -638,29 +631,38 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
                     ipkg = prev_ipackage
                 if resource_changed:
                     ires = prev_iresource
-                m = ResourceSnippetMatch2(
+                match_detections = merge_matches(match_detections)
+                mds = []
+                for match_detection in match_detections:
+                    m = match_detection.qspan.subspans()
+                    mds.extend(m)
+                m = ResourceSnippetMatch(
                     package=ipkg,
                     resource=ires,
                     similarity=similarity,
-                    match_detections=match_detections
+                    match_detections=mds,
                 )
                 final_matches.append(m)
                 match_detections = []
 
             for match in grouped_matches:
-                m = match.qspan.subspans()
-                match_detections.extend(m)
+                match_detections.append(match)
 
             prev_ipackage = ipackage
             prev_iresource = iresource
 
         if match_detections:
             # we are out of the loop but not reported what was left over
-            m = ResourceSnippetMatch2(
+            match_detections = merge_matches(match_detections)
+            mds = []
+            for match_detection in match_detections:
+                m = match_detection.qspan.subspans()
+                mds.extend(m)
+            m = ResourceSnippetMatch(
                 package=prev_ipackage,
                 resource=prev_iresource,
                 similarity=similarity,
-                match_detections=match_detections
+                match_detections=mds,
             )
             final_matches.append(m)
 

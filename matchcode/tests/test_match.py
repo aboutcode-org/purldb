@@ -9,14 +9,18 @@
 
 import os
 
+from licensedcode.spans import Span
+
 from matchcode.match import APPROXIMATE_DIRECTORY_CONTENT_MATCH
 from matchcode.match import APPROXIMATE_DIRECTORY_STRUCTURE_MATCH
 from matchcode.match import APPROXIMATE_FILE_MATCH
 from matchcode.match import EXACT_FILE_MATCH
 from matchcode.match import EXACT_PACKAGE_ARCHIVE_MATCH
+from matchcode.match import merge_matches
 from matchcode.match import path_suffixes
 from matchcode.match import run_do_match_from_scan
 from matchcode.models import ApproximateResourceContentIndex
+from matchcode.models import ExtendedFileFragmentMatch
 from matchcode.tests import FIXTURES_REGEN
 from matchcode.utils import MatchcodeTestCase
 from matchcode.utils import index_package_directories
@@ -480,3 +484,129 @@ class DirectoryMatchingTestCase(MatchcodeTestCase):
             "match/directory-matching/get-stdin-3.0.2-i-expected.json"
         )
         self.check_codebase(vc, expected, regen=FIXTURES_REGEN)
+
+
+class TestMergeMatches(MatchcodeTestCase):
+    BASE_DIR = os.path.join(os.path.dirname(__file__), "testfiles")
+
+    def setUp(self):
+        self.test_package1, _ = Package.objects.get_or_create(
+            filename="abbot-0.12.3.jar",
+            sha1="51d28a27d919ce8690a40f4f335b9d591ceb16e9",
+            md5="38206e62a54b0489fb6baa4db5a06093",
+            size=689791,
+            name="abbot",
+            version="0.12.3",
+            download_url="http://repo1.maven.org/maven2/abbot/abbot/0.12.3/abbot-0.12.3.jar",
+            type="maven",
+        )
+        self.test_package2, _ = Package.objects.get_or_create(
+            filename="dojoz-0.4.1-1.jar",
+            sha1="ae9d68fd6a29906606c2d9407d1cc0749ef84588",
+            md5="508361a1c6273a4c2b8e4945618b509f",
+            size=876720,
+            name="dojoz",
+            version="0.4.1-1",
+            download_url="https://repo1.maven.org/maven2/org/zkoss/zkforge/dojoz/0.4.1-1/dojoz-0.4.1-1.jar",
+            type="maven",
+        )
+        self.test_resource1, _ = Resource.objects.get_or_create(
+            path="inflate.c", size=55466, package=self.test_package1
+        )
+        self.test_resource2, _ = Resource.objects.get_or_create(
+            path="inflate-mod.c", size=55466, package=self.test_package2
+        )
+
+    def test_merge_does_merge_non_contiguous_matches_in_sequence(self):
+        m1 = ExtendedFileFragmentMatch(
+            ipackage=self.test_package1, iresource=self.test_resource1, qspan=Span(0, 2)
+        )
+        m2 = ExtendedFileFragmentMatch(
+            ipackage=self.test_package1, iresource=self.test_resource1, qspan=Span(4, 6)
+        )
+        m3 = ExtendedFileFragmentMatch(
+            ipackage=self.test_package1, iresource=self.test_resource1, qspan=Span(1, 6)
+        )
+
+        results = merge_matches([m1, m2, m3])
+        assert results == [
+            ExtendedFileFragmentMatch(
+                ipackage=self.test_package1,
+                iresource=self.test_resource1,
+                qspan=Span(0, 6),
+            )
+        ]
+
+    def test_merge_does_not_merge_overlapping_matches_of_different_ipackage_iresource(
+        self,
+    ):
+        m1 = ExtendedFileFragmentMatch(
+            ipackage=self.test_package1, iresource=self.test_resource1, qspan=Span(0, 5)
+        )
+        m2 = ExtendedFileFragmentMatch(
+            ipackage=self.test_package1, iresource=self.test_resource2, qspan=Span(1, 6)
+        )
+
+        with self.assertRaises(TypeError):
+            merge_matches([m1, m2])
+
+    def test_merge_does_merge_overlapping_matches_if_in_sequence(self):
+        m1 = ExtendedFileFragmentMatch(
+            ipackage=self.test_package1, iresource=self.test_resource1, qspan=Span(0, 5)
+        )
+        m2 = ExtendedFileFragmentMatch(
+            ipackage=self.test_package1, iresource=self.test_resource1, qspan=Span(1, 6)
+        )
+
+        results = merge_matches([m1, m2])
+        assert results == [
+            ExtendedFileFragmentMatch(
+                ipackage=self.test_package1,
+                iresource=self.test_resource1,
+                qspan=Span(0, 6),
+            )
+        ]
+
+    def test_merge_does_not_merge_overlapping_matches_if_in_sequence_with_gaps(self):
+        m1 = ExtendedFileFragmentMatch(
+            ipackage=self.test_package1, iresource=self.test_resource1, qspan=Span(1, 3)
+        )
+        m2 = ExtendedFileFragmentMatch(
+            ipackage=self.test_package1,
+            iresource=self.test_resource1,
+            qspan=Span(14, 20),
+        )
+
+        expected = [
+            ExtendedFileFragmentMatch(
+                ipackage=self.test_package1,
+                iresource=self.test_resource1,
+                qspan=Span(1, 3) | Span(14, 20),
+            )
+        ]
+        results = merge_matches([m1, m2])
+        assert results == expected
+
+    def test_merge_does_not_merge_overlapping_matches_if_in_sequence_with_gaps_for_long_match(
+        self,
+    ):
+        m1 = ExtendedFileFragmentMatch(
+            ipackage=self.test_package1,
+            iresource=self.test_resource1,
+            qspan=Span(1, 10),
+        )
+        m2 = ExtendedFileFragmentMatch(
+            ipackage=self.test_package1,
+            iresource=self.test_resource1,
+            qspan=Span(14, 20),
+        )
+
+        expected = [
+            ExtendedFileFragmentMatch(
+                ipackage=self.test_package1,
+                iresource=self.test_resource1,
+                qspan=Span(1, 10) | Span(14, 20),
+            )
+        ]
+        results = merge_matches([m1, m2])
+        assert results == expected

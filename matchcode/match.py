@@ -311,8 +311,6 @@ def merge_matches(matches, max_dist=None, trace=TRACE):
     # TODO: consider each element in matches to be part of the same iresource
 
     sorter = lambda m: (
-        m.ipackage,
-        m.iresource,
         m.qspan.start,
         -m.len(),
     )
