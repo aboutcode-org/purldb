@@ -598,58 +598,49 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
 
         # Step 3: group matches by ipackage and iresource, then spans
         sorter = lambda m: (
-            m.ipackage,
-            m.iresource,
-            m.similarity,
+            -m.similarity,
             m.qspan.start,
             -m.len(),
         )
         matches.sort(key=sorter)
         matches_by_ipackage_iresource = groupby(matches, key=sorter)
         final_matches = []
+        similarity = 0.0
         prev_ipackage = None
         prev_iresource = None
-        similarity = 0.0
         match_detections = []
         for (
-            ipackage,
-            iresource,
             similarity,
             _,
             _,
         ), grouped_matches in matches_by_ipackage_iresource:
-            if not prev_ipackage:
-                prev_ipackage = ipackage
-            if not prev_iresource:
-                prev_iresource = iresource
-
-            package_changed = ipackage != prev_ipackage
-            resource_changed = iresource != prev_iresource
-            if package_changed or resource_changed:
-                # finish up match_detections for this ipackage or iresource and create ResourceSnippetMatch
-                if package_changed:
-                    ipkg = prev_ipackage
-                if resource_changed:
-                    ires = prev_iresource
-                match_detections = merge_matches(match_detections)
-                mds = []
-                for match_detection in match_detections:
-                    m = match_detection.qspan.subspans()
-                    mds.extend(m)
-                m = ResourceSnippetMatch(
-                    package=ipkg,
-                    resource=ires,
-                    similarity=similarity,
-                    match_detections=mds,
-                )
-                final_matches.append(m)
-                match_detections = []
-
             for match in grouped_matches:
-                match_detections.append(match)
+                package_changed = (
+                    match.ipackage != prev_ipackage if prev_ipackage else False
+                )
+                resource_changed = (
+                    match.iresource != prev_iresource if prev_iresource else False
+                )
 
-            prev_ipackage = ipackage
-            prev_iresource = iresource
+                if package_changed or resource_changed:
+                    # finish up match_detections for this ipackage or iresource and create ResourceSnippetMatch
+                    match_detections = merge_matches(match_detections)
+                    mds = []
+                    for match_detection in match_detections:
+                        m = match_detection.qspan.subspans()
+                        mds.extend(m)
+                    m = ResourceSnippetMatch(
+                        package=prev_ipackage,
+                        resource=prev_iresource,
+                        similarity=abs(similarity),
+                        match_detections=mds,
+                    )
+                    final_matches.append(m)
+                    match_detections = []
+
+                match_detections.append(match)
+                prev_ipackage = match.ipackage
+                prev_iresource = match.iresource
 
         if match_detections:
             # we are out of the loop but not reported what was left over
@@ -661,7 +652,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
             m = ResourceSnippetMatch(
                 package=prev_ipackage,
                 resource=prev_iresource,
-                similarity=similarity,
+                similarity=abs(similarity),
                 match_detections=mds,
             )
             final_matches.append(m)
