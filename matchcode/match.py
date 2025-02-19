@@ -310,10 +310,9 @@ def merge_matches(matches, max_dist=None, trace=TRACE):
     # sort by package, resource, sort on start, longer high, longer match, matcher type
     # TODO: consider each element in matches to be part of the same iresource
 
-    sorter = lambda m: (
-        m.qspan.start,
-        -m.len(),
-    )
+    def sorter(m):
+        return m.qspan.start, -m.len()
+
     matches.sort(key=sorter)
 
     if trace:

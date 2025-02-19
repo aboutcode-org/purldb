@@ -597,11 +597,9 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         # we need to have a list of matched position in ascending order
 
         # Step 3: group matches by ipackage and iresource, then spans
-        sorter = lambda m: (
-            -m.similarity,
-            m.qspan.start,
-            -m.len(),
-        )
+        def sorter(m):
+            return -m.similarity, m.qspan.start, -m.len()
+
         matches.sort(key=sorter)
         matches_by_ipackage_iresource = groupby(matches, key=sorter)
         final_matches = []
@@ -611,8 +609,8 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         match_detections = []
         for (
             similarity,
-            _,
-            _,
+            qspan_start,
+            match_length,
         ), grouped_matches in matches_by_ipackage_iresource:
             for match in grouped_matches:
                 package_changed = (
