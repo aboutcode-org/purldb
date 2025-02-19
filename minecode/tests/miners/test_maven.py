@@ -654,7 +654,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = maven.MavenPOMVisitor(uri)
-            data = data.decode('UTF-8')
+            data = data.decode("UTF-8")
         package = maven.get_package(data).to_dict()
         expected_loc = self.get_test_loc("maven/mapper/axis-1.4.pom.package.json")
         self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
@@ -665,7 +665,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = maven.MavenPOMVisitor(uri)
-            data = data.decode('UTF-8')
+            data = data.decode("UTF-8")
         package = maven.get_package(data).to_dict()
         expected_loc = self.get_test_loc(
             "maven/mapper/commons-pool-1.5.7.pom.package.json"
@@ -678,7 +678,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = maven.MavenPOMVisitor(uri)
-            data = data.decode('UTF-8')
+            data = data.decode("UTF-8")
         package = maven.get_package(data).to_dict()
         expected_loc = self.get_test_loc(
             "maven/mapper/struts-menu-2.4.2.pom.package.json"
@@ -691,7 +691,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = maven.MavenPOMVisitor(uri)
-            data = data.decode('UTF-8')
+            data = data.decode("UTF-8")
         package = maven.get_package(data).to_dict()
         expected_loc = self.get_test_loc(
             "maven/mapper/mysql-connector-java-5.1.27.pom.package.json"
@@ -704,7 +704,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = maven.MavenPOMVisitor(uri)
-            data = data.decode('UTF-8')
+            data = data.decode("UTF-8")
         package = maven.get_package(data).to_dict()
         expected_loc = self.get_test_loc("maven/mapper/xbean-jmx-2.0.pom.package.json")
         self.check_expected_results(package, expected_loc, regen=FIXTURES_REGEN)
@@ -715,7 +715,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = maven.MavenPOMVisitor(uri)
-            data = data.decode('UTF-8')
+            data = data.decode("UTF-8")
         package = maven.get_package(data).to_dict()
         expected_loc = self.get_test_loc(
             "maven/mapper/maven-all-1.0-RELEASE.pom.package.json"
@@ -728,7 +728,7 @@ class MavenMapperVisitAndMapTest(JsonBasedTesting, DjangoTestCase):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = maven.MavenPOMVisitor(uri)
-            data = data.decode('UTF-8')
+            data = data.decode("UTF-8")
         package = maven.get_package(data).to_dict()
         expected_loc = self.get_test_loc(
             "maven/mapper/commons-jaxrs-1.21.pom.package.json"

@@ -45,8 +45,7 @@ def get_conan_recipe(name, version):
     the conan package described by name and version string.
     """
     base_index_url = (
-        "https://raw.githubusercontent.com/conan-io/"
-        "conan-center-index/master/recipes/"
+        "https://raw.githubusercontent.com/conan-io/conan-center-index/master/recipes/"
     )
 
     conan_central_config_url = f"{base_index_url}/{name}/config.yml"

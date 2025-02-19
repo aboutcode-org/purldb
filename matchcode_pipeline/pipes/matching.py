@@ -260,7 +260,7 @@ def match_purldb_resources(
 
     if logger:
         if resource_count > 0:
-            logger(f"Matching {resource_count:,d} resources in PurlDB, " "using SHA1")
+            logger(f"Matching {resource_count:,d} resources in PurlDB, using SHA1")
         else:
             logger(f"Skipping resource matching as there are {resource_count:,d}")
 

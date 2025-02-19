@@ -199,7 +199,7 @@ def build_packages(purl, data):
         src_filename = src["name"]
         src_sha256 = src["sha256"]
         src_size = src["size"]
-        download_url = f'https://f-droid.org/repo/{src_filename.strip("/")}'
+        download_url = f"https://f-droid.org/repo/{src_filename.strip('/')}"
 
         package_mapping = dict(
             version=version_code,
