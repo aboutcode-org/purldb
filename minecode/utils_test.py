@@ -371,9 +371,9 @@ class TestMigrations(DjangoTestCase):
     migrate_to = None
 
     def setUp(self):
-        assert (
-            self.migrate_from and self.migrate_to
-        ), f"TestCase '{type(self).__name__}' must define migrate_from and migrate_to properties"
+        assert self.migrate_from and self.migrate_to, (
+            f"TestCase '{type(self).__name__}' must define migrate_from and migrate_to properties"
+        )
         self.migrate_from = [(self.app, self.migrate_from)]
         self.migrate_to = [(self.app, self.migrate_to)]
         executor = MigrationExecutor(connection)

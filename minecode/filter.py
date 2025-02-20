@@ -21,7 +21,7 @@ def sf_net(input_file, output):
     adding new columns and trying to sf_net the data
     """
     download_url_template = (
-        "http://master.dl.sourceforge.net/project" "/%(project_id)s%(filename)s"
+        "http://master.dl.sourceforge.net/project/%(project_id)s%(filename)s"
     )
 
     existing_headers = (

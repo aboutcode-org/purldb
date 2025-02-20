@@ -29,9 +29,11 @@ from aboutcode.pipeline import LoopProgress
 from scanpipe import pipes
 from scanpipe.pipes import flag
 from scanpipe.pipes import js
+from scanpipe.pipes.matchcode import save_resource_fingerprints
 
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateResourceContentIndex
+from matchcode.models import SnippetIndex
 from packagedb.models import Package
 from packagedb.models import Resource
 
@@ -182,6 +184,28 @@ def match_purldb_resource_approximately(project, resource):
         )
 
 
+def match_purldb_resource_snippets(project, resource):
+    """Match by approximation a single resource in the PurlDB."""
+    fingerprints = resource.extra_data.get("snippets", "")
+    results = SnippetIndex.match_resources(
+        fingerprints=fingerprints,
+        resource=resource,
+    )
+    if results:
+        matched_snippets = []
+        for result in results:
+            matched_package_data = result.package.to_dict()
+            create_package_from_purldb_data(
+                project,
+                [resource],
+                matched_package_data,
+                "snippet-matched-to-purldb-resource",
+            )
+            results_mapping = result.to_dict()
+            matched_snippets.append(results_mapping)
+        save_resource_fingerprints(resource, {"matched_snippets": matched_snippets})
+
+
 def match_purldb_directory(project, resource, exact_match=False):
     """Match a single directory resource in the PurlDB."""
     fingerprint = resource.extra_data.get("directory_content", "")
@@ -236,7 +260,7 @@ def match_purldb_resources(
 
     if logger:
         if resource_count > 0:
-            logger(f"Matching {resource_count:,d} resources in PurlDB, " "using SHA1")
+            logger(f"Matching {resource_count:,d} resources in PurlDB, using SHA1")
         else:
             logger(f"Skipping resource matching as there are {resource_count:,d}")
 
@@ -325,6 +349,38 @@ def match_purldb_resources_approximately(project, logger=None):
     logger(
         f"{matched_count:,d} resource{pluralize(matched_count, 's')} "
         f"approximately matched in PurlDB"
+    )
+
+
+def match_purldb_resources_snippets(project, logger=None):
+    # Get table of resources to match on
+    resources = (
+        project.codebaseresources.filter(is_text=True)
+        .no_status(status=flag.MATCHED_TO_PURLDB_PACKAGE)
+        .no_status(status=flag.MATCHED_TO_PURLDB_RESOURCE)
+        .no_status(status=flag.MATCHED_TO_PURLDB_DIRECTORY)
+        .no_status(status=flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE)
+    )
+    resource_count = resources.count()
+
+    if logger:
+        logger(
+            f"Snippet matching {resource_count:,d} "
+            f"resource{pluralize(resource_count, 's')} against PurlDB"
+        )
+
+    resource_iterator = resources.iterator(chunk_size=2000)
+    progress = LoopProgress(resource_count, logger)
+
+    for resource in progress.iter(resource_iterator):
+        match_purldb_resource_snippets(project, resource)
+
+    matched_count = project.codebaseresources.filter(
+        status="snippet-matched-to-purldb-resource"
+    ).count()
+    logger(
+        f"{matched_count:,d} resource{pluralize(matched_count, 's')} "
+        f"snippet matched in PurlDB"
     )
 
 

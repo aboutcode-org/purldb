@@ -222,9 +222,7 @@ def get_http_response(uri, timeout=10):
 
     status = response.status_code
     if status != 200:
-        raise Exception(
-            f"get_http_response: Download failed for {uri} " f"with {status}"
-        )
+        raise Exception(f"get_http_response: Download failed for {uri} with {status}")
     return response
 
 

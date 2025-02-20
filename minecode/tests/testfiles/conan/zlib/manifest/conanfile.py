@@ -80,16 +80,16 @@ class ZlibConan(ConanFile):
                 replace_in_file(
                     self,
                     filepath,
-                    "#ifdef HAVE_UNISTD_H    "
-                    "/* may be set to #if 1 by ./configure */",
-                    "#if defined(HAVE_UNISTD_H) && (1-HAVE_UNISTD_H-1 != 0)",
+                    "#ifdef HAVE_UNISTD_H    "  # NOQA
+                    "/* may be set to #if 1 by ./configure */",  # NOQA
+                    "#if defined(HAVE_UNISTD_H) && (1-HAVE_UNISTD_H-1 != 0)",  # NOQA
                 )
                 replace_in_file(
                     self,
                     filepath,
-                    "#ifdef HAVE_STDARG_H    "
-                    "/* may be set to #if 1 by ./configure */",
-                    "#if defined(HAVE_STDARG_H) && (1-HAVE_STDARG_H-1 != 0)",
+                    "#ifdef HAVE_STDARG_H    "  # NOQA
+                    "/* may be set to #if 1 by ./configure */",  # NOQA
+                    "#if defined(HAVE_STDARG_H) && (1-HAVE_STDARG_H-1 != 0)",  # NOQA
                 )
 
     def build(self):

@@ -431,7 +431,7 @@ class CollectPackageSerializer(Serializer):
             pipe for pipe in value if not is_supported_addon_pipeline(pipe)
         ]:
             raise ValidationError(
-                f'Error unsupported addon pipelines: {",".join(invalid_pipelines)}'
+                f"Error unsupported addon pipelines: {','.join(invalid_pipelines)}"
             )
         return value
 
@@ -440,7 +440,7 @@ class CollectPackageSerializer(Serializer):
             field for field in value if not is_supported_sort_field(field)
         ]:
             raise ValidationError(
-                f'Error unsupported sort fields: {",".join(invalid_sort_fields)}'
+                f"Error unsupported sort fields: {','.join(invalid_sort_fields)}"
             )
         return value
 

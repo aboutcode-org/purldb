@@ -7,6 +7,8 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import logging
+import sys
 from functools import reduce
 from operator import or_
 
@@ -21,6 +23,22 @@ from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import ExactFileIndex
 from matchcode.models import ExactPackageArchiveIndex
+
+TRACE = False
+
+if TRACE:
+    level = logging.DEBUG
+else:
+    level = logging.ERROR
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(stream=sys.stdout)
+logger.setLevel(level)
+
+
+def logger_debug(*args):
+    return logger.debug(" ".join(isinstance(a, str) and a or repr(a) for a in args))
+
 
 """
 These functions are convenience functions to run matching on a Codebase or
@@ -275,3 +293,64 @@ def path_suffixes(path):
     suffixes = (segments[i:] for i in range(len(segments)))
     for suffix in suffixes:
         yield "/".join(suffix)
+
+
+def merge_matches(matches, max_dist=None, trace=TRACE):
+    """
+    Return a list of merged LicenseMatch matches given a `matches` list of
+    LicenseMatch. Merging is a "lossless" operation that combines two or more
+    matches to the same rule and that are in sequence of increasing query and
+    index positions in a single new match.
+    """
+    # shortcut for single matches
+    if len(matches) < 2:
+        return matches
+
+    # only merge matches from the same package - package resource combination
+    # sort by package, resource, sort on start, longer high, longer match, matcher type
+    # TODO: consider each element in matches to be part of the same iresource
+
+    def sorter(m):
+        return m.qspan.start, -m.len()
+
+    matches.sort(key=sorter)
+
+    if trace:
+        print("merge_matches: number of matches to process:", len(matches))
+
+    if max_dist is None:
+        # Using window length
+        # TODO: expose window length variable and reference that here
+        max_dist = 16
+
+    # compare two matches in the sorted sequence: current and next
+    i = 0
+    while i < len(matches) - 1:
+        j = i + 1
+        while j < len(matches):
+            current_match = matches[i]
+            next_match = matches[j]
+
+            # if we have two equal ispans and some overlap
+            # keep the shortest/densest match in qspan e.g. the smallest magnitude of the two
+            # or distance within max_dist
+            if (
+                current_match.overlap(next_match)
+                or current_match.qcontains(next_match)
+                or current_match.qdistance_to(next_match) < max_dist
+            ):
+                current_match.update(next_match)
+                if trace:
+                    logger_debug(
+                        "    ---> ###merge_matches: "
+                        "current overlaps, qcontains, or qdistance_to < max_dist to next_match, "
+                        "merged as new:",
+                        current_match,
+                    )
+                del matches[j]
+                continue
+            else:
+                break
+            j += 1
+        i += 1
+    return matches

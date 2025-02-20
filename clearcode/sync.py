@@ -102,9 +102,9 @@ def fetch_and_save_latest_definitions(
     Otherwise, the order is not specified.
     NOTE: these do not contain file details (but the harvest do)
     """
-    assert (
-        output_dir or save_to_db
-    ), "You must select one of the --output-dir or --save-to-db options."
+    assert output_dir or save_to_db, (
+        "You must select one of the --output-dir or --save-to-db options."
+    )
 
     definitions_url = cdutils.append_path_to_url(base_api_url, extra_path="definitions")
     if by_latest:
@@ -296,9 +296,9 @@ def fetch_and_save_harvests(
 
     (Note: Return a tuple of (etag, md5, url) for usage as a callback)
     """
-    assert (
-        output_dir or save_to_db
-    ), "You must select one of the --output-dir or --save-to-db options."
+    assert output_dir or save_to_db, (
+        "You must select one of the --output-dir or --save-to-db options."
+    )
 
     url = coordinate.get_harvests_api_url()
     etag, checksum, content = cache.get_content(
@@ -431,9 +431,9 @@ def sync(
     as gzipped JSON either as as files in output-dir or in a PostgreSQL
     database. Loop forever after waiting some seconds between each cycles.
     """
-    assert (
-        output_dir or save_to_db
-    ), "You must select at least one of the --output-dir or --save-to-db options."
+    assert output_dir or save_to_db, (
+        "You must select at least one of the --output-dir or --save-to-db options."
+    )
 
     fetch_harvests = not only_definitions
 

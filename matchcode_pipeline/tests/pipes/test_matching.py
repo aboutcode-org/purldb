@@ -127,7 +127,7 @@ class MatchingPipesTest(TestCase):
             logger=buffer.write,
         )
 
-        expected = "Matching 1 directory against PurlDB" "1 directory matched in PurlDB"
+        expected = "Matching 1 directory against PurlDB1 directory matched in PurlDB"
         self.assertEqual(expected, buffer.getvalue())
 
         package = self.project1.discoveredpackages.get()
@@ -193,7 +193,7 @@ class MatchingPipesTest(TestCase):
             logger=buffer.write,
         )
         expected = (
-            "Refining matching for 1 " f"{flag.MATCHED_TO_PURLDB_RESOURCE} archives."
+            f"Refining matching for 1 {flag.MATCHED_TO_PURLDB_RESOURCE} archives."
         )
         self.assertIn(expected, buffer.getvalue())
 
