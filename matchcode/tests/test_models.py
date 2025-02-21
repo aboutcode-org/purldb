@@ -489,7 +489,7 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         self.test_resource1_snippets = fingerprints["snippets"]
         for snippet in self.test_resource1_snippets:
             fingerprint = snippet["snippet"]
-            position = snippet["start_pos"]
+            position = snippet["position"]
             SnippetIndex.index(
                 fingerprint,
                 position,
@@ -513,7 +513,7 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         self.test_resource2_snippets = fingerprints2["snippets"]
         for snippet in self.test_resource2_snippets:
             fingerprint = snippet["snippet"]
-            position = snippet["start_pos"]
+            position = snippet["position"]
             SnippetIndex.index(
                 fingerprint,
                 position,
@@ -545,7 +545,7 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         self.test_resource3_snippets = fingerprints3["snippets"]
         for snippet in self.test_resource3_snippets:
             fingerprint = snippet["snippet"]
-            position = snippet["start_pos"]
+            position = snippet["position"]
             SnippetIndex.index(
                 fingerprint,
                 position,
@@ -569,7 +569,7 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         self.test_resource4_snippets = fingerprints4["snippets"]
         for snippet in self.test_resource4_snippets:
             fingerprint = snippet["snippet"]
-            position = snippet["start_pos"]
+            position = snippet["position"]
             SnippetIndex.index(
                 fingerprint,
                 position,
@@ -593,7 +593,7 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         self.test_resource5_snippets = fingerprints5["snippets"]
         for snippet in self.test_resource5_snippets:
             fingerprint = snippet["snippet"]
-            position = snippet["start_pos"]
+            position = snippet["position"]
             SnippetIndex.index(
                 fingerprint,
                 position,

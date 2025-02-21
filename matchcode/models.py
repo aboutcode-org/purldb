@@ -23,6 +23,7 @@ from django.utils.translation import gettext_lazy as _
 
 import attr
 from licensedcode.spans import Span
+from matchcode_toolkit.fingerprinting import SNIPPET_WINDOW_LENGTH
 from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode_toolkit.fingerprinting import split_fingerprint
@@ -548,8 +549,8 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         extended_file_fragment_matches_by_fingerprints = defaultdict(list)
         for fp in fingerprints:
             snippet = fp["snippet"]
-            start_pos = fp["start_pos"]
-            end_pos = fp["end_pos"]
+            start_pos = fp["position"]
+            end_pos = start_pos + SNIPPET_WINDOW_LENGTH - 1
             resource = kwargs.get("resource")
             qspan = Span(start_pos, end_pos)
             extended_file_fragment_matches_by_fingerprints[snippet].append(
