@@ -13,6 +13,7 @@ from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import ExactFileIndex
 from matchcode.models import SnippetIndex
+from matchcode.models import StemmedSnippetIndex
 from minecode.management.commands import get_error_message
 from minecode.model_utils import update_or_create_resource
 from minecode.models import ScannableURI
@@ -39,7 +40,8 @@ def index_package_files(package, scan_data, reindex=False):
         package.approximatedirectorystructureindex_set.all().delete()
         package.approximateresourcecontentindex_set.all().delete()
         package.exactfileindex_set.all().delete()
-        package.snippetindex.all().delete()
+        package.snippetindex_set.all().delete()
+        package.stemmedsnippetindex_set.all().delete()
         package.resources.all().delete()
 
     scan_index_errors = []
@@ -91,6 +93,18 @@ def index_package_files(package, scan_data, reindex=False):
                     snippet = s["snippet"]
                     position = s["position"]
                     _, _ = SnippetIndex.index(
+                        fingerprint=snippet,
+                        position=position,
+                        resource=r,
+                        package=package,
+                    )
+
+            stemmed_snippets = resource_extra_data.get("stemmed_snippets", [])
+            if stemmed_snippets:
+                for s in stemmed_snippets:
+                    snippet = s["snippet"]
+                    position = s["position"]
+                    _, _ = StemmedSnippetIndex.index(
                         fingerprint=snippet,
                         position=position,
                         resource=r,
