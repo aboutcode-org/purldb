@@ -79,7 +79,7 @@ lxml==5.3.1
 Markdown==3.7
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
-matchcode-toolkit @ git+https://github.com/aboutcode-org/matchcode-toolkit.git@007ca57509ab73dda391af8631616b59e35eb9ef
+matchcode-toolkit==7.1.0
 mdurl==0.1.2
 milksnake==0.1.6
 mock==5.1.0
@@ -136,7 +136,7 @@ rust-inspector==0.1.0
 samecode==0.5.1
 saneyaml==0.6.1
 scancode-toolkit==32.3.2
-scancodeio @ git+https://github.com/aboutcode-org/scancode.io.git@ca654094e324f22d7d1b7024b546d2f90591698b
+scancodeio @ git+https://github.com/aboutcode-org/scancode.io.git@625f8895e724325e75af2c87cdf4a890ea63bd43
 semantic-version==2.10.0
 semver==3.0.4
 setuptools==75.6.0
