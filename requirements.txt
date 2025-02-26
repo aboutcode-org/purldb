@@ -136,7 +136,7 @@ rust-inspector==0.1.0
 samecode==0.5.1
 saneyaml==0.6.1
 scancode-toolkit==32.3.2
-scancodeio @ git+https://github.com/aboutcode-org/scancode.io.git@625f8895e724325e75af2c87cdf4a890ea63bd43
+scancodeio @ git+https://github.com/aboutcode-org/scancode.io.git@b7bc7c9efc6d995967b70eb83695271bd1edc3b9
 semantic-version==2.10.0
 semver==3.0.4
 setuptools==75.6.0
