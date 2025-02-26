@@ -79,7 +79,7 @@ lxml==5.3.1
 Markdown==3.7
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
-matchcode-toolkit==7.1.0
+matchcode-toolkit==7.2.1
 mdurl==0.1.2
 milksnake==0.1.6
 mock==5.1.0
