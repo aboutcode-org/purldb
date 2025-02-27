@@ -23,6 +23,7 @@ from django.utils.translation import gettext_lazy as _
 
 import attr
 from licensedcode.spans import Span
+from matchcode_toolkit.fingerprinting import SNIPPET_WINDOW_LENGTH
 from matchcode_toolkit.fingerprinting import create_halohash_chunks
 from matchcode_toolkit.fingerprinting import hexstring_to_binarray
 from matchcode_toolkit.fingerprinting import split_fingerprint
@@ -403,7 +404,7 @@ class ApproximateResourceContentIndex(ApproximateMatchingHashMixin):
 
 class PackageSnippetMatch(NamedTuple):
     package: Package
-    fingerprints: list["SnippetIndex"]
+    fingerprints: list
     fingerprints_count: int
 
 
@@ -425,7 +426,7 @@ class ResourceSnippetMatch(NamedTuple):
         }
 
 
-class SnippetIndex(PackageRelatedMixin, models.Model):
+class BaseSnippetIndexMixin(PackageRelatedMixin, models.Model):
     resource = models.ForeignKey(
         Resource,
         help_text="The Package that this snippet fingerprint is from",
@@ -447,7 +448,8 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         default=0,
     )
 
-    # TODO: window length must be constant so we can calculate offsets
+    class Meta:
+        abstract = True
 
     @classmethod
     def index(cls, fingerprint, position, resource, package):
@@ -548,8 +550,8 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         extended_file_fragment_matches_by_fingerprints = defaultdict(list)
         for fp in fingerprints:
             snippet = fp["snippet"]
-            start_pos = fp["start_pos"]
-            end_pos = fp["end_pos"]
+            start_pos = fp["position"]
+            end_pos = start_pos + SNIPPET_WINDOW_LENGTH - 1
             resource = kwargs.get("resource")
             qspan = Span(start_pos, end_pos)
             extended_file_fragment_matches_by_fingerprints[snippet].append(
@@ -574,7 +576,7 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
         matches = []
         for r in resources:
             # Get unique snippet fingerprints for this Resource
-            r_snippets = SnippetIndex.objects.filter(resource=r).distinct("fingerprint")
+            r_snippets = cls.objects.filter(resource=r).distinct("fingerprint")
             matching_snippets = r_snippets.filter(fingerprint__in=only_fings)
             r_snippets_count = r_snippets.count()
             matching_snippets_count = matching_snippets.count()
@@ -656,6 +658,14 @@ class SnippetIndex(PackageRelatedMixin, models.Model):
             final_matches.append(m)
 
         return final_matches[:top]
+
+
+class SnippetIndex(BaseSnippetIndexMixin, models.Model):
+    pass
+
+
+class StemmedSnippetIndex(BaseSnippetIndexMixin, models.Model):
+    pass
 
 
 class ApproximateFileIndex(ApproximateMatchingHashMixin, models.Model):

@@ -120,6 +120,13 @@ class Matching(ScanCodebase, LoadInventory):
             logger=self.log,
         )
 
+    def match_resources_stemmed_snippets(self):
+        """Match snippets from selected text files in PurlDB"""
+        matching.match_purldb_resources_stemmed_snippets(
+            project=self.project,
+            logger=self.log,
+        )
+
     def match_purldb_resources_post_process(self):
         """Choose the best package for PurlDB matched resources."""
         matching.match_purldb_resources_post_process(self.project, logger=self.log)
