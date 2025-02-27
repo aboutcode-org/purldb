@@ -1,8 +1,8 @@
 Changelog
 =========
 
-Next Release
-----------------
+v6.0.0
+---------
 
 - Improve web template for API web page https://github.com/aboutcode-org/purldb/issues/132
 - The API endpoints for ``approximate_directory_content_index``,
@@ -23,6 +23,13 @@ Next Release
   ascending or descending fashion on fields using the ``sort`` query parameter.
   This parameter takes in the same fields as ``sort`` from `/api/packages/`.
   https://github.com/aboutcode-org/purldb/issues/508
+- Visitors and Mappers have been merged into a single module named ``miners``.
+- Code is now formatted using ruff.
+- purldb, matchcode, and other related projects have been updated to store,
+  collect, and match code snippets. This is still in an early phase.
+- Add FederatedCode support.
+- Update queries when filtering resources by checksums to fix a performance issue.
+
 
 v5.0.1
 ---------
