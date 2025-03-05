@@ -13,16 +13,17 @@ from django.contrib.auth import get_user_model
 from django.core import signing
 from django.db import transaction
 from django.http import Http404
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from packageurl import PackageURL
 from rest_framework import serializers
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
@@ -185,7 +186,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["POST"])
+@require_POST
 @csrf_exempt
 def index_package_scan(request, key):
     """
@@ -229,4 +230,4 @@ def index_package_scan(request, key):
         "status": f"scan results for scannable_uri {scannable_uri.uuid} "
         "have been queued for indexing"
     }
-    return Response(msg)
+    return JsonResponse(msg)

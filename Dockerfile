@@ -61,7 +61,9 @@ RUN mkdir -p /var/$APP_NAME \
  && chown $APP_USER:$APP_USER /var/$APP_NAME
  RUN mkdir -p /var/scancodeio \
  && chown $APP_USER:$APP_USER /var/scancodeio
- 
+ RUN mkdir -p /tmp/minecode \
+ && chown $APP_USER:$APP_USER /tmp/minecode
+
 # Setup the work directory and the user as APP_USER for the remaining stages
 WORKDIR $APP_DIR
 USER $APP_USER
