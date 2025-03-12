@@ -122,6 +122,27 @@ def index_package_files(package, scan_data, reindex=False):
 def index_package(
     scannable_uri, package, scan_data, summary_data, project_extra_data, reindex=False
 ):
+    from packagedb.models import Package
+
+    # Check for dupes
+    existing_packages = Package.objects.filter(sha1=package.sha1)
+    if existing_packages:
+        for existing_package in existing_packages:
+            # see if the package we are indexing is older than the package we have
+            if existing_package.package.release_date > package.release_date:
+                existing_package.approximatedirectorycontentindex_set.update(package=package)
+                existing_package.approximatedirectorystructureindex_set.update(package=package)
+                existing_package.approximateresourcecontentindex_set.update(package=package)
+                existing_package.exactfileindex_set.update(package=package)
+                existing_package.snippetindex_set.update(package=package)
+                existing_package.stemmedsnippetindex_set.update(package=package)
+                existing_package.resources.update(package=package)
+                existing_package.is_duplicate = True
+                existing_package.save()
+                package.is_duplicate = False
+                package.save()
+                return
+
     scan_index_errors = []
     try:
         indexing_errors = index_package_files(package, scan_data, reindex=reindex)
