@@ -555,7 +555,8 @@ class Package(
         ),
     )
     is_duplicate = models.BooleanField(
-        default=False, help_text=_("True if this Package is a duplicate of another Package")
+        default=False,
+        help_text=_("True if this Package is a duplicate of another Package"),
     )
 
     objects = PackageQuerySet.as_manager()

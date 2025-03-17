@@ -184,3 +184,41 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         extra_data = result.first().extra_data
         expected_extra_data = scan_data["files"][0]["extra_data"]
         self.assertEqual(expected_extra_data, extra_data)
+
+    def test_update_package_relationships(self):
+        test_package1 = Package.objects.create(
+            download_url="https://github.com//wagon-api/wagon-api-20040705.181715.jar",
+            type="github",
+            namespace="",
+            name="wagon-api",
+            version="20040705.181715",
+            sha1="12345",
+        )
+        test_package2 = Package.objects.create(
+            download_url="https://repo1.maven.org/wagon-api-20040705.181715.jar",
+            type="maven",
+            namespace="",
+            name="wagon-api",
+            version="20040705.181715",
+            sha1="12345",
+        )
+        scan_data_loc = self.get_test_loc(
+            "indexing/scancodeio_wagon-api-20040705.181715.json"
+        )
+        with open(scan_data_loc, "rb") as f:
+            scan_data = json.loads(f.read())
+
+        indexing_errors = indexing.index_package_files(test_package1, scan_data)
+        indexing.update_package_relationships(
+            package=test_package2, existing_package=test_package1
+        )
+
+        resources = Resource.objects.filter(package=test_package2)
+        self.assertEqual(64, len(resources))
+        resource_data = [r.to_dict() for r in resources]
+        expected_resources_loc = self.get_test_loc(
+            "indexing/scancodeio_wagon-api-20040705.181715-expected.json"
+        )
+        self.check_expected_results(
+            resource_data, expected_resources_loc, regen=FIXTURES_REGEN
+        )
