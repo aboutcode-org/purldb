@@ -579,10 +579,18 @@ class MavenEnd2EndTest(JsonBasedTesting, DjangoTestCase):
         else:
             visited = ResourceURI.objects.all().order_by("uri")
 
-        uri_results = list(model_to_dict(rec, exclude=["id"]) for rec in visited)
+        # sort for stable order across OSes
+        # https://github.com/aboutcode-org/purldb/issues/589
+        uri_results = sorted(
+            model_to_dict(rec, exclude=["id"]).items() for rec in visited
+        )
+        uri_results = [dict(i) for i in uri_results]
+
         expected_loc = self.get_test_loc(
             "maven/end2end_index/expected_visited_increment_index.json"
         )
+
+        self.maxDiff = None
         self.check_expected_results(uri_results, expected_loc, regen=FIXTURES_REGEN)
 
 
