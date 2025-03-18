@@ -151,15 +151,32 @@ def check_for_duplicate_packages(package):
         return False
 
     repo_types = [
-        "maven",
-        "pypi",
-        "npm",
+        "apache",
+        "bower",
+        "composer",
+        "cpan",
+        "cran",
         "crate",
+        "deb",
+        "docker",
+        "eclipse",
+        "fdroid",
+        "gem",
+        "golang",
+        "gstreamer",
+        "maven",
+        "npm",
+        "nuget",
+        "openwrt",
+        "pypi",
+        "rpm",
     ]
-    git_repo_types = [
+    source_repo_types = [
+        "bitbucket",
         "github",
         "gitlab",
-        "bitbucket",
+        "googlecode",
+        "sourceforge",
     ]
 
     # Check for dupes
@@ -169,7 +186,10 @@ def check_for_duplicate_packages(package):
         # TODO: This will probably have to be a task
         if (
             (package.type in repo_types and existing_package.type not in repo_types)
-            or (package.type in git_repo_types and package.type not in git_repo_types)
+            or (
+                package.type in source_repo_types
+                and existing_package.type not in source_repo_types
+            )
             or (
                 (existing_package.release_date and package.release_date)
                 and (existing_package.release_date > package.release_date)
@@ -179,7 +199,7 @@ def check_for_duplicate_packages(package):
                 package=package, existing_package=existing_package
             )
 
-    return bool(package.sha1) and bool(existing_packages)
+    return bool(existing_packages)
 
 
 def index_package(
