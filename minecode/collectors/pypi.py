@@ -42,6 +42,22 @@ def get_package_json(name, version):
         logger.error(f"HTTP error occurred: {err}")
 
 
+def get_all_package_version(name):
+    """
+    Resturn a list of all version numbers for the package name.
+    """
+    url = f"https://pypi.org/pypi/{name}/json"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        # Get all available versions
+        versions = list(data["releases"].keys())
+        return versions
+    except requests.exceptions.HTTPError as err:
+        logger.error(f"HTTP error occurred: {err}")
+
+
 def map_pypi_package(package_url, pipelines, priority=0):
     """
     Add a pypi `package_url` to the PackageDB.
@@ -62,6 +78,7 @@ def map_pypi_package(package_url, pipelines, priority=0):
         return error
 
     packages = build_packages(package_json, package_url)
+
     for package in packages:
         package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
 
@@ -93,10 +110,21 @@ def process_request(purl_str, **kwargs):
     priority = kwargs.get("priority", 0)
 
     package_url = PackageURL.from_string(purl_str)
+
     if not package_url.version:
-        return
+        versions = get_all_package_version(package_url.name)
+        for version in versions:
+            # package_url.version cannot be set as it will raise
+            # AttributeError: can't set attribute
+            # package_url.version = version
+            purl = purl_str.replace('@','') + '@' + version
+            package_url = PackageURL.from_string(purl)
+            error_msg = map_pypi_package(package_url, pipelines, priority)
 
-    error_msg = map_pypi_package(package_url, pipelines, priority)
+            if error_msg:
+                return error_msg
+    else:
+        error_msg = map_pypi_package(package_url, pipelines, priority)
 
-    if error_msg:
-        return error_msg
+        if error_msg:
+            return error_msg
