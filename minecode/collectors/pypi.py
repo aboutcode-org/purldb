@@ -117,7 +117,7 @@ def process_request(purl_str, **kwargs):
             # package_url.version cannot be set as it will raise
             # AttributeError: can't set attribute
             # package_url.version = version
-            purl = purl_str.replace('@','') + '@' + version
+            purl = purl_str.replace("@", "") + "@" + version
             package_url = PackageURL.from_string(purl)
             error_msg = map_pypi_package(package_url, pipelines, priority)
 
