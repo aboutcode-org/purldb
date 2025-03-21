@@ -119,9 +119,95 @@ def index_package_files(package, scan_data, reindex=False):
     return scan_index_errors
 
 
+def update_package_relationships(package, existing_package):
+    """
+    Update the relations of `existing_package` to point at `package`
+    """
+    existing_package.approximatedirectorycontentindex_set.update(package=package)
+    existing_package.approximatedirectorystructureindex_set.update(package=package)
+    existing_package.approximateresourcecontentindex_set.update(package=package)
+    existing_package.exactfileindex_set.update(package=package)
+    existing_package.snippetindex_set.update(package=package)
+    existing_package.stemmedsnippetindex_set.update(package=package)
+    existing_package.resources.update(package=package)
+    existing_package.is_duplicate = True
+    existing_package.save()
+    package.is_duplicate = False
+    package.save()
+
+
+def check_for_duplicate_packages(package):
+    """
+    Given a `package`, check to see if it has already been indexed already. If
+    so, then check to see if `package` is a better candidate than the existing
+    package for being the ultimate source for that package.
+
+    Return True if a duplicate package already exists and relations have been
+    updated, otherwise return False.
+    """
+    from packagedb.models import Package
+
+    if not package.sha1:
+        return False
+
+    repo_types = [
+        "apache",
+        "bower",
+        "composer",
+        "cpan",
+        "cran",
+        "crate",
+        "deb",
+        "docker",
+        "eclipse",
+        "fdroid",
+        "gem",
+        "golang",
+        "gstreamer",
+        "maven",
+        "npm",
+        "nuget",
+        "openwrt",
+        "pypi",
+        "rpm",
+    ]
+    source_repo_types = [
+        "bitbucket",
+        "github",
+        "gitlab",
+        "googlecode",
+        "sourceforge",
+    ]
+
+    # Check for dupes
+    existing_packages = Package.objects.filter(sha1=package.sha1, is_duplicate=False)
+    for existing_package in existing_packages:
+        # see if the package we are indexing is older than the package we have
+        # TODO: This will probably have to be a task
+        if (
+            (package.type in repo_types and existing_package.type not in repo_types)
+            or (
+                package.type in source_repo_types
+                and existing_package.type not in source_repo_types
+            )
+            or (
+                (existing_package.release_date and package.release_date)
+                and (existing_package.release_date > package.release_date)
+            )
+        ):
+            update_package_relationships(
+                package=package, existing_package=existing_package
+            )
+
+    return bool(existing_packages)
+
+
 def index_package(
     scannable_uri, package, scan_data, summary_data, project_extra_data, reindex=False
 ):
+    if check_for_duplicate_packages(package):
+        return
+
     scan_index_errors = []
     try:
         indexing_errors = index_package_files(package, scan_data, reindex=reindex)

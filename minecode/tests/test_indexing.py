@@ -9,6 +9,7 @@
 
 import json
 import os
+from datetime import datetime
 
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
@@ -184,3 +185,74 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         extra_data = result.first().extra_data
         expected_extra_data = scan_data["files"][0]["extra_data"]
         self.assertEqual(expected_extra_data, extra_data)
+
+    def test_update_check_for_duplicate_packages(self):
+        test_package1 = Package.objects.create(
+            download_url="https://github.com//wagon-api/wagon-api-20040705.181715.jar",
+            type="github",
+            namespace="",
+            name="wagon-api",
+            version="20040705.181715",
+            sha1="12345",
+        )
+        test_package2 = Package.objects.create(
+            download_url="https://repo1.maven.org/wagon-api-20040705.181715.jar",
+            type="maven",
+            namespace="",
+            name="wagon-api",
+            version="20040705.181715",
+            sha1="12345",
+        )
+        scan_data_loc = self.get_test_loc(
+            "indexing/scancodeio_wagon-api-20040705.181715.json"
+        )
+        with open(scan_data_loc, "rb") as f:
+            scan_data = json.loads(f.read())
+
+        # Test that resources
+        indexing.index_package_files(test_package1, scan_data)
+        indexing.update_package_relationships(
+            package=test_package2, existing_package=test_package1
+        )
+        resources = Resource.objects.filter(package=test_package2)
+        self.assertEqual(64, len(resources))
+        resource_data = [r.to_dict() for r in resources]
+        expected_resources_loc = self.get_test_loc(
+            "indexing/scancodeio_wagon-api-20040705.181715-expected.json"
+        )
+        self.check_expected_results(
+            resource_data, expected_resources_loc, regen=FIXTURES_REGEN
+        )
+
+    def test_update_check_for_duplicate_packages_release_date(self):
+        test_package1 = Package.objects.create(
+            download_url="https://bitbucket.com//wagon-api/wagon-api-20040705.181715.jar",
+            type="bitbucket",
+            namespace="",
+            name="wagon-api",
+            version="20040705.181715",
+            sha1="12345",
+            release_date=datetime.now(),
+        )
+        test_package2 = Package.objects.create(
+            download_url="https://github.com/wagon-api-20040705.181715.jar",
+            type="github",
+            namespace="",
+            name="wagon-api",
+            version="20040705.181715",
+            sha1="12345",
+            release_date=datetime.now(),
+        )
+        scan_data_loc = self.get_test_loc(
+            "indexing/scancodeio_wagon-api-20040705.181715.json"
+        )
+        with open(scan_data_loc, "rb") as f:
+            scan_data = json.loads(f.read())
+
+        # Test that resources are updated to use the older package
+        indexing.index_package_files(test_package2, scan_data)
+        indexing.update_package_relationships(
+            package=test_package1, existing_package=test_package2
+        )
+        resources = Resource.objects.filter(package=test_package1)
+        self.assertEqual(64, len(resources))
