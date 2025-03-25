@@ -67,6 +67,7 @@ def map_pypi_package(package_url, pipelines, priority=0):
     from minecode.model_utils import add_package_to_scan_queue
     from minecode.model_utils import merge_or_create_package
 
+    error = ""
     package_json = get_package_json(
         name=package_url.name,
         version=package_url.version,
@@ -80,9 +81,10 @@ def map_pypi_package(package_url, pipelines, priority=0):
     packages = build_packages(package_json, package_url)
 
     for package in packages:
-        package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
-
+        # package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
         db_package, _, _, error = merge_or_create_package(package, visit_level=0)
+        if error:
+            break
 
         # Submit package for scanning
         if db_package:
@@ -90,7 +92,7 @@ def map_pypi_package(package_url, pipelines, priority=0):
                 package=db_package, pipelines=pipelines, priority=priority
             )
 
-        return error
+    return error
 
 
 @priority_router.route("pkg:pypi/.*")
@@ -117,7 +119,7 @@ def process_request(purl_str, **kwargs):
             # package_url.version cannot be set as it will raise
             # AttributeError: can't set attribute
             # package_url.version = version
-            purl = purl_str.replace("@", "") + "@" + version
+            purl = purl_str + "@" + version
             package_url = PackageURL.from_string(purl)
             error_msg = map_pypi_package(package_url, pipelines, priority)
 
