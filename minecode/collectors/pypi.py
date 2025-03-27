@@ -44,7 +44,7 @@ def get_package_json(name, version):
 
 def get_all_package_version(name):
     """
-    Resturn a list of all version numbers for the package name.
+    Return a list of all version numbers for the package name.
     """
     url = f"https://pypi.org/pypi/{name}/json"
     try:
