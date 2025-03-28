@@ -1,0 +1,55 @@
+{
+  "info": {
+    "author": "Erik Max Francis",
+    "author_email": "software@alcyone.com",
+    "bugtrack_url": null,
+    "classifiers": [
+      "Development Status :: 6 - Mature",
+      "Intended Audience :: Developers",
+      "Intended Audience :: End Users/Desktop",
+      "Intended Audience :: Science/Research",
+      "License :: OSI Approved :: GNU General Public License (GPL)",
+      "Operating System :: OS Independent",
+      "Programming Language :: Python",
+      "Topic :: Games/Entertainment",
+      "Topic :: Scientific/Engineering :: Artificial Intelligence",
+      "Topic :: Scientific/Engineering :: Mathematics"
+    ],
+    "description": "CAGE is a fairy generic and complete cellular automaton simulation\r\n    engine in Python.  It supports both 1D and 2D automata, a variety\r\n    of prepackaged rules, and the concept of \"agents\" which can move\r\n    about independently on the map for implementing agent behavior.\r\n\r\n    CAGE comes with numerous examples of fully-functional CA systems,\r\n    including Conway's Game of Life, Langton's self-reproducing\r\n    automaton, Langton's \"vants,\" and 1D automata rule explorers.  It\r\n    also comes with simple displayers (including a curses interface\r\n    for 2D automata).  Also included is a unique implementation of a\r\n    finite state machine (ant.py).",
+    "description_content_type": null,
+    "docs_url": null,
+    "download_url": "http://www.alcyone.com/software/cage/cage-latest.tar.gz",
+    "downloads": {
+      "last_day": -1,
+      "last_month": -1,
+      "last_week": -1
+    },
+    "dynamic": null,
+    "home_page": "http://www.alcyone.com/software/cage/",
+    "keywords": "cellular automata, Turing machines, Langton vants, self-organizing systems, finite state machines, finite state automata",
+    "license": "GPL",
+    "license_expression": null,
+    "license_files": null,
+    "maintainer": "",
+    "maintainer_email": "",
+    "name": "CAGE",
+    "package_url": "https://pypi.org/project/CAGE/",
+    "platform": "any; Unix for curses frontend",
+    "project_url": "https://pypi.org/project/CAGE/",
+    "project_urls": {
+      "Download": "http://www.alcyone.com/software/cage/cage-latest.tar.gz",
+      "Homepage": "http://www.alcyone.com/software/cage/"
+    },
+    "provides_extra": null,
+    "release_url": "https://pypi.org/project/CAGE/1.1.4/",
+    "requires_dist": null,
+    "requires_python": null,
+    "summary": "A generic and fairly complete cellular automata simulation engine.",
+    "version": "1.1.4",
+    "yanked": false,
+    "yanked_reason": null
+  },
+  "last_serial": 944145,
+  "urls": [],
+  "vulnerabilities": []
+}
