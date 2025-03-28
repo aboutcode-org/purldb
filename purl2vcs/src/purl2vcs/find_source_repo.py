@@ -188,7 +188,7 @@ def get_source_package_for_all_packages():
     Add the PackageURL of the source repository of a Package
     if found
     """
-    for package in Package.objects.all().paginated():
+    for package in Package.objects.all().iterator():
         get_source_package_and_add_to_package_set(package)
 
 
