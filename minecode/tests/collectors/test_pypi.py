@@ -30,10 +30,11 @@ class PypiPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         with open(self.expected_json_loc) as f:
             self.expected_json_contents = json.load(f)
 
+
     def test_get_package_json(self):
         json_contents = pypi.get_package_json(
-            name=self.scan_package.name,
-            version=self.scan_package.version,
+            name="cage",
+            version="1.1.4",
         )
         self.assertEqual(self.expected_json_contents, json_contents)
 
