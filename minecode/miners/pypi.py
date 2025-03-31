@@ -259,10 +259,11 @@ def build_packages(metadata, purl=None):
         if not url:
             continue
 
-        packagetype = "pypi_sdist_pkginfo"
-        if "packagetype" in download:
-            if download.get("packagetype") == "bdist_wheel":
-                packagetype = "pypi_bdist_pkginfo"
+        packagetype = None
+        if download.get("packagetype") == "sdist":
+            packagetype = "pypi_sdist_pkginfo"
+        else:
+            packagetype = "pypi_bdist_pkginfo"
 
         download_data = dict(
             download_url=url,
@@ -277,9 +278,12 @@ def build_packages(metadata, purl=None):
         package = scan_models.PackageData.from_data(download_data)
         package.datasource_id = "pypi_api_metadata"
 
-        purl_str = purl.to_string()
-        purl_filename_qualifiers = purl_str + "?file_name=" + download.get("filename")
-        updated_purl = PackageURL.from_string(purl_filename_qualifiers)
-        package.set_purl(updated_purl)
+        if purl:
+            purl_str = purl.to_string()
+            purl_filename_qualifiers = purl_str + "?file_name=" + download.get("filename")
+            updated_purl = PackageURL.from_string(purl_filename_qualifiers)
+            package.set_purl(updated_purl)
+        else:
+            package.set_purl(purl)
 
         yield package
