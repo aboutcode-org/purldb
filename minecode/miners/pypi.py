@@ -259,11 +259,17 @@ def build_packages(metadata, purl=None):
         if not url:
             continue
 
+        packagetype = None
+        if download.get("packagetype") == "sdist":
+            packagetype = "pypi_sdist_pkginfo"
+        else:
+            packagetype = "pypi_bdist_pkginfo"
+
         download_data = dict(
             download_url=url,
             size=download.get("size"),
             release_date=parse_date(download.get("upload_time")),
-            datasource_id="pypi_sdist_pkginfo",
+            datasource_id=packagetype,
             type="pypi",
         )
         # TODO: Check for other checksums
@@ -271,5 +277,15 @@ def build_packages(metadata, purl=None):
         download_data.update(common_data)
         package = scan_models.PackageData.from_data(download_data)
         package.datasource_id = "pypi_api_metadata"
-        package.set_purl(purl)
+
+        if purl:
+            purl_str = purl.to_string()
+            purl_filename_qualifiers = (
+                purl_str + "?file_name=" + download.get("filename")
+            )
+            updated_purl = PackageURL.from_string(purl_filename_qualifiers)
+            package.set_purl(updated_purl)
+        else:
+            package.set_purl(purl)
+
         yield package
