@@ -14,7 +14,6 @@ from packageurl import PackageURL
 
 from minecode import priority_router
 from minecode.miners.pypi import build_packages
-from packagedb.models import PackageContentType
 
 """
 Collect PyPI packages from pypi registries.
