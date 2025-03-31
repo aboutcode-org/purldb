@@ -259,11 +259,10 @@ def build_packages(metadata, purl=None):
         if not url:
             continue
 
-        packagetype = None
-        if download.get("packagetype") == "sdist":
-            packagetype = "pypi_sdist_pkginfo"
-        else:
-            packagetype = "pypi_bdist_pkginfo"
+        packagetype = "pypi_sdist_pkginfo"
+        if "packagetype" in download:
+            if download.get("packagetype") == "bdist_wheel":
+                packagetype = "pypi_bdist_pkginfo"
 
         download_data = dict(
             download_url=url,
