@@ -280,7 +280,9 @@ def build_packages(metadata, purl=None):
 
         if purl:
             purl_str = purl.to_string()
-            purl_filename_qualifiers = purl_str + "?file_name=" + download.get("filename")
+            purl_filename_qualifiers = (
+                purl_str + "?file_name=" + download.get("filename")
+            )
             updated_purl = PackageURL.from_string(purl_filename_qualifiers)
             package.set_purl(updated_purl)
         else:
