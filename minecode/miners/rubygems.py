@@ -213,6 +213,60 @@ def build_rubygem_packages_from_api_data(metadata, name, purl=None):
         yield package
 
 
+def build_rubygem_packages_from_api_v2_data(metadata_dict, purl):
+    """
+    Yield ScannedPackage built from RubyGems API v2.
+    purl: String value of the package url of the ResourceURI object
+    """
+
+    name = metadata_dict["name"]
+    version = metadata_dict["version"]
+    description = metadata_dict["description"]
+    homepage_url = metadata_dict["homepage_uri"]
+    repository_homepage_url = metadata_dict["project_uri"]
+    release_date = metadata_dict["version_created_at"]
+
+    extracted_license_statement = []
+    lic_list = metadata_dict["licenses"]
+    if lic_list:
+        extracted_license_statement = lic_list
+
+    # mapping of information that are common to all the downloads of a
+    # version
+    common_data = dict(
+        name=name,
+        version=version,
+        description=description,
+        homepage_url=homepage_url,
+        repository_homepage_url=repository_homepage_url,
+        release_date=release_date,
+        extracted_license_statement=extracted_license_statement,
+    )
+
+    author = metadata_dict["authors"]
+    if author:
+        parties = common_data.get("parties")
+        if not parties:
+            common_data["parties"] = []
+        common_data["parties"].append(
+            scan_models.Party(name=author, role="author"))
+
+    download_url = metadata_dict["gem_uri"]
+
+    download_data = dict(
+        datasource_id="gem_pkginfo",
+        type="gem",
+        download_url=download_url,
+        sha256=metadata_dict["sha"],
+    )
+    download_data.update(common_data)
+    package = scan_models.PackageData.from_data(download_data)
+
+    package.datasource_id = "gem_api_metadata"
+    package.set_purl(purl)
+    yield package
+
+
 @map_router.route(r"https?://rubygems.org/downloads/[\w\-\.]+.gem")
 class RubyGemsPackageArchiveMetadataMapper(Mapper):
     """Mapper to build on e Package from the metadata file found inside a gem."""
