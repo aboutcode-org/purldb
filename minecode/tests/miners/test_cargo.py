@@ -13,10 +13,11 @@ import os
 
 from django.test import TestCase as DjangoTestCase
 
+from packageurl import PackageURL
+
 from minecode import miners
 from minecode.tests import FIXTURES_REGEN
 from minecode.utils_test import JsonBasedTesting
-from packageurl import PackageURL
 
 
 class TestCargoMap(JsonBasedTesting, DjangoTestCase):

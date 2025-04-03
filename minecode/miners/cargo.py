@@ -8,7 +8,6 @@
 #
 
 import requests
-
 from packagedcode import models as scan_models
 
 
@@ -90,4 +89,3 @@ def build_packages(metadata_dict, purl):
             package.datasource_id = "cargo_api_metadata"
             package.set_purl(purl)
             yield package
-
