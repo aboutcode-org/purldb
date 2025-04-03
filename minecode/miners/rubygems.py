@@ -218,7 +218,6 @@ def build_rubygem_packages_from_api_v2_data(metadata_dict, purl):
     Yield ScannedPackage built from RubyGems API v2.
     purl: String value of the package url of the ResourceURI object
     """
-
     name = metadata_dict["name"]
     version = metadata_dict["version"]
     description = metadata_dict["description"]

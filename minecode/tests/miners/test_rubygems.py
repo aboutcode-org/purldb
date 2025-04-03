@@ -172,8 +172,8 @@ class RubyGemsApiMapperTest(JsonBasedTesting):
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_rubygem_packages_from_api_v2_data(self):
-        with open(self.get_test_loc("rubygems/apiv2/rails-8.0.2.json")) as cargo_meta:
-            metadata = json.load(cargo_meta)
+        with open(self.get_test_loc("rubygems/apiv2/rails-8.0.2.json")) as gem_data:
+            metadata = json.load(gem_data)
         package_url = PackageURL.from_string("pkg:gem/rails@8.0.2")
         packages = build_rubygem_packages_from_api_v2_data(
             metadata, package_url)
