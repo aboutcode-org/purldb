@@ -48,8 +48,6 @@ conf:
 dev:
 	@echo "-> Configure and install development dependencies"
 	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --dev
-	@echo "-> Configure and install documentation dependencies"
-	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --docs
 
 envfile:
 	@echo "-> Create the .env file and generate a secret key"
@@ -63,17 +61,36 @@ envfile_testing: envfile
 	@echo SCANCODEIO_DB_USER=\"postgres\" >> ${ENV_FILE}
 	@echo SCANCODEIO_DB_PASSWORD=\"postgres\" >> ${ENV_FILE}
 
+doc8:
+	@echo "-> Run doc8 validation"
+	@${ACTIVATE} doc8 --quiet docs/ *.rst
+
 valid:
 	@echo "-> Run Ruff format"
-	@${ACTIVATE} ruff format  --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
+	@${ACTIVATE} ruff format
 	@echo "-> Run Ruff linter"
-	@${ACTIVATE} ruff check --fix --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
+	@${ACTIVATE} ruff check --fix
 
-check: check_docs
+check:
 	@echo "-> Run Ruff linter validation (pycodestyle, bandit, isort, and more)"
-	@${ACTIVATE} ruff check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
+	@${ACTIVATE} ruff check
 	@echo "-> Run Ruff format validation"
-	@${ACTIVATE} ruff format --check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
+	@${ACTIVATE} ruff format --check
+	@$(MAKE) doc8
+	@echo "-> Run ABOUT files validation"
+	@${ACTIVATE} about check etc/
+
+# valid:
+# 	@echo "-> Run Ruff format"
+# 	@${ACTIVATE} ruff format  --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
+# 	@echo "-> Run Ruff linter"
+# 	@${ACTIVATE} ruff check --fix --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
+
+# check: check_docs
+# 	@echo "-> Run Ruff linter validation (pycodestyle, bandit, isort, and more)"
+# 	@${ACTIVATE} ruff check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
+# 	@echo "-> Run Ruff format validation"
+# 	@${ACTIVATE} ruff format --check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
 
 clean:
 	@echo "-> Clean the Python env"
@@ -106,7 +123,7 @@ postgres_matchcodeio:
 	@echo "-> Create 'matchcodeio' database"
 	${SUDO_POSTGRES} createdb --encoding=utf-8 --owner=matchcodeio matchcodeio
 	${MATCHCODE_MANAGE} migrate
-	
+
 run:
 	${MANAGE} runserver 8001 --insecure
 
@@ -123,7 +140,7 @@ run_map:
 	${MANAGE} run_map
 
 test_purldb:
-	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf minecode packagedb purl2vcs purldb_project purldb_public_project --ignore packagedb/tests/test_throttling.py 
+	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf minecode packagedb purl2vcs purldb_project purldb_public_project --ignore packagedb/tests/test_throttling.py
 	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf packagedb/tests/test_throttling.py
 
 test_toolkit:
@@ -160,11 +177,9 @@ docs:
 	rm -rf docs/_build/
 	@${ACTIVATE} sphinx-build docs/source docs/_build/
 
-check_docs:
-	@echo "Check Sphinx Documentation build minimally"
-	@${ACTIVATE} sphinx-build -E -W docs/source build
-	@echo "Check for documentation style errors"
-	@${ACTIVATE} doc8 --max-line-length 100 docs/source --ignore-path docs/_build/ --ignore D000 --quiet
+docs-check:
+	@${ACTIVATE} sphinx-build -E -W -b html docs/source docs/_build/
+	@${ACTIVATE} sphinx-build -E -W -b linkcheck docs/source docs/_build/
 
 docker-images:
 	@echo "-> Build Docker services"
@@ -176,4 +191,4 @@ docker-images:
 	@docker save minecode minecode_minecode nginx | gzip > dist/minecode-images-`git describe --tags`.tar.gz
 
 # keep this sorted
-.PHONY: black bump check check_docs clean `clearindex clearsync conf dev docker-images docs envfile envfile_testing index_packages isort migrate postgres postgres_matchcodeio priority_queue run run_map run_matchcodeio run_visit seed shell test test_clearcode test_matchcode test_purldb test_toolkit valid virtualenv
+.PHONY: bump check docs-check clean clearindex clearsync conf dev docker-images docs envfile envfile_testing index_packages migrate postgres postgres_matchcodeio priority_queue run run_map run_matchcodeio run_visit seed shell test test_clearcode test_matchcode test_purldb test_toolkit valid virtualenv

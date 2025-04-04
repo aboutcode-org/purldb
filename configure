@@ -31,14 +31,15 @@ CUSTOM_PACKAGES=""
 
 # Requirement arguments passed to pip and used by default or with --dev.
 REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/ --editable purl2vcs/ --editable . --constraint requirements.txt"
-DEV_REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/[testing] --editable .[testing,docs] --editable purl2vcs/[testing] --constraint requirements.txt --constraint requirements-dev.txt"
-DOCS_REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/ --editable .[docs] --constraint requirements.txt"
+DEV_REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/[testing] --editable .[dev] --editable purl2vcs/[testing] --constraint requirements.txt --constraint requirements-dev.txt"
+
 
 # where we create a virtualenv
 VIRTUALENV_DIR=venv
 
 # Cleanable files and directories to delete with the --clean option
-CLEANABLE="build dist venv .cache .eggs matchcode-toolkit/build matchcode-toolkit/dist matchcode-toolkit/.eggs purldb-toolkit/build purldb-toolkit/dist"
+CLEANABLE="build dist venv .cache .eggs *.egg-info docs/_build/ pip-selfcheck.json matchcode-toolkit/build matchcode-toolkit/dist matchcode-toolkit/.eggs purldb-toolkit/build purldb-toolkit/dist"
+
 
 # extra  arguments passed to pip
 PIP_EXTRA_ARGS=" "
@@ -171,6 +172,7 @@ clean() {
     for cln in $CLEANABLE;
         do rm -rf "${CFG_ROOT_DIR:?}/${cln:?}";
     done
+    find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
     set +e
     exit
 }
@@ -188,7 +190,6 @@ while getopts :-: optchar; do
                 help  ) cli_help;;
                 clean ) find_python && clean;;
                 dev   ) CFG_REQUIREMENTS="$DEV_REQUIREMENTS";;
-                docs   ) CFG_REQUIREMENTS="$DOCS_REQUIREMENTS";;
             esac;;
     esac
 done

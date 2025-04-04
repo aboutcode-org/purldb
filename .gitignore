@@ -72,7 +72,6 @@ tcl
 # Ignore Jupyter Notebook related temp files
 .ipynb_checkpoints/
 
-# Env Files
+/.ruff_cache/
 .env
-
 var/
