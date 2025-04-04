@@ -46,5 +46,4 @@ jobs:
           image_name: ubuntu-24.04
           python_versions: ['3.10']
           test_suites:
-              all: make docs check_docs
-
+              all: make dev docs-check
