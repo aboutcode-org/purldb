@@ -1,0 +1,101 @@
+{
+    "name": "rails",
+    "downloads": 601793128,
+    "version": "8.0.2",
+    "version_created_at": "2025-03-12T03:09:11.097Z",
+    "version_downloads": 460079,
+    "platform": "ruby",
+    "authors": "David Heinemeier Hansson",
+    "info": "Ruby on Rails is a full-stack web framework optimized for programmer happiness and sustainable productivity. It encourages beautiful code by favoring convention over configuration.",
+    "licenses": [
+      "MIT"
+    ],
+    "metadata": {
+      "changelog_uri": "https://github.com/rails/rails/releases/tag/v8.0.2",
+      "bug_tracker_uri": "https://github.com/rails/rails/issues",
+      "source_code_uri": "https://github.com/rails/rails/tree/v8.0.2",
+      "mailing_list_uri": "https://discuss.rubyonrails.org/c/rubyonrails-talk",
+      "documentation_uri": "https://api.rubyonrails.org/v8.0.2/",
+      "rubygems_mfa_required": "true"
+    },
+    "yanked": false,
+    "sha": "fdfaa5a83ec0388e02864e88d515959caedc88053b5f701c4deb1652d8f164c6",
+    "spec_sha": "2da4a6b10a044943a0124063abdfe505408e904b7e02e95b2f206255d8903b79",
+    "project_uri": "https://rubygems.org/gems/rails",
+    "gem_uri": "https://rubygems.org/gems/rails-8.0.2.gem",
+    "homepage_uri": "https://rubyonrails.org",
+    "wiki_uri": null,
+    "documentation_uri": "https://api.rubyonrails.org/v8.0.2/",
+    "mailing_list_uri": "https://discuss.rubyonrails.org/c/rubyonrails-talk",
+    "source_code_uri": "https://github.com/rails/rails/tree/v8.0.2",
+    "bug_tracker_uri": "https://github.com/rails/rails/issues",
+    "changelog_uri": "https://github.com/rails/rails/releases/tag/v8.0.2",
+    "funding_uri": null,
+    "dependencies": {
+      "development": [],
+      "runtime": [
+        {
+          "name": "actioncable",
+          "requirements": "= 8.0.2"
+        },
+        {
+          "name": "actionmailbox",
+          "requirements": "= 8.0.2"
+        },
+        {
+          "name": "actionmailer",
+          "requirements": "= 8.0.2"
+        },
+        {
+          "name": "actionpack",
+          "requirements": "= 8.0.2"
+        },
+        {
+          "name": "actiontext",
+          "requirements": "= 8.0.2"
+        },
+        {
+          "name": "actionview",
+          "requirements": "= 8.0.2"
+        },
+        {
+          "name": "activejob",
+          "requirements": "= 8.0.2"
+        },
+        {
+          "name": "activemodel",
+          "requirements": "= 8.0.2"
+        },
+        {
+          "name": "activerecord",
+          "requirements": "= 8.0.2"
+        },
+        {
+          "name": "activestorage",
+          "requirements": "= 8.0.2"
+        },
+        {
+          "name": "activesupport",
+          "requirements": "= 8.0.2"
+        },
+        {
+          "name": "bundler",
+          "requirements": ">= 1.15.0"
+        },
+        {
+          "name": "railties",
+          "requirements": "= 8.0.2"
+        }
+      ]
+    },
+    "built_at": "2025-03-12T00:00:00.000Z",
+    "created_at": "2025-03-12T03:09:11.097Z",
+    "description": "Ruby on Rails is a full-stack web framework optimized for programmer happiness and sustainable productivity. It encourages beautiful code by favoring convention over configuration.",
+    "downloads_count": 460079,
+    "number": "8.0.2",
+    "summary": "Full-stack web application framework.",
+    "rubygems_version": ">= 1.8.11",
+    "ruby_version": ">= 3.2.0",
+    "prerelease": false,
+    "requirements": []
+  }
