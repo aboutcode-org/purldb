@@ -17,7 +17,6 @@ from django.conf import settings
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
 from django.core import exceptions
-from django.core.paginator import Paginator
 from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -858,11 +857,11 @@ class Party(models.Model):
     )
 
     name = models.CharField(
-        max_length=255, blank=True, null=True, help_text=_("Name of this party.")
+        max_length=1024, blank=True, null=True, help_text=_("Name of this party.")
     )
 
     email = models.CharField(
-        max_length=255, blank=True, null=True, help_text=_("Email for this party.")
+        max_length=1024, blank=True, null=True, help_text=_("Email for this party.")
     )
 
     url = models.CharField(

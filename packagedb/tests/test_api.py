@@ -1257,7 +1257,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             },
             # NOt in DB and unsupported
             {
-                "purl": "pkg:pypi/does/not-exist@1",
+                "purl": "pkg:bower/does/not-exist@1",
             },
         ]
         data = {"packages": packages, "reindex": True}
@@ -1268,7 +1268,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         ]
 
         unsupported_purls = [
-            "pkg:pypi/does/not-exist@1",
+            "pkg:bower/does/not-exist@1",
         ]
 
         response = self.client.post(
