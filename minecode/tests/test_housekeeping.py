@@ -36,9 +36,7 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
             type="maven",
         )
         packages = [p.to_dict() for p in find_ambiguous_packages()]
-        expected_loc = self.get_test_loc(
-            "housekeeping/declared_license_search_expected.json"
-        )
+        expected_loc = self.get_test_loc("housekeeping/declared_license_search_expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_find_ambiguous_packages_license_expression(self):
@@ -50,9 +48,7 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
         )
         packages = [p.to_dict() for p in find_ambiguous_packages()]
 
-        expected_loc = self.get_test_loc(
-            "housekeeping/license_expression_search_expected.json"
-        )
+        expected_loc = self.get_test_loc("housekeeping/license_expression_search_expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_find_ambiguous_packages_license_expression_ignore_uppercase(self):
@@ -64,9 +60,7 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
         )
         packages = [p.to_dict() for p in find_ambiguous_packages()]
 
-        expected_loc = self.get_test_loc(
-            "housekeeping/ignore_upper_case_search_expected.json"
-        )
+        expected_loc = self.get_test_loc("housekeeping/ignore_upper_case_search_expected.json")
 
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
@@ -95,9 +89,7 @@ class PackageLicenseCheckTest(JsonBasedTesting, DjangoTestCase):
         output = StringIO()
         results_loc = self.get_temp_file()
         management.call_command("check_licenses", "-o", results_loc, stdout=output)
-        self.assertTrue(
-            "Visited 0 packages\nFound 0 possible packages" in output.getvalue()
-        )
+        self.assertTrue("Visited 0 packages\nFound 0 possible packages" in output.getvalue())
 
     def test_visit_and_map_using_pom(self):
         uri = "http://repo1.maven.org/maven2/org/bytesoft/bytejta-supports/0.5.0-ALPHA4/bytejta-supports-0.5.0-ALPHA4.pom"

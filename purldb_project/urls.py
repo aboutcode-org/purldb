@@ -42,9 +42,7 @@ api_router.register("validate", PurlValidateViewSet, "validate")
 api_router.register("collect", CollectViewSet, "collect")
 api_router.register("watch", PackageWatchViewSet)
 api_router.register("scan_queue", ScannableURIViewSet)
-api_router.register(
-    "approximate_directory_content_index", ApproximateDirectoryContentIndexViewSet
-)
+api_router.register("approximate_directory_content_index", ApproximateDirectoryContentIndexViewSet)
 api_router.register(
     "approximate_directory_structure_index", ApproximateDirectoryStructureIndexViewSet
 )

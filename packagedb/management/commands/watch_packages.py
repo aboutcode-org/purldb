@@ -18,8 +18,7 @@ from packagedb.models import Package
 from packagedb.tasks import get_and_index_new_purls
 
 VERSION_CLASS_BY_PACKAGE_TYPE = {
-    pkg_type: range_class.version_class
-    for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()
+    pkg_type: range_class.version_class for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()
 }
 
 PRIORITY_QUEUE_SUPPORTED_ECOSYSTEMS = ["maven", "npm"]
@@ -29,9 +28,7 @@ class Command(BaseCommand):
     help = "Watch all packages for their latest versions and add them to the priority queue for scanning and indexing."
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "--purl", type=str, help="Specify a PURL to watch single package."
-        )
+        parser.add_argument("--purl", type=str, help="Specify a PURL to watch single package.")
 
     def handle(self, *args, **options):
         purl_value = options.get("purl")

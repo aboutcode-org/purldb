@@ -315,9 +315,7 @@ class ResourceURIManager(models.Manager):
         Limit the QuerySet to ResourceURIs that have never been mapped.
         This is usually the state of a ResourceURI after its succesful visit.
         """
-        return self.successfully_visited().filter(
-            last_map_date__isnull=True, wip_date__isnull=True
-        )
+        return self.successfully_visited().filter(last_map_date__isnull=True, wip_date__isnull=True)
 
     def mapped(self):
         """
@@ -421,8 +419,7 @@ class ResourceURI(BaseURI):
         null=True,
         blank=True,
         db_index=True,
-        help_text="Timestamp set to the date of the last mapping. "
-        "Used to track mapping status.",
+        help_text="Timestamp set to the date of the last mapping. Used to track mapping status.",
     )
 
     is_mappable = models.BooleanField(
@@ -605,9 +602,7 @@ class ScannableURIManager(models.Manager):
             .order_by("scan_status"),
         )
         for stat in statuses:
-            stat["scan_status"] = ScannableURI.SCAN_STATUSES_BY_CODE[
-                stat["scan_status"]
-            ]
+            stat["scan_status"] = ScannableURI.SCAN_STATUSES_BY_CODE[stat["scan_status"]]
         stats = {
             "total": self.count(),
             "processables": self.get_processables().count(),
@@ -622,9 +617,7 @@ class ScannableURIManager(models.Manager):
                 scan_status=ScannableURI.SCAN_FAILED,
                 extra_value="scan_error",
             ),
-            most_recent_in_progress=self._recent(
-                scan_status=ScannableURI.SCAN_IN_PROGRESS
-            ),
+            most_recent_in_progress=self._recent(scan_status=ScannableURI.SCAN_IN_PROGRESS),
             most_recent_completed=self._recent(scan_status=ScannableURI.SCAN_COMPLETED),
             most_recent_index_errors=self._recent(
                 scan_status=ScannableURI.SCAN_INDEX_FAILED,
@@ -640,9 +633,7 @@ class ScannableURIManager(models.Manager):
         ``scan_status``.
         Include an optional ``extra value`` field name.
         """
-        recent_uris = self.filter(scan_status=scan_status).order_by("-scan_date")[
-            :most_recent
-        ]
+        recent_uris = self.filter(scan_status=scan_status).order_by("-scan_date")[:most_recent]
         for scauri in recent_uris:
             recent = dict(
                 # this is NOT a field requiring this loop
@@ -730,9 +721,7 @@ class ScannableURI(BaseURI):
 
     SCAN_STATUSES_BY_CODE = dict(SCAN_STATUS_CHOICES)
 
-    SCAN_STATUS_CODES_BY_SCAN_STATUS = {
-        status: code for code, status in SCAN_STATUS_CHOICES
-    }
+    SCAN_STATUS_CODES_BY_SCAN_STATUS = {status: code for code, status in SCAN_STATUS_CHOICES}
 
     scan_status = models.IntegerField(
         default=SCAN_NEW,
@@ -834,9 +823,7 @@ class PriorityResourceURIManager(models.Manager):
         if priority_resource_uris.count() == 0 or all(
             p.processed_date for p in priority_resource_uris
         ):
-            priority_resource_uri = self.create(
-                uri=uri, package_url=uri, **extra_fields
-            )
+            priority_resource_uri = self.create(uri=uri, package_url=uri, **extra_fields)
             return priority_resource_uri
 
     def in_progress(self):
@@ -867,9 +854,7 @@ class PriorityResourceURIManager(models.Manager):
         NOTE: this method can only be called from within a transaction.atomic
         block.
         """
-        priority_resource_uri = (
-            self.get_requests().select_for_update(skip_locked=True).first()
-        )
+        priority_resource_uri = self.get_requests().select_for_update(skip_locked=True).first()
         if not priority_resource_uri:
             return
         priority_resource_uri.wip_date = timezone.now()
@@ -983,9 +968,7 @@ class ImportableURIManager(models.Manager):
         # TODO: be able to create a request for an existing purl if the previous request has been completed already
 
         importable_uris = self.filter(uri=uri, **extra_fields)
-        if importable_uris.count() == 0 or all(
-            p.processed_date for p in importable_uris
-        ):
+        if importable_uris.count() == 0 or all(p.processed_date for p in importable_uris):
             importable_uri = self.create(
                 uri=uri, data=data, package_url=package_url, **extra_fields
             )

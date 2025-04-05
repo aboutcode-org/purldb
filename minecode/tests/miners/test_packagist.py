@@ -19,9 +19,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class PackagistVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_visit_packagistlist(self):
         uri = "https://packagist.org/packages/list.json"
@@ -34,18 +32,12 @@ class PackagistVistorTest(JsonBasedTesting):
 
 
 class TestPackagistMap(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_packages(self):
-        with open(
-            self.get_test_loc("packagist/00f100_cakephp-opauth.json")
-        ) as packagist_package:
+        with open(self.get_test_loc("packagist/00f100_cakephp-opauth.json")) as packagist_package:
             metadata = json.load(packagist_package)
         packages = miners.packagist.build_packages_with_json(metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "packagist/packaglist_00f100_cakephp-opauth_expected.json"
-        )
+        expected_loc = self.get_test_loc("packagist/packaglist_00f100_cakephp-opauth_expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

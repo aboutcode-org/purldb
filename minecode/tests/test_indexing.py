@@ -53,9 +53,7 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         self.assertEqual(0, ExactFileIndex.objects.count())
         self.assertEqual(0, Resource.objects.count())
 
-        scan_data_loc = self.get_test_loc(
-            "indexing/scancodeio_wagon-api-20040705.181715.json"
-        )
+        scan_data_loc = self.get_test_loc("indexing/scancodeio_wagon-api-20040705.181715.json")
         with open(scan_data_loc, "rb") as f:
             scan_data = json.loads(f.read())
 
@@ -73,14 +71,10 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
         expected_resources_loc = self.get_test_loc(
             "indexing/scancodeio_wagon-api-20040705.181715-expected.json"
         )
-        self.check_expected_results(
-            resource_data, expected_resources_loc, regen=FIXTURES_REGEN
-        )
+        self.check_expected_results(resource_data, expected_resources_loc, regen=FIXTURES_REGEN)
 
     def test_indexing_index_package(self):
-        scan_data_loc = self.get_test_loc(
-            "indexing/scancodeio_wagon-api-20040705.181715.json"
-        )
+        scan_data_loc = self.get_test_loc("indexing/scancodeio_wagon-api-20040705.181715.json")
         with open(scan_data_loc, "rb") as f:
             scan_data = json.load(f)
 
@@ -130,9 +124,7 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
 
         # Make sure that Package data is updated
         self.assertEqual("apache-2.0", self.package1.declared_license_expression)
-        self.assertEqual(
-            "Copyright (c) Apache Software Foundation", self.package1.copyright
-        )
+        self.assertEqual("Copyright (c) Apache Software Foundation", self.package1.copyright)
         self.assertEqual("md5", self.package1.md5)
         self.assertEqual("sha1", self.package1.sha1)
         self.assertEqual("sha256", self.package1.sha256)
@@ -145,9 +137,7 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
             (64, Resource),
             (45, ExactFileIndex),
         ]:
-            self.assertEqual(
-                expected_count, model.objects.filter(package=self.package1).count()
-            )
+            self.assertEqual(expected_count, model.objects.filter(package=self.package1).count())
 
     def test_indexing_index_package_dwarf(self):
         scan_data_loc = self.get_test_loc("indexing/get_scan_data_dwarf.json")
@@ -203,26 +193,20 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
             version="20040705.181715",
             sha1="12345",
         )
-        scan_data_loc = self.get_test_loc(
-            "indexing/scancodeio_wagon-api-20040705.181715.json"
-        )
+        scan_data_loc = self.get_test_loc("indexing/scancodeio_wagon-api-20040705.181715.json")
         with open(scan_data_loc, "rb") as f:
             scan_data = json.loads(f.read())
 
         # Test that resources
         indexing.index_package_files(test_package1, scan_data)
-        indexing.update_package_relationships(
-            package=test_package2, existing_package=test_package1
-        )
+        indexing.update_package_relationships(package=test_package2, existing_package=test_package1)
         resources = Resource.objects.filter(package=test_package2)
         self.assertEqual(64, len(resources))
         resource_data = [r.to_dict() for r in resources]
         expected_resources_loc = self.get_test_loc(
             "indexing/scancodeio_wagon-api-20040705.181715-expected.json"
         )
-        self.check_expected_results(
-            resource_data, expected_resources_loc, regen=FIXTURES_REGEN
-        )
+        self.check_expected_results(resource_data, expected_resources_loc, regen=FIXTURES_REGEN)
 
     def test_update_check_for_duplicate_packages_release_date(self):
         test_package1 = Package.objects.create(
@@ -243,16 +227,12 @@ class IndexingTest(MiningTestCase, JsonBasedTesting):
             sha1="12345",
             release_date=datetime.now(),
         )
-        scan_data_loc = self.get_test_loc(
-            "indexing/scancodeio_wagon-api-20040705.181715.json"
-        )
+        scan_data_loc = self.get_test_loc("indexing/scancodeio_wagon-api-20040705.181715.json")
         with open(scan_data_loc, "rb") as f:
             scan_data = json.loads(f.read())
 
         # Test that resources are updated to use the older package
         indexing.index_package_files(test_package2, scan_data)
-        indexing.update_package_relationships(
-            package=test_package1, existing_package=test_package2
-        )
+        indexing.update_package_relationships(package=test_package1, existing_package=test_package2)
         resources = Resource.objects.filter(package=test_package1)
         self.assertEqual(64, len(resources))

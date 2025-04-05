@@ -25,9 +25,7 @@ class CreateUserCommand(BaseCommand):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.UserModel = get_user_model()
-        self.username_field = self.UserModel._meta.get_field(
-            self.UserModel.USERNAME_FIELD
-        )
+        self.username_field = self.UserModel._meta.get_field(self.UserModel.USERNAME_FIELD)
 
     def add_arguments(self, parser):
         parser.add_argument("username", help="Specifies the username for the user.")
@@ -42,9 +40,7 @@ class CreateUserCommand(BaseCommand):
         username = options["username"]
         interactive = options["interactive"]
         verbosity = options["verbosity"]
-        self.create_user(
-            username=username, interactive=interactive, verbosity=verbosity
-        )
+        self.create_user(username=username, interactive=interactive, verbosity=verbosity)
 
     def create_user(self, username, interactive, verbosity):
         error_msg = self._validate_username(username)
@@ -85,9 +81,7 @@ class CreateUserCommand(BaseCommand):
                 validate_password(password2, self.UserModel(**fake_user_data))
             except exceptions.ValidationError as err:
                 self.stderr.write("\n".join(err.messages))
-                response = input(
-                    "Bypass password validation and create user anyway? [y/N]: "
-                )
+                response = input("Bypass password validation and create user anyway? [y/N]: ")
                 if response.lower() != "y":
                     continue
             password = password1

@@ -20,9 +20,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class OpenWRTVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_visit_openwrt_download_pages(self):
         uri = "https://downloads.openwrt.org/chaos_calmer/15.05/"
@@ -81,21 +79,15 @@ class OpenWRTVistorTest(JsonBasedTesting):
 
 
 class OpenWRTMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     @expectedFailure
     def test_build_packages_1(self):
-        with open(
-            self.get_test_loc("openwrt/6to4_12-2_all_ipk_expected")
-        ) as openwrt_ipk_meta:
+        with open(self.get_test_loc("openwrt/6to4_12-2_all_ipk_expected")) as openwrt_ipk_meta:
             metadata = json.load(openwrt_ipk_meta)
         packages = miners.openwrt.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "openwrt/6to4_12-2_all_ipk_expected_mapper.json"
-        )
+        expected_loc = self.get_test_loc("openwrt/6to4_12-2_all_ipk_expected_mapper.json")
         self.check_expected_results(packages, expected_loc)
 
     @expectedFailure
@@ -106,7 +98,5 @@ class OpenWRTMapperTest(JsonBasedTesting):
             metadata = json.load(openwrt_ipk_meta)
         packages = miners.openwrt.build_packages(metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "openwrt/wpa-cli_0.5.7-1_mipsel.ipk_expected_mapper.json"
-        )
+        expected_loc = self.get_test_loc("openwrt/wpa-cli_0.5.7-1_mipsel.ipk_expected_mapper.json")
         self.check_expected_results(packages, expected_loc)

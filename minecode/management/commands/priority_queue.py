@@ -85,7 +85,9 @@ class Command(VerboseCommand):
             try:
                 errors = process_request(priority_resource_uri)
             except Exception as e:
-                errors = f"Error: Failed to process PriorityResourceURI: {repr(priority_resource_uri)}\n"
+                errors = (
+                    f"Error: Failed to process PriorityResourceURI: {repr(priority_resource_uri)}\n"
+                )
                 errors += get_error_message(e)
             finally:
                 if errors:

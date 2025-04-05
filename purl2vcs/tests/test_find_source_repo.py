@@ -29,11 +29,8 @@ from purl2vcs.find_source_repo import (
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TEST_DATA = os.path.join(BASE_DIR, "testfiles",
-                         "find_source_repo", "tags_commits.txt")
-TAGS_COMMITS_FILE = os.path.join(
-    BASE_DIR, "testfiles", "find_source_repo", "tags_commits_list.txt"
-)
+TEST_DATA = os.path.join(BASE_DIR, "testfiles", "find_source_repo", "tags_commits.txt")
+TAGS_COMMITS_FILE = os.path.join(BASE_DIR, "testfiles", "find_source_repo", "tags_commits_list.txt")
 
 
 class TestFindSourceRepo(TestCase):
@@ -134,10 +131,7 @@ class TestFindSourceRepo(TestCase):
             None,
         ]
         mock_text.side_effect = [["https://bitbucket/ab/cd"], [], [], []]
-        source_urls = list(
-            get_urls_from_package_data(
-                self.package_with_resources_and_package_data)
-        )
+        source_urls = list(get_urls_from_package_data(self.package_with_resources_and_package_data))
         assert source_urls == [
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/src/master/",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
@@ -147,9 +141,7 @@ class TestFindSourceRepo(TestCase):
 
     def test_get_source_purl_from_package_resources(self):
         source_urls = list(
-            get_urls_from_package_resources(
-                self.package_with_resources_and_package_data
-            )
+            get_urls_from_package_resources(self.package_with_resources_and_package_data)
         )
         assert source_urls == [
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
@@ -157,9 +149,7 @@ class TestFindSourceRepo(TestCase):
         ]
 
     @mock.patch("purl2vcs.find_source_repo.get_urls_from_package_data")
-    @mock.patch(
-        "purl2vcs.find_source_repo.get_merged_ancestor_package_from_maven_package"
-    )
+    @mock.patch("purl2vcs.find_source_repo.get_merged_ancestor_package_from_maven_package")
     def test_get_source_purl_from_package_data_and_resources(self, mock1, mock2):
         mock1.return_value = None
         mock2.return_value = []
@@ -182,27 +172,19 @@ class TestFindSourceRepo(TestCase):
         ]
 
     @mock.patch("purl2vcs.find_source_repo.get_urls_from_package_data")
-    @mock.patch(
-        "purl2vcs.find_source_repo.get_merged_ancestor_package_from_maven_package"
-    )
+    @mock.patch("purl2vcs.find_source_repo.get_merged_ancestor_package_from_maven_package")
     def test_get_repo_urls(self, mock1, mock2):
         mock1.return_value = None
         mock2.return_value = []
-        source_urls = list(
-            get_repo_urls(
-                package=self.package_without_resources_and_package_data)
-        )
+        source_urls = list(get_repo_urls(package=self.package_without_resources_and_package_data))
         assert source_urls == [
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/tree/master/oauth-oidc-sdk/src/main/resources/META-INF/MANIFEST.MF",
         ]
-        source_urls = list(get_repo_urls(
-            package=self.package_without_versions))
+        source_urls = list(get_repo_urls(package=self.package_without_versions))
         assert source_urls == []
-        source_urls = list(
-            get_repo_urls(package=self.package_with_resources_and_package_data)
-        )
+        source_urls = list(get_repo_urls(package=self.package_with_resources_and_package_data))
         assert source_urls == [
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions",
             "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/tree/master/oauth-oidc-sdk/src/main/resources/META-INF/MANIFEST.MF",
@@ -214,9 +196,7 @@ class TestFindSourceRepo(TestCase):
     def test_convert_repo_urls_to_purls(self):
         source_urls = list(
             convert_repo_urls_to_purls(
-                [
-                    "https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions"
-                ]
+                ["https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions"]
             )
         )
         source_urls = [str(source_url) for source_url in source_urls]
@@ -236,9 +216,7 @@ class TestFindSourceRepo(TestCase):
         ]
 
         assert list(
-            convert_repo_urls_to_purls(
-                ["git://github.com:maxmind/MaxMind-DB-Reader-java"]
-            )
+            convert_repo_urls_to_purls(["git://github.com:maxmind/MaxMind-DB-Reader-java"])
         ) == [
             PackageURL(
                 type="github",
@@ -268,9 +246,7 @@ class TestFindSourceRepo(TestCase):
         ]
 
         assert list(
-            convert_repo_urls_to_purls(
-                ["git+https://github.com/ckeditor/ckeditor4-react.git"]
-            )
+            convert_repo_urls_to_purls(["git+https://github.com/ckeditor/ckeditor4-react.git"])
         ) == [
             PackageURL(
                 type="github",
@@ -316,8 +292,7 @@ class TestFindSourceRepo(TestCase):
                     namespace="connect2id",
                     name="oauth-2.0-sdk-with-openid-connect-extensions",
                     version="9.36",
-                    qualifiers={
-                        "commit": "e86fb3431972d302fcb615aca0baed4d8ab89791"},
+                    qualifiers={"commit": "e86fb3431972d302fcb615aca0baed4d8ab89791"},
                     subpath=None,
                 )
 
@@ -325,14 +300,13 @@ class TestFindSourceRepo(TestCase):
     def test_fetch_response(self, mock_get):
         mock_get.return_value.status_code = 200
         mock_get.return_value.text = "abc"
-        assert fetch_response("https://github.com/assets") == None
-        assert fetch_response("https://github.com/abc.js") == None
+        assert fetch_response("https://github.com/assets") is None
+        assert fetch_response("https://github.com/abc.js") is None
 
     def test_from_purl_to_git(self):
         response = self.client.get(
             "/api/from_purl/purl2git",
-            data={"package_url": str(
-                self.package_without_resources_and_package_data)},
+            data={"package_url": str(self.package_without_resources_and_package_data)},
             follow=True,
         )
         expected = "pkg:bitbucket/connect2id/oauth-2.0-sdk-with-openid-connect-extensions@9.36?commit=e86fb3431972d302fcb615aca0baed4d8ab89791"

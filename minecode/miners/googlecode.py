@@ -63,17 +63,12 @@ class GooglecodeArchiveVisitor(NonPersistentHttpVisitor):
                     if project_line.startswith(
                         "gs://google-code-archive/v2"
                     ) and project_line.endswith("/project.json"):
-                        project_line = project_line.replace(
-                            "gs://google-code-archive/v2", ""
-                        )
+                        project_line = project_line.replace("gs://google-code-archive/v2", "")
                         package_name = project_line.replace("/project.json", "")
                         package_url = PackageURL(
                             type="googlecode", name=package_name.strip("/")
                         ).to_string()
-                        project_line = (
-                            "google-code-archive/o/v2"
-                            + project_line.replace("/", "%2F")
-                        )
+                        project_line = "google-code-archive/o/v2" + project_line.replace("/", "%2F")
                         url = url_base.format(project_info=project_line)
                         yield URI(uri=url, package_url=package_url, source_uri=self.uri)
 
@@ -109,9 +104,7 @@ class GoogleProjectPagesVisitor(HttpVisitor):
                 package_url = PackageURL(
                     type="googlecode", name=project_name.strip("/")
                 ).to_string()
-                yield URI(
-                    uri=project_api_url, package_url=package_url, source_uri=self.uri
-                )
+                yield URI(uri=project_api_url, package_url=package_url, source_uri=self.uri)
             if page.text.startswith("Next"):
                 yield URI(uri=url, source_uri=self.uri)
 
@@ -193,9 +186,7 @@ class GoogleNewAPIV2ProjectJsonMapper(Mapper):
         # FIXME: JSON deserialization should be handled eventually by the
         # framework
         metadata = json.loads(resource_uri.data)
-        return build_packages_from_projectsjson_v2(
-            metadata, resource_uri.package_url, uri
-        )
+        return build_packages_from_projectsjson_v2(metadata, resource_uri.package_url, uri)
 
 
 def build_packages_from_projectsjson_v2(metadata, purl=None, uri=None):
@@ -249,9 +240,7 @@ class GoogleNewAPIV1ProjectJsonMapper(Mapper):
         # FIXME: JSON deserialization should be handled eventually by the
         # framework
         metadata = json.loads(resource_uri.data)
-        return build_packages_from_projectsjson_v1(
-            metadata, resource_uri.package_url, uri
-        )
+        return build_packages_from_projectsjson_v1(metadata, resource_uri.package_url, uri)
 
 
 def build_packages_from_projectsjson_v1(metadata, purl=None, uri=None):

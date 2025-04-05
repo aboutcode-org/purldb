@@ -19,15 +19,11 @@ from minecode.utils_test import mocked_requests_get
 
 
 class GitlabTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
 
 class GitlabVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     @unittest.skip("The test is to test fetching remotely through http connection")
     def test_visit_api_header_getheaders(self):
@@ -47,18 +43,12 @@ class GitlabVistorTest(JsonBasedTesting):
 
 
 class GitlabMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_map_software_html_page_hal(self):
-        with open(
-            self.get_test_loc("gitlab/microservice-express-mongo.json")
-        ) as gitlab_json:
+        with open(self.get_test_loc("gitlab/microservice-express-mongo.json")) as gitlab_json:
             metadata = gitlab_json.read()
         packages = miners.gitlab.build_packages_from_json(metadata)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "gitlab/microservice-express-mongo_expected.json"
-        )
+        expected_loc = self.get_test_loc("gitlab/microservice-express-mongo_expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

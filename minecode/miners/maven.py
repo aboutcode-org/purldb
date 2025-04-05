@@ -365,9 +365,7 @@ def build_url_and_filename(
 
 
 # TODO: consider switching to HTTPS
-def build_maven_xml_url(
-    group_id, artifact_id, base_repo_url="https://repo1.maven.org/maven2"
-):
+def build_maven_xml_url(group_id, artifact_id, base_repo_url="https://repo1.maven.org/maven2"):
     """
     Return a download URL for a Maven artifact built from its
     coordinates.
@@ -564,9 +562,7 @@ def to_dict(self):
 Artifact = namedtuple("Artifact", _artifact_base_fields)
 Artifact.to_dict = to_dict
 
-ArtifactExtended = namedtuple(
-    "ArtifactExtended", _artifact_base_fields + _artifact_extended_fields
-)
+ArtifactExtended = namedtuple("ArtifactExtended", _artifact_base_fields + _artifact_extended_fields)
 ArtifactExtended.to_dict = to_dict
 
 
@@ -742,9 +738,7 @@ def get_entries(location, fields=frozenset(ENTRY_FIELDS)):
 
                 except EOFError:
                     if TRACE_DEEP:
-                        print(
-                            f"Index version: {_index_version} last_modified: {_last_modified}"
-                        )
+                        print(f"Index version: {_index_version} last_modified: {_last_modified}")
                         print(f"Processed {entries_count} docs. Last entry: {entry}")
                         print("Unique keys:")
                         for k in sorted(keys):

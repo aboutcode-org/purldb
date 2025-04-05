@@ -24,8 +24,7 @@ test_env = FileDrivenTesting()
 test_env.test_data_dir = os.path.join(os.path.dirname(__file__), "data")
 
 
-class TestPURLCLI_metadata(object):
-
+class TestPURLCLI_metadata:
     def test_metadata_cli_duplicate_input_sources(self):
         """
         Test the `metadata` command with both `--purl` and `--file` inputs.
@@ -39,8 +38,7 @@ class TestPURLCLI_metadata(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_metadata,
-                               options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
         assert "Use either purls or file but not both." in result.output
         assert result.exit_code == 2
 
@@ -53,15 +51,13 @@ class TestPURLCLI_metadata(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_metadata,
-                               options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
         assert "Error: Use either purls" in result.output
         assert result.exit_code == 2
 
     @mock.patch("purldb_toolkit.purlcli.collect_metadata")
     @mock.patch("purldb_toolkit.purlcli.check_metadata_purl")
     def test_metadata_details(self, mock_check_metadata_purl, mock_collect_metadata):
-
         mock_collect_metadata.return_value = [
             OrderedDict(
                 [
@@ -606,12 +602,9 @@ class TestPURLCLI_metadata(object):
             ),
         ],
     )
-    def test_normalize_purls(
-        self, test_input, expected_input_purls, expected_normalized_purls
-    ):
+    def test_normalize_purls(self, test_input, expected_input_purls, expected_normalized_purls):
         unique = True
-        input_purls, normalized_purls = purlcli.normalize_purls(
-            test_input[0], unique)
+        input_purls, normalized_purls = purlcli.normalize_purls(test_input[0], unique)
 
         assert input_purls == expected_input_purls
         assert normalized_purls == expected_normalized_purls
@@ -737,8 +730,7 @@ class TestPURLCLI_metadata(object):
         assert metadata_headers == expected
 
 
-class TestPURLCLI_urls(object):
-
+class TestPURLCLI_urls:
     @mock.patch("purldb_toolkit.purlcli.make_head_request")
     def test_urls_cli_head(self, mock_make_head_request):
         """
@@ -758,11 +750,8 @@ class TestPURLCLI_urls(object):
             {"get_request": 200},
             {"head_request": 200},
         ]
-        expected_result_file = test_env.get_test_loc(
-            "purlcli/expected_urls_output_head_mock.json"
-        )
-        actual_result_file = test_env.get_temp_file(
-            "actual_urls_output_head_mock.json")
+        expected_result_file = test_env.get_test_loc("purlcli/expected_urls_output_head_mock.json")
+        actual_result_file = test_env.get_temp_file("actual_urls_output_head_mock.json")
         options = [
             "--purl",
             "pkg:pypi/fetchcode",
@@ -771,8 +760,7 @@ class TestPURLCLI_urls(object):
             actual_result_file,
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_urls, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         with open(actual_result_file) as f_output:
@@ -788,8 +776,7 @@ class TestPURLCLI_urls(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"],
-             expected_data["headers"][0]["purls"]),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -833,8 +820,7 @@ class TestPURLCLI_urls(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_urls, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
         assert "Use either purls or file but not both." in result.output
         assert result.exit_code == 2
 
@@ -847,8 +833,7 @@ class TestPURLCLI_urls(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_urls, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
         assert "Use either purls or file." in result.output
         assert result.exit_code == 2
 
@@ -869,9 +854,7 @@ class TestPURLCLI_urls(object):
                     },
                     "purls": ["pkg:pypi/fetchcode"],
                     "errors": [],
-                    "warnings": [
-                        "'pkg:pypi/fetchcode' not fully supported with `urls` command"
-                    ],
+                    "warnings": ["'pkg:pypi/fetchcode' not fully supported with `urls` command"],
                 }
             ],
             "packages": [
@@ -933,9 +916,7 @@ class TestPURLCLI_urls(object):
 
     @mock.patch("requests.get")
     @mock.patch("requests.head")
-    def test_validate_purl_mock_requests_get_and_head(
-        self, mock_requests_head, mock_requests_get
-    ):
+    def test_validate_purl_mock_requests_get_and_head(self, mock_requests_head, mock_requests_get):
         get_response = mock.Mock(requests.Response)
         get_response.status_code = 200
 
@@ -953,8 +934,7 @@ class TestPURLCLI_urls(object):
         assert results == expected_results
 
 
-class TestPURLCLI_validate(object):
-
+class TestPURLCLI_validate:
     @mock.patch("requests.get")
     def test_validate_purl_mock_requests_get(self, mock_requests_get):
         mock_request_response = {
@@ -974,7 +954,6 @@ class TestPURLCLI_validate(object):
 
     @mock.patch("requests.get")
     def test_validate_purl_mock_requests_get_jsondecodeerror(self, mock_requests_get):
-
         def json_decode_failure_exception(**kwargs):
             raise json.decoder.JSONDecodeError("test", "[{}]", 0)
 
@@ -992,7 +971,6 @@ class TestPURLCLI_validate(object):
 
     @mock.patch("requests.get")
     def test_validate_purl_mock_requests_get_exception(self, mock_requests_get):
-
         def raise_exception(**kwargs):
             raise Exception
 
@@ -1007,7 +985,6 @@ class TestPURLCLI_validate(object):
 
     @mock.patch("requests.get")
     def test_validate_purl_mock_requests_none(self, mock_requests_get):
-
         def raise_exception(**kwargs):
             raise Exception
 
@@ -1021,8 +998,7 @@ class TestPURLCLI_validate(object):
         assert "'validate' endpoint error for 'None': \n" in results
 
 
-class TestPURLCLI_versions(object):
-
+class TestPURLCLI_versions:
     @mock.patch("purldb_toolkit.purlcli.collect_versions")
     @mock.patch("purldb_toolkit.purlcli.check_versions_purl")
     def test_versions_details_multiple(
@@ -1030,7 +1006,6 @@ class TestPURLCLI_versions(object):
         mock_check_versions_purl,
         mock_collect_versions,
     ):
-
         mock_check_versions_purl.side_effect = [
             None,
             None,
@@ -1192,9 +1167,7 @@ class TestPURLCLI_versions(object):
                             },
                             "purls": ["pkg:nginx/nginx"],
                             "errors": [],
-                            "warnings": [
-                                "'pkg:nginx/nginx' not supported with `versions` command"
-                            ],
+                            "warnings": ["'pkg:nginx/nginx' not supported with `versions` command"],
                         }
                     ],
                     "packages": [],
@@ -1279,7 +1252,6 @@ class TestPURLCLI_versions(object):
         mock_check_versions_purl,
         mock_collect_versions,
     ):
-
         mock_collect_versions.return_value = [
             {
                 "purl": "pkg:pypi/fetchcode@0.1.0",

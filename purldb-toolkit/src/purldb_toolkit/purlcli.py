@@ -83,8 +83,7 @@ def get_metadata(purls, output, file, unique):
     context = click.get_current_context()
     command_name = context.command.name
 
-    metadata_info = get_metadata_details(
-        purls, output, file, unique, command_name)
+    metadata_info = get_metadata_details(purls, output, file, unique, command_name)
     json.dump(metadata_info, output, indent=4)
 
 
@@ -164,7 +163,7 @@ def check_metadata_purl(purl):
         return "validation_error"
     results = check_validation
 
-    if results["valid"] == False:
+    if not results["valid"]:
         return "not_valid"
 
     # This is manually constructed from a visual inspection of fetchcode/package.py.
@@ -181,11 +180,11 @@ def check_metadata_purl(purl):
     if metadata_purl.type not in metadata_supported_ecosystems:
         return "valid_but_not_supported"
 
-    if results["exists"] == False:
-        return "not_in_upstream_repo"
-
-    if results["exists"] == None:
+    if results["exists"] is None:
         return "check_existence_not_supported"
+
+    if not results["exists"]:
+        return "not_in_upstream_repo"
 
 
 def normalize_purls(purls, unique):
@@ -262,9 +261,7 @@ def construct_headers(
     if (command_name in ["metadata", "urls", "validate", "versions"]) and unique:
         for input_purl, normalized_purl in normalized_purls:
             if input_purl != normalized_purl:
-                warnings.append(
-                    f"input PURL: '{input_purl}' normalized to '{normalized_purl}'"
-                )
+                warnings.append(f"input PURL: '{input_purl}' normalized to '{normalized_purl}'")
 
     for purl in purls:
         if not purl:
@@ -290,7 +287,7 @@ def construct_headers(
 
     log_file = Path(LOG_FILE_LOCATION)
     if log_file.is_file():
-        with open(log_file, "r") as f:
+        with open(log_file) as f:
             for line in f:
                 errors.append(line)
 
@@ -353,8 +350,7 @@ def get_urls(purls, output, file, unique, head):
     context = click.get_current_context()
     command_name = context.command.name
 
-    urls_info = get_urls_details(
-        purls, output, file, unique, head, command_name)
+    urls_info = get_urls_details(purls, output, file, unique, head, command_name)
     json.dump(urls_info, output, indent=4)
 
 
@@ -405,8 +401,7 @@ def get_urls_details(purls, output, file, unique, head, command_name):
             {"url": inferred} for inferred in purl2url.get_inferred_urls(purl)
         ]
 
-        url_detail["repo_download_url"] = {
-            "url": purl2url.get_repo_download_url(purl)}
+        url_detail["repo_download_url"] = {"url": purl2url.get_repo_download_url(purl)}
 
         url_detail["repo_download_url_by_package_type"] = {
             "url": purl2url.get_repo_download_url_by_package_type(
@@ -498,7 +493,7 @@ def check_urls_purl(purl):
         return "validation_error"
     results = check_validation
 
-    if results["valid"] == False:
+    if not results["valid"]:
         return "not_valid"
 
     # Both of these lists are manually constructed from a visual inspection of
@@ -540,7 +535,7 @@ def check_urls_purl(purl):
     ):
         return "valid_but_not_supported"
 
-    if results["exists"] == False:
+    if not results["exists"]:
         return "not_in_upstream_repo"
 
     if (
@@ -550,7 +545,6 @@ def check_urls_purl(purl):
         urls_purl.type not in urls_supported_ecosystems_repo_url
         and urls_purl.type in urls_supported_ecosystems_download_url
     ):
-
         return "valid_but_not_fully_supported"
 
 
@@ -599,8 +593,7 @@ def validate(purls, output, file, unique):
     context = click.get_current_context()
     command_name = context.command.name
 
-    validated_purls = get_validate_details(
-        purls, output, file, unique, command_name)
+    validated_purls = get_validate_details(purls, output, file, unique, command_name)
     json.dump(validated_purls, output, indent=4)
 
 
@@ -662,16 +655,16 @@ def check_validate_purl(purl):
         return "validation_error"
     results = check_validation
 
-    if results["valid"] == False:
+    if not results["valid"]:
         return "not_valid"
 
-    if results["exists"] == False:
+    if not results["exists"]:
         return "not_in_upstream_repo"
 
-    if results["exists"] == True:
+    if results["exists"]:
         return check_validation
 
-    if results["exists"] == None:
+    if results["exists"] is None:
         return "check_existence_not_supported"
 
 
@@ -705,9 +698,7 @@ def validate_purl(purl):
         response = requests.get(api_query, params=request_body).json()
 
     except json.decoder.JSONDecodeError as e:
-
-        print(
-            f"validate_purl(): json.decoder.JSONDecodeError for '{purl}': {e}")
+        print(f"validate_purl(): json.decoder.JSONDecodeError for '{purl}': {e}")
 
         logging.basicConfig(
             filename=LOG_FILE_LOCATION,
@@ -716,16 +707,14 @@ def validate_purl(purl):
             filemode="w",
         )
 
-        logger.error(
-            f"validate_purl(): json.decoder.JSONDecodeError for '{purl}': {e}")
+        logger.error(f"validate_purl(): json.decoder.JSONDecodeError for '{purl}': {e}")
 
     except Exception as e:
         print(f"'validate' endpoint error for '{purl}': {e}")
 
     else:
         if response is None:
-            print(
-                f"'{purl}' -- response.status_code for None = {response.status_code}")
+            print(f"'{purl}' -- response.status_code for None = {response.status_code}")
         return response
 
 
@@ -772,8 +761,7 @@ def get_versions(purls, output, file, unique):
     context = click.get_current_context()
     command_name = context.command.name
 
-    purl_versions = get_versions_details(
-        purls, output, file, unique, command_name)
+    purl_versions = get_versions_details(purls, output, file, unique, command_name)
     json.dump(purl_versions, output, indent=4)
 
 
@@ -884,7 +872,7 @@ def check_versions_purl(purl):
         return "validation_error"
     results = check_validation
 
-    if results["valid"] == False:
+    if not results["valid"]:
         return "not_valid"
 
     supported = SUPPORTED_ECOSYSTEMS
@@ -893,10 +881,10 @@ def check_versions_purl(purl):
     if versions_purl.type not in supported:
         return "valid_but_not_supported"
 
-    if results["exists"] == False:
+    if not results["exists"]:
         return "not_in_upstream_repo"
 
-    if results["exists"] == None:
+    if results["exists"] is None:
         return "check_existence_not_supported"
 
     # This handles the conflict between the `validate`` endpoint (treats
@@ -926,6 +914,7 @@ class D2DPackage(NamedTuple):
     A package to use in d2d, identifier by its PURL and qualified by is package_content which is one
     of PackageContentType.
     """
+
     purl: str
     package_content: str
     download_url: str
@@ -960,6 +949,7 @@ class PackagePair(NamedTuple):
     """
     A pair of from and to D2DPackages.=
     """
+
     from_package: D2DPackage
     to_package: D2DPackage
 
@@ -969,9 +959,9 @@ class PackagePair(NamedTuple):
 
 # Keep in sync with the packagedb.models.PackageContentType
 class PackageContentType(Enum):
-    SOURCE_REPO = 3, 'source_repo'
-    SOURCE_ARCHIVE = 4, 'source_archive'
-    BINARY = 5, 'binary'
+    SOURCE_REPO = 3, "source_repo"
+    SOURCE_ARCHIVE = 4, "source_archive"
+    BINARY = 5, "binary"
 
 
 def generate_d2d_package_pairs(from_packages, to_packages):
@@ -999,16 +989,21 @@ def get_package_pairs_for_d2d(packages):
     for content, content_packages in groupby(packages, key=lambda p: p.package_content):
         packages_by_content[content] = list(content_packages)
 
-    source_repo_packages = packages_by_content.get(
-        PackageContentType.SOURCE_REPO.name.lower(), [])
+    source_repo_packages = packages_by_content.get(PackageContentType.SOURCE_REPO.name.lower(), [])
     source_archive_packages = packages_by_content.get(
-        PackageContentType.SOURCE_ARCHIVE.name.lower(), [])
-    binary_packages = packages_by_content.get(
-        PackageContentType.BINARY.name.lower(), [])
+        PackageContentType.SOURCE_ARCHIVE.name.lower(), []
+    )
+    binary_packages = packages_by_content.get(PackageContentType.BINARY.name.lower(), [])
 
-    yield from generate_d2d_package_pairs(from_packages=source_repo_packages, to_packages=binary_packages)
-    yield from generate_d2d_package_pairs(from_packages=source_archive_packages, to_packages=binary_packages)
-    yield from generate_d2d_package_pairs(from_packages=source_repo_packages, to_packages=source_archive_packages)
+    yield from generate_d2d_package_pairs(
+        from_packages=source_repo_packages, to_packages=binary_packages
+    )
+    yield from generate_d2d_package_pairs(
+        from_packages=source_archive_packages, to_packages=binary_packages
+    )
+    yield from generate_d2d_package_pairs(
+        from_packages=source_repo_packages, to_packages=source_archive_packages
+    )
 
 
 def validate_purls_for_d2d(ctx, param, value):
@@ -1019,21 +1014,22 @@ def validate_purls_for_d2d(ctx, param, value):
     len_purls = len(purls)
     if len_purls > 2:
         raise click.BadParameter(
-            "Invalid number of --purl options. Only one or two options are allowed.")
+            "Invalid number of --purl options. Only one or two options are allowed."
+        )
 
     if len_purls == 1:
         if not purls[0].startswith("pkg:"):
-            raise click.BadParameter(
-                f"Invalid PURL: {purls[0]!r}. Must start with `pkg:`")
+            raise click.BadParameter(f"Invalid PURL: {purls[0]!r}. Must start with `pkg:`")
         else:
             return value
 
     elif len_purls != 2:
         raise click.BadParameter(
-            f"Invalid number of --purl options. There should be exactly two --purl options.")
+            "Invalid number of --purl options. There should be exactly two --purl options."
+        )
 
     elif not (all_purls(purls) or all_urls(purls)):
-        purls = '\n'.join(purls)
+        purls = "\n".join(purls)
         raise click.BadParameter(
             f"Invalid combination of --purl options:\n"
             f"{purls}\n"
@@ -1192,7 +1188,9 @@ def run_d2d_purl_set(purl, purldb_api_url, matchcode_api_url):
         package_pairs = get_package_pairs_for_d2d(d2d_packages)
         for package_pair in package_pairs:
             click.echo(
-                f"Running D2D for: {package_pair.from_package.purl} -> {package_pair.to_package.purl}", err=True)
+                f"Running D2D for: {package_pair.from_package.purl} -> {package_pair.to_package.purl}",
+                err=True,
+            )
             run_id, project_url = map_deploy_to_devel(
                 from_purl=package_pair.from_package.purl,
                 to_purl=package_pair.to_package.purl,
@@ -1214,12 +1212,10 @@ def run_d2d_purl_set(purl, purldb_api_url, matchcode_api_url):
                 continue
             # TODO: Use a better progress indicator.
             click.echo(".", err=True)
-            data = get_run_data(
-                matchcode_api_url=matchcode_api_url, run_id=run_id)
+            data = get_run_data(matchcode_api_url=matchcode_api_url, run_id=run_id)
             if data.get("status") != "running":
                 project.done = True
-                project.result = get_project_results(
-                    project_url=project.project_url)
+                project.result = get_project_results(project_url=project.project_url)
             time.sleep(1)
         time.sleep(POLLING_INTERVAL)
         if all(project.done for project in projects):
@@ -1227,21 +1223,23 @@ def run_d2d_purl_set(purl, purldb_api_url, matchcode_api_url):
 
     d2d_results = []
     for project in projects:
-        d2d_results.append({
-            "results": {
-                "from": {
-                    "purl": project.package_pair.from_package.purl,
-                    "package_content": project.package_pair.from_package.package_content,
-                    "download_url": project.package_pair.from_package.download_url
-                },
-                "to": {
-                    "purl": project.package_pair.to_package.purl,
-                    "package_content": project.package_pair.to_package.package_content,
-                    "download_url": project.package_pair.to_package.download_url
-                },
-                "d2d_result": project.result
+        d2d_results.append(
+            {
+                "results": {
+                    "from": {
+                        "purl": project.package_pair.from_package.purl,
+                        "package_content": project.package_pair.from_package.package_content,
+                        "download_url": project.package_pair.from_package.download_url,
+                    },
+                    "to": {
+                        "purl": project.package_pair.to_package.purl,
+                        "package_content": project.package_pair.to_package.package_content,
+                        "download_url": project.package_pair.to_package.download_url,
+                    },
+                    "d2d_result": project.result,
+                }
             }
-        })
+        )
     return d2d_results
 
 
@@ -1252,13 +1250,11 @@ def map_deploy_to_devel(from_purl, to_purl, purldb_api_url, matchcode_api_url):
     """
     from_url = get_download_url(purl=from_purl, purldb_api_url=purldb_api_url)
     if not from_url:
-        raise Exception(
-            f"Could not find download URL for the `from` PURL: {from_purl}.")
+        raise Exception(f"Could not find download URL for the `from` PURL: {from_purl}.")
 
     to_url = get_download_url(purl=to_purl, purldb_api_url=purldb_api_url)
     if not to_url:
-        raise Exception(
-            f"Could not find download URL for the `to` PURL: {to_url}.")
+        raise Exception(f"Could not find download URL for the `to` PURL: {to_url}.")
 
     return map_deploy_to_devel_urls(
         from_url=from_url,
@@ -1271,15 +1267,16 @@ def map_deploy_to_devel_urls(from_url, to_url, matchcode_api_url):
     """
     Return a tuple of matchcode.io d2d (run ID, project URL) for a given pair of HTTP URLs.
     """
-    input_urls = (f"{from_url}#from", f"{to_url}#to",)
+    input_urls = (
+        f"{from_url}#from",
+        f"{to_url}#to",
+    )
 
-    d2d_launch = launch_d2d(input_urls=input_urls,
-                            matchcode_api_url=matchcode_api_url)
+    d2d_launch = launch_d2d(input_urls=input_urls, matchcode_api_url=matchcode_api_url)
     project_url = d2d_launch.get("url") or None
     run_url = d2d_launch.get("runs")
     if not run_url:
-        raise Exception(
-            f"Could not find a run URL for the input URLs {input_urls!r}.")
+        raise Exception(f"Could not find a run URL for the input URLs {input_urls!r}.")
 
     return run_url[0], project_url
 
@@ -1290,7 +1287,7 @@ def launch_d2d(matchcode_api_url, input_urls):
     These are used for polling and fetching results later.
     """
     url = urljoin(matchcode_api_url, "d2d/")
-    headers = {'Content-Type': 'application/json'}
+    headers = {"Content-Type": "application/json"}
     payload = json.dumps({"input_urls": input_urls, "runs": []})
     d2d_results = requests.post(
         url=url,

@@ -46,9 +46,7 @@ class Command(VerboseCommand):
         for index, package in enumerate(iterator, start=1):
             download_url = package.download_url
             package_url = package.package_url
-            logger.info(
-                f"Updating release_date for package {package_url} ({download_url})"
-            )
+            logger.info(f"Updating release_date for package {package_url} ({download_url})")
             package_version_page_url = dirname(download_url)
             filename = download_url.rsplit("/")[-1]
             response = requests.get(package_version_page_url)

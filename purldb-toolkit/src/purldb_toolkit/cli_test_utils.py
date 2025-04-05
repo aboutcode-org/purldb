@@ -7,7 +7,6 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import io
 import json
 import os
 import time
@@ -18,8 +17,7 @@ from packageurl import PackageURL
 from scancode_config import scancode_root_dir
 
 
-REGEN_TEST_FIXTURES = os.environ.get(
-    "PURLDB_TOOLKIT_TEST_FIXTURES_REGEN", False)
+REGEN_TEST_FIXTURES = os.environ.get("PURLDB_TOOLKIT_TEST_FIXTURES_REGEN", False)
 
 
 def run_scan_plain(
@@ -67,8 +65,7 @@ def run_scan_plain(
 
     if rc != expected_rc:
         opts = get_opts(options)
-        error = (
-            f"""
+        error = f"""
 Failure to run:
 rc: {rc}
 scancode {opts}
@@ -77,9 +74,7 @@ stdout:
 
 stderr:
 {stderr}
-"""
-            % locals()
-        )
+""" % locals()
         assert rc == expected_rc, error
 
     return rc, stdout, stderr
@@ -126,16 +121,14 @@ def run_scan_click(
 
     runner = CliRunner()
 
-    result = runner.invoke(cli.scancode, options,
-                           catch_exceptions=False, env=env)
+    result = runner.invoke(cli.scancode, options, catch_exceptions=False, env=env)
     if retry and result.exit_code != expected_rc:
         if on_windows:
             # wait and rerun in verbose mode to get more in the output
             time.sleep(1)
         if "--verbose" not in options:
             options.append("--verbose")
-        result = runner.invoke(cli.scancode, options,
-                               catch_exceptions=False, env=env)
+        result = runner.invoke(cli.scancode, options, catch_exceptions=False, env=env)
 
     if result.exit_code != expected_rc:
         output = result.output
@@ -199,8 +192,7 @@ def check_json_scan(
     If `remove_uuid` is True, removes UUID from Package and Dependency.
     and if also `regen` is True then regenerate expected file with old UUIDs present already.
     """
-    results = load_json_result(
-        location=result_file, remove_file_date=remove_file_date)
+    results = load_json_result(location=result_file, remove_file_date=remove_file_date)
     if remove_uuid:
         results = remove_uuid_from_scan(results)
 
@@ -212,9 +204,7 @@ def check_json_scan(
             json.dump(results, reg, indent=2, separators=(",", ": "))
         expected = results
     else:
-        expected = load_json_result(
-            location=expected_file, remove_file_date=remove_file_date
-        )
+        expected = load_json_result(location=expected_file, remove_file_date=remove_file_date)
         if remove_uuid:
             expected = remove_uuid_from_scan(expected)
         if not check_headers:
@@ -246,8 +236,7 @@ def remove_uuid_from_scan(results):
 
         for_package_uid = dependency.get("for_package_uid")
         if for_package_uid:
-            dependency["for_package_uid"] = purl_with_fake_uuid(
-                for_package_uid)
+            dependency["for_package_uid"] = purl_with_fake_uuid(for_package_uid)
 
     for resource in results.get("files") or []:
         for_packages = []
@@ -278,7 +267,7 @@ def load_json_result(location, remove_file_date=False):
     To optionally also remove date attributes from "files" and "headers"
     entries, set the `remove_file_date` argument to True.
     """
-    with io.open(location, encoding="utf-8") as res:
+    with open(location, encoding="utf-8") as res:
         scan_results = res.read()
     return load_json_result_from_string(scan_results, remove_file_date)
 
@@ -369,7 +358,7 @@ def check_jsonlines_scan(
 
     If `remove_file_date` is True, the file.date attribute is removed.
     """
-    with io.open(result_file, encoding="utf-8") as res:
+    with open(result_file, encoding="utf-8") as res:
         results = [json.loads(line) for line in res]
 
     if remove_uuid:
@@ -381,7 +370,7 @@ def check_jsonlines_scan(
         with open(expected_file, "w") as reg:
             json.dump(results, reg, indent=2, separators=(",", ": "))
 
-    with io.open(expected_file, encoding="utf-8") as res:
+    with open(expected_file, encoding="utf-8") as res:
         expected = json.load(res)
         if remove_uuid:
             for result in results:

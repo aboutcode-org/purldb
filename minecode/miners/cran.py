@@ -28,9 +28,7 @@ class CranSeed(seed.Seeder):
         yield "https://cloud.r-project.org/web/packages/available_packages_by_date.html"
 
 
-@visit_router.route(
-    "https://cloud.r-project.org/web/packages/available_packages_by_date.html"
-)
+@visit_router.route("https://cloud.r-project.org/web/packages/available_packages_by_date.html")
 class CranPackagesVisitors(HttpVisitor):
     """Return URIs by parsing the HTML content of the page"""
 
@@ -159,9 +157,7 @@ def build_packages_from_html(metadata, uri=None, purl=None):
                             type=scan_models.party_person,
                             name=maintainer_split[0].rstrip(),
                             role="maintainer",
-                            email=maintainer_split[1]
-                            .replace(">", "")
-                            .replace(" at ", "@"),
+                            email=maintainer_split[1].replace(">", "").replace(" at ", "@"),
                         )
                         common_data["parties"].append(party.to_dict())
                 elif "source" in key or "binaries" in key:
@@ -179,7 +175,9 @@ def build_packages_from_html(metadata, uri=None, purl=None):
         common_data["extracted_license_statement"] = extracted_license_statement
         common_data["license_detections"] = []
 
-    if download_urls:  # for else statement will have else running always if there is no break statement
+    if (
+        download_urls
+    ):  # for else statement will have else running always if there is no break statement
         for download_url in download_urls:
             package = scan_models.Package.from_package_data(
                 package_data=common_data,

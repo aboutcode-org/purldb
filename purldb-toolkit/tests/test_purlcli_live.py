@@ -22,7 +22,7 @@ test_env.test_data_dir = os.path.join(os.path.dirname(__file__), "data")
 pytestmark = pytest.mark.live_fetch()
 
 
-class TestPURLCLI_metadata(object):
+class TestPURLCLI_metadata:
     def test_metadata_cli(self):
         """
         Test the `metadata` command with actual and expected JSON output files.
@@ -31,11 +31,8 @@ class TestPURLCLI_metadata(object):
         because the `--output` values (paths) differ due to the use of
         temporary files, and therefore we test a list of relevant key-value pairs.
         """
-        expected_result_file = test_env.get_test_loc(
-            "purlcli/expected_metadata_output.json"
-        )
-        actual_result_file = test_env.get_temp_file(
-            "actual_metadata_output.json")
+        expected_result_file = test_env.get_test_loc("purlcli/expected_metadata_output.json")
+        actual_result_file = test_env.get_temp_file("actual_metadata_output.json")
         options = [
             "--purl",
             "pkg:pypi/fetchcode",
@@ -59,8 +56,7 @@ class TestPURLCLI_metadata(object):
             actual_result_file,
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_metadata,
-                               options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         with open(actual_result_file) as f_output:
@@ -78,8 +74,7 @@ class TestPURLCLI_metadata(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"],
-             expected_data["headers"][0]["purls"]),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -116,11 +111,8 @@ class TestPURLCLI_metadata(object):
         Test the `metadata` command with actual and expected JSON output files
         with the `--unique` flag included in the command.
         """
-        expected_result_file = test_env.get_test_loc(
-            "purlcli/expected_metadata_output_unique.json"
-        )
-        actual_result_file = test_env.get_temp_file(
-            "actual_metadata_output.json")
+        expected_result_file = test_env.get_test_loc("purlcli/expected_metadata_output_unique.json")
+        actual_result_file = test_env.get_temp_file("actual_metadata_output.json")
         options = [
             "--purl",
             "pkg:pypi/fetchcode",
@@ -145,8 +137,7 @@ class TestPURLCLI_metadata(object):
             "--unique",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_metadata,
-                               options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         with open(actual_result_file) as f_output:
@@ -164,8 +155,7 @@ class TestPURLCLI_metadata(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"],
-             expected_data["headers"][0]["purls"]),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -210,8 +200,7 @@ class TestPURLCLI_metadata(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_metadata,
-                               options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
         assert "Use either purls or file but not both." in result.output
         assert result.exit_code == 2
 
@@ -224,8 +213,7 @@ class TestPURLCLI_metadata(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_metadata,
-                               options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_metadata, options, catch_exceptions=False)
         assert "Use either purls or file." in result.output
         assert result.exit_code == 2
 
@@ -558,9 +546,7 @@ class TestPURLCLI_metadata(object):
                             "purls": ["pkg:nginx/nginx"],
                             "tool_name": "purlcli",
                             "tool_version": "0.2.0",
-                            "warnings": [
-                                "'pkg:nginx/nginx' not supported with `metadata` command"
-                            ],
+                            "warnings": ["'pkg:nginx/nginx' not supported with `metadata` command"],
                         }
                     ],
                     "packages": [],
@@ -781,12 +767,9 @@ class TestPURLCLI_metadata(object):
             ),
         ],
     )
-    def test_normalize_purls(
-        self, test_input, expected_input_purls, expected_normalized_purls
-    ):
+    def test_normalize_purls(self, test_input, expected_input_purls, expected_normalized_purls):
         unique = True
-        input_purls, normalized_purls = purlcli.normalize_purls(
-            test_input[0], unique)
+        input_purls, normalized_purls = purlcli.normalize_purls(test_input[0], unique)
 
         assert input_purls == expected_input_purls
         assert normalized_purls == expected_normalized_purls
@@ -912,14 +895,12 @@ class TestPURLCLI_metadata(object):
         assert metadata_headers == expected
 
 
-class TestPURLCLI_urls(object):
+class TestPURLCLI_urls:
     def test_urls_cli(self):
         """
         Test the `urls` command with actual and expected JSON output files.
         """
-        expected_result_file = test_env.get_test_loc(
-            "purlcli/expected_urls_output.json"
-        )
+        expected_result_file = test_env.get_test_loc("purlcli/expected_urls_output.json")
         actual_result_file = test_env.get_temp_file("actual_urls_output.json")
         options = [
             "--purl",
@@ -966,8 +947,7 @@ class TestPURLCLI_urls(object):
             actual_result_file,
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_urls, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         with open(actual_result_file) as f_output:
@@ -983,8 +963,7 @@ class TestPURLCLI_urls(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"],
-             expected_data["headers"][0]["purls"]),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -1015,11 +994,8 @@ class TestPURLCLI_urls(object):
         """
         Test the `urls` command with actual and expected JSON output files.
         """
-        expected_result_file = test_env.get_test_loc(
-            "purlcli/expected_urls_output_unique.json"
-        )
-        actual_result_file = test_env.get_temp_file(
-            "actual_urls_output_unique.json")
+        expected_result_file = test_env.get_test_loc("purlcli/expected_urls_output_unique.json")
+        actual_result_file = test_env.get_temp_file("actual_urls_output_unique.json")
         options = [
             "--purl",
             "pkg:pypi/fetchcode",
@@ -1066,8 +1042,7 @@ class TestPURLCLI_urls(object):
             "--unique",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_urls, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         with open(actual_result_file) as f_output:
@@ -1083,8 +1058,7 @@ class TestPURLCLI_urls(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"],
-             expected_data["headers"][0]["purls"]),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -1115,11 +1089,8 @@ class TestPURLCLI_urls(object):
         """
         Test the `urls` command with actual and expected JSON output files.
         """
-        expected_result_file = test_env.get_test_loc(
-            "purlcli/expected_urls_output_head.json"
-        )
-        actual_result_file = test_env.get_temp_file(
-            "actual_urls_output_head.json")
+        expected_result_file = test_env.get_test_loc("purlcli/expected_urls_output_head.json")
+        actual_result_file = test_env.get_temp_file("actual_urls_output_head.json")
         options = [
             "--purl",
             "pkg:pypi/fetchcode",
@@ -1166,8 +1137,7 @@ class TestPURLCLI_urls(object):
             actual_result_file,
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_urls, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         with open(actual_result_file) as f_output:
@@ -1183,8 +1153,7 @@ class TestPURLCLI_urls(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"],
-             expected_data["headers"][0]["purls"]),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -1228,8 +1197,7 @@ class TestPURLCLI_urls(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_urls, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
         assert "Use either purls or file but not both." in result.output
         assert result.exit_code == 2
 
@@ -1242,8 +1210,7 @@ class TestPURLCLI_urls(object):
             "-",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_urls, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.get_urls, options, catch_exceptions=False)
         assert "Use either purls or file." in result.output
         assert result.exit_code == 2
 
@@ -1425,9 +1392,7 @@ class TestPURLCLI_urls(object):
                             "purls": ["pkg:nginx/nginx"],
                             "tool_name": "purlcli",
                             "tool_version": "0.2.0",
-                            "warnings": [
-                                "'pkg:nginx/nginx' not supported with `urls` command"
-                            ],
+                            "warnings": ["'pkg:nginx/nginx' not supported with `urls` command"],
                         }
                     ],
                     "packages": [],
@@ -1585,16 +1550,13 @@ class TestPURLCLI_urls(object):
         assert purl_status_code == expected
 
 
-class TestPURLCLI_validate(object):
+class TestPURLCLI_validate:
     def test_validate_cli(self):
         """
         Test the `validate` command with actual and expected JSON output files.
         """
-        expected_result_file = test_env.get_test_loc(
-            "purlcli/expected_validate_output.json"
-        )
-        actual_result_file = test_env.get_temp_file(
-            "actual_validate_output.json")
+        expected_result_file = test_env.get_test_loc("purlcli/expected_validate_output.json")
+        actual_result_file = test_env.get_temp_file("actual_validate_output.json")
         options = [
             "--purl",
             "pkg:pypi/fetchcode",
@@ -1618,8 +1580,7 @@ class TestPURLCLI_validate(object):
             actual_result_file,
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.validate, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.validate, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         with open(actual_result_file) as f_output:
@@ -1633,8 +1594,7 @@ class TestPURLCLI_validate(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"],
-             expected_data["headers"][0]["purls"]),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -1666,11 +1626,8 @@ class TestPURLCLI_validate(object):
         Test the `validate` command with actual and expected JSON output files
         with the `--unique` flag included in the command.
         """
-        expected_result_file = test_env.get_test_loc(
-            "purlcli/expected_validate_output_unique.json"
-        )
-        actual_result_file = test_env.get_temp_file(
-            "actual_validate_output.json")
+        expected_result_file = test_env.get_test_loc("purlcli/expected_validate_output_unique.json")
+        actual_result_file = test_env.get_temp_file("actual_validate_output.json")
         options = [
             "--purl",
             "pkg:pypi/fetchcode",
@@ -1695,8 +1652,7 @@ class TestPURLCLI_validate(object):
             "--unique",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.validate, options,
-                               catch_exceptions=False)
+        result = runner.invoke(purlcli.validate, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         with open(actual_result_file) as f_output:
@@ -1710,8 +1666,7 @@ class TestPURLCLI_validate(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"],
-             expected_data["headers"][0]["purls"]),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -1893,16 +1848,13 @@ class TestPURLCLI_validate(object):
         assert validated_purl == expected
 
 
-class TestPURLCLI_versions(object):
+class TestPURLCLI_versions:
     def test_versions_cli(self):
         """
         Test the `versions` command with actual and expected JSON output files.
         """
-        expected_result_file = test_env.get_test_loc(
-            "purlcli/expected_versions_output.json"
-        )
-        actual_result_file = test_env.get_temp_file(
-            "actual_versions_output.json")
+        expected_result_file = test_env.get_test_loc("purlcli/expected_versions_output.json")
+        actual_result_file = test_env.get_temp_file("actual_versions_output.json")
         options = [
             "--purl",
             "pkg:pypi/fetchcode",
@@ -1924,8 +1876,7 @@ class TestPURLCLI_versions(object):
             actual_result_file,
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_versions,
-                               options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_versions, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         with open(actual_result_file) as f_output:
@@ -1941,8 +1892,7 @@ class TestPURLCLI_versions(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"],
-             expected_data["headers"][0]["purls"]),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -1975,11 +1925,8 @@ class TestPURLCLI_versions(object):
         Test the `versions` command with actual and expected JSON output files
         with the `--unique` flag included in the command.
         """
-        expected_result_file = test_env.get_test_loc(
-            "purlcli/expected_versions_output_unique.json"
-        )
-        actual_result_file = test_env.get_temp_file(
-            "actual_versions_output.json")
+        expected_result_file = test_env.get_test_loc("purlcli/expected_versions_output_unique.json")
+        actual_result_file = test_env.get_temp_file("actual_versions_output.json")
         options = [
             "--purl",
             "pkg:pypi/fetchcode",
@@ -2002,8 +1949,7 @@ class TestPURLCLI_versions(object):
             "--unique",
         ]
         runner = CliRunner()
-        result = runner.invoke(purlcli.get_versions,
-                               options, catch_exceptions=False)
+        result = runner.invoke(purlcli.get_versions, options, catch_exceptions=False)
         assert result.exit_code == 0
 
         with open(actual_result_file) as f_output:
@@ -2019,8 +1965,7 @@ class TestPURLCLI_versions(object):
                 output_data["headers"][0]["tool_name"],
                 expected_data["headers"][0]["tool_name"],
             ),
-            (output_data["headers"][0]["purls"],
-             expected_data["headers"][0]["purls"]),
+            (output_data["headers"][0]["purls"], expected_data["headers"][0]["purls"]),
             (
                 output_data["headers"][0]["warnings"],
                 expected_data["headers"][0]["warnings"],
@@ -2172,9 +2117,7 @@ class TestPURLCLI_versions(object):
                             },
                             "purls": ["pkg:nginx/nginx"],
                             "errors": [],
-                            "warnings": [
-                                "'pkg:nginx/nginx' not supported with `versions` command"
-                            ],
+                            "warnings": ["'pkg:nginx/nginx' not supported with `versions` command"],
                         }
                     ],
                     "packages": [],
@@ -2195,9 +2138,7 @@ class TestPURLCLI_versions(object):
                             },
                             "purls": ["pkg:pypi/zzzzz"],
                             "errors": [],
-                            "warnings": [
-                                "'pkg:pypi/zzzzz' does not exist in the upstream repo"
-                            ],
+                            "warnings": ["'pkg:pypi/zzzzz' does not exist in the upstream repo"],
                         }
                     ],
                     "packages": [],
@@ -2253,9 +2194,7 @@ class TestPURLCLI_versions(object):
         command_name = "versions"
         unique = False
 
-        purl_versions = purlcli.get_versions_details(
-            test_input, output, file, unique, command_name
-        )
+        purl_versions = purlcli.get_versions_details(test_input, output, file, unique, command_name)
 
         cli_test_utils.streamline_headers(purl_versions["headers"])
         cli_test_utils.streamline_headers(expected["headers"])
