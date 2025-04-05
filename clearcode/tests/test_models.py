@@ -119,9 +119,7 @@ class CDitemManagerTestCase(TestCase):
             map_error="error",
         )
         # This should not be mappable
-        CDitem.objects.create(
-            path="sourcearchive/mavencentral/io.nats/jnats/revision/2.6.6.json"
-        )
+        CDitem.objects.create(path="sourcearchive/mavencentral/io.nats/jnats/revision/2.6.6.json")
         mappables = list(CDitem.objects.mappable_scancode_harvests())
         self.assertEqual(1, len(mappables))
         harvest = mappables[0]

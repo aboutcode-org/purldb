@@ -20,9 +20,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class DockerHubTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
 
 class DockerHubVistorTest(DockerHubTest):

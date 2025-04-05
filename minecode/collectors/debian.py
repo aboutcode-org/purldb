@@ -219,9 +219,7 @@ def update_license_copyright_fields(package_from, package_to, replace=True):
             setattr(package_to, field, value)
 
 
-def map_debian_metadata_binary_and_source(
-    package_url, source_package_url, pipelines, priority=0
-):
+def map_debian_metadata_binary_and_source(package_url, source_package_url, pipelines, priority=0):
     """
     Get metadata for the binary and source release of the Debian package
     `package_url` and save it to the PackageDB.
@@ -351,13 +349,9 @@ class DebianPackage:
         for archive_format in debian_source_archive_formats:
             if ".orig" in archive_format:
                 base_version_source = source_version.split("-")[0]
-                archive_name = (
-                    f"{source_package_name}_{base_version_source}" + archive_format
-                )
+                archive_name = f"{source_package_name}_{base_version_source}" + archive_format
             else:
-                archive_name = (
-                    f"{source_package_name}_{source_version}" + archive_format
-                )
+                archive_name = f"{source_package_name}_{source_version}" + archive_format
             source_package_url = self.archive_directory_url + archive_name
             response = requests.get(source_package_url)
             if response.ok:
@@ -378,14 +372,12 @@ class DebianPackage:
 
         base_version_metadata = metadata_version.split("+")[0]
         metadata_dsc_package_url = (
-            self.archive_directory_url
-            + f"{metadata_package_name}_{base_version_metadata}.dsc"
+            self.archive_directory_url + f"{metadata_package_name}_{base_version_metadata}.dsc"
         )
         response = requests.get(metadata_dsc_package_url)
         if not response.ok:
             metadata_dsc_package_url = (
-                self.archive_directory_url
-                + f"{metadata_package_name}_{metadata_version}.dsc"
+                self.archive_directory_url + f"{metadata_package_name}_{metadata_version}.dsc"
             )
 
         return metadata_dsc_package_url
@@ -444,9 +436,7 @@ class DebianPackage:
         msg = "No directory exists for package at: "
 
         package_directory = f"{archive_base_url}{index_folder}/{self.package_url.name}/"
-        metadata_directory = (
-            f"{metadata_base_url}{index_folder}/{self.package_url.name}/"
-        )
+        metadata_directory = f"{metadata_base_url}{index_folder}/{self.package_url.name}/"
 
         response = requests.get(package_directory)
         if not response.ok:
@@ -460,9 +450,7 @@ class DebianPackage:
             else:
                 index_folder = self.source_package_url.name[0]
 
-            package_directory = (
-                f"{archive_base_url}{index_folder}/{self.source_package_url.name}/"
-            )
+            package_directory = f"{archive_base_url}{index_folder}/{self.source_package_url.name}/"
             metadata_directory = (
                 f"{metadata_base_url}{index_folder}/{self.source_package_url.name}/"
             )
@@ -502,9 +490,7 @@ def get_dependencies(data):
         # FIXME:!!!
         for name in dependencies:
             purl = PackageURL(type="deb", namespace="debian", name=name)
-            dep = scan_models.DependentPackage(
-                purl=purl.to_string(), score=scope, **flags
-            )
+            dep = scan_models.DependentPackage(purl=purl.to_string(), score=scope, **flags)
             dep_pkgs.append(dep)
 
     return dep_pkgs

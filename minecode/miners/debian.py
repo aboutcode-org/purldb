@@ -128,9 +128,7 @@ class DebianDirectoryIndexVisitor(NonPersistentHttpVisitor):
                 logger.error(f"Unknown Debian URI namespace: {self.uri}")
                 continue
 
-            if file_name.endswith(
-                (".deb", ".udeb", ".tar.gz", ".tar.xz", ".tar.bz2", ".tar.lzma")
-            ):
+            if file_name.endswith((".deb", ".udeb", ".tar.gz", ".tar.xz", ".tar.bz2", ".tar.lzma")):
                 name, version, arch = debian_inspector.package.get_nva(file_name)
                 package_url = PackageURL(
                     type="deb",
@@ -389,9 +387,7 @@ def parse_description(metadata, purl=None, base_download_url=None):
     # TODO: what do we do with files?
     # FIXME: we should store them in the package record
     files = defaultdict(File)
-    collect_files(
-        existing_files=files, field_value=metadata.get("Files"), checksum_name="md5"
-    )
+    collect_files(existing_files=files, field_value=metadata.get("Files"), checksum_name="md5")
     collect_files(
         existing_files=files,
         field_value=metadata.get("Checksums-Sha1"),
@@ -448,9 +444,7 @@ def build_source_file_packages(metadata, purl=None):
             for contributor in contributor_names:
                 name, email = debutils.parse_email(contributor)
                 if name:
-                    party = scan_models.Party(
-                        name=name, role="contributor", email=email
-                    )
+                    party = scan_models.Party(name=name, role="contributor", email=email)
                     parties.append(party)
 
         dependencies = debian_collector.get_dependencies(source, ["Build-Depends"])

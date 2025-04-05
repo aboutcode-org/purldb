@@ -44,9 +44,7 @@ def get_conan_recipe(name, version):
     Return the contents of the `conanfile.py` and `conandata.yml` file for
     the conan package described by name and version string.
     """
-    base_index_url = (
-        "https://raw.githubusercontent.com/conan-io/conan-center-index/master/recipes/"
-    )
+    base_index_url = "https://raw.githubusercontent.com/conan-io/conan-center-index/master/recipes/"
 
     conan_central_config_url = f"{base_index_url}/{name}/config.yml"
     config = get_yaml_response(conan_central_config_url)
@@ -72,9 +70,7 @@ def get_conan_recipe(name, version):
         response.raise_for_status()
         conanfile = response.text
     except requests.exceptions.HTTPError as err:
-        logger.error(
-            f"HTTP error occurred while fetching conanfile.py for {name} {version}: {err}"
-        )
+        logger.error(f"HTTP error occurred while fetching conanfile.py for {name} {version}: {err}")
         conanfile = None
 
     return conanfile, conandata

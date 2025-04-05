@@ -37,24 +37,12 @@ class RsyncTest(MiningTestCase):
             "-rw-rw-r--              0 2015/07/23 17:36:47 bar/that/baz",
         ]
         expected = [
-            rsync.Entry(
-                "d", "rwxrwxr-x", 4096, "2015-07-23T17:36:47+00:00", "."
-            )._asdict(),
-            rsync.Entry(
-                "-", "rw-rw-r--", 0, "2015-07-23T17:36:47+00:00", "foo"
-            )._asdict(),
-            rsync.Entry(
-                "d", "rwxrwxr-x", 4096, "2015-07-23T17:36:47+00:00", "bar"
-            )._asdict(),
-            rsync.Entry(
-                "-", "rw-rw-r--", 0, "2015-07-23T17:36:47+00:00", "bar/this"
-            )._asdict(),
-            rsync.Entry(
-                "d", "rwxrwxr-x", 4096, "2015-07-23T17:36:47+00:00", "bar/that"
-            )._asdict(),
-            rsync.Entry(
-                "-", "rw-rw-r--", 0, "2015-07-23T17:36:47+00:00", "bar/that/baz"
-            )._asdict(),
+            rsync.Entry("d", "rwxrwxr-x", 4096, "2015-07-23T17:36:47+00:00", ".")._asdict(),
+            rsync.Entry("-", "rw-rw-r--", 0, "2015-07-23T17:36:47+00:00", "foo")._asdict(),
+            rsync.Entry("d", "rwxrwxr-x", 4096, "2015-07-23T17:36:47+00:00", "bar")._asdict(),
+            rsync.Entry("-", "rw-rw-r--", 0, "2015-07-23T17:36:47+00:00", "bar/this")._asdict(),
+            rsync.Entry("d", "rwxrwxr-x", 4096, "2015-07-23T17:36:47+00:00", "bar/that")._asdict(),
+            rsync.Entry("-", "rw-rw-r--", 0, "2015-07-23T17:36:47+00:00", "bar/that/baz")._asdict(),
         ]
 
         for test, exp in zip(lines, expected):

@@ -172,12 +172,8 @@ class PackageSetAPISerializer(ModelSerializer):
 class PackageAPISerializer(HyperlinkedModelSerializer):
     dependencies = DependentPackageSerializer(many=True)
     parties = PartySerializer(many=True)
-    resources = HyperlinkedIdentityField(
-        view_name="api:package-resources", lookup_field="uuid"
-    )
-    history = HyperlinkedIdentityField(
-        view_name="api:package-history", lookup_field="uuid"
-    )
+    resources = HyperlinkedIdentityField(view_name="api:package-resources", lookup_field="uuid")
+    history = HyperlinkedIdentityField(view_name="api:package-history", lookup_field="uuid")
     url = HyperlinkedIdentityField(view_name="api:package-detail", lookup_field="uuid")
     package_sets = PackageSetAPISerializer(many=True)
     package_content = SerializerMethodField()
@@ -347,9 +343,7 @@ class PackageSetAPISerializer(ModelSerializer):
 
 
 class PackageWatchAPISerializer(HyperlinkedModelSerializer):
-    url = HyperlinkedIdentityField(
-        view_name="api:packagewatch-detail", lookup_field="package_url"
-    )
+    url = HyperlinkedIdentityField(view_name="api:packagewatch-detail", lookup_field="package_url")
 
     class Meta:
         model = PackageWatch
@@ -427,21 +421,15 @@ class CollectPackageSerializer(Serializer):
         return value
 
     def validate_addon_pipelines(self, value):
-        if invalid_pipelines := [
-            pipe for pipe in value if not is_supported_addon_pipeline(pipe)
-        ]:
+        if invalid_pipelines := [pipe for pipe in value if not is_supported_addon_pipeline(pipe)]:
             raise ValidationError(
                 f"Error unsupported addon pipelines: {','.join(invalid_pipelines)}"
             )
         return value
 
     def validate_sort(self, value):
-        if invalid_sort_fields := [
-            field for field in value if not is_supported_sort_field(field)
-        ]:
-            raise ValidationError(
-                f"Error unsupported sort fields: {','.join(invalid_sort_fields)}"
-            )
+        if invalid_sort_fields := [field for field in value if not is_supported_sort_field(field)]:
+            raise ValidationError(f"Error unsupported sort fields: {','.join(invalid_sort_fields)}")
         return value
 
 
@@ -558,9 +546,7 @@ def is_supported_sort_field(field):
 
 
 class PackageActivitySerializer(ModelSerializer):
-    url = HyperlinkedIdentityField(
-        view_name="api:packageactivity-detail", lookup_field="uuid"
-    )
+    url = HyperlinkedIdentityField(view_name="api:packageactivity-detail", lookup_field="uuid")
 
     class Meta:
         model = PackageActivity

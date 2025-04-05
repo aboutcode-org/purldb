@@ -19,13 +19,9 @@ class Command(CreateUserCommand):
         username = options["username"]
         interactive = options["interactive"]
         verbosity = options["verbosity"]
-        user = self.create_user(
-            username=username, interactive=interactive, verbosity=verbosity
-        )
+        user = self.create_user(username=username, interactive=interactive, verbosity=verbosity)
         # Add user to `scan_queue_workers` group
-        scan_queue_workers_group, _ = Group.objects.get_or_create(
-            name="scan_queue_workers"
-        )
+        scan_queue_workers_group, _ = Group.objects.get_or_create(name="scan_queue_workers")
         scan_queue_workers_group.user_set.add(user)
         msg = f"User {username} added to `scan_queue_workers` group"
         self.stdout.write(msg, self.style.SUCCESS)

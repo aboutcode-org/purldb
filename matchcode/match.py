@@ -97,11 +97,7 @@ def package_archive_match(codebase):
     """
     match_count = 0
     for resource in codebase.walk(topdown=True):
-        if (
-            resource.is_dir
-            or not resource.is_archive
-            or resource.extra_data.get("matched", False)
-        ):
+        if resource.is_dir or not resource.is_archive or resource.extra_data.get("matched", False):
             continue
 
         archive_matches, match_type = get_archive_match(resource)
@@ -241,9 +237,7 @@ def get_approximate_file_match(resource):
         resource_content_fingerprint = resource.halo1
     else:
         resource_content_fingerprint = resource.extra_data.get("halo1", "")
-    file_matches = ApproximateResourceContentIndex.match(
-        resource_content_fingerprint, resource
-    )
+    file_matches = ApproximateResourceContentIndex.match(resource_content_fingerprint, resource)
     return file_matches, "approximate-file"
 
 
@@ -279,9 +273,7 @@ def tag_matched_resources(resource, codebase, matches, match_type):
         # by or), then querying the matched packages resources to see if any of
         # those suffixes match a package child resource path
         for child in resource.walk(codebase):
-            query = reduce(
-                or_, (Q(path=suffix) for suffix in path_suffixes(child.path)), Q()
-            )
+            query = reduce(or_, (Q(path=suffix) for suffix in path_suffixes(child.path)), Q())
             matched_child_resources = match.package.resources.filter(query)
             if len(matched_child_resources) > 0:
                 tag_matched_resource(child, codebase, purl)

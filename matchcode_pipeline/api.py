@@ -28,9 +28,7 @@ from scanpipe.views import project_results_json_response
 
 
 class RunSerializer(SerializerExcludeFieldsMixin, serializers.ModelSerializer):
-    project = serializers.HyperlinkedRelatedField(
-        view_name="run-detail", read_only=True
-    )
+    project = serializers.HyperlinkedRelatedField(view_name="run-detail", read_only=True)
 
     class Meta:
         model = Run

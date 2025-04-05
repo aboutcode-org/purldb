@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) nexB Inc. and others. All rights reserved.
 #
@@ -32,10 +31,6 @@ Pre-requisite:
  file.
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import argparse
 import json
 import os
@@ -53,14 +48,16 @@ except ImportError:
 try:
     import requests
 except ImportError:
-    print('The "requests" library is required by this script.\n'
-          'Install it with: "pip install requests"')
+    print(
+        'The "requests" library is required by this script.\n'
+        'Install it with: "pip install requests"'
+    )
     sys.exit(1)
 
 logging.captureWarnings(True)
 
 
-class ProgressBar(object):
+class ProgressBar:
     progress_width = 75
 
     def __init__(self, output, total_count):
@@ -76,10 +73,10 @@ class ProgressBar(object):
         if self.prev_done >= done:
             return
         self.prev_done = done
-        cr = '' if self.total_count == 1 else '\r'
-        self.output.write(cr + '[' + '.' * done + ' ' * (self.progress_width - done) + ']')
+        cr = "" if self.total_count == 1 else "\r"
+        self.output.write(cr + "[" + "." * done + " " * (self.progress_width - done) + "]")
         if done == self.progress_width:
-            self.output.write('\n')
+            self.output.write("\n")
         self.output.flush()
 
 
@@ -97,25 +94,25 @@ def get_all_objects_from_endpoint(url, extra_payload=None, verbose=True):
     count_done = 0
     progress_bar = None
 
-    next_url = '{}?{}'.format(url, urlencode(payload))
+    next_url = f"{url}?{urlencode(payload)}"
     while next_url:
         response = requests.get(next_url)
         if response.status_code == requests.codes.ok:
             response_json = response.json()
             if verbose and not progress_bar:
-                total_count = response_json.get('count')
+                total_count = response_json.get("count")
                 if not total_count:
                     return []
-                print('{} total'.format(total_count))
+                print(f"{total_count} total")
                 progress_bar = ProgressBar(output, total_count)
-            results = response_json.get('results')
+            results = response_json.get("results")
             objects.extend(results)
             if verbose:
                 count_done += len(results)
                 progress_bar.update(count_done)
-            next_url = response_json.get('next')
+            next_url = response_json.get("next")
         else:
-            print('Error. Please restart the script.')
+            print("Error. Please restart the script.")
             sys.exit(1)
 
     return objects
@@ -136,7 +133,7 @@ def run_api_backup(api_root_url, extra_payload=None):
     On errors, this function will exit Python with a return code of 1.
     """
     endpoints = [
-        'cditems',
+        "cditems",
     ]
 
     # Ensure all those dependencies are available in the backup file to feed the copy script.
@@ -145,39 +142,39 @@ def run_api_backup(api_root_url, extra_payload=None):
     results = defaultdict(list)
 
     for endpoint_name in endpoints:
-        endpoint_url = '{}{}/'.format(api_root_url, endpoint_name)
+        endpoint_url = f"{api_root_url}{endpoint_name}/"
 
-        print('Collecting {}...'.format(endpoint_name))
+        print(f"Collecting {endpoint_name}...")
         objects = get_all_objects_from_endpoint(endpoint_url, extra_payload=extra_payload)
-        print('{} {} collected.'.format(len(objects), endpoint_name))
+        print(f"{len(objects)} {endpoint_name} collected.")
 
         results[endpoint_name] += objects
 
-    timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    backup_dir = join(abspath(dirname(__file__)), 'clearcode_backup_{}'.format(timestamp))
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    backup_dir = join(abspath(dirname(__file__)), f"clearcode_backup_{timestamp}")
     if not exists(backup_dir):
         os.mkdir(backup_dir)
 
     for endpoint_name, objects in results.items():
-        backup_file = join(backup_dir, '{}.json'.format(endpoint_name))
+        backup_file = join(backup_dir, f"{endpoint_name}.json")
         assert not exists(backup_file)
-        with open(backup_file, 'w') as f:
+        with open(backup_file, "w") as f:
             f.write(json.dumps(objects, indent=2))
 
-    print('Backup location: {}'.format(backup_dir))
+    print(f"Backup location: {backup_dir}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='clearcode data backup using the clearcode API',
+        description="clearcode data backup using the clearcode API",
     )
     parser.add_argument(
-        '--api-root-url',
-        help='clearcode API endpoints root URL.',
-        default='http://127.0.0.1:8000/api/',
+        "--api-root-url",
+        help="clearcode API endpoints root URL.",
+        default="http://127.0.0.1:8000/api/",
     )
     parser.add_argument(
-        '--last-modified-date',
+        "--last-modified-date",
         help='Limit the backup to object created/modified after that date. Format: "YYYY-MM-DD"',
         required=True,
     )
@@ -185,13 +182,13 @@ if __name__ == '__main__':
 
     extra_payload = {}
     try:
-        datetime.strptime(args.last_modified_date, '%Y-%m-%d')
+        datetime.strptime(args.last_modified_date, "%Y-%m-%d")
     except ValueError:
-        print('Incorrect last_modified_date format. Expected YYYY-MM-DD')
+        print("Incorrect last_modified_date format. Expected YYYY-MM-DD")
         sys.exit(1)
-    extra_payload['last_modified_date'] = args.last_modified_date
+    extra_payload["last_modified_date"] = args.last_modified_date
 
-    print('Starting backup from {}'.format(args.api_root_url))
+    print(f"Starting backup from {args.api_root_url}")
     run_api_backup(args.api_root_url, extra_payload)
-    print('Backup completed.')
+    print("Backup completed.")
     sys.exit(0)

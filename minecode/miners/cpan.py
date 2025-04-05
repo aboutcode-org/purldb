@@ -60,9 +60,7 @@ class CpanSeed(seed.Seeder):
 # https://fastapi.metacpan.org/release/_search?q=author:ABERNDT&size=5000
 
 
-@visit_router.route(
-    r"https://fastapi.metacpan.org/author/_search\?q=email:[a-z]\*&size=5000"
-)
+@visit_router.route(r"https://fastapi.metacpan.org/author/_search\?q=email:[a-z]\*&size=5000")
 class MetaCpanAuthorURLVisitors(HttpJsonVisitor):
     """
     Run search on author's email, and parse the returned json content and form
@@ -86,9 +84,7 @@ class MetaCpanAuthorURLVisitors(HttpJsonVisitor):
             yield URI(uri=release_visitor_template.format(id=_id), source_uri=self.uri)
 
 
-@visit_router.route(
-    r"https://fastapi.metacpan.org/release/_search\?q=author:\w+&size=5000"
-)
+@visit_router.route(r"https://fastapi.metacpan.org/release/_search\?q=author:\w+&size=5000")
 class MetaCpanRleaseURLVisitors(HttpJsonVisitor):
     """
     Run the release results by searching the passing AUTHOR ID. The visitor will
@@ -157,19 +153,13 @@ class CpanProjectHTMLVisitors(HttpVisitor):
                 continue  # Avoid the directory and other non-file links
             else:
                 name = url
-                name = (
-                    name.replace("tar.gz", "")
-                    .replace(".readme", "")
-                    .replace(".meta", "")
-                )
+                name = name.replace("tar.gz", "").replace(".readme", "").replace(".meta", "")
                 partions = name.rpartition("-")
                 name = partions[0]
                 version = partions[-1]
                 package_url = None
                 if name and version:
-                    package_url = PackageURL(
-                        type="cpan", name=name, version=version
-                    ).to_string()
+                    package_url = PackageURL(type="cpan", name=name, version=version).to_string()
                 url = url_template.format(path=url)
                 yield URI(uri=url, package_url=package_url, source_uri=self.uri)
 
@@ -210,16 +200,12 @@ class CpanReadmeVisitors(HttpVisitor):
         return json.dumps(readme_dict)
 
 
-@map_router.route(
-    r"https://fastapi.metacpan.org/release/_search\?q=author:\w+&size=5000"
-)
+@map_router.route(r"https://fastapi.metacpan.org/release/_search\?q=author:\w+&size=5000")
 class MetaCpanReleaseSearchMapper(Mapper):
     def get_packages(self, uri, resource_uri):
         """Yield packages by parsing the json returned from release search request."""
         metadata = resource_uri.data
-        build_packages_from_release_json(
-            metadata, resource_uri.uri, resource_uri.package_url
-        )
+        build_packages_from_release_json(metadata, resource_uri.uri, resource_uri.package_url)
 
 
 def build_packages_from_release_json(metadata, uri=None):
@@ -278,9 +264,7 @@ def build_packages_from_release_json(metadata, uri=None):
         # like perl_5. The license here under resources section is the
         # url of license for example: http://dev.perl.org/licenses/ So
         # it's useful to collect both information...
-        license_url = [
-            lic for lic in resources.get("license", []) if lic and lic.strip()
-        ]
+        license_url = [lic for lic in resources.get("license", []) if lic and lic.strip()]
         if license_url:
             common_data["extracted_license_statement"].extend(license_url)
 
@@ -335,9 +319,7 @@ class CpanMetaFileMapper(Mapper):
         Yield as many Package as there are download URLs.
         """
         metadata = resource_uri.data
-        build_packages_from_metafile(
-            metadata, resource_uri.uri, resource_uri.package_url
-        )
+        build_packages_from_metafile(metadata, resource_uri.uri, resource_uri.package_url)
 
 
 def build_packages_from_metafile(metadata, uri=None, purl=None):
@@ -439,9 +421,7 @@ class CpanReadmeFileMapper(Mapper):
         Yield as many Package as there are download URLs.
         """
         metadata = resource_uri.data
-        build_packages_from_metafile(
-            metadata, resource_uri.uri, resource_uri.package_url
-        )
+        build_packages_from_metafile(metadata, resource_uri.uri, resource_uri.package_url)
 
 
 def build_packages_from_readmefile(metadata, uri=None, purl=None):

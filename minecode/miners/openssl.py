@@ -71,22 +71,11 @@ class OpenSSLVisitor(HttpVisitor):
                     if size.endswith(("M", "m")):
                         # If the size is mega byte, and the format is a float
                         # instead of int, since it's possible like 5.1M
-                        size = str(
-                            int(
-                                float(size.replace("M", "").replace("m", ""))
-                                * 1024
-                                * 1024
-                            )
-                        )
+                        size = str(int(float(size.replace("M", "").replace("m", "")) * 1024 * 1024))
                     elif size.endswith("G") or size.endswith("G"):
                         # if the size is gega byte
                         size = str(
-                            int(
-                                float(size.replace("G", "").replace("g", ""))
-                                * 1024
-                                * 1024
-                                * 1024
-                            )
+                            int(float(size.replace("G", "").replace("g", "")) * 1024 * 1024 * 1024)
                         )
                     if size == "-":
                         # if it's folder, ignore the size

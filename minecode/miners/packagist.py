@@ -129,9 +129,7 @@ def build_packages_with_json(metadata, purl=None, uri=None):
             for lic in version_content.get("license"):
                 extracted_license_statement.add(lic)
             if extracted_license_statement:
-                common["extracted_license_statement"] = list(
-                    extracted_license_statement
-                )
+                common["extracted_license_statement"] = list(extracted_license_statement)
                 common["license_detections"] = []
 
             dependencies = []

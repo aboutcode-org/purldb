@@ -19,9 +19,7 @@ class Command(BaseCommand):
     help = "Subscribe package for their metadata update from FederatedCode."
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "purl", type=str, help="Specify a PURL to subscribe for updates."
-        )
+        parser.add_argument("purl", type=str, help="Specify a PURL to subscribe for updates.")
 
     def handle(self, *args, **options):
         purl = options.get("purl")

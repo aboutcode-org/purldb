@@ -44,12 +44,9 @@ def get_timestamps_by_links(package_version_page_url):
     timestamps_by_links = {}
     response = requests.get(package_version_page_url)
     if response:
-        timestamps_by_links = collect_links_from_text(
-            response.text, filter=filter_for_artifacts
-        )
+        timestamps_by_links = collect_links_from_text(response.text, filter=filter_for_artifacts)
         timestamps_by_links = {
-            link: dateutil_parse(timestamp)
-            for link, timestamp in timestamps_by_links.items()
+            link: dateutil_parse(timestamp) for link, timestamp in timestamps_by_links.items()
         }
     return timestamps_by_links
 
@@ -153,9 +150,7 @@ class Command(VerboseCommand):
     def handle(self, *args, **options):
         maven_packages = Package.objects.filter(type="maven", sha1__is_null=False)
         maven_packages_count = maven_packages.count()
-        logger.info(
-            f"Checking {maven_packages_count:,} Maven Package PackageURL values"
-        )
+        logger.info(f"Checking {maven_packages_count:,} Maven Package PackageURL values")
         packages_to_delete = []
 
         for package in MemorySavingQuerysetIterator(maven_packages):

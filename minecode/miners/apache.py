@@ -196,9 +196,7 @@ class ApacheDistIndexVisitor(NonPersistentHttpVisitor):
         url_template = "https://apache.org/dist/{path}"
 
         archive_checksum_extensions = tuple(
-            chain.from_iterable(
-                [[ae + cke for ae in ARCHIVE_EXTS] for cke in CHECKSUM_EXTS]
-            )
+            chain.from_iterable([[ae + cke for ae in ARCHIVE_EXTS] for cke in CHECKSUM_EXTS])
         )
         kept_extensions = archive_checksum_extensions + ARCHIVE_EXTS
 
@@ -209,9 +207,7 @@ class ApacheDistIndexVisitor(NonPersistentHttpVisitor):
             path = entry.path
 
             # ignore several downloads
-            if not path.endswith(kept_extensions) or any(
-                i in path for i in IGNORED_PATH_CONTAINS
-            ):
+            if not path.endswith(kept_extensions) or any(i in path for i in IGNORED_PATH_CONTAINS):
                 continue
             # only checksums need further visit, the archive will be scanned only
             is_visited = not path.endswith(CHECKSUM_EXTS)
@@ -351,9 +347,7 @@ class ApachePodlingsJsonVisitor(HttpJsonVisitor):
             if "homepage" not in project_meta:
                 continue
 
-            package_url = PackageURL(
-                type="apache", namespace="incubator", name=project_name
-            )
+            package_url = PackageURL(type="apache", namespace="incubator", name=project_name)
 
             yield URI(
                 uri=project_meta.get("homepage"),
@@ -468,9 +462,7 @@ def build_packages_from_projects(metadata, uri=None):
                     rdata["release_date"] = parse_date(release.get("created"))
                 else:
                     logger.warn(
-                        "Unexpected date format for release date: {}".format(
-                            release.get("created")
-                        )
+                        "Unexpected date format for release date: {}".format(release.get("created"))
                     )
                 package = scan_models.Package.from_package_data(
                     package_data=rdata,

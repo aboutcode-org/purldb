@@ -33,9 +33,7 @@ def index_package_files(package, scan_data, reindex=False):
     deleted and recreated from `scan_data`.
     """
     if reindex:
-        logger.info(
-            f"Deleting fingerprints and Resources related to {package.package_url}"
-        )
+        logger.info(f"Deleting fingerprints and Resources related to {package.package_url}")
         package.approximatedirectorycontentindex_set.all().delete()
         package.approximatedirectorystructureindex_set.all().delete()
         package.approximateresourcecontentindex_set.all().delete()
@@ -58,9 +56,7 @@ def index_package_files(package, scan_data, reindex=False):
 
             resource_extra_data = resource.get("extra_data", {})
 
-            directory_content_fingerprint = resource_extra_data.get(
-                "directory_content", ""
-            )
+            directory_content_fingerprint = resource_extra_data.get("directory_content", "")
             if directory_content_fingerprint:
                 _, _ = ApproximateDirectoryContentIndex.index(
                     fingerprint=directory_content_fingerprint,
@@ -68,9 +64,7 @@ def index_package_files(package, scan_data, reindex=False):
                     package=package,
                 )
 
-            directory_structure_fingerprint = resource_extra_data.get(
-                "directory_structure", ""
-            )
+            directory_structure_fingerprint = resource_extra_data.get("directory_structure", "")
 
             if directory_structure_fingerprint:
                 _, _ = ApproximateDirectoryStructureIndex.index(
@@ -187,17 +181,14 @@ def check_for_duplicate_packages(package):
         if (
             (package.type in repo_types and existing_package.type not in repo_types)
             or (
-                package.type in source_repo_types
-                and existing_package.type not in source_repo_types
+                package.type in source_repo_types and existing_package.type not in source_repo_types
             )
             or (
                 (existing_package.release_date and package.release_date)
                 and (existing_package.release_date > package.release_date)
             )
         ):
-            update_package_relationships(
-                package=package, existing_package=existing_package
-            )
+            update_package_relationships(package=package, existing_package=existing_package)
 
     return bool(existing_packages)
 
@@ -239,13 +230,9 @@ def index_package(
             **checksums_and_size_by_field,
         }
         # do not override fields with empty values
-        values_by_updateable_fields = {
-            k: v for k, v in values_by_updateable_fields.items() if v
-        }
+        values_by_updateable_fields = {k: v for k, v in values_by_updateable_fields.items() if v}
 
-        _, updated_fields = package.update_fields(
-            save=True, **values_by_updateable_fields
-        )
+        _, updated_fields = package.update_fields(save=True, **values_by_updateable_fields)
         updated_fields = ", ".join(updated_fields)
         message = f"Updated fields for Package {package.purl}: {updated_fields}"
         logger.info(message)

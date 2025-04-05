@@ -52,9 +52,7 @@ class MatchingPipesTest(TestCase):
         )
 
     def test_matchcode_pipeline_pipes_matching_get_project_resources_qs(self):
-        package_resource = make_resource_file(
-            self.project1, "package.jar", is_archive=True
-        )
+        package_resource = make_resource_file(self.project1, "package.jar", is_archive=True)
         make_resource_directory(self.project1, "package.jar-extract/")
         make_resource_file(self.project1, "package.jar-extract/foo.class")
 
@@ -66,9 +64,7 @@ class MatchingPipesTest(TestCase):
         make_resource_file(self.project1, "directory100/bar.txt")
 
         resources = [package_resource, directory_resource]
-        resources_qs = matching.get_project_resources_qs(
-            self.project1, resources=resources
-        )
+        resources_qs = matching.get_project_resources_qs(self.project1, resources=resources)
         expected_paths = [
             "package.jar",
             "package.jar-extract/",
@@ -84,9 +80,7 @@ class MatchingPipesTest(TestCase):
         to_1.is_archive = True
         to_1.save()
         # The initial status will be updated to flag.MATCHED_TO_PURLDB_PACKAGE
-        to_2 = make_resource_file(
-            self.project1, "package.jar-extract/a.class", status=flag.MAPPED
-        )
+        to_2 = make_resource_file(self.project1, "package.jar-extract/a.class", status=flag.MAPPED)
         to_3 = make_resource_file(self.project1, "package.jar-extract/b.class")
 
         buffer = io.StringIO()
@@ -97,8 +91,7 @@ class MatchingPipesTest(TestCase):
             logger=buffer.write,
         )
         expected = (
-            "Matching 1 resources in PurlDB, using SHA1"
-            "3 resources matched in PurlDB using 1 SHA1s"
+            "Matching 1 resources in PurlDB, using SHA13 resources matched in PurlDB using 1 SHA1s"
         )
         self.assertEqual(expected, buffer.getvalue())
 
@@ -114,9 +107,7 @@ class MatchingPipesTest(TestCase):
         to_1 = make_resource_directory(
             self.project1,
             "package.jar-extract",
-            extra_data={
-                "directory_content": "00000003238f6ed2c218090d4da80b3b42160e69"
-            },
+            extra_data={"directory_content": "00000003238f6ed2c218090d4da80b3b42160e69"},
         )
         to_2 = make_resource_file(self.project1, "package.jar-extract/a.class")
         to_3 = make_resource_file(self.project1, "package.jar-extract/b.class")
@@ -192,9 +183,7 @@ class MatchingPipesTest(TestCase):
             self.project1,
             logger=buffer.write,
         )
-        expected = (
-            f"Refining matching for 1 {flag.MATCHED_TO_PURLDB_RESOURCE} archives."
-        )
+        expected = f"Refining matching for 1 {flag.MATCHED_TO_PURLDB_RESOURCE} archives."
         self.assertIn(expected, buffer.getvalue())
 
         package1_resource_count = package1.codebase_resources.count()

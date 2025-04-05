@@ -9,7 +9,7 @@
 
 import logging
 import subprocess
-from typing import Generator, List
+from collections.abc import Generator
 from urllib.parse import urlparse
 
 import requests
@@ -151,9 +151,7 @@ def get_source_package_and_add_to_package_set(package):
         logger.error(f"Error getting download_url for {source_purl}")
         return
 
-    source_package = Package.objects.for_package_url(
-        purl_str=str(source_purl)
-    ).get_or_none()
+    source_package = Package.objects.for_package_url(purl_str=str(source_purl)).get_or_none()
 
     if not source_package:
         source_package, _created = Package.objects.get_or_create(
@@ -165,13 +163,10 @@ def get_source_package_and_add_to_package_set(package):
             package_content=PackageContentType.SOURCE_REPO,
         )
         add_package_to_scan_queue(source_package)
-        logger.info(
-            f"Created source repo package {source_purl} for {package.purl}")
-    package_set_uuids = [item["uuid"]
-                         for item in package.package_sets.all().values("uuid")]
+        logger.info(f"Created source repo package {source_purl} for {package.purl}")
+    package_set_uuids = [item["uuid"] for item in package.package_sets.all().values("uuid")]
     package_set_ids = set(package_set_uuids)
-    source_package_set_ids = set(
-        source_package.package_sets.all().values_list("uuid"))
+    source_package_set_ids = set(source_package.package_sets.all().values_list("uuid"))
 
     # If the package exists and already in the set then there is nothing left to do
     if package_set_ids.intersection(source_package_set_ids):
@@ -218,28 +213,24 @@ def get_repo_urls(package: Package) -> Generator[str, None, None]:
     """
     Return the URL of the source repository of a package
     """
-    source_urls = get_source_urls_from_package_data_and_resources(
-        package=package)
+    source_urls = get_source_urls_from_package_data_and_resources(package=package)
     if source_urls:
         yield from source_urls
 
     # TODO: Use univers to sort versions
     # TODO: Also consider using dates https://github.com/aboutcode-org/purldb/issues/136
     for version_package in package.get_all_versions().order_by("-version"):
-        source_urls = get_source_urls_from_package_data_and_resources(
-            package=version_package
-        )
+        source_urls = get_source_urls_from_package_data_and_resources(package=version_package)
         if source_urls:
             yield from source_urls
 
     if package.type == "maven":
         yield from get_source_urls_from_package_data_and_resources(
-            package=get_merged_ancestor_package_from_maven_package(
-                package=package)
+            package=get_merged_ancestor_package_from_maven_package(package=package)
         )
 
 
-def get_source_urls_from_package_data_and_resources(package: Package) -> List[str]:
+def get_source_urls_from_package_data_and_resources(package: Package) -> list[str]:
     """
     Return a list of URLs of source repositories for a package,
     possibly empty.
@@ -282,8 +273,7 @@ def convert_repo_url_to_purls(source_url):
         source_url = source_url.replace("https+//", "https://")
 
     if (
-        source_url.startswith(
-            "git+https://") or source_url.startswith("git://")
+        source_url.startswith("git+https://") or source_url.startswith("git://")
     ) and "@" in source_url:
         # remove the commit from the end of the URL
         source_url, _, _ = source_url.rpartition("@")
@@ -350,11 +340,8 @@ def get_urls_from_package_data(package) -> Generator[str, None, None]:
     homepage_text = homepage_response and homepage_response.text
     found_urls.extend(get_urls_from_text(text=homepage_text))
 
-    repository_homepage_response = fetch_response(
-        url=package.repository_homepage_url)
-    repository_homepage_text = (
-        repository_homepage_response and repository_homepage_response.text
-    )
+    repository_homepage_response = fetch_response(url=package.repository_homepage_url)
+    repository_homepage_text = repository_homepage_response and repository_homepage_response.text
     found_urls.extend(get_urls_from_text(text=repository_homepage_text))
 
     found_urls.extend(get_urls_from_text(text=package.description))
@@ -484,9 +471,7 @@ def find_package_version_tag_and_commit(version, source_purls):
     """
     for source_purl in source_purls:
         tags_and_commits = get_tags_and_commits(source_purl=source_purl)
-        tag_and_commit = get_tag_and_commit(
-            version=version, tags_and_commits=tags_and_commits
-        )
+        tag_and_commit = get_tag_and_commit(version=version, tags_and_commits=tags_and_commits)
         if not tag_and_commit:
             continue
         tag, commit = tag_and_commit

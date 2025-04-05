@@ -19,9 +19,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class FreeBSDVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_visit_freebsd_seed(self):
         uri = "https://pkg.freebsd.org"
@@ -38,9 +36,7 @@ class FreeBSDVistorTest(JsonBasedTesting):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = freebsd.FreeBSDSubHTMLVisitors(uri)
-        expected_loc = self.get_test_loc(
-            "freebsd/FreeBSD-10-i386_release_0_.html_expected"
-        )
+        expected_loc = self.get_test_loc("freebsd/FreeBSD-10-i386_release_0_.html_expected")
         self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_freebsd_indexvisitor(self):
@@ -54,9 +50,7 @@ class FreeBSDVistorTest(JsonBasedTesting):
 
 
 class FreedesktopMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_map_index_file(self):
         with open(self.get_test_loc("freebsd/mapper_input1")) as freebsd_metadata:

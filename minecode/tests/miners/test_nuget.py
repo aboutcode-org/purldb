@@ -20,9 +20,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class NugetVisitorsTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_NugetQueryVisitor(self):
         uri = "https://api-v2v3search-0.nuget.org/query"
@@ -71,9 +69,7 @@ class NugetVisitorsTest(JsonBasedTesting):
 
 
 class TestNugetMap(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_packages(self):
         with open(self.get_test_loc("nuget/entityframework2.json")) as nuget_metadata:
@@ -85,9 +81,7 @@ class TestNugetMap(JsonBasedTesting):
 
     def test_regex_1(self):
         regex = re.compile(r"^https://api.nuget.org/packages/.*\.nupkg$")
-        result = re.match(
-            regex, "https://api.nuget.org/packages/entityframework.4.3.1.nupkg"
-        )
+        result = re.match(regex, "https://api.nuget.org/packages/entityframework.4.3.1.nupkg")
         self.assertTrue(result)
 
     def test_regex_2(self):

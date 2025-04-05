@@ -39,9 +39,7 @@ class FromPurlToGitRepoViewSet(viewsets.ViewSet):
         response = {}
 
         if not serializer.is_valid():
-            return Response(
-                {"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         validated_data = serializer.validated_data
         package_url = validated_data.get("package_url")
@@ -53,9 +51,7 @@ class FromPurlToGitRepoViewSet(viewsets.ViewSet):
             )
         source_repo = get_source_repo(package=package)
         response["git_repo"] = str(source_repo)
-        serializer = PurltoGitRepoResponseSerializer(
-            response, context={"request": request}
-        )
+        serializer = PurltoGitRepoResponseSerializer(response, context={"request": request})
         return Response(serializer.data)
 
 

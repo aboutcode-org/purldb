@@ -89,9 +89,7 @@ class NpmRegistryVisitor(NonPersistentHttpVisitor):
             namespace, name = split_scoped_package_name(name)
             package_api_url = npm_api_url(namespace, name)
 
-            package_url = PackageURL(
-                type="npm", namespace=namespace, name=name
-            ).to_string()
+            package_url = PackageURL(type="npm", namespace=namespace, name=name).to_string()
 
             # here: this is ready for mapping
             yield URI(

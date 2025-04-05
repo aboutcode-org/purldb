@@ -185,9 +185,7 @@ class Coordinate:
         return cls(*segments)
 
     def to_api_path(self):
-        return "{type}/{provider}/{namespace}/{name}/{revision}".format(
-            **self.to_dict()
-        )
+        return "{type}/{provider}/{namespace}/{name}/{revision}".format(**self.to_dict())
 
     def to_def_blob_path(self):
         return "{type}/{provider}/{namespace}/{name}/revision/{revision}.json".format(
@@ -289,9 +287,7 @@ class Coordinate:
 
         package_type = p.type
         if package_type not in PACKAGE_TYPES_BY_PURL_TYPE:
-            raise Exception(
-                f"Package type is not supported by ClearlyDefined: {package_type}"
-            )
+            raise Exception(f"Package type is not supported by ClearlyDefined: {package_type}")
         # Handle the source types of Maven and Debian packages
         if package_type == "maven" and p.qualifiers.get("classifier", "") == "sources":
             package_type = "sourcearchive"
@@ -330,9 +326,7 @@ def get_coordinates(data_dir):
             yield pth, Coordinate.from_path(cdpth)
 
 
-def _get_response_content(
-    url, retries=2, wait=2, session=requests, verbose=False, _retries=set()
-):
+def _get_response_content(url, retries=2, wait=2, session=requests, verbose=False, _retries=set()):
     """
     Return a tuple of (etag, md5, content bytes) with the content as bytes or as decoded
     text if `as_text` is True) of the response of a GET HTTP request at `url`.
@@ -379,9 +373,7 @@ def _get_response_content(
 
     # all other errors
     raise Exception(
-        "Failed HTTP request for {url} : error: {status_code} : {error_code}".format(
-            **locals()
-        )
+        "Failed HTTP request for {url} : error: {status_code} : {error_code}".format(**locals())
     )
 
 
@@ -427,12 +419,9 @@ def join_qs(keys_values, do_not_quote=()):
     Join a key/values mapping back into a query string.
     Quote values unless the name is in in the `do_not_quote` set.
     """
-    keys_values = {
-        k: (v[0] if v and isinstance(v, list) else v) for k, v in keys_values.items()
-    }
+    keys_values = {k: (v[0] if v and isinstance(v, list) else v) for k, v in keys_values.items()}
     return "&".join(
-        "=".join([k, v if k in do_not_quote else quote_plus(v)])
-        for k, v in keys_values.items()
+        "=".join([k, v if k in do_not_quote else quote_plus(v)]) for k, v in keys_values.items()
     )
 
 

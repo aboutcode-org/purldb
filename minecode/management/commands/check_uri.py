@@ -62,9 +62,7 @@ class Command(BaseCommand):
         show_data = options.get("show_data")
 
         # get the last 10 uris
-        uris = ResourceURI.objects.filter(uri__startswith=uri_prefix).order_by("-id")[
-            :limit
-        ]
+        uris = ResourceURI.objects.filter(uri__startswith=uri_prefix).order_by("-id")[:limit]
 
         # TODO: add if the uri be resolved by visit and/or map router
         for uri in uris:

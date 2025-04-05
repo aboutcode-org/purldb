@@ -14,9 +14,7 @@ from minecode.utils_test import JsonBasedTesting
 
 
 class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def setUp(self):
         super().setUp()
@@ -135,9 +133,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         with open(pom_loc) as f:
             pom_text = f.read()
         package = _parse("maven_pom", "maven", "Java", text=pom_text)
-        expected_before_loc = self.get_test_loc(
-            "maven/pom/ant-antlr-1.10.1-package_before.json"
-        )
+        expected_before_loc = self.get_test_loc("maven/pom/ant-antlr-1.10.1-package_before.json")
         self.check_expected_results(package.to_dict(), expected_before_loc, regen=regen)
 
         parent_pom_loc = self.get_test_loc("maven/pom/ant-parent-1.10.1.pom")
@@ -145,9 +141,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             parent_pom_text = f.read()
         parent_package = _parse("maven_pom", "maven", "Java", text=parent_pom_text)
         package = maven.merge_parent(package, parent_package)
-        expected_after_loc = self.get_test_loc(
-            "maven/pom/ant-antlr-1.10.1-package_after.json"
-        )
+        expected_after_loc = self.get_test_loc("maven/pom/ant-antlr-1.10.1-package_after.json")
         self.check_expected_results(package.to_dict(), expected_after_loc, regen=regen)
 
     def test_merge_ancestors(self, regen=FIXTURES_REGEN):
@@ -202,12 +196,8 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             merged_package = maven.get_merged_ancestor_package_from_maven_package(
                 package=db_package
             )
-            expected_loc = self.get_test_loc(
-                "maven/pom/pulsar-client-merged-ancestor-package.json"
-            )
-            self.check_expected_results(
-                merged_package.to_dict(), expected_loc, regen=regen
-            )
+            expected_loc = self.get_test_loc("maven/pom/pulsar-client-merged-ancestor-package.json")
+            self.check_expected_results(merged_package.to_dict(), expected_loc, regen=regen)
 
 
 class MavenCrawlerFunctionsTest(JsonBasedTesting, DjangoTestCase):
@@ -252,7 +242,9 @@ class MavenCrawlerFunctionsTest(JsonBasedTesting, DjangoTestCase):
     def test_check_on_page(self, mock_request_get):
         checker = maven.check_if_page_has_pom_files
         mock_request_get.return_value.ok = True
-        mock_request_get.return_value.text = '<a href="parent-7.11.0.pom" title="parent-7.11.0.pom">parent-7.11.0.pom</a>'
+        mock_request_get.return_value.text = (
+            '<a href="parent-7.11.0.pom" title="parent-7.11.0.pom">parent-7.11.0.pom</a>'
+        )
         self.assertTrue(
             maven.check_on_page(
                 "https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/", checker
@@ -268,10 +260,10 @@ class MavenCrawlerFunctionsTest(JsonBasedTesting, DjangoTestCase):
     @mock.patch("requests.get")
     def test_is_package_page(self, mock_request_get):
         mock_request_get.return_value.ok = True
-        mock_request_get.return_value.text = '<a href="maven-metadata.xml" title="maven-metadata.xml">maven-metadata.xml</a>'
-        self.assertTrue(
-            maven.is_package_page("https://repo1.maven.org/maven2/xml-apis/xml-apis/")
+        mock_request_get.return_value.text = (
+            '<a href="maven-metadata.xml" title="maven-metadata.xml">maven-metadata.xml</a>'
         )
+        self.assertTrue(maven.is_package_page("https://repo1.maven.org/maven2/xml-apis/xml-apis/"))
 
     @mock.patch("requests.get")
     def test_is_package_version_page(self, mock_request_get):
@@ -306,9 +298,7 @@ class MavenCrawlerFunctionsTest(JsonBasedTesting, DjangoTestCase):
         mock_request_get.return_value.text = '<a href="archetype-catalog.xml" title="archetype-catalog.xml">archetype-catalog.xml</a>'
         self.assertEqual(
             "https://repo1.maven.org/maven2",
-            maven.get_maven_root(
-                "https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/"
-            ),
+            maven.get_maven_root("https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/"),
         )
 
     @mock.patch("requests.get")
@@ -338,8 +328,8 @@ class MavenCrawlerFunctionsTest(JsonBasedTesting, DjangoTestCase):
             package_version_page,
         ]
 
-        namespace, package_name, package_version = (
-            maven.determine_namespace_name_version_from_url(url, root_url)
+        namespace, package_name, package_version = maven.determine_namespace_name_version_from_url(
+            url, root_url
         )
         self.assertEqual("xml-apis", namespace)
         self.assertEqual("xml-apis", package_name)
@@ -455,9 +445,7 @@ class MavenCrawlerFunctionsTest(JsonBasedTesting, DjangoTestCase):
             "https://repo1.maven.org/maven2/xml-apis/xml-apis/1.0.b2/": "2005-09-20 05:53",
             "https://repo1.maven.org/maven2/xml-apis/xml-apis/1.2.01/": "2010-02-03 21:05",
         }
-        self.assertEqual(
-            expected, maven.create_absolute_urls_for_links(text, url, filter=filter)
-        )
+        self.assertEqual(expected, maven.create_absolute_urls_for_links(text, url, filter=filter))
 
     @mock.patch("requests.get")
     def test_get_directory_links(self, mock_request_get):

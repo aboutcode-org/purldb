@@ -63,7 +63,9 @@ class HaxeVersionsVisitor(HttpVisitor):
 
     def get_uris(self, content):
         """Yield haxelib json URL based on specified version, for example: https://lib.haxe.org/p/openfl/8.6.4/raw-files/openfl/package.json"""
-        version_url_tempalte = "https://lib.haxe.org/p/{project}/{version}/raw-files/{project}/package.json"
+        version_url_tempalte = (
+            "https://lib.haxe.org/p/{project}/{version}/raw-files/{project}/package.json"
+        )
         page = BeautifulSoup(content, "lxml")
         for a in page.find_all(name="a"):
             if "href" not in a.attrs:
@@ -77,30 +79,22 @@ class HaxeVersionsVisitor(HttpVisitor):
                     # if there is only one slash between project and version, openfl/8.6.3
                     project = project_version[0]
                     version = project_version[1]
-                    package_url = PackageURL(
-                        type="haxe", name=project, version=version
-                    ).to_string()
+                    package_url = PackageURL(type="haxe", name=project, version=version).to_string()
                     yield URI(
-                        uri=version_url_tempalte.format(
-                            project=project, version=version
-                        ),
+                        uri=version_url_tempalte.format(project=project, version=version),
                         package_url=package_url,
                         source_uri=self.uri,
                     )
 
 
-@visit_router.route(
-    r"https://lib.haxe.org/p/[\w\-\.]+/[\w\-\.]+/raw-files/[\w\-\.]+/package.json"
-)
+@visit_router.route(r"https://lib.haxe.org/p/[\w\-\.]+/[\w\-\.]+/raw-files/[\w\-\.]+/package.json")
 class HaxePackageJsonVisitor(HttpJsonVisitor):
     """Empty Visitor to get the package json content only."""
 
     pass
 
 
-@map_router.route(
-    r"https://lib.haxe.org/p/[\w\-\.]+/[\w\-\.]+/raw-files/[\w\-\.]+/package.json"
-)
+@map_router.route(r"https://lib.haxe.org/p/[\w\-\.]+/[\w\-\.]+/raw-files/[\w\-\.]+/package.json")
 class HaxePackageJsonMapper(Mapper):
     def get_packages(self, uri, resource_uri):
         """Yield Package built from package json file."""

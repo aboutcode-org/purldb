@@ -17,8 +17,7 @@ from univers.versions import InvalidVersion
 PRIORITY_QUEUE_SUPPORTED_ECOSYSTEMS = ["maven", "npm"]
 
 VERSION_CLASS_BY_PACKAGE_TYPE = {
-    pkg_type: range_class.version_class
-    for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()
+    pkg_type: range_class.version_class for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()
 }
 
 
@@ -97,9 +96,7 @@ def is_supported_watch_ecosystem(watch):
         (VERSION_CLASS_BY_PACKAGE_TYPE, "Univers"),
     ]:
         if watch.type not in ecosystem:
-            watch.watch_error = (
-                f"`{watch.type}` ecosystem is not supported by {error_message}"
-            )
+            watch.watch_error = f"`{watch.type}` ecosystem is not supported by {error_message}"
             watch.last_watch_date = datetime.datetime.now(tz=datetime.timezone.utc)
             watch.save(update_fields=["last_watch_date"])
             return False

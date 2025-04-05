@@ -110,16 +110,12 @@ def map_uri(resource_uri, _map_router=map_router):
     """
     # FIXME: returning a string or sequence is UGLY
     try:
-        mapped_scanned_packages = _map_router.process(
-            resource_uri.uri, resource_uri=resource_uri
-        )
+        mapped_scanned_packages = _map_router.process(resource_uri.uri, resource_uri=resource_uri)
 
         logger.debug(f"map_uri: Package URI: {resource_uri.uri}")
 
         # consume generators
-        mapped_scanned_packages = mapped_scanned_packages and list(
-            mapped_scanned_packages
-        )
+        mapped_scanned_packages = mapped_scanned_packages and list(mapped_scanned_packages)
 
         if not mapped_scanned_packages:
             msg = "No visited scanned packages returned."
@@ -130,9 +126,7 @@ def map_uri(resource_uri, _map_router=map_router):
             return
 
     except Exception as e:
-        msg = (
-            f"Error: Failed to map while processing ResourceURI: {repr(resource_uri)}\n"
-        )
+        msg = f"Error: Failed to map while processing ResourceURI: {repr(resource_uri)}\n"
         msg += get_error_message(e)
         logger.error(msg)
         # we had an error, so mapped_scanned_packages is an error string
@@ -169,9 +163,7 @@ def map_uri(resource_uri, _map_router=map_router):
                         logger.debug(f" + Inserted ScannableURI\t: {package_uri}")
 
     except Exception as e:
-        msg = (
-            f"Error: Failed to map while processing ResourceURI: {repr(resource_uri)}\n"
-        )
+        msg = f"Error: Failed to map while processing ResourceURI: {repr(resource_uri)}\n"
         msg += f"While processing scanned_package: {repr(scanned_package)}\n"
         msg += get_error_message(e)
         logger.error(msg)

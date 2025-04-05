@@ -18,9 +18,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class FreedesktopTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
 
 class FreedesktopVistorTest(FreedesktopTest):
@@ -48,9 +46,7 @@ class FreedesktopMapperTest(FreedesktopTest):
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_map_software_html_page_libinput(self):
-        with open(
-            self.get_test_loc("freedesktop/libinput.html")
-        ) as freedesktop_metadata:
+        with open(self.get_test_loc("freedesktop/libinput.html")) as freedesktop_metadata:
             metadata = freedesktop_metadata.read()
         packages = miners.freedesktop.build_packages(
             metadata,

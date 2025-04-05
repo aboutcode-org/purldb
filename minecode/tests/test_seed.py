@@ -40,9 +40,7 @@ class RevisitSeedTest(MiningTestCase):
 
     def test_insert_seed_uris_revisit_before_10_days_custom_revisit_after(self):
         # we consume generators to insert seed URI
-        list(
-            insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed1])
-        )
+        list(insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed1]))
 
         seeded = ResourceURI.objects.all()
         self.assertEqual(1, len(seeded))
@@ -51,17 +49,13 @@ class RevisitSeedTest(MiningTestCase):
         s.last_visit_date = timezone.now() - timedelta(minutes=10)
         s.save()
 
-        list(
-            insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed1])
-        )
+        list(insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed1]))
         seeded = ResourceURI.objects.all()
         self.assertEqual(1, len(seeded))
 
     def test_insert_seed_uris_revisit_after_10_days_custom_revisit_after(self):
         # we consume generators to insert seed URI
-        list(
-            insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed1])
-        )
+        list(insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed1]))
 
         seeded = ResourceURI.objects.all()
         self.assertEqual(1, len(seeded))
@@ -70,17 +64,13 @@ class RevisitSeedTest(MiningTestCase):
         s.last_visit_date = timezone.now() - timedelta(days=10)
         s.save()
 
-        list(
-            insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed1])
-        )
+        list(insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed1]))
         seeded = ResourceURI.objects.all()
         self.assertEqual(2, len(seeded))
 
     def test_insert_seed_uris_revisit_before_10_days_default_revisit_after(self):
         # we consume generators to insert seed URI
-        list(
-            insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed0])
-        )
+        list(insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed0]))
 
         seeded = ResourceURI.objects.all()
         self.assertEqual(1, len(seeded))
@@ -89,17 +79,13 @@ class RevisitSeedTest(MiningTestCase):
         s.last_visit_date = timezone.now() - timedelta(days=9)
         s.save()
 
-        list(
-            insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed0])
-        )
+        list(insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed0]))
         seeded = ResourceURI.objects.all()
         self.assertEqual(1, len(seeded))
 
     def test_insert_seed_uris_revisit_after_10_days_default_revisit_after(self):
         # we consume generators to insert seed URI
-        list(
-            insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed0])
-        )
+        list(insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed0]))
 
         seeded = ResourceURI.objects.all()
         self.assertEqual(1, len(seeded))
@@ -108,9 +94,7 @@ class RevisitSeedTest(MiningTestCase):
         s.last_visit_date = timezone.now() - timedelta(days=10)
         s.save()
 
-        list(
-            insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed0])
-        )
+        list(insert_seed_uris(pattern=".*python.org/pypi/.*", seeders=[self.SampleSeed0]))
         seeded = ResourceURI.objects.all()
         self.assertEqual(2, len(seeded))
 
@@ -185,9 +169,7 @@ class SeedTest(MiningTestCase):
         mock_get_active_seeders.return_value = [self.SampleSeed1]
         before = list(ResourceURI.objects.all().values_list("id"))
         seeders = seed.get_active_seeders()
-        results = sorted(
-            insert_seed_uris(pattern=".*python.*igloo.json", seeders=seeders)
-        )
+        results = sorted(insert_seed_uris(pattern=".*python.*igloo.json", seeders=seeders))
         if before:
             seeded = ResourceURI.objects.exclude(uri__in=before)
         else:

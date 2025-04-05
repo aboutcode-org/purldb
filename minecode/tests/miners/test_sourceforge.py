@@ -19,9 +19,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class SourceforgeVisitorsTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_visit_sf_sitemap_index_new(self):
         uri = "http://sourceforge.net/sitemap.xml"
@@ -41,9 +39,7 @@ class SourceforgeVisitorsTest(JsonBasedTesting):
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, error = sourceforge.SourceforgeSitemapPageVisitor(uri)
 
-        expected_loc = self.get_test_loc(
-            "sourceforge/expected_sf_sitemap_page_new.json"
-        )
+        expected_loc = self.get_test_loc("sourceforge/expected_sf_sitemap_page_new.json")
         self.check_expected_uris(uris, expected_loc)
         self.assertIsNone(error)
 
@@ -71,9 +67,7 @@ class SourceforgeVisitorsTest(JsonBasedTesting):
 
 
 class SourceforgeMappersTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_packages(self):
         with open(self.get_test_loc("sourceforge/odanur.json")) as sourceforge_metadata:
@@ -84,9 +78,7 @@ class SourceforgeMappersTest(JsonBasedTesting):
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages2(self):
-        with open(
-            self.get_test_loc("sourceforge/openstunts.json")
-        ) as sourceforge_metadata:
+        with open(self.get_test_loc("sourceforge/openstunts.json")) as sourceforge_metadata:
             metadata = json.load(sourceforge_metadata)
         packages = miners.sourceforge.build_packages_from_metafile(metadata)
         packages = [p.to_dict() for p in packages]
@@ -102,9 +94,7 @@ class SourceforgeMappersTest(JsonBasedTesting):
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages4(self):
-        with open(
-            self.get_test_loc("sourceforge/niftyphp.json")
-        ) as sourceforge_metadata:
+        with open(self.get_test_loc("sourceforge/niftyphp.json")) as sourceforge_metadata:
             metadata = json.load(sourceforge_metadata)
         packages = miners.sourceforge.build_packages_from_metafile(metadata)
         packages = [p.to_dict() for p in packages]

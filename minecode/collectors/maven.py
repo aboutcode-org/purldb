@@ -44,9 +44,7 @@ if TRACE:
 
 
 MAVEN_BASE_URL = "https://repo1.maven.org/maven2"
-MAVEN_INDEX_URL = (
-    "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz"
-)
+MAVEN_INDEX_URL = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz"
 
 
 class MavenNexusCollector:
@@ -166,12 +164,7 @@ def fetch_parent(pom_text, base_url=MAVEN_BASE_URL):
     if not pom_text:
         return
     pom = get_maven_pom(text=pom_text)
-    if (
-        pom.parent
-        and pom.parent.group_id
-        and pom.parent.artifact_id
-        and pom.parent.version.version
-    ):
+    if pom.parent and pom.parent.group_id and pom.parent.artifact_id and pom.parent.version.version:
         parent_namespace = pom.parent.group_id
         parent_name = pom.parent.artifact_id
         parent_version = str(pom.parent.version.version)
@@ -265,9 +258,7 @@ def merge_ancestors(ancestor_pom_texts, package):
     return package
 
 
-def map_maven_package(
-    package_url, package_content, pipelines, priority=0, reindex_metadata=False
-):
+def map_maven_package(package_url, package_content, pipelines, priority=0, reindex_metadata=False):
     """
     Add a maven `package_url` to the PackageDB.
 
@@ -336,9 +327,7 @@ def map_maven_package(
     if sha1:
         package.sha1 = sha1
         override = reindex_metadata
-        db_package, _, _, _ = merge_or_create_package(
-            package, visit_level=50, override=override
-        )
+        db_package, _, _, _ = merge_or_create_package(package, visit_level=50, override=override)
     else:
         msg = f"Failed to retrieve JAR: {package_url}"
         error += msg + "\n"
@@ -347,16 +336,12 @@ def map_maven_package(
     if not reindex_metadata:
         # Submit package for scanning
         if db_package:
-            add_package_to_scan_queue(
-                package=db_package, pipelines=pipelines, priority=priority
-            )
+            add_package_to_scan_queue(package=db_package, pipelines=pipelines, priority=priority)
 
     return db_package, error
 
 
-def map_maven_binary_and_source(
-    package_url, pipelines, priority=0, reindex_metadata=False
-):
+def map_maven_binary_and_source(package_url, pipelines, priority=0, reindex_metadata=False):
     """
     Get metadata for the binary and source release of the Maven package
     `package_url` and save it to the PackageDB.
@@ -513,9 +498,9 @@ def check_if_page_has_directories(links, **kwargs):
 
 def check_if_package_version_page(links, **kwargs):
     """Return True if `links` contains pom files and has no directories"""
-    return check_if_page_has_pom_files(
+    return check_if_page_has_pom_files(links=links) and not check_if_page_has_directories(
         links=links
-    ) and not check_if_page_has_directories(links=links)
+    )
 
 
 def check_if_package_page(links, **kwargs):
@@ -529,9 +514,7 @@ def check_if_maven_root(links, **kwargs):
     Return True if "archetype-catalog.xml" is in `links`, as the root of a Maven
     repo contains "archetype-catalog.xml".
     """
-    return check_if_file_name_is_linked_on_page(
-        file_name="archetype-catalog.xml", links=links
-    )
+    return check_if_file_name_is_linked_on_page(file_name="archetype-catalog.xml", links=links)
 
 
 def check_on_page(url, checker):

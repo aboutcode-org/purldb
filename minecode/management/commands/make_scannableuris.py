@@ -26,9 +26,7 @@ class Command(BaseCommand):
         for package in Package.objects.all():
             package_uri = package.download_url
             try:
-                _, created = ScannableURI.objects.get_or_create(
-                    uri=package_uri, package=package
-                )
+                _, created = ScannableURI.objects.get_or_create(uri=package_uri, package=package)
                 if created:
                     self.stdout.write(f"ScannableURI created for: {package_uri}")
             except Exception as e:

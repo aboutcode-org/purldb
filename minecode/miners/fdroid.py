@@ -94,9 +94,7 @@ class FdroidIndexVisitor(NonPersistentHttpVisitor):
                 uri=purl,
                 package_url=purl,
                 source_uri=self.uri,
-                data=json.dumps(
-                    package_data, separators=(",", ":"), ensure_ascii=False
-                ),
+                data=json.dumps(package_data, separators=(",", ":"), ensure_ascii=False),
                 # note: visited is True since there nothing more to visit
                 visited=True,
             )

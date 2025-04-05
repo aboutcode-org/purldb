@@ -19,9 +19,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class HaxeVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_visit_haxe_projects(self):
         uri = "https://lib.haxe.org/all"
@@ -52,9 +50,7 @@ class HaxeVistorTest(JsonBasedTesting):
 
 
 class HaxeMappersTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_project_package_json(self):
         with open(self.get_test_loc("haxe/project_package.json")) as projectsjson_meta:

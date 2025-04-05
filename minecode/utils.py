@@ -383,9 +383,7 @@ class MemorySavingQuerysetIterator:
             # By making a copy of of the queryset and using that to actually access
             # the objects we ensure that there are only `max_obj_num` objects in
             # memory at any given time
-            smaller_queryset = copy.deepcopy(self._base_queryset)[
-                i : i + self.max_obj_num
-            ]
+            smaller_queryset = copy.deepcopy(self._base_queryset)[i : i + self.max_obj_num]
             logger.debug(f"Grabbing next {self.max_obj_num} objects from DB")
             yield from smaller_queryset.iterator()
 

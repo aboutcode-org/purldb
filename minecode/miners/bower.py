@@ -48,16 +48,10 @@ class BowerTopJsonVisitor(HttpJsonVisitor):
         The url could be in the following formats like github, loglg, gitcafe, bitbuckets etc.
         # FIXME: We should cover all urls beyond the above four categories.
         """
-        github_base_url = (
-            "https://raw.githubusercontent.com/{owner}/{name}/master/bower.json"
-        )
+        github_base_url = "https://raw.githubusercontent.com/{owner}/{name}/master/bower.json"
         lolg_base_url = "https://lolg.it/{owner}/{name}/raw/master/bower.json"
-        gitcafe_base_url = (
-            "https://coding.net/u/{owner}/p/{name}/git/raw/master/bower.json"
-        )
-        bitbucket_base_url = (
-            "https://bitbucket.org/{owner}/{name}/raw/master/bower.json"
-        )
+        gitcafe_base_url = "https://coding.net/u/{owner}/p/{name}/git/raw/master/bower.json"
+        bitbucket_base_url = "https://bitbucket.org/{owner}/{name}/raw/master/bower.json"
         base_url_map = {
             "https://github.com/": github_base_url,
             "https://lolg.it/": lolg_base_url,
@@ -105,9 +99,7 @@ class BowerJsonMapper(Mapper):
         Yield as many Package as there are download URLs.
         """
         metadata = resource_uri.data
-        build_packages_from_jsonfile(
-            metadata, resource_uri.uri, resource_uri.package_url
-        )
+        build_packages_from_jsonfile(metadata, resource_uri.uri, resource_uri.package_url)
 
 
 def build_packages_from_jsonfile(metadata, uri=None, purl=None):
@@ -141,9 +133,7 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
     if dependencies:
         for key, value in dependencies.items():
             dependencies_build.append(
-                DependentPackage(
-                    purl=key, extracted_requirement=value, scope="runtime"
-                ).to_dict()
+                DependentPackage(purl=key, extracted_requirement=value, scope="runtime").to_dict()
             )
 
     if name:
@@ -165,9 +155,7 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
         )
 
         if extracted_license_statement:
-            common_data["extracted_license_statement"] = list(
-                extracted_license_statement
-            )
+            common_data["extracted_license_statement"] = list(extracted_license_statement)
 
         author_content = content.get("author")
         if author_content:

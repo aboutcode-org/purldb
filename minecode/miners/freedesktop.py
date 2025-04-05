@@ -39,9 +39,7 @@ class FreedesktopHTMLVisitor(HttpVisitor):
                 href = a["href"]
                 if href and href.startswith("./"):
                     project_name = href.replace("./", "").strip("/")
-                    package_url = PackageURL(
-                        type="freedesktop", name=project_name
-                    ).to_string()
+                    package_url = PackageURL(type="freedesktop", name=project_name).to_string()
                     yield URI(
                         uri=url_template.format(name=project_name),
                         package_url=package_url,
@@ -73,9 +71,7 @@ def build_packages(html_text, uri, purl):
     package URL string.
     """
     purl = PackageURL.from_string(purl)
-    package_data = dict(
-        type="freedesktop", name=purl.name, version=purl.version, homepage_url=uri
-    )
+    package_data = dict(type="freedesktop", name=purl.name, version=purl.version, homepage_url=uri)
 
     page = BeautifulSoup(html_text, "lxml")
     if page.h1:

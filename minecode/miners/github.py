@@ -204,9 +204,7 @@ class GithubMetaFileMapper(Mapper):
         visited_data = resource_uri.data
         if not visited_data:
             return
-        return build_github_packages(
-            visited_data, resource_uri.uri, resource_uri.package_url
-        )
+        return build_github_packages(visited_data, resource_uri.uri, resource_uri.package_url)
 
 
 def build_github_packages(visited_data, uri, purl=None):

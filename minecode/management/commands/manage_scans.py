@@ -79,18 +79,14 @@ class ScanningCommand(VerboseCommand):
                 break
 
             if max_uris and uris_counter >= max_uris:
-                cls.logger.info(
-                    "max_uris requested reached: exiting scan processing loop."
-                )
+                cls.logger.info("max_uris requested reached: exiting scan processing loop.")
                 break
 
             scannable_uri = cls.get_next_uri()
 
             if not scannable_uri:
                 if exit_on_empty:
-                    cls.logger.info(
-                        "exit-on-empty requested: No more scannable URIs, exiting..."
-                    )
+                    cls.logger.info("exit-on-empty requested: No more scannable URIs, exiting...")
                     break
 
                 # Only log a single message when we go to sleep

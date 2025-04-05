@@ -169,12 +169,8 @@ class RouteTest(TestCase):
         def myroute2(uri):
             pass
 
-        self.assertRaises(
-            route.RouteAlreadyDefined, uris.append, r"http://nexb\.com", myroute
-        )
-        self.assertRaises(
-            route.RouteAlreadyDefined, uris.append, r"http://nexb\.com", myroute
-        )
+        self.assertRaises(route.RouteAlreadyDefined, uris.append, r"http://nexb\.com", myroute)
+        self.assertRaises(route.RouteAlreadyDefined, uris.append, r"http://nexb\.com", myroute)
 
         self.assertRaises(route.MultipleRoutesDefined, uris.resolve, r"http://nexb.com")
         self.assertRaises(route.NoRouteAvailable, uris.resolve, "impossible")

@@ -49,17 +49,12 @@ class PackageDBFilterTest(TestCase):
     def test_packagedb_filters_parse_query_string_to_lookups(self):
         inputs = {
             "LICENSE": "(AND: ('name__icontains', 'LICENSE'))",
-            "two words": (
-                "(AND: ('name__icontains', 'two'), ('name__icontains', 'words'))"
-            ),
+            "two words": ("(AND: ('name__icontains', 'two'), ('name__icontains', 'words'))"),
             "'two words'": "(AND: ('name__icontains', 'two words'))",
-            "na me:LICENSE": (
-                "(AND: ('name__icontains', 'na'), ('me__icontains', 'LICENSE'))"
-            ),
+            "na me:LICENSE": ("(AND: ('name__icontains', 'na'), ('me__icontains', 'LICENSE'))"),
             "name:LICENSE": "(AND: ('name__icontains', 'LICENSE'))",
             "default_value name:LICENSE": (
-                "(AND: ('name__icontains', 'default_value'), "
-                "('name__icontains', 'LICENSE'))"
+                "(AND: ('name__icontains', 'default_value'), ('name__icontains', 'LICENSE'))"
             ),
             'name:"name with spaces"': "(AND: ('name__icontains', 'name with spaces'))",
             "name:'name with spaces'": "(AND: ('name__icontains', 'name with spaces'))",
@@ -68,8 +63,7 @@ class PackageDBFilterTest(TestCase):
                 "(NOT (AND: ('name__icontains', 'NOTICE'))))"
             ),
             "name:LICENSE status:scanned": (
-                "(AND: ('name__icontains', 'LICENSE'), "
-                "('status__icontains', 'scanned'))"
+                "(AND: ('name__icontains', 'LICENSE'), ('status__icontains', 'scanned'))"
             ),
             'name^:"file"': "(AND: ('name__istartswith', 'file'))",
             'name$:".zip"': "(AND: ('name__iendswith', '.zip'))",

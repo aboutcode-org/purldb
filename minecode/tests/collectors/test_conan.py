@@ -22,9 +22,7 @@ from minecode.utils_test import JsonBasedTesting
 
 
 class ConanPriorityQueueTests(JsonBasedTesting, TestCase):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def setUp(self):
         super().setUp()
@@ -84,9 +82,7 @@ class ConanPriorityQueueTests(JsonBasedTesting, TestCase):
             self.zlib_conandata_contents_dict, self.package_url1.version
         )
         expected_zlib_download_url = "https://zlib.net/fossils/zlib-1.3.1.tar.gz"
-        expected_zlib_sha256 = (
-            "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23"
-        )
+        expected_zlib_sha256 = "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23"
 
         self.assertEqual(result_download_url, expected_zlib_download_url)
         self.assertEqual(result_sha256, expected_zlib_sha256)

@@ -64,20 +64,14 @@ class SourceforgeSitemapPageVisitor(HttpVisitor):
         regex = re.compile(r"^https?://sourceforge.net/projects/[a-z0-9.-]+/?$")
         for loc in sitemap_locs:
             if loc.text and re.match(regex, loc.text):
-                project_json_baseurl = (
-                    "https://sourceforge.net/api/project/name/{}/json"
+                project_json_baseurl = "https://sourceforge.net/api/project/name/{}/json"
+                project_name = loc.text.partition("https://sourceforge.net/projects/")[-1].strip(
+                    "/"
                 )
-                project_name = loc.text.partition("https://sourceforge.net/projects/")[
-                    -1
-                ].strip("/")
                 project_json_url = project_json_baseurl.format(project_name)
-                package_url = PackageURL(
-                    type="sourceforge", name=project_name
-                ).to_string()
+                package_url = PackageURL(type="sourceforge", name=project_name).to_string()
                 # The priority in the xml has different view with the priority in visitor, so skip it.
-                yield URI(
-                    uri=project_json_url, package_url=package_url, source_uri=self.uri
-                )
+                yield URI(uri=project_json_url, package_url=package_url, source_uri=self.uri)
 
 
 @visit_router.route(

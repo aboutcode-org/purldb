@@ -20,13 +20,10 @@ def sf_net(input_file, output):
     Take an input_file CSV file and writes and output CSV file,
     adding new columns and trying to sf_net the data
     """
-    download_url_template = (
-        "http://master.dl.sourceforge.net/project/%(project_id)s%(filename)s"
-    )
+    download_url_template = "http://master.dl.sourceforge.net/project/%(project_id)s%(filename)s"
 
     existing_headers = (
-        "external_id,name,version,license,owners,"
-        "homepage_url,keywords,description".split(",")
+        "external_id,name,version,license,owners,homepage_url,keywords,description".split(",")
     )
 
     new_headers = (

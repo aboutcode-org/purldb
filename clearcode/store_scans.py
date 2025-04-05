@@ -242,9 +242,7 @@ def get_github_repos(user_name, token=os.getenv("GH_TOKEN")):
 
     # TODO: We need have a way to handle failures from GH API
     if not response.status_code == 200:
-        raise Exception(
-            f"HTTP {response.status_code}: Failed to get repos for {user_name}"
-        )
+        raise Exception(f"HTTP {response.status_code}: Failed to get repos for {user_name}")
 
     data = response.json()
     for repo_data in data:

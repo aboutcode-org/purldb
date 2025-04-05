@@ -48,7 +48,9 @@ def update_packages(packages, fields_to_update):
                 except DataError:
                     service = basename(__file__)
                     traceback_message = traceback.format_exc()
-                    message = f"Error updating Package {package.package_uid}:\n\n{traceback_message}"
+                    message = (
+                        f"Error updating Package {package.package_uid}:\n\n{traceback_message}"
+                    )
                     ProcessingError.objects.create(
                         service=service,
                         date=timezone.now(),
@@ -73,9 +75,7 @@ def create_packages(packages):
             except DataError:
                 service = basename(__file__)
                 traceback_message = traceback.format_exc()
-                message = (
-                    f"Error creating Package {package.purl}:\n\n{traceback_message}"
-                )
+                message = f"Error creating Package {package.purl}:\n\n{traceback_message}"
                 ProcessingError.objects.create(
                     service=service,
                     date=timezone.now(),
@@ -197,9 +197,7 @@ def update_package_fields(package, maven_package, field_names):
         return package
 
 
-def update_maven_packages(
-    maven_package, fields_to_update, lowercased_purl_fields=False
-):
+def update_maven_packages(maven_package, fields_to_update, lowercased_purl_fields=False):
     namespace = maven_package.namespace
     name = maven_package.name
     version = maven_package.version
@@ -228,9 +226,7 @@ def update_maven_packages(
                 duplicate_packages.append(existing_package)
 
         duplicate_packages_pks = [p.pk for p in duplicate_packages]
-        existing_package = Package.objects.exclude(
-            pk__in=duplicate_packages_pks
-        ).get_or_none(
+        existing_package = Package.objects.exclude(pk__in=duplicate_packages_pks).get_or_none(
             type="maven",
             namespace=namespace,
             name=name,
@@ -325,15 +321,11 @@ class Command(VerboseCommand):
                 continue
 
             if Package.objects.filter(download_url=maven_package.download_url).exists():
-                logger.debug(
-                    f"Skipping creation of {maven_package.purl} - already exists"
-                )
+                logger.debug(f"Skipping creation of {maven_package.purl} - already exists")
                 continue
 
             if create_package:
-                normalized_qualifiers = normalize_qualifiers(
-                    maven_package.qualifiers, encode=True
-                )
+                normalized_qualifiers = normalize_qualifiers(maven_package.qualifiers, encode=True)
                 new_package = Package(
                     type=maven_package.type,
                     namespace=maven_package.namespace,

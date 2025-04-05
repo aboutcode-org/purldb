@@ -93,9 +93,7 @@ class Command(VerboseCommand):
                 add_package_to_scan_queue(source_package)
 
             package_set_ids = set(package.package_sets.all().values("uuid"))
-            source_package_set_ids = set(
-                source_package.package_sets.all().values("uuid")
-            )
+            source_package_set_ids = set(source_package.package_sets.all().values("uuid"))
 
             # If the package exists and already in the set then there is nothing left to do
             if package_set_ids.intersection(source_package_set_ids):

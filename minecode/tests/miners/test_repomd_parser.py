@@ -25,9 +25,7 @@ from minecode.utils_test import mocked_requests_get_for_uris
 
 
 class TestRepomdParser(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_combine_list_of_dicts(self):
         expected = {"a": "1", "b": "2", "c": "3"}
@@ -44,9 +42,7 @@ class TestRepomdParser(JsonBasedTesting):
                 "href": "/python-ceilometerclient-1.5.0-1.el7.src.rpm",
             }
         ]
-        repomdxml_url = (
-            "http://vault.centos.org/7.1.1503/cloud/Source/openstack-liberty"
-        )
+        repomdxml_url = "http://vault.centos.org/7.1.1503/cloud/Source/openstack-liberty"
         rpms = list(generate_rpm_objects(packages, repomdxml_url))
         self.assertEqual(1, len(rpms))
         rpm = rpms[0]
@@ -71,16 +67,12 @@ class TestRepomdParser(JsonBasedTesting):
 
         uri = "http://archive.cloudera.com/cm5/redhat/6/x86_64/cm/5.3.2/repodata/repomd.xml"
         with patch("requests.get") as mock_http_get:
-            mock_http_get.side_effect = (
-                lambda *args, **kwargs: mocked_requests_get_for_uris(
-                    uri2loc, *args, **kwargs
-                )
+            mock_http_get.side_effect = lambda *args, **kwargs: mocked_requests_get_for_uris(
+                uri2loc, *args, **kwargs
             )
             _uris, packages, _error = collect_rpm_packages_from_repomd(uri)
 
-        expected_loc = self.get_test_loc(
-            "repodata_rpms/repomd_parser/cloudera/expected.json"
-        )
+        expected_loc = self.get_test_loc("repodata_rpms/repomd_parser/cloudera/expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_rpm_packages_from_repomd_centos(self):
@@ -101,10 +93,8 @@ class TestRepomdParser(JsonBasedTesting):
 
         uri = "http://vault.centos.org/3.8/updates/x86_64/repodata/repomd.xml"
         with patch("requests.get") as mock_http_get:
-            mock_http_get.side_effect = (
-                lambda *args, **kwargs: mocked_requests_get_for_uris(
-                    uri2loc, *args, **kwargs
-                )
+            mock_http_get.side_effect = lambda *args, **kwargs: mocked_requests_get_for_uris(
+                uri2loc, *args, **kwargs
             )
             uris, packages, _error = collect_rpm_packages_from_repomd(uri)
 
@@ -121,9 +111,7 @@ class TestRepomdParser(JsonBasedTesting):
         ]
         self.assertEqual(expected_uris, uris)
 
-        expected_loc = self.get_test_loc(
-            "repodata_rpms/repomd_parser/centos/expected.json"
-        )
+        expected_loc = self.get_test_loc("repodata_rpms/repomd_parser/centos/expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_rpm_packages_from_repomd_cloudera_2(self):
@@ -144,16 +132,12 @@ class TestRepomdParser(JsonBasedTesting):
 
         uri = "http://archive.cloudera.com/cm5/redhat/5/x86_64/cm/5.2.0/repodata/repomd.xml"
         with patch("requests.get") as mock_http_get:
-            mock_http_get.side_effect = (
-                lambda *args, **kwargs: mocked_requests_get_for_uris(
-                    uri2loc, *args, **kwargs
-                )
+            mock_http_get.side_effect = lambda *args, **kwargs: mocked_requests_get_for_uris(
+                uri2loc, *args, **kwargs
             )
             _uris, packages, _error = collect_rpm_packages_from_repomd(uri)
 
-        expected_loc = self.get_test_loc(
-            "repodata_rpms/repomd_parser/cloudera2/expected.json"
-        )
+        expected_loc = self.get_test_loc("repodata_rpms/repomd_parser/cloudera2/expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_rpm_packages_from_repomd_postgresql(self):
@@ -174,10 +158,8 @@ class TestRepomdParser(JsonBasedTesting):
 
         uri = "http://yum.postgresql.org/9.2/redhat/rhel-6-x86_64/repodata/repomd.xml"
         with patch("requests.get") as mock_http_get:
-            mock_http_get.side_effect = (
-                lambda *args, **kwargs: mocked_requests_get_for_uris(
-                    uri2loc, *args, **kwargs
-                )
+            mock_http_get.side_effect = lambda *args, **kwargs: mocked_requests_get_for_uris(
+                uri2loc, *args, **kwargs
             )
             uris, packages, error = collect_rpm_packages_from_repomd(uri)
         self.assertEqual(None, error)
@@ -194,9 +176,7 @@ class TestRepomdParser(JsonBasedTesting):
         ]
 
         self.assertEqual(expected_uris, uris)
-        expected_loc = self.get_test_loc(
-            "repodata_rpms/repomd_parser/postgresql/expected.json"
-        )
+        expected_loc = self.get_test_loc("repodata_rpms/repomd_parser/postgresql/expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_rpm_packages_from_repomd_opensuse(self):
@@ -217,16 +197,12 @@ class TestRepomdParser(JsonBasedTesting):
 
         uri = "http://download.opensuse.org/distribution/12.3/repo/oss/suse/repodata/repomd.xml"
         with patch("requests.get") as mock_http_get:
-            mock_http_get.side_effect = (
-                lambda *args, **kwargs: mocked_requests_get_for_uris(
-                    uri2loc, *args, **kwargs
-                )
+            mock_http_get.side_effect = lambda *args, **kwargs: mocked_requests_get_for_uris(
+                uri2loc, *args, **kwargs
             )
             _uris, packages, _error = collect_rpm_packages_from_repomd(uri)
 
-        expected_loc = self.get_test_loc(
-            "repodata_rpms/repomd_parser/opensuse/expected.json"
-        )
+        expected_loc = self.get_test_loc("repodata_rpms/repomd_parser/opensuse/expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_collect_rpm_packages_from_repomd_pgpool(self):
@@ -247,16 +223,12 @@ class TestRepomdParser(JsonBasedTesting):
 
         uri = "http://pgpool.net/yum/rpms/3.4/redhat/rhel-6-x86_64/repodata/repomd.xml"
         with patch("requests.get") as mock_http_get:
-            mock_http_get.side_effect = (
-                lambda *args, **kwargs: mocked_requests_get_for_uris(
-                    uri2loc, *args, **kwargs
-                )
+            mock_http_get.side_effect = lambda *args, **kwargs: mocked_requests_get_for_uris(
+                uri2loc, *args, **kwargs
             )
             _uris, packages, _error = collect_rpm_packages_from_repomd(uri)
 
-        expected_loc = self.get_test_loc(
-            "repodata_rpms/repomd_parser/pgpool/expected.json"
-        )
+        expected_loc = self.get_test_loc("repodata_rpms/repomd_parser/pgpool/expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_combine_dicts_using_pkgid(self):

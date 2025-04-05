@@ -15,9 +15,7 @@ from minecode.miners import repodata
 
 
 class TestRepoData(FileBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_get_pkg_infos(self):
         filelists_xml = self.get_test_loc("repodata_rpms/repodata/filelists.xml")

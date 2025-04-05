@@ -22,9 +22,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class GithubVisitorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     @patch("github.MainClass.Github.get_repo")
     def test_GithubRepoVisitor(self, mock_get_repo):
@@ -106,7 +104,9 @@ class GithubVisitorTest(JsonBasedTesting):
         repository.full_name = "collectiveidea/calendar_builder"
         repository.ssh_url = "git@github.com:collectiveidea/calendar_builder.git"
         repository.owner = None
-        repository.blobs_url = "https://api.github.com/repos/collectiveidea/calendar_builder/git/blobs{/sha}"
+        repository.blobs_url = (
+            "https://api.github.com/repos/collectiveidea/calendar_builder/git/blobs{/sha}"
+        )
         repository.master_branch = None
         repository.updated_at = None
         repository.pushed_at = None
@@ -137,9 +137,7 @@ class GithubVisitorTest(JsonBasedTesting):
 
 
 class GithubMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_github_repo_mapper1(self):
         with open(self.get_test_loc("github/calendar_builder.json")) as json_metadata:
@@ -160,7 +158,5 @@ class GithubMapperTest(JsonBasedTesting):
             metadata, "https://api.github.com/repos/mojombo/grit"
         )
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "github/mojombo_grit_result_mapper_expected.json"
-        )
+        expected_loc = self.get_test_loc("github/mojombo_grit_result_mapper_expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

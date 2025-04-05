@@ -113,8 +113,7 @@ class CDitem(models.Model):
         null=True,
         blank=True,
         db_index=True,
-        help_text="Timestamp set to the date of the last mapping. "
-        "Used to track mapping status.",
+        help_text="Timestamp set to the date of the last mapping. Used to track mapping status.",
     )
 
     map_error = models.TextField(
