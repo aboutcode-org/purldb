@@ -74,7 +74,7 @@ def map_gem_package(package_url, pipelines, priority=0):
     )
 
     if not package_json:
-        error = f"Package does not exist on PyPI: {package_url}"
+        error = f"Package does not exist on rubygems.org: {package_url}"
         logger.error(error)
         return error
 
