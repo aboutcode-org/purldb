@@ -14,6 +14,7 @@ from packageurl import PackageURL
 
 from minecode import priority_router
 from minecode.miners.rubygems import build_rubygem_packages_from_api_v2_data
+from packagedb.models import PackageContentType
 
 """
 Collect GEM packages from gem registries.
@@ -82,6 +83,7 @@ def map_gem_package(package_url, pipelines, priority=0):
     packages = build_rubygem_packages_from_api_v2_data(metadata, package_url)
 
     for package in packages:
+        package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
         db_package, _, _, error = merge_or_create_package(package, visit_level=0)
         if error:
             break
