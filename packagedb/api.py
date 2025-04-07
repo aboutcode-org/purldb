@@ -997,6 +997,7 @@ class CollectViewSet(viewsets.ViewSet):
             "github",
             "conan",
             "pypi",
+            "cargo",
         ]
 
         unique_packages, unsupported_packages, unsupported_vers = get_resolved_packages(
