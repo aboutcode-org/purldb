@@ -147,6 +147,8 @@ max-complexity = 10
 "**/testfiles/**.py" = ["F821"] # Ignore undefined names from test files
 "matchcode_project/settings.py" = ["F403", "F405"] # Ignore undefined names from star imports and star imports
 "purldb_public_project/settings.py" = ["F403", "F405"]  # Ignore undefined names from star imports and star imports
+"etc/scripts/update_skeleton.py" = ["S108", "S603", "S605", "S607"]
+"purl2vcs/src/purl2vcs/find_source_repo.py" = ["S605"]
 
 [tool.doc8]
 ignore-path = ["docs/build", "doc/build", "docs/_build", "doc/_build"]

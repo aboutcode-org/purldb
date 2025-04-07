@@ -126,3 +126,11 @@ latex_elements = {"classoptions": ",openany,oneside"}
 redirects = {
     "how-to-guides/tutorial_symbol_and_string_collection.html": "symbols_and_strings.html",
 }
+
+linkcheck_ignore = [
+    r"http://localhost*",
+    r"http://127.0.0.1*",
+    "https://public.purldb.io/api/docs/#validate",
+]
+
+linkcheck_allow_unauthorized = True

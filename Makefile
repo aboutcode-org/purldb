@@ -80,18 +80,6 @@ check:
 	@echo "-> Run ABOUT files validation"
 	@${ACTIVATE} about check etc/
 
-# valid:
-# 	@echo "-> Run Ruff format"
-# 	@${ACTIVATE} ruff format  --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
-# 	@echo "-> Run Ruff linter"
-# 	@${ACTIVATE} ruff check --fix --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
-
-# check: check_docs
-# 	@echo "-> Run Ruff linter validation (pycodestyle, bandit, isort, and more)"
-# 	@${ACTIVATE} ruff check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
-# 	@echo "-> Run Ruff format validation"
-# 	@${ACTIVATE} ruff format --check --exclude etc/scripts/ --exclude purldb-toolkit/ --exclude purl2vcs/
-
 clean:
 	@echo "-> Clean the Python env"
 	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --clean
