@@ -80,7 +80,6 @@ def map_gem_package(package_url, pipelines, priority=0):
 
     metadata = package_json
     packages = build_rubygem_packages_from_api_v2_data(metadata, package_url)
-    # packages = build_packages(package_json, package_url)
 
     for package in packages:
         db_package, _, _, error = merge_or_create_package(package, visit_level=0)
