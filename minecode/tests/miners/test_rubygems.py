@@ -175,13 +175,10 @@ class RubyGemsApiMapperTest(JsonBasedTesting):
         with open(self.get_test_loc("rubygems/apiv2/rails-8.0.2.json")) as gem_data:
             metadata = json.load(gem_data)
         package_url = PackageURL.from_string("pkg:gem/rails@8.0.2")
-        packages = build_rubygem_packages_from_api_v2_data(
-            metadata, package_url)
+        packages = build_rubygem_packages_from_api_v2_data(metadata, package_url)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "rubygems/apiv2/expected-rails-8.0.2.json")
-        self.check_expected_results(
-            packages, expected_loc, regen=FIXTURES_REGEN)
+        expected_loc = self.get_test_loc("rubygems/apiv2/expected-rails-8.0.2.json")
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
 
 class RubyGemsArchiveMapperTest(JsonBasedTesting):

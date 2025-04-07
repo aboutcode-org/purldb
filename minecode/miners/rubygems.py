@@ -247,8 +247,7 @@ def build_rubygem_packages_from_api_v2_data(metadata_dict, purl):
         parties = common_data.get("parties")
         if not parties:
             common_data["parties"] = []
-        common_data["parties"].append(
-            scan_models.Party(name=author, role="author"))
+        common_data["parties"].append(scan_models.Party(name=author, role="author"))
 
     download_url = metadata_dict["gem_uri"]
 
