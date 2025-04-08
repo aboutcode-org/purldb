@@ -92,9 +92,7 @@ class Command(VerboseCommand):
             try:
                 errors = process_request(importable_uri)
             except Exception as e:
-                errors = (
-                    f"Error: Failed to process ImportableURI: {repr(importable_uri)}\n"
-                )
+                errors = f"Error: Failed to process ImportableURI: {repr(importable_uri)}\n"
                 errors += get_error_message(e)
             finally:
                 if errors:
@@ -126,9 +124,7 @@ def process_request(importable_uri):
     else:
         namespace, name, _ = determine_namespace_name_version_from_url(uri)
 
-    timestamps_by_directory_links = collect_links_from_text(
-        data, filter_only_directories
-    )
+    timestamps_by_directory_links = collect_links_from_text(data, filter_only_directories)
     # Go into each version directory
     for directory_link in timestamps_by_directory_links.keys():
         version = directory_link.rstrip("/")

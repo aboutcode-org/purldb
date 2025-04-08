@@ -16,11 +16,18 @@ resources:
         - 5432:5432
 
 jobs:
+    - template: etc/ci/azure-posix.yml
+      parameters:
+          job_name: ci_code_style
+          image_name: ubuntu-24.04
+          python_versions: ['3.12']
+          test_suites:
+              all: make check
 
     - template: etc/ci/azure-posix.yml
       parameters:
           job_name: ubuntu20_cpython
-          image_name: ubuntu-20.04
+          image_name: ubuntu-22.04
           python_versions: ['3.10', '3.11', '3.12']
           test_suites:
               all: make test
@@ -28,7 +35,7 @@ jobs:
     - template: etc/ci/azure-posix.yml
       parameters:
           job_name: ubuntu22_cpython
-          image_name: ubuntu-22.04
+          image_name: ubuntu-24.04
           python_versions: ['3.10', '3.11', '3.12']
           test_suites:
               all: make test
@@ -36,15 +43,7 @@ jobs:
     - template: etc/ci/azure-posix.yml
       parameters:
           job_name: ci_documentation
-          image_name: ubuntu-22.04
-          python_versions: ['3.10']
+          image_name: ubuntu-24.04
+          python_versions: ['3.12']
           test_suites:
-              all: make docs check_docs
-
-    - template: etc/ci/azure-posix.yml
-      parameters:
-          job_name: ci_code_style
-          image_name: ubuntu-22.04
-          python_versions: ['3.10']
-          test_suites:
-              all: make check
+              all: make docs-check

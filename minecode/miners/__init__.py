@@ -116,16 +116,10 @@ class URI:
         return isinstance(other, URI) and self.to_dict() == other.to_dict()
 
     def __lt__(self, other):
-        return (
-            isinstance(other, URI) and self.to_dict().items() < other.to_dict().items()
-        )
+        return isinstance(other, URI) and self.to_dict().items() < other.to_dict().items()
 
     def __repr__(self):
-        args = [
-            key + "=%(" + key + ")r"
-            for key in self.__slots__
-            if getattr(self, key, None)
-        ]
+        args = [key + "=%(" + key + ")r" for key in self.__slots__ if getattr(self, key, None)]
         return ("URI(" + ", ".join(args) + ")") % self.to_dict()
 
     @classmethod

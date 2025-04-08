@@ -42,9 +42,7 @@ def download(uri):
     name = name.replace(file_ext, "")
 
     content = fetch_http(uri)
-    temp_file = get_temp_file(
-        file_name="minecode-fetched-file-" + name, extension=file_ext
-    )
+    temp_file = get_temp_file(file_name="minecode-fetched-file-" + name, extension=file_ext)
     with open(temp_file, "wb") as tmp:
         tmp.write(content)
     file_name = tmp.name

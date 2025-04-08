@@ -48,9 +48,7 @@ def get_search_conditions():
 class DockerHubSeed(seed.Seeder):
     def get_seeds(self):
         yield "https://hub.docker.com/explore/?page=1"
-        search_uril_format = (
-            "https://index.docker.io/v1/search?q={condition}&n=100&page=1"
-        )
+        search_uril_format = "https://index.docker.io/v1/search?q={condition}&n=100&page=1"
         for condition in get_search_conditions():
             # yield a combination of query conditions, the API accepts at least
             # two chars for searching conditions.
@@ -86,9 +84,7 @@ class DockHubExplorePageVisitor(HttpVisitor):
                     source_uri=self.uri,
                 )
                 yield URI(
-                    uri=dockhub_library_restapi_template.format(
-                        project=href.partition("/_/")[-1]
-                    ),
+                    uri=dockhub_library_restapi_template.format(project=href.partition("/_/")[-1]),
                     package_url=package_url,
                     source_uri=self.uri,
                 )
@@ -128,9 +124,7 @@ class DockHubProjectHTMLVisitor(HttpVisitor):
         return json.dumps(metadata_dict)
 
 
-@visit_router.route(
-    r"https://registry.hub.docker.com/v2/repositories/library/[\w\-\.]+/"
-)
+@visit_router.route(r"https://registry.hub.docker.com/v2/repositories/library/[\w\-\.]+/")
 class DockHubLibraryRESTJsonVisitor(HttpJsonVisitor):
     """
     Return URIs by parsing the json content of API of Dock Hub library
@@ -174,9 +168,7 @@ class DockerHubLiraryJsonMapper(Mapper):
         Yield as many Package as there are download URLs.
         """
         metadata = resource_uri.data
-        build_packages_from_jsonfile(
-            metadata, resource_uri.uri, resource_uri.package_url
-        )
+        build_packages_from_jsonfile(metadata, resource_uri.uri, resource_uri.package_url)
 
 
 def build_packages_from_jsonfile(metadata, uri=None, purl=None):

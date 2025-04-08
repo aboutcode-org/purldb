@@ -25,9 +25,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class BaseDebianTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def check_objects_expected(self, results, expected_loc, regen=FIXTURES_REGEN):
         """
@@ -107,9 +105,7 @@ class DebutilsTest(BaseDebianTest):
     def test_parse_deb822_dsc(self):
         dsc_file = self.get_test_loc("debian/debutils/3dldf_2.0.3+dfsg-2.dsc")
         result = debcon.get_paragraph_data_from_file(dsc_file)
-        expected_loc = self.get_test_loc(
-            "debian/debutils/3dldf_2.0.3+dfsg-2.dsc-expected"
-        )
+        expected_loc = self.get_test_loc("debian/debutils/3dldf_2.0.3+dfsg-2.dsc-expected")
         self.check_expected_deb822(result, expected_loc, regen=FIXTURES_REGEN)
 
     #################################################################
@@ -200,9 +196,7 @@ class DebianCopyrightTest(BaseDebianTest):
     @expectedFailure
     def test_parse_copyright_allinfo_basic(self):
         copyright_file = self.get_test_loc("debian/copyright/basic_copyright")
-        copyright_data = [
-            info for info in debian.parse_copyright_allinfo(copyright_file)
-        ]
+        copyright_data = [info for info in debian.parse_copyright_allinfo(copyright_file)]
         expected = [
             {
                 "files": ("*",),
@@ -288,9 +282,7 @@ class DebianSourcesTest(BaseDebianTest):
 
     @expectedFailure
     def test_DebianSourcesVisitor(self):
-        uri = (
-            "http://ftp.debian.org/debian/dists/jessie-backports/main/source/Sources.gz"
-        )
+        uri = "http://ftp.debian.org/debian/dists/jessie-backports/main/source/Sources.gz"
         test_loc = self.get_test_loc("debian/sources/Sources.gz")
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
@@ -322,9 +314,7 @@ class DebianPackagesTest(BaseDebianTest):
     def test_parse_packages_index(self):
         index_file = self.get_test_loc("debian/packages/debian_Packages")
         package_info = [info for info in debian.parse_packages_index(index_file)]
-        expected_loc = self.get_test_loc(
-            "debian/packages/debian_Packages-visit-expected.json"
-        )
+        expected_loc = self.get_test_loc("debian/packages/debian_Packages-visit-expected.json")
         self.check_objects_expected(package_info, expected_loc, regen=FIXTURES_REGEN)
 
     @expectedFailure
@@ -332,9 +322,7 @@ class DebianPackagesTest(BaseDebianTest):
         with open(self.get_test_loc("debian/packages/debian_Packages")) as packs:
             packages = debian.parse_packages(packs.read())
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "debian/packages/debian_Packages-expected.json"
-        )
+        expected_loc = self.get_test_loc("debian/packages/debian_Packages-expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     @expectedFailure
@@ -342,9 +330,7 @@ class DebianPackagesTest(BaseDebianTest):
         with open(self.get_test_loc("debian/packages/ubuntu_Packages")) as packs:
             packages = debian.parse_packages(packs.read())
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "debian/packages/ubuntu_Packages-expected.json"
-        )
+        expected_loc = self.get_test_loc("debian/packages/ubuntu_Packages-expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     @expectedFailure
@@ -352,9 +338,7 @@ class DebianPackagesTest(BaseDebianTest):
         with open(self.get_test_loc("debian/status/simple_status")) as packs:
             packages = debian.parse_packages(packs.read())
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "debian/packages/ubuntu_Packages-expected.json"
-        )
+        expected_loc = self.get_test_loc("debian/packages/ubuntu_Packages-expected.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
 
@@ -394,9 +378,7 @@ class DebianDescriptionTest(BaseDebianTest):
 
     @expectedFailure
     def test_parse_description(self):
-        with open(
-            self.get_test_loc("debian/dsc/description.json")
-        ) as debian_description_meta:
+        with open(self.get_test_loc("debian/dsc/description.json")) as debian_description_meta:
             metadata = json.load(debian_description_meta)
         packages = debian.parse_description(metadata)
         packages = [p.to_dict() for p in packages]

@@ -27,9 +27,7 @@ logger.setLevel(logging.INFO)
 
 
 class Command(VerboseCommand):
-    help = (
-        "Insert ResourceURIs records from Seed objects with a URI matching a pattern."
-    )
+    help = "Insert ResourceURIs records from Seed objects with a URI matching a pattern."
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -69,9 +67,7 @@ def insert_seed_uris(pattern=None, priority=SEED_PRIORITY, seeders=()):
         for seeder in seeders:
             for uri in seeder.get_seeds():
                 if pattern and not re.match(pattern, uri):
-                    logger.info(
-                        f"Skipping seeding for: {uri}. Pattern {pattern}not matched."
-                    )
+                    logger.info(f"Skipping seeding for: {uri}. Pattern {pattern}not matched.")
                     continue
 
                 if ResourceURI.objects.filter(uri=uri).exists():

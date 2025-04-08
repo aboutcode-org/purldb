@@ -90,9 +90,7 @@ def map_gem_package(package_url, pipelines, priority=0):
 
         # Submit package for scanning
         if db_package:
-            add_package_to_scan_queue(
-                package=db_package, pipelines=pipelines, priority=priority
-            )
+            add_package_to_scan_queue(package=db_package, pipelines=pipelines, priority=priority)
 
     return error
 

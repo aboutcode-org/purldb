@@ -43,9 +43,7 @@ from minecode.utils_test import model_to_dict
 
 
 class RubyGemsVisitorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_check_gem_file_visitor_routes(self):
         routes = [
@@ -63,9 +61,7 @@ class RubyGemsVisitorTest(JsonBasedTesting):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = RubyGemsIndexVisitor(uri)
-        expected_loc = self.get_test_loc(
-            "rubygems/index/latest_specs.4.8.gz.expected.json"
-        )
+        expected_loc = self.get_test_loc("rubygems/index/latest_specs.4.8.gz.expected.json")
         uris_list = list(uris)
         self.assertTrue(len(uris_list) > 1000)
         self.check_expected_uris(uris_list[0:1000], expected_loc, regen=FIXTURES_REGEN)
@@ -85,9 +81,7 @@ class RubyGemsVisitorTest(JsonBasedTesting):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = RubyGemsApiManyVersionsVisitor(uri)
-        expected_loc = self.get_test_loc(
-            "rubygems/apiv1/expected_a1630ty_a1630ty.api.json"
-        )
+        expected_loc = self.get_test_loc("rubygems/apiv1/expected_a1630ty_a1630ty.api.json")
         self.check_expected_results(data, expected_loc, regen=FIXTURES_REGEN)
 
     def test_RubyGemsApiVersionVisitor3(self):
@@ -111,9 +105,7 @@ class RubyGemsVisitorTest(JsonBasedTesting):
 
 
 class RubyGemsApiMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_rubygem_packages_from_api_data_1(self):
         with open(self.get_test_loc("rubygems/apiv1/0xffffff.api.json")) as api:
@@ -134,25 +126,17 @@ class RubyGemsApiMapperTest(JsonBasedTesting):
     def test_build_rubygem_packages_from_api_data_3(self):
         with open(self.get_test_loc("rubygems/apiv1/a1630ty_a1630ty.api.json")) as api:
             apidata = json.load(api)
-        packages = miners.rubygems.build_rubygem_packages_from_api_data(
-            apidata, "a1630ty_a1630ty"
-        )
+        packages = miners.rubygems.build_rubygem_packages_from_api_data(apidata, "a1630ty_a1630ty")
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "rubygems/apiv1/a1630ty_a1630ty.api.package.json"
-        )
+        expected_loc = self.get_test_loc("rubygems/apiv1/a1630ty_a1630ty.api.package.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_rubygem_packages_from_api_data_with_deps(self):
         with open(self.get_test_loc("rubygems/apiv1/action_tracker.api.json")) as api:
             apidata = json.load(api)
-        packages = miners.rubygems.build_rubygem_packages_from_api_data(
-            apidata, "action_tracker"
-        )
+        packages = miners.rubygems.build_rubygem_packages_from_api_data(apidata, "action_tracker")
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "rubygems/apiv1/action_tracker.api.package.json"
-        )
+        expected_loc = self.get_test_loc("rubygems/apiv1/action_tracker.api.package.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_RubyGemsApiVersionsJsonMapper(self):
@@ -166,9 +150,7 @@ class RubyGemsApiMapperTest(JsonBasedTesting):
         test_res_uri = ResourceURI(uri=test_uri, data=test_data)
         packages = RubyGemsApiVersionsJsonMapper(test_uri, test_res_uri)
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "rubygems/apiv1/a1630ty_a1630ty.api.mapped.json"
-        )
+        expected_loc = self.get_test_loc("rubygems/apiv1/a1630ty_a1630ty.api.mapped.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_rubygem_packages_from_api_v2_data(self):
@@ -182,9 +164,7 @@ class RubyGemsApiMapperTest(JsonBasedTesting):
 
 
 class RubyGemsArchiveMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_test_RubyGemsPackageArchiveMetadataMapper(self):
         test_uri = "https://rubygems.org/downloads/mysmallidea-address_standardization-0.4.1.gem"
@@ -204,9 +184,7 @@ class RubyGemsArchiveMapperTest(JsonBasedTesting):
         )
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
-    def check_mapped_packages(
-        self, test_loc, expected_loc, extract=True, regen=FIXTURES_REGEN
-    ):
+    def check_mapped_packages(self, test_loc, expected_loc, extract=True, regen=FIXTURES_REGEN):
         test_loc = self.get_test_loc(test_loc, copy=True)
 
         if extract:
@@ -256,9 +234,7 @@ class RubyGemsArchiveMapperTest(JsonBasedTesting):
         )
 
     def test_build_rubygem_packages_from_metadata_3(self):
-        self.check_mapped_packages(
-            "rubygems/m2r-2.1.0.gem", "rubygems/m2r-2.1.0.gem.package.json"
-        )
+        self.check_mapped_packages("rubygems/m2r-2.1.0.gem", "rubygems/m2r-2.1.0.gem.package.json")
 
     def test_build_rubygem_packages_from_metadata_4(self):
         self.check_mapped_packages(
@@ -285,9 +261,7 @@ class RubyGemsArchiveMapperTest(JsonBasedTesting):
         )
 
     def test_build_rubygem_packages_from_metadata_8(self):
-        self.check_mapped_packages(
-            "rubygems/small-0.2.gem", "rubygems/small-0.2.gem.package.json"
-        )
+        self.check_mapped_packages("rubygems/small-0.2.gem", "rubygems/small-0.2.gem.package.json")
 
     def test_build_rubygem_packages_from_metadata_9(self):
         self.check_mapped_packages(
@@ -303,9 +277,7 @@ class RubyGemsArchiveMapperTest(JsonBasedTesting):
 
 
 class RubyEnd2EndTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_visit_and_map_end2end(self):
         import packagedb
@@ -313,9 +285,7 @@ class RubyEnd2EndTest(JsonBasedTesting, DjangoTestCase):
         from minecode.management.commands.run_visit import visit_uri
 
         uri = "https://rubygems.org/downloads/sprockets-vendor_gems-0.1.3.gem"
-        test_loc = self.get_test_loc(
-            "rubygems/sprockets-vendor_gems-0.1.3.gem", copy=True
-        )
+        test_loc = self.get_test_loc("rubygems/sprockets-vendor_gems-0.1.3.gem", copy=True)
 
         before_uri = [p.id for p in ResourceURI.objects.all()]
         before_pkg = [p.id for p in packagedb.models.Package.objects.all()]
@@ -334,9 +304,7 @@ class RubyEnd2EndTest(JsonBasedTesting, DjangoTestCase):
             visited = ResourceURI.objects.all()
 
         uri_results = [model_to_dict(rec, exclude=["id"]) for rec in visited]
-        expected_loc = self.get_test_loc(
-            "rubygems/sprockets-vendor_gems-0.1.3.gem.visited.json"
-        )
+        expected_loc = self.get_test_loc("rubygems/sprockets-vendor_gems-0.1.3.gem.visited.json")
         self.check_expected_results(uri_results, expected_loc, regen=FIXTURES_REGEN)
 
         if before_pkg:
@@ -345,9 +313,7 @@ class RubyEnd2EndTest(JsonBasedTesting, DjangoTestCase):
             mapped = packagedb.models.Package.objects.all()
 
         package_results = [pac.to_dict() for pac in mapped]
-        expected_loc = self.get_test_loc(
-            "rubygems/sprockets-vendor_gems-0.1.3.gem.mapped.json"
-        )
+        expected_loc = self.get_test_loc("rubygems/sprockets-vendor_gems-0.1.3.gem.mapped.json")
         self.check_expected_results(
             package_results,
             expected_loc,

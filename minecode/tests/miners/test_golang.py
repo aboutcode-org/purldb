@@ -23,9 +23,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class GoLangVisitorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_GoLangGoDocAPIVisitor(self):
         uri = "https://api.godoc.org/packages"
@@ -51,9 +49,7 @@ class GoLangVisitorTest(JsonBasedTesting):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             uris, _, _ = GodocSearchVisitor(uri)
-        expected_loc = self.get_test_loc(
-            "golang/godoc_search_off_github_expected_uris.json"
-        )
+        expected_loc = self.get_test_loc("golang/godoc_search_off_github_expected_uris.json")
         self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_parse_package_path(self):
@@ -67,9 +63,7 @@ class GoLangVisitorTest(JsonBasedTesting):
 
 
 class GoLangMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_golang_package(self):
         purl = "pkg:golang/github.com/golang/glog?vcs_repository=https://github.com/golang/glog"

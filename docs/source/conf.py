@@ -45,7 +45,7 @@ redirects = {}
 
 # This points to aboutcode.readthedocs.io
 # In case of "undefined label" ERRORS check docs on intersphinx to troubleshoot
-# Link was created at commit - https://github.com/nexB/aboutcode/commit/faea9fcf3248f8f198844fe34d43833224ac4a83
+# Link was created at commit - https://github.com/aboutcode-org/aboutcode/commit/faea9fcf3248f8f198844fe34d43833224ac4a83
 
 intersphinx_mapping = {
     "aboutcode": ("https://aboutcode.readthedocs.io/en/latest/", None),
@@ -100,7 +100,8 @@ html_css_files = [
 html_show_sphinx = True
 
 # Define CSS and HTML abbreviations used in .rst files.  These are examples.
-# .. role:: is used to refer to styles defined in _static/theme_overrides.css and is used like this: :red:`text`
+# .. role:: is used to refer to styles defined in _static/theme_overrides.css
+# and is used like this: :red:`text`
 rst_prolog = """
 .. |psf| replace:: Python Software Foundation
 
@@ -125,3 +126,14 @@ latex_elements = {"classoptions": ",openany,oneside"}
 redirects = {
     "how-to-guides/tutorial_symbol_and_string_collection.html": "symbols_and_strings.html",
 }
+
+linkcheck_ignore = [
+    r"http://localhost*",
+    r"http://127.0.0.1*",
+    "https://www.softwaretestinghelp.com/how-to-write-good-bug-report/",
+]
+
+linkcheck_anchors_ignore_for_url = [
+    "https://public.purldb.io/api/docs",
+    "https://github.com/aboutcode-org/purldb",
+]

@@ -49,15 +49,11 @@ class GitlabAPIHeaderVisitor(HttpVisitor):
             total_pages = int(total_pages)
             for i in range(total_pages):
                 # Use the loop  to yield the uri of next page of the visitor.
-                nextpage_url = new_page_template.format(
-                    next_page=i + 1, per_page=page_size
-                )
+                nextpage_url = new_page_template.format(next_page=i + 1, per_page=page_size)
                 yield URI(uri=nextpage_url, source_uri=self.uri, visited=False)
 
 
-@visit_router.route(
-    r"https://gitlab.com/api/v4/projects\?page=\d+&per_page=\d+&statistics=true"
-)
+@visit_router.route(r"https://gitlab.com/api/v4/projects\?page=\d+&per_page=\d+&statistics=true")
 class GitlabAPIVisitor(HttpJsonVisitor):
     """
     Return URIs from the json content of one API page returned from gitlab api.

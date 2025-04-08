@@ -19,9 +19,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class GstreamerVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_visit_gstreamer_source_root(self):
         uri = "https://gstreamer.freedesktop.org/src/"
@@ -43,9 +41,7 @@ class GstreamerVistorTest(JsonBasedTesting):
 
 
 class GstreamerMappersTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_package_mapper_regex(self):
         regex = re.compile(

@@ -164,9 +164,7 @@ class ResourceURIManagerGetRevisitablesUnmappableURITestCase(TestCase):
 class ResourceURIManagerGetRevisitablesMappableURITestCase(TestCase):
     def setUp(self):
         # this is a mappable ResourceURI
-        self.uri = (
-            "http://repo1.maven.org/maven2/org/ye/mav/mav-all/1.0/mav-all-1.0.pom"
-        )
+        self.uri = "http://repo1.maven.org/maven2/org/ye/mav/mav-all/1.0/mav-all-1.0.pom"
         self.resource = ResourceURI.objects.insert(uri=self.uri, priority=100)
 
     def test_get_revisitables_unmapped_last_visit_date_now(self):
@@ -291,12 +289,8 @@ class ResourceURIManagerGetNextVisitableUnmappableURITestCase(TestCase):
 class ResourceURIManagerGetNextVisitableMappableURITestCase(TestCase):
     def setUp(self):
         # this is a mappable ResourceURI
-        self.uri0 = (
-            "http://repo1.maven.org/maven2/org/ye/mav/mav-all/1.0/mav-all-1.0.pom"
-        )
-        self.uri1 = (
-            "http://repo1.maven.org/maven2/org/ye/mav/mav-all/1.1/mav-all-1.1.pom"
-        )
+        self.uri0 = "http://repo1.maven.org/maven2/org/ye/mav/mav-all/1.0/mav-all-1.0.pom"
+        self.uri1 = "http://repo1.maven.org/maven2/org/ye/mav/mav-all/1.1/mav-all-1.1.pom"
         self.resource0 = ResourceURI.objects.insert(uri=self.uri0, priority=100)
         self.resource1 = ResourceURI.objects.insert(uri=self.uri1, priority=100)
 
@@ -463,9 +457,7 @@ class ScannableURIModelTestCase(TestCase):
 
     def test_ScannableURI_save(self):
         test_error_message = "error"
-        scannable_uri = ScannableURI.objects.create(
-            uri=self.test_uri, package=self.test_package
-        )
+        scannable_uri = ScannableURI.objects.create(uri=self.test_uri, package=self.test_package)
         self.assertFalse(scannable_uri.scan_error)
         scannable_uri.scan_error = test_error_message
         scannable_uri.save()

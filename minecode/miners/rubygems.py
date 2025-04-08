@@ -63,9 +63,7 @@ class RubyGemsIndexVisitor(NonPersistentHttpVisitor):
 
         # TODO: use a purl!!!
         for name, version, platform in reader.loads(index):
-            json_url = "https://rubygems.org/api/v1/versions/{name}.json".format(
-                **locals()
-            )
+            json_url = "https://rubygems.org/api/v1/versions/{name}.json".format(**locals())
 
             package_url = PackageURL(type="gem", name=name).to_string()
             yield URI(uri=json_url, package_url=package_url, source_uri=self.uri)
@@ -101,9 +99,7 @@ class RubyGemsApiManyVersionsVisitor(HttpJsonVisitor):
         # FIXME: return actual data too!!!
         for version_details in content:
             # get the gems name by parsing from the uri
-            name = self.uri[
-                self.uri.index("/versions/") + len("/versions/") : -len(".json")
-            ]
+            name = self.uri[self.uri.index("/versions/") + len("/versions/") : -len(".json")]
             version = version_details.get("number")
             gem_name = f"{name}-{version}"
             package_url = PackageURL(type="gem", name=name, version=version).to_string()
@@ -189,9 +185,7 @@ def build_rubygem_packages_from_api_data(metadata, name, purl=None):
         if version_details.get("sha"):
             package["sha256"] = version_details.get("sha")
 
-        package["release_date"] = (
-            parse_date(version_details.get("created_at") or "") or None
-        )
+        package["release_date"] = parse_date(version_details.get("created_at") or "") or None
 
         author = version_details.get("authors")
         if author:
@@ -368,17 +362,13 @@ def get_dependencies_from_meta(content):
             # >= 0 allows for any version: we ignore these type of contrainsts
             # as this is the same as no constraints. We also ignore lack of
             # constraints and versions
-            if (constraint == ">=" and req_version == "0") or not (
-                constraint and req_version
-            ):
+            if (constraint == ">=" and req_version == "0") or not (constraint and req_version):
                 continue
             version_constraint.append(" ".join([constraint, req_version]))
         version_constraint = ", ".join(version_constraint) or None
 
         group.append(
-            DependentPackage(
-                purl=name, extracted_requirement=version_constraint, scope=scope
-            )
+            DependentPackage(purl=name, extracted_requirement=version_constraint, scope=scope)
         )
 
     return group
@@ -418,17 +408,13 @@ def get_dependencies_from_api(content):
             # >= 0 allows for any version: we ignore these type of contrainsts
             # as this is the same as no constraints. We also ignore lack of
             # constraints and versions
-            if (constraint == ">=" and req_version == "0") or not (
-                constraint and req_version
-            ):
+            if (constraint == ">=" and req_version == "0") or not (constraint and req_version):
                 continue
             version_constraint.append(" ".join([constraint, req_version]))
         version_constraint = ", ".join(version_constraint) or None
 
         group.append(
-            DependentPackage(
-                purl=name, extracted_requirement=version_constraint, scope=scope
-            )
+            DependentPackage(purl=name, extracted_requirement=version_constraint, scope=scope)
         )
 
     return group

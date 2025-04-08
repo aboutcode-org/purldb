@@ -50,9 +50,7 @@ class GstreamerHTMLVisitor(HttpVisitor):
                     continue
                 if href.endswith("/"):
                     # If the path is folder, yield it for the next visitor use.
-                    yield URI(
-                        uri=url_template.format(sub_path=href), source_uri=self.uri
-                    )
+                    yield URI(uri=url_template.format(sub_path=href), source_uri=self.uri)
                 else:
                     # If it's the file resource, form the package_url and yield the URI with package url info
                     # For example: gst-openmax-0.10.0.4.tar.bz2

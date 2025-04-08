@@ -22,9 +22,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class TestNPMVisit(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     # FIXME: use smaller test files
     def test_NpmRegistryVisitor(self):
@@ -48,7 +46,9 @@ class TestNPMVisit(JsonBasedTesting):
         self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_NpmRegistryVisitor_1000records(self):
-        uri = "https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=77777"
+        uri = (
+            "https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=77777"
+        )
         test_loc = self.get_test_loc("npm/1000_records.json")
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
@@ -58,9 +58,7 @@ class TestNPMVisit(JsonBasedTesting):
 
 
 class TestNPMMapper(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_packages(self):
         with open(self.get_test_loc("npm/0flux.json")) as npm_metadata:
@@ -87,7 +85,9 @@ class TestNPMMapper(JsonBasedTesting):
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_with_visitor_data(self):
-        uri = "https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=77777"
+        uri = (
+            "https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=77777"
+        )
         test_loc = self.get_test_loc("npm/1000_records.json")
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
@@ -109,7 +109,9 @@ class TestNPMMapper(JsonBasedTesting):
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_with_ticket_439(self):
-        uri = "https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=10&since=7333426"
+        uri = (
+            "https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=10&since=7333426"
+        )
         test_loc = self.get_test_loc("npm/ticket_439.json")
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
@@ -125,7 +127,9 @@ class TestNPMMapper(JsonBasedTesting):
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_verify_ticket_440(self):
-        uri = "https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=10&since=7632607"
+        uri = (
+            "https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=10&since=7632607"
+        )
         test_loc = self.get_test_loc("npm/ticket_440_records.json")
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
@@ -164,7 +168,5 @@ class TestNPMMapper(JsonBasedTesting):
 
     def test_regex_npm_mapper(self):
         regex = re.compile(r"^https://registry.npmjs.org/[^\/]+$")
-        result = re.match(
-            regex, "https://registry.npmjs.org/react-mobile-navigation-modal"
-        )
+        result = re.match(regex, "https://registry.npmjs.org/react-mobile-navigation-modal")
         self.assertTrue(result)

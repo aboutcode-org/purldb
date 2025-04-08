@@ -20,9 +20,7 @@ from minecode.utils_test import JsonBasedTesting
 
 
 class PypiPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def setUp(self):
         super().setUp()
@@ -57,8 +55,6 @@ class PypiPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         self.assertEqual(1, package_count)
         package = packagedb.models.Package.objects.all().first()
         expected_purl_str = "pkg:pypi/cage@1.1.4"
-        expected_download_url = (
-            "http://www.alcyone.com/software/cage/cage-latest.tar.gz"
-        )
+        expected_download_url = "http://www.alcyone.com/software/cage/cage-latest.tar.gz"
         self.assertEqual(expected_purl_str, package.purl)
         self.assertEqual(expected_download_url, package.download_url)

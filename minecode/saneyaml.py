@@ -168,9 +168,7 @@ SaneDumper.add_representer(str, string_dumper)
 
 # treat number as strings, not as numbers
 SaneDumper.add_representer(int, partial(string_dumper, _tag="tag:yaml.org,2002:int"))
-SaneDumper.add_representer(
-    float, partial(string_dumper, _tag="tag:yaml.org,2002:float")
-)
+SaneDumper.add_representer(float, partial(string_dumper, _tag="tag:yaml.org,2002:float"))
 
 
 def boolean_dumper(dumper, value):

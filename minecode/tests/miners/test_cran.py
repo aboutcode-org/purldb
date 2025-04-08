@@ -22,9 +22,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class CranVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_visit_metacpan_api_projects(self):
         uri = "https://cloud.r-project.org/web/packages/available_packages_by_date.html"
@@ -37,14 +35,10 @@ class CranVistorTest(JsonBasedTesting):
 
 
 class CranMapperTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_packages_from_directory_listing(self):
-        ResourceURI.objects.create(
-            uri="https://cloud.r-project.org/web/packages/ANN2/index.html"
-        )
+        ResourceURI.objects.create(uri="https://cloud.r-project.org/web/packages/ANN2/index.html")
         with open(self.get_test_loc("cran/CRAN_Package_ANN2.html")) as html_metadata:
             metadata = html_metadata.read()
         packages = miners.cran.build_packages_from_html(
@@ -57,9 +51,7 @@ class CranMapperTest(JsonBasedTesting, DjangoTestCase):
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_from_directory_listing2(self):
-        ResourceURI.objects.create(
-            uri="https://cloud.r-project.org/web/packages/abe/index.html"
-        )
+        ResourceURI.objects.create(uri="https://cloud.r-project.org/web/packages/abe/index.html")
         with open(self.get_test_loc("cran/CRAN_Package_abe.html")) as html_metadata:
             metadata = html_metadata.read()
         packages = miners.cran.build_packages_from_html(

@@ -208,10 +208,7 @@ class JsonBasedTestingMixin(TestCase):
             for key, value in data.items():
                 if type(value) in (list, ReturnList, dict, OrderedDict, ReturnDict):
                     value = self._normalize_results(value, fields_to_remove)
-                if (
-                    key in ("package_uid", "dependency_uid", "for_package_uid")
-                    and value
-                ):
+                if key in ("package_uid", "dependency_uid", "for_package_uid") and value:
                     value = purl_with_fake_uuid(value)
                 if key == "for_packages":
                     value = [purl_with_fake_uuid(package_uid) for package_uid in value]
@@ -224,10 +221,7 @@ class JsonBasedTestingMixin(TestCase):
 
     def _remove_fields_from_results(self, data, fields_to_remove):
         if type(data) in (list, ReturnList):
-            return [
-                self._remove_fields_from_results(entry, fields_to_remove)
-                for entry in data
-            ]
+            return [self._remove_fields_from_results(entry, fields_to_remove) for entry in data]
 
         if type(data) in (dict, OrderedDict, ReturnDict):
             # Remove fields from results and normalize Package UIDs
@@ -277,10 +271,7 @@ class JsonBasedTesting(JsonBasedTestingMixin, FileBasedTesting):
             for key, value in data.items():
                 if type(value) in (list, ReturnList, dict, OrderedDict, ReturnDict):
                     value = self._normalize_results(value, fields_to_remove)
-                if (
-                    key in ("package_uid", "dependency_uid", "for_package_uid")
-                    and value
-                ):
+                if key in ("package_uid", "dependency_uid", "for_package_uid") and value:
                     value = purl_with_fake_uuid(value)
                 if key == "for_packages":
                     value = [purl_with_fake_uuid(package_uid) for package_uid in value]
@@ -293,10 +284,7 @@ class JsonBasedTesting(JsonBasedTestingMixin, FileBasedTesting):
 
     def _remove_fields_from_results(self, data, fields_to_remove):
         if type(data) in (list, ReturnList):
-            return [
-                self._remove_fields_from_results(entry, fields_to_remove)
-                for entry in data
-            ]
+            return [self._remove_fields_from_results(entry, fields_to_remove) for entry in data]
 
         if type(data) in (dict, OrderedDict, ReturnDict):
             # Remove fields from results and normalize Package UIDs
@@ -305,9 +293,7 @@ class JsonBasedTesting(JsonBasedTestingMixin, FileBasedTesting):
                     continue
                 data.pop(field)
 
-    def check_expected_uris(
-        self, uris, expected_loc, data_is_json=False, regen=FIXTURES_REGEN
-    ):
+    def check_expected_uris(self, uris, expected_loc, data_is_json=False, regen=FIXTURES_REGEN):
         """
         Check a `uris` iterable of URIs matches the data stored in the JSON file
         at `expected_loc`.
@@ -322,9 +308,7 @@ class JsonBasedTesting(JsonBasedTestingMixin, FileBasedTesting):
                 # FIXME: we should ONLY have strings there!!!
                 uri_dict["date"] = str(uri_dict.get("date"))
             results.append(uri_dict)
-        self.check_expected_results(
-            results=results, expected_loc=expected_loc, regen=regen
-        )
+        self.check_expected_results(results=results, expected_loc=expected_loc, regen=regen)
 
 
 def model_to_dict(instance, fields=None, exclude=None):

@@ -173,9 +173,7 @@ def fetch_definitions(api_url, cache, retries=1, verbose=True):
             content = json.loads(content)
 
         except requests.exceptions.ConnectionError as ex:
-            print(
-                "!!!!!!!!!!!!!!!!!! -> Request failed, retrying:", api_url, "with:", ex
-            )
+            print("!!!!!!!!!!!!!!!!!! -> Request failed, retrying:", api_url, "with:", ex)
             errors_count += 1
             if errors_count <= max_errors:
                 # wait and retry, sleeping more each time we egt some error
@@ -471,9 +469,7 @@ def sync(
 
                 if def_type:
                     # get latest with a "type" query
-                    def_api_url = cdutils.update_url(
-                        base_api_url, qs_mapping=dict(type=def_type)
-                    )
+                    def_api_url = cdutils.update_url(base_api_url, qs_mapping=dict(type=def_type))
                 else:
                     # do nothing if we have no type
                     def_api_url = base_api_url
@@ -515,9 +511,7 @@ def sync(
                     if max_def and max_def <= cycle_defs_count:
                         break
 
-                if max_def and (
-                    max_def <= cycle_defs_count or max_def <= total_defs_count
-                ):
+                if max_def and (max_def <= cycle_defs_count or max_def <= total_defs_count):
                     break
 
             total_defs_count += cycle_defs_count
@@ -613,8 +607,7 @@ def sync(
     metavar="INT",
     default=60,
     show_default=True,
-    help="Set the number of seconds to wait for new or updated definitions "
-    "between two loops.",
+    help="Set the number of seconds to wait for new or updated definitions between two loops.",
 )
 @click.option(
     "-n",
@@ -623,8 +616,7 @@ def sync(
     metavar="INT",
     default=1,
     show_default=True,
-    help="Set the number of parallel processes to use. "
-    "Disable parallel processing if 0.",
+    help="Set the number of parallel processes to use. Disable parallel processing if 0.",
 )
 @click.option(
     "--max-def",

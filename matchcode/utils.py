@@ -94,9 +94,7 @@ class CodebaseTester:
         self.assertEqual(expected, results)
 
 
-class MatchcodeTestCase(
-    CodebaseTester, JsonBasedTestingMixin, BaseTestCase, DjangoTestCase
-):
+class MatchcodeTestCase(CodebaseTester, JsonBasedTestingMixin, BaseTestCase, DjangoTestCase):
     databases = "__all__"
 
 
@@ -140,9 +138,7 @@ def index_package_files_sha1(package, scan_location):
     from matchcode.models import ExactFileIndex
 
     resource_attributes = dict()
-    vc = VirtualCodebase(
-        location=scan_location, resource_attributes=resource_attributes
-    )
+    vc = VirtualCodebase(location=scan_location, resource_attributes=resource_attributes)
 
     for resource in vc.walk(topdown=True):
         sha1 = resource.sha1
@@ -215,9 +211,7 @@ def index_resource_fingerprints(codebase, package):
     indexed_arci = 0
     for resource in codebase.walk(topdown=False):
         directory_content_fingerprint = resource.extra_data.get("directory_content", "")
-        directory_structure_fingerprint = resource.extra_data.get(
-            "directory_structure", ""
-        )
+        directory_structure_fingerprint = resource.extra_data.get("directory_structure", "")
         resource_content_fingerprint = resource.extra_data.get("halo1", "")
 
         if directory_content_fingerprint:

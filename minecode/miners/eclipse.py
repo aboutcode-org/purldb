@@ -40,9 +40,7 @@ class EclipseProjectVisitors(HttpVisitor):
             href = a["href"]
             if href and href.startswith("https://projects.eclipse.org/projects/"):
                 # if the herf content starts with Eclipse single project suffix, generate a URI with the href content
-                project_name = href.replace(
-                    "https://projects.eclipse.org/projects/", ""
-                )
+                project_name = href.replace("https://projects.eclipse.org/projects/", "")
                 package_url = PackageURL(type="eclipse", name=project_name).to_string()
                 yield URI(uri=href, package_url=package_url, source_uri=self.uri)
 

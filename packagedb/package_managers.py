@@ -121,9 +121,7 @@ class VersionAPI:
             else:
                 valid_versions.add(version.value)
 
-        return VersionResponse(
-            valid_versions=valid_versions, newer_versions=new_versions
-        )
+        return VersionResponse(valid_versions=valid_versions, newer_versions=new_versions)
 
     def fetch(self, pkg: str) -> Iterable[PackageVersion]:
         """
@@ -160,9 +158,7 @@ class LaunchpadVersionAPI(VersionAPI):
 
             for release in entries:
                 source_package_version = release.get("source_package_version")
-                source_package_version = remove_debian_default_epoch(
-                    version=source_package_version
-                )
+                source_package_version = remove_debian_default_epoch(version=source_package_version)
                 date_published = release.get("date_published")
                 release_date = None
                 if date_published and type(date_published) is str:
@@ -487,9 +483,7 @@ class GoproxyVersionAPI(VersionAPI):
         return escaped_path
 
     @staticmethod
-    def fetch_version_info(
-        version_info: str, escaped_pkg: str
-    ) -> PackageVersion | None:
+    def fetch_version_info(version_info: str, escaped_pkg: str) -> PackageVersion | None:
         v = version_info.split()
         if not v:
             return None
@@ -511,9 +505,7 @@ class GoproxyVersionAPI(VersionAPI):
                     f"Error while fetching version info for {escaped_pkg}/{escaped_ver} "
                     f"from goproxy:\n{traceback.format_exc()}"
                 )
-            release_date = (
-                parse_datetime(response.get("Time", "")) if response else None
-            )
+            release_date = parse_datetime(response.get("Time", "")) if response else None
 
         return PackageVersion(value=value, release_date=release_date)
 
@@ -562,9 +554,7 @@ VERSION_API_CLASSES = {
 }
 
 
-VERSION_API_CLASSES_BY_PACKAGE_TYPE = {
-    cls.package_type: cls for cls in VERSION_API_CLASSES
-}
+VERSION_API_CLASSES_BY_PACKAGE_TYPE = {cls.package_type: cls for cls in VERSION_API_CLASSES}
 
 
 VERSION_API_CLASS_BY_PACKAGE_NAMESPACE = {
@@ -597,11 +587,7 @@ def get_api_package_name(purl: PackageURL) -> str:
 
 def get_version_fetcher(package_url):
     if package_url.type == "deb":
-        versions_fetcher: VersionAPI = VERSION_API_CLASS_BY_PACKAGE_NAMESPACE[
-            package_url.namespace
-        ]
+        versions_fetcher: VersionAPI = VERSION_API_CLASS_BY_PACKAGE_NAMESPACE[package_url.namespace]
     else:
-        versions_fetcher: VersionAPI = VERSION_API_CLASSES_BY_PACKAGE_TYPE[
-            package_url.type
-        ]
+        versions_fetcher: VersionAPI = VERSION_API_CLASSES_BY_PACKAGE_TYPE[package_url.type]
     return versions_fetcher

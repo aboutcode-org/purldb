@@ -32,8 +32,6 @@ class PriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         package_count = Package.objects.all().count()
         self.assertEqual(2, package_count)
 
-        purls = [
-            (package.purl, package.download_url) for package in Package.objects.all()
-        ]
+        purls = [(package.purl, package.download_url) for package in Package.objects.all()]
         self.assertIn((purl_str, download_url), purls)
         self.assertIn((purl_sources_str, sources_download_url), purls)
