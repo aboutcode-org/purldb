@@ -54,7 +54,7 @@ def map_nuget_package(package_url, pipelines, priority=0):
     package_json = get_package_json(name=package_url.name.lower())
 
     if not package_json:
-        error = f"Package does not exist on crates.io: {package_url}"
+        error = f"Package does not exist on nuget.org: {package_url}"
         logger.error(error)
         return error
 
