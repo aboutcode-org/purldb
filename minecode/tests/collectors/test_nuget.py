@@ -20,9 +20,7 @@ from minecode.utils_test import JsonBasedTesting
 
 
 class CargoPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def setUp(self):
         super().setUp()
