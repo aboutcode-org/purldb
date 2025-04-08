@@ -44,6 +44,6 @@ jobs:
       parameters:
           job_name: ci_documentation
           image_name: ubuntu-24.04
-          python_versions: ['3.10']
+          python_versions: ['3.12']
           test_suites:
-              all: make dev docs-check
+              all: make docs-check

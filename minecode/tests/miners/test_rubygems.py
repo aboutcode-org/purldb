@@ -16,6 +16,7 @@ from unittest.mock import patch
 from django.test import TestCase as DjangoTestCase
 
 from commoncode.fileutils import file_name
+from packageurl import PackageURL
 
 from minecode import miners
 from minecode import route
@@ -26,6 +27,7 @@ from minecode.miners.rubygems import RubyGemsIndexVisitor
 from minecode.miners.rubygems import RubyGemsPackageArchiveMetadataMapper
 from minecode.miners.rubygems import RubyGemsPackageArchiveMetadataVisitor
 from minecode.miners.rubygems import build_rubygem_packages_from_api_data
+from minecode.miners.rubygems import build_rubygem_packages_from_api_v2_data
 from minecode.miners.rubygems import build_rubygem_packages_from_metadata
 from minecode.miners.rubygems import get_gem_metadata
 from minecode.models import ResourceURI
@@ -149,6 +151,15 @@ class RubyGemsApiMapperTest(JsonBasedTesting):
         packages = RubyGemsApiVersionsJsonMapper(test_uri, test_res_uri)
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc("rubygems/apiv1/a1630ty_a1630ty.api.mapped.json")
+        self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
+
+    def test_build_rubygem_packages_from_api_v2_data(self):
+        with open(self.get_test_loc("rubygems/apiv2/rails-8.0.2.json")) as gem_data:
+            metadata = json.load(gem_data)
+        package_url = PackageURL.from_string("pkg:gem/rails@8.0.2")
+        packages = build_rubygem_packages_from_api_v2_data(metadata, package_url)
+        packages = [p.to_dict() for p in packages]
+        expected_loc = self.get_test_loc("rubygems/apiv2/expected-rails-8.0.2.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
 
