@@ -217,6 +217,8 @@ def build_packages_with_json(metadata, purl=None):
             copyright=copyr,
             parties=authors,
             keywords=keywords,
+            declared_license_expression=metadata.get("licenseExpression"),
+            download_url=metadata.get("packageContent"),
         )
         package = scan_models.PackageData.from_data(package_data=package_mapping)
         package.set_purl(purl)

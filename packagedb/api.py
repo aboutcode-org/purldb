@@ -975,6 +975,7 @@ class CollectViewSet(viewsets.ViewSet):
             "pypi",
             "cargo",
             "gem",
+            "nuget",
         ]
 
         unique_packages, unsupported_packages, unsupported_vers = get_resolved_packages(
