@@ -84,13 +84,9 @@ class PriorityResourceURIViewSet(viewsets.ModelViewSet):
         priority_resource_uri = PriorityResourceURI.objects.insert(uri=purl)
 
         if priority_resource_uri:
-            message = {
-                "status": f"Package index request for {purl} has been successful."
-            }
+            message = {"status": f"Package index request for {purl} has been successful."}
         else:
-            message = {
-                "status": f"Package {purl} has already been requested for indexing."
-            }
+            message = {"status": f"Package {purl} has already been requested for indexing."}
         # TODO: revisiting a package should be handled on another level, dependent on data we store
         return Response(message)
 
@@ -148,9 +144,7 @@ class ScannableURIViewSet(viewsets.ModelViewSet):
 
         scannable_uri = self.get_object()
         scannable_uri_uuid = scannable_uri.uuid
-        scannable_uri_status = ScannableURI.SCAN_STATUSES_BY_CODE.get(
-            scannable_uri.scan_status
-        )
+        scannable_uri_status = ScannableURI.SCAN_STATUSES_BY_CODE.get(scannable_uri.scan_status)
 
         if scannable_uri.scan_status in [
             ScannableURI.SCAN_INDEXED,

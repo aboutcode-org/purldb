@@ -23,9 +23,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class EclipseVistorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_visit_eclipse_projects(self):
         uri = "https://projects.eclipse.org/list-of-projects"
@@ -42,9 +40,7 @@ class EclipseVistorTest(JsonBasedTesting):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = eclipse.EclipseSingleProjectVisitor(uri)
-        with open(
-            self.get_test_loc("eclipse/acceleo_expected.html"), "rb"
-        ) as data_file:
+        with open(self.get_test_loc("eclipse/acceleo_expected.html"), "rb") as data_file:
             self.assertEqual(data_file.read(), data)
 
     def test_visit_eclipse_git_repo(self):
@@ -106,9 +102,7 @@ class EclipseVistorTest(JsonBasedTesting):
 
 
 class TestEclipseMap(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_packages(self):
         with open(self.get_test_loc("eclipse/birt.json")) as eclipse_metadata:

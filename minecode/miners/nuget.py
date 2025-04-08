@@ -68,12 +68,10 @@ class PackagesPageVisitor(HttpJsonVisitor):
                 pkg_url = version["@id"]
                 version_template = "{pkg_version}.0.json"
                 version_name = version_template.format(pkg_version=pkg_ver)
-                name = pkg_url.replace(
-                    "https://api.nuget.org/v3/registration1/", ""
-                ).partition("/")[0]
-                package_url = PackageURL(
-                    type="nuget", name=name, version=pkg_ver
-                ).to_string()
+                name = pkg_url.replace("https://api.nuget.org/v3/registration1/", "").partition(
+                    "/"
+                )[0]
+                package_url = PackageURL(type="nuget", name=name, version=pkg_ver).to_string()
                 if version_name in pkg_url:
                     # sometimes an extra '0' is appended to the version in the URL
                     # FIXME: this is weird: there must be good reason why this is done???
@@ -148,14 +146,10 @@ class NugetHTMLPageVisitor(HttpVisitor):
                 if name:
                     yield URI(uri=url_format.format(name=name), source_uri=self.uri)
         if has_package:
-            page_id = self.uri.replace(
-                "https://www.nuget.org/packages?page=", ""
-            ).strip("/")
+            page_id = self.uri.replace("https://www.nuget.org/packages?page=", "").strip("/")
             next_pageid = int(page_id) + 1
             nextpage_url_format = "https://www.nuget.org/packages?page={id}"
-            yield URI(
-                uri=nextpage_url_format.format(id=next_pageid), source_uri=self.uri
-            )
+            yield URI(uri=nextpage_url_format.format(id=next_pageid), source_uri=self.uri)
 
 
 @visit_router.route(
@@ -249,9 +243,7 @@ class NugetNUPKGDownloadMapper(Mapper):
 
 def build_packages_with_nupkg_download_url(metadata, purl, uri):
     if purl:
-        package = scan_models.PackageData(
-            type="nuget", name=purl.name, download_url=uri
-        )
+        package = scan_models.PackageData(type="nuget", name=purl.name, download_url=uri)
         package.set_purl(purl)
         yield package
 
@@ -305,11 +297,7 @@ def build_packages_from_html(metadata, uri, purl=None):
 
         description = None
         for m in soup.find_all("meta"):
-            if (
-                m.get("property")
-                and m.get("property") == "og:description"
-                and m.get("content")
-            ):
+            if m.get("property") and m.get("property") == "og:description" and m.get("content"):
                 description = m.get("content")
 
         for tbody in soup.find_all("tbody"):
@@ -319,9 +307,7 @@ def build_packages_from_html(metadata, uri, purl=None):
                     if not version or not version.strip():
                         continue
                     version = version.strip()
-                    download_url = download_url_format.format(
-                        name=name, version=version
-                    )
+                    download_url = download_url_format.format(name=name, version=version)
                     package_mapping = dict(
                         datasource_id="nuget_metadata_json",
                         name=name,

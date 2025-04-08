@@ -34,9 +34,7 @@ def combine_dicts_using_pkgid(all_dicts):
     for package_info in all_dicts:
         if package_info["pkgid"]:
             all_package_info.append(
-                combine_list_of_dicts(
-                    [a for a in all_dicts if a["pkgid"] == package_info["pkgid"]]
-                )
+                combine_list_of_dicts([a for a in all_dicts if a["pkgid"] == package_info["pkgid"]])
             )
     return remove_list_repetitions(all_package_info)
 
@@ -114,12 +112,8 @@ def get_url_for_tag(location, data_type):
     for data_tag in repomd.findall("{http://linux.duke.edu/metadata/repo}data"):
         for attrib, value in data_tag.items():
             if attrib == "type" and value == data_type:
-                download_location = data_tag.find(
-                    "{http://linux.duke.edu/metadata/repo}location"
-                )
-                relative_url_info = convert_tuples_to_dict(
-                    download_location.items(), "location"
-                )
+                download_location = data_tag.find("{http://linux.duke.edu/metadata/repo}location")
+                relative_url_info = convert_tuples_to_dict(download_location.items(), "location")
                 if relative_url_info:
                     return relative_url_info["href_location"]
 
@@ -151,14 +145,10 @@ def filelistsxml_parser(location):
     """
     infos = []
     filelistsxml = etree.parse(location).getroot()
-    for package in filelistsxml.findall(
-        "{http://linux.duke.edu/metadata/filelists}package"
-    ):
+    for package in filelistsxml.findall("{http://linux.duke.edu/metadata/filelists}package"):
         version = package.find("{http://linux.duke.edu/metadata/filelists}version")
         package_info = dict(package.items() + version.items())
-        directory_listing = package.findall(
-            "{http://linux.duke.edu/metadata/filelists}file"
-        )
+        directory_listing = package.findall("{http://linux.duke.edu/metadata/filelists}file")
         directories = []
         files = []
         for name in directory_listing:
@@ -205,17 +195,13 @@ def primaryxml_parser(location):
         url = package.find("{http://linux.duke.edu/metadata/common}url")
         size = package.find("{http://linux.duke.edu/metadata/common}size")
         time = package.find("{http://linux.duke.edu/metadata/common}time")
-        download_location = package.find(
-            "{http://linux.duke.edu/metadata/common}location"
-        )
+        download_location = package.find("{http://linux.duke.edu/metadata/common}location")
         checksum = package.find("{http://linux.duke.edu/metadata/common}checksum")
 
         rpm_format = package.find("{http://linux.duke.edu/metadata/common}format")
         buildhost = rpm_format.find("{http://linux.duke.edu/metadata/rpm}buildhost")
         rpm_group = rpm_format.find("{http://linux.duke.edu/metadata/rpm}group")
-        header_range = rpm_format.find(
-            "{http://linux.duke.edu/metadata/rpm}header-range"
-        )
+        header_range = rpm_format.find("{http://linux.duke.edu/metadata/rpm}header-range")
         rpm_license = rpm_format.find("{http://linux.duke.edu/metadata/rpm}license")
         rpm_vendor = rpm_format.find("{http://linux.duke.edu/metadata/rpm}vendor")
         source_rpm = rpm_format.find("{http://linux.duke.edu/metadata/rpm}sourcerpm")
@@ -288,6 +274,4 @@ def get_pkg_infos(filelists_xml, primary_xml, other_xml):
     otherxml_dicts = otherxml_parser(other_xml)
     filelistsxml_dicts = filelistsxml_parser(filelists_xml)
 
-    return combine_dicts_using_pkgid(
-        primaryxml_dicts + otherxml_dicts + filelistsxml_dicts
-    )
+    return combine_dicts_using_pkgid(primaryxml_dicts + otherxml_dicts + filelistsxml_dicts)

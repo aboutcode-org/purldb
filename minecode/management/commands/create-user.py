@@ -17,6 +17,4 @@ class Command(CreateUserCommand):
         username = options["username"]
         interactive = options["interactive"]
         verbosity = options["verbosity"]
-        self.create_user(
-            username=username, interactive=interactive, verbosity=verbosity
-        )
+        self.create_user(username=username, interactive=interactive, verbosity=verbosity)

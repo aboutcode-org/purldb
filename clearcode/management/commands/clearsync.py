@@ -58,8 +58,7 @@ class Command(VerboseCommand):
             dest="processes",
             default=1,
             type=int,
-            help="Set the number of parallel processes to use. "
-            "Disable parallel processing if 0.",
+            help="Set the number of parallel processes to use. Disable parallel processing if 0.",
         )
         parser.add_argument(
             "--max-def",

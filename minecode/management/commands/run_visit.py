@@ -176,9 +176,7 @@ def visit_uris(
 
         if not resource_uri:
             if exit_on_empty:
-                logger.info(
-                    "exit-on-empty requested: No more visitable resource, exiting..."
-                )
+                logger.info("exit-on-empty requested: No more visitable resource, exiting...")
                 break
 
             # Only log a single message when we go to sleep
@@ -229,9 +227,7 @@ def visit_uris(
     return visited_counter, inserted_counter
 
 
-def visit_uri(
-    resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_router=visit_router
-):
+def visit_uri(resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_router=visit_router):
     """
     Call a visitor for a single ResourceURI. Process up to `max_uris` records.
     `_visit_router` is the Router to use for routing. Used for tests only.
@@ -265,9 +261,7 @@ def visit_uri(
             logger.debug(f"visit_uri: uri: {uri_to_visit}")
 
         # TODO: Consider pass a full visitors.URI plain object rather than a plain string
-        new_uris_to_visit, visited_data, visit_error = _visit_router.process(
-            uri_to_visit
-        )
+        new_uris_to_visit, visited_data, visit_error = _visit_router.process(uri_to_visit)
         if TRACE:
             new_uris_to_visit = list(new_uris_to_visit or [])
             logger.debug(f"visit_uri: new_uris_to_visit: {new_uris_to_visit}")
@@ -335,9 +329,7 @@ def visit_uri(
                         uri_counter_by_visitor[visitor_key] += 1
                 else:
                     # if not pre-visited only insert if not existing
-                    if not ResourceURI.objects.filter(
-                        uri=vuri.uri, last_visit_date=None
-                    ).exists():
+                    if not ResourceURI.objects.filter(uri=vuri.uri, last_visit_date=None).exists():
                         visited_uri["last_visit_date"] = None
                         new_uri = ResourceURI(**visited_uri)
                         new_uri.save()

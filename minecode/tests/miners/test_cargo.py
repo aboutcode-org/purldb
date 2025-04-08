@@ -21,9 +21,7 @@ from minecode.utils_test import JsonBasedTesting
 
 
 class TestCargoMap(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_packages_with_no_version(self):
         with open(self.get_test_loc("cargo/sam.json")) as cargo_meta:

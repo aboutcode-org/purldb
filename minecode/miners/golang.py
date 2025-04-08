@@ -206,9 +206,7 @@ def parse_package_path(path):
 
     path = "/".join(segments)
 
-    package_url = PackageURL(
-        type="golang", namespace=namespace, name=name, qualifiers=qualifiers
-    )
+    package_url = PackageURL(type="golang", namespace=namespace, name=name, qualifiers=qualifiers)
 
     return package_url, path
 

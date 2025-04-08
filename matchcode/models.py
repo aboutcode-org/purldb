@@ -344,9 +344,7 @@ class ApproximateMatchingHashMixin(PackageRelatedMixin, models.Model):
                     # that for size comparison. For now, we are going to
                     # disregard size as a factor.
                     size_difference = 0
-                name_sequence_matcher = SequenceMatcher(
-                    a=resource.name, b=matched_resource.name
-                )
+                name_sequence_matcher = SequenceMatcher(a=resource.name, b=matched_resource.name)
                 name_difference = 1 - name_sequence_matcher.ratio()
                 rank_attributes = (hamming_distance, size_difference, name_difference)
                 matches_by_rank_attributes[rank_attributes].append(match)
@@ -384,9 +382,7 @@ class ApproximateMatchingHashMixin(PackageRelatedMixin, models.Model):
     def fingerprint(self):
         indexed_element_count_as_hex_bytes = b"%08x" % self.indexed_elements_count
         chunk1, chunk2, chunk3, chunk4 = self.get_chunks()
-        fingerprint = (
-            indexed_element_count_as_hex_bytes + chunk1 + chunk2 + chunk3 + chunk4
-        )
+        fingerprint = indexed_element_count_as_hex_bytes + chunk1 + chunk2 + chunk3 + chunk4
         return fingerprint.decode("utf-8")
 
 
@@ -510,9 +506,7 @@ class BaseSnippetIndexMixin(PackageRelatedMixin, models.Model):
         # Step 1.2: group matched Packages and fingerprints with count
         matches = []
         for package in packages:
-            match_fingerprints = matched_fps.filter(package=package).distinct(
-                "fingerprint"
-            )
+            match_fingerprints = matched_fps.filter(package=package).distinct("fingerprint")
             matches.append(
                 PackageSnippetMatch(
                     package=package,
@@ -615,12 +609,8 @@ class BaseSnippetIndexMixin(PackageRelatedMixin, models.Model):
             match_length,
         ), grouped_matches in matches_by_ipackage_iresource:
             for match in grouped_matches:
-                package_changed = (
-                    match.ipackage != prev_ipackage if prev_ipackage else False
-                )
-                resource_changed = (
-                    match.iresource != prev_iresource if prev_iresource else False
-                )
+                package_changed = match.ipackage != prev_ipackage if prev_ipackage else False
+                resource_changed = match.iresource != prev_iresource if prev_iresource else False
 
                 if package_changed or resource_changed:
                     # finish up match_detections for this ipackage or iresource and create ResourceSnippetMatch
@@ -712,9 +702,7 @@ class ExtendedFileFragmentMatch:
 
     qspan = attr.ib(
         default=None,
-        metadata=dict(
-            help="query matched Span, start at zero which is the query Resource start."
-        ),
+        metadata=dict(help="query matched Span, start at zero which is the query Resource start."),
     )
 
     start_line = attr.ib(default=0, metadata=dict(help="match start line, 1-based"))

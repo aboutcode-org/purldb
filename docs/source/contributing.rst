@@ -17,7 +17,7 @@ Do Your Homework
 ----------------
 
 Before adding a contribution or create a new issue, take a look at the project’s
-`README <https://github.com/aboutcode-org/purldb#readme>`_, read through our
+`README <https://github.com/aboutcode-org/purldb?tab=readme-ov-file#the-purldb>`_, read through our
 `documentation <https://purldb.readthedocs.io>`_,
 and browse existing `issues <https://github.com/aboutcode-org/purldb/issues>`_,
 to develop some understanding of the project and confirm whether a given

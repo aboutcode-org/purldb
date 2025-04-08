@@ -96,9 +96,7 @@ def packagedata_from_dict(package_data):
     Ignore unknown and unsupported fields.
     """
     supported = {attr.name for attr in attr.fields(PackageData)}
-    cleaned_package_data = {
-        key: value for key, value in package_data.items() if key in supported
-    }
+    cleaned_package_data = {key: value for key, value in package_data.items() if key in supported}
     return PackageData.from_data(cleaned_package_data)
 
 

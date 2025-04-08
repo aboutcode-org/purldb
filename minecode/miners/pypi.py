@@ -92,9 +92,7 @@ class PypiPackageVisitor(HttpJsonVisitor):
         name = info.get("name")
         if name:
             for release in content["releases"]:
-                package_url = PackageURL(
-                    type="pypi", name=name, version=release
-                ).to_string()
+                package_url = PackageURL(type="pypi", name=name, version=release).to_string()
                 yield URI(
                     uri=url_template.format(name=name, release=release),
                     package_url=package_url,
@@ -118,9 +116,7 @@ class PypiPackageReleaseVisitor(HttpJsonVisitor):
         download_url = info.get("download_url")
         if download_url and download_url != "UNKNOWN":
             version = info.get("version")
-            package_url = PackageURL(
-                type="pypi", name=name, version=version
-            ).to_string()
+            package_url = PackageURL(type="pypi", name=name, version=version).to_string()
             yield URI(uri=download_url, package_url=package_url, source_uri=self.uri)
 
         # Common on-Pypi-download URLs are in the urls block
@@ -128,9 +124,7 @@ class PypiPackageReleaseVisitor(HttpJsonVisitor):
             url = download.get("url")
             if not url:
                 continue
-            package_url = PackageURL(
-                type="pypi", name=name, version=version
-            ).to_string()
+            package_url = PackageURL(type="pypi", name=name, version=version).to_string()
             yield URI(
                 url,
                 package_url=package_url,
@@ -280,9 +274,7 @@ def build_packages(metadata, purl=None):
 
         if purl:
             purl_str = purl.to_string()
-            purl_filename_qualifiers = (
-                purl_str + "?file_name=" + download.get("filename")
-            )
+            purl_filename_qualifiers = purl_str + "?file_name=" + download.get("filename")
             updated_purl = PackageURL.from_string(purl_filename_qualifiers)
             package.set_purl(updated_purl)
         else:

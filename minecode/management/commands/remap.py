@@ -42,10 +42,8 @@ class Command(BaseCommand):
             last_map_date=None
         )
 
-        ResourceURI.objects.successfully_mapped().exclude(
-            uri__startswith="http://repo1"
-        ).exclude(uri__startswith="maven-index://").exclude(
-            uri__startswith="https://replicate"
-        ).exclude(uri__startswith="https://registry.npmjs.org").update(
-            is_mappable=False
-        )
+        ResourceURI.objects.successfully_mapped().exclude(uri__startswith="http://repo1").exclude(
+            uri__startswith="maven-index://"
+        ).exclude(uri__startswith="https://replicate").exclude(
+            uri__startswith="https://registry.npmjs.org"
+        ).update(is_mappable=False)

@@ -116,9 +116,7 @@ class Command(VerboseCommand):
                 logger.info("Graceful exit of the map loop.")
                 break
 
-            mappable_definitions = CDitem.objects.mappable_definitions()[
-                :MAP_BATCH_SIZE
-            ]
+            mappable_definitions = CDitem.objects.mappable_definitions()[:MAP_BATCH_SIZE]
             mappable_scancode_harvests = CDitem.objects.mappable_scancode_harvests()[
                 :MAP_BATCH_SIZE
             ]
@@ -230,9 +228,7 @@ def get_or_create_package_from_cditem_definition(cditem):
     homepage_url = described.get("projectWebsite")
     release_date = described.get("releaseDate")
     declared_license = licensed.get("declared")
-    normalized_license_expression = licensing.get_normalized_expression(
-        declared_license
-    )
+    normalized_license_expression = licensing.get_normalized_expression(declared_license)
     copyrights = get_parties_from_licensed(licensed)
     copyrights = "\n".join(copyrights)
     definition_mining_level = 0
@@ -262,9 +258,7 @@ def get_or_create_package_from_cditem_definition(cditem):
         )
         # log history if package was created
         if created:
-            package.append_to_history(
-                f"Created package from CDitem definition: {cditem.path}"
-            )
+            package.append_to_history(f"Created package from CDitem definition: {cditem.path}")
 
     else:
         # TODO: This is temporary until we fold clearindex into minecode mapping
@@ -290,9 +284,7 @@ def get_or_create_package_from_cditem_definition(cditem):
             replace=True,
         )
         package = existing_package
-        package.append_to_history(
-            f"Updated package from CDitem definition: {cditem.path}"
-        )
+        package.append_to_history(f"Updated package from CDitem definition: {cditem.path}")
 
     return package
 
@@ -351,9 +343,4 @@ def str2coord(s):
 
 def get_parties_from_licensed(licensed):
     """Return a list of Copyright statements from `licensed`, if available"""
-    return (
-        licensed.get("facets", {})
-        .get("core", {})
-        .get("attribution", {})
-        .get("parties", [])
-    )
+    return licensed.get("facets", {}).get("core", {}).get("attribution", {}).get("parties", [])

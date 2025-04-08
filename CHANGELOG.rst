@@ -41,7 +41,8 @@ v5.0.0
 
 - Add `/api/docs` Swagger API documentation for API endpoints.
 - Add `/api/from_purl/purl2git` endpoint to get a git repo for a purl.
-- Add `/api/to_purl/go` endpoint to get a purl from a golang import string or a package string in go.mod.
+- Add `/api/to_purl/go` endpoint to get a purl from a golang import string or a
+  package string in go.mod.
 - Support indexing of PURLs listed in https://github.com/aboutcode-org/purldb/issues/326,
   https://github.com/aboutcode-org/purldb/issues/327, https://github.com/aboutcode-org/purldb/issues/328,
   https://github.com/aboutcode-org/purldb/issues/329 and https://github.com/aboutcode-org/purldb/issues/356.

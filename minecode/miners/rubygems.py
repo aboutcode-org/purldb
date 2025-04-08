@@ -63,9 +63,7 @@ class RubyGemsIndexVisitor(NonPersistentHttpVisitor):
 
         # TODO: use a purl!!!
         for name, version, platform in reader.loads(index):
-            json_url = "https://rubygems.org/api/v1/versions/{name}.json".format(
-                **locals()
-            )
+            json_url = "https://rubygems.org/api/v1/versions/{name}.json".format(**locals())
 
             package_url = PackageURL(type="gem", name=name).to_string()
             yield URI(uri=json_url, package_url=package_url, source_uri=self.uri)
@@ -101,9 +99,7 @@ class RubyGemsApiManyVersionsVisitor(HttpJsonVisitor):
         # FIXME: return actual data too!!!
         for version_details in content:
             # get the gems name by parsing from the uri
-            name = self.uri[
-                self.uri.index("/versions/") + len("/versions/") : -len(".json")
-            ]
+            name = self.uri[self.uri.index("/versions/") + len("/versions/") : -len(".json")]
             version = version_details.get("number")
             gem_name = f"{name}-{version}"
             package_url = PackageURL(type="gem", name=name, version=version).to_string()
@@ -189,9 +185,7 @@ def build_rubygem_packages_from_api_data(metadata, name, purl=None):
         if version_details.get("sha"):
             package["sha256"] = version_details.get("sha")
 
-        package["release_date"] = (
-            parse_date(version_details.get("created_at") or "") or None
-        )
+        package["release_date"] = parse_date(version_details.get("created_at") or "") or None
 
         author = version_details.get("authors")
         if author:
@@ -211,6 +205,58 @@ def build_rubygem_packages_from_api_data(metadata, name, purl=None):
         package = PackageData.from_data(package)
         package.set_purl(purl)
         yield package
+
+
+def build_rubygem_packages_from_api_v2_data(metadata_dict, purl):
+    """
+    Yield ScannedPackage built from RubyGems API v2.
+    purl: String value of the package url of the ResourceURI object
+    """
+    name = metadata_dict["name"]
+    version = metadata_dict["version"]
+    description = metadata_dict["description"]
+    homepage_url = metadata_dict["homepage_uri"]
+    repository_homepage_url = metadata_dict["project_uri"]
+    release_date = metadata_dict["version_created_at"]
+
+    extracted_license_statement = []
+    lic_list = metadata_dict["licenses"]
+    if lic_list:
+        extracted_license_statement = lic_list
+
+    # mapping of information that are common to all the downloads of a
+    # version
+    common_data = dict(
+        name=name,
+        version=version,
+        description=description,
+        homepage_url=homepage_url,
+        repository_homepage_url=repository_homepage_url,
+        release_date=release_date,
+        extracted_license_statement=extracted_license_statement,
+    )
+
+    author = metadata_dict["authors"]
+    if author:
+        parties = common_data.get("parties")
+        if not parties:
+            common_data["parties"] = []
+        common_data["parties"].append(scan_models.Party(name=author, role="author"))
+
+    download_url = metadata_dict["gem_uri"]
+
+    download_data = dict(
+        datasource_id="gem_pkginfo",
+        type="gem",
+        download_url=download_url,
+        sha256=metadata_dict["sha"],
+    )
+    download_data.update(common_data)
+    package = scan_models.PackageData.from_data(download_data)
+
+    package.datasource_id = "gem_api_metadata"
+    package.set_purl(purl)
+    yield package
 
 
 @map_router.route(r"https?://rubygems.org/downloads/[\w\-\.]+.gem")
@@ -316,17 +362,13 @@ def get_dependencies_from_meta(content):
             # >= 0 allows for any version: we ignore these type of contrainsts
             # as this is the same as no constraints. We also ignore lack of
             # constraints and versions
-            if (constraint == ">=" and req_version == "0") or not (
-                constraint and req_version
-            ):
+            if (constraint == ">=" and req_version == "0") or not (constraint and req_version):
                 continue
             version_constraint.append(" ".join([constraint, req_version]))
         version_constraint = ", ".join(version_constraint) or None
 
         group.append(
-            DependentPackage(
-                purl=name, extracted_requirement=version_constraint, scope=scope
-            )
+            DependentPackage(purl=name, extracted_requirement=version_constraint, scope=scope)
         )
 
     return group
@@ -366,17 +408,13 @@ def get_dependencies_from_api(content):
             # >= 0 allows for any version: we ignore these type of contrainsts
             # as this is the same as no constraints. We also ignore lack of
             # constraints and versions
-            if (constraint == ">=" and req_version == "0") or not (
-                constraint and req_version
-            ):
+            if (constraint == ">=" and req_version == "0") or not (constraint and req_version):
                 continue
             version_constraint.append(" ".join([constraint, req_version]))
         version_constraint = ", ".join(version_constraint) or None
 
         group.append(
-            DependentPackage(
-                purl=name, extracted_requirement=version_constraint, scope=scope
-            )
+            DependentPackage(purl=name, extracted_requirement=version_constraint, scope=scope)
         )
 
     return group

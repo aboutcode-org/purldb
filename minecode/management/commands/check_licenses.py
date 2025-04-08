@@ -37,9 +37,7 @@ class Command(VerboseCommand):
     help = "Find packages with an ambiguous declared license."
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "-o", "--output", type=str, help="Define the output file name"
-        )
+        parser.add_argument("-o", "--output", type=str, help="Define the output file name")
 
         parser.add_argument(
             "--types",
@@ -65,9 +63,7 @@ class Command(VerboseCommand):
         packages_with_ambiguous_licenses = find_ambiguous_packages(types=types)
 
         file_location = os.path.abspath(output_filename)
-        found_counter = dump(
-            packages=packages_with_ambiguous_licenses, json_location=file_location
-        )
+        found_counter = dump(packages=packages_with_ambiguous_licenses, json_location=file_location)
 
         visited_counter = Package.objects.filter(type__in=types).count()
 
@@ -90,13 +86,9 @@ def find_ambiguous_packages(
     contain "unknown", "proprietary" and "commercial" words.
     """
     # filter to detect declared_license field
-    filter_expression = [
-        Q(declared_license_expression__icontains=word) for word in keywords
-    ]
+    filter_expression = [Q(declared_license_expression__icontains=word) for word in keywords]
     # filter to detect license_expression field, add or relationship between these two fields
-    filter_expression.extend(
-        [Q(other_license_expression__icontains=word) for word in keywords]
-    )
+    filter_expression.extend([Q(other_license_expression__icontains=word) for word in keywords])
     license_filter = reduce(operator.or_, filter_expression)
 
     yield from Package.objects.filter(type__in=types).filter(license_filter)

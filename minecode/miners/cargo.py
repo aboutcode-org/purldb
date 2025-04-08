@@ -62,9 +62,7 @@ def build_packages(metadata_dict, purl):
                 parties = common_data.get("parties")
                 if not parties:
                     common_data["parties"] = []
-                common_data["parties"].append(
-                    scan_models.Party(name=author, role="author")
-                )
+                common_data["parties"].append(scan_models.Party(name=author, role="author"))
 
         download_path = version_info["dl_path"]
         if download_path:

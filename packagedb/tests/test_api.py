@@ -163,9 +163,7 @@ class ResourceAPITestCase(JsonBasedTesting, TestCase):
         self.assertEqual(test_resource.get("type"), self.resource2.type)
 
     def test_api_resource_list_endpoint_returns_none_when_filtering_by_wrong_purl(self):
-        response = self.client.get(
-            "/api/resources/?purl={}".format("pkg:npm/test@1.0.0")
-        )
+        response = self.client.get("/api/resources/?purl={}".format("pkg:npm/test@1.0.0"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, response.data.get("count"))
 
@@ -421,9 +419,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         assert response.data.get("count") == 1
         response = self.client.get("/api/packages/?search={}".format("12.35"))
         assert response.data.get("count") == 1
-        response = self.client.get(
-            "/api/packages/?search={}".format("https://dummy.com/dummy")
-        )
+        response = self.client.get("/api/packages/?search={}".format("https://dummy.com/dummy"))
         assert response.data.get("count") == 1
 
     def test_package_api_retrieve_endpoint(self):
@@ -459,19 +455,13 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
             download_url="http://c.c", type="generic", name="name", version="3.0"
         )
 
-        response = self.client.get(
-            reverse("api:package-latest-version", args=[p1.uuid])
-        )
+        response = self.client.get(reverse("api:package-latest-version", args=[p1.uuid]))
         self.assertEqual("3.0", response.data["version"])
 
-        response = self.client.get(
-            reverse("api:package-latest-version", args=[p2.uuid])
-        )
+        response = self.client.get(reverse("api:package-latest-version", args=[p2.uuid]))
         self.assertEqual("3.0", response.data["version"])
 
-        response = self.client.get(
-            reverse("api:package-latest-version", args=[p3.uuid])
-        )
+        response = self.client.get(reverse("api:package-latest-version", args=[p3.uuid]))
         self.assertEqual("3.0", response.data["version"])
 
     def test_api_package_resources_action(self):
@@ -479,9 +469,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         for i in range(0, 10):
             Resource.objects.create(package=self.package, path=f"path{i}/")
 
-        response = self.client.get(
-            reverse("api:package-resources", args=[self.package.uuid])
-        )
+        response = self.client.get(reverse("api:package-resources", args=[self.package.uuid]))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(10, response.data["count"])
@@ -527,9 +515,7 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
             regen=FIXTURES_REGEN,
         )
         data["enhance_package_data"] = True
-        enhanced_response = self.client.post(
-            "/api/packages/filter_by_checksums/", data=data
-        )
+        enhanced_response = self.client.post("/api/packages/filter_by_checksums/", data=data)
         self.assertEqual(5, len(enhanced_response.data["results"]))
         expected = self.get_test_loc(
             "api/package-filter_by_checksums-enhanced-package-data-expected.json"
@@ -588,17 +574,13 @@ class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
 
     def test_reindex_package(self):
         self.assertEqual(1, ScannableURI.objects.all().count())
-        response = self.client.get(
-            f"/api/packages/{self.package.uuid}/reindex_package/"
-        )
+        response = self.client.get(f"/api/packages/{self.package.uuid}/reindex_package/")
         self.assertEqual(
             "pkg:maven/sample/Baz@90.12 has been queued for reindexing",
             response.data["status"],
         )
         self.assertEqual(2, ScannableURI.objects.all().count())
-        new_scannable_uri = ScannableURI.objects.exclude(
-            pk=self.scannableuri.pk
-        ).first()
+        new_scannable_uri = ScannableURI.objects.exclude(pk=self.scannableuri.pk).first()
         self.assertEqual(self.package, new_scannable_uri.package)
         self.assertEqual(True, new_scannable_uri.reindex_uri)
         self.assertEqual(100, new_scannable_uri.priority)
@@ -711,17 +693,11 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
 
         test_package = response.data.get("results")[0]
         self.assertEqual(test_package.get("type"), self.package_data1.get("type"))
-        self.assertEqual(
-            test_package.get("namespace"), self.package_data1.get("namespace")
-        )
+        self.assertEqual(test_package.get("namespace"), self.package_data1.get("namespace"))
         self.assertEqual(test_package.get("name"), self.package_data1.get("name"))
         self.assertEqual(test_package.get("version"), self.package_data1.get("version"))
-        self.assertEqual(
-            test_package.get("download_url"), self.package_data1.get("download_url")
-        )
-        self.assertEqual(
-            test_package.get("extra_data"), self.package_data1.get("extra_data")
-        )
+        self.assertEqual(test_package.get("download_url"), self.package_data1.get("download_url"))
+        self.assertEqual(test_package.get("extra_data"), self.package_data1.get("extra_data"))
 
     def test_package_api_purl_filter_by_query_param2(self):
         response = self.client.get(f"/api/packages/?purl={self.purl2}")
@@ -730,52 +706,32 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
 
         test_package = response.data.get("results")[0]
         self.assertEqual(test_package.get("type"), self.package_data2.get("type"))
-        self.assertEqual(
-            test_package.get("namespace"), self.package_data2.get("namespace")
-        )
+        self.assertEqual(test_package.get("namespace"), self.package_data2.get("namespace"))
         self.assertEqual(test_package.get("name"), self.package_data2.get("name"))
         self.assertEqual(test_package.get("version"), self.package_data2.get("version"))
-        self.assertEqual(
-            test_package.get("download_url"), self.package_data2.get("download_url")
-        )
-        self.assertEqual(
-            test_package.get("extra_data"), self.package_data2.get("extra_data")
-        )
+        self.assertEqual(test_package.get("download_url"), self.package_data2.get("download_url"))
+        self.assertEqual(test_package.get("extra_data"), self.package_data2.get("extra_data"))
 
     def test_package_api_purl_filter_by_both_query_params(self):
-        response = self.client.get(
-            f"/api/packages/?purl={self.purl1}&purl={self.purl2}"
-        )
+        response = self.client.get(f"/api/packages/?purl={self.purl1}&purl={self.purl2}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, response.data.get("count"))
 
         test_package = response.data.get("results")[0]
         self.assertEqual(test_package.get("type"), self.package_data1.get("type"))
-        self.assertEqual(
-            test_package.get("namespace"), self.package_data1.get("namespace")
-        )
+        self.assertEqual(test_package.get("namespace"), self.package_data1.get("namespace"))
         self.assertEqual(test_package.get("name"), self.package_data1.get("name"))
         self.assertEqual(test_package.get("version"), self.package_data1.get("version"))
-        self.assertEqual(
-            test_package.get("download_url"), self.package_data1.get("download_url")
-        )
-        self.assertEqual(
-            test_package.get("extra_data"), self.package_data1.get("extra_data")
-        )
+        self.assertEqual(test_package.get("download_url"), self.package_data1.get("download_url"))
+        self.assertEqual(test_package.get("extra_data"), self.package_data1.get("extra_data"))
 
         test_package = response.data.get("results")[1]
         self.assertEqual(test_package.get("type"), self.package_data2.get("type"))
-        self.assertEqual(
-            test_package.get("namespace"), self.package_data2.get("namespace")
-        )
+        self.assertEqual(test_package.get("namespace"), self.package_data2.get("namespace"))
         self.assertEqual(test_package.get("name"), self.package_data2.get("name"))
         self.assertEqual(test_package.get("version"), self.package_data2.get("version"))
-        self.assertEqual(
-            test_package.get("download_url"), self.package_data2.get("download_url")
-        )
-        self.assertEqual(
-            test_package.get("extra_data"), self.package_data2.get("extra_data")
-        )
+        self.assertEqual(test_package.get("download_url"), self.package_data2.get("download_url"))
+        self.assertEqual(test_package.get("extra_data"), self.package_data2.get("extra_data"))
 
     def test_package_api_purl_filter_by_two_purl_values_on_multiple_packages(self):
         # extra test package
@@ -786,60 +742,38 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
             version="2.2.2",
         )
 
-        response = self.client.get(
-            f"/api/packages/?purl={self.purl1}&purl={self.purl2}"
-        )
+        response = self.client.get(f"/api/packages/?purl={self.purl1}&purl={self.purl2}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, response.data.get("count"))
 
         test_package = response.data.get("results")[0]
         self.assertEqual(test_package.get("type"), self.package_data1.get("type"))
-        self.assertEqual(
-            test_package.get("namespace"), self.package_data1.get("namespace")
-        )
+        self.assertEqual(test_package.get("namespace"), self.package_data1.get("namespace"))
         self.assertEqual(test_package.get("name"), self.package_data1.get("name"))
         self.assertEqual(test_package.get("version"), self.package_data1.get("version"))
-        self.assertEqual(
-            test_package.get("download_url"), self.package_data1.get("download_url")
-        )
-        self.assertEqual(
-            test_package.get("extra_data"), self.package_data1.get("extra_data")
-        )
+        self.assertEqual(test_package.get("download_url"), self.package_data1.get("download_url"))
+        self.assertEqual(test_package.get("extra_data"), self.package_data1.get("extra_data"))
 
         test_package = response.data.get("results")[1]
         self.assertEqual(test_package.get("type"), self.package_data2.get("type"))
-        self.assertEqual(
-            test_package.get("namespace"), self.package_data2.get("namespace")
-        )
+        self.assertEqual(test_package.get("namespace"), self.package_data2.get("namespace"))
         self.assertEqual(test_package.get("name"), self.package_data2.get("name"))
         self.assertEqual(test_package.get("version"), self.package_data2.get("version"))
-        self.assertEqual(
-            test_package.get("download_url"), self.package_data2.get("download_url")
-        )
-        self.assertEqual(
-            test_package.get("extra_data"), self.package_data2.get("extra_data")
-        )
+        self.assertEqual(test_package.get("download_url"), self.package_data2.get("download_url"))
+        self.assertEqual(test_package.get("extra_data"), self.package_data2.get("extra_data"))
 
     def test_package_api_purl_filter_by_one_purl_multiple_params(self):
-        response = self.client.get(
-            f"/api/packages/?purl={self.purl1}&purl={self.missing_purl}"
-        )
+        response = self.client.get(f"/api/packages/?purl={self.purl1}&purl={self.missing_purl}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, response.data.get("count"))
 
         test_package = response.data.get("results")[0]
         self.assertEqual(test_package.get("type"), self.package_data1.get("type"))
-        self.assertEqual(
-            test_package.get("namespace"), self.package_data1.get("namespace")
-        )
+        self.assertEqual(test_package.get("namespace"), self.package_data1.get("namespace"))
         self.assertEqual(test_package.get("name"), self.package_data1.get("name"))
         self.assertEqual(test_package.get("version"), self.package_data1.get("version"))
-        self.assertEqual(
-            test_package.get("download_url"), self.package_data1.get("download_url")
-        )
-        self.assertEqual(
-            test_package.get("extra_data"), self.package_data1.get("extra_data")
-        )
+        self.assertEqual(test_package.get("download_url"), self.package_data1.get("download_url"))
+        self.assertEqual(test_package.get("extra_data"), self.package_data1.get("extra_data"))
 
     def test_package_api_purl_filter_by_multiple_blank_purl(self):
         response = self.client.get("/api/packages/?purl={}&purl={}".format("", ""))
@@ -969,14 +903,10 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         sources_download_url = "https://repo1.maven.org/maven2/org/apache/twill/twill-core/0.12.0/twill-core-0.12.0-sources.jar"
 
         self.assertEqual(0, Package.objects.filter(download_url=download_url).count())
-        self.assertEqual(
-            0, Package.objects.filter(download_url=sources_download_url).count()
-        )
+        self.assertEqual(0, Package.objects.filter(download_url=sources_download_url).count())
         response = self.client.get(f"/api/collect/?purl={purl_str}")
         self.assertEqual(1, Package.objects.filter(download_url=download_url).count())
-        self.assertEqual(
-            1, Package.objects.filter(download_url=sources_download_url).count()
-        )
+        self.assertEqual(1, Package.objects.filter(download_url=sources_download_url).count())
         expected = self.get_test_loc("api/twill-core-0.12.0.json")
         results = response.data
         self.assertEqual(2, len(results))
@@ -1007,17 +937,11 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         sources_download_url = "https://repo1.maven.org/maven2/org/elasticsearch/plugin/elasticsearch-scripting-painless-spi/6.8.15/elasticsearch-scripting-painless-spi-6.8.15-sources.jar"
 
         self.assertEqual(0, Package.objects.filter(download_url=download_url).count())
-        self.assertEqual(
-            0, Package.objects.filter(download_url=sources_download_url).count()
-        )
+        self.assertEqual(0, Package.objects.filter(download_url=sources_download_url).count())
         response = self.client.get(f"/api/collect/?purl={purl}")
         self.assertEqual(1, Package.objects.filter(download_url=download_url).count())
-        self.assertEqual(
-            1, Package.objects.filter(download_url=sources_download_url).count()
-        )
-        expected = self.get_test_loc(
-            "api/elasticsearch-scripting-painless-spi-6.8.15.json"
-        )
+        self.assertEqual(1, Package.objects.filter(download_url=sources_download_url).count())
+        expected = self.get_test_loc("api/elasticsearch-scripting-painless-spi-6.8.15.json")
 
         self.assertEqual(2, len(response.data))
         result = response.data[0]
@@ -1059,16 +983,12 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             "pkg:maven/ch.qos.reload4j/reload4j@1.2.24",
             "pkg:maven/com.esotericsoftware.kryo/kryo@2.24.0",
         ]
-        self.assertEqual(
-            sorted(expected_queued_packages), sorted(response.data["queued_packages"])
-        )
+        self.assertEqual(sorted(expected_queued_packages), sorted(response.data["queued_packages"]))
         self.assertEqual(0, response.data["unqueued_packages_count"])
         self.assertEqual([], response.data["unqueued_packages"])
         self.assertEqual(1, response.data["unsupported_packages_count"])
         expected_unsupported_packages = ["pkg:bitbucket/example/example@1.0.0"]
-        self.assertEqual(
-            expected_unsupported_packages, response.data["unsupported_packages"]
-        )
+        self.assertEqual(expected_unsupported_packages, response.data["unsupported_packages"])
         priority_resource_uris_count = PriorityResourceURI.objects.all().count()
         self.assertEqual(2, priority_resource_uris_count)
 
@@ -1098,9 +1018,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         )
         self.assertEqual(1, response.data["unsupported_packages_count"])
         expected_unsupported_packages = ["pkg:bitbucket/example/example@1.0.0"]
-        self.assertEqual(
-            expected_unsupported_packages, response.data["unsupported_packages"]
-        )
+        self.assertEqual(expected_unsupported_packages, response.data["unsupported_packages"])
 
         bad_data = {"does-not-exist": "dne"}
         response = self.client.post(
@@ -1156,9 +1074,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             "pkg:maven/ch.qos.reload4j/reload4j@1.2.22",
             "pkg:maven/ch.qos.reload4j/reload4j@1.2.23",
         ]
-        self.assertEqual(
-            sorted(expected_queued_packages), sorted(response.data["queued_packages"])
-        )
+        self.assertEqual(sorted(expected_queued_packages), sorted(response.data["queued_packages"]))
         self.assertEqual(0, response.data["requeued_packages_count"])
         self.assertEqual([], response.data["requeued_packages"])
         self.assertEqual(0, response.data["unqueued_packages_count"])
@@ -1168,9 +1084,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         self.assertEqual(9, priority_resource_uris_count)
 
     @mock.patch("packagedb.api.get_all_versions")
-    def test_package_api_index_packages_endpoint_all_version_index(
-        self, mock_get_all_versions
-    ):
+    def test_package_api_index_packages_endpoint_all_version_index(self, mock_get_all_versions):
         priority_resource_uris_count = PriorityResourceURI.objects.all().count()
         self.assertEqual(0, priority_resource_uris_count)
         packages = [
@@ -1216,9 +1130,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
             "pkg:maven/ch.qos.reload4j/reload4j@1.2.24",
             "pkg:maven/ch.qos.reload4j/reload4j@1.2.25",
         ]
-        self.assertEqual(
-            sorted(expected_queued_packages), sorted(response.data["queued_packages"])
-        )
+        self.assertEqual(sorted(expected_queued_packages), sorted(response.data["queued_packages"]))
         self.assertEqual(0, response.data["requeued_packages_count"])
         self.assertEqual([], response.data["requeued_packages"])
         self.assertEqual(0, response.data["unqueued_packages_count"])
@@ -1276,9 +1188,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         )
 
         self.assertEqual(2, response.data["requeued_packages_count"])
-        self.assertListEqual(
-            sorted(existing_purls), sorted(response.data["requeued_packages"])
-        )
+        self.assertListEqual(sorted(existing_purls), sorted(response.data["requeued_packages"]))
 
         self.assertEqual(1, response.data["unsupported_packages_count"])
         self.assertListEqual(unsupported_purls, response.data["unsupported_packages"])
@@ -1332,9 +1242,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         expected_queued_packages = expected_kryo_packages + [
             "pkg:maven/ch.qos.reload4j/reload4j@1.2.24"
         ]
-        self.assertEqual(
-            sorted(expected_queued_packages), sorted(response.data["queued_packages"])
-        )
+        self.assertEqual(sorted(expected_queued_packages), sorted(response.data["queued_packages"]))
 
         priority_resource_uri = PriorityResourceURI.objects.get(
             package_url="pkg:maven/ch.qos.reload4j/reload4j@1.2.24"
@@ -1359,9 +1267,7 @@ class CollectApiTestCase(JsonBasedTesting, TestCase):
         unhandled_purl = "pkg:does-not-exist/does-not-exist@1.0"
         response = self.client.get(f"/api/collect/?purl={unhandled_purl}")
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
-        expected_status = (
-            f"cannot fetch Package data for {unhandled_purl}: no available handler"
-        )
+        expected_status = f"cannot fetch Package data for {unhandled_purl}: no available handler"
         self.assertEqual(expected_status, response.data["status"])
 
         purl_str = "pkg:maven/does-not-exist@1.0"
@@ -1555,9 +1461,7 @@ class PurlValidateApiTestCase(TestCase):
         self.assertEqual(status.HTTP_200_OK, response1.status_code)
 
         self.assertEqual(False, response2.data["valid"])
-        self.assertEqual(
-            "The provided PackageURL is not valid.", response2.data["message"]
-        )
+        self.assertEqual("The provided PackageURL is not valid.", response2.data["message"])
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response2.status_code)
 
     def test_api_purl_validation_unsupported_package_type(self):
@@ -1622,9 +1526,7 @@ class PackageWatchTestCase(TestCase):
         mock_create_new_job.return_value = None
         data = {"package_url": "pkg:npm/foobar2"}
 
-        response1 = self.client.post(
-            "/api/watch/", data=data, content_type="application/json"
-        )
+        response1 = self.client.post("/api/watch/", data=data, content_type="application/json")
         expected = {
             "package_url": "pkg:npm/foobar2",
             "depth": 3,
@@ -1640,12 +1542,8 @@ class PackageWatchTestCase(TestCase):
         mock_create_new_job.return_value = None
         data = {"package_url": "pkg:npm/foobar"}
 
-        response1 = self.client.post(
-            "/api/watch/", data=data, content_type="application/json"
-        )
-        expected = {
-            "package_url": ["package watch with this package url already exists."]
-        }
+        response1 = self.client.post("/api/watch/", data=data, content_type="application/json")
+        expected = {"package_url": ["package watch with this package url already exists."]}
 
         result = response1.json()
 
@@ -1743,27 +1641,21 @@ class PackageActivityAPITestCase(JsonBasedTesting, TestCase):
         self.client = APIClient()
 
     def test_api_package_activity_listener_inbox_endpoint(self):
-        response = self.client.post(
-            "/api/users/@purldb/inbox", data=self.data, format="json"
-        )
+        response = self.client.post("/api/users/@purldb/inbox", data=self.data, format="json")
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_api_package_activity_creation(self):
         package_activity_count = PackageActivity.objects.count()
         self.assertEqual(0, package_activity_count)
 
-        response = self.client.post(
-            "/api/users/@purldb/inbox", data=self.data, format="json"
-        )
+        response = self.client.post("/api/users/@purldb/inbox", data=self.data, format="json")
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
         package_activity_count = PackageActivity.objects.count()
         self.assertEqual(1, package_activity_count)
 
     def test_api_package_activity_endpoint(self):
-        response = self.client.post(
-            "/api/users/@purldb/inbox", data=self.data, format="json"
-        )
+        response = self.client.post("/api/users/@purldb/inbox", data=self.data, format="json")
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
         package_activity = self.client.get("/api/package_activity/")

@@ -28,10 +28,7 @@ class PackageDBRouter:
         return None
 
     def allow_relation(self, obj1, obj2, **hints):
-        if (
-            obj1._meta.app_label in self.app_labels
-            or obj2._meta.app_label in self.app_labels
-        ):
+        if obj1._meta.app_label in self.app_labels or obj2._meta.app_label in self.app_labels:
             return True
         return None
 
@@ -57,10 +54,7 @@ class ScancodeIORouter:
         return None
 
     def allow_relation(self, obj1, obj2, **hints):
-        if (
-            obj1._meta.app_label in self.app_labels
-            or obj2._meta.app_label in self.app_labels
-        ):
+        if obj1._meta.app_label in self.app_labels or obj2._meta.app_label in self.app_labels:
             return True
         return None
 

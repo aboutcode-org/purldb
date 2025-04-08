@@ -79,38 +79,26 @@ class RunVisitWithCounterTest(MiningTestCase):
             uri_counter_by_visitor=counter,
         )
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-0-max-uris-3-multi-uri1.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-0-max-uris-3-multi-uri1.com")
         self.assertEqual(1, visited.count())
         self.assertEqual("pkg:npm/foobar@12.3.1", visited[0].package_url)
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-0-max-uris-3-multi-uri2.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-0-max-uris-3-multi-uri2.com")
         self.assertEqual(1, visited.count())
         self.assertEqual("pkg:npm/foobar@12.3.2", visited[0].package_url)
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-0-max-uris-3-multi-uri3.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-0-max-uris-3-multi-uri3.com")
         self.assertEqual(1, visited.count())
         self.assertEqual("pkg:npm/foobar@12.3.3", visited[0].package_url)
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-0-max-uris-3-multi-uri4.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-0-max-uris-3-multi-uri4.com")
         self.assertEqual(1, visited.count())
         self.assertEqual("pkg:npm/foobar@12.3.4", visited[0].package_url)
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-0-max-uris-3-multi-uri5.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-0-max-uris-3-multi-uri5.com")
         self.assertEqual(0, visited.count())
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-0-max-uris-3-multi-uri6.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-0-max-uris-3-multi-uri6.com")
         self.assertEqual(0, visited.count())
 
     def test_visit_uri_with_counter_0_max_uris_1_multi_uri(self):
@@ -151,21 +139,15 @@ class RunVisitWithCounterTest(MiningTestCase):
             uri_counter_by_visitor=counter,
         )
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-0-max-uris-1-multi-uri1.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-0-max-uris-1-multi-uri1.com")
         self.assertEqual(1, visited.count())
 
         # MAX_URIS=1 still gives us two URIs
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-0-max-uris-1-multi-uri2.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-0-max-uris-1-multi-uri2.com")
         self.assertEqual(1, visited.count())
 
         # ... but not 3
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-0-max-uris-1-multi-uri3.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-0-max-uris-1-multi-uri3.com")
         self.assertEqual(0, visited.count())
 
     def test_visit_uri_with_counter_10_max_uris_10_multi_uri(self):
@@ -299,22 +281,14 @@ class RunVisitWithCounterTest(MiningTestCase):
             uri_counter_by_visitor=counter,
         )
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-3-max-uris-3-multi-uri1.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-3-max-uris-3-multi-uri1.com")
         self.assertEqual(1, visited.count())
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-3-max-uris-3-multi-uri2.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-3-max-uris-3-multi-uri2.com")
         self.assertEqual(0, visited.count())
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-3-max-uris-3-multi-uri3.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-3-max-uris-3-multi-uri3.com")
         self.assertEqual(0, visited.count())
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-3-max-uris-3-multi-uri3.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-3-max-uris-3-multi-uri3.com")
         self.assertEqual(0, visited.count())
 
     def test_visit_uri_with_counter_1_max_uris_1_multi_uri(self):
@@ -354,14 +328,10 @@ class RunVisitWithCounterTest(MiningTestCase):
             uri_counter_by_visitor=counter,
         )
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-1-max-uris-1-multi-uri1.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-1-max-uris-1-multi-uri1.com")
         self.assertEqual(1, visited.count())
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-1-max-uris-1-multi-uri2.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-1-max-uris-1-multi-uri2.com")
         self.assertEqual(0, visited.count())
 
     def test_visit_uri_with_counter_10_max_uris_10(self):
@@ -394,9 +364,7 @@ class RunVisitWithCounterTest(MiningTestCase):
             uri_counter_by_visitor=counter,
         )
 
-        visited = ResourceURI.objects.filter(
-            uri="http://test-counter-10-max-uris-10.com"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test-counter-10-max-uris-10.com")
         self.assertEqual(1, visited.count())
 
     def test_visit_uri_with_counter_3_max_uris_3(self):
@@ -583,9 +551,7 @@ class RunVisitTest(MiningTestCase):
     def test_visit_uri_always_inserts_new_uri(self):
         # test proper
         visit_uri(self.resource_uri, _visit_router=self.router2)
-        visited = ResourceURI.objects.filter(uri="http://test.com").order_by(
-            "-package_url"
-        )
+        visited = ResourceURI.objects.filter(uri="http://test.com").order_by("-package_url")
         expected = [
             URI(uri="http://test.com", data="{'some': 'data'}"),
             URI(uri="http://test.com", package_url="pkg:npm/foobar@12.3.1"),

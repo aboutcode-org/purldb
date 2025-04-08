@@ -99,15 +99,11 @@ def create_package_from_purldb_data(project, resources, package_data, status):
         flag.MATCHED_TO_PURLDB_RESOURCE,
         flag.MATCHED_TO_PURLDB_DIRECTORY,
     ]
-    matched_resources_count = resources_qs.exclude(status__in=purldb_statuses).update(
-        status=status
-    )
+    matched_resources_count = resources_qs.exclude(status__in=purldb_statuses).update(status=status)
     return package, matched_resources_count
 
 
-def match_purldb_package(
-    project, resources_by_sha1, enhance_package_data=True, **kwargs
-):
+def match_purldb_package(project, resources_by_sha1, enhance_package_data=True, **kwargs):
     """
     Given a mapping of lists of CodebaseResources by their sha1 values,
     `resources_by_sha1`, send those sha1 values to purldb packages API endpoint,
@@ -134,9 +130,7 @@ def match_purldb_package(
     return match_count
 
 
-def match_purldb_resource(
-    project, resources_by_sha1, package_data_by_purldb_urls=None, **kwargs
-):
+def match_purldb_resource(project, resources_by_sha1, package_data_by_purldb_urls=None, **kwargs):
     """
     Given a mapping of lists of CodebaseResources by their sha1 values,
     `resources_by_sha1`, send those sha1 values to purldb resources API
@@ -178,9 +172,7 @@ def match_purldb_resource(
 def match_purldb_resource_approximately(project, resource):
     """Match by approximation a single resource in the PurlDB."""
     fingerprint = resource.extra_data.get("halo1", "")
-    results = ApproximateResourceContentIndex.match(
-        fingerprint=fingerprint, resource=resource
-    )
+    results = ApproximateResourceContentIndex.match(fingerprint=fingerprint, resource=resource)
     for result in results:
         package_data = result.package.to_dict()
         return create_package_from_purldb_data(
@@ -232,9 +224,7 @@ def match_purldb_resource_stemmed_snippets(project, resource):
             )
             results_mapping = result.to_dict()
             matched_stemmed_snippets.append(results_mapping)
-        save_resource_fingerprints(
-            resource, {"matched_stemmed_snippets": matched_stemmed_snippets}
-        )
+        save_resource_fingerprints(resource, {"matched_stemmed_snippets": matched_stemmed_snippets})
 
 
 def match_purldb_directory(project, resource, exact_match=False):
@@ -250,9 +240,7 @@ def match_purldb_directory(project, resource, exact_match=False):
         )
 
 
-def match_sha1s_to_purldb(
-    project, resources_by_sha1, matcher_func, package_data_by_purldb_urls
-):
+def match_sha1s_to_purldb(project, resources_by_sha1, matcher_func, package_data_by_purldb_urls):
     """
     Process `resources_by_sha1` with `matcher_func` and return a 3-tuple
     contaning an empty defaultdict(list), the number of matches and the number
@@ -304,9 +292,7 @@ def match_purldb_resources(
     )
 
 
-def _match_purldb_resources(
-    project, resources, matcher_func, chunk_size=1000, logger=None
-):
+def _match_purldb_resources(project, resources, matcher_func, chunk_size=1000, logger=None):
     resource_count = resources.count()
     resource_iterator = resources.iterator(chunk_size=chunk_size)
     progress = LoopProgress(resource_count, logger)
@@ -344,8 +330,7 @@ def _match_purldb_resources(
         total_sha1_count += sha1_count
 
     logger(
-        f"{total_matched_count:,d} resources matched in PurlDB "
-        f"using {total_sha1_count:,d} SHA1s"
+        f"{total_matched_count:,d} resources matched in PurlDB using {total_sha1_count:,d} SHA1s"
     )
 
 
@@ -409,10 +394,7 @@ def match_purldb_resources_snippets(project, logger=None):
     matched_count = project.codebaseresources.filter(
         status="snippet-matched-to-purldb-resource"
     ).count()
-    logger(
-        f"{matched_count:,d} resource{pluralize(matched_count, 's')} "
-        f"snippet matched in PurlDB"
-    )
+    logger(f"{matched_count:,d} resource{pluralize(matched_count, 's')} snippet matched in PurlDB")
 
 
 def match_purldb_resources_stemmed_snippets(project, logger=None):
@@ -482,10 +464,7 @@ def match_purldb_directories(project, exact_directory_match=False, logger=None):
         .filter(status=flag.MATCHED_TO_PURLDB_DIRECTORY)
         .count()
     )
-    logger(
-        f"{matched_count:,d} director{pluralize(matched_count, 'y,ies')} "
-        f"matched in PurlDB"
-    )
+    logger(f"{matched_count:,d} director{pluralize(matched_count, 'y,ies')} matched in PurlDB")
 
 
 def match_purldb_resources_post_process(project, logger=None):
@@ -494,16 +473,13 @@ def match_purldb_resources_post_process(project, logger=None):
         path__regex=r"^.*-extract$"
     )
 
-    resources = project.codebaseresources.files().filter(
-        status=flag.MATCHED_TO_PURLDB_RESOURCE
-    )
+    resources = project.codebaseresources.files().filter(status=flag.MATCHED_TO_PURLDB_RESOURCE)
 
     resource_count = extract_directories.count()
 
     if logger:
         logger(
-            f"Refining matching for {resource_count:,d} "
-            f"{flag.MATCHED_TO_PURLDB_RESOURCE} archives."
+            f"Refining matching for {resource_count:,d} {flag.MATCHED_TO_PURLDB_RESOURCE} archives."
         )
 
     resource_iterator = extract_directories.iterator(chunk_size=2000)
@@ -546,9 +522,7 @@ def _match_purldb_resources_post_process(directory_path, codebase_resources):
 
     for package, resources in ranked_packages.items():
         unmapped_resources = [
-            resource
-            for resource in resources
-            if not resource.discovered_packages.exists()
+            resource for resource in resources if not resource.discovered_packages.exists()
         ]
         if unmapped_resources:
             package.add_resources(unmapped_resources)

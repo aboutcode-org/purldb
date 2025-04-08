@@ -23,9 +23,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_ApacheDistIndexVisitor(self):
         uri = "http://apache.org/dist/zzz/find-ls.gz"
@@ -130,9 +128,7 @@ class ApacheVistorTest(JsonBasedTesting, DjangoTestCase):
 
 
 class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_package_from_download(self):
         package = miners.apache.build_package_from_download(
@@ -140,9 +136,7 @@ class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
             "pkg:apache/groovy@2.4.6",
         )
         expected_loc = self.get_test_loc("apache/map-groovy_expected.json")
-        self.check_expected_results(
-            package.to_dict(), expected_loc, regen=FIXTURES_REGEN
-        )
+        self.check_expected_results(package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_package_from_download2(self):
         package = miners.apache.build_package_from_download(
@@ -150,9 +144,7 @@ class ApacheMapperTest(JsonBasedTesting, DjangoTestCase):
             "pkg:apache/turbine-webapp@2.3.3-1.0.0-source-release",
         )
         expected_loc = self.get_test_loc("apache/map-turbine-webapp_expected.json")
-        self.check_expected_results(
-            package.to_dict(), expected_loc, regen=FIXTURES_REGEN
-        )
+        self.check_expected_results(package.to_dict(), expected_loc, regen=FIXTURES_REGEN)
 
     # TODO: add tests for checksums
 

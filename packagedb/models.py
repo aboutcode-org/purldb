@@ -57,9 +57,7 @@ class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
         Create and return a new Package.
         Return None if the insertion failed when an identical entry already exist.
         """
-        package, created = self.get_or_create(
-            download_url=download_url, defaults=extra_fields
-        )
+        package, created = self.get_or_create(download_url=download_url, defaults=extra_fields)
         if created:
             return package
 
@@ -405,9 +403,7 @@ class AbstractPackage(models.Model):
         max_length=64,
         blank=True,
         null=True,
-        help_text=_(
-            "The identifier for the datafile handler used to obtain this package."
-        ),
+        help_text=_("The identifier for the datafile handler used to obtain this package."),
     )
     file_references = models.JSONField(
         default=list,
@@ -464,9 +460,7 @@ class Package(
     PackageURLMixin,
     AbstractPackage,
 ):
-    uuid = models.UUIDField(
-        verbose_name=_("UUID"), default=uuid.uuid4, unique=True, editable=False
-    )
+    uuid = models.UUIDField(verbose_name=_("UUID"), default=uuid.uuid4, unique=True, editable=False)
     mining_level = models.PositiveIntegerField(
         default=0,
         help_text=_(
@@ -527,18 +521,14 @@ class Package(
         null=True,
         choices=PackageContentType.choices,
         help_text=_(
-            "Content of this Package as one of: {}".format(
-                ", ".join(PackageContentType.labels)
-            )
+            "Content of this Package as one of: {}".format(", ".join(PackageContentType.labels))
         ),
     )
     summary = models.JSONField(
         default=dict,
         blank=True,
         null=True,
-        help_text=_(
-            "A mapping containing a summary and license clarity score for this Package"
-        ),
+        help_text=_("A mapping containing a summary and license clarity score for this Package"),
     )
     is_duplicate = models.BooleanField(
         default=False,
@@ -563,9 +553,7 @@ class Package(
         ]
         indexes = [
             # multicolumn index for search on a whole `purl`
-            models.Index(
-                fields=["type", "namespace", "name", "version", "qualifiers", "subpath"]
-            ),
+            models.Index(fields=["type", "namespace", "name", "version", "qualifiers", "subpath"]),
             models.Index(fields=["type"]),
             models.Index(fields=["namespace"]),
             models.Index(fields=["name"]),
@@ -629,9 +617,7 @@ class Package(
         addon_pipelines = kwargs.get("addon_pipelines", [])
         pipelines = DEFAULT_PIPELINES + tuple(addon_pipelines)
 
-        add_package_to_scan_queue(
-            self, pipelines=pipelines, reindex_uri=True, priority=100
-        )
+        add_package_to_scan_queue(self, pipelines=pipelines, reindex_uri=True, priority=100)
 
     def update_fields(self, save=False, **values_by_fields):
         """
@@ -670,9 +656,7 @@ class Package(
                             dep = DependentPackage(
                                 package=self,
                                 purl=dep_data.get("purl"),
-                                extracted_requirement=dep_data.get(
-                                    "extracted_requirement"
-                                ),
+                                extracted_requirement=dep_data.get("extracted_requirement"),
                                 scope=dep_data.get("scope"),
                                 is_runtime=dep_data.get("is_runtime"),
                                 is_optional=dep_data.get("is_optional"),
@@ -720,9 +704,7 @@ class Package(
                                 sha256=resource_data.get("sha256"),
                                 mime_type=resource_data.get("mime_type"),
                                 file_type=resource_data.get("file_type"),
-                                programming_language=resource_data.get(
-                                    "programming_language"
-                                ),
+                                programming_language=resource_data.get("programming_language"),
                                 is_binary=resource_data.get("is_binary"),
                                 is_text=resource_data.get("is_text"),
                                 is_archive=resource_data.get("is_archive"),
@@ -955,9 +937,7 @@ class AbstractResource(models.Model):
     extension = models.CharField(
         max_length=100,
         blank=True,
-        help_text=_(
-            "File extension for this resource (directories do not have an extension)."
-        ),
+        help_text=_("File extension for this resource (directories do not have an extension)."),
     )
 
     size = models.BigIntegerField(
@@ -1052,16 +1032,12 @@ class ScanFieldsModelMixin(models.Model):
     copyrights = models.JSONField(
         blank=True,
         default=list,
-        help_text=_(
-            "List of detected copyright statements (and related detection details)."
-        ),
+        help_text=_("List of detected copyright statements (and related detection details)."),
     )
     holders = models.JSONField(
         blank=True,
         default=list,
-        help_text=_(
-            "List of detected copyright holders (and related detection details)."
-        ),
+        help_text=_("List of detected copyright holders (and related detection details)."),
     )
     authors = models.JSONField(
         blank=True,
@@ -1122,9 +1098,7 @@ class ScanFieldsModelMixin(models.Model):
             self.save()
 
 
-class Resource(
-    ExtraDataFieldMixin, HashFieldsMixin, ScanFieldsModelMixin, AbstractResource
-):
+class Resource(ExtraDataFieldMixin, HashFieldsMixin, ScanFieldsModelMixin, AbstractResource):
     package = models.ForeignKey(
         Package,
         related_name="resources",
@@ -1200,8 +1174,7 @@ class PackageRelation(models.Model):
 
     def __str__(self):
         return (
-            f"{self.from_package.purl} is the "
-            f"{self.relationship.upper()} to {self.to_package.purl}"
+            f"{self.from_package.purl} is the {self.relationship.upper()} to {self.to_package.purl}"
         )
 
 
@@ -1280,9 +1253,7 @@ class PackageWatch(models.Model):
     depth = models.PositiveSmallIntegerField(
         choices=DEPTH_CHOICES,
         default=3,
-        help_text=_(
-            "Depth of data collection from listing versions up to a full scan."
-        ),
+        help_text=_("Depth of data collection from listing versions up to a full scan."),
     )
 
     watch_interval = models.PositiveSmallIntegerField(
@@ -1334,9 +1305,7 @@ class PackageWatch(models.Model):
             try:
                 purl = PackageURL.from_string(self.package_url)
             except ValueError as e:
-                raise exceptions.ValidationError(
-                    f"Error creating PackageWatch object: {e}"
-                ) from e
+                raise exceptions.ValidationError(f"Error creating PackageWatch object: {e}") from e
 
             # we are removing version/qualifiers/subpath before saving
             self.package_url = str(
@@ -1449,9 +1418,7 @@ class ApiUserManager(UserManager):
         except models.ObjectDoesNotExist:
             pass
         else:
-            raise exceptions.ValidationError(
-                f"Error: This email already exists: {email}"
-            )
+            raise exceptions.ValidationError(f"Error: This email already exists: {email}")
 
 
 @receiver(models.signals.post_save, sender=settings.AUTH_USER_MODEL)

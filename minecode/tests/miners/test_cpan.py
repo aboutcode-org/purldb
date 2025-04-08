@@ -20,9 +20,7 @@ from minecode.utils_test import mocked_requests_get
 
 
 class CpanVisitorTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_metacpanauthorurlvisitors(self):
         uri = "https://fastapi.metacpan.org/author/_search?q=email:a*&size=5000"
@@ -39,9 +37,7 @@ class CpanVisitorTest(JsonBasedTesting):
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
             _, data, _ = cpan.CpanModulesVisitors(uri)
-        expected_loc = self.get_test_loc(
-            "cpan/expected_release_from_author_ABERNDT.json"
-        )
+        expected_loc = self.get_test_loc("cpan/expected_release_from_author_ABERNDT.json")
         self.check_expected_results(data, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_html_modules(self):
@@ -63,7 +59,9 @@ class CpanVisitorTest(JsonBasedTesting):
         self.check_expected_uris(uris, expected_loc, regen=FIXTURES_REGEN)
 
     def test_visit_readme_file(self):
-        uri = "http://www.cpan.org/authors/id/A/AM/AMIRITE/Mojolicious-Plugin-Nour-Config-0.09.readme"
+        uri = (
+            "http://www.cpan.org/authors/id/A/AM/AMIRITE/Mojolicious-Plugin-Nour-Config-0.09.readme"
+        )
         test_loc = self.get_test_loc("cpan/Mojolicious-Plugin-Nour-Config-0.09.readme")
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
@@ -74,9 +72,7 @@ class CpanVisitorTest(JsonBasedTesting):
 
 
 class CpanMapperTest(JsonBasedTesting):
-    test_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "testfiles"
-    )
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_from_release_search_json(self):
         with open(self.get_test_loc("cpan/release_search.json")) as cpan_metadata:
@@ -90,18 +86,14 @@ class CpanMapperTest(JsonBasedTesting):
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_from_release_search_json2(self):
-        with open(
-            self.get_test_loc("cpan/MIYAGAWA_author_release_search.json")
-        ) as cpan_metadata:
+        with open(self.get_test_loc("cpan/MIYAGAWA_author_release_search.json")) as cpan_metadata:
             metadata = cpan_metadata.read()
         packages = miners.cpan.build_packages_from_release_json(
             metadata,
             "https://fastapi.metacpan.org/release/_search?q=author:MIYAGAWA&size=5000",
         )
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "cpan/expected_release_search_author_MIYAGAWA.json"
-        )
+        expected_loc = self.get_test_loc("cpan/expected_release_search_author_MIYAGAWA.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_metafile_from_yaml(self):
@@ -117,9 +109,7 @@ class CpanMapperTest(JsonBasedTesting):
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_metafile_from_json(self):
-        with open(
-            self.get_test_loc("cpan/Regexp-Common-2016010701.meta")
-        ) as cpan_metadata:
+        with open(self.get_test_loc("cpan/Regexp-Common-2016010701.meta")) as cpan_metadata:
             metadata = cpan_metadata.read()
         packages = miners.cpan.build_packages_from_metafile(
             metadata,
@@ -131,7 +121,9 @@ class CpanMapperTest(JsonBasedTesting):
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_readme_from_json(self):
-        uri = "http://www.cpan.org/authors/id/A/AM/AMIRITE/Mojolicious-Plugin-Nour-Config-0.09.readme"
+        uri = (
+            "http://www.cpan.org/authors/id/A/AM/AMIRITE/Mojolicious-Plugin-Nour-Config-0.09.readme"
+        )
         test_loc = self.get_test_loc("cpan/Mojolicious-Plugin-Nour-Config-0.09.readme")
         with patch("requests.get") as mock_http_get:
             mock_http_get.return_value = mocked_requests_get(uri, test_loc)
@@ -142,9 +134,7 @@ class CpanMapperTest(JsonBasedTesting):
             "pkg:cpan/Mojolicious-Plugin-Nour-Config@0.09",
         )
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "cpan/expected_json_readmefile_cpanmapper.json"
-        )
+        expected_loc = self.get_test_loc("cpan/expected_json_readmefile_cpanmapper.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_readme_from_json2(self):
@@ -161,7 +151,5 @@ class CpanMapperTest(JsonBasedTesting):
             "http://www.cpan.org/authors/id/A/AB/ABIGAIL/Algorithm-Graphs-TransitiveClosure-2009110901.readme",
         )
         packages = [p.to_dict() for p in packages]
-        expected_loc = self.get_test_loc(
-            "cpan/expected_json_readmefile_cpanmapper2.json"
-        )
+        expected_loc = self.get_test_loc("cpan/expected_json_readmefile_cpanmapper2.json")
         self.check_expected_results(packages, expected_loc, regen=FIXTURES_REGEN)

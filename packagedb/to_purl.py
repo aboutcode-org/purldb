@@ -50,9 +50,7 @@ class GolangPurlViewSet(viewsets.ViewSet):
         response = {}
 
         if not serializer.is_valid():
-            return Response(
-                {"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         validated_data = serializer.validated_data
         go_import = validated_data.get("go_package")
@@ -64,9 +62,7 @@ class GolangPurlViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         response["package_url"] = str(purl)
-        serializer = GoLangPurlResponseSerializer(
-            response, context={"request": request}
-        )
+        serializer = GoLangPurlResponseSerializer(response, context={"request": request})
         return Response(serializer.data)
 
 

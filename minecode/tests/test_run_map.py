@@ -65,16 +65,12 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         resource_uri.save()
 
         # ensure that we are clear of Package before
-        before = packagedb.models.Package.objects.filter(
-            download_url="http://testdomap.com"
-        )
+        before = packagedb.models.Package.objects.filter(download_url="http://testdomap.com")
         self.assertEqual(0, before.count())
 
         # test proper
         map_uri(resource_uri, _map_router=router)
-        mapped = packagedb.models.Package.objects.filter(
-            download_url="http://testdomap.com"
-        )
+        mapped = packagedb.models.Package.objects.filter(download_url="http://testdomap.com")
         self.assertEqual(1, mapped.count())
         mapped_package = mapped.first()
         self.assertEqual(
@@ -114,24 +110,18 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         assert resolved == mock_mapper
 
         # seed ResourceURI with a uri
-        resource_uri = ResourceURI.objects.insert(
-            uri=uri, last_visit_date=timezone.now()
-        )
+        resource_uri = ResourceURI.objects.insert(uri=uri, last_visit_date=timezone.now())
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
         resource_uri.save()
 
         # ensure that we are clear of Package before
-        before = packagedb.models.Package.objects.filter(
-            download_url="http://testdomap.com"
-        )
+        before = packagedb.models.Package.objects.filter(download_url="http://testdomap.com")
         self.assertEqual(0, before.count())
 
         # test proper
         map_uri(resource_uri, _map_router=router)
-        mapped = packagedb.models.Package.objects.filter(
-            download_url="http://testdomap.com"
-        )
+        mapped = packagedb.models.Package.objects.filter(download_url="http://testdomap.com")
         self.assertEqual(0, mapped.count())
 
         # check that the ResourceURI status has been updated correctly
@@ -159,24 +149,18 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         assert resolved == mock_mapper
 
         # seed ResourceURI with a uri
-        resource_uri = ResourceURI.objects.insert(
-            uri=uri, last_visit_date=timezone.now()
-        )
+        resource_uri = ResourceURI.objects.insert(uri=uri, last_visit_date=timezone.now())
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
         resource_uri.save()
 
         # ensure that we are clear of Package before
-        before = packagedb.models.Package.objects.filter(
-            download_url="http://testdomap.com"
-        )
+        before = packagedb.models.Package.objects.filter(download_url="http://testdomap.com")
         self.assertEqual(0, before.count())
 
         # test proper
         map_uri(resource_uri, _map_router=router)
-        mapped = packagedb.models.Package.objects.filter(
-            download_url="http://testdomap.com"
-        )
+        mapped = packagedb.models.Package.objects.filter(download_url="http://testdomap.com")
         self.assertEqual(0, mapped.count())
 
         # check that the ResourceURI status has been updated correctly
@@ -207,24 +191,18 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         assert resolved == mock_mapper
 
         # seed ResourceURI with a uri
-        resource_uri = ResourceURI.objects.insert(
-            uri=uri, last_visit_date=timezone.now()
-        )
+        resource_uri = ResourceURI.objects.insert(uri=uri, last_visit_date=timezone.now())
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
         resource_uri.save()
 
         # ensure that we are clear of Package before
-        before = packagedb.models.Package.objects.filter(
-            download_url="http://testdomap.com"
-        )
+        before = packagedb.models.Package.objects.filter(download_url="http://testdomap.com")
         self.assertEqual(0, before.count())
 
         # test proper
         map_uri(resource_uri, _map_router=router)
-        mapped = packagedb.models.Package.objects.filter(
-            download_url="http://testdomap.com"
-        )
+        mapped = packagedb.models.Package.objects.filter(download_url="http://testdomap.com")
         self.assertEqual(0, mapped.count())
 
         # check that the ResourceURI status has been updated correctly
@@ -260,24 +238,18 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
         assert resolved == mock_mapper
 
         # seed ResourceURI with a uri
-        resource_uri = ResourceURI.objects.insert(
-            uri=uri, last_visit_date=timezone.now()
-        )
+        resource_uri = ResourceURI.objects.insert(uri=uri, last_visit_date=timezone.now())
         assert ResourceURI.objects.get(uri=uri) == resource_uri
         resource_uri.is_mappable = True
         resource_uri.save()
 
         # ensure that we are clear of Package before
-        before = packagedb.models.Package.objects.filter(
-            download_url="http://testdomap.com"
-        )
+        before = packagedb.models.Package.objects.filter(download_url="http://testdomap.com")
         self.assertEqual(0, before.count())
 
         # test proper
         map_uri(resource_uri, _map_router=router)
-        mapped = packagedb.models.Package.objects.filter(
-            download_url="http://testdomap.com"
-        )
+        mapped = packagedb.models.Package.objects.filter(download_url="http://testdomap.com")
         self.assertEqual(0, mapped.count())
 
         # check that the ResourceURI status has been updated correctly
@@ -593,9 +565,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
             download_url=download_url,
         ).to_dict()
         merge_packages(existing_package, new_package_data, replace=False)
-        expected_loc = self.get_test_loc(
-            "run_map/test_merge_packages_no_replace-expected.json"
-        )
+        expected_loc = self.get_test_loc("run_map/test_merge_packages_no_replace-expected.json")
         result = existing_package.to_dict()
         self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
@@ -617,9 +587,7 @@ class RunMapTest(JsonBasedTesting, MiningTestCase):
             download_url=download_url,
         ).to_dict()
         merge_packages(existing_package, new_package_data, replace=True)
-        expected_loc = self.get_test_loc(
-            "run_map/test_merge_packages_with_replace-expected.json"
-        )
+        expected_loc = self.get_test_loc("run_map/test_merge_packages_with_replace-expected.json")
         result = existing_package.to_dict()
         self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 

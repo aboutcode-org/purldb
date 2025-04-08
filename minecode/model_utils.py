@@ -45,9 +45,7 @@ SUPPORTED_ADDON_PIPELINES = (
 )
 
 
-def add_package_to_scan_queue(
-    package, pipelines=DEFAULT_PIPELINES, priority=0, reindex_uri=False
-):
+def add_package_to_scan_queue(package, pipelines=DEFAULT_PIPELINES, priority=0, reindex_uri=False):
     """
     Add a Package `package` to the scan queue to run the list of provided
     `pipelines` with a given `priority`. A ScannableURI with a `priority` of 100
@@ -159,9 +157,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
                 # If `existing_field` is `parties`, then we update the `Party` table
                 parties = new_value
                 existing_parties = Party.objects.filter(package=existing_package)
-                serialized_existing_parties = PartySerializer(
-                    existing_parties, many=True
-                ).data
+                serialized_existing_parties = PartySerializer(existing_parties, many=True).data
                 if replace:
                     # Delete existing Party objects
                     existing_parties.delete()
@@ -184,9 +180,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
             elif existing_field == "dependencies":
                 # If `existing_field` is `dependencies`, then we update the `DependentPackage` table
                 dependencies = new_value
-                existing_dependencies = DependentPackage.objects.filter(
-                    package=existing_package
-                )
+                existing_dependencies = DependentPackage.objects.filter(package=existing_package)
                 serialized_existing_dependencies = DependentPackageSerializer(
                     existing_dependencies, many=True
                 ).data
@@ -222,9 +216,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
             # If `existing_field` is not `parties` or `dependencies`, then the
             # `existing_field` is a regular field on the Package model and can
             # be updated normally.
-            entry = dict(
-                field=existing_field, old_value=existing_value, new_value=new_value
-            )
+            entry = dict(field=existing_field, old_value=existing_value, new_value=new_value)
             updated_fields.append(entry)
             setattr(existing_package, existing_field, new_value)
             existing_package.last_modified_date = timezone.now()
@@ -330,9 +322,7 @@ def merge_or_create_package(scanned_package, visit_level, override=False):
             data = {
                 "updated_fields": updated_fields,
             }
-            stored_package.append_to_history(
-                "Package field values have been updated.", data=data
-            )
+            stored_package.append_to_history("Package field values have been updated.", data=data)
 
         # TODO: append updated_fields information to the package's history
 
@@ -399,9 +389,7 @@ def merge_or_create_package(scanned_package, visit_level, override=False):
         stringify_null_purl_fields(package_data)
 
         created_package = Package.objects.create(**package_data)
-        created_package.append_to_history(
-            f"New Package created from URI: {package_uri}"
-        )
+        created_package.append_to_history(f"New Package created from URI: {package_uri}")
 
         # This is used in the case of Maven packages created from the priority queue
         for h in history:

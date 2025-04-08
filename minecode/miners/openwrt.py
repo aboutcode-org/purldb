@@ -56,12 +56,8 @@ class OpenWrtDownloadPagesVisitor(HttpVisitor):
             # Add the uri for next loop if it ends with "/", which means it'a
             # folder resource uri
             if href.endswith("/"):
-                package_url = PackageURL(
-                    type="openwrt", name=href.replace("/", "")
-                ).to_string()
-                yield URI(
-                    uri=self.uri + href, package_url=package_url, source_uri=self.uri
-                )
+                package_url = PackageURL(type="openwrt", name=href.replace("/", "")).to_string()
+                yield URI(uri=self.uri + href, package_url=package_url, source_uri=self.uri)
             elif href.endswith(("Packages", "Packages.gz", ".ipk")):
                 yield URI(uri=self.uri + href, source_uri=self.uri)
 

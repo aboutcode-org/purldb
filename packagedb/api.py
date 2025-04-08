@@ -245,9 +245,7 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
 
         if unsupported_fields:
             unsupported_fields_str = ", ".join(unsupported_fields)
-            response_data = {
-                "status": f"Unsupported field(s) given: {unsupported_fields_str}"
-            }
+            response_data = {"status": f"Unsupported field(s) given: {unsupported_fields_str}"}
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
         if not data:
@@ -269,9 +267,7 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
             .order_by()
         )
         paginated_qs = self.paginate_queryset(qs)
-        serializer = ResourceAPISerializer(
-            paginated_qs, many=True, context={"request": request}
-        )
+        serializer = ResourceAPISerializer(paginated_qs, many=True, context={"request": request})
         paginated_response = self.get_paginated_response(serializer.data)
         return paginated_response
 
@@ -387,9 +383,7 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
 
         latest_version = package.get_latest_version()
         if latest_version:
-            return Response(
-                PackageAPISerializer(latest_version, context={"request": request}).data
-            )
+            return Response(PackageAPISerializer(latest_version, context={"request": request}).data)
 
         return Response({})
 
@@ -407,9 +401,7 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         qs = Resource.objects.filter(package=package)
         paginated_qs = self.paginate_queryset(qs)
 
-        serializer = ResourceAPISerializer(
-            paginated_qs, many=True, context={"request": request}
-        )
+        serializer = ResourceAPISerializer(paginated_qs, many=True, context={"request": request})
         return self.get_paginated_response(serializer.data)
 
     @action(detail=True)
@@ -467,9 +459,7 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
 
         if unsupported_fields:
             unsupported_fields_str = ", ".join(unsupported_fields)
-            response_data = {
-                "status": f"Unsupported field(s) given: {unsupported_fields_str}"
-            }
+            response_data = {"status": f"Unsupported field(s) given: {unsupported_fields_str}"}
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
         enhance_package_data = data.pop("enhance_package_data", False)
@@ -502,9 +492,7 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
                 get_enhanced_package(package=package) for package in paginated_qs
             ]
         else:
-            serializer = PackageAPISerializer(
-                paginated_qs, many=True, context={"request": request}
-            )
+            serializer = PackageAPISerializer(paginated_qs, many=True, context={"request": request})
             serialized_package_data = serializer.data
         return self.get_paginated_response(serialized_package_data)
 
@@ -545,9 +533,7 @@ class PackageUpdateSet(viewsets.ViewSet):
         serializer = UpdatePackagesSerializer(data=request.data)
 
         if not serializer.is_valid():
-            return Response(
-                {"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         validated_data = serializer.validated_data
         packages = validated_data.get("purls", [])
@@ -795,12 +781,8 @@ class CollectViewSet(viewsets.ViewSet):
 
     @extend_schema(
         parameters=[
-            OpenApiParameter(
-                "purl", str, "query", description="PackageURL", required=True
-            ),
-            OpenApiParameter(
-                "source_purl", str, "query", description="Source PackageURL"
-            ),
+            OpenApiParameter("purl", str, "query", description="PackageURL", required=True),
+            OpenApiParameter("source_purl", str, "query", description="Source PackageURL"),
             # There is no OpenApiTypes.LIST https://github.com/tfranzel/drf-spectacular/issues/341
             OpenApiParameter(
                 "addon_pipelines",
@@ -842,9 +824,7 @@ class CollectViewSet(viewsets.ViewSet):
             try:
                 errors = priority_router.process(purl, **kwargs)
             except NoRouteAvailable:
-                message = {
-                    "status": f"cannot fetch Package data for {purl}: no available handler"
-                }
+                message = {"status": f"cannot fetch Package data for {purl}: no available handler"}
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
             lookups = purl_to_lookups(purl)
@@ -860,9 +840,7 @@ class CollectViewSet(viewsets.ViewSet):
         for package in packages:
             get_source_package_and_add_to_package_set(package)
 
-        serializer = PackageAPISerializer(
-            packages, many=True, context={"request": request}
-        )
+        serializer = PackageAPISerializer(packages, many=True, context={"request": request})
         return Response(serializer.data)
 
     @extend_schema(
@@ -971,9 +949,7 @@ class CollectViewSet(viewsets.ViewSet):
         serializer = self.serializer_class(data=request.data)
 
         if not serializer.is_valid():
-            return Response(
-                {"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         validated_data = serializer.validated_data
         packages = validated_data.get("packages", [])
@@ -998,6 +974,7 @@ class CollectViewSet(viewsets.ViewSet):
             "conan",
             "pypi",
             "cargo",
+            "gem",
             "nuget",
         ]
 
@@ -1011,9 +988,7 @@ class CollectViewSet(viewsets.ViewSet):
                 kwargs = dict()
                 if addon_pipelines := package.get("addon_pipelines"):
                     kwargs["addon_pipelines"] = [
-                        pipe
-                        for pipe in addon_pipelines
-                        if is_supported_addon_pipeline(pipe)
+                        pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)
                     ]
                 lookups = purl_to_lookups(purl)
                 packages = Package.objects.filter(**lookups)
@@ -1030,9 +1005,7 @@ class CollectViewSet(viewsets.ViewSet):
             requeued_packages.extend([p.package_url for p in reindexed_packages])
 
         if not reindex or nonexistent_packages:
-            interesting_packages = (
-                nonexistent_packages if nonexistent_packages else unique_packages
-            )
+            interesting_packages = nonexistent_packages if nonexistent_packages else unique_packages
             for package in interesting_packages:
                 purl = package["purl"]
                 is_routable_purl = priority_router.is_routable(purl)
@@ -1045,15 +1018,11 @@ class CollectViewSet(viewsets.ViewSet):
                         extra_fields["source_uri"] = source_purl
                     if addon_pipelines := package.get("addon_pipelines"):
                         extra_fields["addon_pipelines"] = [
-                            pipe
-                            for pipe in addon_pipelines
-                            if is_supported_addon_pipeline(pipe)
+                            pipe for pipe in addon_pipelines if is_supported_addon_pipeline(pipe)
                         ]
                     if priority := package.get("priority"):
                         extra_fields["priority"] = priority
-                    priority_resource_uri = PriorityResourceURI.objects.insert(
-                        purl, **extra_fields
-                    )
+                    priority_resource_uri = PriorityResourceURI.objects.insert(purl, **extra_fields)
                     if priority_resource_uri:
                         queued_packages.append(purl)
                     else:
@@ -1072,16 +1041,12 @@ class CollectViewSet(viewsets.ViewSet):
             "unsupported_vers": unsupported_vers,
         }
 
-        serializer = IndexPackagesResponseSerializer(
-            response_data, context={"request": request}
-        )
+        serializer = IndexPackagesResponseSerializer(response_data, context={"request": request})
         return Response(serializer.data)
 
     @extend_schema(
         parameters=[
-            OpenApiParameter(
-                "purl", str, "query", description="PackageURL", required=True
-            ),
+            OpenApiParameter("purl", str, "query", description="PackageURL", required=True),
         ],
         responses={200: PackageAPISerializer()},
     )
@@ -1127,9 +1092,7 @@ class CollectViewSet(viewsets.ViewSet):
         try:
             errors = priority_router.process(purl, **kwargs)
         except NoRouteAvailable:
-            message = {
-                "status": f"cannot fetch Package data for {purl}: no available handler"
-            }
+            message = {"status": f"cannot fetch Package data for {purl}: no available handler"}
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
         lookups = purl_to_lookups(purl)
@@ -1142,9 +1105,7 @@ class CollectViewSet(viewsets.ViewSet):
                 }
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = PackageAPISerializer(
-            packages, many=True, context={"request": request}
-        )
+        serializer = PackageAPISerializer(packages, many=True, context={"request": request})
         return Response(serializer.data)
 
 
@@ -1191,9 +1152,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
         serializer = self.serializer_class(data=request.query_params)
 
         if not serializer.is_valid():
-            return Response(
-                {"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         validated_data = serializer.validated_data
         purl = validated_data.get("purl")
@@ -1201,7 +1160,9 @@ class PurlValidateViewSet(viewsets.ViewSet):
 
         message_valid = "The provided PackageURL is valid."
         message_not_valid = "The provided PackageURL is not valid."
-        message_valid_and_exists = "The provided Package URL is valid, and the package exists in the upstream repo."
+        message_valid_and_exists = (
+            "The provided Package URL is valid, and the package exists in the upstream repo."
+        )
         message_valid_but_does_not_exist = (
             "The provided PackageURL is valid, but does not exist in the upstream repo."
         )
@@ -1217,9 +1178,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
         try:
             package_url = PackageURL.from_string(purl)
         except ValueError:
-            serializer = PurlValidateResponseSerializer(
-                response, context={"request": request}
-            )
+            serializer = PurlValidateResponseSerializer(response, context={"request": request})
             return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
         response["valid"] = True
@@ -1259,9 +1218,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
             else:
                 response["message"] = message_valid_but_does_not_exist
 
-        serializer = PurlValidateResponseSerializer(
-            response, context={"request": request}
-        )
+        serializer = PurlValidateResponseSerializer(response, context={"request": request})
         return Response(serializer.data)
 
 
@@ -1367,9 +1324,7 @@ def resolve_versions(parsed_purl, vers):
                 )
                 result.append(str(package_url))
         except InvalidConstraintsError:
-            logger.warning(
-                f"Invalid constraints sequence in '{vers}' for '{parsed_purl}'"
-            )
+            logger.warning(f"Invalid constraints sequence in '{vers}' for '{parsed_purl}'")
             return
 
     return result
@@ -1413,8 +1368,7 @@ def get_all_versions(purl):
 
 
 VERSION_CLASS_BY_PACKAGE_TYPE = {
-    pkg_type: range_class.version_class
-    for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()
+    pkg_type: range_class.version_class for pkg_type, range_class in RANGE_CLASS_BY_SCHEMES.items()
 }
 
 

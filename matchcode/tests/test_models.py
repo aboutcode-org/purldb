@@ -95,13 +95,9 @@ class BaseModelTest(MatchcodeTestCase):
         index_packages_sha1()
 
         # Populate ExactFileIndexFingerprint table
-        load_resources_from_scan(
-            self.get_test_loc("models/match-test.json"), self.test_package4
-        )
+        load_resources_from_scan(self.get_test_loc("models/match-test.json"), self.test_package4)
         index_package_directories(self.test_package4)
-        index_package_files_sha1(
-            self.test_package4, self.get_test_loc("models/match-test.json")
-        )
+        index_package_files_sha1(self.test_package4, self.get_test_loc("models/match-test.json"))
 
 
 class ExactPackageArchiveIndexModelTestCase(BaseModelTest):
@@ -122,14 +118,10 @@ class ExactPackageArchiveIndexModelTestCase(BaseModelTest):
 
     def test_ExactPackageArchiveIndex_index_of_invalid_sha1(self):
         ExactPackageArchiveIndex.index("not a sha1", self.test_package1)
-        self.assertTrue(
-            "Error('Non-hexadecimal digit found')" in self.test_package1.index_error
-        )
+        self.assertTrue("Error('Non-hexadecimal digit found')" in self.test_package1.index_error)
 
     def test_ExactPackageArchiveIndex_single_sha1_single_match(self):
-        result = ExactPackageArchiveIndex.match(
-            "51d28a27d919ce8690a40f4f335b9d591ceb16e9"
-        )
+        result = ExactPackageArchiveIndex.match("51d28a27d919ce8690a40f4f335b9d591ceb16e9")
         result = [r.package.to_dict() for r in result]
         expected = [self.test_package1_metadata]
         self.assertEqual(expected, result)
@@ -150,9 +142,7 @@ class ExactFileIndexModelTestCase(BaseModelTest):
 
         # Test index of invalid sha1
         ExactFileIndex.index("not a sha1", self.test_package1)
-        self.assertTrue(
-            "Error('Non-hexadecimal digit found')" in self.test_package1.index_error
-        )
+        self.assertTrue("Error('Non-hexadecimal digit found')" in self.test_package1.index_error)
 
     def test_ExactFileIndex_match(self):
         scan_location = self.get_test_loc("models/match-test.json")
@@ -172,9 +162,7 @@ class ExactFileIndexModelTestCase(BaseModelTest):
                 resource.matched_to.append(p["purl"])
             resource.save(codebase)
 
-        expected = self.get_test_loc(
-            "models/exact-file-matching-standalone-test-results.json"
-        )
+        expected = self.get_test_loc("models/exact-file-matching-standalone-test-results.json")
         self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
 
 
@@ -244,9 +232,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
         )
 
     def test_ApproximateDirectoryStructureIndex_match_subdir(self):
-        scan_location = self.get_test_loc(
-            "models/directory-matching/async-0.2.9-i.json"
-        )
+        scan_location = self.get_test_loc("models/directory-matching/async-0.2.9-i.json")
         vc = VirtualCodebase(
             location=scan_location,
             resource_attributes=dict(packages=attr.ib(default=attr.Factory(list))),
@@ -258,9 +244,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             if resource.is_file:
                 continue
             fp = resource.extra_data.get("directory_structure", "")
-            matches = ApproximateDirectoryStructureIndex.match(
-                fingerprint=fp, resource=resource
-            )
+            matches = ApproximateDirectoryStructureIndex.match(fingerprint=fp, resource=resource)
             for match in matches:
                 p = match.package.to_dict()
                 p["match_type"] = "approximate-directory-structure"
@@ -299,9 +283,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
         )
 
     def test_ApproximateDirectoryContentIndex_match_subdir(self):
-        scan_location = self.get_test_loc(
-            "models/directory-matching/async-0.2.9-i.json"
-        )
+        scan_location = self.get_test_loc("models/directory-matching/async-0.2.9-i.json")
         vc = VirtualCodebase(
             location=scan_location,
             resource_attributes=dict(packages=attr.ib(default=attr.Factory(list))),
@@ -313,9 +295,7 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             if resource.is_file:
                 continue
             fp = resource.extra_data.get("directory_content", "")
-            matches = ApproximateDirectoryContentIndex.match(
-                fingerprint=fp, resource=resource
-            )
+            matches = ApproximateDirectoryContentIndex.match(fingerprint=fp, resource=resource)
             for match in matches:
                 p = match.package.to_dict()
                 p["match_type"] = "approximate-directory-content"
@@ -366,9 +346,7 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
             extension="js",
             package=self.test_package1,
         )
-        test_resource1_loc = self.get_test_loc(
-            "match/approximate-file-matching/index.js"
-        )
+        test_resource1_loc = self.get_test_loc("match/approximate-file-matching/index.js")
         fingerprints = get_file_fingerprint_hashes(test_resource1_loc)
         self.test_resource1_fingerprint = fingerprints["halo1"]
         ApproximateResourceContentIndex.index(
@@ -395,9 +373,7 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
         self.assertEqual(fingerprint, adci.fingerprint())
 
         # Test index of invalid fingerprint
-        ApproximateResourceContentIndex.index(
-            "not a fingerprint", resource_path, self.test_package
-        )
+        ApproximateResourceContentIndex.index("not a fingerprint", resource_path, self.test_package)
         self.assertTrue(
             "ValueError: invalid literal for int() with base 16: 'not a fi'"
             in self.test_package.index_error
@@ -416,9 +392,7 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
         for resource in codebase.walk(topdown=True):
             if not (fp := resource.halo1):
                 continue
-            matches = ApproximateResourceContentIndex.match(
-                fingerprint=fp, resource=resource
-            )
+            matches = ApproximateResourceContentIndex.match(fingerprint=fp, resource=resource)
             for match in matches:
                 p = match.package.to_dict()
                 p["match_type"] = "approximate-resource-content"
@@ -431,9 +405,7 @@ class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
         self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
 
     def test_ApproximateResourceContentIndex_match_deep_equals(self):
-        test_file_loc = self.get_test_loc(
-            "match/approximate-file-matching/index-modified.js"
-        )
+        test_file_loc = self.get_test_loc("match/approximate-file-matching/index-modified.js")
         fingerprints = get_file_fingerprint_hashes(test_file_loc)
         fp = fingerprints["halo1"]
         matches = ApproximateResourceContentIndex.match(fp)
@@ -479,12 +451,8 @@ class SnippetIndexTestCase(MatchcodeTestCase):
             extension="js",
             package=self.test_package1,
         )
-        test_resource1_loc = self.get_test_loc(
-            "match/approximate-file-matching/index.js"
-        )
-        fingerprints = get_file_fingerprint_hashes(
-            test_resource1_loc, include_ngrams=True
-        )
+        test_resource1_loc = self.get_test_loc("match/approximate-file-matching/index.js")
+        fingerprints = get_file_fingerprint_hashes(test_resource1_loc, include_ngrams=True)
 
         self.test_resource1_snippets = fingerprints["snippets"]
         for snippet in self.test_resource1_snippets:
@@ -503,12 +471,8 @@ class SnippetIndexTestCase(MatchcodeTestCase):
             extension="js",
             package=self.test_package1,
         )
-        test_resource2_loc = self.get_test_loc(
-            "match/approximate-file-matching/index-2.js"
-        )
-        fingerprints2 = get_file_fingerprint_hashes(
-            test_resource2_loc, include_ngrams=True
-        )
+        test_resource2_loc = self.get_test_loc("match/approximate-file-matching/index-2.js")
+        fingerprints2 = get_file_fingerprint_hashes(test_resource2_loc, include_ngrams=True)
 
         self.test_resource2_snippets = fingerprints2["snippets"]
         for snippet in self.test_resource2_snippets:
@@ -535,12 +499,8 @@ class SnippetIndexTestCase(MatchcodeTestCase):
             extension="c",
             package=self.test_package2,
         )
-        test_resource3_loc = self.get_test_loc(
-            "match/approximate-file-matching/inflate.c"
-        )
-        fingerprints3 = get_file_fingerprint_hashes(
-            test_resource3_loc, include_ngrams=True
-        )
+        test_resource3_loc = self.get_test_loc("match/approximate-file-matching/inflate.c")
+        fingerprints3 = get_file_fingerprint_hashes(test_resource3_loc, include_ngrams=True)
 
         self.test_resource3_snippets = fingerprints3["snippets"]
         for snippet in self.test_resource3_snippets:
@@ -559,12 +519,8 @@ class SnippetIndexTestCase(MatchcodeTestCase):
             extension="c",
             package=self.test_package2,
         )
-        test_resource4_loc = self.get_test_loc(
-            "match/approximate-file-matching/inflate-mod2.c"
-        )
-        fingerprints4 = get_file_fingerprint_hashes(
-            test_resource4_loc, include_ngrams=True
-        )
+        test_resource4_loc = self.get_test_loc("match/approximate-file-matching/inflate-mod2.c")
+        fingerprints4 = get_file_fingerprint_hashes(test_resource4_loc, include_ngrams=True)
 
         self.test_resource4_snippets = fingerprints4["snippets"]
         for snippet in self.test_resource4_snippets:
@@ -583,12 +539,8 @@ class SnippetIndexTestCase(MatchcodeTestCase):
             extension="c",
             package=self.test_package2,
         )
-        test_resource5_loc = self.get_test_loc(
-            "match/approximate-file-matching/inflate-mod3.c"
-        )
-        fingerprints5 = get_file_fingerprint_hashes(
-            test_resource5_loc, include_ngrams=True
-        )
+        test_resource5_loc = self.get_test_loc("match/approximate-file-matching/inflate-mod3.c")
+        fingerprints5 = get_file_fingerprint_hashes(test_resource5_loc, include_ngrams=True)
 
         self.test_resource5_snippets = fingerprints5["snippets"]
         for snippet in self.test_resource5_snippets:
@@ -602,9 +554,7 @@ class SnippetIndexTestCase(MatchcodeTestCase):
             )
 
     def test_SnippetIndexTestCase_match(self):
-        test_file_loc = self.get_test_loc(
-            "match/approximate-file-matching/index-modified.js"
-        )
+        test_file_loc = self.get_test_loc("match/approximate-file-matching/index-modified.js")
         test_package, _ = Package.objects.get_or_create(
             filename="test_package.tar.gz",
             sha1="beefbeef",
@@ -687,9 +637,7 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         assert sorted(fingerprints) == sorted(expected_fingerprints)
 
     def test_SnippetIndexTestCase_match_resource(self):
-        test_file_loc = self.get_test_loc(
-            "match/approximate-file-matching/inflate-mod.c"
-        )
+        test_file_loc = self.get_test_loc("match/approximate-file-matching/inflate-mod.c")
         fingerprints = get_file_fingerprint_hashes(test_file_loc)
         snippets = fingerprints["snippets"]
         matches = SnippetIndex.match_resources(fingerprints=snippets)
@@ -702,9 +650,7 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         assert match.similarity == 0.9286452947259566
 
     def test_SnippetIndexTestCase_match_resource_return_only_top_match(self):
-        test_file_loc = self.get_test_loc(
-            "match/approximate-file-matching/inflate-mod.c"
-        )
+        test_file_loc = self.get_test_loc("match/approximate-file-matching/inflate-mod.c")
         fingerprints = get_file_fingerprint_hashes(test_file_loc)
         snippets = fingerprints["snippets"]
         matches = SnippetIndex.match_resources(
@@ -720,9 +666,7 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         assert match.similarity == 0.9286452947259566
 
     def test_SnippetIndex_match_resources_match_to_resource_with_less_duplicates(self):
-        test_file_loc = self.get_test_loc(
-            "match/approximate-file-matching/index-modified.js"
-        )
+        test_file_loc = self.get_test_loc("match/approximate-file-matching/index-modified.js")
         test_package, _ = Package.objects.get_or_create(
             filename="test_package.tar.gz",
             sha1="beefbeef",

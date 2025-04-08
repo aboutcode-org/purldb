@@ -110,9 +110,7 @@ def create_from_harvest(package_scan={}, files_data=[], cditem_path=""):
             download_url=download_url,
         )
         # Merge package records if it already exists
-        merge_packages(
-            existing_package=package, new_package_data=package_data, replace=False
-        )
+        merge_packages(existing_package=package, new_package_data=package_data, replace=False)
         package.append_to_history(f"Updated package from CDitem harvest: {cditem_path}")
 
         logger.info(f"Merged package data from scancode harvest: {package}")
@@ -121,20 +119,14 @@ def create_from_harvest(package_scan={}, files_data=[], cditem_path=""):
         try:
             package = Package.objects.get(download_url=download_url)
             # Merge package records if it already exists
-            merge_packages(
-                existing_package=package, new_package_data=package_data, replace=False
-            )
-            package.append_to_history(
-                f"Updated package from CDitem harvest: {cditem_path}"
-            )
+            merge_packages(existing_package=package, new_package_data=package_data, replace=False)
+            package.append_to_history(f"Updated package from CDitem harvest: {cditem_path}")
 
             logger.info(f"Merged package data from scancode harvest: {package}")
 
         except Package.DoesNotExist:
             package = Package.objects.create(**package_data)
-            package.append_to_history(
-                f"Created package from CDitem harvest: {cditem_path}"
-            )
+            package.append_to_history(f"Created package from CDitem harvest: {cditem_path}")
 
             logger.info(f"Created package from scancode harvest: {package}")
 
