@@ -130,7 +130,10 @@ redirects = {
 linkcheck_ignore = [
     r"http://localhost*",
     r"http://127.0.0.1*",
-    "https://public.purldb.io/api/docs/#validate",
+    "https://www.softwaretestinghelp.com/how-to-write-good-bug-report/",
 ]
 
-linkcheck_allow_unauthorized = True
+linkcheck_anchors_ignore_for_url = [
+    "https://public.purldb.io/api/docs",
+    "https://github.com/aboutcode-org/purldb",
+]
