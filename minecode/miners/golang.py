@@ -19,6 +19,7 @@ from minecode.miners import URI
 from minecode.miners import Mapper
 from minecode.miners import NonPersistentHttpVisitor
 from minecode.utils import form_vcs_url
+from minecode.utils import parse_date
 
 
 class GoLangSeed(seed.Seeder):
@@ -237,45 +238,3 @@ def build_golang_package(package_data, purl):
         vcs_url=vcs_url,
     )
     return package
-
-
-def build_packages_from_gitlab(metadata_dict, purl):
-    """
-    Yield ScannedPackage built from Gitlab.
-
-    The metadata_dict is a dictionary.
-
-    purl: String value of the package url of the ResourceURI object
-    """
-    id = metadata_dict["id"]
-    name = metadata_dict["name"]
-    version = purl.version
-    description = metadata_dict["description"]
-    repository_homepage_url = metadata_dict["http_url_to_repo"]
-    download_url = metadata_dict["download_url"]
-    author = metadata_dict["author"]
-    email = metadata_dict["email"]
-
-    license_url = f"https://gitlab.com/api/v4/projects/{id}/repository/files/LICENSE/raw"
-    extracted_license_statement = [license_url]
-
-    common_data = dict(
-        name=name,
-        version=version,
-        description=description,
-        repository_homepage_url=repository_homepage_url,
-        extracted_license_statement=extracted_license_statement,
-        download_url=download_url,
-    )
-
-    if author:
-        parties = common_data.get("parties")
-        if not parties:
-            common_data["parties"] = []
-        common_data["parties"].append(scan_models.Party(name=author, role="author", email=email))
-
-    package = scan_models.PackageData.from_data(common_data)
-
-    package.datasource_id = "golang_api_metadata"
-    package.set_purl(purl)
-    yield package

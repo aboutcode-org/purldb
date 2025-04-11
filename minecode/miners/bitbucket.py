@@ -300,3 +300,40 @@ def build_bitbucket_repo_package(repo_data, purl):
     )
     package.set_purl(purl)
     return package
+
+
+def build_bitbucket_packages(metadata_dict, purl):
+    """
+    Yield ScannedPackage built from Bitbucket.
+    The metadata_dict is a dictionary.
+    purl: String value of the package url of the ResourceURI object
+    """
+    name = metadata_dict["name"]
+    description = metadata_dict["description"]
+    homepage_url = metadata_dict["links"]["html"]["href"]
+    version = metadata_dict["version"]
+    size = metadata_dict["size"]
+    primary_language = metadata_dict["language"]
+
+    common_data = dict(
+        name=name,
+        version=version,
+        description=description,
+        homepage_url=homepage_url,
+        size=size,
+        primary_language=primary_language,
+    )
+
+    download_data = dict(
+        datasource_id="bitbucket_pkginfo",
+        download_url=metadata_dict["download_url"],
+    )
+
+    common_data.update(download_data)
+    print("COMMON DICT")
+    print(common_data)
+    package = scan_models.PackageData.from_data(common_data)
+
+    package.datasource_id = "bitbucket_api_metadata"
+    package.set_purl(purl)
+    yield package

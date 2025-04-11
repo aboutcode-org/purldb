@@ -228,7 +228,7 @@ def merge_packages(existing_package, new_package_data, replace=False):
     return updated_fields
 
 
-def merge_or_create_package(scanned_package, visit_level, override=False):
+def merge_or_create_package(scanned_package, visit_level, override=False, filename=None):
     """
     Update Package from ``scanned_package`` instance if `visit_level` is greater
     than the mining level of the existing package.
@@ -348,10 +348,13 @@ def merge_or_create_package(scanned_package, visit_level, override=False):
         existing_related_package = existing_related_packages.first()
         package_content = scanned_package.extra_data.get("package_content")
 
+        if not filename:
+            filename = fileutils.file_name(package_uri)
+
         package_data = dict(
             # FIXME: we should get the file_name in the
             # PackageData object instead.
-            filename=fileutils.file_name(package_uri),
+            filename=filename,
             # TODO: update the PackageDB model
             release_date=scanned_package.release_date,
             mining_level=mining_level,

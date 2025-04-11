@@ -134,3 +134,60 @@ def build_packages_from_json(metadata, purl=None):
         package = scan_models.Package(**common_data)
         package.set_purl(purl)
         yield package
+
+
+def build_packages_from_json_golang(content, purl=None):
+    """
+    Yield Package built from gitlab json content
+    metadata: Json metadata content
+    purl: String value of the package url of the ResourceURI object
+    """
+    import requests
+
+    id = content.get("id")
+    name = content.get("name")
+    repository_homepage_url = content.get("http_url_to_repo")
+    version = ""
+    if purl:
+        version = purl.version
+
+    author = ""
+    email = ""
+    if "author" in content:
+        author = content.get("author")
+    if "email" in content:
+        email = content.get("email")
+
+    license_url = f"https://gitlab.com/api/v4/projects/{id}/repository/files/LICENSE/raw"
+    response = requests.get(license_url)
+    extracted_license_statement = []
+    if response.status_code == 200:
+        extracted_license_statement = [response.text]
+
+    common_data = dict(
+        name=name,
+        version=version,
+        description=content.get("description"),
+        homepage_url=content.get("web_url"),
+        repository_homepage_url=repository_homepage_url,
+        extracted_license_statement=extracted_license_statement,
+        download_url=content.get("download_url"),
+    )
+
+    if repository_homepage_url:
+        repository_homepage_url = form_vcs_url("git", repository_homepage_url)
+        common_data["vcs_url"] = repository_homepage_url
+    common_data["code_view_url"] = repository_homepage_url
+    common_data["release_date"] = parse_date(content.get("created_at"))
+
+    if author:
+        parties = common_data.get("parties")
+        if not parties:
+            common_data["parties"] = []
+        common_data["parties"].append(scan_models.Party(name=author, role="author", email=email))
+
+    package = scan_models.PackageData.from_data(common_data)
+
+    package.datasource_id = "golang_api_metadata"
+    package.set_purl(purl)
+    yield package
