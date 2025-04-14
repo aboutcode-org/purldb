@@ -4,6 +4,7 @@
 
 import json
 import logging
+import requests
 
 from packagedcode import models as scan_models
 from packageurl import PackageURL
@@ -302,6 +303,45 @@ def build_bitbucket_repo_package(repo_data, purl):
     return package
 
 
+def get_bitbucket_license_info(repo_path):
+    """
+    Fetch license information from a Bitbucket repository.
+    Returns the detected license text based on the common license filenames
+    """
+
+    # Bitbucket API endpoint for repository sources (where license file typically is)
+    url = f"https://api.bitbucket.org/2.0/repositories/{repo_path}/src"
+
+    try:
+        while url:
+            response = requests.get(url)
+            response.raise_for_status()
+
+            # Check common license file names
+            common_license_file_name = [
+                "LICENSE",
+                "LICENSE.MD",
+                "LICENSE.TXT",
+                "COPYING",
+                "COPYING.TXT",
+            ]
+            data = response.json()
+            # Search for license files in the root directory
+            for item in data["values"]:
+                if item["path"].upper() in common_license_file_name:
+                    # Found a license file - fetch its content
+                    license_url = f"https://api.bitbucket.org/2.0/repositories/{repo_path}/src/HEAD/{item['path']}"
+                    license_response = requests.get(license_url)
+                    license_response.raise_for_status()
+                    return license_response.text
+            # Handle pagination
+            url = data.get("next", None)
+        return None  # No license file found
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching license info: {e}")
+        return None
+
+
 def build_bitbucket_packages(metadata_dict, purl):
     """
     Yield ScannedPackage built from Bitbucket.
@@ -311,17 +351,23 @@ def build_bitbucket_packages(metadata_dict, purl):
     name = metadata_dict["name"]
     description = metadata_dict["description"]
     homepage_url = metadata_dict["links"]["html"]["href"]
-    version = metadata_dict["version"]
     size = metadata_dict["size"]
     primary_language = metadata_dict["language"]
 
+    if "repo_workspace_name" in metadata_dict:
+        repo_path = metadata_dict["repo_workspace_name"]
+    else:
+        repo_path = ""
+    license_text = get_bitbucket_license_info(repo_path)
+    extracted_license_statement = [license_text]
+
     common_data = dict(
         name=name,
-        version=version,
         description=description,
         homepage_url=homepage_url,
         size=size,
         primary_language=primary_language,
+        extracted_license_statement=extracted_license_statement,
     )
 
     download_data = dict(
@@ -330,8 +376,6 @@ def build_bitbucket_packages(metadata_dict, purl):
     )
 
     common_data.update(download_data)
-    print("COMMON DICT")
-    print(common_data)
     package = scan_models.PackageData.from_data(common_data)
 
     package.datasource_id = "bitbucket_api_metadata"

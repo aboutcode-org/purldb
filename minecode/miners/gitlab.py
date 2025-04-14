@@ -8,6 +8,7 @@
 #
 
 import json
+import requests
 
 import packagedcode.models as scan_models
 from packageurl import PackageURL
@@ -142,8 +143,6 @@ def build_packages_from_json_golang(content, purl=None):
     metadata: Json metadata content
     purl: String value of the package url of the ResourceURI object
     """
-    import requests
-
     id = content.get("id")
     name = content.get("name")
     repository_homepage_url = content.get("http_url_to_repo")
@@ -172,6 +171,7 @@ def build_packages_from_json_golang(content, purl=None):
         repository_homepage_url=repository_homepage_url,
         extracted_license_statement=extracted_license_statement,
         download_url=content.get("download_url"),
+        primary_language="go",
     )
 
     if repository_homepage_url:

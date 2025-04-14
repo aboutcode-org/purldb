@@ -19,7 +19,6 @@ from minecode.miners import URI
 from minecode.miners import Mapper
 from minecode.miners import NonPersistentHttpVisitor
 from minecode.utils import form_vcs_url
-from minecode.utils import parse_date
 
 
 class GoLangSeed(seed.Seeder):
