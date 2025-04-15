@@ -38,9 +38,10 @@ def bitbucket_get_all_package_version_author(subset_path):
                 for item in data["values"]:
                     version = item["name"]
                     author = ""
-                    if "tagger" in item and item["tagger"]:
-                        if item["tagger"]["type"] == "author":
-                            author = item["tagger"]["raw"]
+                    if "target" in item and item["target"]:
+                        if "author" in item["target"] and item["target"]["author"]:
+                            if item["target"]["author"]["type"] == "author":
+                                author = item["target"]["author"]["user"]["display_name"]
                     version_author_list.append((version, author))
             # Handle pagination
             repo_tags = data.get("next", None)

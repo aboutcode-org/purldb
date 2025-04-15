@@ -1,0 +1,41 @@
+{
+    "id": 65271576,
+    "description": "GitLab Go SDK\r\n\r\nThis project has been migrated from `github.com/xanzy/go-gitlab`.",
+    "name": "client-go",
+    "name_with_namespace": "GitLab.org / API / client-go",
+    "path": "client-go",
+    "path_with_namespace": "gitlab-org/api/client-go",
+    "created_at": "2024-12-10T14:14:37.357Z",
+    "default_branch": "main",
+    "tag_list": [
+      "gitlab",
+      "go",
+      "sdk"
+    ],
+    "topics": [
+      "gitlab",
+      "go",
+      "sdk"
+    ],
+    "ssh_url_to_repo": "git@gitlab.com:gitlab-org/api/client-go.git",
+    "http_url_to_repo": "https://gitlab.com/gitlab-org/api/client-go.git",
+    "web_url": "https://gitlab.com/gitlab-org/api/client-go",
+    "readme_url": "https://gitlab.com/gitlab-org/api/client-go/-/blob/main/README.md",
+    "forks_count": 36,
+    "avatar_url": null,
+    "star_count": 54,
+    "last_activity_at": "2025-04-15T04:41:12.062Z",
+    "namespace": {
+      "id": 98461187,
+      "name": "API",
+      "path": "api",
+      "kind": "group",
+      "full_path": "gitlab-org/api",
+      "parent_id": 9970,
+      "avatar_url": null,
+      "web_url": "https://gitlab.com/groups/gitlab-org/api"
+    },
+    "download_url": "https://gitlab.com/api/v4/projects/gitlab-org%2Fapi%2Fclient-go/repository/archive.zip?sha=v0.127.0",
+    "author": "Patrick Rice",
+    "email": "patrick.rice@kingland.com"
+  }

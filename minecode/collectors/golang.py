@@ -24,6 +24,7 @@ from minecode.miners.gitlab import build_packages_from_json_golang
 from minecode.miners.golang import build_golang_generic_package
 from minecode.miners.bitbucket import build_bitbucket_packages
 
+from packagedb.models import PackageContentType
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -108,8 +109,8 @@ def map_golang_package(package_url, package_json, pipelines, priority=0, filenam
         packages = build_golang_generic_package(package_json, package_url)
 
     for package in packages:
+        package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
         db_package, _, _, error = merge_or_create_package(package, visit_level=0, filename=filename)
-        print(db_package)
         if error:
             break
 
@@ -316,7 +317,6 @@ def process_requests(purl_str, **kwargs):
                                 collected_version = repo_version
                             updated_purl_str = purl_str + "@" + collected_version
                             package_url = PackageURL.from_string(updated_purl_str)
-
                         error_msg = map_golang_package(
                             package_url, updated_json, pipelines, priority, filename=filename
                         )
@@ -353,9 +353,6 @@ def process_requests(purl_str, **kwargs):
                     package_json = scrape_go_package(subset_path, ver)
                     error_msg = map_golang_package(package_url, package_json, pipelines, priority)
             else:
-                print("HAVE VERSION")
-                print(subset_path)
-                print(version)
                 package_url = PackageURL.from_string(purl_str)
                 package_json = scrape_go_package(subset_path, version)
                 error_msg = map_golang_package(package_url, package_json, pipelines, priority)

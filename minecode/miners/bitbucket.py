@@ -338,7 +338,7 @@ def get_bitbucket_license_info(repo_path):
             url = data.get("next", None)
         return None  # No license file found
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching license info: {e}")
+        logger.error(f"Error fetching license info: {e}")
         return None
 
 

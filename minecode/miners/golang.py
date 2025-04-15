@@ -244,10 +244,6 @@ def build_golang_generic_package(package_data, package_url):
     homepage_url = "/".join(["https:/", package_url.namespace, package_url.name])
     license_text = package_data.get("license_text")
     extracted_license_statement = [license_text]
-    print("NAME")
-    print(package_url.name)
-    print(package_url.namespace)
-    print(package_url.type)
 
     common_data = dict(
         name=package_url.name,
