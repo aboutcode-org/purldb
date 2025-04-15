@@ -7,19 +7,23 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 import logging
-
 import requests
+
+from bs4 import BeautifulSoup
 
 from packageurl import PackageURL
 
 from minecode import priority_router
+
 from minecode.collectors.generic import map_fetchcode_supported_package
 from minecode.collectors.gitlab import gitlab_get_all_package_version_author
 from minecode.collectors.github import github_get_all_versions
 from minecode.collectors.bitbucket import bitbucket_get_all_package_version_author
 
 from minecode.miners.gitlab import build_packages_from_json_golang
+from minecode.miners.golang import build_golang_generic_package
 from minecode.miners.bitbucket import build_bitbucket_packages
+
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -100,9 +104,12 @@ def map_golang_package(package_url, package_json, pipelines, priority=0, filenam
         packages = build_packages_from_json_golang(package_json, package_url)
     elif purl_str.startswith("pkg:golang/bitbucket"):
         packages = build_bitbucket_packages(package_json, package_url)
+    else:
+        packages = build_golang_generic_package(package_json, package_url)
 
     for package in packages:
         db_package, _, _, error = merge_or_create_package(package, visit_level=0, filename=filename)
+        print(db_package)
         if error:
             break
 
@@ -135,6 +142,57 @@ def process_download_metadata(download_url, package_json):
     return package_json, filename
 
 
+def scrape_go_package(repo_path, version):
+    """
+    Access the repository on pkg.go.dev and extract the project's metadata.
+    """
+    url = f"https://pkg.go.dev/{repo_path}@v{version}"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+
+        # Parse HTML content
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Find the <a> tag with the specific text
+        license_tag = soup.find("a", {"data-test-id": "UnitHeader-license"})
+        license_text = license_tag.text if license_tag else ""
+
+        # Find the <a> tag inside the UnitMeta-repo div
+        repo_tag = soup.find("div", class_="UnitMeta-repo").find("a")
+        repo_url = repo_tag["href"] if repo_tag else ""
+
+        download_url = f"https://proxy.golang.org/{repo_path}/@v/v{version}.zip"
+
+        return {
+            "license_text": license_text,
+            "repository_homepage_url": repo_url,
+            "download_url": download_url,
+        }
+
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Request failed: {str(e)}"}
+    except Exception as e:
+        return {"error": f"An error occurred: {str(e)}"}
+
+
+def scrape_package_versions(repo_path):
+    """
+    Return all the version of a repo as a list that is fetched from pkg.go.dev.
+    """
+    url = f"https://pkg.go.dev/{repo_path}?tab=versions"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, "html.parser")
+        version_divs = soup.find_all("div", class_="Version-tag")
+        versions = [div.get_text(strip=True) for div in version_divs]
+        return versions
+    else:
+        print(f"Error fetching page: {response.status_code}")
+        return []
+
+
 # It may need indexing GitHub PURLs that requires a GitHub API token.
 # Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
 @priority_router.route("pkg:golang/.*")
@@ -153,6 +211,10 @@ def process_requests(purl_str, **kwargs):
     priority = kwargs.get("priority", 0)
 
     try:
+        """
+        We retrieve metadata from APIs for GitHub, GitLab, and Bitbucket.
+        For the other cases, we will scrape data from pkg.go.dev
+        """
         if purl_str.startswith("pkg:golang/github"):
             subset_path, version = extract_golang_subset_purl(purl_str)
             if version:
@@ -273,6 +335,30 @@ def process_requests(purl_str, **kwargs):
                 error_msg = map_golang_package(
                     package_url, updated_json, pipelines, priority, filename=filename
                 )
+        else:
+            subset_path = ""
+            version = ""
+            subset_path = purl_str.partition("pkg:golang/")[2].partition("@")[0]
+            if "@" in purl_str:
+                version = purl_str.rpartition("@")[2]
+            if not version:
+                version_list = scrape_package_versions(subset_path)
+                for ver in version_list:
+                    if ver.startswith("version"):
+                        ver = ver.partition("version")[2]
+                    elif ver.startswith("v"):
+                        ver = ver[1:]
+                    updated_purl_str = purl_str + "@" + ver
+                    package_url = PackageURL.from_string(updated_purl_str)
+                    package_json = scrape_go_package(subset_path, ver)
+                    error_msg = map_golang_package(package_url, package_json, pipelines, priority)
+            else:
+                print("HAVE VERSION")
+                print(subset_path)
+                print(version)
+                package_url = PackageURL.from_string(purl_str)
+                package_json = scrape_go_package(subset_path, version)
+                error_msg = map_golang_package(package_url, package_json, pipelines, priority)
 
     except ValueError as e:
         error = f"error occurred when parsing {purl_str}: {e}"

@@ -237,3 +237,29 @@ def build_golang_package(package_data, purl):
         vcs_url=vcs_url,
     )
     return package
+
+
+def build_golang_generic_package(package_data, package_url):
+    """Return a single Golang package"""
+    homepage_url = "/".join(["https:/", package_url.namespace, package_url.name])
+    license_text = package_data.get("license_text")
+    extracted_license_statement = [license_text]
+    print("NAME")
+    print(package_url.name)
+    print(package_url.namespace)
+    print(package_url.type)
+
+    common_data = dict(
+        name=package_url.name,
+        namespace=package_url.namespace,
+        type=package_url.type,
+        primary_language="go",
+        repository_homepage_url=package_data.get("repository_homepage_url"),
+        homepage_url=homepage_url,
+        extracted_license_statement=extracted_license_statement,
+        download_url=package_data.get("download_url"),
+    )
+
+    package = scan_models.PackageData.from_data(common_data)
+    package.set_purl(package_url)
+    yield package
