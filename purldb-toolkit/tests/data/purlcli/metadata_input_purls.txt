@@ -1,3 +1,0 @@
-pkg:pypi/fetchcode
-pkg:pypi/matchcode
-pkg:pypi/minecode

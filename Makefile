@@ -131,14 +131,11 @@ test_purldb:
 	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf minecode packagedb purl2vcs purldb_project purldb_public_project --ignore packagedb/tests/test_throttling.py
 	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf packagedb/tests/test_throttling.py
 
-test_toolkit:
-	${ACTIVATE} pytest -vvs purldb-toolkit/
-
 test_clearcode:
 	${ACTIVATE} ${DJSM_PDB} ${PYTHON_EXE} -m pytest -vvs clearcode clearindex
 
 test_matchcode:
-	${ACTIVATE} ${DJSM_MAT} ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline matchcode-toolkit matchcode
+	${ACTIVATE} ${DJSM_MAT} ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline matchcode
 
 test: test_purldb test_matchcode test_toolkit test_clearcode
 

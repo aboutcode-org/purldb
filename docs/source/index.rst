@@ -110,10 +110,10 @@ PurlDB toolkit
 purldb-toolkit is command line utility and library to use the PurlDB, its API
 and various related libraries.
 
-.. toctree::
-   :maxdepth: 2
+.. note::
 
-   purldb-toolkit/index
+    purldb-toolkit has moved to its own repo at https://github.com/aboutcode-org/purldb-toolkit
+    from its previous location at https://github.com/aboutcode-org/purldb/tree/main/purldb-toolkit
 
 ----
 

@@ -11,6 +11,10 @@ the PurlDB and MatchCode REST API and exposes various PURL-based services.
 
 purldb-toolkit serves as a tool, a library and an example of how to use the services programmatically.
 
+.. note::
+
+    purldb-toolkit has moved to its own repo at https://github.com/aboutcode-org/purldb-toolkit
+    from its previous location at https://github.com/aboutcode-org/purldb/tree/main/purldb-toolkit
 
 Installation
 ------------

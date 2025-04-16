@@ -30,15 +30,15 @@ CLI_ARGS=$1
 CUSTOM_PACKAGES=""
 
 # Requirement arguments passed to pip and used by default or with --dev.
-REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/ --editable purl2vcs/ --editable . --constraint requirements.txt"
-DEV_REQUIREMENTS="$CUSTOM_PACKAGES --editable purldb-toolkit/[testing] --editable .[dev] --editable purl2vcs/[testing] --constraint requirements.txt --constraint requirements-dev.txt"
+REQUIREMENTS="$CUSTOM_PACKAGES --editable purl2vcs/ --editable . --constraint requirements.txt"
+DEV_REQUIREMENTS="$CUSTOM_PACKAGES --editable .[dev] --editable purl2vcs/[testing] --constraint requirements.txt --constraint requirements-dev.txt"
 
 
 # where we create a virtualenv
 VIRTUALENV_DIR=venv
 
 # Cleanable files and directories to delete with the --clean option
-CLEANABLE="build dist venv .cache .eggs *.egg-info docs/_build/ pip-selfcheck.json matchcode-toolkit/build matchcode-toolkit/dist matchcode-toolkit/.eggs purldb-toolkit/build purldb-toolkit/dist"
+CLEANABLE="build dist venv .cache .eggs *.egg-info docs/_build/ pip-selfcheck.json"
 
 
 # extra  arguments passed to pip
