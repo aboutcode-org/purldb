@@ -34,7 +34,7 @@ logger.setLevel(logging.INFO)
 
 def extract_golang_subset_purl(purl_str):
     """
-    Extract the first two swgments after github.com or bitbucket.org and
+    Extract the first two segments after github.com or bitbucket.org and
     version For instance, pkg:golang/github.com/rickar/cal/v2/aa@2.1.23
     Return
         subset_path: rickar/cal
