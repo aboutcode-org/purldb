@@ -976,6 +976,7 @@ class CollectViewSet(viewsets.ViewSet):
             "cargo",
             "gem",
             "golang",
+            "nuget",
         ]
 
         unique_packages, unsupported_packages, unsupported_vers = get_resolved_packages(
