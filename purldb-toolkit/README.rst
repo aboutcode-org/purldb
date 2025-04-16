@@ -14,7 +14,7 @@ purldb-toolkit serves as a tool, a library and an example of how to use the serv
 .. note::
 
     purldb-toolkit has moved to its own repo at https://github.com/aboutcode-org/purldb-toolkit
-    from its previous location https://github.com/aboutcode-org/purldb/tree/main/purldb-toolkit
+    from its previous location at https://github.com/aboutcode-org/purldb/tree/main/purldb-toolkit
 
 Installation
 ------------
