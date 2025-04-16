@@ -975,6 +975,7 @@ class CollectViewSet(viewsets.ViewSet):
             "pypi",
             "cargo",
             "gem",
+            "golang",
             "nuget",
         ]
 
