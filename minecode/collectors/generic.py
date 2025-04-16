@@ -117,6 +117,18 @@ def map_fetchcode_supported_package(package_url, pipelines, priority=0):
         return error
 
     package_data = packages[0].to_dict()
+    if "license_expression" in package_data and package_data["license_expression"]:
+        if (
+            "declared_license_expression" not in package_data
+            or not package_data["declared_license_expression"]
+        ):
+            package_data["declared_license_expression"] = package_data["license_expression"]
+    if "declared_license" in package_data and package_data["declared_license"]:
+        if (
+            "extracted_license_statement" not in package_data
+            or not package_data["extracted_license_statement"]
+        ):
+            package_data["extracted_license_statement"] = [package_data["declared_license"]]
 
     # Remove obsolete Package fields see https://github.com/aboutcode-org/fetchcode/issues/108
     package = packagedata_from_dict(package_data)
