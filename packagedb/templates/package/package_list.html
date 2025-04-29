@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
+<h1>Package List</h1>
+
+<!-- Filter form -->
+<h2>Package Filters</h2>
+<form method="get">
+    {{ filter.form.as_p }}
+    <button type="submit">Filter</button>
+</form>
+
 <!-- Table to display the packages -->
+<h2>Packages</h2>
 <table>
     <thead>
         <tr>

@@ -7,10 +7,11 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from packagedb.api import PackageFilterSet
 from packagedb.models import Package
 
-from django.views.generic import ListView
 from django.views.generic.detail import DetailView
+from django_filters.views import FilterView
 
 PAGE_SIZE = 20
 
@@ -92,9 +93,10 @@ class TableColumnsMixin:
 
 class PackageListView(
     TableColumnsMixin,
-    ListView
+    FilterView
 ):
     model = Package
+    filterset_class = PackageFilterSet
     paginate_by = PAGE_SIZE
     template_name = "package/package_list.html"
     table_columns = [
