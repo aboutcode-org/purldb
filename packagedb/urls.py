@@ -11,6 +11,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from django.views.generic import RedirectView
 from packagedb.views import PackageListView
+from packagedb.views import PackageDetailView
 
 router = DefaultRouter()
 router.register(r"packages", PackageListView, basename="package")
@@ -18,4 +19,5 @@ router.register(r"packages", PackageListView, basename="package")
 urlpatterns = [
     path("", RedirectView.as_view(url="/packages")),
     path("packages/", PackageListView.as_view(), name='package_list'),
+    path("packages/<uuid:uuid>/", PackageDetailView.as_view(), name='package_detail'),
 ]

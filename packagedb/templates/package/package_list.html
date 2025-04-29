@@ -13,7 +13,7 @@
         {% for package in object_list %}
             <tr>
                 <td>
-                    {{ package.package_url }}
+                    <a href="{% url 'package_detail' package.uuid %}"> {{ package.package_url }} </a>
                 </td>
                 <td>
                     {{ package.name }}

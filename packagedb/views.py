@@ -8,7 +8,9 @@
 #
 
 from packagedb.models import Package
+
 from django.views.generic import ListView
+from django.views.generic.detail import DetailView
 
 PAGE_SIZE = 20
 
@@ -95,7 +97,6 @@ class PackageListView(
     model = Package
     paginate_by = PAGE_SIZE
     template_name = "package/package_list.html"
-    
     table_columns = [
         {
             "field_name": "package_url",
@@ -118,3 +119,16 @@ class PackageListView(
             "sort_name": "created_date",
         }
     ]
+
+class PackageDetailView(DetailView):
+    model = Package
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid"
+    template_name = "package/package_detail.html"
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .prefetch_related("parties", "dependencies")
+        )
