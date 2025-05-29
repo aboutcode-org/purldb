@@ -259,9 +259,11 @@ def build_packages(metadata, purl=None):
         else:
             packagetype = "pypi_bdist_pkginfo"
 
+        filename = download.get("filename")
         download_data = dict(
             download_url=url,
             size=download.get("size"),
+            filename=filename,
             release_date=parse_date(download.get("upload_time")),
             datasource_id=packagetype,
             type="pypi",
@@ -274,7 +276,7 @@ def build_packages(metadata, purl=None):
 
         if purl:
             purl_str = purl.to_string()
-            purl_filename_qualifiers = purl_str + "?file_name=" + download.get("filename")
+            purl_filename_qualifiers = purl_str + "?file_name=" + filename
             updated_purl = PackageURL.from_string(purl_filename_qualifiers)
             package.set_purl(updated_purl)
         else:
