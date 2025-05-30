@@ -12,7 +12,7 @@ def set_package_content_value(apps, schema_editor):
     source_extensions = (".tar.gz", ".zip", ".tar.bz2", ".tar.xz", ".tar.Z", ".tgz", ".tbz")
     binary_extensions = (".whl", ".egg")
     unsaved_packages = []
-    for i, package in packages:
+    for i, package in enumerate(packages, start=1):
         if not i % 5000:
             Package.objects.bulk_update(
                 objs=unsaved_packages,
