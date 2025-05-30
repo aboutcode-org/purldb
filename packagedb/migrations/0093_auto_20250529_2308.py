@@ -7,20 +7,26 @@ def set_package_content_value(apps, schema_editor):
     from packagedb.models import PackageContentType
 
     Package = apps.get_model("packagedb", "Package")
-    packages = Package.objects.filter(type="pypi")
+    packages = Package.objects.filter(type="pypi", package_content__isnull=True).iterator(chunk_size=5000)
 
     source_extensions = (".tar.gz", ".zip", ".tar.bz2", ".tar.xz", ".tar.Z", ".tgz", ".tbz")
     binary_extensions = (".whl", ".egg")
     unsaved_packages = []
-    for package in packages:
-        updated = False
+    for i, package in packages:
+        if not i % 5000:
+            Package.objects.bulk_update(
+                objs=unsaved_packages,
+                fields=[
+                    "package_content",
+                ]
+            )
+            unsaved_packages = []
+
         if package.filename.endswith(source_extensions):
             package.package_content = PackageContentType.SOURCE_ARCHIVE
-            updated = True
         if package.filename.endswith(binary_extensions):
             package.package_content = PackageContentType.BINARY
-            updated = True
-        if updated:
+        if package.package_content:
             unsaved_packages.append(package)
 
     if unsaved_packages:
