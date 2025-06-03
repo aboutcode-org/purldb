@@ -75,17 +75,6 @@ class TestPackageSetCreation(TestMigrations):
             name="foo",
             version="0.0.1",
         )
-        self.packages = [
-            self.package1,
-            self.package2,
-            self.package3,
-            self.package4,
-            self.package5,
-            self.package6,
-        ]
-
-        for package in self.packages:
-            package.save()
 
     def test_package_set_creation(self):
         # using get_model to avoid circular import
@@ -132,7 +121,7 @@ class TestPythonPackageContent(TestMigrations):
             namespace="example",
             name="example",
             version="1.0.0",
-            filename="example.tar.gz"
+            filename="example.tar.gz",
         )
         self.package2 = Package.objects.create(
             download_url="http://example.com/example.egg",
@@ -140,21 +129,13 @@ class TestPythonPackageContent(TestMigrations):
             namespace="example",
             name="example",
             version="1.0.0",
-            filename="example.egg"
+            filename="example.egg",
         )
-
-        self.packages = [
-            self.package1,
-            self.package2,
-        ]
-        for package in self.packages:
-            package.save()
-
 
     def test_python_package_content_update(self):
         # using get_model to avoid circular import
         Package = apps.get_model("packagedb", "Package")
         packages = Package.objects.all()
         self.assertEqual(2, packages.count())
-        for package in packages:
-            self.assertTrue(package.package_content)
+        self.assertEqual(4, packages[0].package_content)
+        self.assertEqual(5, packages[1].package_content)

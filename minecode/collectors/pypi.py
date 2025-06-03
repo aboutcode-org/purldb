@@ -83,14 +83,16 @@ def map_pypi_package(package_url, pipelines, priority=0):
     source_extensions = (".tar.gz", ".zip", ".tar.bz2", ".tar.xz", ".tar.Z", ".tgz", ".tbz")
     binary_extensions = (".whl", ".egg")
     for package in packages:
-        if package.download_url.endswith(source_extensions):
-            package.package_content = PackageContentType.SOURCE_ARCHIVE
-        if package.download_url.endswith(binary_extensions):
-            package.package_content = PackageContentType.BINARY
-
         db_package, _, _, error = merge_or_create_package(package, visit_level=0)
         if error:
             break
+
+        if db_package.download_url.endswith(tuple(source_extensions)):
+            db_package.package_content = PackageContentType.SOURCE_ARCHIVE
+            db_package.save()
+        if db_package.download_url.endswith(tuple(binary_extensions)):
+            db_package.package_content = PackageContentType.BINARY
+            db_package.save()
 
         # Submit package for scanning
         if db_package:

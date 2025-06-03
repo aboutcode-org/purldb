@@ -46,7 +46,7 @@ class PypiPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         for version in expected:
             self.assertIn(version, releases_list)
 
-    def test_map_npm_package(self):
+    def test_map_pypi_package(self):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(0, package_count)
         package_url = PackageURL.from_string("pkg:pypi/cage@1.1.4")
@@ -58,3 +58,6 @@ class PypiPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         expected_download_url = "http://www.alcyone.com/software/cage/cage-latest.tar.gz"
         self.assertEqual(expected_purl_str, package.purl)
         self.assertEqual(expected_download_url, package.download_url)
+        self.assertEqual(
+            packagedb.models.PackageContentType.SOURCE_ARCHIVE, package.package_content
+        )
