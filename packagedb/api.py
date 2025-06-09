@@ -306,6 +306,7 @@ PACKAGE_FILTER_SORT_FIELDS = [
     "version",
     "qualifiers",
     "subpath",
+    "package_content",
     "download_url",
     "filename",
     "size",
@@ -338,6 +339,9 @@ class PackageFilterSet(FilterSet):
     purl = MultiplePackageURLFilter(
         label="Package URL",
     )
+    package_content = MultipleCharField(
+        help_text=""
+    )
     search = PackageSearchFilter(
         label="Search",
         field_name="name",
@@ -356,6 +360,7 @@ class PackageFilterSet(FilterSet):
             "version",
             "qualifiers",
             "subpath",
+            "package_content",
             "download_url",
             "filename",
             "sha1",

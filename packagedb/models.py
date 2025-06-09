@@ -568,6 +568,7 @@ class Package(
             models.Index(fields=["sha1"]),
             models.Index(fields=["sha256"]),
             models.Index(fields=["sha512"]),
+            models.Index(fields=["package_content"]),
         ]
 
     def __str__(self):
