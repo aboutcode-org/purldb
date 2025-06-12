@@ -339,9 +339,7 @@ class PackageFilterSet(FilterSet):
     purl = MultiplePackageURLFilter(
         label="Package URL",
     )
-    package_content = MultipleCharField(
-        help_text=""
-    )
+    package_content = MultipleCharField(help_text="")
     search = PackageSearchFilter(
         label="Search",
         field_name="name",

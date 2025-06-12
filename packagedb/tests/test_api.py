@@ -664,6 +664,18 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
     def tearDown(self):
         Package.objects.all().delete()
 
+    def _compare_package_results(self, test_package_data, expected_package_data):
+        self.assertEqual(test_package_data.get("type"), expected_package_data.get("type"))
+        self.assertEqual(test_package_data.get("namespace"), expected_package_data.get("namespace"))
+        self.assertEqual(test_package_data.get("name"), expected_package_data.get("name"))
+        self.assertEqual(test_package_data.get("version"), expected_package_data.get("version"))
+        self.assertEqual(
+            test_package_data.get("download_url"), expected_package_data.get("download_url")
+        )
+        self.assertEqual(
+            test_package_data.get("extra_data"), expected_package_data.get("extra_data", {})
+        )
+
     def test_package_api_purl_filter_by_query_param_invalid_purl(self):
         response = self.client.get("/api/packages/?purl={}".format("11111"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -690,48 +702,26 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         response = self.client.get(f"/api/packages/?purl={self.purl1}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, response.data.get("count"))
-
-        test_package = response.data.get("results")[0]
-        self.assertEqual(test_package.get("type"), self.package_data1.get("type"))
-        self.assertEqual(test_package.get("namespace"), self.package_data1.get("namespace"))
-        self.assertEqual(test_package.get("name"), self.package_data1.get("name"))
-        self.assertEqual(test_package.get("version"), self.package_data1.get("version"))
-        self.assertEqual(test_package.get("download_url"), self.package_data1.get("download_url"))
-        self.assertEqual(test_package.get("extra_data"), self.package_data1.get("extra_data"))
+        test_package_data = response.data.get("results")[0]
+        self._compare_package_results(test_package_data, self.package_data1)
 
     def test_package_api_purl_filter_by_query_param2(self):
         response = self.client.get(f"/api/packages/?purl={self.purl2}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, response.data.get("count"))
-
-        test_package = response.data.get("results")[0]
-        self.assertEqual(test_package.get("type"), self.package_data2.get("type"))
-        self.assertEqual(test_package.get("namespace"), self.package_data2.get("namespace"))
-        self.assertEqual(test_package.get("name"), self.package_data2.get("name"))
-        self.assertEqual(test_package.get("version"), self.package_data2.get("version"))
-        self.assertEqual(test_package.get("download_url"), self.package_data2.get("download_url"))
-        self.assertEqual(test_package.get("extra_data"), self.package_data2.get("extra_data"))
+        test_package_data = response.data.get("results")[0]
+        self._compare_package_results(test_package_data, self.package_data2)
 
     def test_package_api_purl_filter_by_both_query_params(self):
         response = self.client.get(f"/api/packages/?purl={self.purl1}&purl={self.purl2}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, response.data.get("count"))
 
-        test_package = response.data.get("results")[0]
-        self.assertEqual(test_package.get("type"), self.package_data1.get("type"))
-        self.assertEqual(test_package.get("namespace"), self.package_data1.get("namespace"))
-        self.assertEqual(test_package.get("name"), self.package_data1.get("name"))
-        self.assertEqual(test_package.get("version"), self.package_data1.get("version"))
-        self.assertEqual(test_package.get("download_url"), self.package_data1.get("download_url"))
-        self.assertEqual(test_package.get("extra_data"), self.package_data1.get("extra_data"))
+        test_package_data = response.data.get("results")[0]
+        self._compare_package_results(test_package_data, self.package_data1)
 
-        test_package = response.data.get("results")[1]
-        self.assertEqual(test_package.get("type"), self.package_data2.get("type"))
-        self.assertEqual(test_package.get("namespace"), self.package_data2.get("namespace"))
-        self.assertEqual(test_package.get("name"), self.package_data2.get("name"))
-        self.assertEqual(test_package.get("version"), self.package_data2.get("version"))
-        self.assertEqual(test_package.get("download_url"), self.package_data2.get("download_url"))
-        self.assertEqual(test_package.get("extra_data"), self.package_data2.get("extra_data"))
+        test_package_data = response.data.get("results")[1]
+        self._compare_package_results(test_package_data, self.package_data2)
 
     def test_package_api_purl_filter_by_two_purl_values_on_multiple_packages(self):
         # extra test package
@@ -746,34 +736,19 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, response.data.get("count"))
 
-        test_package = response.data.get("results")[0]
-        self.assertEqual(test_package.get("type"), self.package_data1.get("type"))
-        self.assertEqual(test_package.get("namespace"), self.package_data1.get("namespace"))
-        self.assertEqual(test_package.get("name"), self.package_data1.get("name"))
-        self.assertEqual(test_package.get("version"), self.package_data1.get("version"))
-        self.assertEqual(test_package.get("download_url"), self.package_data1.get("download_url"))
-        self.assertEqual(test_package.get("extra_data"), self.package_data1.get("extra_data"))
+        test_package_data = response.data.get("results")[0]
+        self._compare_package_results(test_package_data, self.package_data1)
 
-        test_package = response.data.get("results")[1]
-        self.assertEqual(test_package.get("type"), self.package_data2.get("type"))
-        self.assertEqual(test_package.get("namespace"), self.package_data2.get("namespace"))
-        self.assertEqual(test_package.get("name"), self.package_data2.get("name"))
-        self.assertEqual(test_package.get("version"), self.package_data2.get("version"))
-        self.assertEqual(test_package.get("download_url"), self.package_data2.get("download_url"))
-        self.assertEqual(test_package.get("extra_data"), self.package_data2.get("extra_data"))
+        test_package_data = response.data.get("results")[1]
+        self._compare_package_results(test_package_data, self.package_data2)
 
     def test_package_api_purl_filter_by_one_purl_multiple_params(self):
         response = self.client.get(f"/api/packages/?purl={self.purl1}&purl={self.missing_purl}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, response.data.get("count"))
 
-        test_package = response.data.get("results")[0]
-        self.assertEqual(test_package.get("type"), self.package_data1.get("type"))
-        self.assertEqual(test_package.get("namespace"), self.package_data1.get("namespace"))
-        self.assertEqual(test_package.get("name"), self.package_data1.get("name"))
-        self.assertEqual(test_package.get("version"), self.package_data1.get("version"))
-        self.assertEqual(test_package.get("download_url"), self.package_data1.get("download_url"))
-        self.assertEqual(test_package.get("extra_data"), self.package_data1.get("extra_data"))
+        test_package_data = response.data.get("results")[0]
+        self._compare_package_results(test_package_data, self.package_data1)
 
     def test_package_api_purl_filter_by_multiple_blank_purl(self):
         response = self.client.get("/api/packages/?purl={}&purl={}".format("", ""))
@@ -789,6 +764,21 @@ class PackageApiPurlFilterTestCase(JsonBasedTesting, TestCase):
         self.check_expected_results(
             result, expected, fields_to_remove=["package_sets"], regen=FIXTURES_REGEN
         )
+
+    def test_package_api_filter_by_package_content(self):
+        response = self.client.get(f"/api/packages/?package_content={PackageContentType.BINARY}")
+        self.assertEqual(1, response.data.get("count"))
+        test_package_data = response.data.get("results")[0]
+        self._compare_package_results(test_package_data, self.package_data3)
+
+    def test_package_api_sort_by_package_content(self):
+        response = self.client.get("/api/packages/?sort=package_content")
+        self.assertEqual(4, response.data.get("count"))
+        test_package_data = response.data.get("results")[0]
+        self._compare_package_results(test_package_data, self.package_data4)
+
+        test_package_data = response.data.get("results")[1]
+        self._compare_package_results(test_package_data, self.package_data3)
 
 
 class CollectApiTestCase(JsonBasedTesting, TestCase):
