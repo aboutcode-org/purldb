@@ -65,6 +65,7 @@ def map_pypi_package(package_url, pipelines, priority=0):
     """
     from minecode.model_utils import add_package_to_scan_queue
     from minecode.model_utils import merge_or_create_package
+    from packagedb.models import PackageContentType
 
     error = ""
     package_json = get_package_json(
@@ -79,10 +80,19 @@ def map_pypi_package(package_url, pipelines, priority=0):
 
     packages = build_packages(package_json, package_url)
 
+    source_extensions = (".tar.gz", ".zip", ".tar.bz2", ".tar.xz", ".tar.Z", ".tgz", ".tbz")
+    binary_extensions = (".whl", ".egg")
     for package in packages:
         db_package, _, _, error = merge_or_create_package(package, visit_level=0)
         if error:
             break
+
+        if db_package.download_url.endswith(tuple(source_extensions)):
+            db_package.package_content = PackageContentType.SOURCE_ARCHIVE
+            db_package.save()
+        if db_package.download_url.endswith(tuple(binary_extensions)):
+            db_package.package_content = PackageContentType.BINARY
+            db_package.save()
 
         # Submit package for scanning
         if db_package:

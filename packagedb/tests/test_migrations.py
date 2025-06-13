@@ -75,17 +75,6 @@ class TestPackageSetCreation(TestMigrations):
             name="foo",
             version="0.0.1",
         )
-        self.packages = [
-            self.package1,
-            self.package2,
-            self.package3,
-            self.package4,
-            self.package5,
-            self.package6,
-        ]
-
-        for package in self.packages:
-            package.save()
 
     def test_package_set_creation(self):
         # using get_model to avoid circular import
@@ -115,3 +104,38 @@ class TestPackageSetCreation(TestMigrations):
         self.assertEqual(2, package_set_for_package4_and_package5.packages.count())
 
         self.assertEqual(0, self.package6.package_sets.count())
+
+
+class TestPythonPackageContent(TestMigrations):
+    app_name = "packagedb"
+    migrate_from = "0092_alter_party_email_alter_party_name"
+    migrate_to = "0093_auto_20250529_2308"
+
+    def setUpBeforeMigration(self, apps):
+        # using get_model to avoid circular import
+        Package = apps.get_model("packagedb", "Package")
+
+        self.package1 = Package.objects.create(
+            download_url="http://example.com/example.tar.gz",
+            type="pypi",
+            namespace="example",
+            name="example",
+            version="1.0.0",
+            filename="example.tar.gz",
+        )
+        self.package2 = Package.objects.create(
+            download_url="http://example.com/example.egg",
+            type="pypi",
+            namespace="example",
+            name="example",
+            version="1.0.0",
+            filename="example.egg",
+        )
+
+    def test_python_package_content_update(self):
+        # using get_model to avoid circular import
+        Package = apps.get_model("packagedb", "Package")
+        packages = Package.objects.all()
+        self.assertEqual(2, packages.count())
+        self.assertEqual(4, packages[0].package_content)
+        self.assertEqual(5, packages[1].package_content)
