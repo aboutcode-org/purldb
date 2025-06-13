@@ -22,9 +22,10 @@ def set_package_content_value(apps, schema_editor):
             )
             unsaved_packages = []
 
-        if package.filename.endswith(source_extensions):
+        name = package.filename if package.filename else package.download_url
+        if name.endswith(source_extensions):
             package.package_content = PackageContentType.SOURCE_ARCHIVE
-        if package.filename.endswith(binary_extensions):
+        if name.endswith(binary_extensions):
             package.package_content = PackageContentType.BINARY
         if package.package_content:
             unsaved_packages.append(package)
