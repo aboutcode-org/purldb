@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("packagedb", "0092_alter_party_email_alter_party_name"),
+        ("packagedb", "0093_update_pypi_package_content"),
     ]
 
     operations = [
