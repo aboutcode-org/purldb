@@ -109,7 +109,7 @@ class TestPackageSetCreation(TestMigrations):
 class TestPythonPackageContent(TestMigrations):
     app_name = "packagedb"
     migrate_from = "0092_alter_party_email_alter_party_name"
-    migrate_to = "0093_auto_20250529_2308"
+    migrate_to = "0093_update_pypi_package_content"
 
     def setUpBeforeMigration(self, apps):
         # using get_model to avoid circular import
