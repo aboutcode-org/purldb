@@ -89,6 +89,8 @@ def create_package_from_purldb_data(project, resources, package_data, status):
         package_data=package_data,
         codebase_resources=resources_qs,
     )
+    package.update_extra_data({"matchcodeio_match_status": status})
+
     # Get the number of already matched CodebaseResources from `resources_qs`
     # before we update the status of all CodebaseResources from `resources_qs`,
     # then subtract the number of already matched CodebaseResources from the
