@@ -220,3 +220,15 @@ class MatchingPipesTest(TestCase):
         resource.refresh_from_db()
         self.assertEqual("approximate-matched-to-purldb-resource", resource.status)
         self.assertEqual(package, resource.discovered_packages.get())
+
+    def test_matching_create_package_from_purldb_data_set_package_match_type(self):
+        resource = make_resource_file(self.project1, "package.jar-extract/a.class")
+        resources = [resource]
+        dummy_package_data1 = package_data1.copy()
+        package1, _ = matching.create_package_from_purldb_data(
+            self.project1,
+            resources,
+            dummy_package_data1,
+            flag.MATCHED_TO_PURLDB_RESOURCE,
+        )
+        self.assertEqual(flag.MATCHED_TO_PURLDB_RESOURCE, package1.extra_data["matchcodeio_match_status"])
