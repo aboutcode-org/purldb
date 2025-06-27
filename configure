@@ -40,7 +40,6 @@ VIRTUALENV_DIR=venv
 # Cleanable files and directories to delete with the --clean option
 CLEANABLE="build dist venv .cache .eggs *.egg-info docs/_build/ pip-selfcheck.json"
 
-
 # extra  arguments passed to pip
 PIP_EXTRA_ARGS=" "
 
@@ -114,7 +113,7 @@ create_virtualenv() {
         fi
 
         $PYTHON_EXECUTABLE "$VIRTUALENV_PYZ" \
-            --wheel embed --pip embed --setuptools embed \
+            --pip embed --setuptools embed \
             --seeder pip \
             --never-download \
             --no-periodic-update \
