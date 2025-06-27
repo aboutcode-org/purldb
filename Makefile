@@ -45,11 +45,6 @@ conf:
 	@echo "-> Install dependencies"
 	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure
 
-
-conf:
-	@echo "-> Install dependencies"
-	./configure
-
 dev:
 	@echo "-> Configure and install development dependencies"
 	@PYTHON_EXECUTABLE=${PYTHON_EXE} ./configure --dev
