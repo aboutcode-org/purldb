@@ -24,7 +24,7 @@ PurlDB
 
 .. code-block:: console
 
-    git clone https://github.com/aboutcode-org/scancode.io.git && cd scancode.io
+    git clone https://github.com/aboutcode-org/purldb.git && cd purldb
     make envfile
     docker compose build
 
