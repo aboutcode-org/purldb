@@ -93,19 +93,18 @@ def get_package_json(subset_path, type=None, version=None):
     elif type == "bitbucket":
         url = f"https://api.bitbucket.org/2.0/repositories/{subset_path}"
     else:
-        if version:
-            if version.startswith('v'):
-                url = f"https://api.deps.dev/v3/systems/GO/packages/{subset_path}/versions/{version}"
-            else:
-                url = f"https://api.deps.dev/v3/systems/GO/packages/{subset_path}/versions/v{version}"
+        if version.startswith('v'):
+            url = f"https://api.deps.dev/v3/systems/GO/packages/{subset_path}/versions/{version}"
+        else:
+            url = f"https://api.deps.dev/v3/systems/GO/packages/{subset_path}/versions/v{version}"
     try:
         response = requests.get(url)
         response.raise_for_status()
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        print(response.json())
         return response.json()
     except requests.exceptions.HTTPError as err:
         logger.error(f"HTTP error occurred: {err}")
+    except AttributeError:
+        logger.error("The PURL is missing a version.")
 
 
 def map_golang_package(package_url, package_json, pipelines, priority=0, filename=None):
