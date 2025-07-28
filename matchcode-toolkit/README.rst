@@ -7,6 +7,11 @@ and `ScanCode.io <https://github.com/aboutcode-org/scancode.io>`_ by implementin
 HaloHash algorithm and using it in ScanCode toolkit and ScanCode.io plugins and
 pipelines.
 
+.. note::
+
+    MatchCode toolkit has moved to its own repo at https://github.com/aboutcode-org/matchcode-toolkit
+    from its previous location https://github.com/aboutcode-org/purldb/tree/main/matchcode-toolkit
+
 
 Installation
 ------------
@@ -50,8 +55,3 @@ Resources and computes those values for directories.
 MatchCode toolkit provides the ``scan_and_fingerprint_package`` pipeline for
 ScanCode.io. This is the same as the ``scan_single_package`` pipeline, but has the
 added step of computing fingerprints for directories.
-
-.. note::
-
-    MatchCode toolkit has moved to its own repo at https://github.com/aboutcode-org/matchcode-toolkit
-    from its previous location https://github.com/aboutcode-org/purldb/tree/main/matchcode-toolkit
