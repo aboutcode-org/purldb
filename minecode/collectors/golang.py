@@ -39,7 +39,7 @@ def extract_golang_subset_purl(purl_str):
         version: 2.1.23
     """
     # Strip "pkg:golang/"
-    purl_body = purl_str[len("pkg:golang/"):]
+    purl_body = purl_str[len("pkg:golang/") :]
 
     # Extract namespace, name, and version
     parts = purl_body.split("/")
@@ -93,7 +93,7 @@ def get_package_json(subset_path, type=None, version=None):
     elif type == "bitbucket":
         url = f"https://api.bitbucket.org/2.0/repositories/{subset_path}"
     else:
-        if version.startswith('v'):
+        if version.startswith("v"):
             url = f"https://api.deps.dev/v3/systems/GO/packages/{subset_path}/versions/{version}"
         else:
             url = f"https://api.deps.dev/v3/systems/GO/packages/{subset_path}/versions/v{version}"
@@ -133,15 +133,13 @@ def map_golang_package(package_url, package_json, pipelines, priority=0, filenam
 
     for package in packages:
         package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
-        db_package, _, _, error = merge_or_create_package(
-            package, visit_level=0, filename=filename)
+        db_package, _, _, error = merge_or_create_package(package, visit_level=0, filename=filename)
         if error:
             break
 
         # Submit package for scanning
         if db_package:
-            add_package_to_scan_queue(
-                package=db_package, pipelines=pipelines, priority=priority)
+            add_package_to_scan_queue(package=db_package, pipelines=pipelines, priority=priority)
 
     return error
 
@@ -230,8 +228,7 @@ def process_requests(purl_str, **kwargs):
             if not package_json:
                 error = f"package not found: {purl_str}"
             else:
-                repo_version_author_list = gitlab_get_all_package_version_author(
-                    subset_path)
+                repo_version_author_list = gitlab_get_all_package_version_author(subset_path)
                 if repo_version_author_list:
                     for repo_version, author, email in repo_version_author_list:
                         # Check the version along with stripping the first
@@ -246,23 +243,32 @@ def process_requests(purl_str, **kwargs):
                             if not version:
                                 if repo_version.startswith("v"):
                                     updated_purl_str = (
-                                        PackageURL.to_string(
-                                            package_url) + "@" + repo_version[1:])
+                                        PackageURL.to_string(package_url) + "@" + repo_version[1:]
+                                    )
                                 else:
                                     updated_purl_str = (
-                                        PackageURL.to_string(
-                                            package_url) + "@" + repo_version)
-                                updated_purl = PackageURL.from_string(
-                                    updated_purl_str)
+                                        PackageURL.to_string(package_url) + "@" + repo_version
+                                    )
+                                updated_purl = PackageURL.from_string(updated_purl_str)
                                 error_msg = map_golang_package(
-                                    updated_purl, updated_json, pipelines, priority, filename=filename)
+                                    updated_purl,
+                                    updated_json,
+                                    pipelines,
+                                    priority,
+                                    filename=filename,
+                                )
                                 if error_msg:
                                     print(error_msg)
                                 else:
                                     processed = True
                             else:
                                 error_msg = map_golang_package(
-                                    package_url, updated_json, pipelines, priority, filename=filename)
+                                    package_url,
+                                    updated_json,
+                                    pipelines,
+                                    priority,
+                                    filename=filename,
+                                )
                                 if error_msg:
                                     print(error_msg)
                                 else:
@@ -273,8 +279,7 @@ def process_requests(purl_str, **kwargs):
                     download_url = (
                         f"https://gitlab.com/api/v4/projects/{subset_path}/repository/archive.zip"
                     )
-                    updated_json, filename = process_download_metadata(
-                        download_url, package_json)
+                    updated_json, filename = process_download_metadata(download_url, package_json)
                     error_msg = map_golang_package(
                         package_url, updated_json, pipelines, priority, filename=filename
                     )
@@ -289,8 +294,7 @@ def process_requests(purl_str, **kwargs):
             if not package_json:
                 error = f"package not found: {purl_str}"
             else:
-                repo_version_author_list = bitbucket_get_all_package_version_author(
-                    subset_path)
+                repo_version_author_list = bitbucket_get_all_package_version_author(subset_path)
                 package_json["repo_workspace_name"] = subset_path
                 if repo_version_author_list:
                     found_match = False
@@ -299,7 +303,9 @@ def process_requests(purl_str, **kwargs):
                         # character 'v' in the repo_version
                         if not version or version in {repo_version, repo_version[1:]}:
                             found_match = True
-                            download_url = f"https://bitbucket.org/{subset_path}/get/{repo_version}.zip"
+                            download_url = (
+                                f"https://bitbucket.org/{subset_path}/get/{repo_version}.zip"
+                            )
                             updated_json, filename = process_download_metadata(
                                 download_url, package_json
                             )
@@ -310,8 +316,7 @@ def process_requests(purl_str, **kwargs):
                                 else:
                                     collected_version = repo_version
                                 updated_purl_str = purl_str + "@" + collected_version
-                                package_url = PackageURL.from_string(
-                                    updated_purl_str)
+                                package_url = PackageURL.from_string(updated_purl_str)
                             error_msg = map_golang_package(
                                 package_url, updated_json, pipelines, priority, filename=filename
                             )
@@ -328,8 +333,7 @@ def process_requests(purl_str, **kwargs):
                     # Get the main branch name for the download url
                     main_branch = package_json["mainbranch"]["name"]
                     download_url = f"https://bitbucket.org/{subset_path}/get/{main_branch}.zip"
-                    updated_json, filename = process_download_metadata(
-                        download_url, package_json)
+                    updated_json, filename = process_download_metadata(download_url, package_json)
 
                     error_msg = map_golang_package(
                         package_url, updated_json, pipelines, priority, filename=filename
@@ -340,7 +344,7 @@ def process_requests(purl_str, **kwargs):
                         processed = True
         if not processed:
             # Handle case which no version is in the input purl
-            if '@' not in purl_str:
+            if "@" not in purl_str:
                 namespace_name = purl_str.partition("pkg:golang/")[2]
                 encoded_namespace_name = quote(namespace_name, safe="")
                 version_list = get_package_versions(encoded_namespace_name)
@@ -348,21 +352,16 @@ def process_requests(purl_str, **kwargs):
                 for version in version_list:
                     purl_str_version = purl_str + "@" + version
                     package_url = PackageURL.from_string(purl_str_version)
-                    package_json = get_package_json(
-                        encoded_namespace_name, version=version)
-                    error_msg = map_golang_package(
-                        package_url, package_json, pipelines, priority)
+                    package_json = get_package_json(encoded_namespace_name, version=version)
+                    error_msg = map_golang_package(package_url, package_json, pipelines, priority)
                     if error_msg:
                         print(error_msg)
             else:
-                namespace_name = purl_str.partition(
-                    "pkg:golang/")[2].rpartition("@")[0]
+                namespace_name = purl_str.partition("pkg:golang/")[2].rpartition("@")[0]
                 encoded_namespace_name = quote(namespace_name, safe="")
                 package_url = PackageURL.from_string(purl_str)
-                package_json = get_package_json(
-                    encoded_namespace_name, version=package_url.version)
-                error_msg = map_golang_package(
-                    package_url, package_json, pipelines, priority)
+                package_json = get_package_json(encoded_namespace_name, version=package_url.version)
+                error_msg = map_golang_package(package_url, package_json, pipelines, priority)
                 if error_msg:
                     print(error_msg)
 
