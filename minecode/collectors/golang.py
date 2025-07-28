@@ -9,22 +9,20 @@
 import logging
 import requests
 
-from bs4 import BeautifulSoup
-
-from packageurl import PackageURL
-
 from minecode import priority_router
-
 from minecode.collectors.generic import map_fetchcode_supported_package
 from minecode.collectors.gitlab import gitlab_get_all_package_version_author
 from minecode.collectors.github import github_get_all_versions
 from minecode.collectors.bitbucket import bitbucket_get_all_package_version_author
-
 from minecode.miners.gitlab import build_packages_from_json_golang
 from minecode.miners.golang import build_golang_generic_package
 from minecode.miners.bitbucket import build_bitbucket_packages
 
+from packageurl import PackageURL
+
 from packagedb.models import PackageContentType
+
+from urllib.parse import quote
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -41,7 +39,7 @@ def extract_golang_subset_purl(purl_str):
         version: 2.1.23
     """
     # Strip "pkg:golang/"
-    purl_body = purl_str[len("pkg:golang/") :]
+    purl_body = purl_str[len("pkg:golang/"):]
 
     # Extract namespace, name, and version
     parts = purl_body.split("/")
@@ -62,11 +60,30 @@ def gitlab_updated_purl(purl_str):
     if "@" in purl_str:
         version = purl_str.rpartition("@")[2]
     subset = purl_str.partition("pkg:golang/gitlab.com/")[2].partition("@")[0]
-    subset_path = subset.replace("/", "%2F")
+    subset_path = quote(subset, safe="")
     return subset_path, version
 
 
-def get_package_json(subset_path, type):
+def get_package_versions(namespace_name):
+    """
+    Return all the version of the package fetched from "api.deps.dev" in a
+    list
+    """
+    version_list = []
+    url = f"https://api.deps.dev/v3/systems/GO/packages/{namespace_name}"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        context = response.json()
+        versions = context["versions"]
+        for version in versions:
+            version_list.append(version["versionKey"]["version"])
+        return version_list
+    except requests.exceptions.HTTPError as err:
+        logger.error(f"HTTP error occurred: {err}")
+
+
+def get_package_json(subset_path, type=None, version=None):
     """
     Return the contents of the JSON file of the package.
     """
@@ -75,10 +92,17 @@ def get_package_json(subset_path, type):
         url = f"https://gitlab.com/api/v4/projects/{subset_path}"
     elif type == "bitbucket":
         url = f"https://api.bitbucket.org/2.0/repositories/{subset_path}"
-
+    else:
+        if version:
+            if version.startswith('v'):
+                url = f"https://api.deps.dev/v3/systems/GO/packages/{subset_path}/versions/{version}"
+            else:
+                url = f"https://api.deps.dev/v3/systems/GO/packages/{subset_path}/versions/v{version}"
     try:
         response = requests.get(url)
         response.raise_for_status()
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        print(response.json())
         return response.json()
     except requests.exceptions.HTTPError as err:
         logger.error(f"HTTP error occurred: {err}")
@@ -110,13 +134,15 @@ def map_golang_package(package_url, package_json, pipelines, priority=0, filenam
 
     for package in packages:
         package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
-        db_package, _, _, error = merge_or_create_package(package, visit_level=0, filename=filename)
+        db_package, _, _, error = merge_or_create_package(
+            package, visit_level=0, filename=filename)
         if error:
             break
 
         # Submit package for scanning
         if db_package:
-            add_package_to_scan_queue(package=db_package, pipelines=pipelines, priority=priority)
+            add_package_to_scan_queue(
+                package=db_package, pipelines=pipelines, priority=priority)
 
     return error
 
@@ -143,63 +169,12 @@ def process_download_metadata(download_url, package_json):
     return package_json, filename
 
 
-def scrape_go_package(repo_path, version):
-    """
-    Access the repository on pkg.go.dev and extract the project's metadata.
-    """
-    url = f"https://pkg.go.dev/{repo_path}@v{version}"
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-
-        # Parse HTML content
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        # Find the <a> tag with the specific text
-        license_tag = soup.find("a", {"data-test-id": "UnitHeader-license"})
-        license_text = license_tag.text if license_tag else ""
-
-        # Find the <a> tag inside the UnitMeta-repo div
-        repo_tag = soup.find("div", class_="UnitMeta-repo").find("a")
-        repo_url = repo_tag["href"] if repo_tag else ""
-
-        download_url = f"https://proxy.golang.org/{repo_path}/@v/v{version}.zip"
-
-        return {
-            "license_text": license_text,
-            "repository_homepage_url": repo_url,
-            "download_url": download_url,
-        }
-
-    except requests.exceptions.RequestException as e:
-        return {"error": f"Request failed: {str(e)}"}
-    except Exception as e:
-        return {"error": f"An error occurred: {str(e)}"}
-
-
-def scrape_package_versions(repo_path):
-    """
-    Return all the version of a repo as a list that is fetched from pkg.go.dev.
-    """
-    url = f"https://pkg.go.dev/{repo_path}?tab=versions"
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, "html.parser")
-        version_divs = soup.find_all("div", class_="Version-tag")
-        versions = [div.get_text(strip=True) for div in version_divs]
-        return versions
-    else:
-        print(f"Error fetching page: {response.status_code}")
-        return []
-
-
 # It may need indexing GitHub PURLs that requires a GitHub API token.
 # Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
 @priority_router.route("pkg:golang/.*")
 def process_requests(purl_str, **kwargs):
     """
-    Process `priority_resource_uri` containing a GitHub Package URL (PURL).
+    Process `priority_resource_uri` containing a golang Package URL (PURL).
 
     This involves obtaining Package information for the PURL using
     https://github.com/aboutcode-org/fetchcode and using it to create a new
@@ -214,8 +189,10 @@ def process_requests(purl_str, **kwargs):
     try:
         """
         We retrieve metadata from APIs for GitHub, GitLab, and Bitbucket.
-        For the other cases, we will scrape data from pkg.go.dev
+        For the other cases (or failing cases), we will get the data from
+        deps.dev
         """
+        processed = False
         if purl_str.startswith("pkg:golang/github"):
             subset_path, version = extract_golang_subset_purl(purl_str)
             if version:
@@ -226,7 +203,9 @@ def process_requests(purl_str, **kwargs):
                     package_url, pipelines, priority, from_go_lang=True
                 )
                 if error_msg:
-                    return error_msg
+                    print(error_msg)
+                else:
+                    processed = True
             else:
                 version_list = github_get_all_versions(subset_path)
                 for v in version_list:
@@ -242,120 +221,151 @@ def process_requests(purl_str, **kwargs):
                         package_url, pipelines, priority, from_go_lang=True
                     )
                     if error_msg:
-                        return error_msg
+                        print(error_msg)
+                    else:
+                        processed = True
         elif purl_str.startswith("pkg:golang/gitlab"):
             package_url = PackageURL.from_string(purl_str)
             subset_path, version = gitlab_updated_purl(purl_str)
             package_json = get_package_json(subset_path, "gitlab")
             if not package_json:
                 error = f"package not found: {purl_str}"
-                return error
-            repo_version_author_list = gitlab_get_all_package_version_author(subset_path)
-            if repo_version_author_list:
-                for repo_version, author, email in repo_version_author_list:
-                    # Check the version along with stripping the first
-                    # character 'v' in the repo_version
-                    if not version or version in {repo_version, repo_version[1:]}:
-                        download_url = f"https://gitlab.com/api/v4/projects/{subset_path}/repository/archive.zip?sha={repo_version}"
-                        updated_json, filename = process_download_metadata(
-                            download_url, package_json
-                        )
-                        updated_json["author"] = author
-                        updated_json["email"] = email
-                        if not version:
-                            if repo_version.startswith("v"):
-                                updated_purl_str = (
-                                    PackageURL.to_string(package_url) + "@" + repo_version[1:]
-                                )
-                            else:
-                                updated_purl_str = (
-                                    PackageURL.to_string(package_url) + "@" + repo_version
-                                )
-                            updated_purl = PackageURL.from_string(updated_purl_str)
-                            error_msg = map_golang_package(
-                                updated_purl, updated_json, pipelines, priority, filename=filename
-                            )
-                        else:
-                            error_msg = map_golang_package(
-                                package_url, updated_json, pipelines, priority, filename=filename
-                            )
-                            break
             else:
-                # The repo does not have any tag (i.e. it only has one version)
-                download_url = (
-                    f"https://gitlab.com/api/v4/projects/{subset_path}/repository/archive.zip"
-                )
-                updated_json, filename = process_download_metadata(download_url, package_json)
-                error_msg = map_golang_package(
-                    package_url, updated_json, pipelines, priority, filename=filename
-                )
+                repo_version_author_list = gitlab_get_all_package_version_author(
+                    subset_path)
+                if repo_version_author_list:
+                    for repo_version, author, email in repo_version_author_list:
+                        # Check the version along with stripping the first
+                        # character 'v' in the repo_version
+                        if not version or version in {repo_version, repo_version[1:]}:
+                            download_url = f"https://gitlab.com/api/v4/projects/{subset_path}/repository/archive.zip?sha={repo_version}"
+                            updated_json, filename = process_download_metadata(
+                                download_url, package_json
+                            )
+                            updated_json["author"] = author
+                            updated_json["email"] = email
+                            if not version:
+                                if repo_version.startswith("v"):
+                                    updated_purl_str = (
+                                        PackageURL.to_string(
+                                            package_url) + "@" + repo_version[1:])
+                                else:
+                                    updated_purl_str = (
+                                        PackageURL.to_string(
+                                            package_url) + "@" + repo_version)
+                                updated_purl = PackageURL.from_string(
+                                    updated_purl_str)
+                                error_msg = map_golang_package(
+                                    updated_purl, updated_json, pipelines, priority, filename=filename)
+                                if error_msg:
+                                    print(error_msg)
+                                else:
+                                    processed = True
+                            else:
+                                error_msg = map_golang_package(
+                                    package_url, updated_json, pipelines, priority, filename=filename)
+                                if error_msg:
+                                    print(error_msg)
+                                else:
+                                    processed = True
+                                break
+                else:
+                    # The repo does not have any tag (i.e. it only has one version)
+                    download_url = (
+                        f"https://gitlab.com/api/v4/projects/{subset_path}/repository/archive.zip"
+                    )
+                    updated_json, filename = process_download_metadata(
+                        download_url, package_json)
+                    error_msg = map_golang_package(
+                        package_url, updated_json, pipelines, priority, filename=filename
+                    )
+                    if error_msg:
+                        print(error_msg)
+                    else:
+                        processed = True
         elif purl_str.startswith("pkg:golang/bitbucket"):
             package_url = PackageURL.from_string(purl_str)
             subset_path, version = extract_golang_subset_purl(purl_str)
             package_json = get_package_json(subset_path, "bitbucket")
             if not package_json:
                 error = f"package not found: {purl_str}"
-                return error
-            repo_version_author_list = bitbucket_get_all_package_version_author(subset_path)
-            package_json["repo_workspace_name"] = subset_path
-            if repo_version_author_list:
-                found_match = False
-                for repo_version, author in repo_version_author_list:
-                    # Check the version along with stripping the first
-                    # character 'v' in the repo_version
-                    if not version or version in {repo_version, repo_version[1:]}:
-                        found_match = True
-                        download_url = f"https://bitbucket.org/{subset_path}/get/{repo_version}.zip"
-                        updated_json, filename = process_download_metadata(
-                            download_url, package_json
-                        )
-                        updated_json["author"] = author
-                        if not version:
-                            if repo_version.startswith("v"):
-                                collected_version = repo_version[1:]
-                            else:
-                                collected_version = repo_version
-                            updated_purl_str = purl_str + "@" + collected_version
-                            package_url = PackageURL.from_string(updated_purl_str)
-                        error_msg = map_golang_package(
-                            package_url, updated_json, pipelines, priority, filename=filename
-                        )
-                        if version:
-                            break
-                if not found_match:
-                    error_msg = f"The package version not found: {version}"
-                    return error_msg
             else:
-                # The repo does not have any tag (i.e. it only has one version)
-                # Get the main branch name for the download url
-                main_branch = package_json["mainbranch"]["name"]
-                download_url = f"https://bitbucket.org/{subset_path}/get/{main_branch}.zip"
-                updated_json, filename = process_download_metadata(download_url, package_json)
+                repo_version_author_list = bitbucket_get_all_package_version_author(
+                    subset_path)
+                package_json["repo_workspace_name"] = subset_path
+                if repo_version_author_list:
+                    found_match = False
+                    for repo_version, author in repo_version_author_list:
+                        # Check the version along with stripping the first
+                        # character 'v' in the repo_version
+                        if not version or version in {repo_version, repo_version[1:]}:
+                            found_match = True
+                            download_url = f"https://bitbucket.org/{subset_path}/get/{repo_version}.zip"
+                            updated_json, filename = process_download_metadata(
+                                download_url, package_json
+                            )
+                            updated_json["author"] = author
+                            if not version:
+                                if repo_version.startswith("v"):
+                                    collected_version = repo_version[1:]
+                                else:
+                                    collected_version = repo_version
+                                updated_purl_str = purl_str + "@" + collected_version
+                                package_url = PackageURL.from_string(
+                                    updated_purl_str)
+                            error_msg = map_golang_package(
+                                package_url, updated_json, pipelines, priority, filename=filename
+                            )
+                            if error_msg:
+                                print(error_msg)
+                            if version:
+                                break
+                    if not found_match:
+                        error_msg = f"The package version not found: {version}"
+                    else:
+                        processed = True
+                else:
+                    # The repo does not have any tag (i.e. it only has one version)
+                    # Get the main branch name for the download url
+                    main_branch = package_json["mainbranch"]["name"]
+                    download_url = f"https://bitbucket.org/{subset_path}/get/{main_branch}.zip"
+                    updated_json, filename = process_download_metadata(
+                        download_url, package_json)
 
-                error_msg = map_golang_package(
-                    package_url, updated_json, pipelines, priority, filename=filename
-                )
-        else:
-            subset_path = ""
-            version = ""
-            subset_path = purl_str.partition("pkg:golang/")[2].partition("@")[0]
-            if "@" in purl_str:
-                version = purl_str.rpartition("@")[2]
-            if not version:
-                version_list = scrape_package_versions(subset_path)
-                for ver in version_list:
-                    if ver.startswith("version"):
-                        ver = ver.partition("version")[2]
-                    elif ver.startswith("v"):
-                        ver = ver[1:]
-                    updated_purl_str = purl_str + "@" + ver
-                    package_url = PackageURL.from_string(updated_purl_str)
-                    package_json = scrape_go_package(subset_path, ver)
-                    error_msg = map_golang_package(package_url, package_json, pipelines, priority)
+                    error_msg = map_golang_package(
+                        package_url, updated_json, pipelines, priority, filename=filename
+                    )
+                    if error_msg:
+                        print(error_msg)
+                    else:
+                        processed = True
+        if not processed:
+            # Handle case which no version is in the input purl
+            if '@' not in purl_str:
+                namespace_name = purl_str.partition("pkg:golang/")[2]
+                encoded_namespace_name = quote(namespace_name, safe="")
+                version_list = get_package_versions(encoded_namespace_name)
+
+                for version in version_list:
+                    purl_str_version = purl_str + "@" + version
+                    package_url = PackageURL.from_string(purl_str_version)
+                    package_json = get_package_json(
+                        encoded_namespace_name, version=version)
+                    error_msg = map_golang_package(
+                        package_url, package_json, pipelines, priority)
+                    if error_msg:
+                        print(error_msg)
             else:
+                namespace_name = purl_str.partition(
+                    "pkg:golang/")[2].rpartition("@")[0]
+                encoded_namespace_name = quote(namespace_name, safe="")
                 package_url = PackageURL.from_string(purl_str)
-                package_json = scrape_go_package(subset_path, version)
-                error_msg = map_golang_package(package_url, package_json, pipelines, priority)
+                package_json = get_package_json(
+                    encoded_namespace_name, version=package_url.version)
+                error_msg = map_golang_package(
+                    package_url, package_json, pipelines, priority)
+                if error_msg:
+                    print(error_msg)
 
     except ValueError as e:
         error = f"error occurred when parsing {purl_str}: {e}"

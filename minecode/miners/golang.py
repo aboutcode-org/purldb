@@ -41,13 +41,15 @@ class GodocIndexVisitor(NonPersistentHttpVisitor):
 
             # note the addition of a * at the end of the search string...
             # without this the returned data are sparse
-            details_url = "https://api.godoc.org/search?q={path}*".format(**locals())
+            details_url = "https://api.godoc.org/search?q={path}*".format(
+                **locals())
             host = get_well_known_host(path)
             # If the path belongs github/bitbucket, yield a repo too
             if host:
                 # keep github, bitbucket... as type:
                 repo_type, _, _ = host.lower().partition(".")  # NOQA
-                repo_url = "https://{namespace}/{name}".format(**package_url.to_dict())
+                repo_url = "https://{namespace}/{name}".format(
+                    **package_url.to_dict())
                 repo_purl = PackageURL(
                     type=repo_type,
                     namespace=package_url.namespace,
@@ -206,7 +208,8 @@ def parse_package_path(path):
 
     path = "/".join(segments)
 
-    package_url = PackageURL(type="golang", namespace=namespace, name=name, qualifiers=qualifiers)
+    package_url = PackageURL(
+        type="golang", namespace=namespace, name=name, qualifiers=qualifiers)
 
     return package_url, path
 
@@ -222,7 +225,8 @@ def build_golang_package(package_data, purl):
     """Return a single Golang package"""
     package_url = PackageURL.from_string(purl)
     vcs_url = package_url.qualifiers.get("vcs_repository")
-    homepage_url = "/".join(["https:/", package_url.namespace, package_url.name])
+    homepage_url = "/".join(["https:/",
+                            package_url.namespace, package_url.name])
     vcs_tool = "git" if "github.com" in package_url.namespace else None
     if vcs_tool:
         vcs_url = form_vcs_url(vcs_tool, vcs_url)
@@ -241,19 +245,22 @@ def build_golang_package(package_data, purl):
 
 def build_golang_generic_package(package_data, package_url):
     """Return a single Golang package"""
-    homepage_url = "/".join(["https:/", package_url.namespace, package_url.name])
-    license_text = package_data.get("license_text")
+    homepage_url = "/".join(["https:/",
+                            package_url.namespace, package_url.name])
+    license_text = package_data.get("licenses")
     extracted_license_statement = [license_text]
+
+    download_url = "/".join(["https://proxy.golang.org", package_url.namespace,
+                            package_url.name, "@v"]) + "/v" + package_url.version + ".zip"
 
     common_data = dict(
         name=package_url.name,
         namespace=package_url.namespace,
         type=package_url.type,
         primary_language="go",
-        repository_homepage_url=package_data.get("repository_homepage_url"),
         homepage_url=homepage_url,
         extracted_license_statement=extracted_license_statement,
-        download_url=package_data.get("download_url"),
+        download_url=download_url,
     )
 
     package = scan_models.PackageData.from_data(common_data)

@@ -20,16 +20,19 @@ from minecode.utils_test import JsonBasedTesting
 
 
 class GoLangPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
+    test_data_dir = os.path.join(os.path.dirname(
+        os.path.dirname(__file__)), "testfiles")
 
     def test_extract_golang_subset_purl(self):
-        test1 = "pkg:golang/github.com/rickar/cal/v2/aa@2.1.23"
-        test2 = "pkg:golang/github.com/rickar/cal/v2/aa"
+        test1 = "pkg:golang/github.com/rickar/cal/v2@2.1.23"
+        test2 = "pkg:golang/github.com/rickar/cal/v2"
         expected_path1 = "rickar/cal"
         expected_version1 = "2.1.23"
 
-        result_path1, result_version1 = golang.extract_golang_subset_purl(test1)
-        result_path2, result_version2 = golang.extract_golang_subset_purl(test2)
+        result_path1, result_version1 = golang.extract_golang_subset_purl(
+            test1)
+        result_path2, result_version2 = golang.extract_golang_subset_purl(
+            test2)
 
         self.assertEqual(expected_path1, result_path1)
         self.assertEqual(result_version1, expected_version1)
@@ -53,7 +56,8 @@ class GoLangPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         self.assertEqual(result_version2, "")
 
     def test_get_package_json_gitlab(self):
-        json_contents = golang.get_package_json("xx_network%2Fprimitives", "gitlab")
+        json_contents = golang.get_package_json(
+            "xx_network%2Fprimitives", "gitlab")
         expected_id = 20321795
         expected_name = "primitives"
 
@@ -61,7 +65,8 @@ class GoLangPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         self.assertEqual(json_contents.get("name"), expected_name)
 
     def test_get_package_json_bitbucket(self):
-        json_contents = golang.get_package_json("lebronto_kerovol/gwerror", "bitbucket")
+        json_contents = golang.get_package_json(
+            "lebronto_kerovol/gwerror", "bitbucket")
         expected_full_name = "lebronto_kerovol/gwerror"
         expected_name = "gwerror"
 
@@ -77,7 +82,8 @@ class GoLangPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
 
         with open(self.get_test_loc("golang/client-go_0.127.0.json")) as file:
             package_json = json.load(file)
-            golang.map_golang_package(package_url, package_json, ("test_pipeline"))
+            golang.map_golang_package(
+                package_url, package_json, ("test_pipeline"))
             package_count = packagedb.models.Package.objects.all().count()
             self.assertEqual(1, package_count)
             package = packagedb.models.Package.objects.all().first()
@@ -89,11 +95,13 @@ class GoLangPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     def test_map_go_package_bitbucket(self):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(0, package_count)
-        package_url = PackageURL.from_string("pkg:golang/bitbucket.org/digi-sense/gg-core@0.3.64")
+        package_url = PackageURL.from_string(
+            "pkg:golang/bitbucket.org/digi-sense/gg-core@0.3.64")
 
         with open(self.get_test_loc("golang/gg-core_0.3.64.json")) as file:
             package_json = json.load(file)
-            golang.map_golang_package(package_url, package_json, ("test_pipeline"))
+            golang.map_golang_package(
+                package_url, package_json, ("test_pipeline"))
             package_count = packagedb.models.Package.objects.all().count()
             self.assertEqual(1, package_count)
             package = packagedb.models.Package.objects.all().first()
@@ -105,36 +113,23 @@ class GoLangPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     def test_map_go_package_others(self):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(0, package_count)
-        package_url = PackageURL.from_string("pkg:golang/golang.org/x/oauth2@0.29.0")
+        package_url = PackageURL.from_string(
+            "pkg:golang/golang.org/x/oauth2@0.29.0")
 
-        package_json = golang.scrape_go_package("golang.org/x/oauth2", "0.29.0")
-        golang.map_golang_package(package_url, package_json, ("test_pipeline"))
-        package_count = packagedb.models.Package.objects.all().count()
-        self.assertEqual(1, package_count)
-        package = packagedb.models.Package.objects.all().first()
-        expected_purl_str = "pkg:golang/golang.org/x/oauth2@0.29.0"
-        expected_download_url = "https://proxy.golang.org/golang.org/x/oauth2/@v/v0.29.0.zip"
-        self.assertEqual(expected_purl_str, package.purl)
-        self.assertEqual(expected_download_url, package.download_url)
+        with open(self.get_test_loc("golang/oauth2_0.29.0.json")) as file:
+            package_json = json.load(file)
+            golang.map_golang_package(
+                package_url, package_json, ("test_pipeline"))
+            package_count = packagedb.models.Package.objects.all().count()
+            self.assertEqual(1, package_count)
+            package = packagedb.models.Package.objects.all().first()
+            expected_purl_str = "pkg:golang/golang.org/x/oauth2@0.29.0"
+            expected_download_url = "https://proxy.golang.org/golang.org/x/oauth2/@v/v0.29.0.zip"
+            self.assertEqual(expected_purl_str, package.purl)
+            self.assertEqual(expected_download_url, package.download_url)
 
     def test_process_download_metadata(self):
         url = "https://bitbucket.org/digi-sense/gg-core/get/v0.3.64.zip"
         _package_json, filename = golang.process_download_metadata(url, {})
         exprected_filename = "digi-sense-gg-core-9d3dfdc43161.zip"
         self.assertEqual(exprected_filename, filename)
-
-    def test_scrape_go_package(self):
-        metadata_dict = golang.scrape_go_package("golang.org/x/oauth2", "0.29.0")
-        expected_dict = {
-            "license_text": "BSD-3-Clause",
-            "repository_homepage_url": "https://cs.opensource.google/go/x/oauth2",
-            "download_url": "https://proxy.golang.org/golang.org/x/oauth2/@v/v0.29.0.zip",
-        }
-        self.assertEqual(expected_dict, metadata_dict)
-
-    def test_scrape_package_versions(self):
-        versions = golang.scrape_package_versions("golang.org/x/oauth2")
-        # The version list may expand overtime, as of writing the test,
-        # there are 29 releases
-        expected_version_len = 29
-        self.assertGreaterEqual(len(versions), expected_version_len)
