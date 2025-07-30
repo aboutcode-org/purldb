@@ -22,6 +22,7 @@ class GithubPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         repo_path = "aboutcode-org/purldb"
         versions = github.github_get_all_versions(repo_path)
         expected = [
+            "v7.0.0",
             "v6.0.0",
             "v5.0.1",
             "v5.0.0",

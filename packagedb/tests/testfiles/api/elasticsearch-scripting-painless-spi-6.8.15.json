@@ -48,7 +48,7 @@
           "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/apache-2.0_40.RULE",
           "from_file":null,
           "start_line":1,
-          "matched_text":"- name: The Apache Software License, Version 2.0\n  url: http://www.apache.org/licenses/LICENSE-2.0.txt",
+          "matched_text":"name: The Apache Software License, Version 2.0\nurl: http://www.apache.org/licenses/LICENSE-2.0.txt",
           "match_coverage":100.0,
           "matched_length":18,
           "rule_relevance":100,
@@ -65,7 +65,7 @@
   "other_license_expression":null,
   "other_license_expression_spdx":null,
   "other_license_detections":[],
-  "extracted_license_statement":"- name: The Apache Software License, Version 2.0\n  url: http://www.apache.org/licenses/LICENSE-2.0.txt\n",
+  "extracted_license_statement":"- license:\n    name: The Apache Software License, Version 2.0\n    url: http://www.apache.org/licenses/LICENSE-2.0.txt\n",
   "notice_text":null,
   "source_packages":[
     "pkg:maven/org.elasticsearch.plugin/elasticsearch-scripting-painless-spi@6.8.15?classifier=sources"
