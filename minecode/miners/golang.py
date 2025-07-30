@@ -11,6 +11,7 @@ import json
 
 from packagedcode import models as scan_models
 from packageurl import PackageURL
+from packageurl.contrib.purl2url import build_golang_download_url
 
 from minecode import map_router
 from minecode import seed
@@ -245,12 +246,8 @@ def build_golang_generic_package(package_data, package_url):
     license_text = package_data.get("licenses")
     extracted_license_statement = [license_text]
 
-    download_url = (
-        "/".join(["https://proxy.golang.org", package_url.namespace, package_url.name, "@v"])
-        + "/v"
-        + package_url.version
-        + ".zip"
-    )
+    purl_str = package_url.to_string()
+    download_url = build_golang_download_url(purl_str)
 
     common_data = dict(
         name=package_url.name,
