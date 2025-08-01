@@ -100,7 +100,7 @@ def packagedata_from_dict(package_data):
     return PackageData.from_data(cleaned_package_data)
 
 
-def map_fetchcode_supported_package(package_url, pipelines, priority=0):
+def map_fetchcode_supported_package(package_url, pipelines, priority=0, from_go_lang=False):
     """
     Add a `package_url` supported by fetchcode to the PackageDB.
 
@@ -116,6 +116,9 @@ def map_fetchcode_supported_package(package_url, pipelines, priority=0):
         logger.error(error)
         return error
 
+    if from_go_lang:
+        packages[0].type = "golang"
+        packages[0].namespace = "github.com/" + packages[0].namespace
     package_data = packages[0].to_dict()
 
     # Remove obsolete Package fields see https://github.com/aboutcode-org/fetchcode/issues/108

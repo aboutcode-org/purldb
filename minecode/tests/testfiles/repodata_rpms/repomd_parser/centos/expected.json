@@ -171,16 +171,16 @@
             "start_line":1,
             "end_line":1,
             "matcher":"2-aho",
-            "score":99.0,
+            "score":100.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "rule_relevance":99,
+            "rule_relevance":100,
             "rule_identifier":"mit_366.RULE",
             "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/mit_366.RULE",
             "matched_text":"MIT/X11/XFree86/many others"
           }
         ],
-        "identifier":"mit-f0a83ed6-696b-c78a-6990-0e10a45015e4"
+        "identifier":"mit-5b0474ee-95b1-e25a-6b45-d6d8905a7b1c"
       }
     ],
     "other_license_expression":null,

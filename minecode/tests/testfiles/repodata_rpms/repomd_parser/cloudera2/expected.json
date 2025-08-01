@@ -36,17 +36,17 @@
             "from_file":null,
             "start_line":1,
             "end_line":1,
-            "matcher":"5-undetected",
-            "score":100.0,
+            "matcher":"1-hash",
+            "score":60.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "rule_relevance":100,
-            "rule_identifier":"package-manifest-unknown-ddb1bcfb5ee6486356d14ee1a5a069d77a773026",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-ddb1bcfb5ee6486356d14ee1a5a069d77a773026",
+            "rule_relevance":60,
+            "rule_identifier":"unknown_kernel4.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/unknown_kernel4.RULE",
             "matched_text":"license unknown"
           }
         ],
-        "identifier":"unknown-3d894fcd-3b01-c17b-5c8a-8d492abc4264"
+        "identifier":"unknown-6b6b5f84-672b-0a16-0eaa-1c7798736e44"
       }
     ],
     "other_license_expression":null,
