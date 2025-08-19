@@ -79,8 +79,8 @@ RUN mkdir -p /var/$APP_NAME/static/ \
 RUN mkdir -p /var/scancodeio/static/ \
  && mkdir -p /var/scancodeio/workspace/
 # Install the dependencies before the codebase COPY for proper Docker layer caching
-COPY --chown=$APP_USER:$APP_USER setup.cfg setup.py $APP_DIR/
-RUN pip install --no-cache-dir .
+COPY --chown=$APP_USER:$APP_USER setup.cfg setup.py requirements.txt $APP_DIR/
+RUN pip install --requirement requirements.txt --no-cache-dir .
 
 # Copy the codebase and set the proper permissions for the APP_USER
 COPY --chown=$APP_USER:$APP_USER . $APP_DIR
