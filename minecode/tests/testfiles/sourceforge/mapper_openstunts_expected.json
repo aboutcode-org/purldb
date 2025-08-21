@@ -70,11 +70,11 @@
             "end_line":1,
             "matcher":"2-aho",
             "score":100.0,
-            "matched_length":6,
+            "matched_length":7,
             "match_coverage":100.0,
             "rule_relevance":100,
-            "rule_identifier":"gpl-2.0_39.RULE",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_39.RULE",
+            "rule_identifier":"gpl-2.0_required_phrase_32.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/gpl-2.0_required_phrase_32.RULE",
             "matched_text":"GNU General Public License version 2.0 (GPLv2)"
           },
           {
@@ -93,7 +93,7 @@
             "matched_text":"GNU General Public License version 2.0 (GPLv2)"
           }
         ],
-        "identifier":"gpl_2_0-c577222f-9147-72be-dd68-bd319655699a"
+        "identifier":"gpl_2_0-7eddb2db-e746-4576-b08b-dcfd30f4d17f"
       }
     ],
     "other_license_expression":null,
