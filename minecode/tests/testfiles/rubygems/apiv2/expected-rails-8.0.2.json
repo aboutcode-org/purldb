@@ -1,77 +1,77 @@
 [
-    {
-      "type": "gem",
-      "namespace": null,
-      "name": "rails",
-      "version": "8.0.2",
-      "qualifiers": {},
-      "subpath": null,
-      "primary_language": null,
-      "description": "Ruby on Rails is a full-stack web framework optimized for programmer happiness and sustainable productivity. It encourages beautiful code by favoring convention over configuration.",
-      "release_date": "2025-03-12T03:09:11.097Z",
-      "parties": [
-        {
-          "type": null,
-          "role": "author",
-          "name": "David Heinemeier Hansson",
-          "email": null,
-          "url": null
-        }
-      ],
-      "keywords": [],
-      "homepage_url": "https://rubyonrails.org",
-      "download_url": "https://rubygems.org/gems/rails-8.0.2.gem",
-      "size": null,
-      "sha1": null,
-      "md5": null,
-      "sha256": "fdfaa5a83ec0388e02864e88d515959caedc88053b5f701c4deb1652d8f164c6",
-      "sha512": null,
-      "bug_tracking_url": null,
-      "code_view_url": null,
-      "vcs_url": null,
-      "copyright": null,
-      "holder": null,
-      "declared_license_expression": "mit",
-      "declared_license_expression_spdx": "MIT",
-      "license_detections": [
-        {
-          "license_expression": "mit",
-          "license_expression_spdx": "MIT",
-          "matches": [
-            {
-              "license_expression": "mit",
-              "license_expression_spdx": "MIT",
-              "from_file": null,
-              "start_line": 1,
-              "end_line": 1,
-              "matcher": "1-spdx-id",
-              "score": 100,
-              "matched_length": 1,
-              "match_coverage": 100,
-              "rule_relevance": 100,
-              "rule_identifier": "spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
-              "rule_url": null,
-              "matched_text": "MIT"
-            }
-          ],
-          "identifier": "mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
-        }
-      ],
-      "other_license_expression": null,
-      "other_license_expression_spdx": null,
-      "other_license_detections": [],
-      "extracted_license_statement": "- MIT\n",
-      "notice_text": null,
-      "source_packages": [],
-      "file_references": [],
-      "is_private": false,
-      "is_virtual": false,
-      "extra_data": {},
-      "dependencies": [],
-      "repository_homepage_url": "https://rubygems.org/gems/rails",
-      "repository_download_url": null,
-      "api_data_url": null,
-      "datasource_id": "gem_api_metadata",
-      "purl": "pkg:gem/rails@8.0.2"
-    }
-  ]
+  {
+    "type":"gem",
+    "namespace":null,
+    "name":"rails",
+    "version":"8.0.2",
+    "qualifiers":{},
+    "subpath":null,
+    "primary_language":null,
+    "description":"Ruby on Rails is a full-stack web framework optimized for programmer happiness and sustainable productivity. It encourages beautiful code by favoring convention over configuration.",
+    "release_date":"2025-03-12T03:09:11.097Z",
+    "parties":[
+      {
+        "type":null,
+        "role":"author",
+        "name":"David Heinemeier Hansson",
+        "email":null,
+        "url":null
+      }
+    ],
+    "keywords":[],
+    "homepage_url":"https://rubyonrails.org",
+    "download_url":"https://rubygems.org/gems/rails-8.0.2.gem",
+    "size":null,
+    "sha1":null,
+    "md5":null,
+    "sha256":"fdfaa5a83ec0388e02864e88d515959caedc88053b5f701c4deb1652d8f164c6",
+    "sha512":null,
+    "bug_tracking_url":null,
+    "code_view_url":null,
+    "vcs_url":null,
+    "copyright":null,
+    "holder":null,
+    "declared_license_expression":"mit",
+    "declared_license_expression_spdx":"MIT",
+    "license_detections":[
+      {
+        "license_expression":"mit",
+        "license_expression_spdx":"MIT",
+        "matches":[
+          {
+            "license_expression":"mit",
+            "license_expression_spdx":"MIT",
+            "from_file":null,
+            "start_line":1,
+            "end_line":1,
+            "matcher":"1-spdx-id",
+            "score":100.0,
+            "matched_length":1,
+            "match_coverage":100.0,
+            "rule_relevance":100,
+            "rule_identifier":"spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_url":null,
+            "matched_text":"MIT"
+          }
+        ],
+        "identifier":"mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf"
+      }
+    ],
+    "other_license_expression":null,
+    "other_license_expression_spdx":null,
+    "other_license_detections":[],
+    "extracted_license_statement":"- MIT\n",
+    "notice_text":null,
+    "source_packages":[],
+    "file_references":[],
+    "is_private":false,
+    "is_virtual":false,
+    "extra_data":{},
+    "dependencies":[],
+    "repository_homepage_url":"https://rubygems.org/gems/rails",
+    "repository_download_url":null,
+    "api_data_url":null,
+    "datasource_id":"gem_api_metadata",
+    "purl":"pkg:gem/rails@8.0.2"
+  }
+]

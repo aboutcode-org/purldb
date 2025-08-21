@@ -992,17 +992,17 @@
             "from_file":null,
             "start_line":1,
             "end_line":1,
-            "matcher":"5-undetected",
-            "score":100.0,
+            "matcher":"1-hash",
+            "score":60.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "rule_relevance":100,
-            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "matched_text":"license - unknown"
+            "rule_relevance":60,
+            "rule_identifier":"unknown_kernel4.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/unknown_kernel4.RULE",
+            "matched_text":"license unknown"
           }
         ],
-        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
+        "identifier":"unknown-6b6b5f84-672b-0a16-0eaa-1c7798736e44"
       }
     ],
     "other_license_expression":null,
@@ -2019,17 +2019,17 @@
             "from_file":null,
             "start_line":1,
             "end_line":1,
-            "matcher":"5-undetected",
-            "score":100.0,
+            "matcher":"1-hash",
+            "score":60.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "rule_relevance":100,
-            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "matched_text":"license - unknown"
+            "rule_relevance":60,
+            "rule_identifier":"unknown_kernel4.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/unknown_kernel4.RULE",
+            "matched_text":"license unknown"
           }
         ],
-        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
+        "identifier":"unknown-6b6b5f84-672b-0a16-0eaa-1c7798736e44"
       }
     ],
     "other_license_expression":null,
@@ -2098,17 +2098,17 @@
             "from_file":null,
             "start_line":1,
             "end_line":1,
-            "matcher":"5-undetected",
-            "score":100.0,
+            "matcher":"1-hash",
+            "score":60.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "rule_relevance":100,
-            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "matched_text":"license - unknown"
+            "rule_relevance":60,
+            "rule_identifier":"unknown_kernel4.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/unknown_kernel4.RULE",
+            "matched_text":"license unknown"
           }
         ],
-        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
+        "identifier":"unknown-6b6b5f84-672b-0a16-0eaa-1c7798736e44"
       }
     ],
     "other_license_expression":null,
@@ -2177,17 +2177,17 @@
             "from_file":null,
             "start_line":1,
             "end_line":1,
-            "matcher":"5-undetected",
-            "score":100.0,
+            "matcher":"1-hash",
+            "score":60.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "rule_relevance":100,
-            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "matched_text":"license - unknown"
+            "rule_relevance":60,
+            "rule_identifier":"unknown_kernel4.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/unknown_kernel4.RULE",
+            "matched_text":"license unknown"
           }
         ],
-        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
+        "identifier":"unknown-6b6b5f84-672b-0a16-0eaa-1c7798736e44"
       }
     ],
     "other_license_expression":null,
@@ -2256,17 +2256,17 @@
             "from_file":null,
             "start_line":1,
             "end_line":1,
-            "matcher":"5-undetected",
-            "score":100.0,
+            "matcher":"1-hash",
+            "score":60.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "rule_relevance":100,
-            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "matched_text":"license - unknown"
+            "rule_relevance":60,
+            "rule_identifier":"unknown_kernel4.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/unknown_kernel4.RULE",
+            "matched_text":"license unknown"
           }
         ],
-        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
+        "identifier":"unknown-6b6b5f84-672b-0a16-0eaa-1c7798736e44"
       }
     ],
     "other_license_expression":null,
@@ -2414,17 +2414,17 @@
             "from_file":null,
             "start_line":1,
             "end_line":1,
-            "matcher":"5-undetected",
-            "score":100.0,
+            "matcher":"1-hash",
+            "score":60.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "rule_relevance":100,
-            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "matched_text":"license - unknown"
+            "rule_relevance":60,
+            "rule_identifier":"unknown_kernel4.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/unknown_kernel4.RULE",
+            "matched_text":"license unknown"
           }
         ],
-        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
+        "identifier":"unknown-6b6b5f84-672b-0a16-0eaa-1c7798736e44"
       }
     ],
     "other_license_expression":null,
@@ -2493,17 +2493,17 @@
             "from_file":null,
             "start_line":1,
             "end_line":1,
-            "matcher":"5-undetected",
-            "score":100.0,
+            "matcher":"1-hash",
+            "score":60.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "rule_relevance":100,
-            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "matched_text":"license - unknown"
+            "rule_relevance":60,
+            "rule_identifier":"unknown_kernel4.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/unknown_kernel4.RULE",
+            "matched_text":"license unknown"
           }
         ],
-        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
+        "identifier":"unknown-6b6b5f84-672b-0a16-0eaa-1c7798736e44"
       }
     ],
     "other_license_expression":null,
@@ -2572,17 +2572,17 @@
             "from_file":null,
             "start_line":1,
             "end_line":1,
-            "matcher":"5-undetected",
-            "score":100.0,
+            "matcher":"1-hash",
+            "score":60.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "rule_relevance":100,
-            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "matched_text":"license - unknown"
+            "rule_relevance":60,
+            "rule_identifier":"unknown_kernel4.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/unknown_kernel4.RULE",
+            "matched_text":"license unknown"
           }
         ],
-        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
+        "identifier":"unknown-6b6b5f84-672b-0a16-0eaa-1c7798736e44"
       }
     ],
     "other_license_expression":null,
@@ -2651,17 +2651,17 @@
             "from_file":null,
             "start_line":1,
             "end_line":1,
-            "matcher":"5-undetected",
-            "score":100.0,
+            "matcher":"1-hash",
+            "score":60.0,
             "matched_length":2,
             "match_coverage":100.0,
-            "rule_relevance":100,
-            "rule_identifier":"package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/package-manifest-unknown-60d25d9573996bcd1c02ac0df23ea095e03a886c",
-            "matched_text":"license - unknown"
+            "rule_relevance":60,
+            "rule_identifier":"unknown_kernel4.RULE",
+            "rule_url":"https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/unknown_kernel4.RULE",
+            "matched_text":"license unknown"
           }
         ],
-        "identifier":"unknown-6b0f0e5d-bddc-c231-45de-646115b29dbc"
+        "identifier":"unknown-6b6b5f84-672b-0a16-0eaa-1c7798736e44"
       }
     ],
     "other_license_expression":null,
