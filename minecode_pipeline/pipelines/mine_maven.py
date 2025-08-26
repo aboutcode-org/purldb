@@ -21,6 +21,7 @@
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
 
+from minecode_pipeline.pipes import maven
 from scanpipe.pipelines.publish_to_federatedcode import PublishToFederatedCode
 
 
@@ -39,14 +40,9 @@ class MineMaven(PublishToFederatedCode):
     @classmethod
     def steps(cls):
         return (
-            cls.collect_packages_from_maven,
             cls.check_federatedcode_eligibility,
-            cls.get_package_repository,
-            cls.clone_repository,
-            cls.add_scan_result,
-            cls.commit_and_push_changes,
-            cls.delete_local_clone,
+            cls.collect_packages_from_maven,
         )
 
     def collect_packages_from_maven(self):
-        pass
+        maven.collect_packages_from_maven(self.project, self.log)
