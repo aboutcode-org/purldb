@@ -27,6 +27,7 @@ from packagedcode.maven import build_filename
 from packagedcode.maven import build_url
 from packagedcode.models import PackageData
 
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -657,19 +658,21 @@ class MavenNexusCollector:
             yield current_purl, package
 
 
-def collect_packages_from_maven2(project, logger):
+def collect_packages_from_maven(commits_per_push=10, logger=None):
+    # check out repo
+    repo = federatedcode.clone_repository(
+        repo_url="https://github.com/JonoYang/test.git",
+        logger=logger,
+    )
+
+    # download and iterate through maven nexus index
     maven_nexus_collector = MavenNexusCollector()
     prev_package = None
     current_packages = []
-    for current_package, package in maven_nexus_collector.get_packages():
+    for i, (current_package, package) in enumerate(maven_nexus_collector.get_packages(), start=1):
         if not prev_package:
             prev_package = current_package
         elif prev_package != current_package:
-            # check out repo
-            repo = federatedcode.clone_repository(
-                repo_url="https://github.com/JonoYang/test.git",
-                logger=logger,
-            )
             # save purls to yaml
             ppath = hashid.get_package_purls_yml_file_path(prev_package)
             purls = [package.purl for package in current_packages]
@@ -678,19 +681,27 @@ def collect_packages_from_maven2(project, logger):
                 file_path=ppath,
                 data=purls,
             )
-            # commit and push
-            federatedcode.commit_and_push_changes(
+
+            change_type = "Add" if ppath in repo.untracked_files else "Update"
+            commit_message = f"""\
+            {change_type} list of available {current_package} versions
+            """
+            federatedcode.commit_changes(
                 repo=repo,
-                file_to_commit=ppath,
-                purl=prev_package,
-                logger=logger,
+                files_to_commit=[ppath],
+                commit_message=commit_message,
             )
-            # delete local clone
-            federatedcode.delete_local_clone(repo)
+
+            # see if we should push
+            if not bool(i % commits_per_push):
+                federatedcode.push_changes(repo=repo)
 
             current_packages = []
             prev_package = current_package
         current_packages.append(package)
+
+    # delete local clone
+    federatedcode.delete_local_clone(repo)
 
 
 def write_file(base_path, file_path, data):
