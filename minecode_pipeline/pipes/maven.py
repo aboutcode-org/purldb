@@ -6,8 +6,8 @@
 # See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
-import re
-import requests
+
+import saneyaml
 import os
 import gzip
 import io
@@ -186,19 +186,6 @@ def get_artifacts(
         # artifact for now we care only about a few things: POMs and binary Jars.
         if artifact and worthyness(artifact):
             yield artifact
-
-
-def get_artifacts2(
-    location,
-    fields=frozenset(ENTRY_FIELDS),
-    worthyness=is_worthy_artifact,
-    include_all=False,
-):
-    """
-    Yield artifact mappings from a Gzipped Maven nexus index data file
-    at location.
-    """
-    print(get_entries2(location, fields))
 
 
 _artifact_base_fields = (
@@ -444,43 +431,6 @@ def get_entries(location, fields=frozenset(ENTRY_FIELDS)):
                     break
 
 
-def get_entries2(location, fields=frozenset(ENTRY_FIELDS)):
-    """
-    Return Maven index entry mappings from a Gzipped Maven nexus index
-    data file at `location`. Only includes `fields` names.
-    """
-    buffer_size = 128 * 1024 * 1024
-    entry = None
-    entries_count = 0
-    keys = set()
-    keys_update = keys.update
-
-    with GzipFileWithTrailing(location, "rb") as compressed:
-        # using io.BufferedReader for increased perfs
-        with io.BufferedReader(compressed, buffer_size=buffer_size) as nexus_index:
-            jstream = java_stream.DataInputStream(nexus_index)
-
-            # FIXME: we do nothing with these two
-            # NOTE: this reads 1+8=9 bytes of the stream
-            _index_version, _last_modified = decode_index_header(jstream)
-            while True:
-                try:
-                    entry = decode_entry(jstream, fields)
-                    if entry:
-                        keys_update(entry)
-                    entries_count += 1
-
-                except EOFError:
-                    if TRACE_DEEP:
-                        print(f"Index version: {_index_version} last_modified: {_last_modified}")
-                        print(f"Processed {entries_count} docs. Last entry: {entry}")
-                        print("Unique keys:")
-                        for k in sorted(keys):
-                            print(k)
-                    break
-    return keys
-
-
 def decode_index_header(jstream):
     """
     Return the index header from a `jstream` Java-like stream as a tuple
@@ -684,7 +634,7 @@ class MavenNexusCollector:
             repository_download_url = urls["repository_download_url"]
             api_data_url = urls["api_data_url"]
 
-            yield PackageData(
+            package = PackageData(
                 type="maven",
                 namespace=group_id,
                 name=artifact_id,
@@ -698,370 +648,57 @@ class MavenNexusCollector:
                 repository_download_url=repository_download_url,
                 api_data_url=api_data_url,
             )
-
-    def get_packages2(self, content=None):
-        """Yield Package objects from maven index"""
-        if content:
-            index_location = content
-        else:
-            index_location = self.fetch_index()
-
-        get_artifacts2(index_location, worthyness=is_worthy_artifact)
-
-
-###############################################################################
-
-
-collect_links = re.compile(r'href="([^"]+)"').findall
-collect_links_and_artifact_timestamps = re.compile(
-    r'<a href="([^"]+)".*</a>\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}|-)'
-).findall
-
-
-def check_if_file_name_is_linked_on_page(file_name, links, **kwargs):
-    """Return True if `file_name` is in `links`"""
-    return any(link.endswith(file_name) for link in links)
-
-
-def check_if_page_has_pom_files(links, **kwargs):
-    """Return True of any entry in `links` ends with .pom."""
-    return any(link.endswith(".pom") for link in links)
-
-
-def check_if_page_has_directories(links, **kwargs):
-    """Return True if any entry, excluding "../", ends with /."""
-    return any(link.endswith("/") for link in links if link != "../")
-
-
-def check_if_package_version_page(links, **kwargs):
-    """Return True if `links` contains pom files and has no directories"""
-    return check_if_page_has_pom_files(links=links) and not check_if_page_has_directories(
-        links=links
-    )
-
-
-def check_if_package_page(links, **kwargs):
-    return check_if_file_name_is_linked_on_page(
-        file_name="maven-metadata.xml", links=links
-    ) and not check_if_page_has_pom_files(links=links)
-
-
-def check_if_maven_root(links, **kwargs):
-    """
-    Return True if "archetype-catalog.xml" is in `links`, as the root of a Maven
-    repo contains "archetype-catalog.xml".
-    """
-    return check_if_file_name_is_linked_on_page(file_name="archetype-catalog.xml", links=links)
-
-
-def check_on_page(url, checker):
-    """
-    Return True if there is a link on `url` that is the same as `file_name`,
-    False otherwise.
-    """
-    response = requests.get(url)
-    if response:
-        links = collect_links(response.text)
-        return checker(links=links)
-    return False
-
-
-def is_maven_root(url):
-    """Return True if `url` is the root of a Maven repo, False otherwise."""
-    return check_on_page(url, check_if_maven_root)
-
-
-def is_package_page(url):
-    """Return True if `url` is a package page on a Maven repo, False otherwise."""
-    return check_on_page(url, check_if_package_page)
-
-
-def is_package_version_page(url):
-    """Return True if `url` is a package version page on a Maven repo, False otherwise."""
-    return check_on_page(url, check_if_package_version_page)
-
-
-def url_parts(url):
-    parsed_url = urlparse(url)
-    scheme = parsed_url.scheme
-    netloc = parsed_url.netloc
-    path_segments = [p for p in parsed_url.path.split("/") if p]
-    return scheme, netloc, path_segments
-
-
-def create_url(scheme, netloc, path_segments):
-    url_template = f"{scheme}://{netloc}"
-    path = "/".join(path_segments)
-    return f"{url_template}/{path}"
-
-
-def get_maven_root(url):
-    """
-    Given `url`, that is a URL to namespace, package, or artifact in a Maven
-    repo, return the URL to the root of that repo. If a Maven root cannot be
-    determined, return None.
-
-    >>> get_maven_root('https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/')
-    'https://repo1.maven.org/maven2'
-    """
-    scheme, netloc, path_segments = url_parts(url)
-    for i in range(len(path_segments)):
-        segments = path_segments[: i + 1]
-        url_segment = create_url(scheme, netloc, segments)
-        if is_maven_root(url_segment):
-            return url_segment
-    return None
-
-
-def determine_namespace_name_version_from_url(url, root_url=None):
-    """
-    Return a 3-tuple containing strings of a Package namespace, name, and
-    version, determined from `url`, where `url` points to namespace, package,
-    specific package version, or artifact on a Maven repo.
-
-    Return None if a Maven root cannot be determined from `url`.
-
-    >>> determine_namespace_name_version_from_url('https://repo1.maven.org/maven2/net/shibboleth/parent/7.11.0/')
-    ('net.shibboleth', 'parent', '7.11.0')
-    """
-    if not root_url:
-        root_url = get_maven_root(url)
-        if not root_url:
-            raise Exception(f"Error: not a Maven repository: {url}")
-
-    _, remaining_path_segments = url.split(root_url)
-    remaining_path_segments = remaining_path_segments.split("/")
-    remaining_path_segments = [p for p in remaining_path_segments if p]
-
-    namespace_segments = []
-    package_name = ""
-    package_version = ""
-    for i in range(len(remaining_path_segments)):
-        segment = remaining_path_segments[i]
-        segments = remaining_path_segments[: i + 1]
-        path = "/".join(segments)
-        url_segment = f"{root_url}/{path}"
-        if is_package_page(url_segment):
-            package_name = segment
-        elif is_package_version_page(url_segment):
-            package_version = segment
-        else:
-            namespace_segments.append(segment)
-    namespace = ".".join(namespace_segments)
-    return namespace, package_name, package_version
-
-
-def filter_only_directories(timestamps_by_links):
-    """Given a mapping of `timestamps_by_links`, where the links are directory names (which end with `/`),"""
-    timestamps_by_links_filtered = {}
-    for link, timestamp in timestamps_by_links.items():
-        if link != "../" and link.endswith("/"):
-            timestamps_by_links_filtered[link] = timestamp
-    return timestamps_by_links_filtered
-
-
-valid_artifact_extensions = [
-    "ejb3",
-    "ear",
-    "aar",
-    "apk",
-    "gem",
-    "jar",
-    "nar",
-    # 'pom',
-    "so",
-    "swc",
-    "tar",
-    "tar.gz",
-    "war",
-    "xar",
-    "zip",
-]
-
-
-def filter_for_artifacts(timestamps_by_links):
-    """
-    Given a mapping of `timestamps_by_links`, where the links are the filenames
-    of Maven artifacts, return a mapping of filenames whose extension is in
-    `valid_artifact_extensions` and their timestamps.
-    """
-    timestamps_by_links_filtered = {}
-    for link, timestamp in timestamps_by_links.items():
-        for ext in valid_artifact_extensions:
-            if link.endswith(ext):
-                timestamps_by_links_filtered[link] = timestamp
-    return timestamps_by_links_filtered
-
-
-def collect_links_from_text(text, filter):
-    """
-    Return a mapping of link locations and their timestamps, given HTML `text`
-    content, that is filtered using `filter`.
-    """
-    links_and_timestamps = collect_links_and_artifact_timestamps(text)
-    timestamps_by_links = {}
-    for link, timestamp in links_and_timestamps:
-        if timestamp == "-":
-            timestamp = ""
-        timestamps_by_links[link] = timestamp
-
-    timestamps_by_links = filter(timestamps_by_links=timestamps_by_links)
-    return timestamps_by_links
-
-
-def create_absolute_urls_for_links(text, url, filter):
-    """
-    Given the `text` contents from `url`, return a mapping of absolute URLs to
-    links from `url` and their timestamps, that is then filtered by `filter`.
-    """
-    timestamps_by_absolute_links = {}
-    url = url.rstrip("/")
-    timestamps_by_links = collect_links_from_text(text, filter)
-    for link, timestamp in timestamps_by_links.items():
-        if not link.startswith(url):
-            link = f"{url}/{link}"
-        timestamps_by_absolute_links[link] = timestamp
-    return timestamps_by_absolute_links
-
-
-def get_directory_links(url):
-    """Return a list of absolute directory URLs of the hyperlinks from `url`"""
-    timestamps_by_directory_links = {}
-    response = requests.get(url)
-    if response:
-        timestamps_by_directory_links = create_absolute_urls_for_links(
-            response.text, url=url, filter=filter_only_directories
-        )
-    return timestamps_by_directory_links
-
-
-def get_artifact_links(url):
-    """Return a list of absolute directory URLs of the hyperlinks from `url`"""
-    timestamps_by_artifact_links = []
-    response = requests.get(url)
-    if response:
-        timestamps_by_artifact_links = create_absolute_urls_for_links(
-            response.text, url=url, filter=filter_for_artifacts
-        )
-    return timestamps_by_artifact_links
-
-
-def get_package_versions(url):
-    """
-    Given a `url` to a maven package page, return a list of the available package versions
-    """
-    versions = []
-    response = requests.get(url)
-    if response:
-        links = collect_links(response.text)
-        # filter for directories, skipping "../" and files
-        # each directory name is a package version
-        versions = [link for link in links if link.endswith("/") and link != "../"]
-        # remove trailing / from version
-        versions = [v.rstrip("/") for v in versions]
-    return versions
-
-
-def validate_sha1(sha1):
-    """
-    Validate a `sha1` string.
-
-    Return `sha1` if it is valid, None otherwise.
-    """
-    if sha1 and len(sha1) != 40:
-        logger.warning(f'Invalid SHA1 length ({len(sha1)}): "{sha1}": SHA1 ignored!')
-        sha1 = None
-    return sha1
-
-
-def get_artifact_sha1(artifact_url):
-    """Return the SHA1 value of the Maven artifact located at `artifact_url`."""
-    sha1 = None
-    artifact_sha1_url = f"{artifact_url}.sha1"
-    response = requests.get(artifact_sha1_url)
-    if response:
-        sha1_contents = response.text.strip().split()
-        sha1 = sha1_contents[0]
-        sha1 = validate_sha1(sha1)
-    return sha1
-
-
-def get_classifier_from_artifact_url(
-    artifact_url, package_version_page_url, package_name, package_version
-):
-    """
-    Return the classifier from a Maven artifact URL `artifact_url`, otherwise
-    return None if a classifier cannot be determined from `artifact_url`
-    """
-    classifier = None
-    # https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0
-    package_version_page_url = package_version_page_url.rstrip("/")
-    # https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0
-    leading_url_portion = f"{package_version_page_url}/{package_name}-{package_version}"
-    # artifact_url = 'https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0-onejar.jar'
-    # ['', '-onejar.jar']
-    _, remaining_url_portion = artifact_url.split(leading_url_portion)
-    # ['-onejar', 'jar']
-    remaining_url_portions = remaining_url_portion.split(".")
-    if remaining_url_portions and remaining_url_portions[0]:
-        # '-onejar'
-        classifier = remaining_url_portions[0]
-        if classifier.startswith("-"):
-            # 'onejar'
-            classifier = classifier[1:]
-    return classifier
-
-
-def crawl_to_package(url, root_url):
-    """
-    Given a maven repo `url`, crawl the repo and for each package, yield a
-    PackageURL and a list of PackageURLs of available versions
-    """
-    if is_package_page(url):
-        namespace, name, _ = determine_namespace_name_version_from_url(url)
-        versions = get_package_versions(url)
-        purl = PackageURL(type="maven", namespace=namespace, name=name)
-        purls = [
-            PackageURL(
+            current_purl = PackageURL(
                 type="maven",
-                namespace=namespace,
-                name=name,
+                namespace=group_id,
+                name=artifact_id,
                 version=version,
             )
-            for version in versions
-        ]
-        yield purl, purls
-
-    for link in get_directory_links(url):
-        crawl_to_package(link, root_url)
+            yield current_purl, package
 
 
-def crawl_maven_repo_from_root(root_url):
+def collect_packages_from_maven2(project, logger):
+    maven_nexus_collector = MavenNexusCollector()
+    prev_package = None
+    current_packages = []
+    for current_package, package in maven_nexus_collector.get_packages():
+        if not prev_package:
+            prev_package = current_package
+        elif prev_package != current_package:
+            # check out repo
+            repo = federatedcode.clone_repository(
+                repo_url="https://github.com/JonoYang/test.git",
+                logger=logger,
+            )
+            # save purls to yaml
+            ppath = hashid.get_package_purls_yml_file_path(prev_package)
+            purls = [package.purl for package in current_packages]
+            write_file(
+                base_path=repo.working_dir,
+                file_path=ppath,
+                data=purls,
+            )
+            # commit and push
+            federatedcode.commit_and_push_changes(
+                repo=repo,
+                file_to_commit=ppath,
+                purl=prev_package,
+                logger=logger,
+            )
+            # delete local clone
+            federatedcode.delete_local_clone(repo)
+
+            current_packages = []
+            prev_package = current_package
+        current_packages.append(package)
+
+
+def write_file(base_path, file_path, data):
     """
-    Given the `url` to a maven root, traverse the repo depth-first and add
-    packages to the import queue.
+    Write the ``data`` as YAML to the ``file_path`` in the ``base_path`` root directory.
+    Create directories in the path as needed.
     """
-    crawl_to_package(root_url, root_url)
-
-
-def collect_packages_from_maven(project, logger):
-    for purl, purls in crawl_maven_repo_from_root():
-        # check out repo
-        repo = federatedcode.clone_repository(
-            repo_url="",
-            logger=logger,
-        )
-        # save purls to yaml
-        ppath = hashid.get_package_purls_yml_file_path(purl)
-        federatedcode.write_file(
-            base_path=repo.working_dir,
-            file_path=ppath,
-            data=purls,
-        )
-        # commit and push
-        federatedcode.commit_and_push_changes(
-            repo=repo,
-            file_to_commit=ppath,
-            purl=purl,
-            logger=logger,
-        )
+    write_to = base_path / file_path
+    write_to.parent.mkdir(parents=True, exist_ok=True)
+    with open(write_to, encoding="utf-8", mode="w") as f:
+        f.write(saneyaml.dump(data))
