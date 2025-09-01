@@ -139,6 +139,9 @@ test_matchcode:
 
 test: test_purldb test_matchcode test_toolkit test_clearcode
 
+test_minecode:
+	${ACTIVATE} ${PYTHON_EXE} -m pytest -vvs minecode_pipeline
+
 shell:
 	${MANAGE} shell
 
