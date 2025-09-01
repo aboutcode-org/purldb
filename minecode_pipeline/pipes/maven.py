@@ -676,7 +676,7 @@ def collect_packages_from_maven(commits_per_push=10, logger=None):
             # save purls to yaml
             ppath = hashid.get_package_purls_yml_file_path(prev_package)
             purls = [package.purl for package in current_packages]
-            write_file(
+            federatedcode.write_data_as_yaml(
                 base_path=repo.working_dir,
                 file_path=ppath,
                 data=purls,
@@ -702,14 +702,3 @@ def collect_packages_from_maven(commits_per_push=10, logger=None):
 
     # delete local clone
     federatedcode.delete_local_clone(repo)
-
-
-def write_file(base_path, file_path, data):
-    """
-    Write the ``data`` as YAML to the ``file_path`` in the ``base_path`` root directory.
-    Create directories in the path as needed.
-    """
-    write_to = base_path / file_path
-    write_to.parent.mkdir(parents=True, exist_ok=True)
-    with open(write_to, encoding="utf-8", mode="w") as f:
-        f.write(saneyaml.dump(data))
