@@ -21,6 +21,7 @@ from minecode_pipeline.pipes import java_stream
 from collections import namedtuple
 from scanpipe.pipes.fetch import fetch_http
 from scanpipe.pipes import federatedcode
+from minecode_pipeline.pipes import write_purls_to_repo
 from jawa.util.utf import decode_modified_utf8
 from packagedcode.maven import get_urls
 from packagedcode.maven import build_filename
@@ -673,29 +674,14 @@ def collect_packages_from_maven(commits_per_push=10, logger=None):
         if not prev_package:
             prev_package = current_package
         elif prev_package != current_package:
+            push_commit = not bool(i % commits_per_push)
             # save purls to yaml
-            ppath = hashid.get_package_purls_yml_file_path(prev_package)
-            purls = [package.purl for package in current_packages]
-            federatedcode.write_data_as_yaml(
-                base_path=repo.working_dir,
-                file_path=ppath,
-                data=purls,
-            )
-
-            change_type = "Add" if ppath in repo.untracked_files else "Update"
-            commit_message = f"""\
-            {change_type} list of available {current_package} versions
-            """
-            federatedcode.commit_changes(
+            write_purls_to_repo(
                 repo=repo,
-                files_to_commit=[ppath],
-                commit_message=commit_message,
+                package=prev_package,
+                packages=current_packages,
+                push_commit=push_commit
             )
-
-            # see if we should push
-            if not bool(i % commits_per_push):
-                federatedcode.push_changes(repo=repo)
-
             current_packages = []
             prev_package = current_package
         current_packages.append(package)
