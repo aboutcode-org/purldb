@@ -42,9 +42,9 @@ django-crispy-forms==2.4
 django-environ==0.12.0
 django-filter==25.1
 django-probes==1.7.0
-django-rq==3.0.1
+django-rq==3.1
 django-taggit==6.1.0
-djangorestframework==3.16.0
+djangorestframework==3.16.1
 dockerfile-parse==2.0.1
 dparse2==0.7.0
 drf-spectacular==0.28.0
@@ -139,7 +139,7 @@ python-inspector==0.14.3
 pytz==2025.2
 PyYAML==6.0.2
 rdflib==7.1.4
-redis==6.2.0
+redis==6.4.0
 referencing==0.36.2
 regipy==5.2.0
 reppy2==0.3.6
@@ -147,14 +147,14 @@ requests==2.32.4
 resolvelib==1.2.0
 rpds-py==0.25.1
 rpm-inspector-rpm==4.16.1.3.210404
-rq==2.4.1
+rq==2.5.0
 rq-scheduler==0.14.0
 rubymarshal==1.0.3
 rust-inspector==0.1.0
 samecode==0.5.1
 saneyaml==0.6.1
 scancode-toolkit==32.4.0
-scancodeio==35.1.0
+scancodeio==35.3.0
 scipy==1.15.3
 semantic-version==2.10.0
 semver==3.0.4
