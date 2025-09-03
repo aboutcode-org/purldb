@@ -84,11 +84,11 @@ jsonschema==4.24.0
 jsonschema-specifications==2025.4.1
 jsonstreams==0.6.0
 lib4sbom==0.8.6
-license-expression==30.4.3
+license-expression==30.4.4
 lief==0.15.1
 lxml==6.0.0
 Markdown==3.8.2
-markdown-it-py==3.0.0
+markdown-it-py==4.0.0
 MarkupSafe==3.0.2
 matchcode-toolkit==7.2.2
 mdurl==0.1.2
@@ -101,7 +101,7 @@ normality==2.6.1
 numpy==2.2.6
 openpyxl==3.1.5
 packagedcode-msitools==0.101.210706
-packageurl-python==0.17.3
+packageurl-python==0.17.5
 packaging==25.0
 packvers==21.5
 parameter-expansion-patched==0.3.1
@@ -126,9 +126,9 @@ pydantic-settings==2.10.1
 pydantic_core==2.33.2
 pyelftools==0.32
 PyGithub==2.6.1
-pygmars==0.9.0
+pygmars==1.0.0
 Pygments==2.19.2
-pyinstrument==5.0.3
+pyinstrument==5.1.1
 PyJWT==2.10.1
 pymaven-patch==0.3.2
 PyNaCl==1.5.0
