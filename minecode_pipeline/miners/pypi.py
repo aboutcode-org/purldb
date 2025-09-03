@@ -36,32 +36,27 @@ downloads available for this release.
 """
 
 
-pypi_json_headers = {
-    "Accept": "application/vnd.pypi.simple.v1+json"
-}
+pypi_json_headers = {"Accept": "application/vnd.pypi.simple.v1+json"}
 
 
 PYPI_REPO = "https://pypi.org/simple/"
 PYPI_TYPE = "pypi"
 
 
-
 def get_pypi_packages(pypi_repo, logger=None):
-
     response = requests.get(pypi_repo, headers=pypi_json_headers)
     if not response.ok:
         return
 
     packages = response.json()
     temp_file = get_temp_file("PypiPackagesJSON")
-    with open(temp_file, 'w', encoding='utf-8') as f:
+    with open(temp_file, "w", encoding="utf-8") as f:
         json.dump(packages, f, indent=4)
 
     return temp_file
 
 
 def get_pypi_packageurls(name):
-
     packageurls = []
 
     project_index_api_url = PYPI_REPO + name

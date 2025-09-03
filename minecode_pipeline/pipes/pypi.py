@@ -51,7 +51,6 @@ MINECODE_SETTINGS_REPO = "https://github.com/AyanSinhaMahapatra/minecode-test/"
 PYPI_SETTINGS_PATH = "minecode_checkpoints/pypi.json"
 
 
-
 def mine_pypi_packages(logger=None):
     return get_pypi_packages(pypi_repo=PYPI_REPO, logger=logger)
 
@@ -61,14 +60,15 @@ def fetch_last_serial_mined(
     settings_path=PYPI_SETTINGS_PATH,
 ):
     """
+    Fetch "last_serial" for the last mined packages.
+
     This is a simple JSON in a github repo containing mining checkpoints
     with the "last_serial" from the pypi index which was mined. Example:
     https://github.com/AyanSinhaMahapatra/minecode-test/blob/main/minecode_checkpoints/pypi.json
     """
     repo_name = settings_repo.split("github.com")[-1]
     minecode_checkpoint_pypi = (
-        "https://raw.githubusercontent.com/" + repo_name
-        + "refs/heads/main/" + settings_path
+        "https://raw.githubusercontent.com/" + repo_name + "refs/heads/main/" + settings_path
     )
     response = requests.get(minecode_checkpoint_pypi)
     if not response.ok:
@@ -94,7 +94,6 @@ def update_last_serial_mined(
 
 
 def write_packageurls_to_file(repo, base_dir, packageurls):
-
     purl_file_rel_path = os.path.join(base_dir, PURLS_FILENAME)
     purl_file_full_path = Path(repo.working_dir) / purl_file_rel_path
     write_data_to_file(path=purl_file_full_path, data=packageurls)
@@ -108,7 +107,6 @@ def write_data_to_file(path, data):
 
 
 def mine_and_publish_pypi_packageurls(packages, use_last_serial=False, logger=None):
-
     if use_last_serial:
         last_serial_fetched = fetch_last_serial_mined()
         if logger:
