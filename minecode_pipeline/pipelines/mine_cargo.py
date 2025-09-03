@@ -23,11 +23,13 @@ import json
 from pathlib import Path
 
 from minecode_pipeline.pipes import cargo
-from scanpipe.pipelines.publish_to_federatedcode import PublishToFederatedCode
+
+from scanpipe.pipelines import Pipeline
 from fetchcode.vcs import fetch_via_vcs
+from scanpipe.pipes import federatedcode
 
 
-class MineCargo(PublishToFederatedCode):
+class MineCargo(Pipeline):
     """Pipeline to mine Cargo (crates.io) packages and publish them to FederatedCode."""
 
     repo_url = "git+https://github.com/rust-lang/crates.io-index"
@@ -36,13 +38,18 @@ class MineCargo(PublishToFederatedCode):
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.clone_cargo_index,
-            cls.clone_repository,
+            cls.clone_cargo_repo,
             cls.collect_packages_from_cargo,
-            cls.delete_local_clone,
         )
 
-    def clone_cargo_index(self, repo_url):
+    def check_federatedcode_eligibility(self):
+        """
+        Check if the project fulfills the following criteria for
+        pushing the project result to FederatedCode.
+        """
+        federatedcode.check_federatedcode_eligibility(project=self.project)
+
+    def clone_cargo_repo(self, repo_url):
         """
         Clone the repo at repo_url and return the VCSResponse object
         """
@@ -62,10 +69,21 @@ class MineCargo(PublishToFederatedCode):
         for idx, file_path in enumerate(json_files, start=1):
             try:
                 with open(file_path, encoding="utf-8") as f:
-                    packages = json.load(f)
+                    packages = []
+                    for line in f:
+                        if line.strip():
+                            packages.append(json.loads(line))
+
             except (json.JSONDecodeError, UnicodeDecodeError):
                 continue
 
             if packages:
                 push_commit = idx == len(json_files)  # only True on last
                 cargo.collect_packages_from_cargo(packages, self.vcs_response, push_commit)
+
+    def clean_cargo_repo(self):
+        """
+        Delete the VCS response repository if it exists.
+        """
+        if self.vcs_response:
+            self.vcs_response.delete()

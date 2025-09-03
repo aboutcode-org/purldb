@@ -18,11 +18,11 @@ author_email = "FEDERATEDCODE_GIT_SERVICE_EMAIL"
 remote_name = "origin"
 
 
-def write_purls_to_repo(repo, package, packages_yaml, push_commit=False):
+def write_purls_to_repo(repo, package, updated_purls, push_commit=False):
     """Write or update package purls in the repo and optionally commit/push changes."""
 
     ppath = hashid.get_package_purls_yml_file_path(package)
-    add_purl_result(packages_yaml, repo, ppath)
+    add_purl_result(updated_purls, repo, ppath)
 
     if push_commit:
         change_type = "Add" if ppath in repo.untracked_files else "Update"
@@ -40,7 +40,7 @@ def write_purls_to_repo(repo, package, packages_yaml, push_commit=False):
 
 def add_purl_result(purls, repo, purls_file):
     """Add package urls result to the local Git repository."""
-    relative_purl_file_path = Path(*purls_file.parts[1:])
+    relative_purl_file_path = Path(purls_file)
 
     write_to = Path(repo.working_dir) / relative_purl_file_path
     write_to.parent.mkdir(parents=True, exist_ok=True)
