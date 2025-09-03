@@ -45,12 +45,12 @@ class MineandPublishPypiPURLs(Pipeline):
         Check if the project fulfills the following criteria for
         pushing the project result to FederatedCode.
         """
-        federatedcode.check_federatedcode_eligibility(project=self.project)
+        federatedcode.check_federatedcode_configured_and_available()
 
     def mine_pypi_packages(self):
-        """Compute directory fingerprints for matching"""
-        self.pypi_packages = pypi.mine_pypi_packages()
+        """Mine pypi package names from pypi indexes."""
+        self.pypi_packages = pypi.mine_pypi_packages(logger=self.log)
 
     def mine_and_publish_pypi_packageurls(self):
-        """Compute directory fingerprints for matching"""
-        pypi.mine_and_publish_pypi_packageurls(self.project, packages=self.pypi_packages, logger=self.log)
+        """Get pypi packageURLs for all mined pypi package names."""
+        pypi.mine_and_publish_pypi_packageurls(packages=self.pypi_packages, logger=self.log)

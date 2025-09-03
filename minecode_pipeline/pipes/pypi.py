@@ -52,8 +52,8 @@ PYPI_SETTINGS_PATH = "minecode_checkpoints/pypi.json"
 
 
 
-def mine_pypi_packages():
-    return get_pypi_packages(pypi_repo=PYPI_REPO)
+def mine_pypi_packages(logger=None):
+    return get_pypi_packages(pypi_repo=PYPI_REPO, logger=logger)
 
 
 def fetch_last_serial_mined(
@@ -111,12 +111,23 @@ def mine_and_publish_pypi_packageurls(packages, use_last_serial=False, logger=No
 
     if use_last_serial:
         last_serial_fetched = fetch_last_serial_mined()
+        if logger:
+            logger(f"Last serial number mined: {last_serial_fetched}")
 
     last_serial, packages = load_pypi_packages(packages)
+    if logger:
+        logger(f"Last serial number fetched from index: {last_serial}")
+        logger(f"# of package names fetched from index: {len(packages)}")
 
     # We are all synced up from the index
-    if not last_serial > last_serial_fetched:
+    if use_last_serial and last_serial <= last_serial_fetched:
         return
+
+    if packages:
+        # clone repo
+        cloned_repo = clone_repository(repo_url=MINECODE_SETTINGS_REPO)
+        if logger:
+            logger(f"{MINECODE_SETTINGS_REPO} repo cloned at: {cloned_repo.working_dir}")
 
     purl_files_updated = []
     for package in packages:
@@ -124,11 +135,14 @@ def mine_and_publish_pypi_packageurls(packages, use_last_serial=False, logger=No
 
         # we skip updating this package if it was not updated
         # after our latest sync
-        if not last_serial > last_serial_fetched:
+        if use_last_serial and last_serial <= last_serial_fetched:
             continue
 
         # fetch packageURLs for package
         name = package.get("name")
+        if logger:
+            logger(f"getting packageURLs for package: {name}")
+
         packageurls = get_pypi_packageurls(name)
         if not packageurls:
             continue
@@ -137,8 +151,10 @@ def mine_and_publish_pypi_packageurls(packages, use_last_serial=False, logger=No
         base_purl = PackageURL(type=PYPI_TYPE, name=name).to_string()
         package_base_dir = get_package_base_dir(purl=base_purl)
 
-        # clone repo
-        cloned_repo = clone_repository(repo_url=MINECODE_SETTINGS_REPO)
+        if logger:
+            logger(f"writing packageURLs for package: {base_purl} at: {package_base_dir}")
+            purls_string = " ".join(packageurls)
+            logger(f"packageURLs: {purls_string}")
 
         # write packageURLs to file
         purl_file = write_packageurls_to_file(

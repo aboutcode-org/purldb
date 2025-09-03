@@ -46,7 +46,7 @@ PYPI_TYPE = "pypi"
 
 
 
-def get_pypi_packages(pypi_repo):
+def get_pypi_packages(pypi_repo, logger=None):
 
     response = requests.get(pypi_repo, headers=pypi_json_headers)
     if not response.ok:
@@ -54,7 +54,7 @@ def get_pypi_packages(pypi_repo):
 
     packages = response.json()
     temp_file = get_temp_file("PypiPackagesJSON")
-    with open('packages.json', 'w', encoding='utf-8') as f:
+    with open(temp_file, 'w', encoding='utf-8') as f:
         json.dump(packages, f, indent=4)
 
     return temp_file
