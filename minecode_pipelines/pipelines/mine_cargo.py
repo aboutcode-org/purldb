@@ -19,20 +19,17 @@
 #
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
-import json
-from pathlib import Path
 
-from minecode_pipeline.pipes import cargo
-
+from git.repo.base import Repo
+from scanpipe.pipes.federatedcode import delete_local_clone
+from minecode.utils import get_temp_file
 from scanpipe.pipelines import Pipeline
-from fetchcode.vcs import fetch_via_vcs
 from scanpipe.pipes import federatedcode
+from minecode_pipelines.miners import cargo
 
 
-class MineCargo(Pipeline):
+class MineandPublishCargoPURLs(Pipeline):
     """Pipeline to mine Cargo (crates.io) packages and publish them to FederatedCode."""
-
-    repo_url = "git+https://github.com/rust-lang/crates.io-index"
 
     @classmethod
     def steps(cls):
@@ -40,6 +37,7 @@ class MineCargo(Pipeline):
             cls.check_federatedcode_eligibility,
             cls.clone_cargo_repo,
             cls.collect_packages_from_cargo,
+            cls.clean_cargo_repo,
         )
 
     def check_federatedcode_eligibility(self):
@@ -49,41 +47,25 @@ class MineCargo(Pipeline):
         """
         federatedcode.check_federatedcode_eligibility(project=self.project)
 
-    def clone_cargo_repo(self, repo_url):
+    def clone_cargo_repo(self):
         """
         Clone the repo at repo_url and return the VCSResponse object
         """
-        self.vcs_response = fetch_via_vcs(repo_url)
+        conan_repo_url = "git+https://github.com/rust-lang/crates.io-index"
+        fed_repo_url = "git+https://github.com/ziadhany/cargo-test"
+
+        self.fed_repo = federatedcode.clone_repository(fed_repo_url)
+        self.cargo_repo = Repo.clone_from(conan_repo_url, get_temp_file())
 
     def collect_packages_from_cargo(self):
-        base_path = Path(self.vcs_response.dest_dir)
-
-        json_files = []
-        for file_path in base_path.glob("**/*"):
-            if not file_path.is_file():
-                continue
-            if file_path.name in {"config.json", "README.md", "update-dl-url.yml"}:
-                continue
-            json_files.append(file_path)
-
-        for idx, file_path in enumerate(json_files, start=1):
-            try:
-                with open(file_path, encoding="utf-8") as f:
-                    packages = []
-                    for line in f:
-                        if line.strip():
-                            packages.append(json.loads(line))
-
-            except (json.JSONDecodeError, UnicodeDecodeError):
-                continue
-
-            if packages:
-                push_commit = idx == len(json_files)  # only True on last
-                cargo.collect_packages_from_cargo(packages, self.vcs_response, push_commit)
+        cargo.process_cargo_packages(self.cargo_repo, self.fed_repo)
 
     def clean_cargo_repo(self):
         """
-        Delete the VCS response repository if it exists.
+        Delete the federatedcode repository if it exists, and also delete the Cargo repository if it exists.
         """
-        if self.vcs_response:
-            self.vcs_response.delete()
+        if self.cargo_repo:
+            delete_local_clone(self.cargo_repo)
+
+        if self.fed_repo:
+            delete_local_clone(self.fed_repo)
