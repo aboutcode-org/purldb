@@ -109,10 +109,18 @@ def map_fetchcode_supported_package(package_url, pipelines, priority=0, from_go_
     from minecode.model_utils import add_package_to_scan_queue
     from minecode.model_utils import merge_or_create_package
 
-    packages = [p for p in info(str(package_url)) or []]
+    try:
+        packages = []
+        packages = [p for p in info(str(package_url)) or []]
+    except Exception as e:
+        print(str(e))
 
     if not packages:
-        error = f"Could not find package using fetchcode: {package_url}"
+        if from_go_lang:
+            purl = "pkg:golang/" + str(package_url).partition("pkg:")[2]
+        else:
+            purl = str(package_url)
+        error = f"Could not find package using fetchcode: {purl}"
         logger.error(error)
         return error
 
