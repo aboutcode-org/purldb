@@ -41,7 +41,7 @@ class CargoPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         self.assertListEqual(list(keys), expected_list)
         self.assertEqual(json_contents["crate"]["id"], "sam")
 
-    def test_map_npm_package(self):
+    def test_map_cargo_package(self):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(0, package_count)
         package_url = PackageURL.from_string("pkg:cargo/sam@0.3.1")
