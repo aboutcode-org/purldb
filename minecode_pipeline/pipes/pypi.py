@@ -23,11 +23,10 @@
 import os
 import json
 import requests
-import saneyaml
 
-from pathlib import Path
 from datetime import datetime
 
+from minecode_pipeline import pipes
 from minecode_pipeline.miners.pypi import get_pypi_packages
 from minecode_pipeline.miners.pypi import load_pypi_packages
 from minecode_pipeline.miners.pypi import get_pypi_packageurls
@@ -38,7 +37,6 @@ from minecode_pipeline.miners.pypi import PYPI_TYPE
 from packageurl import PackageURL
 
 from aboutcode.hashid import get_package_base_dir
-from aboutcode.hashid import PURLS_FILENAME
 
 
 from scanpipe.pipes.federatedcode import clone_repository
@@ -89,21 +87,8 @@ def update_last_serial_mined(
     }
     cloned_repo = clone_repository(repo_url=settings_repo)
     settings_path = os.path.join(cloned_repo.working_dir, settings_path)
-    write_data_to_file(path=settings_path, data=settings_data)
+    pipes.write_data_to_file(path=settings_path, data=settings_data)
     commit_and_push_changes(repo=cloned_repo, file_to_commit=settings_path)
-
-
-def write_packageurls_to_file(repo, base_dir, packageurls):
-    purl_file_rel_path = os.path.join(base_dir, PURLS_FILENAME)
-    purl_file_full_path = Path(repo.working_dir) / purl_file_rel_path
-    write_data_to_file(path=purl_file_full_path, data=packageurls)
-    return purl_file_rel_path
-
-
-def write_data_to_file(path, data):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, encoding="utf-8", mode="w") as f:
-        f.write(saneyaml.dump(data))
 
 
 def mine_and_publish_pypi_packageurls(packages, use_last_serial=False, logger=None):
@@ -155,7 +140,7 @@ def mine_and_publish_pypi_packageurls(packages, use_last_serial=False, logger=No
             logger(f"packageURLs: {purls_string}")
 
         # write packageURLs to file
-        purl_file = write_packageurls_to_file(
+        purl_file = pipes.write_packageurls_to_file(
             repo=cloned_repo,
             base_dir=package_base_dir,
             packageurls=packageurls,
