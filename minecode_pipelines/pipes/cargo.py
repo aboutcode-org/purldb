@@ -1,9 +1,9 @@
 from packageurl import PackageURL
 from aboutcode.hashid import get_core_purl
-from minecode_pipeline.pipes import write_purls_to_repo
+from minecode_pipelines.pipes import write_purls_to_repo
 
 
-def collect_packages_from_cargo(packages, repo, push_commit=False):
+def store_cargo_packages(packages, fed_repo, push_commit=False):
     """Collect Cargo package versions into purls and write them to the repo."""
 
     if not packages:
@@ -22,4 +22,4 @@ def collect_packages_from_cargo(packages, repo, push_commit=False):
         purl = PackageURL(type="cargo", name=name, version=version).to_string()
         updated_purls.append(purl)
 
-    write_purls_to_repo(repo, base_purl, updated_purls, push_commit)
+    write_purls_to_repo(fed_repo, base_purl, updated_purls, push_commit)

@@ -4,14 +4,13 @@ from pathlib import Path
 from unittest import mock
 from unittest.mock import Mock, patch
 import saneyaml
-
 from django.test import TestCase
 from packageurl import PackageURL
 
-from minecode_pipeline.pipes import add_purl_result
-from minecode_pipeline.pipes.cargo import collect_packages_from_cargo
+from minecode_pipelines.pipes import git_stage_purls
+from minecode_pipelines.pipes.cargo import store_cargo_packages
 
-DATA_DIR = Path(__file__).parent / "test_data"
+DATA_DIR = Path(__file__).parent.parent / "test_data" / "cargo"
 
 
 class CargoPipelineTests(TestCase):
@@ -20,7 +19,7 @@ class CargoPipelineTests(TestCase):
 
         return tempfile.mkdtemp()
 
-    @patch("minecode_pipeline.pipes.cargo.write_purls_to_repo")
+    @patch("minecode_pipelines.pipes.cargo.write_purls_to_repo")
     def test_collect_packages_from_cargo_calls_write(self, mock_write):
         packages_file = DATA_DIR / "c5store"
         expected_file = DATA_DIR / "c5store-expected.yaml"
@@ -35,7 +34,7 @@ class CargoPipelineTests(TestCase):
             expected = saneyaml.load(f)
 
         repo = Mock()
-        result = collect_packages_from_cargo(packages, repo)
+        result = store_cargo_packages(packages, repo)
         self.assertIsNone(result)
 
         mock_write.assert_called_once()
@@ -65,7 +64,7 @@ class CargoPipelineTests(TestCase):
 
             purls_file = repo_dir / "purls.yaml"
 
-            relative_path = add_purl_result(purls, mock_repo, purls_file)
+            relative_path = git_stage_purls(purls, mock_repo, purls_file)
 
             written_file = repo_dir / relative_path
             self.assertTrue(written_file.exists())
