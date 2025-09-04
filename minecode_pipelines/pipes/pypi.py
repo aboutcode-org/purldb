@@ -26,13 +26,13 @@ import requests
 
 from datetime import datetime
 
-from minecode_pipeline import pipes
-from minecode_pipeline.miners.pypi import get_pypi_packages
-from minecode_pipeline.miners.pypi import load_pypi_packages
-from minecode_pipeline.miners.pypi import get_pypi_packageurls
-from minecode_pipeline.miners.pypi import PYPI_REPO
+from minecode_pipelines import pipes
+from minecode_pipelines.miners.pypi import get_pypi_packages
+from minecode_pipelines.miners.pypi import load_pypi_packages
+from minecode_pipelines.miners.pypi import get_pypi_packageurls
+from minecode_pipelines.miners.pypi import PYPI_REPO
 
-from minecode_pipeline.miners.pypi import PYPI_TYPE
+from minecode_pipelines.miners.pypi import PYPI_TYPE
 
 from packageurl import PackageURL
 

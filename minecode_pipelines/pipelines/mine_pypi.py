@@ -23,7 +23,7 @@
 from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
-from minecode_pipeline.pipes import pypi
+from minecode_pipelines.pipes import pypi
 
 
 class MineandPublishPypiPURLs(Pipeline):
