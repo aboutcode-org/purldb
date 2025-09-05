@@ -7,15 +7,15 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import saneyaml
+from itertools import chain
 import os
 import gzip
 import io
 import logging
 import arrow
-from aboutcode import hashid
+import javaproperties
 from packageurl import PackageURL
-from urllib.parse import urlparse
+
 from dateutil import tz
 from minecode_pipeline.pipes import java_stream
 from collections import namedtuple
@@ -44,6 +44,8 @@ if TRACE:
 
 MAVEN_BASE_URL = "https://repo1.maven.org/maven2"
 MAVEN_INDEX_URL = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz"
+MAVEN_INDEX_INCREMENT_BASE_URL = f"https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.{index}.gz"
+MAVEN_INDEX_PROPERTIES_URL = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties"
 
 
 def is_worthy_artifact(artifact):
@@ -575,24 +577,36 @@ class MavenNexusCollector:
     WARNING: Processing is rather long: a full index is ~600MB.
     """
 
-    def fetch_index(self, uri=MAVEN_INDEX_URL, timeout=10):
+    def fetch_index(self, uri=MAVEN_INDEX_URL):
         """
-        Return a temporary location where the fetched content was saved.
-        Does not return the content proper as a regular fetch does.
-
-        `timeout` is a default timeout.
+        Return a temporary location where the maven index was saved.
         """
         index = fetch_http(uri)
         return index.path
 
-    def get_packages(self, content=None):
-        """Yield Package objects from maven index"""
-        if content:
-            index_location = content
-        else:
-            index_location = self.fetch_index()
+    def fetch_index_properties(self, uri=MAVEN_INDEX_PROPERTIES_URL):
+        """
+        Return a temporary location where the maven index properties file was saved.
+        """
+        index_properties = fetch_http(uri)
+        return index_properties.path
 
-        artifacts = get_artifacts(index_location, worthyness=is_worthy_artifact)
+    def fetch_index_increments(self):
+        """
+        Yield maven index increments
+        """
+        content = self.fetch_index_properties()
+        with open(content) as config_file:
+            properties = javaproperties.load(config_file) or {}
+
+        for key, increment_index in properties.items():
+            if key.startswith("nexus.index.incremental"):
+                index_increment_url = MAVEN_INDEX_INCREMENT_BASE_URL.format(index=increment_index)
+                index_increment = fetch_http(index_increment_url)
+                yield index_increment.path
+
+    def _get_packages(self, content=None):
+        artifacts = get_artifacts(content, worthyness=is_worthy_artifact)
 
         for artifact in artifacts:
             # we cannot do much without these
@@ -657,6 +671,22 @@ class MavenNexusCollector:
                 version=version,
             )
             yield current_purl, package
+
+    def _get_packages_from_index_increments(self):
+        for index_increment in self.fetch_index_increments():
+            return self._get_packages(content=index_increment)
+
+    def get_packages(self, content=None, increments=False):
+        """Yield Package objects from maven index"""
+        if increments:
+            packages = chain(self._get_packages_from_index_increments())
+        else:
+            if content:
+                index_location = content
+            else:
+                index_location = self.fetch_index()
+            packages = self._get_packages(content=index_location)
+        return packages
 
 
 def collect_packages_from_maven(commits_per_push=10, logger=None):
