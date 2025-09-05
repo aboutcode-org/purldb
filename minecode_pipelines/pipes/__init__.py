@@ -8,11 +8,18 @@
 #
 
 from aboutcode.hashid import PURLS_FILENAME
-import os
 import textwrap
-from pathlib import Path
 import saneyaml
 from aboutcode import hashid
+import os
+from datetime import datetime
+from pathlib import Path
+
+from git import Repo
+import json
+
+from minecode_pipelines.miners import write_data_to_file
+
 
 VERSION = os.environ.get("VERSION", "")
 PURLDB_ALLOWED_HOST = os.environ.get("FEDERATEDCODE_GIT_ALLOWED_HOST", "")
@@ -62,6 +69,79 @@ def commit_and_push_changes(repo):
 
     commit_message = f"""\
     Add/Update list of available package versions
+    Tool: pkg:github/aboutcode-org/purldb@v{VERSION}
+    Reference: https://{PURLDB_ALLOWED_HOST}/
+    Signed-off-by: {author_name} <{author_email}>
+    """
+
+    default_branch = repo.active_branch.name
+    repo.index.commit(textwrap.dedent(commit_message))
+    repo.git.push(remote_name, default_branch, "--no-verify")
+
+
+def get_changed_files(repo: Repo, commit_x: str = None, commit_y: str = None):
+    """
+    Return a list of files changed between two commits using GitPython.
+    Includes added, modified, deleted, and renamed files.
+
+    - commit_x is the empty tree hash (repo root).
+    - commit_y is the latest commit (HEAD).
+    """
+    if commit_y is None:
+        commit_y = repo.head.commit.hexsha
+
+    commit_y_obj = repo.commit(commit_y)
+    if commit_x is None:
+        commit_x = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+
+        diff_index = commit_y_obj.diff(commit_x, R=True)
+    else:
+        commit_x_obj = repo.commit(commit_x)
+        diff_index = commit_x_obj.diff(commit_y_obj)
+
+    changed_files = {item.a_path or item.b_path for item in diff_index}
+
+    return list(changed_files)
+
+
+def get_last_commit(repo, ecosystem):
+    """
+    Retrieve the last mined commit for a given ecosystem.
+
+    This function reads a JSON checkpoint file from the repository, which stores
+    mining progress. Each checkpoint contains the "last_commit" from the package
+    index (e.g., PyPI) that was previously mined.
+
+    https://github.com/AyanSinhaMahapatra/minecode-test/blob/main/minecode_checkpoints/pypi.json
+    https://github.com/ziadhany/cargo-test/blob/main/minecode_checkpoints/cargo.json
+    """
+
+    last_commit_file_path = (
+        Path(repo.working_tree_dir) / "minecode_checkpoints" / f"{ecosystem}.json"
+    )
+    try:
+        with open(last_commit_file_path) as f:
+            settings_data = json.load(f)
+    except FileNotFoundError:
+        return
+    return settings_data.get("last_commit")
+
+
+def update_last_commit(last_commit, repo, ecosystem):
+    """Update the last mined commit checkpoint for a given ecosystem and push it to the repo."""
+
+    settings_data = {
+        "date": str(datetime.now()),
+        "last_commit": last_commit,
+    }
+
+    settings_path = Path(repo.working_tree_dir) / "minecode_checkpoints" / f"{ecosystem}.json"
+    write_data_to_file(path=settings_path, data=settings_data)
+    repo.index.add([settings_path])
+
+    commit_message = f"""\
+    Update last mined commit for {ecosystem}
+
     Tool: pkg:github/aboutcode-org/purldb@v{VERSION}
     Reference: https://{PURLDB_ALLOWED_HOST}/
     Signed-off-by: {author_name} <{author_email}>
