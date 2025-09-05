@@ -19,13 +19,18 @@
 #
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
+import os
 
 from git.repo.base import Repo
 from scanpipe.pipes.federatedcode import delete_local_clone
-from minecode.utils import get_temp_file
+from minecode_pipelines.utils import get_temp_file
 from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 from minecode_pipelines.miners import cargo
+
+FEDERATEDCODE_CARGO_GIT_URL = os.environ.get(
+    "FEDERATEDCODE_CARGO_GIT_URL", "https://github.com/ziadhany/cargo-test"
+)
 
 
 class MineandPublishCargoPURLs(Pipeline):
@@ -49,16 +54,15 @@ class MineandPublishCargoPURLs(Pipeline):
 
     def clone_cargo_repo(self):
         """
-        Clone the repo at repo_url and return the VCSResponse object
+        Clone the repo at repo_url and return the Repo object
         """
-        conan_repo_url = "git+https://github.com/rust-lang/crates.io-index"
-        fed_repo_url = "git+https://github.com/ziadhany/cargo-test"
+        conan_repo_url = "https://github.com/rust-lang/crates.io-index"
 
-        self.fed_repo = federatedcode.clone_repository(fed_repo_url)
+        self.fed_repo = federatedcode.clone_repository(FEDERATEDCODE_CARGO_GIT_URL)
         self.cargo_repo = Repo.clone_from(conan_repo_url, get_temp_file())
 
     def collect_packages_from_cargo(self):
-        cargo.process_cargo_packages(self.cargo_repo, self.fed_repo)
+        cargo.process_cargo_packages(self.cargo_repo, self.fed_repo, self.log)
 
     def clean_cargo_repo(self):
         """
