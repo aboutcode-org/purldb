@@ -17,7 +17,7 @@ import javaproperties
 from packageurl import PackageURL
 
 from dateutil import tz
-from minecode_pipeline.pipes import java_stream
+from minecode_pipelines.pipes import java_stream
 from collections import namedtuple
 from scanpipe.pipes.fetch import fetch_http
 from scanpipe.pipes import federatedcode
