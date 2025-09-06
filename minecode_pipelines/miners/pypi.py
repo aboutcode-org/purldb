@@ -13,7 +13,7 @@ import requests
 
 from packageurl import PackageURL
 
-from minecode_pipeline.utils import get_temp_file
+from minecode_pipelines.utils import get_temp_file
 
 """
 Visitors for Pypi and Pypi-like Python package repositories.

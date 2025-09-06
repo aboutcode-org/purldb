@@ -3,10 +3,10 @@ requires = [ "flot>=0.7.0" ]
 build-backend = "flot.buildapi"
 
 [project]
-name = "minecode_pipeline"
+name = "minecode_pipelines"
 version = "0.0.1b1"
 description = "A library for mining packageURLs and package metadata from ecosystem repositories."
-readme = "minecode_pipeline/README.rst"
+readme = "minecode_pipelines/README.rst"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.10"
 
@@ -28,7 +28,7 @@ keywords = [
 
 
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
@@ -45,19 +45,19 @@ dependencies = [
 urls = { Homepage = "https://github.com/aboutcode-org/purldb" }
 
 [project.entry-points."scancodeio_pipelines"]
-mine_pypi = "minecode_pipeline.pipelines.mine_pypi:MineandPublishPypiPURLs"
+mine_pypi = "minecode_pipelines.pipelines.mine_pypi:MineandPublishPypiPURLs"
 
 [tool.bumpversion]
 current_version = "0.0.1b1"
 allow_dirty = true
 
 files = [
-    { filename = "pyproject-minecode_pipeline.toml" },
+    { filename = "pyproject-minecode_pipelines.toml" },
 ]
 
 [tool.flot]
 includes = [
-    "minecode_pipeline/**/*",
+    "minecode_pipelines/**/*",
 ]
 
 excludes = [
@@ -71,10 +71,10 @@ excludes = [
     "**/.ve",
     "**/*.bak",
     "**/.ipynb_checkpoints/*",
-    "minecode_pipeline/tests/**/*",
-    "minecode_pipeline/notebooks/*",
+    "minecode_pipelines/tests/**/*",
+    "minecode_pipelines/notebooks/*",
 ]
 
 metadata_files = ["apache-2.0.LICENSE", "NOTICE"]
-editable_paths = ["minecode_pipeline"]
+editable_paths = ["minecode_pipelines"]
 

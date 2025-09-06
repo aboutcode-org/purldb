@@ -21,7 +21,7 @@
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
 
-from minecode_pipeline.pipes import maven
+from minecode_pipelines.pipes import maven
 from scanpipe.pipelines.publish_to_federatedcode import PublishToFederatedCode
 
 
