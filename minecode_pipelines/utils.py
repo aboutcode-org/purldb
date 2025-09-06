@@ -9,8 +9,17 @@
 
 import os
 import tempfile
+import textwrap
+from pathlib import Path
 
 from commoncode.fileutils import create_dir
+from minecode_pipelines.miners import write_data_to_file
+
+VERSION = os.environ.get("VERSION", "")
+PURLDB_ALLOWED_HOST = os.environ.get("FEDERATEDCODE_GIT_ALLOWED_HOST", "")
+author_name = os.environ.get("FEDERATEDCODE_GIT_SERVICE_NAME", "")
+author_email = os.environ.get("FEDERATEDCODE_GIT_SERVICE_EMAIL", "")
+remote_name = os.environ.get("FEDERATEDCODE_GIT_REMOTE_NAME", "origin")
 
 
 def system_temp_dir(temp_dir=os.getenv("MINECODE_TMP")):
@@ -49,3 +58,33 @@ def get_temp_file(file_name="data", extension=".file", dir_name=""):
     temp_dir = get_temp_dir(dir_name)
     location = os.path.join(temp_dir, file_name)
     return location
+
+
+def git_stage_purls(purls, repo, purls_file):
+    """Write package URLs to a file and stage it in the local Git repository."""
+    relative_purl_file_path = Path(purls_file)
+
+    write_to = Path(repo.working_dir) / relative_purl_file_path
+
+    write_data_to_file(path=write_to, data=purls)
+
+    repo.index.add([relative_purl_file_path])
+    return relative_purl_file_path
+
+
+def commit_and_push_changes(repo):
+    """
+    Commit staged changes to the local repository and push them
+    to the remote on the current active branch.
+    """
+
+    commit_message = f"""\
+    Add/Update list of available package versions
+    Tool: pkg:github/aboutcode-org/purldb@v{VERSION}
+    Reference: https://{PURLDB_ALLOWED_HOST}/
+    Signed-off-by: {author_name} <{author_email}>
+    """
+
+    default_branch = repo.active_branch.name
+    repo.index.commit(textwrap.dedent(commit_message))
+    repo.git.push(remote_name, default_branch, "--no-verify")
