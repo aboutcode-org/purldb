@@ -18,7 +18,6 @@ from minecode.miners import URI
 from minecode.miners import HttpVisitor
 from minecode.miners import Mapper
 from minecode.utils import parse_date
-from packagedcode import models as scan_models
 
 CRAN_URL = "https://cloud.r-project.org/"
 CRAN_WEB_URL = CRAN_URL + "web/"
