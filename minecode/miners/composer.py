@@ -24,10 +24,10 @@ def build_packages(metadata_dict, purl):
       }
     """
     purl_version = purl.version
-    name = f"{purl.namespace}/{purl.name}" if purl.namespace else purl.name
+    package_name = f"{purl.namespace}/{purl.name}" if purl.namespace else purl.name
 
     packages = metadata_dict.get("packages") or {}
-    versions = packages.get(name) or []
+    versions = packages.get(package_name) or []
 
     for version_info in versions:
         version_normalized = version_info.get("version_normalized")
