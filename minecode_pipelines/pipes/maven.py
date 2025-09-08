@@ -692,15 +692,15 @@ class MavenNexusCollector:
 def collect_packages_from_maven(commits_per_push=10, logger=None):
     # download and iterate through maven nexus index
     maven_nexus_collector = MavenNexusCollector()
-    prev_package = None
+    prev_purl = None
     current_packages = []
-    for i, (current_package, package) in enumerate(maven_nexus_collector.get_packages(), start=1):
-        if not prev_package:
-            prev_package = current_package
-        elif prev_package != current_package:
+    for i, (current_purl, package) in enumerate(maven_nexus_collector.get_packages(), start=1):
+        if not prev_purl:
+            prev_purl = current_purl
+        elif prev_purl != current_purl:
             # check out repo
             repo_url, _ = federatedcode.get_package_repository(
-                project_purl=prev_package,
+                project_purl=prev_purl,
                 logger=logger
             )
             repo = federatedcode.clone_repository(
@@ -712,7 +712,7 @@ def collect_packages_from_maven(commits_per_push=10, logger=None):
             # save purls to yaml
             write_purls_to_repo(
                 repo=repo,
-                package=prev_package,
+                package=prev_purl,
                 packages=current_packages,
                 push_commit=push_commit
             )
@@ -721,5 +721,5 @@ def collect_packages_from_maven(commits_per_push=10, logger=None):
             federatedcode.delete_local_clone(repo)
 
             current_packages = []
-            prev_package = current_package
+            prev_purl = current_purl
         current_packages.append(package)

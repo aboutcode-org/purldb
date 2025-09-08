@@ -13,6 +13,7 @@ import saneyaml
 from pathlib import Path
 
 from aboutcode import hashid
+from packageurl import PackageURL
 from scanpipe.pipes import federatedcode
 
 
@@ -31,7 +32,9 @@ def write_data_to_file(path, data):
 
 def write_purls_to_repo(repo, package, packages, push_commit=False):
     # save purls to yaml
-    ppath = hashid.get_package_purls_yml_file_path(package)
+    path_elements = hashid.package_path_elements(package)
+    _, core_path, _, _ = path_elements
+    ppath = core_path / hashid.PURLS_FILENAME
     purls = [p.purl for p in packages]
     federatedcode.write_data_as_yaml(
         base_path=repo.working_dir,
