@@ -37,7 +37,9 @@ def github_get_all_versions(subset_path):
             break
 
         for tag in data:
-            version_list.append(tag["name"])
+            version = tag.get("name") or {}
+            if version:
+                version_list.append(version)
         page += 1
 
         # Check if we've reached the last page

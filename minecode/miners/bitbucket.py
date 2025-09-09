@@ -327,10 +327,13 @@ def get_bitbucket_license_info(repo_path):
             ]
             data = response.json()
             # Search for license files in the root directory
-            for item in data["values"]:
-                if item["path"].upper() in common_license_file_name:
+            for item in data.get("values"):
+                path = item.get("path")
+                if path.upper() in common_license_file_name:
                     # Found a license file - fetch its content
-                    license_url = f"https://api.bitbucket.org/2.0/repositories/{repo_path}/src/HEAD/{item['path']}"
+                    license_url = (
+                        f"https://api.bitbucket.org/2.0/repositories/{repo_path}/src/HEAD/{path}"
+                    )
                     license_response = requests.get(license_url)
                     license_response.raise_for_status()
                     return license_response.text
@@ -348,14 +351,16 @@ def build_bitbucket_packages(metadata_dict, purl):
     The metadata_dict is a dictionary.
     purl: String value of the package url of the ResourceURI object
     """
-    name = metadata_dict["name"]
-    description = metadata_dict["description"]
-    homepage_url = metadata_dict["links"]["html"]["href"]
-    size = metadata_dict["size"]
-    primary_language = metadata_dict["language"]
+    name = metadata_dict.get("name") or {}
+    description = metadata_dict.get("description") or {}
+    links = metadata_dict.get("links") or {}
+    html = links.get("html") or {}
+    homepage_url = html.get["href"] or {}
+    size = metadata_dict.get("size") or {}
+    primary_language = metadata_dict.get("language") or {}
 
     if "repo_workspace_name" in metadata_dict:
-        repo_path = metadata_dict["repo_workspace_name"]
+        repo_path = metadata_dict.get("repo_workspace_name") or {}
     else:
         repo_path = ""
     license_text = get_bitbucket_license_info(repo_path)
@@ -372,7 +377,7 @@ def build_bitbucket_packages(metadata_dict, purl):
 
     download_data = dict(
         datasource_id="bitbucket_pkginfo",
-        download_url=metadata_dict["download_url"],
+        download_url=metadata_dict.get("download_url") or {},
     )
 
     common_data.update(download_data)

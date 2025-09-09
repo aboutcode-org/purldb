@@ -35,9 +35,10 @@ def gitlab_get_all_package_version_author(subset_path):
         version_author_list = []
         # Get all available versions
         for item in data:
-            version = item["name"]
-            author = item["commit"]["author_name"]
-            author_email = item["commit"]["author_email"]
+            version = item.get("name")
+            commit = item.get("commit") or {}
+            author = commit.get("author_name") or {}
+            author_email = commit.get("author_email") or {}
             version_author_list.append((version, author, author_email))
         return version_author_list
     except requests.exceptions.HTTPError as err:
