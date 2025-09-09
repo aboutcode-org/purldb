@@ -351,16 +351,14 @@ def build_bitbucket_packages(metadata_dict, purl):
     The metadata_dict is a dictionary.
     purl: String value of the package url of the ResourceURI object
     """
-    name = metadata_dict.get("name") or {}
-    description = metadata_dict.get("description") or {}
-    links = metadata_dict.get("links") or {}
-    html = links.get("html") or {}
-    homepage_url = html.get["href"] or {}
-    size = metadata_dict.get("size") or {}
-    primary_language = metadata_dict.get("language") or {}
+    name = metadata_dict["name"]
+    description = metadata_dict["description"]
+    homepage_url = metadata_dict["links"]["html"]["href"]
+    size = metadata_dict["size"]
+    primary_language = metadata_dict["language"]
 
     if "repo_workspace_name" in metadata_dict:
-        repo_path = metadata_dict.get("repo_workspace_name") or {}
+        repo_path = metadata_dict["repo_workspace_name"]
     else:
         repo_path = ""
     license_text = get_bitbucket_license_info(repo_path)
