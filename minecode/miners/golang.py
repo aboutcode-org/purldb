@@ -11,6 +11,7 @@ import json
 
 from packagedcode import models as scan_models
 from packageurl import PackageURL
+from packageurl.contrib.purl2url import build_golang_download_url
 
 from minecode import map_router
 from minecode import seed
@@ -237,3 +238,27 @@ def build_golang_package(package_data, purl):
         vcs_url=vcs_url,
     )
     return package
+
+
+def build_golang_generic_package(package_data, package_url):
+    """Return a single Golang package"""
+    homepage_url = "/".join(["https:/", package_url.namespace, package_url.name])
+    license_text = package_data.get("licenses")
+    extracted_license_statement = [license_text]
+
+    purl_str = package_url.to_string()
+    download_url = build_golang_download_url(purl_str)
+
+    common_data = dict(
+        name=package_url.name,
+        namespace=package_url.namespace,
+        type=package_url.type,
+        primary_language="go",
+        homepage_url=homepage_url,
+        extracted_license_statement=extracted_license_statement,
+        download_url=download_url,
+    )
+
+    package = scan_models.PackageData.from_data(common_data)
+    package.set_purl(package_url)
+    yield package

@@ -1,0 +1,21 @@
+{
+    "versionKey": {
+        "system": "GO",
+        "name": "golang.org/x/oauth2",
+        "version": "v0.29.0"
+    },
+    "publishedAt": "2025-03-19T22:59:26Z",
+    "isDefault": "FALSE",
+    "licenses": ["BSD-3-Clause"],
+    "advisoryKeys": [],
+    "links": [
+        {
+            "label": "SOURCE_REPO",
+            "url": "https://go.googlesource.com/oauth2"
+        }
+    ],
+    "slsaProvenances": [],
+    "attestations": [],
+    "registries": [],
+    "relatedProjects": []
+}
