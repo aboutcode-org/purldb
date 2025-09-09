@@ -8,11 +8,16 @@
 #
 
 import os
+import textwrap
 import saneyaml
-
 from pathlib import Path
-
 from aboutcode.hashid import PURLS_FILENAME
+
+VERSION = os.environ.get("VERSION", "")
+PURLDB_ALLOWED_HOST = os.environ.get("FEDERATEDCODE_GIT_ALLOWED_HOST", "")
+author_name = os.environ.get("FEDERATEDCODE_GIT_SERVICE_NAME", "")
+author_email = os.environ.get("FEDERATEDCODE_GIT_SERVICE_EMAIL", "")
+remote_name = os.environ.get("FEDERATEDCODE_GIT_REMOTE_NAME", "origin")
 
 
 def write_packageurls_to_file(repo, base_dir, packageurls):
@@ -26,3 +31,33 @@ def write_data_to_file(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, encoding="utf-8", mode="w") as f:
         f.write(saneyaml.dump(data))
+
+
+def git_stage_purls(purls, repo, purls_file):
+    """Write package URLs to a file and stage it in the local Git repository."""
+    relative_purl_file_path = Path(purls_file)
+
+    write_to = Path(repo.working_dir) / relative_purl_file_path
+
+    write_data_to_file(path=write_to, data=purls)
+
+    repo.index.add([relative_purl_file_path])
+    return relative_purl_file_path
+
+
+def commit_and_push_changes(repo):
+    """
+    Commit staged changes to the local repository and push them
+    to the remote on the current active branch.
+    """
+
+    commit_message = f"""\
+    Add/Update list of available package versions
+    Tool: pkg:github/aboutcode-org/purldb@v{VERSION}
+    Reference: https://{PURLDB_ALLOWED_HOST}/
+    Signed-off-by: {author_name} <{author_email}>
+    """
+
+    default_branch = repo.active_branch.name
+    repo.index.commit(textwrap.dedent(commit_message))
+    repo.git.push(remote_name, default_branch, "--no-verify")
