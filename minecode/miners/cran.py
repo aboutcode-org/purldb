@@ -194,3 +194,57 @@ def build_packages_from_html(metadata, uri=None, purl=None):
         )
         package.set_purl(purl)
         yield package
+
+
+def build_packages(metadata_dict, purl):
+    """
+    Yield ScannedPackage built from CRAN DB API.
+
+    metadata_dict format:
+    {
+      "versions": {
+        "1.0.0": { ... },
+        "1.1.0": { ... }
+      }
+    }
+    """
+    purl_version = purl.version
+    name = metadata_dict.get("Package") or purl.name
+
+    versions = metadata_dict.get("versions", {})
+    for version, version_info in versions.items():
+        if purl_version and not purl_version == version:
+            continue
+
+        description = version_info.get("Description")
+        homepage_url = version_info.get("URL")
+        license_str = version_info.get("License")
+
+        authors = version_info.get("Author", "")
+        parties = []
+        if authors:
+            parties.append(scan_models.Party(name=authors, role="author"))
+
+        # CRAN tarball download URL
+        download_url = f"https://cran.r-project.org/src/contrib/{name}_{version}.tar.gz"
+
+        common_data = dict(
+            name=name,
+            version=version,
+            description=description,
+            homepage_url=homepage_url,
+            extracted_license_statement=[license_str] if license_str else [],
+            parties=parties,
+        )
+
+        download_data = dict(
+            datasource_id="cran_pkginfo",
+            type="cran",
+            download_url=download_url,
+        )
+        download_data.update(common_data)
+
+        package = scan_models.PackageData.from_data(download_data)
+        package.datasource_id = "cran_api_metadata"
+        package.set_purl(purl)
+        yield package
