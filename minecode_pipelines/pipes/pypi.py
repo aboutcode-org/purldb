@@ -20,32 +20,19 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-import os
-import json
-import requests
-
-from datetime import datetime
+from aboutcode.hashid import get_package_base_dir
+from packageurl import PackageURL
+from scanpipe.pipes.federatedcode import commit_changes
+from scanpipe.pipes.federatedcode import push_changes
 
 from minecode_pipelines import pipes
 from minecode_pipelines.miners.pypi import get_pypi_packages
-from minecode_pipelines.miners.pypi import load_pypi_packages
 from minecode_pipelines.miners.pypi import get_pypi_packageurls
+from minecode_pipelines.miners.pypi import load_pypi_packages
 from minecode_pipelines.miners.pypi import PYPI_REPO
-
 from minecode_pipelines.miners.pypi import PYPI_TYPE
 
-from packageurl import PackageURL
 
-from aboutcode.hashid import get_package_base_dir
-
-
-from scanpipe.pipes.federatedcode import clone_repository
-from scanpipe.pipes.federatedcode import commit_changes
-from scanpipe.pipes.federatedcode import push_changes
-from scanpipe.pipes.federatedcode import commit_and_push_changes
-
-
-MINECODE_SETTINGS_REPO = "https://github.com/AyanSinhaMahapatra/minecode-test/"
 PYPI_SETTINGS_PATH = "minecode_checkpoints/pypi.json"
 
 
@@ -53,47 +40,9 @@ def mine_pypi_packages(logger=None):
     return get_pypi_packages(pypi_repo=PYPI_REPO, logger=logger)
 
 
-def fetch_last_serial_mined(
-    settings_repo=MINECODE_SETTINGS_REPO,
-    settings_path=PYPI_SETTINGS_PATH,
-):
-    """
-    Fetch "last_serial" for the last mined packages.
-
-    This is a simple JSON in a github repo containing mining checkpoints
-    with the "last_serial" from the pypi index which was mined. Example:
-    https://github.com/AyanSinhaMahapatra/minecode-test/blob/main/minecode_checkpoints/pypi.json
-    """
-    repo_name = settings_repo.split("github.com")[-1]
-    minecode_checkpoint_pypi = (
-        "https://raw.githubusercontent.com/" + repo_name + "refs/heads/main/" + settings_path
-    )
-    response = requests.get(minecode_checkpoint_pypi)
-    if not response.ok:
-        return
-
-    settings_data = json.loads(response.text)
-    return settings_data.get("last_serial")
-
-
-def update_last_serial_mined(
-    last_serial,
-    settings_repo=MINECODE_SETTINGS_REPO,
-    settings_path=PYPI_SETTINGS_PATH,
-):
-    settings_data = {
-        "date": str(datetime.now()),
-        "last_serial": last_serial,
-    }
-    cloned_repo = clone_repository(repo_url=settings_repo)
-    settings_path = os.path.join(cloned_repo.working_dir, settings_path)
-    pipes.write_data_to_file(path=settings_path, data=settings_data)
-    commit_and_push_changes(repo=cloned_repo, file_to_commit=settings_path)
-
-
 def mine_and_publish_pypi_packageurls(packages, use_last_serial=False, logger=None):
     if use_last_serial:
-        last_serial_fetched = fetch_last_serial_mined()
+        last_serial_fetched = pipes.fetch_last_serial_mined(settings_path=PYPI_SETTINGS_PATH)
         if logger:
             logger(f"Last serial number mined: {last_serial_fetched}")
 
@@ -108,9 +57,9 @@ def mine_and_publish_pypi_packageurls(packages, use_last_serial=False, logger=No
 
     if packages:
         # clone repo
-        cloned_repo = clone_repository(repo_url=MINECODE_SETTINGS_REPO)
+        cloned_repo = pipes.clone_repository(repo_url=pipes.MINECODE_SETTINGS_REPO)
         if logger:
-            logger(f"{MINECODE_SETTINGS_REPO} repo cloned at: {cloned_repo.working_dir}")
+            logger(f"{pipes.MINECODE_SETTINGS_REPO} repo cloned at: {cloned_repo.working_dir}")
 
     purl_files_updated = []
     for package in packages:
@@ -155,4 +104,4 @@ def mine_and_publish_pypi_packageurls(packages, use_last_serial=False, logger=No
 
     # update last_serial to minecode checkpoints
     if use_last_serial:
-        update_last_serial_mined(last_serial=last_serial)
+        pipes.update_last_serial_mined(last_serial=last_serial, settings_path=PYPI_SETTINGS_PATH)
