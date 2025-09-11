@@ -29,11 +29,7 @@ def process_cargo_packages(cargo_repo, fed_repo, fed_conf_repo, logger):
 
     while True:
         setting_last_commit = get_last_commit(fed_conf_repo, "cargo")
-
-        if setting_last_commit is None:
-            setting_last_commit = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
-
-        next_commit = get_next_x_commit(cargo_repo, setting_last_commit, x=1000, branch="master")
+        next_commit = get_next_x_commit(cargo_repo, setting_last_commit, x=10, branch="master")
 
         if next_commit == setting_last_commit:
             logger("No new commits to mine")
