@@ -41,6 +41,12 @@ def write_data_to_file(path, data):
         f.write(saneyaml.dump(data))
 
 
+def write_json_file(path, data):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, mode="w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
+
+
 def write_purls_to_repo(repo, package, updated_purls, push_commits=False):
     """Write or update package purls in the repo and optionally commit/push changes."""
     ppath = hashid.get_package_purls_yml_file_path(package)
@@ -84,23 +90,23 @@ def get_changed_files(repo: Repo, commit_x: str = None, commit_y: str = None):
     Return a list of files changed between two commits using GitPython.
     Includes added, modified, deleted, and renamed files.
 
-    - commit_x is the empty tree hash (repo root).
-    - commit_y is the latest commit (HEAD).
+    - commit_x: base commit (or the empty tree hash for the first commit)
+    - commit_y: target commit (defaults to HEAD if not provided)
     """
+    EMPTY_TREE_HASH = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+
     if commit_y is None:
         commit_y = repo.head.commit.hexsha
-
     commit_y_obj = repo.commit(commit_y)
-    if commit_x is None:
-        commit_x = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
 
-        diff_index = commit_y_obj.diff(commit_x, R=True)
+    if commit_x is None or commit_x == EMPTY_TREE_HASH:
+        # First commit case: diff against empty tree
+        diff_index = commit_y_obj.diff(EMPTY_TREE_HASH, R=True)
     else:
         commit_x_obj = repo.commit(commit_x)
-        diff_index = commit_x_obj.diff(commit_y_obj)
+        diff_index = commit_x_obj.diff(commit_y_obj, R=True)
 
     changed_files = {item.a_path or item.b_path for item in diff_index}
-
     return list(changed_files)
 
 
@@ -136,7 +142,7 @@ def update_last_commit(last_commit, repo, ecosystem):
     }
 
     settings_path = Path(repo.working_tree_dir) / "minecode_checkpoints" / f"{ecosystem}.json"
-    write_data_to_file(path=settings_path, data=settings_data)
+    write_json_file(path=settings_path, data=settings_data)
     repo.index.add([settings_path])
 
     commit_message = f"""\
