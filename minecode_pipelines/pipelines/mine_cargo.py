@@ -32,6 +32,10 @@ FEDERATEDCODE_CARGO_GIT_URL = os.environ.get(
     "FEDERATEDCODE_CARGO_GIT_URL", "https://github.com/ziadhany/cargo-test"
 )
 
+FEDERATEDCODE_CONFIG_GIT_URL = os.environ.get(
+    "FEDERATEDCODE_CONFIG_GIT_URL", "https://github.com/ziadhany/federatedcode-config"
+)
+
 
 class MineandPublishCargoPURLs(Pipeline):
     """Pipeline to mine Cargo (crates.io) packages and publish them to FederatedCode."""
@@ -50,7 +54,7 @@ class MineandPublishCargoPURLs(Pipeline):
         Check if the project fulfills the following criteria for
         pushing the project result to FederatedCode.
         """
-        federatedcode.check_federatedcode_eligibility(project=self.project)
+        federatedcode.check_federatedcode_configured_and_available(project=self.project)
 
     def clone_cargo_repo(self):
         """
@@ -59,6 +63,7 @@ class MineandPublishCargoPURLs(Pipeline):
         conan_repo_url = "https://github.com/rust-lang/crates.io-index"
 
         self.fed_repo = federatedcode.clone_repository(FEDERATEDCODE_CARGO_GIT_URL)
+        self.fed_conf_repo = federatedcode.clone_repository(FEDERATEDCODE_CONFIG_GIT_URL)
         self.cargo_repo = Repo.clone_from(conan_repo_url, get_temp_file())
 
     def collect_packages_from_cargo(self):
@@ -72,4 +77,7 @@ class MineandPublishCargoPURLs(Pipeline):
             delete_local_clone(self.cargo_repo)
 
         if self.fed_repo:
+            delete_local_clone(self.fed_repo)
+
+        if self.fed_conf_repo:
             delete_local_clone(self.fed_repo)

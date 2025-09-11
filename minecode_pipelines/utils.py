@@ -6,10 +6,10 @@
 # See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
-
 import tempfile
 import os
 from commoncode.fileutils import create_dir
+from git.repo.base import Repo
 
 from itertools import zip_longest
 
@@ -60,3 +60,30 @@ def get_temp_file(file_name="data", extension=".file", dir_name=""):
     temp_dir = get_temp_dir(dir_name)
     location = os.path.join(temp_dir, file_name)
     return location
+
+
+EMPTY_TREE_HASH = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+
+
+def get_next_x_commit(repo: Repo, current_commit: str, x: int = 1, branch: str = "master") -> str:
+    if x == 0:
+        return current_commit
+
+    history = list(repo.iter_commits(branch))
+    if not history:
+        return current_commit  # no commits, return current_commit
+
+    if not current_commit or current_commit == EMPTY_TREE_HASH:
+        if x == 1:
+            return history[-1].hexsha
+        else:
+            return history[0].hexsha
+
+    for i, commit in enumerate(history):
+        if commit.hexsha == current_commit:
+            if i + x < len(history):
+                return history[i + x].hexsha
+            else:
+                return history[0].hexsha
+
+    return history[0].hexsha

@@ -6,47 +6,61 @@
 # See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
-from minecode_pipelines.pipes import get_last_commit, get_changed_files, update_last_commit
+from minecode_pipelines.pipes import get_last_commit
+from minecode_pipelines.pipes import get_changed_files
+from minecode_pipelines.pipes import update_last_commit
 from minecode_pipelines.pipes.cargo import store_cargo_packages
 import json
 from pathlib import Path
 
+from minecode_pipelines.utils import get_next_x_commit
 
-def process_cargo_packages(cargo_repo, fed_repo, logger):
+
+def process_cargo_packages(cargo_repo, fed_repo, fed_conf_repo, logger):
+    """
+    Process Cargo index files commit by commit.
+    Push changes to fed_repo after:
+    - every `commit_batch_size` commits, OR
+    - every `file_batch_size` files, OR
+    - when reaching HEAD.
+    """
+
     base_path = Path(cargo_repo.working_tree_dir)
-    setting_last_commit = get_last_commit(fed_repo, "cargo")
-    valid_files = get_changed_files(cargo_repo, setting_last_commit)  # start from empty tree hash
 
-    logger(f"Found {len(valid_files)} changed files in Cargo index.")
-    targets_files = []
-    for file_path in base_path.glob("**/*"):
-        if not file_path.is_file():
-            continue
+    while True:
+        setting_last_commit = get_last_commit(fed_conf_repo, "cargo")
 
-        rel_path = str(file_path.relative_to(base_path))
-        if rel_path not in valid_files:
-            continue
+        if setting_last_commit is None:
+            setting_last_commit = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
 
-        if file_path.name in {"config.json", "README.md", "update-dl-url.yml"}:
-            continue
+        next_commit = get_next_x_commit(cargo_repo, setting_last_commit, x=1000, branch="master")
 
-        targets_files.append(file_path)
+        if next_commit == setting_last_commit:
+            logger("No new commits to mine")
+            break
 
-    logger(f"Collected {len(targets_files)} target package files to process.")
+        changed_files = get_changed_files(
+            cargo_repo, commit_x=setting_last_commit, commit_y=next_commit
+        )
+        logger(f"Found {len(changed_files)} changed files in Cargo index.")
 
-    for idx, file_path in enumerate(targets_files, start=1):
-        packages = []
-        with open(file_path, encoding="utf-8") as f:
-            for line in f:
-                if line.strip():
-                    packages.append(json.loads(line))
+        for idx, rel_path in enumerate(changed_files):
+            file_path = base_path / rel_path
+            logger(f"Found {file_path}.")
 
-        if not packages:
-            continue
+            if not file_path.is_file():
+                continue
 
-        push_commit = idx == len(targets_files)  # only True on last
-        store_cargo_packages(packages, fed_repo, push_commit)
-        logger(f"Processed {len(packages)} packages from {file_path} ({idx}/{len(targets_files)}).")
+            if file_path.name in {"config.json", "README.md", "update-dl-url.yml"}:
+                continue
+            packages = []
+            with open(file_path, encoding="utf-8") as f:
+                for line in f:
+                    if line.strip():
+                        packages.append(json.loads(line))
 
-    update_last_commit(setting_last_commit, fed_repo, "cargo")
-    logger("Updated last commit checkpoint for Cargo.")
+            push_commit = idx == len(changed_files)
+            store_cargo_packages(packages, fed_repo, push_commit)
+
+        update_last_commit(next_commit, fed_conf_repo, "cargo")
+        logger(f"Pushed batch for commit range {setting_last_commit}:{next_commit}.")
