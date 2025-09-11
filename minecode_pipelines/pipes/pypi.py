@@ -40,6 +40,7 @@ from aboutcode.hashid import get_package_base_dir
 
 
 from scanpipe.pipes.federatedcode import clone_repository
+
 from scanpipe.pipes.federatedcode import commit_changes
 from scanpipe.pipes.federatedcode import push_changes
 from scanpipe.pipes.federatedcode import commit_and_push_changes
