@@ -484,3 +484,84 @@ def get_vcs_repo_fromstring(content):
         return "git", repo[repo.index("<") + 1 : repo.index(">")]
     else:
         return None, None
+
+
+def build_packages(release_json, purl):
+    """
+    Yield ScannedPackage built from MetaCPAN release API.
+
+    Example release_json (_source):
+    {
+      "name": "Mojolicious-9.22",
+      "distribution": "Mojolicious",
+      "version": "9.22",
+      "abstract": "A next-generation web framework for Perl",
+      "license": ["perl_5"],
+      "author": "SRI",
+      "resources": {
+        "homepage": "https://mojolicious.org",
+        "repository": { "url": "https://github.com/mojolicious/mojo" }
+      },
+      "download_url": "https://cpan.metacpan.org/authors/id/S/SR/SRI/Mojolicious-9.22.tar.gz"
+    }
+    """
+    name = release_json.get("distribution") or purl.name
+    version = release_json.get("version")
+    description = release_json.get("abstract")
+    release_date = release_json.get("date")
+    license_list = release_json.get("license", [])
+
+    resources = release_json.get("resources", {})
+    homepage_url = resources.get("homepage")
+    repo = resources.get("repository", {})
+    bugtracker = resources.get("bugtracker", {})
+
+    vcs_url = None
+    if repo and repo.get("url"):
+        vcs_url = repo.get("url")
+
+    parties = []
+    author = release_json.get("author")
+    if author:
+        parties.append(scan_models.Party(name=author, role="author"))
+
+    download_url = release_json.get("download_url")
+    size = release_json.get("stat", {}).get("size")
+    md5 = release_json.get("checksum_md5")
+    sha256 = release_json.get("checksum_sha256")
+
+    keywords = release_json.get("keywords") or []
+
+    common_data = dict(
+        name=name,
+        version=version,
+        primary_language="Perl",
+        description=description,
+        release_date=release_date,
+        homepage_url=homepage_url,
+        vcs_url=vcs_url,
+        bug_tracking_url=bugtracker.get("web"),
+        code_view_url=repo.get("web"),
+        repository_homepage_url=f"https://metacpan.org/release/{name}",
+        repository_download_url=download_url,
+        api_data_url=f"https://fastapi.metacpan.org/v1/release/{name}",
+        extracted_license_statement=license_list,
+        declared_license_expression=" OR ".join(license_list) if license_list else None,
+        parties=parties,
+        keywords=keywords,
+        size=size,
+        md5=md5,
+        sha256=sha256,
+    )
+
+    download_data = dict(
+        datasource_id="cpan_pkginfo",
+        type="cpan",
+        download_url=download_url,
+    )
+    download_data.update(common_data)
+
+    package = scan_models.PackageData.from_data(download_data)
+    package.datasource_id = "cpan_api_metadata"
+    package.set_purl(purl)
+    yield package
