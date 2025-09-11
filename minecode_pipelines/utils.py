@@ -61,29 +61,13 @@ def get_temp_file(file_name="data", extension=".file", dir_name=""):
     location = os.path.join(temp_dir, file_name)
     return location
 
-
-EMPTY_TREE_HASH = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
-
-
-def get_next_x_commit(repo: Repo, current_commit: str, x: int = 1, branch: str = "master") -> str:
-    if x == 0:
-        return current_commit
-
-    history = list(repo.iter_commits(branch))
-    if not history:
-        return current_commit  # no commits, return current_commit
-
-    if not current_commit or current_commit == EMPTY_TREE_HASH:
-        if x == 1:
-            return history[-1].hexsha
-        else:
-            return history[0].hexsha
-
-    for i, commit in enumerate(history):
-        if commit.hexsha == current_commit:
-            if i + x < len(history):
-                return history[i + x].hexsha
-            else:
-                return history[0].hexsha
-
-    return history[0].hexsha
+def get_next_x_commit(repo: Repo, current_commit: str, x: int = 10, branch: str = "master") -> str:
+    """
+    Get the x-th next commit after the current commit in the specified branch.
+    """
+    if not current_commit:
+        current_commit = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+    revs = repo.git.rev_list(f"^{current_commit}", branch).splitlines()
+    if len(revs) < x:
+        raise ValueError(f"Not enough commits ahead; only {len(revs)} available.")
+    return revs[-x]
