@@ -1,0 +1,461 @@
+{
+  "abbreviate": {
+    "_id": "abbreviate",
+    "_rev": "6-c214483426b263b02f8aff6d73c87402",
+    "name": "abbreviate",
+    "archived": false,
+    "versions": {
+      "0.1": {
+        "Package": "abbreviate",
+        "Type": "Package",
+        "Title": "Readable String Abbreviation",
+        "Version": "0.1",
+        "Date": "2021-12-12",
+        "Authors@R": "\nperson(\"Sigbert\", \"Klinke\", email=\"sigbert@hu-berlin.de\", role=c(\"aut\", \"cre\"))",
+        "Description": "Strings are abbreviated to at least \"minlength\" characters, such that they remain unique\n(if they were). The abbreviations should be recognisable.",
+        "URL": "https://github.com/sigbertklinke/abbreviate (development version)",
+        "RoxygenNote": "7.1.1",
+        "License": "GPL-3",
+        "Encoding": "UTF-8",
+        "Suggests": {
+          "testthat": ">= 3.0.0"
+        },
+        "Config/testthat/edition": "3",
+        "NeedsCompilation": "no",
+        "Packaged": "2021-12-12 14:35:02 UTC; sk",
+        "Author": "Sigbert Klinke [aut, cre]",
+        "Maintainer": "Sigbert Klinke <sigbert@hu-berlin.de>",
+        "Repository": "CRAN",
+        "Date/Publication": "2021-12-14 08:40:04 UTC",
+        "crandb_file_date": "2021-12-14 10:02:23",
+        "MD5sum": "37285eddefb6b0fce95783bf21b32999",
+        "date": "2021-12-14T07:40:04+00:00",
+        "releases": []
+      }
+    },
+    "timeline": {
+      "0.1": "2021-12-14T07:40:04+00:00"
+    },
+    "latest": "0.1",
+    "title": "Readable String Abbreviation"
+  },
+  "abc": {
+    "_id": "abc",
+    "_rev": "13-5b00c8405507a05d9247b38313e3d2e3",
+    "name": "abc",
+    "versions": {
+      "1.0": {
+        "Package": "abc",
+        "Version": "1.0",
+        "Date": "2010-08-03",
+        "Title": "Functions to perform Approximate Bayesian Computation (ABC)<U+000a>using simulated data",
+        "Author": "Katalin Csillery, with contributions from Michael Blum and<U+000a>Olivier Francois",
+        "Maintainer": "Katalin Csillery <kati.csillery@gmail.com>",
+        "Depends": {
+          "R": ">= 1.8.0",
+          "nnet": "*",
+          "quantreg": "*",
+          "locfit": "*",
+          "methods": "*"
+        },
+        "Description": "The 'abc' package provides various functions for parameter<U+000a>estimation and model selection in an ABC framework. Three main<U+000a>functions are available: (i) 'abc' implements several ABC<U+000a>inference algorithms, (ii) 'cv4abc' is a cross-validation tool<U+000a>to evaluate the quality of the estimation and help the choice<U+000a>of tolerance rate, and (iii) 'postpr' implements model<U+000a>selection in an ABC setting. All these functions are<U+000a>accompanied by appropriate summary and plotting functions.",
+        "License": "Unlimited",
+        "Packaged": "2010-10-04 19:52:49 UTC; kcsillery",
+        "Repository": "CRAN",
+        "Date/Publication": "2010-10-05 08:45:21",
+        "crandb_file_date": "2010-10-05 04:45:28",
+        "date": "2010-10-05T08:45:21+00:00",
+        "releases": []
+      },
+      "1.1": {
+        "Package": "abc",
+        "Version": "1.1",
+        "Date": "2010-08-03",
+        "Title": "Functions to perform Approximate Bayesian Computation (ABC)<U+000a>using simulated data",
+        "Author": "Katalin Csillery, with contributions from Michael Blum and<U+000a>Olivier Francois",
+        "Maintainer": "Katalin Csillery <kati.csillery@gmail.com>",
+        "Depends": {
+          "R": ">= 1.8.0",
+          "nnet": "*",
+          "quantreg": "*",
+          "locfit": "*",
+          "methods": "*"
+        },
+        "Description": "The 'abc' package provides various functions for parameter<U+000a>estimation and model selection in an ABC framework. Three main<U+000a>functions are available: (i) 'abc' implements several ABC<U+000a>inference algorithms, (ii) 'cv4abc' is a cross-validation tool<U+000a>to evaluate the quality of the estimation and help the choice<U+000a>of tolerance rate, and (iii) 'postpr' implements model<U+000a>selection in an ABC setting. All these functions are<U+000a>accompanied by appropriate summary and plotting functions.",
+        "License": "Unlimited",
+        "Packaged": "2010-10-11 07:22:18 UTC; mblum",
+        "Repository": "CRAN",
+        "Date/Publication": "2010-10-11 07:24:31",
+        "crandb_file_date": "2010-10-11 01:24:31",
+        "date": "2010-10-11T07:24:31+00:00",
+        "releases": [
+          "2.12.0",
+          "2.12.1"
+        ]
+      },
+      "1.2": {
+        "Package": "abc",
+        "Version": "1.2",
+        "Date": "2011-01-10",
+        "Title": "Functions to perform Approximate Bayesian Computation (ABC)<U+000a>using simulated data",
+        "Author": "Katalin Csillery, Michael Blum and Olivier Francois",
+        "Maintainer": "Katalin Csillery <kati.csillery@gmail.com> and Michael Blum<U+000a><michael.blum@imag.fr>",
+        "Depends": {
+          "R": ">= 1.8.0",
+          "nnet": "*",
+          "quantreg": "*",
+          "locfit": "*"
+        },
+        "Description": "The 'abc' package provides various functions for parameter<U+000a>estimation and model selection in an ABC framework. Three main<U+000a>functions are available: (i) 'abc' implements several ABC<U+000a>inference algorithms, (ii) 'cv4abc' is a cross-validation tool<U+000a>to evaluate the quality of the estimation and help the choice<U+000a>of tolerance rate, and (iii) 'postpr' implements model<U+000a>selection in an ABC setting. All these functions are<U+000a>accompanied by appropriate summary and plotting functions.",
+        "License": "GPL (>= 2)",
+        "Packaged": "2011-01-14 16:27:58 UTC; katalinc",
+        "Repository": "CRAN",
+        "Date/Publication": "2011-01-15 16:23:31",
+        "crandb_file_date": "2011-01-15 11:23:38",
+        "date": "2011-01-15T16:23:31+00:00",
+        "releases": [
+          "2.12.2",
+          "2.13.0"
+        ]
+      },
+      "1.3": {
+        "Package": "abc",
+        "Version": "1.3",
+        "Date": "2011-05-09",
+        "Title": "Tools for Approximate Bayesian Computation (ABC)",
+        "Author": "Katalin Csillery, Michael Blum and Olivier Francois",
+        "Maintainer": "Katalin Csillery <kati.csillery@gmail.com> and Michael Blum<U+000a><michael.blum@imag.fr>",
+        "Depends": {
+          "R": ">= 2.10",
+          "nnet": "*",
+          "quantreg": "*",
+          "locfit": "*"
+        },
+        "Description": "The package implements several ABC algorithms for<U+000a>performing parameter estimation and model selection.<U+000a>Cross-validation tools are also available for measuring the<U+000a>accuracy of ABC estimates, and to calculate the<U+000a>misclassification probabilities of different models.",
+        "License": "GPL (>= 3)",
+        "Packaged": "2011-05-10 07:57:44 UTC; kcsillery",
+        "Repository": "CRAN",
+        "Date/Publication": "2011-05-10 09:42:38",
+        "crandb_file_date": "2011-05-10 05:42:44",
+        "date": "2011-05-10T09:42:38+00:00",
+        "releases": "2.13.1"
+      },
+      "1.4": {
+        "Package": "abc",
+        "Version": "1.4",
+        "Date": "2011-09-02",
+        "Title": "Tools for Approximate Bayesian Computation (ABC)",
+        "Author": "Katalin Csillery, Michael Blum and Olivier Francois",
+        "Maintainer": "Katalin Csillery <kati.csillery@gmail.com> and Michael Blum<U+000a><michael.blum@imag.fr>",
+        "Depends": {
+          "R": ">= 2.10",
+          "MASS": "*",
+          "nnet": "*",
+          "quantreg": "*",
+          "locfit": "*"
+        },
+        "Description": "The package implements several ABC algorithms for<U+000a>performing parameter estimation and model selection.<U+000a>Cross-validation tools are also available for measuring the<U+000a>accuracy of ABC estimates, and to calculate the<U+000a>misclassification probabilities of different models.",
+        "License": "GPL (>= 3)",
+        "Packaged": "2011-09-03 12:42:41 UTC; kcsillery",
+        "Repository": "CRAN",
+        "Date/Publication": "2011-09-04 05:18:45",
+        "crandb_file_date": "2011-09-04 01:18:53",
+        "date": "2011-09-04T05:18:45+00:00",
+        "releases": [
+          "2.13.2",
+          "2.14.0",
+          "2.14.1",
+          "2.14.2",
+          "2.15.0",
+          "2.15.1"
+        ]
+      },
+      "1.5": {
+        "Package": "abc",
+        "Version": "1.5",
+        "Date": "2012-16-02",
+        "Title": "Tools for Approximate Bayesian Computation (ABC)",
+        "Author": "Katalin Csillery, Michael Blum and Olivier Francois",
+        "Maintainer": "Michael Blum <michael.blum@imag.fr>",
+        "Depends": {
+          "R": ">= 2.10",
+          "MASS": "*",
+          "nnet": "*",
+          "quantreg": "*",
+          "locfit": "*"
+        },
+        "Description": "The package implements several ABC algorithms for<U+000a>performing parameter estimation and model selection.<U+000a>Cross-validation tools are also available for measuring the<U+000a>accuracy of ABC estimates, and to calculate the<U+000a>misclassification probabilities of different models.",
+        "License": "GPL (>= 3)",
+        "Packaged": "2012-08-08 09:30:30 UTC; ripley",
+        "Repository": "CRAN",
+        "Date/Publication": "2012-08-08 09:50:54",
+        "crandb_file_date": "2012-08-08 03:50:54",
+        "date": "2012-08-08T09:50:54+00:00",
+        "releases": []
+      },
+      "1.6": {
+        "Package": "abc",
+        "Version": "1.6",
+        "Date": "2012-16-02",
+        "Title": "Tools for Approximate Bayesian Computation (ABC)",
+        "Author": "Katalin Csillery, Michael Blum and Olivier Francois",
+        "Maintainer": "Michael Blum <michael.blum@imag.fr>",
+        "Depends": {
+          "R": ">= 2.10",
+          "MASS": "*",
+          "nnet": "*",
+          "quantreg": "*",
+          "locfit": "*"
+        },
+        "Description": "The package implements several ABC algorithms for<U+000a>performing parameter estimation and model selection.<U+000a>Cross-validation tools are also available for measuring the<U+000a>accuracy of ABC estimates, and to calculate the<U+000a>misclassification probabilities of different models.",
+        "License": "GPL (>= 3)",
+        "Packaged": "2012-08-14 15:10:43 UTC; mblum",
+        "Repository": "CRAN",
+        "Date/Publication": "2012-08-14 16:27:09",
+        "crandb_file_date": "2012-08-14 12:27:12",
+        "date": "2012-08-14T16:27:09+00:00",
+        "releases": [
+          "2.15.2",
+          "2.15.3",
+          "3.0.0",
+          "3.0.1"
+        ]
+      },
+      "1.7": {
+        "Package": "abc",
+        "Version": "1.7",
+        "Date": "2013-06-06",
+        "Title": "Tools for Approximate Bayesian Computation (ABC)",
+        "Author": "Katalin Csillery, Michael Blum and Olivier Francois",
+        "Maintainer": "Michael Blum <michael.blum@imag.fr>",
+        "Depends": {
+          "R": ">= 2.10",
+          "MASS": "*",
+          "nnet": "*",
+          "quantreg": "*",
+          "locfit": "*"
+        },
+        "Description": "The package implements several ABC algorithms for<U+000a>performing parameter estimation and model selection.<U+000a>Cross-validation tools are also available for measuring the<U+000a>accuracy of ABC estimates, and to calculate the<U+000a>misclassification probabilities of different models.",
+        "License": "GPL (>= 3)",
+        "Packaged": "2013-06-06 15:45:28 UTC; mblum",
+        "Repository": "CRAN",
+        "Date/Publication": "2013-06-06 19:53:42",
+        "crandb_file_date": "2013-06-06 13:53:45",
+        "NeedsCompilation": "no",
+        "date": "2013-06-06T19:53:42+00:00",
+        "releases": "3.0.2"
+      },
+      "1.8": {
+        "Package": "abc",
+        "Version": "1.8",
+        "Date": "2013-10-14",
+        "Title": "Tools for Approximate Bayesian Computation (ABC)",
+        "Author": "Katalin Csillery, Michael Blum and Olivier Francois",
+        "Maintainer": "Michael Blum <michael.blum@imag.fr>",
+        "Depends": {
+          "R": ">= 2.10",
+          "nnet": "*",
+          "quantreg": "*",
+          "MASS": "*"
+        },
+        "Description": "The package implements several ABC algorithms for<U+000a>performing parameter estimation and model selection.<U+000a>Cross-validation tools are also available for measuring the<U+000a>accuracy of ABC estimates, and to calculate the<U+000a>misclassification probabilities of different models.",
+        "License": "GPL (>= 3)",
+        "Packaged": "2013-10-28 14:27:28 UTC; kcsillery",
+        "Repository": "CRAN",
+        "Date/Publication": "2013-10-29 14:33:22",
+        "crandb_file_date": "2013-10-29 09:33:25",
+        "NeedsCompilation": "no",
+        "date": "2013-10-29T14:33:22+00:00",
+        "releases": [
+          "3.0.3",
+          "3.1.0",
+          "3.1.1"
+        ]
+      },
+      "2.0": {
+        "Package": "abc",
+        "Version": "2.0",
+        "Date": "2014-7-10",
+        "Title": "Tools for Approximate Bayesian Computation (ABC)",
+        "Author": "Katalin Csillery, Louisiane Lemaire, Michael Blum and Olivier Francois",
+        "Maintainer": "Michael Blum <michael.blum@imag.fr>",
+        "Depends": {
+          "R": ">= 2.10",
+          "nnet": "*",
+          "quantreg": "*",
+          "MASS": "*",
+          "locfit": "*"
+        },
+        "Description": "The package implements several ABC algorithms for<U+000a>performing parameter estimation, model selection, and goodness-of-fit.<U+000a>Cross-validation tools are also available for measuring the<U+000a>accuracy of ABC estimates, and to calculate the<U+000a>misclassification probabilities of different models.",
+        "License": "GPL (>= 3)",
+        "Packaged": "2014-07-11 15:09:21 UTC; mblum",
+        "Repository": "CRAN",
+        "Date/Publication": "2014-07-11 23:50:41",
+        "crandb_file_date": "2014-07-11 17:50:44",
+        "NeedsCompilation": "no",
+        "date": "2014-07-11T23:50:41+00:00",
+        "releases": []
+      },
+      "2.1": {
+        "Package": "abc",
+        "Type": "Package",
+        "Title": "Tools for Approximate Bayesian Computation (ABC)",
+        "Version": "2.1",
+        "Date": "2015-05-04",
+        "Authors@R": "c(\nperson(\"Csillery\", \"Katalin\", role = \"aut\", email=\"kati.csillery@gmail.com\"),\nperson(\"Lemaire\", \"Louisiane\", role = \"aut\"),\nperson(\"Francois\", \"Olivier\", role = \"aut\"),\nperson(\"Blum\", \"Michael\",\nemail = \"michael.blum@imag.fr\", role = c(\"aut\", \"cre\")))",
+        "Depends": {
+          "R": ">= 2.10",
+          "abc.data": "*",
+          "nnet": "*",
+          "quantreg": "*",
+          "MASS": "*",
+          "locfit": "*"
+        },
+        "Description": "Implements several ABC algorithms for\nperforming parameter estimation, model selection, and goodness-of-fit.\nCross-validation tools are also available for measuring the\naccuracy of ABC estimates, and to calculate the\nmisclassification probabilities of different models.",
+        "Repository": "CRAN",
+        "License": "GPL (>= 3)",
+        "NeedsCompilation": "no",
+        "Packaged": "2015-05-05 08:35:25 UTC; mblum",
+        "Author": "Csillery Katalin [aut],\nLemaire Louisiane [aut],\nFrancois Olivier [aut],\nBlum Michael [aut, cre]",
+        "Maintainer": "Blum Michael <michael.blum@imag.fr>",
+        "Date/Publication": "2015-05-05 11:34:14",
+        "crandb_file_date": "2015-05-05 05:35:37",
+        "date": "2015-05-05T11:34:14+00:00",
+        "releases": []
+      },
+      "2.2.1": {
+        "Package": "abc",
+        "Type": "Package",
+        "Title": "Tools for Approximate Bayesian Computation (ABC)",
+        "Version": "2.2.1",
+        "Date": "2022-05-17",
+        "Authors@R": "c(\nperson(\"Csillery\", \"Katalin\", role = \"aut\", email=\"kati.csillery@gmail.com\"),\nperson(\"Lemaire\", \"Louisiane\", role = \"aut\"),\nperson(\"Francois\", \"Olivier\", role = \"aut\"),\nperson(\"Blum\", \"Michael\",\nemail = \"michael.blum.temp@gmail.com\", role = c(\"aut\", \"cre\")))",
+        "Depends": {
+          "R": ">= 2.10",
+          "abc.data": "*",
+          "nnet": "*",
+          "quantreg": "*",
+          "MASS": "*",
+          "locfit": "*"
+        },
+        "Description": "Implements several ABC algorithms for\nperforming parameter estimation, model selection, and goodness-of-fit.\nCross-validation tools are also available for measuring the\naccuracy of ABC estimates, and to calculate the\nmisclassification probabilities of different models.",
+        "Repository": "CRAN",
+        "License": "GPL (>= 3)",
+        "NeedsCompilation": "no",
+        "Packaged": "2022-05-18 18:46:30 UTC; mblum",
+        "Author": "Csillery Katalin [aut],\nLemaire Louisiane [aut],\nFrancois Olivier [aut],\nBlum Michael [aut, cre]",
+        "Maintainer": "Blum Michael <michael.blum.temp@gmail.com>",
+        "Date/Publication": "2022-05-19 07:20:02 UTC",
+        "crandb_file_date": "2022-05-19 08:38:33",
+        "MD5sum": "21e4c928a8cdd4c6fe3c1c76c99913a9",
+        "date": "2022-05-19T06:20:02+00:00",
+        "releases": []
+      },
+      "2.2.2": {
+        "Package": "abc",
+        "Type": "Package",
+        "Title": "Tools for Approximate Bayesian Computation (ABC)",
+        "Version": "2.2.2",
+        "Date": "2024-12-3",
+        "Authors@R": "c(\nperson(\"Csillery\", \"Katalin\", role = \"aut\", email=\"kati.csillery@gmail.com\"),\nperson(\"Lemaire\", \"Louisiane\", role = \"aut\"),\nperson(\"Francois\", \"Olivier\", role = \"aut\"),\nperson(\"Blum\", \"Michael\",\nemail = \"michael.blum.temp@gmail.com\", role = c(\"aut\", \"cre\")))",
+        "Depends": {
+          "R": ">= 2.10",
+          "abc.data": "*",
+          "nnet": "*",
+          "quantreg": "*",
+          "MASS": "*",
+          "locfit": "*"
+        },
+        "Description": "Implements several ABC algorithms for\nperforming parameter estimation, model selection, and goodness-of-fit.\nCross-validation tools are also available for measuring the\naccuracy of ABC estimates, and to calculate the\nmisclassification probabilities of different models.",
+        "Repository": "CRAN",
+        "License": "GPL (>= 3)",
+        "NeedsCompilation": "no",
+        "Packaged": "2024-12-03 17:06:09 UTC; michaelblum",
+        "Author": "Csillery Katalin [aut],\nLemaire Louisiane [aut],\nFrancois Olivier [aut],\nBlum Michael [aut, cre]",
+        "Maintainer": "Blum Michael <michael.blum.temp@gmail.com>",
+        "Date/Publication": "2024-12-03 17:50:02 UTC",
+        "crandb_file_date": "2024-12-03 18:50:29",
+        "MD5sum": "aa7596bcec49d9bcab9ff8ecd46530c9",
+        "date": "2024-12-03T16:50:02+00:00",
+        "releases": []
+      }
+    },
+    "timeline": {
+      "1.0": "2010-10-05T08:45:21+00:00",
+      "1.1": "2010-10-11T07:24:31+00:00",
+      "1.2": "2011-01-15T16:23:31+00:00",
+      "1.3": "2011-05-10T09:42:38+00:00",
+      "1.4": "2011-09-04T05:18:45+00:00",
+      "1.5": "2012-08-08T09:50:54+00:00",
+      "1.6": "2012-08-14T16:27:09+00:00",
+      "1.7": "2013-06-06T19:53:42+00:00",
+      "1.8": "2013-10-29T14:33:22+00:00",
+      "2.0": "2014-07-11T23:50:41+00:00",
+      "2.1": "2015-05-05T11:34:14+00:00",
+      "2.2.1": "2022-05-19T06:20:02+00:00",
+      "2.2.2": "2024-12-03T16:50:02+00:00"
+    },
+    "latest": "2.2.2",
+    "title": "Tools for Approximate Bayesian Computation (ABC)",
+    "archived": false,
+    "revdeps": 2
+  },
+  "abc.data": {
+    "_id": "abc.data",
+    "_rev": "7-41f5c78a9a69541f3d6afca5778185e5",
+    "name": "abc.data",
+    "archived": false,
+    "versions": {
+      "1.0": {
+        "Package": "abc.data",
+        "Type": "Package",
+        "Title": "Data Only: Tools for Approximate Bayesian Computation (ABC)",
+        "Version": "1.0",
+        "Date": "2015-05-04",
+        "Authors@R": "c(\nperson(\"Csillery\", \"Katalin\", role = \"aut\", email=\"kati.csillery@gmail.com\"),\nperson(\"Lemaire\", \"Louisiane\", role = \"aut\"),\nperson(\"Francois\", \"Olivier\", role = \"aut\"),\nperson(\"Blum\", \"Michael\",\nemail = \"michael.blum@imag.fr\", role = c(\"aut\", \"cre\")))",
+        "Depends": {
+          "R": ">= 2.10"
+        },
+        "Description": "Contains data which are used by functions of the 'abc' package.",
+        "Repository": "CRAN",
+        "License": "GPL (>= 3)",
+        "NeedsCompilation": "no",
+        "Packaged": "2015-05-05 09:25:25 UTC; mblum",
+        "Author": "Csillery Katalin [aut],\nLemaire Louisiane [aut],\nFrancois Olivier [aut],\nBlum Michael [aut, cre]",
+        "Maintainer": "Blum Michael <michael.blum@imag.fr>",
+        "Date/Publication": "2015-05-05 11:34:13",
+        "crandb_file_date": "2015-05-05 05:35:35",
+        "date": "2015-05-05T11:34:13+00:00",
+        "releases": []
+      },
+      "1.1": {
+        "Package": "abc.data",
+        "Type": "Package",
+        "Title": "Data Only: Tools for Approximate Bayesian Computation (ABC)",
+        "Version": "1.1",
+        "Authors@R": "c(\nperson(\"Csillery\", \"Katalin\", role = \"aut\", email=\"kati.csillery@gmail.com\"),\nperson(\"Lemaire\", \"Louisiane\", role = \"aut\"),\nperson(\"Francois\", \"Olivier\", role = \"aut\"),\nperson(\"Blum\", \"Michael\",\nemail = \"michael.blum.temp@gmail.com\", role = c(\"aut\", \"cre\")))",
+        "Depends": {
+          "R": ">= 2.10"
+        },
+        "Description": "Contains data which are used by functions of the 'abc' package.",
+        "Repository": "CRAN",
+        "License": "GPL (>= 3)",
+        "NeedsCompilation": "no",
+        "Packaged": "2024-03-24 10:04:54 UTC; hornik",
+        "Author": "Csillery Katalin [aut],\nLemaire Louisiane [aut],\nFrancois Olivier [aut],\nBlum Michael [aut, cre]",
+        "Maintainer": "Blum Michael <michael.blum.temp@gmail.com>",
+        "Date/Publication": "2024-03-24 10:15:14 UTC",
+        "crandb_file_date": "2024-03-24 10:38:49",
+        "MD5sum": "1693d5a243a991f8cf290471972a54f8",
+        "date": "2024-03-24T09:15:14+00:00",
+        "releases": []
+      }
+    },
+    "timeline": {
+      "1.0": "2015-05-05T11:34:13+00:00",
+      "1.1": "2024-03-24T09:15:14+00:00"
+    },
+    "latest": "1.1",
+    "title": "Data Only: Tools for Approximate Bayesian Computation (ABC)"
+  }
+}
