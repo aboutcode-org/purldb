@@ -20,8 +20,7 @@ def process_cargo_packages(cargo_repo, fed_repo, fed_conf_repo, logger):
     """
     Process Cargo index files commit by commit.
     Push changes to fed_repo after:
-    - every `commit_batch_size` commits, OR
-    - every `file_batch_size` files, OR
+    - every `commit_batch` commits, OR
     - when reaching HEAD.
     """
 
@@ -40,6 +39,7 @@ def process_cargo_packages(cargo_repo, fed_repo, fed_conf_repo, logger):
         )
         logger(f"Found {len(changed_files)} changed files in Cargo index.")
 
+        file_counter = 0
         for idx, rel_path in enumerate(changed_files):
             file_path = base_path / rel_path
             logger(f"Found {file_path}.")
@@ -49,13 +49,15 @@ def process_cargo_packages(cargo_repo, fed_repo, fed_conf_repo, logger):
 
             if file_path.name in {"config.json", "README.md", "update-dl-url.yml"}:
                 continue
+
             packages = []
             with open(file_path, encoding="utf-8") as f:
                 for line in f:
                     if line.strip():
                         packages.append(json.loads(line))
 
-            push_commit = idx == len(changed_files)
+            file_counter += 1
+            push_commit = (file_counter % 1000 == 0) or (idx == len(changed_files))
             store_cargo_packages(packages, fed_repo, push_commit)
 
         update_last_commit(next_commit, fed_conf_repo, "cargo")

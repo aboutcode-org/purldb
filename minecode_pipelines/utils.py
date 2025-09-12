@@ -61,6 +61,7 @@ def get_temp_file(file_name="data", extension=".file", dir_name=""):
     location = os.path.join(temp_dir, file_name)
     return location
 
+
 def get_next_x_commit(repo: Repo, current_commit: str, x: int = 10, branch: str = "master") -> str:
     """
     Get the x-th next commit after the current commit in the specified branch.

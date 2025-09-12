@@ -67,7 +67,7 @@ class MineandPublishCargoPURLs(Pipeline):
         self.cargo_repo = Repo.clone_from(conan_repo_url, get_temp_file())
 
     def collect_packages_from_cargo(self):
-        cargo.process_cargo_packages(self.cargo_repo, self.fed_repo, self.log)
+        cargo.process_cargo_packages(self.cargo_repo, self.fed_repo, self.fed_conf_repo, self.log)
 
     def clean_cargo_repo(self):
         """
