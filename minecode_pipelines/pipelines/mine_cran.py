@@ -27,9 +27,7 @@ from scanpipe.pipes import federatedcode
 from minecode_pipelines.miners.cran import get_cran_db
 from minecode_pipelines.pipes import cran
 
-FEDERATEDCODE_CRAN_GIT_URL = os.environ.get(
-    "FEDERATEDCODE_CRAN_GIT_URL", ""
-)
+FEDERATEDCODE_CRAN_GIT_URL = os.environ.get("FEDERATEDCODE_CRAN_GIT_URL", "")
 
 
 class MineandPublishCRANPURLs(Pipeline):
