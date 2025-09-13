@@ -28,7 +28,9 @@ from minecode_pipelines.utils import git_stage_purls, commit_and_push_changes
 
 
 def mine_and_publish_cran_packageurls(fed_repo, db_path):
+    batch_counter = 0
     for purls in extract_cran_packages(db_path):
+        batch_counter += 1
         if not purls:
             continue
 
@@ -36,8 +38,11 @@ def mine_and_publish_cran_packageurls(fed_repo, db_path):
         purl_yaml_path = get_package_purls_yml_file_path(first_purl)
         git_stage_purls(purls, fed_repo, purl_yaml_path)
 
-    commit_and_push_changes(fed_repo)
+        if batch_counter > 1000:
+           commit_and_push_changes(fed_repo)
+           batch_counter = 0
 
+    commit_and_push_changes(fed_repo)
 
 def extract_cran_packages(json_file_path: str) -> list:
     """
