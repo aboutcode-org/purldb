@@ -24,7 +24,7 @@
 from git.repo.base import Repo
 from scanpipe.pipelines import Pipeline
 
-from minecode.utils import get_temp_file
+from minecode_pipelines.utils import get_temp_file
 from minecode_pipelines.miners import conan
 from scanpipe.pipes import federatedcode
 
