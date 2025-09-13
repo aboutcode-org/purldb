@@ -21,11 +21,18 @@ def mine_and_publish_conan_packageurls(conan_repo, fed_repo):
             continue
         yml_files.append(file_path)
 
+    counter = 0
+    batch_size = 1000
     for idx, file_path in enumerate(yml_files, start=1):
         package = file_path.parts[-2]
         with open(file_path, encoding="utf-8") as f:
             versions = saneyaml.load(f)
 
-        if versions:
-            push_commit = idx == len(yml_files)  # only True on last
-            conan.collect_and_write_purls_for_canon(package, versions, fed_repo, push_commit)
+        if not versions:
+            continue
+
+        counter += 1
+        push_commit = counter >= batch_size or idx == len(yml_files)
+        conan.collect_and_write_purls_for_canon(package, versions, fed_repo, push_commit)
+        if push_commit:
+            counter = 0
