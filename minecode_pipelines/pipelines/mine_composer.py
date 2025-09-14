@@ -23,11 +23,8 @@
 import os
 from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
-from minecode_pipelines.pipes.composer import (
-    mine_and_publish_composer_purls,
-    mine_composer_packages,
-)
-
+from minecode_pipelines.pipes.composer import mine_composer_packages
+from minecode_pipelines.pipes.composer import mine_and_publish_composer_purls
 
 FEDERATEDCODE_COMPOSER_GIT_URL = os.environ.get(
     "FEDERATEDCODE_COMPOSER_GIT_URL", "https://github.com/ziadhany/composer-test"

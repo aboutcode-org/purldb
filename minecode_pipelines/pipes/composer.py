@@ -20,18 +20,13 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from minecode_pipelines.miners import write_packageurls_to_file
-from minecode_pipelines.miners.composer import (
-    get_composer_packages,
-    load_composer_packages,
-    get_composer_purl,
-)
 from aboutcode.hashid import get_package_base_dir
-
-from minecode_pipelines.pipes import commit_and_push_changes, git_stage_purls
-
-MINECODE_SETTINGS_REPO = "https://github.com/ziadhany/composer-test/"
-COMPOSER_SETTINGS_PATH = "minecode_checkpoints/composer.json"
+from minecode_pipelines.miners import write_packageurls_to_file
+from minecode_pipelines.miners.composer import get_composer_packages
+from minecode_pipelines.miners.composer import load_composer_packages
+from minecode_pipelines.miners.composer import get_composer_purl
+from minecode_pipelines.pipes import commit_and_push_changes
+from minecode_pipelines.pipes import git_stage_purls
 
 
 def mine_composer_packages(logger=None):
@@ -44,6 +39,7 @@ def mine_and_publish_composer_purls(packages, fed_repo, logger=None):
     """Mine Composer packages and publish their PURLs to a FederatedCode repository."""
 
     purl_files_updated = []
+    counter = 0
     for vendor, package in packages:
         if logger:
             logger(f"getting packageURLs for package: {vendor}/{package}")
@@ -67,5 +63,10 @@ def mine_and_publish_composer_purls(packages, fed_repo, logger=None):
         )
         purl_files_updated.append(purl_file)
         git_stage_purls(repo=fed_repo, purls_file=purl_file, purls=purls)
+
+        counter += 1
+        if counter == 1000:
+            commit_and_push_changes(repo=fed_repo)
+            counter = 0
 
     commit_and_push_changes(repo=fed_repo)
