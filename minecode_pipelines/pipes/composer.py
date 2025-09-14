@@ -38,7 +38,6 @@ def mine_composer_packages(logger=None):
 def mine_and_publish_composer_purls(packages, fed_repo, logger=None):
     """Mine Composer packages and publish their PURLs to a FederatedCode repository."""
 
-    purl_files_updated = []
     counter = 0
     for vendor, package in packages:
         if logger:
@@ -61,7 +60,6 @@ def mine_and_publish_composer_purls(packages, fed_repo, logger=None):
             base_dir=package_base_dir,
             packageurls=purls,
         )
-        purl_files_updated.append(purl_file)
         git_stage_purls(repo=fed_repo, purls_file=purl_file, purls=purls)
 
         counter += 1
