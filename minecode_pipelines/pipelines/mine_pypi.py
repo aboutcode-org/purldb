@@ -24,6 +24,7 @@ from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
 from minecode_pipelines.pipes import pypi
+from minecode_pipelines import pipes
 
 
 class MineandPublishPypiPURLs(Pipeline):
@@ -38,6 +39,7 @@ class MineandPublishPypiPURLs(Pipeline):
             cls.check_federatedcode_eligibility,
             cls.mine_pypi_packages,
             cls.mine_and_publish_pypi_packageurls,
+            cls.delete_cloned_repos,
         )
 
     def check_federatedcode_eligibility(self):
@@ -45,12 +47,19 @@ class MineandPublishPypiPURLs(Pipeline):
         Check if the project fulfills the following criteria for
         pushing the project result to FederatedCode.
         """
-        federatedcode.check_federatedcode_configured_and_available()
+        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
     def mine_pypi_packages(self):
-        """Mine pypi package names from pypi indexes."""
-        self.pypi_packages = pypi.mine_pypi_packages(logger=self.log)
+        """Mine pypi package names from pypi indexes or checkpoint."""
+        self.pypi_packages, self.state = pypi.mine_pypi_packages(logger=self.log)
 
     def mine_and_publish_pypi_packageurls(self):
         """Get pypi packageURLs for all mined pypi package names."""
-        pypi.mine_and_publish_pypi_packageurls(packages=self.pypi_packages, logger=self.log)
+        self.repos = pypi.mine_and_publish_pypi_packageurls(
+            packages_file=self.pypi_packages,
+            state=self.state,
+            logger=self.log,
+        )
+
+    def delete_cloned_repos(self):
+        pipes.delete_cloned_repos(repos=self.repos, logger=self.log)

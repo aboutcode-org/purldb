@@ -14,6 +14,7 @@ import requests
 from packageurl import PackageURL
 
 from minecode_pipelines.utils import get_temp_file
+from minecode_pipelines.pipes import write_data_to_json_file
 
 """
 Visitors for Pypi and Pypi-like Python package repositories.
@@ -48,11 +49,12 @@ def get_pypi_packages(pypi_repo, logger=None):
     if not response.ok:
         return
 
-    packages = response.json()
-    temp_file = get_temp_file("PypiPackagesJSON")
-    with open(temp_file, "w", encoding="utf-8") as f:
-        json.dump(packages, f, indent=4)
+    return response.json()
 
+
+def write_packages_json(packages, name):
+    temp_file = get_temp_file(name)
+    write_data_to_json_file(path=temp_file, data=packages)
     return temp_file
 
 
@@ -76,11 +78,19 @@ def get_pypi_packageurls(name):
     return packageurls
 
 
-def load_pypi_packages(packages):
-    with open(packages) as f:
+def load_pypi_packages(packages_file):
+    with open(packages_file) as f:
         packages_data = json.load(f)
 
     last_serial = packages_data.get("meta").get("_last-serial")
     packages = packages_data.get("projects")
 
     return last_serial, packages
+
+
+def get_last_serial_from_packages(packages_file):
+    with open(packages_file) as f:
+        packages_data = json.load(f)
+
+    last_serial = packages_data.get("meta").get("_last-serial")
+    return last_serial

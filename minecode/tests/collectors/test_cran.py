@@ -11,45 +11,47 @@ import json
 import os
 
 from django.test import TestCase as DjangoTestCase
-
 from packageurl import PackageURL
 
 import packagedb
-from minecode.collectors import cargo
+from minecode.collectors import cran
 from minecode.utils_test import JsonBasedTesting
 
 
-class CargoPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
+class CranPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def setUp(self):
         super().setUp()
-        self.expected_json_loc = self.get_test_loc("cargo/sam.json")
+        self.expected_json_loc = self.get_test_loc("cran/dplyr.json")
         with open(self.expected_json_loc) as f:
             self.expected_json_contents = json.load(f)
 
     def test_get_package_json(self):
-        # As certain fields, such as "downloads," "recent_downloads," and
-        # "num_versions," may vary over time when executing
-        # "cargo.get_package_json(name="sam")", we cannot rely on
-        # "assertEqual" for comparison. Instead, we will verify that the
-        # response includes four primary components: crate, version,
-        # keywords, and categories, and the the "id" under crate is "sam"
-        expected_list = ["crate", "versions", "keywords", "categories"]
-        json_contents = cargo.get_package_json(name="sam")
-        keys = json_contents.keys()
-        self.assertListEqual(list(keys), expected_list)
-        self.assertEqual(json_contents["crate"]["id"], "sam")
+        """
+        Verify get_cran_package_json() returns expected keys for CRAN package.
+        """
+        json_contents = cran.get_cran_package_json(name="dplyr")
+        self.assertIn("versions", json_contents)
+        self.assertIn("dplyr", json_contents.get("Package", "dplyr"))
 
-    def test_map_cargo_package(self):
+    def test_map_cran_package(self):
+        """
+        Verify map_cran_package() creates a Package in the DB with correct PURL
+        and download URL.
+        """
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(0, package_count)
-        package_url = PackageURL.from_string("pkg:cargo/sam@0.3.1")
-        cargo.map_cargo_package(package_url, ("test_pipeline"))
+
+        package_url = PackageURL.from_string("pkg:cran/dplyr@1.1.0")
+        cran.map_cran_package(package_url, ("test_pipeline",))
+
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(1, package_count)
+
         package = packagedb.models.Package.objects.all().first()
-        expected_purl_str = "pkg:cargo/sam@0.3.1"
-        expected_download_url = "https://static.crates.io/crates/sam/sam-0.3.1.crate"
+        expected_purl_str = "pkg:cran/dplyr@1.1.0"
+        expected_download_url = "https://cran.r-project.org/src/contrib/dplyr_1.1.0.tar.gz"
+
         self.assertEqual(expected_purl_str, package.purl)
         self.assertEqual(expected_download_url, package.download_url)

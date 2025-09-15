@@ -13,6 +13,42 @@ from minecode import priority_router
 from minecode.collectors.generic import map_fetchcode_supported_package
 
 
+def github_get_all_versions(subset_path):
+    """
+    Fetch all versions (tags) from a GitHub repository using the API
+    Returns a list of all version tags in the repository
+    """
+    import requests
+
+    url = f"https://api.github.com/repos/{subset_path}/tags"
+    version_list = []
+    page = 1
+
+    while True:
+        response = requests.get(
+            url,
+            params={"page": page, "per_page": 100},  # Max 100 per page
+            headers={"Accept": "application/vnd.github.v3+json"},
+        )
+        response.raise_for_status()
+
+        data = response.json()
+        if not data:
+            break
+
+        for tag in data:
+            version = tag.get("name") or {}
+            if version:
+                version_list.append(version)
+        page += 1
+
+        # Check if we've reached the last page
+        if "next" not in response.links:
+            break
+
+    return version_list
+
+
 # Indexing GitHub PURLs requires a GitHub API token.
 # Please add your GitHub API key to the `.env` file, for example: `GH_TOKEN=your-github-api`.
 @priority_router.route("pkg:github/.*")

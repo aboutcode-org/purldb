@@ -6,3 +6,5 @@
 # See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
+
+VERSION = "0.0.1b2"

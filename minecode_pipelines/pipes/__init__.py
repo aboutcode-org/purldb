@@ -9,90 +9,98 @@
 
 import json
 import os
+from pathlib import Path
+
 import requests
-from datetime import datetime
-
 import saneyaml
-from aboutcode import hashid
-from scanpipe.pipes import federatedcode
+
+from scanpipe.pipes.federatedcode import delete_local_clone
+from scanpipe.pipes.federatedcode import commit_and_push_changes
+
+# states:
+# note: a state is null when mining starts
+INITIAL_SYNC_STATE = "initial-sync"
+PERIODIC_SYNC_STATE = "periodic-sync"
 
 
-MINECODE_SETTINGS_REPO = "https://github.com/AyanSinhaMahapatra/minecode-test/"
+MINECODE_PIPELINES_CONFIG_REPO = "https://github.com/aboutcode-data/minecode-pipelines-config/"
 
 
-def fetch_last_serial_mined(
-    settings_repo=MINECODE_SETTINGS_REPO,
-    settings_path=None,
-):
-    """
-    Fetch "last_serial" for the last mined packages.
-
-    This is a simple JSON in a github repo containing mining checkpoints
-    with the "last_serial" from the pypi index which was mined. Example:
-    https://github.com/AyanSinhaMahapatra/minecode-test/blob/main/minecode_checkpoints/pypi.json
-    """
-    repo_name = settings_repo.split("github.com")[-1]
-    minecode_checkpoint_pypi = (
-        "https://raw.githubusercontent.com/" + repo_name + "refs/heads/main/" + settings_path
+def fetch_checkpoint_from_github(config_repo, checkpoint_path):
+    repo_name = config_repo.split("github.com")[-1]
+    checkpoints_file = (
+        "https://raw.githubusercontent.com/" + repo_name + "refs/heads/main/" + checkpoint_path
     )
-    response = requests.get(minecode_checkpoint_pypi)
+    response = requests.get(checkpoints_file)
     if not response.ok:
         return
 
-    settings_data = json.loads(response.text)
-    return settings_data.get("last_serial")
+    checkpoint_data = json.loads(response.text)
+    return checkpoint_data
 
 
-def write_data_to_file(path, data):
+def update_checkpoints_in_github(checkpoint, cloned_repo, path):
+    checkpoint_path = os.path.join(cloned_repo.working_dir, path)
+    write_data_to_json_file(path=checkpoint_path, data=checkpoint)
+    commit_message = """Update federatedcode purl mining checkpoint"""
+    commit_and_push_changes(
+        repo=cloned_repo,
+        files_to_commit=[checkpoint_path],
+        commit_message=commit_message,
+    )
+
+
+def get_mined_packages_from_checkpoint(config_repo, checkpoint_path):
+    checkpoint = fetch_checkpoint_from_github(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    return checkpoint.get("packages_mined", [])
+
+
+def update_mined_packages_in_checkpoint(packages, config_repo, cloned_repo, checkpoint_path):
+    mined_packages = get_mined_packages_from_checkpoint(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    packages = {"packages_mined": packages + mined_packages}
+    update_checkpoints_in_github(
+        checkpoint=packages,
+        cloned_repo=cloned_repo,
+        path=checkpoint_path,
+    )
+
+
+def write_packageurls_to_file(repo, base_dir, packageurls):
+    purl_file_rel_path = os.path.join(base_dir, PURLS_FILENAME)
+    purl_file_full_path = Path(repo.working_dir) / purl_file_rel_path
+    write_data_to_yaml_file(path=purl_file_full_path, data=packageurls)
+    return purl_file_rel_path
+
+
+def write_data_to_yaml_file(path, data):
+    if isinstance(path, str):
+        path = Path(path)
+
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, encoding="utf-8", mode="w") as f:
         f.write(saneyaml.dump(data))
 
 
-def update_last_serial_mined(
-    last_serial,
-    settings_repo=MINECODE_SETTINGS_REPO,
-    settings_path=None,
-):
-    settings_data = {
-        "date": str(datetime.now()),
-        "last_serial": last_serial,
-    }
-    cloned_repo = federatedcode.clone_repository(repo_url=settings_repo)
-    settings_path = os.path.join(cloned_repo.working_dir, settings_path)
-    write_data_to_file(path=settings_path, data=settings_data)
-    federatedcode.commit_and_push_changes(repo=cloned_repo, file_to_commit=settings_path)
+def write_data_to_json_file(path, data):
+    if isinstance(path, str):
+        path = Path(path)
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
 
 
-def create_package_path(package):
-    path_elements = hashid.package_path_elements(package)
-    _, core_path, _, _ = path_elements
-    ppath = core_path / hashid.PURLS_FILENAME
-    return ppath
+def delete_cloned_repos(repos, logger=None):
+    if not repos:
+        return
 
-
-def write_purls_to_repo(repo, package, packages, commit_message="",push_commit=False):
-    # save purls to yaml
-    path_elements = hashid.package_path_elements(package)
-    _, core_path, _, _ = path_elements
-    ppath = core_path / hashid.PURLS_FILENAME
-    purls = [p.purl for p in packages]
-    federatedcode.write_data_as_yaml(
-        base_path=repo.working_dir,
-        file_path=ppath,
-        data=purls,
-    )
-
-    change_type = "Add" if ppath in repo.untracked_files else "Update"
-    commit_message = f"""\
-    {change_type} list of available {package} versions
-    """
-    federatedcode.commit_changes(
-        repo=repo,
-        files_to_commit=[ppath],
-        commit_message=commit_message,
-    )
-
-    # see if we should push
-    if push_commit:
-        federatedcode.push_changes(repo=repo)
+    for repo in repos:
+        if logger:
+            logger(f"Deleting local clone at: {repo.working_dir}")
+        delete_local_clone(repo)
