@@ -12,6 +12,18 @@ import tempfile
 
 from commoncode.fileutils import create_dir
 
+from itertools import zip_longest
+
+
+def grouper(n, iterable, padvalue=None):
+    """
+    Produce batches of length `n` for an `iterable`.
+    https://docs.python.org/3.10/library/itertools.html#itertools-recipes
+
+    #TODO: replace with `itertools.batched` added in python3.12
+    """
+    return zip_longest(*[iter(iterable)] * n, fillvalue=padvalue)
+
 
 def system_temp_dir(temp_dir=os.getenv("MINECODE_TMP")):
     """Return the global temp directory.."""
