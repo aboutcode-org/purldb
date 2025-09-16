@@ -14,6 +14,7 @@ from pathlib import Path
 import requests
 import saneyaml
 
+from aboutcode.hashid import PURLS_FILENAME
 from scanpipe.pipes.federatedcode import delete_local_clone
 from scanpipe.pipes.federatedcode import commit_and_push_changes
 
@@ -37,6 +38,13 @@ def fetch_checkpoint_from_github(config_repo, checkpoint_path):
 
     checkpoint_data = json.loads(response.text)
     return checkpoint_data
+
+
+def get_checkpoint_from_file(cloned_repo, path):
+    checkpoint_path = os.path.join(cloned_repo.working_dir, path)
+    with open(checkpoint_path) as f:
+        checkpoint_data = json.load(f)
+    return checkpoint_data or {}
 
 
 def update_checkpoints_in_github(checkpoint, cloned_repo, path):

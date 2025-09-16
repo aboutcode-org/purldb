@@ -19,6 +19,7 @@ from jawa.util.utf import decode_modified_utf8
 import arrow
 import javaproperties
 
+from aboutcode import hashid
 from packagedcode.maven import build_filename
 from packagedcode.maven import build_url
 from packagedcode.maven import get_urls
@@ -27,8 +28,8 @@ from packageurl import PackageURL
 from scanpipe.pipes.fetch import fetch_http
 from scanpipe.pipes import federatedcode
 
-from minecode_pipelines import miners
 from minecode_pipelines import pipes
+from minecode_pipelines import VERSION
 from minecode_pipelines.pipes import java_stream
 
 
@@ -49,7 +50,10 @@ MAVEN_BASE_URL = "https://repo1.maven.org/maven2"
 MAVEN_INDEX_URL = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz"
 MAVEN_INDEX_INCREMENT_BASE_URL = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.{index}.gz"
 MAVEN_INDEX_PROPERTIES_URL = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties"
-MAVEN_SETTINGS_PATH = "minecode_checkpoints/maven.json"
+MAVEN_CHECKPOINT_PATH = "maven/checkpoints.json"
+
+# We are testing and storing mined packageURLs in one single repo per ecosystem for now
+MINECODE_DATA_MAVEN_REPO = "https://github.com/aboutcode-data/minecode-data-maven-test"
 
 
 def is_worthy_artifact(artifact):
@@ -589,26 +593,24 @@ class MavenNexusCollector:
         with open(content) as config_file:
             self.index_properties = javaproperties.load(config_file) or {}
 
-    def fetch_index(self, uri=MAVEN_INDEX_URL):
+    def _fetch_index(self, uri=MAVEN_INDEX_URL):
         """
         Return a temporary location where the maven index was saved.
         """
         index = fetch_http(uri)
         return index.path
 
-    def fetch_index_properties(self, uri=MAVEN_INDEX_PROPERTIES_URL):
+    def _fetch_index_properties(self, uri=MAVEN_INDEX_PROPERTIES_URL):
         """
         Return a temporary location where the maven index properties file was saved.
         """
         index_properties = fetch_http(uri)
         return index_properties.path
 
-    def fetch_index_increments(self):
+    def _fetch_index_increments(self, last_incremental):
         """
         Yield maven index increments
         """
-        # in this context, last serial means last incremental
-        last_incremental = pipes.fetch_last_serial_mined(settings_path=MAVEN_SETTINGS_PATH)
         for key, increment_index in self.index_properties.items():
             if increment_index <= last_incremental:
                 continue
@@ -684,15 +686,14 @@ class MavenNexusCollector:
             )
             yield current_purl, package
 
-    def _get_packages_from_index_increments(self):
-        for index_increment in self.fetch_index_increments():
+    def _get_packages_from_index_increments(self, last_incremental):
+        for index_increment in self._fetch_index_increments(last_incremental=last_incremental):
             return self._get_packages(content=index_increment)
 
-    def get_packages(self, content=None):
+    def get_packages(self, content=None, last_incremental=None):
         """Yield Package objects from maven index"""
-        last_incremental = pipes.fetch_last_serial_mined(settings_path=MAVEN_SETTINGS_PATH)
         if last_incremental:
-            packages = chain(self._get_packages_from_index_increments())
+            packages = chain(self._get_packages_from_index_increments(last_incremental=last_incremental))
         else:
             if content:
                 index_location = content
@@ -703,37 +704,76 @@ class MavenNexusCollector:
 
 
 def collect_packages_from_maven(commits_per_push=10, logger=None):
+    # Clone data and config repo
+    data_repo = federatedcode.clone_repository(
+        repo_url=MINECODE_DATA_MAVEN_REPO,
+        logger=logger,
+    )
+    config_repo = federatedcode.clone_repository(
+        repo_url=pipes.MINECODE_PIPELINES_CONFIG_REPO,
+        logger=logger,
+    )
+    if logger:
+        logger(f"{MINECODE_DATA_MAVEN_REPO} repo cloned at: {data_repo.working_dir}")
+        logger(f"{pipes.MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {config_repo.working_dir}")
+
+    # get last_incremental to see if we can start from incrementals
+    checkpoint = pipes.get_checkpoint_from_file(
+        cloned_repo=config_repo,
+        path=MAVEN_CHECKPOINT_PATH
+    )
+    last_incremental = checkpoint.get("last_incremental")
+    if logger:
+        logger(f"last_incremental: {last_incremental}")
+
     # download and iterate through maven nexus index
     maven_nexus_collector = MavenNexusCollector()
     prev_purl = None
-    current_packages = []
-    for i, (current_purl, package) in enumerate(maven_nexus_collector.get_packages(), start=1):
+    current_purls = []
+    for i, (current_purl, package) in enumerate(
+        maven_nexus_collector.get_packages(last_incremental=last_incremental),
+        start=1
+    ):
         if not prev_purl:
             prev_purl = current_purl
         elif prev_purl != current_purl:
-            repo_url, _ = federatedcode.get_package_repository(
-                project_purl=prev_purl,
-                logger=logger
-            )
-            repo = federatedcode.clone_repository(
-                repo_url=repo_url,
-                logger=logger,
+            # write packageURLs to file
+            package_base_dir = hashid.get_package_base_dir(purl=prev_purl)
+            purl_file = pipes.write_packageurls_to_file(
+                repo=data_repo,
+                base_dir=package_base_dir,
+                packageurls=current_purls,
             )
 
+            # commit changes
+            pipes.commit_changes(
+                repo=data_repo,
+                files_to_commit=[purl_file],
+                purls=current_purls,
+                mine_type="packageURL",
+                tool_name="pkg:pypi/minecode-pipelines",
+                tool_version=VERSION,
+            )
+
+            # Push changes to remote repository
             push_commit = not bool(i % commits_per_push)
-            # save purls to yaml
-            miners.write_purls_to_repo(
-                repo=repo,
-                package=prev_purl,
-                packages=current_packages,
-                push_commit=push_commit
-            )
+            if push_commit:
+                federatedcode.push_changes(repo=data_repo)
 
-            federatedcode.delete_local_clone(repo)
-
-            current_packages = []
+            current_purls = []
             prev_purl = current_purl
-        current_packages.append(package)
+        current_purls.append(package.to_string())
 
-        last_incremental = maven_nexus_collector.index_properties.get("nexus.index.last-incremental")
-        pipes.update_last_serial_mined(last_serial=last_incremental, settings_path=MAVEN_SETTINGS_PATH)
+    # update last_incremental so we can pick up from the proper place next time
+    last_incremental = maven_nexus_collector.index_properties.get("nexus.index.last-incremental")
+    checkpoint = {"last_incremental": last_incremental}
+    if logger:
+        logger(f"checkpoint: {checkpoint}")
+    pipes.update_checkpoints_in_github(
+        checkpoint=checkpoint,
+        cloned_repo=config_repo,
+        path=MAVEN_CHECKPOINT_PATH
+    )
+
+    # clean up cloned repos
+    pipes.delete_cloned_repos(repos=[data_repo, config_repo], logger=logger)
