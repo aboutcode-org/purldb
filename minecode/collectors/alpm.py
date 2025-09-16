@@ -8,13 +8,9 @@
 #
 
 import logging
-
-
 from packageurl import PackageURL
-
 from minecode import priority_router
 from minecode.miners.alpm import build_packages
-
 from minecode.utils import fetch_http, get_temp_file
 from minecode.utils import extract_file
 from packagedb.models import PackageContentType
@@ -29,7 +25,8 @@ def map_alpm_package(package_url, pipelines, priority=0):
     """
     Add a Arch Linux distribution `package_url` to the PackageDB.
     """
-    from minecode.model_utils import add_package_to_scan_queue, merge_or_create_package
+    from minecode.model_utils import add_package_to_scan_queue
+    from minecode.model_utils import merge_or_create_package
 
     name = package_url.name
     version = package_url.version
