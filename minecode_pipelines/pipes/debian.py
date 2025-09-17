@@ -21,6 +21,7 @@
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
 import gzip
+import os
 
 import debian_inspector
 from aboutcode import hashid
@@ -74,23 +75,31 @@ def is_ubuntu_url(uri):
 
 class DebianCollector:
     """
-    Download and process a Nexus Maven index file.
-    WARNING: Processing is rather long: a full index is ~600MB.
+    Download and process a Debian ls-lR.gz file for Packages
     """
 
-    def _fetch_index(self, uri=DEBIAN_LSLR_URL):
+    def __init__(self, index_location=None):
+        self.index_location = index_location
+        self.index_location_given = bool(index_location)
+
+    def __del__(self):
+        if self.index_location and self.index_location_given:
+            os.remove(self.index_location)
+
+    def fetch_index(self, uri=DEBIAN_LSLR_URL):
         """
         Return a temporary location where the debian index was saved.
         """
         index = fetch_http(uri)
+        self.index_location = index.path
         return index.path
 
-    def get_packages(self, content=None, logger=None):
+    def get_packages(self, logger=None):
         """Yield Package objects from debian index"""
-        if not content:
-            content = self._fetch_index()
+        if not self.index_location:
+            self.fetch_index()
 
-        with gzip.open(content, "rt") as f:
+        with gzip.open(self.index_location, "rt") as f:
             content = f.read()
 
         url_template = DEBIAN_LSLR_URL.replace("ls-lR.gz", "{path}")
