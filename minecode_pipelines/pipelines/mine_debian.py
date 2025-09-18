@@ -22,12 +22,13 @@
 
 from scanpipe.pipelines.publish_to_federatedcode import PublishToFederatedCode
 
+from minecode_pipelines import pipes
 from minecode_pipelines.pipes import debian
 
 
 class MineDebian(PublishToFederatedCode):
     """
-    Mine all packageURLs from a pypi index and publish them to
+    Mine all packageURLs from a Debian index and publish them to
     a FederatedCode repo.
     """
 
@@ -36,7 +37,11 @@ class MineDebian(PublishToFederatedCode):
         return (
             cls.check_federatedcode_eligibility,
             cls.collect_packages_from_debian,
+            cls.delete_cloned_repos,
         )
 
     def collect_packages_from_debian(self):
-        debian.collect_packages_from_debian(self.project, self.log)
+        self.repos = debian.collect_packages_from_debian(self.project, self.log)
+
+    def delete_cloned_repos(self):
+        pipes.delete_cloned_repos(repos=self.repos, logger=self.log)

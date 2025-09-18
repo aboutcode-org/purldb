@@ -200,5 +200,5 @@ def collect_packages_from_debian(commits_per_push=10, logger=None):
             prev_purl = current_purl
         current_purls.append(package.to_string())
 
-    # clean up cloned repos
-    pipes.delete_cloned_repos(repos=[data_repo, config_repo], logger=logger)
+    repos_to_clean = [data_repo, config_repo]
+    return repos_to_clean
