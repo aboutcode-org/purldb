@@ -14,14 +14,19 @@ from minecode.tests import FIXTURES_REGEN
 from minecode.utils_test import JsonBasedTesting
 from django.test import TestCase as DjangoTestCase
 
+
 class CondaMapperTest(JsonBasedTesting, DjangoTestCase):
     test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_build_packages_metafile_conda1(self):
-        package_url1 = PackageURL.from_string("pkg:conda/numpy@1.11.3?subdir=linux-64&build=py27h1b885b7_8&type=conda")
+        package_url1 = PackageURL.from_string(
+            "pkg:conda/numpy@1.11.3?subdir=linux-64&build=py27h1b885b7_8&type=conda"
+        )
         package_identifier1 = "numpy-1.11.3-py27h1b885b7_8.conda"
         package_info1 = None
-        download_url1 = "https://repo.anaconda.com/pkgs/main/linux-64/numpy-1.11.3-py27h1b885b7_8.conda"
+        download_url1 = (
+            "https://repo.anaconda.com/pkgs/main/linux-64/numpy-1.11.3-py27h1b885b7_8.conda"
+        )
         location1 = self.get_test_loc("conda/repodata.json.bz2")
 
         result = conda.build_packages(
@@ -32,13 +37,17 @@ class CondaMapperTest(JsonBasedTesting, DjangoTestCase):
         self.check_expected_results(result, expected_loc, regen=FIXTURES_REGEN)
 
     def test_build_packages_metafile_conda2(self):
-        package_url2 = PackageURL.from_string("pkg:conda/conda-forge/sqlalchemy@1.1.13?subdir=linux-64&build=py27hb0a01da_0&type=tar.bz2")
+        package_url2 = PackageURL.from_string(
+            "pkg:conda/conda-forge/sqlalchemy@1.1.13?subdir=linux-64&build=py27hb0a01da_0&type=tar.bz2"
+        )
         package_identifier2 = "sqlalchemy-1.1.13-py27hb0a01da_0.tar.bz2"
 
         with open(self.get_test_loc("conda/package_info_sqlalchemy.json")) as f:
             package_info2 = json.load(f)
 
-        download_url2 = "https://repo.anaconda.com/pkgs/main/linux-64/sqlalchemy-1.1.13-py27hb0a01da_0.tar.bz2"
+        download_url2 = (
+            "https://repo.anaconda.com/pkgs/main/linux-64/sqlalchemy-1.1.13-py27hb0a01da_0.tar.bz2"
+        )
         location2 = self.get_test_loc("conda/repodata.json.bz2")
 
         result = conda.build_packages(

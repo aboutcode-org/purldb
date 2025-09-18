@@ -8,6 +8,7 @@
 #
 
 import logging
+from urllib.parse import urljoin
 
 import requests
 from packageurl import PackageURL
@@ -15,6 +16,7 @@ from minecode import priority_router
 from minecode.miners.conda import build_packages
 from minecode.utils import fetch_http, get_temp_file
 from packagedb.models import PackageContentType
+from packageurl.contrib.purl2url import build_conda_download_url
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -29,36 +31,12 @@ def map_conda_package(package_url, pipelines, priority=0):
     from minecode.model_utils import add_package_to_scan_queue
     from minecode.model_utils import merge_or_create_package
 
-    if not package_url.name or not package_url.version:
+    download_url = build_conda_download_url(str(package_url))
+    if not download_url:
         return None
 
-    qualifiers = package_url.qualifiers or {}
-    name = package_url.name
-    version = package_url.version
-    build = qualifiers.get("build")
-    channel = qualifiers.get("channel") or "main"
-    subdir = qualifiers.get("subdir") or "noarch"
-    req_type = qualifiers.get("type")
-
-    def _conda_base_for_channel(channel: str) -> str:
-        """
-        Map a conda channel to its base URL.
-        - 'main' / 'defaults' -> repo.anaconda.com
-        - any other channel    -> conda.anaconda.org/<channel>
-        """
-        ch = (channel or "").lower()
-        if ch in ("main", "defaults"):
-            return "https://repo.anaconda.com/pkgs/main"
-        return f"https://conda.anaconda.org/{ch}"
-
-    base = _conda_base_for_channel(channel)
-
-    package_identifier = (
-        f"{name}-{version}-{build}.{req_type}" if build else f"{name}-{version}.{req_type}"
-    )
-
-    download_url = f"{base}/{subdir}/{package_identifier}"
-    package_indexes_url = f"{base}/{subdir}/repodata.json.bz2"
+    package_identifier = download_url.split("/")[-1]
+    package_indexes_url = urljoin(download_url, "./repodata.json.bz2")
 
     content = fetch_http(package_indexes_url)
     location = get_temp_file("NonPersistentHttpVisitor")
@@ -67,7 +45,7 @@ def map_conda_package(package_url, pipelines, priority=0):
 
     package_info = None
     if package_url.namespace == "conda-forge":
-        package_info = get_package_info(name)
+        package_info = get_package_info(package_url.name)
     packages = build_packages(location, download_url, package_info, package_identifier, package_url)
 
     error = None
