@@ -8,7 +8,7 @@
 #
 
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from packageurl import PackageURL
 import requests

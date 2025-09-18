@@ -20,6 +20,7 @@ handler = logging.StreamHandler()
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
+
 def get_hackage_package_json(name):
     """
     Return the contents of the JSON file of the package from Hackage.
