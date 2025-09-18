@@ -790,5 +790,5 @@ def collect_packages_from_maven(commits_per_push=10, logger=None):
         path=MAVEN_CHECKPOINT_PATH
     )
 
-    # clean up cloned repos
-    pipes.delete_cloned_repos(repos=[data_repo, config_repo], logger=logger)
+    repos_to_clean = [data_repo, config_repo]
+    return repos_to_clean
