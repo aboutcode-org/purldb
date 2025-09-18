@@ -585,19 +585,25 @@ class MavenNexusCollector:
     WARNING: Processing is rather long: a full index is ~600MB.
     """
 
-    def __init__(self, index_properties_location=None):
-        if index_properties_location:
-            content = index_properties_location
-        else:
-            content = self.fetch_index_properties()
-        with open(content) as config_file:
-            self.index_properties = javaproperties.load(config_file) or {}
+    def __init__(self, index_location=None, index_properties_location=None):
+        self._set_index_properties(index_properties_location=index_properties_location)
+        self.index_location = index_location
+        self.index_location_given = bool(index_location)
+        self.index_increment_locations = []
+
+    def __del__(self):
+        if self.index_location and self.index_location_given:
+            os.remove(self.index_location)
+        if self.index_increment_locations:
+            for loc in self.index_increment_locations:
+                os.remove(loc)
 
     def _fetch_index(self, uri=MAVEN_INDEX_URL):
         """
         Return a temporary location where the maven index was saved.
         """
         index = fetch_http(uri)
+        self.index_location = index.path
         return index.path
 
     def _fetch_index_properties(self, uri=MAVEN_INDEX_PROPERTIES_URL):
@@ -606,6 +612,16 @@ class MavenNexusCollector:
         """
         index_properties = fetch_http(uri)
         return index_properties.path
+
+    def _set_index_properties(self, index_properties_location=None):
+        if index_properties_location:
+            content = index_properties_location
+        else:
+            content = self._fetch_index_properties()
+        with open(content) as config_file:
+            self.index_properties = javaproperties.load(config_file) or {}
+        if not index_properties_location:
+            os.remove(content)
 
     def _fetch_index_increments(self, last_incremental):
         """
@@ -617,6 +633,7 @@ class MavenNexusCollector:
             if key.startswith("nexus.index.incremental"):
                 index_increment_url = MAVEN_INDEX_INCREMENT_BASE_URL.format(index=increment_index)
                 index_increment = fetch_http(index_increment_url)
+                self.index_increment_locations.append(index_increment.path)
                 yield index_increment.path
 
     def _get_packages(self, content=None):
@@ -690,16 +707,14 @@ class MavenNexusCollector:
         for index_increment in self._fetch_index_increments(last_incremental=last_incremental):
             return self._get_packages(content=index_increment)
 
-    def get_packages(self, content=None, last_incremental=None):
+    def get_packages(self, last_incremental=None):
         """Yield Package objects from maven index"""
         if last_incremental:
             packages = chain(self._get_packages_from_index_increments(last_incremental=last_incremental))
         else:
-            if content:
-                index_location = content
-            else:
-                index_location = self.fetch_index()
-            packages = self._get_packages(content=index_location)
+            if not self.index_location:
+                self._fetch_index()
+            packages = self._get_packages(content=self.index_location)
         return packages
 
 
