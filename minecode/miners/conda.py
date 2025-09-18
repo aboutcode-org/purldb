@@ -54,7 +54,7 @@ def build_packages(location, download_url, package_info, package_identifier, pac
         sha256=metadata_dict.get("sha256"),
         md5=metadata_dict.get("md5"),
         size=metadata_dict.get("size"),
-        extracted_license_statement=license,
+        extracted_license_statement=extracted_license_statement,
         dependencies=dependencies,
     )
 
@@ -70,7 +70,7 @@ def build_packages(location, download_url, package_info, package_identifier, pac
         conda_forge_data = dict(
             description=description,
             homepage_url=html_url,
-            vcs_url=dev_url,
+            repository_homepage_url=dev_url,
         )
 
         download_data.update(conda_forge_data)
