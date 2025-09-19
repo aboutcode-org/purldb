@@ -1,0 +1,118 @@
+[
+  {
+    "api_data_url": null,
+    "bug_tracking_url": null,
+    "code_view_url": null,
+    "copyright": null,
+    "datasource_id": "conda_api_metadata",
+    "declared_license_expression": "mit",
+    "declared_license_expression_spdx": "MIT",
+    "dependencies": [
+      {
+        "extra_data": {},
+        "extracted_requirement": null,
+        "is_direct": true,
+        "is_optional": false,
+        "is_pinned": false,
+        "is_runtime": true,
+        "purl": "pkg:conan/libgcc-ng",
+        "resolved_package": {},
+        "scope": null
+      },
+      {
+        "extra_data": {},
+        "extracted_requirement": null,
+        "is_direct": true,
+        "is_optional": false,
+        "is_pinned": false,
+        "is_runtime": true,
+        "purl": "pkg:conan/python",
+        "resolved_package": {},
+        "scope": null
+      }
+    ],
+    "description": "SQLAlchemy is the Python SQL toolkit and Object Relational Mapper that\ngives application developers the full power and flexibility of SQL.\n",
+    "download_url": "https://repo.anaconda.com/pkgs/main/linux-64/sqlalchemy-1.1.13-py27hb0a01da_0.tar.bz2",
+    "extra_data": {},
+    "extracted_license_statement": "- MIT\n- MIT\n",
+    "file_references": [],
+    "holder": null,
+    "homepage_url": "http://anaconda.org/conda-forge/sqlalchemy",
+    "is_private": false,
+    "is_virtual": false,
+    "keywords": [],
+    "license_detections": [
+      {
+        "identifier": "mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf",
+        "license_expression": "mit",
+        "license_expression_spdx": "MIT",
+        "matches": [
+          {
+            "end_line": 1,
+            "from_file": null,
+            "license_expression": "mit",
+            "license_expression_spdx": "MIT",
+            "match_coverage": 100.0,
+            "matched_length": 1,
+            "matched_text": "MIT",
+            "matcher": "1-spdx-id",
+            "rule_identifier": "spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance": 100,
+            "rule_url": null,
+            "score": 100.0,
+            "start_line": 1
+          }
+        ]
+      },
+      {
+        "identifier": "mit-a822f434-d61f-f2b1-c792-8b8cb9e7b9bf",
+        "license_expression": "mit",
+        "license_expression_spdx": "MIT",
+        "matches": [
+          {
+            "end_line": 1,
+            "from_file": null,
+            "license_expression": "mit",
+            "license_expression_spdx": "MIT",
+            "match_coverage": 100.0,
+            "matched_length": 1,
+            "matched_text": "MIT",
+            "matcher": "1-spdx-id",
+            "rule_identifier": "spdx-license-identifier-mit-5da48780aba670b0860c46d899ed42a0f243ff06",
+            "rule_relevance": 100,
+            "rule_url": null,
+            "score": 100.0,
+            "start_line": 1
+          }
+        ]
+      }
+    ],
+    "md5": "d1fa1021e302edfaa5032f0531cddf4e",
+    "name": "sqlalchemy",
+    "namespace": "conda-forge",
+    "notice_text": null,
+    "other_license_detections": [],
+    "other_license_expression": null,
+    "other_license_expression_spdx": null,
+    "parties": [],
+    "primary_language": null,
+    "purl": "pkg:conda/conda-forge/sqlalchemy@1.1.13?build=py27hb0a01da_0&subdir=linux-64&type=tar.bz2",
+    "qualifiers": {
+      "build": "py27hb0a01da_0",
+      "subdir": "linux-64",
+      "type": "tar.bz2"
+    },
+    "release_date": null,
+    "repository_download_url": null,
+    "repository_homepage_url": "https://github.com/sqlalchemy/sqlalchemy",
+    "sha1": null,
+    "sha256": "da94c6712a63861828428b395a207d7c132e07a75415a7028bec845572b4f80f",
+    "sha512": null,
+    "size": 1526397,
+    "source_packages": [],
+    "subpath": null,
+    "type": "conda",
+    "vcs_url": null,
+    "version": "1.1.13"
+  }
+]
