@@ -33,9 +33,9 @@ from packageurl import PackageURL
 from scanpipe.pipes import federatedcode
 from scanpipe.pipes.fetch import fetch_http
 
-from minecode import ls
 from minecode_pipelines import pipes
 from minecode_pipelines import VERSION
+from minecode_pipelines.pipes import ls
 
 
 DEBIAN_CHECKPOINT_PATH = "debian/checkpoints.json"
