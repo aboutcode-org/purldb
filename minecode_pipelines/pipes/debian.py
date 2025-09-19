@@ -88,7 +88,7 @@ class DebianCollector:
         self.index_location_given = bool(index_location)
 
     def __del__(self):
-        if self.index_location and self.index_location_given:
+        if self.index_location and not self.index_location_given:
             os.remove(self.index_location)
 
     def _fetch_index(self, uri=DEBIAN_LSLR_URL):
@@ -181,7 +181,7 @@ def collect_packages_from_debian(commits_per_push=10, logger=None):
     prev_purl = None
     current_purls = []
     for i, (current_purl, package) in enumerate(
-        debian_collector.get_packages(skip_previous_date=last_modified),
+        debian_collector.get_packages(previous_index_last_modified_date=last_modified),
         start=1
     ):
         if not prev_purl:
