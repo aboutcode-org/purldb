@@ -195,3 +195,48 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
         package = scan_models.Package(**common_data)
         package.set_purl(purl)
         yield package
+
+
+def build_package_data(metadata_dict, purl):
+    """
+    Yield ScannedPackage built from PackageData API.
+    """
+
+    package_metadata = metadata_dict.get("pkg_metadata")
+    namespace = purl.namespace or "library"
+
+    for pkg_metadata_tag in metadata_dict.get("pkg_metadata_tags", []):
+        short_desc = package_metadata.get("description")
+        long_desc = package_metadata.get("full_description")
+
+        descriptions = [d for d in (short_desc, long_desc) if d and d.strip()]
+        description = "\n".join(descriptions)
+        is_private = package_metadata.get("is_private")
+        tag_name = pkg_metadata_tag.get("name")
+
+        size = pkg_metadata_tag.get("full_size")
+        digest = pkg_metadata_tag.get("digest")
+        sha256 = digest[7::] if digest else None
+
+        last_updater_username = pkg_metadata_tag.get("last_updater_username")
+        parties = []
+        if last_updater_username:
+            parties.append(scan_models.Party(name=last_updater_username, role="usernmae"))
+
+        download_data = dict(
+            type="docker",
+            name=purl.name,
+            namespace=purl.namespace,
+            version=purl.version or tag_name,
+            description=description,
+            is_private=is_private,
+            sha256=sha256,
+            parties=parties,
+            size=size,
+            download_url=f"https://hub.docker.com/layers/{namespace}/{purl.name}/{tag_name}/images/{digest}",
+        )
+
+        package = scan_models.PackageData.from_data(download_data)
+        package.datasource_id = "dockerhub_repositories"
+        package.set_purl(purl)
+        yield package
