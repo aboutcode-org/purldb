@@ -48,8 +48,12 @@ if TRACE:
 
 MAVEN_BASE_URL = "https://repo1.maven.org/maven2"
 MAVEN_INDEX_URL = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz"
-MAVEN_INDEX_INCREMENT_BASE_URL = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.{index}.gz"
-MAVEN_INDEX_PROPERTIES_URL = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties"
+MAVEN_INDEX_INCREMENT_BASE_URL = (
+    "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.{index}.gz"
+)
+MAVEN_INDEX_PROPERTIES_URL = (
+    "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties"
+)
 MAVEN_CHECKPOINT_PATH = "maven/checkpoints.json"
 
 # We are testing and storing mined packageURLs in one single repo per ecosystem for now
@@ -712,7 +716,9 @@ class MavenNexusCollector:
     def get_packages(self, last_incremental=None):
         """Yield Package objects from maven index"""
         if last_incremental:
-            packages = chain(self._get_packages_from_index_increments(last_incremental=last_incremental))
+            packages = chain(
+                self._get_packages_from_index_increments(last_incremental=last_incremental)
+            )
         else:
             packages = self._get_packages(content=self.index_location)
         return packages
@@ -733,10 +739,7 @@ def collect_packages_from_maven(commits_per_push=10, logger=None):
         logger(f"{pipes.MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {config_repo.working_dir}")
 
     # get last_incremental to see if we can start from incrementals
-    checkpoint = pipes.get_checkpoint_from_file(
-        cloned_repo=config_repo,
-        path=MAVEN_CHECKPOINT_PATH
-    )
+    checkpoint = pipes.get_checkpoint_from_file(cloned_repo=config_repo, path=MAVEN_CHECKPOINT_PATH)
     last_incremental = checkpoint.get("last_incremental")
     if logger:
         logger(f"last_incremental: {last_incremental}")
@@ -746,8 +749,7 @@ def collect_packages_from_maven(commits_per_push=10, logger=None):
     prev_purl = None
     current_purls = []
     for i, (current_purl, package) in enumerate(
-        maven_nexus_collector.get_packages(last_incremental=last_incremental),
-        start=1
+        maven_nexus_collector.get_packages(last_incremental=last_incremental), start=1
     ):
         if not prev_purl:
             prev_purl = current_purl
@@ -785,9 +787,7 @@ def collect_packages_from_maven(commits_per_push=10, logger=None):
     if logger:
         logger(f"checkpoint: {checkpoint}")
     pipes.update_checkpoints_in_github(
-        checkpoint=checkpoint,
-        cloned_repo=config_repo,
-        path=MAVEN_CHECKPOINT_PATH
+        checkpoint=checkpoint, cloned_repo=config_repo, path=MAVEN_CHECKPOINT_PATH
     )
 
     repos_to_clean = [data_repo, config_repo]
