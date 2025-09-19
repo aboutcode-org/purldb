@@ -22,10 +22,12 @@
 
 import gzip
 import os
+from datetime import datetime
 
 import debian_inspector
 from aboutcode import hashid
 from commoncode import fileutils
+from commoncode.date import get_file_mtime
 from packagedcode.models import PackageData
 from packageurl import PackageURL
 from scanpipe.pipes import federatedcode
@@ -96,15 +98,19 @@ class DebianCollector:
         index = fetch_http(uri)
         return index.path
 
-    def get_packages(self, logger=None):
+    def get_packages(self, previous_index_last_modified_date=None, logger=None):
         """Yield Package objects from debian index"""
         with gzip.open(self.index_location, "rt") as f:
             content = f.read()
 
         url_template = DEBIAN_LSLR_URL.replace("ls-lR.gz", "{path}")
-
+        previous_index_last_modified_date = datetime.strptime(previous_index_last_modified_date, "%Y-%m-%d %H:%M:%S")
         for entry in ls.parse_directory_listing(content):
-            if entry.type != ls.FILE:
+            entry_date = datetime.strptime(entry.date, "%Y-%m-%d")
+            if (
+                (entry.type != ls.FILE)
+                or entry_date <= previous_index_last_modified_date
+            ):
                 continue
 
             path = entry.path.lstrip("/")
@@ -161,12 +167,21 @@ def collect_packages_from_debian(commits_per_push=10, logger=None):
         logger(f"{MINECODE_DATA_DEBIAN_REPO} repo cloned at: {data_repo.working_dir}")
         logger(f"{pipes.MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {config_repo.working_dir}")
 
+    # get last_modified to see if we can skip files
+    checkpoint = pipes.get_checkpoint_from_file(
+        cloned_repo=config_repo,
+        path=DEBIAN_CHECKPOINT_PATH
+    )
+    last_modified = checkpoint.get("previous_debian_index_last_modified_date")
+    if logger:
+        logger(f"previous_debian_index_last_modified_date: {last_modified}")
+
     # download and iterate through debian index
     debian_collector = DebianCollector()
     prev_purl = None
     current_purls = []
     for i, (current_purl, package) in enumerate(
-        debian_collector.get_packages(),
+        debian_collector.get_packages(skip_previous_date=last_modified),
         start=1
     ):
         if not prev_purl:
@@ -198,6 +213,16 @@ def collect_packages_from_debian(commits_per_push=10, logger=None):
             current_purls = []
             prev_purl = current_purl
         current_purls.append(package.to_string())
+
+    last_modified = get_file_mtime(debian_collector.index_location)
+    checkpoint = {"previous_debian_index_last_modified_date": last_modified}
+    if logger:
+        logger(f"checkpoint: {checkpoint}")
+    pipes.update_checkpoints_in_github(
+        checkpoint=checkpoint,
+        cloned_repo=config_repo,
+        path=DEBIAN_CHECKPOINT_PATH
+    )
 
     repos_to_clean = [data_repo, config_repo]
     return repos_to_clean
