@@ -12,7 +12,6 @@ from itertools import chain
 import os
 import gzip
 import io
-import logging
 
 from dateutil import tz
 from jawa.util.utf import decode_modified_utf8
@@ -32,19 +31,8 @@ from minecode_pipelines import pipes
 from minecode_pipelines import VERSION
 from minecode_pipelines.pipes import java_stream
 
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
 TRACE = False
 TRACE_DEEP = False
-
-if TRACE:
-    import sys
-
-    logging.basicConfig(stream=sys.stdout)
-    logger.setLevel(logging.DEBUG)
-
 
 MAVEN_BASE_URL = "https://repo1.maven.org/maven2"
 MAVEN_INDEX_URL = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz"
