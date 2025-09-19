@@ -37,8 +37,12 @@ def map_apk_package(package_url, pipelines, priority=0):
     if not name or not version or not arch or not repo or not alpine_version:
         return None
 
-    download_url = f"https://dl-cdn.alpinelinux.org/alpine/{alpine_version}/{repo}/{arch}/APKINDEX.tar.gz"
-    apk_download_url = f"https://dl-cdn.alpinelinux.org/alpine/{alpine_version}/{repo}/{arch}/{name}-{version}.apk"
+    download_url = (
+        f"https://dl-cdn.alpinelinux.org/alpine/{alpine_version}/{repo}/{arch}/APKINDEX.tar.gz"
+    )
+    apk_download_url = (
+        f"https://dl-cdn.alpinelinux.org/alpine/{alpine_version}/{repo}/{arch}/{name}-{version}.apk"
+    )
 
     content = fetch_http(download_url)
     location = get_temp_file("NonPersistentHttpVisitor")

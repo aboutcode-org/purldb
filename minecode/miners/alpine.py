@@ -19,11 +19,13 @@ def build_packages(extracted_location, apk_download_url, purl=None):
     """
 
     apk_index_file = Path(extracted_location) / "APKINDEX"
-    
+
     with open(apk_index_file, encoding="utf-8") as f:
         parsed_pkginfo = parse_apkindex(f.read())
 
     extracted_pkginfo = get_package_by_name(parsed_pkginfo, purl.name)
+    if not extracted_pkginfo:
+        return
 
     description = extracted_pkginfo.get("description")
     version = extracted_pkginfo.get("version")
@@ -39,14 +41,8 @@ def build_packages(extracted_location, apk_download_url, purl=None):
 
     repository_homepage_url = extracted_pkginfo.get("url")
     size = extracted_pkginfo.get("size")
-    # apk_checksum = extracted_pkginfo.get("checksum")
-    # sha1 = apk_checksum_to_sha1(apk_checksum)
-
-    # dependencies = []
-    # for name in extracted_pkginfo.get("depends", []):
-    #     dep_purl = PackageURL(type="apk", name=name)
-    #     dep = scan_models.DependentPackage(purl=dep_purl.to_string())
-    #     dependencies.append(dep)
+    apk_checksum = extracted_pkginfo.get("checksum")
+    sha1 = apk_checksum_to_sha1(apk_checksum)
 
     download_data = dict(
         type="apk",
@@ -58,8 +54,7 @@ def build_packages(extracted_location, apk_download_url, purl=None):
         extracted_license_statement=extracted_license_statement,
         parties=parties,
         size=size,
-        # sha1=sha1,
-        # dependencies=dependencies,
+        sha1=sha1,
         download_url=apk_download_url,
     )
 
@@ -67,7 +62,6 @@ def build_packages(extracted_location, apk_download_url, purl=None):
     package.datasource_id = "alpine_metadata"
     package.set_purl(purl)
     yield package
-
 
 
 def parse_apkindex(data: str):
@@ -80,19 +74,17 @@ def parse_apkindex(data: str):
 
     for line in data.splitlines():
         line = line.strip()
-        if not line:  # blank line = end of one package entry
+        if not line:
             if current_pkg:
                 packages.append(current_pkg)
                 current_pkg = {}
             continue
 
-        # key:value
         if ":" not in line:
             continue
         key, value = line.split(":", 1)
         key, value = key.strip(), value.strip()
 
-        # Map known fields
         mapping = {
             "C": "checksum",
             "P": "name",
@@ -114,7 +106,7 @@ def parse_apkindex(data: str):
         }
 
         field = mapping.get(key, key)
-        # Dependencies and lists should be split
+
         if key in ("D", "p", "i"):
             current_pkg[field] = value.split()
         elif key in ("S", "I", "t", "k"):
@@ -125,14 +117,15 @@ def parse_apkindex(data: str):
         else:
             current_pkg[field] = value
 
-    # Add last package if not already added
     if current_pkg:
         packages.append(current_pkg)
 
     return packages
 
+
 def get_package_by_name(packages, name):
     return next((pkg for pkg in packages if pkg["name"] == name), None)
+
 
 def apk_checksum_to_sha1(apk_checksum: str) -> str:
     """
