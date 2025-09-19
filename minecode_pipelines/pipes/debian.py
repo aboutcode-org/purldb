@@ -104,13 +104,12 @@ class DebianCollector:
             content = f.read()
 
         url_template = DEBIAN_LSLR_URL.replace("ls-lR.gz", "{path}")
-        previous_index_last_modified_date = datetime.strptime(previous_index_last_modified_date, "%Y-%m-%d %H:%M:%S")
+        previous_index_last_modified_date = datetime.strptime(
+            previous_index_last_modified_date, "%Y-%m-%d %H:%M:%S"
+        )
         for entry in ls.parse_directory_listing(content):
             entry_date = datetime.strptime(entry.date, "%Y-%m-%d")
-            if (
-                (entry.type != ls.FILE)
-                or entry_date <= previous_index_last_modified_date
-            ):
+            if (entry.type != ls.FILE) or entry_date <= previous_index_last_modified_date:
                 continue
 
             path = entry.path.lstrip("/")
@@ -148,7 +147,7 @@ class DebianCollector:
                 file_name=file_name,
                 date=entry.date,
                 size=entry.size,
-                download_url=url_template.format(path=path)
+                download_url=url_template.format(path=path),
             )
             yield versionless_purl, packaged_data
 
@@ -169,8 +168,7 @@ def collect_packages_from_debian(commits_per_push=10, logger=None):
 
     # get last_modified to see if we can skip files
     checkpoint = pipes.get_checkpoint_from_file(
-        cloned_repo=config_repo,
-        path=DEBIAN_CHECKPOINT_PATH
+        cloned_repo=config_repo, path=DEBIAN_CHECKPOINT_PATH
     )
     last_modified = checkpoint.get("previous_debian_index_last_modified_date")
     if logger:
@@ -181,8 +179,7 @@ def collect_packages_from_debian(commits_per_push=10, logger=None):
     prev_purl = None
     current_purls = []
     for i, (current_purl, package) in enumerate(
-        debian_collector.get_packages(previous_index_last_modified_date=last_modified),
-        start=1
+        debian_collector.get_packages(previous_index_last_modified_date=last_modified), start=1
     ):
         if not prev_purl:
             prev_purl = current_purl
@@ -219,9 +216,7 @@ def collect_packages_from_debian(commits_per_push=10, logger=None):
     if logger:
         logger(f"checkpoint: {checkpoint}")
     pipes.update_checkpoints_in_github(
-        checkpoint=checkpoint,
-        cloned_repo=config_repo,
-        path=DEBIAN_CHECKPOINT_PATH
+        checkpoint=checkpoint, cloned_repo=config_repo, path=DEBIAN_CHECKPOINT_PATH
     )
 
     repos_to_clean = [data_repo, config_repo]
