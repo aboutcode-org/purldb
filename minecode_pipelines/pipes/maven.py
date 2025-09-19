@@ -587,12 +587,15 @@ class MavenNexusCollector:
 
     def __init__(self, index_location=None, index_properties_location=None):
         self._set_index_properties(index_properties_location=index_properties_location)
-        self.index_location = index_location
+        if index_location:
+            self.index_location = index_location
+        else:
+            self.index_location = self._fetch_index()
         self.index_location_given = bool(index_location)
         self.index_increment_locations = []
 
     def __del__(self):
-        if self.index_location and self.index_location_given:
+        if self.index_location and not self.index_location_given:
             os.remove(self.index_location)
         if self.index_increment_locations:
             for loc in self.index_increment_locations:
@@ -603,7 +606,6 @@ class MavenNexusCollector:
         Return a temporary location where the maven index was saved.
         """
         index = fetch_http(uri)
-        self.index_location = index.path
         return index.path
 
     def _fetch_index_properties(self, uri=MAVEN_INDEX_PROPERTIES_URL):
@@ -712,8 +714,6 @@ class MavenNexusCollector:
         if last_incremental:
             packages = chain(self._get_packages_from_index_increments(last_incremental=last_incremental))
         else:
-            if not self.index_location:
-                self._fetch_index()
             packages = self._get_packages(content=self.index_location)
         return packages
 
