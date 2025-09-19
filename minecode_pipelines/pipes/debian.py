@@ -104,12 +104,16 @@ class DebianCollector:
             content = f.read()
 
         url_template = DEBIAN_LSLR_URL.replace("ls-lR.gz", "{path}")
-        previous_index_last_modified_date = datetime.strptime(
-            previous_index_last_modified_date, "%Y-%m-%d %H:%M:%S"
-        )
+        if previous_index_last_modified_date:
+            previous_index_last_modified_date = datetime.strptime(
+                previous_index_last_modified_date, "%Y-%m-%d %H:%M:%S"
+            )
         for entry in ls.parse_directory_listing(content):
             entry_date = datetime.strptime(entry.date, "%Y-%m-%d")
-            if (entry.type != ls.FILE) or entry_date <= previous_index_last_modified_date:
+            if (entry.type != ls.FILE) or (
+                previous_index_last_modified_date
+                and (entry_date <= previous_index_last_modified_date)
+            ):
                 continue
 
             path = entry.path.lstrip("/")
