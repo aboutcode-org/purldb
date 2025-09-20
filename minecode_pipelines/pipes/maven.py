@@ -9,6 +9,7 @@
 
 from collections import namedtuple
 from itertools import chain
+from shutil import rmtree
 import os
 import gzip
 import io
@@ -577,58 +578,81 @@ class MavenNexusCollector:
     WARNING: Processing is rather long: a full index is ~600MB.
     """
 
-    def __init__(self, index_location=None, index_properties_location=None):
-        self._set_index_properties(index_properties_location=index_properties_location)
+    def __init__(self, index_location=None, index_properties_location=None, last_incremental=None):
+        if index_location and last_incremental:
+            raise Exception(
+                "index_location and last_incremental cannot both be set at the same time. "
+                "MavenNexusCollector() is only able to yield packages from a maven index or "
+                "packages starting past a particular index increment."
+            )
+
+        if index_properties_location:
+            self.index_properties_download = None
+            self.index_properties_location = index_properties_location
+        else:
+            self.index_properties_download = self._fetch_index_properties()
+            self.index_properties_location = self.index_properties_download.path
+
+        if self.index_properties_location:
+            with open(self.index_properties_location) as config_file:
+                self.index_properties = javaproperties.load(config_file) or {}
+        else:
+            self.index_properties = {}
+
         if index_location:
+            self.index_download = None
             self.index_location = index_location
         else:
-            self.index_location = self._fetch_index()
-        self.index_location_given = bool(index_location)
-        self.index_increment_locations = []
+            self.index_download = self._fetch_index()
+            self.index_location = self.index_download.path
+
+        if last_incremental:
+            self.index_increment_downloads = self._fetch_index_increments(last_incremental=last_incremental)
+            self.index_increment_locations = [download.path for download in self.index_increment_downloads]
+        else:
+            self.index_increment_downloads = []
+            self.index_increment_locations = []
 
     def __del__(self):
-        if self.index_location and not self.index_location_given:
-            os.remove(self.index_location)
-        if self.index_increment_locations:
-            for loc in self.index_increment_locations:
-                os.remove(loc)
+        if self.index_properties_download:
+            rmtree(path=self.index_properties_download.directory)
+        if self.index_download:
+            rmtree(path=self.index_download.directory)
+        if self.index_increment_downloads:
+            for download in self.index_increment_downloads:
+                rmtree(path=download.directory)
 
     def _fetch_index(self, uri=MAVEN_INDEX_URL):
         """
-        Return a temporary location where the maven index was saved.
+        Fetch the maven index at `uri` and return a Download with information
+        about where the maven index was saved.
         """
         index = fetch_http(uri)
-        return index.path
+        return index
 
     def _fetch_index_properties(self, uri=MAVEN_INDEX_PROPERTIES_URL):
         """
-        Return a temporary location where the maven index properties file was saved.
+        Fetch the maven index properties file at `uri` and return a Download
+        with information about where the maven index properties file was saved.
         """
         index_properties = fetch_http(uri)
-        return index_properties.path
-
-    def _set_index_properties(self, index_properties_location=None):
-        if index_properties_location:
-            content = index_properties_location
-        else:
-            content = self._fetch_index_properties()
-        with open(content) as config_file:
-            self.index_properties = javaproperties.load(config_file) or {}
-        if not index_properties_location:
-            os.remove(content)
+        return index_properties
 
     def _fetch_index_increments(self, last_incremental):
         """
-        Yield maven index increments
+        Fetch maven index increments, starting past `last_incremental`, and
+        return a list of Downloads with information about where the maven index
+        increments were saved.
         """
+        index_increment_downloads = []
         for key, increment_index in self.index_properties.items():
             if increment_index <= last_incremental:
                 continue
             if key.startswith("nexus.index.incremental"):
                 index_increment_url = MAVEN_INDEX_INCREMENT_BASE_URL.format(index=increment_index)
                 index_increment = fetch_http(index_increment_url)
-                self.index_increment_locations.append(index_increment.path)
-                yield index_increment.path
+                index_increment_downloads.append(index_increment)
+        return index_increment_downloads
 
     def _get_packages(self, content=None):
         artifacts = get_artifacts(content, worthyness=is_worthy_artifact)
@@ -697,15 +721,15 @@ class MavenNexusCollector:
             )
             yield current_purl, package
 
-    def _get_packages_from_index_increments(self, last_incremental):
-        for index_increment in self._fetch_index_increments(last_incremental=last_incremental):
-            return self._get_packages(content=index_increment)
+    def _get_packages_from_index_increments(self):
+        for index_increment in self.index_increment_locations:
+            yield self._get_packages(content=index_increment)
 
-    def get_packages(self, last_incremental=None):
-        """Yield Package objects from maven index"""
-        if last_incremental:
+    def get_packages(self):
+        """Yield Package objects from maven index or index increments"""
+        if self.index_increment_locations:
             packages = chain(
-                self._get_packages_from_index_increments(last_incremental=last_incremental)
+                self._get_packages_from_index_increments()
             )
         else:
             packages = self._get_packages(content=self.index_location)
