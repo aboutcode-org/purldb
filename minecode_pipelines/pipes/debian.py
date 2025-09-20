@@ -21,8 +21,8 @@
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
 import gzip
-import os
 from datetime import datetime
+from shutil import rmtree
 
 import debian_inspector
 from aboutcode import hashid
@@ -82,21 +82,23 @@ class DebianCollector:
 
     def __init__(self, index_location=None):
         if index_location:
+            self.index_download = None
             self.index_location = index_location
         else:
-            self.index_location = self._fetch_index()
-        self.index_location_given = bool(index_location)
+            self.index_download = self._fetch_index()
+            self.index_location = self.index_download.path
 
     def __del__(self):
-        if self.index_location and not self.index_location_given:
-            os.remove(self.index_location)
+        if self.index_download:
+            rmtree(self.index_download.directory)
 
     def _fetch_index(self, uri=DEBIAN_LSLR_URL):
         """
-        Return a temporary location where the debian index was saved.
+        Fetch the Debian index at `uri` and return a Download with information
+        about where it was saved.
         """
         index = fetch_http(uri)
-        return index.path
+        return index
 
     def get_packages(self, previous_index_last_modified_date=None, logger=None):
         """Yield Package objects from debian index"""
