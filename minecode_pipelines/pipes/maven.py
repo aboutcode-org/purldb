@@ -607,8 +607,12 @@ class MavenNexusCollector:
             self.index_location = self.index_download.path
 
         if last_incremental:
-            self.index_increment_downloads = self._fetch_index_increments(last_incremental=last_incremental)
-            self.index_increment_locations = [download.path for download in self.index_increment_downloads]
+            self.index_increment_downloads = self._fetch_index_increments(
+                last_incremental=last_incremental
+            )
+            self.index_increment_locations = [
+                download.path for download in self.index_increment_downloads
+            ]
         else:
             self.index_increment_downloads = []
             self.index_increment_locations = []
@@ -625,7 +629,7 @@ class MavenNexusCollector:
     def _fetch_index(self, uri=MAVEN_INDEX_URL):
         """
         Fetch the maven index at `uri` and return a Download with information
-        about where the maven index was saved.
+        about where it was saved.
         """
         index = fetch_http(uri)
         return index
@@ -633,7 +637,7 @@ class MavenNexusCollector:
     def _fetch_index_properties(self, uri=MAVEN_INDEX_PROPERTIES_URL):
         """
         Fetch the maven index properties file at `uri` and return a Download
-        with information about where the maven index properties file was saved.
+        with information about where it was saved.
         """
         index_properties = fetch_http(uri)
         return index_properties
@@ -641,8 +645,7 @@ class MavenNexusCollector:
     def _fetch_index_increments(self, last_incremental):
         """
         Fetch maven index increments, starting past `last_incremental`, and
-        return a list of Downloads with information about where the maven index
-        increments were saved.
+        return a list of Downloads with information about where they were saved.
         """
         index_increment_downloads = []
         for key, increment_index in self.index_properties.items():
@@ -728,9 +731,7 @@ class MavenNexusCollector:
     def get_packages(self):
         """Yield Package objects from maven index or index increments"""
         if self.index_increment_locations:
-            packages = chain(
-                self._get_packages_from_index_increments()
-            )
+            packages = chain(self._get_packages_from_index_increments())
         else:
             packages = self._get_packages(content=self.index_location)
         return packages
