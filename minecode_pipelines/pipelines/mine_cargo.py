@@ -19,22 +19,18 @@
 #
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
-import os
 
-from git.repo.base import Repo
-from scanpipe.pipes.federatedcode import delete_local_clone
-from minecode_pipelines.utils import get_temp_file
+import os
 from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 from minecode_pipelines.miners import cargo
+from minecode_pipelines import pipes
+from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
 
-FEDERATEDCODE_CARGO_GIT_URL = os.environ.get(
-    "FEDERATEDCODE_CARGO_GIT_URL", "https://github.com/ziadhany/cargo-test"
+MINECODE_DATA_CARGO_REPO = os.environ.get(
+    "MINECODE_DATA_CARGO_REPO", "https://github.com/aboutcode-data/minecode-data-cargo-test"
 )
-
-FEDERATEDCODE_CONFIG_GIT_URL = os.environ.get(
-    "FEDERATEDCODE_CONFIG_GIT_URL", "https://github.com/ziadhany/federatedcode-config"
-)
+MINECODE_CARGO_INDEX_REPO = "https://github.com/rust-lang/crates.io-index"
 
 
 class MineandPublishCargoPURLs(Pipeline):
@@ -45,8 +41,8 @@ class MineandPublishCargoPURLs(Pipeline):
         return (
             cls.check_federatedcode_eligibility,
             cls.clone_cargo_repo,
-            cls.collect_packages_from_cargo,
-            cls.clean_cargo_repo,
+            cls.mine_and_publish_cargo_packageurls,
+            cls.delete_cloned_repos,
         )
 
     def check_federatedcode_eligibility(self):
@@ -54,30 +50,34 @@ class MineandPublishCargoPURLs(Pipeline):
         Check if the project fulfills the following criteria for
         pushing the project result to FederatedCode.
         """
-        federatedcode.check_federatedcode_configured_and_available(project=self.project)
+        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
     def clone_cargo_repo(self):
         """
         Clone the repo at repo_url and return the Repo object
         """
-        conan_repo_url = "https://github.com/rust-lang/crates.io-index"
+        self.cargo_index_repo = federatedcode.clone_repository(MINECODE_CARGO_INDEX_REPO)
+        self.cloned_data_repo = federatedcode.clone_repository(MINECODE_DATA_CARGO_REPO)
+        self.cloned_config_repo = federatedcode.clone_repository(MINECODE_PIPELINES_CONFIG_REPO)
 
-        self.fed_repo = federatedcode.clone_repository(FEDERATEDCODE_CARGO_GIT_URL)
-        self.fed_conf_repo = federatedcode.clone_repository(FEDERATEDCODE_CONFIG_GIT_URL)
-        self.cargo_repo = Repo.clone_from(conan_repo_url, get_temp_file())
+        if self.log:
+            self.log(
+                f"{MINECODE_CARGO_INDEX_REPO} repo cloned at: {self.cargo_index_repo.working_dir}"
+            )
+            self.log(
+                f"{MINECODE_DATA_CARGO_REPO} repo cloned at: {self.cloned_data_repo.working_dir}"
+            )
+            self.log(
+                f"{MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {self.cloned_config_repo.working_dir}"
+            )
 
-    def collect_packages_from_cargo(self):
-        cargo.process_cargo_packages(self.cargo_repo, self.fed_repo, self.fed_conf_repo, self.log)
+    def mine_and_publish_cargo_packageurls(self):
+        cargo.process_cargo_packages(
+            self.cargo_index_repo, self.cloned_data_repo, self.cloned_config_repo, self.log
+        )
 
-    def clean_cargo_repo(self):
-        """
-        Delete the federatedcode repository if it exists, and also delete the Cargo repository if it exists.
-        """
-        if self.cargo_repo:
-            delete_local_clone(self.cargo_repo)
-
-        if self.fed_repo:
-            delete_local_clone(self.fed_repo)
-
-        if self.fed_conf_repo:
-            delete_local_clone(self.fed_repo)
+    def delete_cloned_repos(self):
+        pipes.delete_cloned_repos(
+            repos=[self.cargo_index_repo, self.cloned_data_repo, self.cloned_config_repo],
+            logger=self.log,
+        )
