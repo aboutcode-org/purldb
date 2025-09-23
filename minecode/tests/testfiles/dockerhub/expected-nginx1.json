@@ -19,7 +19,7 @@
       }
     ],
     "keywords": [],
-    "homepage_url": null,
+    "homepage_url": "https://hub.docker.com/_/nginx",
     "download_url": "https://hub.docker.com/layers/library/nginx/stable-perl/images/sha256:3d8957cb61d0223de2ab1aa2ec91d29796eb82a81cdcc1e968c090c29606d648",
     "size": 83983956,
     "sha1": null,

@@ -1,5 +1,5 @@
 {
-  "pkg_metadata_tags": [{
+  "tags_metadata": [{
       "creator": 2215,
       "id": 10128273,
       "images": [
@@ -226,7 +226,7 @@
       "content_type": "image",
       "digest": "sha256:3d8957cb61d0223de2ab1aa2ec91d29796eb82a81cdcc1e968c090c29606d648"
   }],
-  "pkg_metadata" : {
+  "summary" : {
         "user": "library",
         "name": "nginx",
         "namespace": "library",

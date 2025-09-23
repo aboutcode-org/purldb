@@ -83,10 +83,12 @@ class DockerHubMapTest(DockerHubTest):
     def test_build_package_data_dockerhub1(self):
         with open(self.get_test_loc("dockerhub/nginx.json")) as dockerhub_metadata:
             metadata = json.load(dockerhub_metadata)
+            summary = metadata["summary"]
+            tags_metadata = metadata["tags_metadata"]
 
         package_url = PackageURL.from_string("pkg:docker/nginx@stable-perl")
 
-        packages = miners.dockerhub.build_package_data(metadata, package_url)
+        packages = miners.dockerhub.build_package_data(summary, tags_metadata, package_url)
 
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc("dockerhub/expected-nginx1.json")
@@ -95,12 +97,14 @@ class DockerHubMapTest(DockerHubTest):
     def test_build_package_data_dockerhub2(self):
         with open(self.get_test_loc("dockerhub/nginx.json")) as dockerhub_metadata:
             metadata = json.load(dockerhub_metadata)
+            summary = metadata["summary"]
+            tags_metadata = metadata["tags_metadata"]
 
         package_url = PackageURL.from_string(
             "pkg:docker/nginx@sha256:3d8957cb61d0223de2ab1aa2ec91d29796eb82a81cdcc1e968c090c29606d648"
         )
 
-        packages = miners.dockerhub.build_package_data(metadata, package_url)
+        packages = miners.dockerhub.build_package_data(summary, tags_metadata, package_url)
 
         packages = [p.to_dict() for p in packages]
         expected_loc = self.get_test_loc("dockerhub/expected-nginx2.json")

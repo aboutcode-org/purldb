@@ -197,28 +197,32 @@ def build_packages_from_jsonfile(metadata, uri=None, purl=None):
         yield package
 
 
-def build_package_data(metadata_dict, purl):
+def build_package_data(summary, tags_metadata, purl):
     """
     Yield ScannedPackage built from PackageData API.
     """
 
-    package_metadata = metadata_dict.get("pkg_metadata")
     namespace = purl.namespace or "library"
 
-    for pkg_metadata_tag in metadata_dict.get("pkg_metadata_tags", []):
-        short_desc = package_metadata.get("description")
-        long_desc = package_metadata.get("full_description")
+    short_desc = summary.get("description")
+    long_desc = summary.get("full_description")
+    descriptions = [d for d in (short_desc, long_desc) if d and d.strip()]
+    description = "\n".join(descriptions)
+    is_private = summary.get("is_private")
 
-        descriptions = [d for d in (short_desc, long_desc) if d and d.strip()]
-        description = "\n".join(descriptions)
-        is_private = package_metadata.get("is_private")
-        tag_name = pkg_metadata_tag.get("name")
+    homepage_url = (
+        f"https://hub.docker.com/_/{purl.name}"
+        if namespace == "library"
+        else f"https://hub.docker.com/r/{namespace}/{purl.name}"
+    )
 
-        size = pkg_metadata_tag.get("full_size")
-        digest = pkg_metadata_tag.get("digest")
+    for tag_metadata in tags_metadata:
+        tag_name = tag_metadata.get("name")
+        size = tag_metadata.get("full_size")
+        digest = tag_metadata.get("digest")
         sha256 = digest[7::] if digest else None
 
-        last_updater_username = pkg_metadata_tag.get("last_updater_username")
+        last_updater_username = tag_metadata.get("last_updater_username")
         parties = []
         if last_updater_username:
             parties.append(scan_models.Party(name=last_updater_username, role="usernmae"))
@@ -233,6 +237,7 @@ def build_package_data(metadata_dict, purl):
             sha256=sha256,
             parties=parties,
             size=size,
+            homepage_url=homepage_url,
             download_url=f"https://hub.docker.com/layers/{namespace}/{purl.name}/{tag_name}/images/{digest}",
         )
 

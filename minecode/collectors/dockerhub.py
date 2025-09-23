@@ -21,10 +21,16 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 
-def fetch_dockerhub_repo_metadata(name, namespace="library"):
+def fetch_dockerhub_repo_summary(name, namespace="library"):
     """
-    Fetch repository metadata for a Docker Hub library image.
-    Example: fetch_dockerhub_repo_metadata("nginx")
+    Fetch summary metadata for a Docker Hub repository.
+
+    Returns:
+        dict or None: Full metadata JSON from the Docker Hub API, including:
+            - description (str): Short description
+            - full_description (str): Detailed description
+            - is_private (bool): Privacy status
+
     """
     url = f"https://hub.docker.com/v2/repositories/{namespace}/{name}/"
     try:
@@ -36,7 +42,7 @@ def fetch_dockerhub_repo_metadata(name, namespace="library"):
         return None
 
 
-def fetch_dockerhub_tag_metadata(name, namespace, tag=None):
+def fetch_dockerhub_tags_metadata(name, namespace, tag=None):
     """
     Search through Docker Hub tags for a given repository.
     - If `tag` is provided, return the JSON metadata for that tag (by name or digest).
@@ -71,11 +77,8 @@ def fetch_dockerhub_tag_metadata(name, namespace, tag=None):
                         return [result]
 
             # Check if more pages exist
-            if not data.get("next"):
+            if not data.get("next") or page_size * page > data.get("count", 0):
                 break  # no more pages
-
-            if page_size * page > data.get("count", 0):
-                break
 
         except requests.exceptions.RequestException as err:
             logger.error(f"Error fetching tags for {name}, page {page}: {err}")
@@ -100,19 +103,15 @@ def map_dockerhub_package(package_url, pipelines, priority=0):
         return error
 
     namespace = package_url.namespace or "library"
-    package_metadata = fetch_dockerhub_repo_metadata(package_url.name, namespace)
-    if not package_metadata:
+    summary = fetch_dockerhub_repo_summary(package_url.name, namespace)
+    if not summary:
         error = f"Package does not exist on dockerhub: {package_url}"
         logger.error(error)
         return error
 
-    namespace = package_url.namespace or "library"
+    tags_metadata = fetch_dockerhub_tags_metadata(package_url.name, namespace, package_url.version)
 
-    package_tag_metadata = fetch_dockerhub_tag_metadata(
-        package_url.name, namespace, package_url.version
-    )
-    package_metadata = {"pkg_metadata": package_metadata, "pkg_metadata_tags": package_tag_metadata}
-    packages = build_package_data(package_metadata, package_url)
+    packages = build_package_data(summary, tags_metadata, package_url)
 
     error = None
     for package in packages:
