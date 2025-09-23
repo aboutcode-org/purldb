@@ -20,16 +20,18 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
+from minecode_pipelines import VERSION
+from aboutcode import hashid
 from shutil import rmtree
 from pathlib import Path
-
+from collections import defaultdict
 import base64
 from packageurl import PackageURL
 from packagedcode.models import PackageData, Party
 from scanpipe.pipes import federatedcode
 from scanpipe.pipes.fetch import fetch_http
 from scanpipe.pipes.scancode import extract_archives
-
+from minecode_pipelines import pipes
 from minecode import debutils
 
 
@@ -84,15 +86,21 @@ ALPINE_LINUX_ARCHS = [
 ]
 
 
-def build_package(extracted_pkginfo, distro=None):
+def build_package(extracted_pkginfo, distro, repo):
     name = extracted_pkginfo.get("name")
     version = extracted_pkginfo.get("version")
     arch = extracted_pkginfo.get("arch")
     qualifiers = {
         "arch": arch,
+        "distro": distro,
     }
-    if distro:
-        qualifiers.update({"distro": distro})
+    description = extracted_pkginfo.get("description")
+    extracted_license_statement = extracted_pkginfo.get("license")
+    repository_homepage_url = extracted_pkginfo.get("url")
+    size = extracted_pkginfo.get("size")
+    apk_checksum = extracted_pkginfo.get("checksum")
+    sha1 = apk_checksum_to_sha1(apk_checksum)
+    apk_download_url = f"https://dl-cdn.alpinelinux.org/alpine/{distro}/{repo}/{arch}/{name}-{version}.apk"
 
     parties = []
     maintainers = extracted_pkginfo.get("maintainer")
@@ -101,14 +109,6 @@ def build_package(extracted_pkginfo, distro=None):
         if name:
             party = Party(name=name, role="maintainer", email=email)
             parties.append(party)
-
-    description = extracted_pkginfo.get("description")
-    extracted_license_statement = extracted_pkginfo.get("license")
-    repository_homepage_url = extracted_pkginfo.get("url")
-    size = extracted_pkginfo.get("size")
-    apk_checksum = extracted_pkginfo.get("checksum")
-    sha1 = apk_checksum_to_sha1(apk_checksum)
-    apk_download_url = f"https://dl-cdn.alpinelinux.org/alpine/{distro}/main/{arch}/{name}-{version}.apk"
 
     purl = PackageURL(
         type="apk",
@@ -235,21 +235,67 @@ class AlpineCollector:
     def get_packages(self, logger=None):
         """Yield Package objects from alpine index"""
 
-        url_template = "https://dl-cdn.alpinelinux.org/alpine/{distro}/{suite}/{arch}/APKINDEX.tar.gz"
+        url_template = "https://dl-cdn.alpinelinux.org/alpine/{distro}/{repo}/{arch}/APKINDEX.tar.gz"
 
         for distro in ALPINE_LINUX_DISTROS:
-            for suite in ALPINE_LINUX_REPOS:
+            for repo in ALPINE_LINUX_REPOS:
                 for arch in ALPINE_LINUX_ARCHS:
-                    index_download_url = url_template.format(distro=distro, suite=suite, arch=arch)
+                    index_download_url = url_template.format(distro=distro, repo=repo, arch=arch)
                     index = self._fetch_index(uri=index_download_url)
                     extract_archives(location=index.path)
                     index_location = f"{index.path}-extract/APKINDEX"
                     with open(index_location, encoding="utf-8") as f:
                         for pkg in parse_apkindex(f.read()):
-                            pd = build_package(pkg, distro=distro)
+                            pd = build_package(pkg, distro=distro, repo=repo)
                             current_purl = PackageURL(
                                 type=pd.type,
                                 namespace=pd.namespace,
                                 name=pd.name,
                             )
                             yield current_purl, pd
+
+
+def collect_packages_from_alpine(logger=None):
+    # Clone data and config repo
+    data_repo = federatedcode.clone_repository(
+        repo_url=MINECODE_DATA_ALPINE_REPO,
+        logger=logger,
+    )
+    config_repo = federatedcode.clone_repository(
+        repo_url=pipes.MINECODE_PIPELINES_CONFIG_REPO,
+        logger=logger,
+    )
+    if logger:
+        logger(f"{MINECODE_DATA_ALPINE_REPO} repo cloned at: {data_repo.working_dir}")
+        logger(f"{pipes.MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {config_repo.working_dir}")
+
+
+    # download and iterate through alpine indices
+    alpine_collector = AlpineCollector()
+    packages_by_purls = defaultdict(list)
+    for i, (current_purl, package) in enumerate(alpine_collector.get_packages(), start=1):
+        packages_by_purls[current_purl].append(package.to_string())
+
+    for current_purl, purls in packages_by_purls.items():
+        # write packageURLs to file
+        package_base_dir = hashid.get_package_base_dir(purl=current_purl)
+        purl_file = pipes.write_packageurls_to_file(
+            repo=data_repo,
+            base_dir=package_base_dir,
+            packageurls=purls,
+        )
+
+        # commit changes
+        pipes.commit_changes(
+            repo=data_repo,
+            files_to_commit=[purl_file],
+            purls=purls,
+            mine_type="packageURL",
+            tool_name="pkg:pypi/minecode-pipelines",
+            tool_version=VERSION,
+        )
+
+    federatedcode.push_changes(repo=data_repo)
+
+    repos_to_clean = [data_repo, config_repo]
+    return repos_to_clean
