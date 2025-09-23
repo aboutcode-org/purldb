@@ -68,6 +68,12 @@ ALPINE_LINUX_DISTROS = [
     "v3.8",
     "v3.9",
 ]
+ALPINE_LINUX_REPO_SUITES = [
+    "community",
+    "main",
+    "releases",
+    "testing",
+]
 ALPINE_LINUX_ARCHS = [
     "aarch64",
     "armhf",
@@ -211,14 +217,8 @@ class AlpineCollector:
     Download and process an Alpine APKINDEX.tar.gz file for Packages
     """
 
-    def __init__(self, index_location=None):
-        if index_location:
-            self.index_download = None
-            self.index_location = index_location
-        else:
-            self.index_download = self._fetch_index()
-            extract_archives(location=self.index_download.path)
-            self.index_location = f"{self.index_download.path}-extract/APKINDEX"
+    def __init__(self):
+        self.index_downloads = []
 
     def __del__(self):
         if self.index_download:
@@ -229,17 +229,27 @@ class AlpineCollector:
         Return a temporary location where the alpine index was saved.
         """
         index = fetch_http(uri)
+        self.index_downloads.append(index)
         return index
 
     def get_packages(self, logger=None):
         """Yield Package objects from alpine index"""
 
-        with open(self.index_location, encoding="utf-8") as f:
-            for pkg in parse_apkindex(f.read()):
-                pd = build_package(pkg, distro="latest-stable")
-                current_purl = PackageURL(
-                    type=pd.type,
-                    namespace=pd.namespace,
-                    name=pd.name,
-                )
-                yield current_purl, pd
+        url_template = "https://dl-cdn.alpinelinux.org/alpine/{distro}/{suite}/{arch}/APKINDEX.tar.gz"
+
+        for distro in ALPINE_LINUX_DISTROS:
+            for suite in ALPINE_LINUX_REPO_SUITES:
+                for arch in ALPINE_LINUX_ARCHS:
+                    index_download_url = url_template.format(distro=distro, suite=suite, arch=arch)
+                    index = self._fetch_index(uri=index_download_url)
+                    extract_archives(location=index.path)
+                    index_location = f"{index.path}-extract/APKINDEX"
+                    with open(index_location, encoding="utf-8") as f:
+                        for pkg in parse_apkindex(f.read()):
+                            pd = build_package(pkg, distro=distro)
+                            current_purl = PackageURL(
+                                type=pd.type,
+                                namespace=pd.namespace,
+                                name=pd.name,
+                            )
+                            yield current_purl, pd
