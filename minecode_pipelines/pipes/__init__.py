@@ -20,6 +20,8 @@ from git import Repo
 from scanpipe.pipes.federatedcode import delete_local_clone
 from scanpipe.pipes.federatedcode import commit_and_push_changes
 
+from minecode_pipelines.utils import get_temp_file
+
 # states:
 # note: a state is null when mining starts
 INITIAL_SYNC_STATE = "initial-sync"
@@ -27,6 +29,12 @@ PERIODIC_SYNC_STATE = "periodic-sync"
 
 
 MINECODE_PIPELINES_CONFIG_REPO = "https://github.com/aboutcode-data/minecode-pipelines-config/"
+
+
+def write_packages_json(packages, name):
+    temp_file = get_temp_file(name)
+    write_data_to_json_file(path=temp_file, data=packages)
+    return temp_file
 
 
 def fetch_checkpoint_from_github(config_repo, checkpoint_path):
@@ -79,6 +87,32 @@ def update_mined_packages_in_checkpoint(packages, config_repo, cloned_repo, chec
         cloned_repo=cloned_repo,
         path=checkpoint_path,
     )
+
+
+def update_checkpoint_state(
+    cloned_repo,
+    state,
+    checkpoint_path,
+    config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+):
+    checkpoint = fetch_checkpoint_from_github(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    checkpoint["state"] = state
+    update_checkpoints_in_github(
+        checkpoint=checkpoint,
+        cloned_repo=cloned_repo,
+        path=checkpoint_path,
+    )
+
+
+def get_packages_file_from_checkpoint(config_repo, checkpoint_path, name):
+    packages = fetch_checkpoint_from_github(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    return write_packages_json(packages, name=name)
 
 
 def write_packageurls_to_file(repo, base_dir, packageurls):

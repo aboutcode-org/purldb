@@ -13,9 +13,6 @@ import requests
 
 from packageurl import PackageURL
 
-from minecode_pipelines.utils import get_temp_file
-from minecode_pipelines.pipes import write_data_to_json_file
-
 """
 Visitors for Pypi and Pypi-like Python package repositories.
 
@@ -50,12 +47,6 @@ def get_pypi_packages(pypi_repo, logger=None):
         return
 
     return response.json()
-
-
-def write_packages_json(packages, name):
-    temp_file = get_temp_file(name)
-    write_data_to_json_file(path=temp_file, data=packages)
-    return temp_file
 
 
 def get_pypi_packageurls(name):
