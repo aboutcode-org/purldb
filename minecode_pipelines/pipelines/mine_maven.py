@@ -20,13 +20,14 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
+from scanpipe.pipelines import Pipeline
+from scanpipe.pipes import federatedcode
 
 from minecode_pipelines import pipes
 from minecode_pipelines.pipes import maven
-from scanpipe.pipelines.publish_to_federatedcode import PublishToFederatedCode
 
 
-class MineMaven(PublishToFederatedCode):
+class MineMaven(Pipeline):
     """
     Create DiscoveredPackages for packages found on maven:
     - input: url of maven repo
@@ -45,6 +46,13 @@ class MineMaven(PublishToFederatedCode):
             cls.collect_packages_from_maven,
             cls.delete_cloned_repos,
         )
+
+    def check_federatedcode_eligibility(self):
+        """
+        Check if the project fulfills the following criteria for
+        pushing the project result to FederatedCode.
+        """
+        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
     def collect_packages_from_maven(self):
         self.repos = maven.collect_packages_from_maven(self.project, self.log)
