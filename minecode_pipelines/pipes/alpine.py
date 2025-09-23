@@ -33,7 +33,6 @@ from scanpipe.pipes.scancode import extract_archives
 from minecode import debutils
 
 
-ALPINE_APKINDEX_URL = "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/APKINDEX.tar.gz"
 ALPINE_CHECKPOINT_PATH = "alpine/checkpoints.json"
 
 # We are testing and storing mined packageURLs in one single repo per ecosystem for now
@@ -68,7 +67,7 @@ ALPINE_LINUX_DISTROS = [
     "v3.8",
     "v3.9",
 ]
-ALPINE_LINUX_REPO_SUITES = [
+ALPINE_LINUX_REPOS = [
     "community",
     "main",
     "releases",
@@ -221,10 +220,11 @@ class AlpineCollector:
         self.index_downloads = []
 
     def __del__(self):
-        if self.index_download:
-            rmtree(self.index_download.directory)
+        if self.index_downloads:
+            for download in self.index_downloads:
+                rmtree(download.directory)
 
-    def _fetch_index(self, uri=ALPINE_APKINDEX_URL):
+    def _fetch_index(self, uri):
         """
         Return a temporary location where the alpine index was saved.
         """
@@ -238,7 +238,7 @@ class AlpineCollector:
         url_template = "https://dl-cdn.alpinelinux.org/alpine/{distro}/{suite}/{arch}/APKINDEX.tar.gz"
 
         for distro in ALPINE_LINUX_DISTROS:
-            for suite in ALPINE_LINUX_REPO_SUITES:
+            for suite in ALPINE_LINUX_REPOS:
                 for arch in ALPINE_LINUX_ARCHS:
                     index_download_url = url_template.format(distro=distro, suite=suite, arch=arch)
                     index = self._fetch_index(uri=index_download_url)
