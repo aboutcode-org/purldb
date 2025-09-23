@@ -4,10 +4,12 @@ on:
   workflow_dispatch:
   push:
    tags:
-     - "minecode-pipeline/*"
+     - "minecode-pipelines/*"
 
 jobs:
   build-and-publish:
+    permissions:
+      id-token: write
     name: Build and publish library to PyPI
     runs-on: ubuntu-22.04
 
