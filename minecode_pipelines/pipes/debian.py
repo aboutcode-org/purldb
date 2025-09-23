@@ -81,23 +81,29 @@ class DebianCollector:
     """
 
     def __init__(self, index_location=None):
+        self.downloads = []
         if index_location:
-            self.index_download = None
             self.index_location = index_location
         else:
-            self.index_download = self._fetch_index()
-            self.index_location = self.index_download.path
+            index_download = self._fetch_index()
+            self.index_location = index_download.path
 
     def __del__(self):
-        if self.index_download:
-            rmtree(self.index_download.directory)
+        if self.downloads:
+            for download in self.downloads:
+                rmtree(download.directory)
+
+    def _fetch_http(self, uri):
+        fetched = fetch_http(uri)
+        self.downloads.append(fetched)
+        return fetched
 
     def _fetch_index(self, uri=DEBIAN_LSLR_URL):
         """
         Fetch the Debian index at `uri` and return a Download with information
         about where it was saved.
         """
-        index = fetch_http(uri)
+        index = self._fetch_http(uri)
         return index
 
     def get_packages(self, previous_index_last_modified_date=None, logger=None):
