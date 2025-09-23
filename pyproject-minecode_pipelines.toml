@@ -4,7 +4,7 @@ build-backend = "flot.buildapi"
 
 [project]
 name = "minecode_pipelines"
-version = "0.0.1b2"
+version = "0.0.1b3"
 description = "A library for mining packageURLs and package metadata from ecosystem repositories."
 readme = "minecode_pipelines/README.rst"
 license = { text = "Apache-2.0" }
@@ -48,7 +48,7 @@ urls = { Homepage = "https://github.com/aboutcode-org/purldb" }
 mine_pypi = "minecode_pipelines.pipelines.mine_pypi:MineandPublishPypiPURLs"
 
 [tool.bumpversion]
-current_version = "0.0.1b1"
+current_version = "0.0.1b3"
 allow_dirty = true
 
 files = [
