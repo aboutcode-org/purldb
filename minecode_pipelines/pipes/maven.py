@@ -586,12 +586,13 @@ class MavenNexusCollector:
                 "packages starting past a particular index increment."
             )
 
+        self.downloads = []
+
         if index_properties_location:
-            self.index_properties_download = None
             self.index_properties_location = index_properties_location
         else:
-            self.index_properties_download = self._fetch_index_properties()
-            self.index_properties_location = self.index_properties_download.path
+            index_property_download = self._fetch_index_properties()
+            self.index_properties_location = index_property_download.path
 
         if self.index_properties_location:
             with open(self.index_properties_location) as config_file:
@@ -600,38 +601,37 @@ class MavenNexusCollector:
             self.index_properties = {}
 
         if index_location:
-            self.index_download = None
             self.index_location = index_location
         else:
-            self.index_download = self._fetch_index()
-            self.index_location = self.index_download.path
+            index_download = self._fetch_index()
+            self.index_location = index_download.path
 
         if last_incremental:
-            self.index_increment_downloads = self._fetch_index_increments(
+            index_increment_downloads = self._fetch_index_increments(
                 last_incremental=last_incremental
             )
             self.index_increment_locations = [
-                download.path for download in self.index_increment_downloads
+                download.path for download in index_increment_downloads
             ]
         else:
-            self.index_increment_downloads = []
             self.index_increment_locations = []
 
     def __del__(self):
-        if self.index_properties_download:
-            rmtree(path=self.index_properties_download.directory)
-        if self.index_download:
-            rmtree(path=self.index_download.directory)
-        if self.index_increment_downloads:
-            for download in self.index_increment_downloads:
-                rmtree(path=download.directory)
+        if self.downloads:
+            for download in self.downloads:
+                rmtree(download.directory)
+
+    def _fetch_http(self, uri):
+        fetched = fetch_http(uri)
+        self.downloads.append(fetched)
+        return fetched
 
     def _fetch_index(self, uri=MAVEN_INDEX_URL):
         """
         Fetch the maven index at `uri` and return a Download with information
         about where it was saved.
         """
-        index = fetch_http(uri)
+        index = self._fetch_http(uri)
         return index
 
     def _fetch_index_properties(self, uri=MAVEN_INDEX_PROPERTIES_URL):
@@ -639,7 +639,7 @@ class MavenNexusCollector:
         Fetch the maven index properties file at `uri` and return a Download
         with information about where it was saved.
         """
-        index_properties = fetch_http(uri)
+        index_properties = self._fetch_http(uri)
         return index_properties
 
     def _fetch_index_increments(self, last_incremental):
@@ -653,7 +653,7 @@ class MavenNexusCollector:
                 continue
             if key.startswith("nexus.index.incremental"):
                 index_increment_url = MAVEN_INDEX_INCREMENT_BASE_URL.format(index=increment_index)
-                index_increment = fetch_http(index_increment_url)
+                index_increment = self._fetch_http(index_increment_url)
                 index_increment_downloads.append(index_increment)
         return index_increment_downloads
 
