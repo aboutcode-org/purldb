@@ -48,6 +48,8 @@ MAVEN_CHECKPOINT_PATH = "maven/checkpoints.json"
 # We are testing and storing mined packageURLs in one single repo per ecosystem for now
 MINECODE_DATA_MAVEN_REPO = "https://github.com/aboutcode-data/minecode-data-maven-test"
 
+PACKAGE_BATCH_SIZE = 500
+
 
 def is_worthy_artifact(artifact):
     """
@@ -737,7 +739,7 @@ class MavenNexusCollector:
         return packages
 
 
-def collect_packages_from_maven(commits_per_push=10, logger=None):
+def collect_packages_from_maven(commits_per_push=PACKAGE_BATCH_SIZE, logger=None):
     # Clone data and config repo
     data_repo = federatedcode.clone_repository(
         repo_url=MINECODE_DATA_MAVEN_REPO,
@@ -793,6 +795,8 @@ def collect_packages_from_maven(commits_per_push=10, logger=None):
             current_purls = []
             prev_purl = current_purl
         current_purls.append(package.to_string())
+
+    federatedcode.push_changes(repo=data_repo)
 
     # update last_incremental so we can pick up from the proper place next time
     last_incremental = maven_nexus_collector.index_properties.get("nexus.index.last-incremental")
