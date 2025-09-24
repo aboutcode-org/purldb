@@ -44,6 +44,8 @@ DEBIAN_LSLR_URL = "http://ftp.debian.org/debian/ls-lR.gz"
 # We are testing and storing mined packageURLs in one single repo per ecosystem for now
 MINECODE_DATA_DEBIAN_REPO = "https://github.com/aboutcode-data/minecode-data-debian-test"
 
+PACKAGE_BATCH_SIZE = 500
+
 
 def is_collectible(file_name):
     """Return True if a `file_name` is collectible."""
@@ -164,7 +166,7 @@ class DebianCollector:
             yield versionless_purl, packaged_data
 
 
-def collect_packages_from_debian(commits_per_push=10, logger=None):
+def collect_packages_from_debian(commits_per_push=PACKAGE_BATCH_SIZE, logger=None):
     # Clone data and config repo
     data_repo = federatedcode.clone_repository(
         repo_url=MINECODE_DATA_DEBIAN_REPO,
@@ -222,6 +224,28 @@ def collect_packages_from_debian(commits_per_push=10, logger=None):
             current_purls = []
             prev_purl = current_purl
         current_purls.append(package.to_string())
+
+    if current_purls:
+        # write packageURLs to file
+        package_base_dir = hashid.get_package_base_dir(purl=prev_purl)
+        purl_file = pipes.write_packageurls_to_file(
+            repo=data_repo,
+            base_dir=package_base_dir,
+            packageurls=current_purls,
+        )
+
+        # commit changes
+        pipes.commit_changes(
+            repo=data_repo,
+            files_to_commit=[purl_file],
+            purls=current_purls,
+            mine_type="packageURL",
+            tool_name="pkg:pypi/minecode-pipelines",
+            tool_version=VERSION,
+        )
+
+        # Push changes to remote repository
+        federatedcode.push_changes(repo=data_repo)
 
     last_modified = get_file_mtime(debian_collector.index_location)
     checkpoint = {"previous_debian_index_last_modified_date": last_modified}
