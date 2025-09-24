@@ -9,6 +9,7 @@
 from datetime import datetime
 
 from minecode_pipelines.pipes import fetch_checkpoint_from_github
+from minecode_pipelines.pipes import get_commit_at_distance_ahead
 from minecode_pipelines.pipes import update_checkpoints_in_github
 from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
 from minecode_pipelines.pipes import get_changed_files
@@ -20,9 +21,10 @@ from minecode_pipelines import VERSION
 import json
 from pathlib import Path
 
-from minecode_pipelines.utils import get_next_x_commit
 
 PACKAGE_BATCH_SIZE = 500
+COMMIT_BATCH_SIZE = 10
+
 CARGO_CHECKPOINT_PATH = "cargo/checkpoints.json"
 
 
@@ -36,14 +38,14 @@ def process_cargo_packages(cargo_index_repo, cloned_data_repo, config_repo, logg
     base_path = Path(cargo_index_repo.working_tree_dir)
 
     while True:
-        cargo_checkpoints = (
-            fetch_checkpoint_from_github(MINECODE_PIPELINES_CONFIG_REPO, CARGO_CHECKPOINT_PATH)
-            or {}
+        cargo_checkpoints = fetch_checkpoint_from_github(
+            config_repo=MINECODE_PIPELINES_CONFIG_REPO, checkpoint_path=CARGO_CHECKPOINT_PATH
         )
+
         checkpoints_last_commit = cargo_checkpoints.get("last_commit")
 
-        next_commit = get_next_x_commit(
-            cargo_index_repo, checkpoints_last_commit, x=10, branch="master"
+        next_commit = get_commit_at_distance_ahead(
+            cargo_index_repo, checkpoints_last_commit, num_commits_ahead=10, branch_name="master"
         )
 
         if next_commit == checkpoints_last_commit:
@@ -62,10 +64,11 @@ def process_cargo_packages(cargo_index_repo, cloned_data_repo, config_repo, logg
             file_path = base_path / rel_path
             logger(f"Found {file_path}.")
 
-            if not file_path.is_file():
-                continue
-
-            if file_path.name in {"config.json", "README.md", "update-dl-url.yml"}:
+            if not file_path.is_file() or file_path.name in {
+                "config.json",
+                "README.md",
+                "update-dl-url.yml",
+            }:
                 continue
 
             packages = []
@@ -75,6 +78,8 @@ def process_cargo_packages(cargo_index_repo, cloned_data_repo, config_repo, logg
                         packages.append(json.loads(line))
 
             file_counter += 1
+
+            # Commit and push after each full batch or when processing the last file
             commit_and_push = (file_counter % PACKAGE_BATCH_SIZE == 0) or (
                 idx == len(changed_files)
             )
@@ -83,6 +88,7 @@ def process_cargo_packages(cargo_index_repo, cloned_data_repo, config_repo, logg
 
             purl_files.append(purl_file)
             purls.append(str(base_purl))
+
             if not commit_and_push:
                 continue
 
@@ -91,11 +97,10 @@ def process_cargo_packages(cargo_index_repo, cloned_data_repo, config_repo, logg
                 files_to_commit=purl_files,
                 purls=purls,
                 mine_type="packageURL",
-                tool_name="pkg:cargo/minecode-pipelines",
+                tool_name="pkg:pypi/minecode-pipelines",
                 tool_version=VERSION,
             )
 
-            # Push changes to remote repository
             push_changes(repo=cloned_data_repo)
             purl_files = []
             purls = []
@@ -105,15 +110,16 @@ def process_cargo_packages(cargo_index_repo, cloned_data_repo, config_repo, logg
                     f"Updating checkpoint at: {CARGO_CHECKPOINT_PATH} with last commit: {checkpoints_last_commit}"
                 )
 
-            settings_data = {
-                "date": str(datetime.now()),
-                "last_commit": next_commit,
-            }
+            if next_commit != checkpoints_last_commit:
+                settings_data = {
+                    "date": str(datetime.now()),
+                    "last_commit": next_commit,
+                }
 
-            update_checkpoints_in_github(
-                checkpoint=settings_data,
-                cloned_repo=config_repo,
-                path=CARGO_CHECKPOINT_PATH,
-            )
+                update_checkpoints_in_github(
+                    checkpoint=settings_data,
+                    cloned_repo=config_repo,
+                    path=CARGO_CHECKPOINT_PATH,
+                )
 
         logger(f"Pushed batch for commit range {checkpoints_last_commit}:{next_commit}.")

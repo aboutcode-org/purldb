@@ -40,7 +40,7 @@ class MineandPublishCargoPURLs(Pipeline):
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.clone_cargo_repo,
+            cls.clone_cargo_repos,
             cls.mine_and_publish_cargo_packageurls,
             cls.delete_cloned_repos,
         )
@@ -52,9 +52,10 @@ class MineandPublishCargoPURLs(Pipeline):
         """
         federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
-    def clone_cargo_repo(self):
+    def clone_cargo_repos(self):
         """
-        Clone the repo at repo_url and return the Repo object
+        Clone the Cargo-related repositories (index, data, and pipelines config)
+        and store their Repo objects in the corresponding instance variables.
         """
         self.cargo_index_repo = federatedcode.clone_repository(MINECODE_CARGO_INDEX_REPO)
         self.cloned_data_repo = federatedcode.clone_repository(MINECODE_DATA_CARGO_REPO)

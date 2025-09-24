@@ -9,7 +9,6 @@
 import tempfile
 import os
 from commoncode.fileutils import create_dir
-from git.repo.base import Repo
 
 from itertools import zip_longest
 
@@ -60,15 +59,3 @@ def get_temp_file(file_name="data", extension=".file", dir_name=""):
     temp_dir = get_temp_dir(dir_name)
     location = os.path.join(temp_dir, file_name)
     return location
-
-
-def get_next_x_commit(repo: Repo, current_commit: str, x: int = 10, branch: str = "master") -> str:
-    """
-    Get the x-th next commit after the current commit in the specified branch.
-    """
-    if not current_commit:
-        current_commit = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
-    revs = repo.git.rev_list(f"^{current_commit}", branch).splitlines()
-    if len(revs) < x:
-        raise ValueError(f"Not enough commits ahead; only {len(revs)} available.")
-    return revs[-x]

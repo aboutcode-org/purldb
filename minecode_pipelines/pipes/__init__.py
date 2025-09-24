@@ -36,7 +36,7 @@ def fetch_checkpoint_from_github(config_repo, checkpoint_path):
     )
     response = requests.get(checkpoints_file)
     if not response.ok:
-        return
+        return {}
 
     checkpoint_data = json.loads(response.text)
     return checkpoint_data
@@ -161,13 +161,19 @@ def get_last_commit(repo, ecosystem):
     return settings_data.get("last_commit")
 
 
-def get_next_x_commit(repo: Repo, current_commit: str, x: int = 10, branch: str = "master") -> str:
+def get_commit_at_distance_ahead(
+    repo: Repo,
+    current_commit: str,
+    num_commits_ahead: int = 10,
+    branch_name: str = "master",
+) -> str:
     """
-    Get the x-th next commit after the current commit in the specified branch.
+    Return the commit hash that is `num_commits_ahead` commits ahead of `current_commit`
+    on the given branch.
     """
     if not current_commit:
         current_commit = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
-    revs = repo.git.rev_list(f"^{current_commit}", branch).splitlines()
-    if len(revs) < x:
+    revs = repo.git.rev_list(f"^{current_commit}", branch_name).splitlines()
+    if len(revs) < num_commits_ahead:
         raise ValueError(f"Not enough commits ahead; only {len(revs)} available.")
-    return revs[-x]
+    return revs[-num_commits_ahead]

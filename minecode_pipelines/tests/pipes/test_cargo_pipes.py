@@ -36,7 +36,7 @@ class CargoPipelineTests(TestCase):
 
         self.assertEqual(called_repo, repo)
 
-        expected_base_purl = 'aboutcode-packages-cargo-0/cargo/c5store/purls.yml'
+        expected_base_purl = "aboutcode-packages-cargo-0/cargo/c5store/purls.yml"
         self.assertEqual(str(base_purl), str(expected_base_purl))
         self.assertEqual(written_packages, expected)
 
