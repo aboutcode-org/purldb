@@ -33,7 +33,7 @@ MINECODE_DATA_CARGO_REPO = os.environ.get(
 MINECODE_CARGO_INDEX_REPO = "https://github.com/rust-lang/crates.io-index"
 
 
-class MineandPublishCargoPURLs(Pipeline):
+class MineCargo(Pipeline):
     """Pipeline to mine Cargo (crates.io) packages and publish them to FederatedCode."""
 
     @classmethod

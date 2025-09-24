@@ -2,7 +2,7 @@ from aboutcode import hashid
 from packageurl import PackageURL
 from aboutcode.hashid import get_core_purl
 
-from minecode_pipelines.miners import write_packageurls_to_file
+from minecode_pipelines.pipes import write_packageurls_to_file
 
 
 def store_cargo_packages(packages, repo):

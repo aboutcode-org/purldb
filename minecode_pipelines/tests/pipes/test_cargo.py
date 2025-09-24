@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 import saneyaml
 from django.test import TestCase
 
-from minecode_pipelines.miners import write_packageurls_to_file
+from minecode_pipelines.pipes import write_packageurls_to_file
 from minecode_pipelines.pipes.cargo import store_cargo_packages
 
 DATA_DIR = Path(__file__).parent.parent / "test_data" / "cargo"
