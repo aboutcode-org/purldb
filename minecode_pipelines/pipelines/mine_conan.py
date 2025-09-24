@@ -20,23 +20,26 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-
-from git.repo.base import Repo
+import os
 from scanpipe.pipelines import Pipeline
-
-from minecode_pipelines.utils import get_temp_file
+from minecode_pipelines import pipes
 from minecode_pipelines.miners import conan
 from scanpipe.pipes import federatedcode
 
+MINECODE_CONAN_INDEX_REPO = "https://github.com/conan-io/conan-center-index"
+MINECODE_DATA_CONAN_REPO = os.environ.get(
+    "MINECODE_DATA_CONAN_REPO", "https://github.com/conan-io/conan-center-index"
+)
 
-class MineandPublishConanPURLs(Pipeline):
+
+class MineConan(Pipeline):
     """Pipeline to mine Conan packages and publish them to FederatedCode repo."""
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.clone_conan_repo,
+            cls.clone_conan_repos,
             cls.mine_and_publish_conan_package_urls,
         )
 
@@ -45,17 +48,31 @@ class MineandPublishConanPURLs(Pipeline):
         Check if the project fulfills the following criteria for
         pushing the project result to FederatedCode.
         """
-        federatedcode.check_federatedcode_configured_and_available()
+        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
-    def clone_conan_repo(self):
+    def clone_conan_repos(self):
         """
-        Clone the repo at repo_url and return the VCSResponse object
+        Clone the Conan-related repositories (index, data, and pipelines config)
+        and store their Repo objects in the corresponding instance variables.
         """
-        conan_repo_url = "git+https://github.com/conan-io/conan-center-index"
-        fed_repo_url = "git+https://github.com/conan-io/conan-center-index"
+        self.conan_index_repo = federatedcode.clone_repository(MINECODE_CONAN_INDEX_REPO)
+        self.cloned_data_repo = federatedcode.clone_repository(MINECODE_DATA_CONAN_REPO)
 
-        self.fed_repo = federatedcode.clone_repository(fed_repo_url)
-        self.conan_repo = Repo.clone_from(conan_repo_url, get_temp_file())
+        if self.log:
+            self.log(
+                f"{MINECODE_CONAN_INDEX_REPO} repo cloned at: {self.conan_index_repo.working_dir}"
+            )
+            self.log(
+                f"{MINECODE_DATA_CONAN_REPO} repo cloned at: {self.cloned_data_repo.working_dir}"
+            )
 
     def mine_and_publish_conan_package_urls(self):
-        conan.mine_and_publish_conan_packageurls(conan_repo=self.conan_repo, fed_repo=self.fed_repo)
+        conan.mine_and_publish_conan_packageurls(
+            self.conan_index_repo, self.cloned_data_repo, self.log
+        )
+
+    def delete_cloned_repos(self):
+        pipes.delete_cloned_repos(
+            repos=[self.conan_index_repo, self.cloned_data_repo],
+            logger=self.log,
+        )
