@@ -13,7 +13,7 @@ DATA_DIR = Path(__file__).parent.parent / "test_data" / "cargo"
 
 
 class CargoPipelineTests(TestCase):
-    @patch("minecode_pipelines.pipes.cargo.write_packageurls_to_file")
+    @patch("minecode_pipelines.pipes.cargo.write_data_to_yaml_file")
     def test_collect_packages_from_cargo_calls_write(self, mock_write):
         packages_file = DATA_DIR / "c5store"
         expected_file = DATA_DIR / "c5store-expected.yaml"

@@ -1,8 +1,10 @@
+from pathlib import Path
+
 from aboutcode import hashid
 from packageurl import PackageURL
 from aboutcode.hashid import get_core_purl
 
-from minecode_pipelines.pipes import write_packageurls_to_file
+from minecode_pipelines.pipes import write_data_to_yaml_file
 
 
 def store_cargo_packages(packages, repo):
@@ -25,4 +27,6 @@ def store_cargo_packages(packages, repo):
         updated_purls.append(purl)
 
     ppath = hashid.get_package_purls_yml_file_path(base_purl)
-    return write_packageurls_to_file(repo, ppath, updated_purls), base_purl
+    purl_file_full_path = Path(repo.working_dir) / ppath
+    write_data_to_yaml_file(path=purl_file_full_path, data=updated_purls)
+    return purl_file_full_path, base_purl
