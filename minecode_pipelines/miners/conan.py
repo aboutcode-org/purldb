@@ -8,12 +8,17 @@
 #
 
 from pathlib import Path
-from minecode_pipelines.pipes import conan
 import saneyaml
+from scanpipe.pipes.federatedcode import commit_changes
+from scanpipe.pipes.federatedcode import push_changes
+from minecode_pipelines import VERSION
+from minecode_pipelines.pipes.conan import store_canon_packages
+
+PACKAGE_BATCH_SIZE = 1000
 
 
-def mine_and_publish_conan_packageurls(conan_repo, fed_repo):
-    base_path = Path(conan_repo.working_dir)
+def mine_and_publish_conan_packageurls(conan_index_repo, cloned_data_repo, logger):
+    base_path = Path(conan_index_repo.working_dir)
 
     yml_files = []
     for file_path in base_path.glob("recipes/**/*"):
@@ -21,8 +26,10 @@ def mine_and_publish_conan_packageurls(conan_repo, fed_repo):
             continue
         yml_files.append(file_path)
 
-    counter = 0
-    batch_size = 1000
+    file_counter = 0
+    purl_files = []
+    purls = []
+
     for idx, file_path in enumerate(yml_files, start=1):
         package = file_path.parts[-2]
         with open(file_path, encoding="utf-8") as f:
@@ -31,8 +38,25 @@ def mine_and_publish_conan_packageurls(conan_repo, fed_repo):
         if not versions:
             continue
 
-        counter += 1
-        push_commit = counter >= batch_size or idx == len(yml_files)
-        conan.collect_and_write_purls_for_canon(package, versions, fed_repo, push_commit)
+        file_counter += 1
+        push_commit = file_counter >= PACKAGE_BATCH_SIZE or idx == len(yml_files)
+
+        result_store = store_canon_packages(package, versions, cloned_data_repo)
+        if result_store:
+            purl_file, base_purl = result_store
+            logger(f"writing packageURLs for package: {base_purl} at: {purl_file}")
+
+            purl_files.append(purl_file)
+            purls.append(str(base_purl))
+
         if push_commit:
-            counter = 0
+            commit_changes(
+                repo=cloned_data_repo,
+                files_to_commit=purl_files,
+                purls=purls,
+                mine_type="packageURL",
+                tool_name="pkg:pypi/minecode-pipelines",
+                tool_version=VERSION,
+            )
+            push_changes(repo=cloned_data_repo)
+            file_counter = 0
