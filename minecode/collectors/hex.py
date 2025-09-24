@@ -11,7 +11,7 @@ import logging
 import requests
 from packageurl import PackageURL
 
-from minecode.miners.pub import build_packages
+from minecode.miners.hex import build_packages
 from minecode import priority_router
 from packagedb.models import PackageContentType
 
@@ -21,15 +21,13 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 
-def get_pub_package_json(name, version=None):
+def get_hex_package_json(name):
     """
-    Return the metadata JSON for a package from pub.dev API.
-    Example: https://pub.dev/api/packages/flutter
+    Return the metadata JSON for a package from hex.pm API.
+    Example: https://hex.pm/api/packages/phoenix
     """
-    if not version:
-        url = f"https://pub.dev/api/packages/{name}"
-    else:
-        url = f"https://pub.dev/api/packages/{name}/versions/{version}"
+
+    url = f"https://hex.pm/api/packages/{name}"
 
     try:
         response = requests.get(url)
@@ -39,21 +37,22 @@ def get_pub_package_json(name, version=None):
         logger.error(f"HTTP error occurred: {err}")
 
 
-def map_pub_package(package_url, pipelines, priority=0):
+def map_hex_package(package_url, pipelines, priority=0):
     """
-    Add a pub `package_url` to the PackageDB.
+    Add a hex `package_url` to the PackageDB.
     """
     from minecode.model_utils import add_package_to_scan_queue, merge_or_create_package
 
     name = package_url.name
-    package_json = get_pub_package_json(name=name, version=package_url.version)
+    package_json = get_hex_package_json(name=name)
 
     if not package_json:
-        error = f"Package does not exist on pub.dev: {package_url}"
+        error = f"Package does not exist on hex.pm: {package_url}"
         logger.error(error)
         return error
 
-    packages = build_packages(package_json, package_url)
+    packages = build_packages(metadata_dict=package_json, purl=package_url)
+
     error = None
     for package in packages:
         package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
@@ -66,10 +65,10 @@ def map_pub_package(package_url, pipelines, priority=0):
     return error
 
 
-@priority_router.route("pkg:pub/.*")
+@priority_router.route("pkg:hex/.*")
 def process_request(purl_str, **kwargs):
     """
-    Process `priority_resource_uri` containing a pub Package URL (PURL).
+    Process `priority_resource_uri` containing a hex Package URL (PURL).
     """
     from minecode.model_utils import DEFAULT_PIPELINES
 
@@ -79,7 +78,7 @@ def process_request(purl_str, **kwargs):
 
     package_url = PackageURL.from_string(purl_str)
 
-    error_msg = map_pub_package(package_url, pipelines, priority)
+    error_msg = map_hex_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg
