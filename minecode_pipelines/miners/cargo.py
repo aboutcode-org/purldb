@@ -45,7 +45,10 @@ def process_cargo_packages(cargo_index_repo, cloned_data_repo, config_repo, logg
 
         try:
             next_commit = get_commit_at_distance_ahead(
-                cargo_index_repo, checkpoints_last_commit, num_commits_ahead=COMMIT_BATCH_SIZE, branch_name="master"
+                cargo_index_repo,
+                checkpoints_last_commit,
+                num_commits_ahead=COMMIT_BATCH_SIZE,
+                branch_name="master",
             )
         except ValueError as e:
             logger(str(e))

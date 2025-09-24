@@ -1,3 +1,12 @@
+#
+# Copyright (c) nexB Inc. and others. All rights reserved.
+# purldb is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
+#
+
 import json
 import tempfile
 from pathlib import Path
@@ -6,7 +15,7 @@ from unittest.mock import Mock, patch
 import saneyaml
 from django.test import TestCase
 
-from minecode_pipelines.pipes import write_packageurls_to_file
+from minecode_pipelines.pipes import write_data_to_yaml_file
 from minecode_pipelines.pipes.cargo import store_cargo_packages
 
 DATA_DIR = Path(__file__).parent.parent / "test_data" / "cargo"
@@ -27,22 +36,24 @@ class CargoPipelineTests(TestCase):
         with open(expected_file, encoding="utf-8") as f:
             expected = saneyaml.load(f)
 
-        repo = Mock()
-        store_cargo_packages(packages, repo)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo = Mock()
+            repo.working_dir = tmpdir
 
-        mock_write.assert_called_once()
-        args, kwargs = mock_write.call_args
-        called_repo, base_purl, written_packages = args
+            store_cargo_packages(packages, repo)
 
-        self.assertEqual(called_repo, repo)
+            mock_write.assert_called_once()
+            args, kwargs = mock_write.call_args
+            base_purl, written_packages = kwargs["path"], kwargs["data"]
 
-        expected_base_purl = "aboutcode-packages-cargo-0/cargo/c5store/purls.yml"
-        self.assertEqual(str(base_purl), str(expected_base_purl))
-        self.assertEqual(written_packages, expected)
+            expected_base_purl = (
+                Path(tmpdir) / "aboutcode-packages-cargo-0" / "cargo" / "c5store" / "purls.yml"
+            )
 
-    def test_add_purl_result_with_mock_repo(self):
-        purls = [{"purl": "pkg:pypi/django@4.2.0"}, {"purl": "pkg:pypi/django@4.3.0"}]
+            self.assertEqual(str(base_purl), str(expected_base_purl))
+            self.assertEqual(written_packages, expected)
 
+    def _assert_purls_written(self, purls):
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_dir = Path(tmpdir)
 
@@ -52,11 +63,23 @@ class CargoPipelineTests(TestCase):
 
             purls_file = repo_dir / "purls.yaml"
 
-            relative_path = write_packageurls_to_file(mock_repo, purls_file, purls)
+            write_data_to_yaml_file(purls_file, purls)
 
-            written_file = repo_dir / relative_path
-            self.assertTrue(written_file.exists())
+            self.assertTrue(purls_file.exists())
 
-            with open(written_file, encoding="utf-8") as f:
+            with open(purls_file, encoding="utf-8") as f:
                 content = saneyaml.load(f)
+
             self.assertEqual(content, purls)
+
+    def test_add_purl_result_with_mock_repo(self):
+        self._assert_purls_written(
+            [{"purl": "pkg:pypi/django@4.2.0"}, {"purl": "pkg:pypi/django@4.3.0"}]
+        )
+
+    def test_add_empty_purl_result_with_mock_repo(self):
+        self._assert_purls_written([])
+
+    def test_add_invalid_purl_with_mock_repo(self):
+        # invalid but still written as empty file
+        self._assert_purls_written([{"purl": "pkg:pypi/django"}])
