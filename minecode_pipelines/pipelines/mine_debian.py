@@ -20,13 +20,14 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from scanpipe.pipelines.publish_to_federatedcode import PublishToFederatedCode
+from scanpipe.pipelines import Pipeline
+from scanpipe.pipes import federatedcode
 
 from minecode_pipelines import pipes
 from minecode_pipelines.pipes import debian
 
 
-class MineDebian(PublishToFederatedCode):
+class MineDebian(Pipeline):
     """
     Mine all packageURLs from a Debian index and publish them to
     a FederatedCode repo.
@@ -39,6 +40,13 @@ class MineDebian(PublishToFederatedCode):
             cls.collect_packages_from_debian,
             cls.delete_cloned_repos,
         )
+
+    def check_federatedcode_eligibility(self):
+        """
+        Check if the project fulfills the following criteria for
+        pushing the project result to FederatedCode.
+        """
+        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
     def collect_packages_from_debian(self):
         self.repos = debian.collect_packages_from_debian(self.project, self.log)
