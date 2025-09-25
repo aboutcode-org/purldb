@@ -778,7 +778,7 @@ def collect_packages_from_maven(commits_per_push=PACKAGE_BATCH_SIZE, logger=None
             )
 
             # commit changes
-            pipes.commit_changes(
+            federatedcode.commit_changes(
                 repo=data_repo,
                 files_to_commit=[purl_file],
                 purls=current_purls,
@@ -796,7 +796,27 @@ def collect_packages_from_maven(commits_per_push=PACKAGE_BATCH_SIZE, logger=None
             prev_purl = current_purl
         current_purls.append(package.to_string())
 
-    federatedcode.push_changes(repo=data_repo)
+    if current_purls:
+        # write packageURLs to file
+        package_base_dir = hashid.get_package_base_dir(purl=prev_purl)
+        purl_file = pipes.write_packageurls_to_file(
+            repo=data_repo,
+            base_dir=package_base_dir,
+            packageurls=current_purls,
+        )
+
+        # commit changes
+        federatedcode.commit_changes(
+            repo=data_repo,
+            files_to_commit=[purl_file],
+            purls=current_purls,
+            mine_type="packageURL",
+            tool_name="pkg:pypi/minecode-pipelines",
+            tool_version=VERSION,
+        )
+
+        # Push changes to remote repository
+        federatedcode.push_changes(repo=data_repo)
 
     # update last_incremental so we can pick up from the proper place next time
     last_incremental = maven_nexus_collector.index_properties.get("nexus.index.last-incremental")

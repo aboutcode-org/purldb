@@ -47,7 +47,8 @@ urls = { Homepage = "https://github.com/aboutcode-org/purldb" }
 [project.entry-points."scancodeio_pipelines"]
 mine_pypi = "minecode_pipelines.pipelines.mine_pypi:MinePypi"
 mine_maven = "minecode_pipeline.pipelines.mine_maven:MineMaven"
-mine_alpine = "minecode_pipelines.pipelines.mine_alpine:MineAlpinePackages"
+mine_debian = "minecode_pipelines.pipelines.mine_debian:MineDebian"
+mine_alpine = "minecode_pipelines.pipelines.mine_alpine:MineAlpine"
 
 [tool.bumpversion]
 current_version = "0.0.1b1"
