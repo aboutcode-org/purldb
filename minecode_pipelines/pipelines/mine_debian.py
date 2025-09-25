@@ -49,7 +49,7 @@ class MineDebian(Pipeline):
         federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
     def collect_packages_from_debian(self):
-        self.repos = debian.collect_packages_from_debian(self.project, self.log)
+        self.repos = debian.collect_packages_from_debian(logger=self.log)
 
     def delete_cloned_repos(self):
         pipes.delete_cloned_repos(repos=self.repos, logger=self.log)

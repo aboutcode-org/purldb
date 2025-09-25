@@ -55,7 +55,7 @@ class MineMaven(Pipeline):
         federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
     def collect_packages_from_maven(self):
-        self.repos = maven.collect_packages_from_maven(self.project, self.log)
+        self.repos = maven.collect_packages_from_maven(logger=self.log)
 
     def delete_cloned_repos(self):
         pipes.delete_cloned_repos(repos=self.repos, logger=self.log)
