@@ -2,17 +2,16 @@
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
-# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
-# See https://github.com/nexB/purldb for support or download.
+# See http://www.apache.org/licenses/LICENSE-2.0
+# See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
-
+import json
 import logging
-import requests
 from packageurl import PackageURL
-
-from minecode.miners.pub import build_packages
 from minecode import priority_router
+from minecode.miners import github
+from minecode.miners.github import build_github_packages
 from packagedb.models import PackageContentType
 
 logger = logging.getLogger(__name__)
@@ -21,55 +20,41 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 
-def get_pub_package_json(name, version=None):
+def map_swift_package(package_url, pipelines, priority=0):
     """
-    Return the metadata JSON for a package from pub.dev API.
-    Example: https://pub.dev/api/packages/flutter
-    """
-    if not version:
-        url = f"https://pub.dev/api/packages/{name}"
-    else:
-        url = f"https://pub.dev/api/packages/{name}/versions/{version}"
-
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.HTTPError as err:
-        logger.error(f"HTTP error occurred: {err}")
-
-
-def map_pub_package(package_url, pipelines, priority=0):
-    """
-    Add a pub `package_url` to the PackageDB.
+    Add a Swift distribution `package_url` to the PackageDB.
     """
     from minecode.model_utils import add_package_to_scan_queue, merge_or_create_package
 
-    name = package_url.name
-    package_json = get_pub_package_json(name=name, version=package_url.version)
+    namespace = package_url.namespace
+    version = package_url.version
 
-    if not package_json:
-        error = f"Package does not exist on pub.dev: {package_url}"
-        logger.error(error)
-        return error
+    owner_name = namespace.split("/")[-1]
 
-    packages = build_packages(package_json, package_url)
+    uri = f"https://api.github.com/repos/{owner_name}/{package_url.name}"
+    _, response_text, _ = github.GithubSingleRepoVisitor(uri)
+    repo_data = json.loads(response_text)
+    repo_data["tags"] = [tag for tag in repo_data["tags"] if tag["name"] == version]
+    packages = build_github_packages(json.dumps(repo_data), uri, package_url)
+
     error = None
     for package in packages:
+        package.type = "swift"
+        package.namespace = namespace
         package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
         db_package, _, _, error = merge_or_create_package(package, visit_level=0)
         if error:
             break
+
         if db_package:
             add_package_to_scan_queue(package=db_package, pipelines=pipelines, priority=priority)
-
     return error
 
 
-@priority_router.route("pkg:pub/.*")
+@priority_router.route("pkg:swift/.*")
 def process_request(purl_str, **kwargs):
     """
-    Process `priority_resource_uri` containing a pub Package URL (PURL).
+    Process Swift Package URL (PURL).
     """
     from minecode.model_utils import DEFAULT_PIPELINES
 
@@ -78,8 +63,7 @@ def process_request(purl_str, **kwargs):
     priority = kwargs.get("priority", 0)
 
     package_url = PackageURL.from_string(purl_str)
-
-    error_msg = map_pub_package(package_url, pipelines, priority)
+    error_msg = map_swift_package(package_url, pipelines, priority)
 
     if error_msg:
         return error_msg

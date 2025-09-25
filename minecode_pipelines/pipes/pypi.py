@@ -34,19 +34,16 @@ from minecode_pipelines.pipes import PERIODIC_SYNC_STATE
 
 
 from minecode_pipelines.miners.pypi import get_pypi_packages
-from minecode_pipelines.miners.pypi import load_pypi_packages
 from minecode_pipelines.miners.pypi import get_pypi_packageurls
+from minecode_pipelines.miners.pypi import load_pypi_packages
 from minecode_pipelines.miners.pypi import PYPI_REPO
 from minecode_pipelines.miners.pypi import write_packages_json
 
 from minecode_pipelines.miners.pypi import PYPI_TYPE
 from minecode_pipelines.utils import grouper
 
-from packageurl import PackageURL
-
 from aboutcode.hashid import get_package_base_dir
-
-
+from packageurl import PackageURL
 from scanpipe.pipes.federatedcode import clone_repository
 from scanpipe.pipes.federatedcode import commit_changes
 from scanpipe.pipes.federatedcode import push_changes
