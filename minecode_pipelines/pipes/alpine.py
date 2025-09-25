@@ -255,7 +255,7 @@ class AlpineCollector:
                             yield current_purl, pd
 
 
-def collect_packages_from_alpine(logger=None):
+def collect_packages_from_alpine(commits_per_push=PACKAGE_BATCH_SIZE, logger=None):
     # Clone data and config repo
     data_repo = federatedcode.clone_repository(
         repo_url=MINECODE_DATA_ALPINE_REPO,
@@ -269,24 +269,20 @@ def collect_packages_from_alpine(logger=None):
         logger(f"{MINECODE_DATA_ALPINE_REPO} repo cloned at: {data_repo.working_dir}")
         logger(f"{pipes.MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {config_repo.working_dir}")
 
-
     # download and iterate through alpine indices
     alpine_collector = AlpineCollector()
-    packages_by_purls = defaultdict(list)
     for i, (current_purl, package) in enumerate(alpine_collector.get_packages(), start=1):
-        packages_by_purls[current_purl].append(package.to_string())
-
-    for current_purl, purls in packages_by_purls.items():
-        # write packageURLs to file
         package_base_dir = hashid.get_package_base_dir(purl=current_purl)
+        purls = [package.purl]
         purl_file = pipes.write_packageurls_to_file(
             repo=data_repo,
             base_dir=package_base_dir,
             packageurls=purls,
+            append=True
         )
 
         # commit changes
-        pipes.commit_changes(
+        federatedcode.commit_changes(
             repo=data_repo,
             files_to_commit=[purl_file],
             purls=purls,
@@ -295,6 +291,11 @@ def collect_packages_from_alpine(logger=None):
             tool_version=VERSION,
         )
 
+        # Push changes to remote repository
+        push_commit = not bool(i % commits_per_push)
+        if push_commit:
+            federatedcode.push_changes(repo=data_repo)
+    
     federatedcode.push_changes(repo=data_repo)
 
     repos_to_clean = [data_repo, config_repo]
