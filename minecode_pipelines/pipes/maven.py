@@ -778,7 +778,7 @@ def collect_packages_from_maven(commits_per_push=PACKAGE_BATCH_SIZE, logger=None
             )
 
             # commit changes
-            pipes.commit_changes(
+            federatedcode.commit_changes(
                 repo=data_repo,
                 files_to_commit=[purl_file],
                 purls=current_purls,
@@ -806,7 +806,7 @@ def collect_packages_from_maven(commits_per_push=PACKAGE_BATCH_SIZE, logger=None
         )
 
         # commit changes
-        pipes.commit_changes(
+        federatedcode.commit_changes(
             repo=data_repo,
             files_to_commit=[purl_file],
             purls=current_purls,
