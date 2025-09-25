@@ -6,10 +6,8 @@
 # See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
-
-import os
 import tempfile
-
+import os
 from commoncode.fileutils import create_dir
 
 from itertools import zip_longest
