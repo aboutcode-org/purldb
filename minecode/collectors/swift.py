@@ -6,15 +6,12 @@
 # See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
-
+import json
 import logging
-
-import requests
 from packageurl import PackageURL
-from packageurl.contrib.purl2url import build_swift_download_url
-from packagedcode import models as scan_models
-
 from minecode import priority_router
+from minecode.miners import github
+from minecode.miners.github import build_github_packages
 from packagedb.models import PackageContentType
 
 logger = logging.getLogger(__name__)
@@ -30,34 +27,27 @@ def map_swift_package(package_url, pipelines, priority=0):
     from minecode.model_utils import add_package_to_scan_queue, merge_or_create_package
 
     namespace = package_url.namespace
-    name = package_url.name
     version = package_url.version
 
-    download_url = build_swift_download_url(str(package_url))
+    owner_name = namespace.split("/")[-1]
 
-    try:
-        response = requests.head(download_url)
-        response.raise_for_status()
-    except requests.RequestException as e:
-        error = f"Error checking package existence on Swift: {package_url}, error: {e}"
-        logger.error(error)
-        return error
+    uri = f"https://api.github.com/repos/{owner_name}/{package_url.name}"
+    _, response_text, _ = github.GithubSingleRepoVisitor(uri)
+    repo_data = json.loads(response_text)
+    repo_data["tags"] = [tag for tag in repo_data["tags"] if tag["name"] == version]
+    packages = build_github_packages(json.dumps(repo_data), uri, package_url)
 
-    package = scan_models.Package(
-        type="swift",
-        namespace=namespace,
-        name=name,
-        version=version,
-        download_url=download_url,
-        vcs_url=f"https://{namespace}/{name}",
-    )
+    error = None
+    for package in packages:
+        package.type = "swift"
+        package.namespace = namespace
+        package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
+        db_package, _, _, error = merge_or_create_package(package, visit_level=0)
+        if error:
+            break
 
-    package.extra_data["package_content"] = PackageContentType.SOURCE_ARCHIVE
-    db_package, _, _, error = merge_or_create_package(package, visit_level=0)
-
-    if db_package:
-        add_package_to_scan_queue(package=db_package, pipelines=pipelines, priority=priority)
-
+        if db_package:
+            add_package_to_scan_queue(package=db_package, pipelines=pipelines, priority=priority)
     return error
 
 

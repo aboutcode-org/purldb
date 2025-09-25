@@ -6,8 +6,10 @@
 # See https://github.com/nexB/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
-
+import json
 import os
+from unittest.mock import patch
+
 from django.test import TestCase
 from packageurl import PackageURL
 import packagedb
@@ -16,20 +18,36 @@ from minecode.utils_test import JsonBasedTesting
 
 
 class SwiftPriorityQueueTests(JsonBasedTesting, TestCase):
-    def setUp(self):
-        super().setUp()
-        self.package_url = PackageURL.from_string("pkg:swift/github.com/Alamofire/Alamofire@5.4.3")
-        self.download_url = "https://github.com/Alamofire/Alamofire/archive/5.4.3.zip"
+    test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
     def test_map_swift_package(self):
+        package_url = PackageURL.from_string("pkg:swift/github.com/Alamofire/Alamofire@5.4.3")
+
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(package_count, 0)
 
-        swift.map_swift_package(self.package_url, ("test_pipelines"))
+        swift.map_swift_package(package_url, ("test_pipelines"))
         package_count = packagedb.models.Package.objects.all().count()
-        self.assertEqual(package_count, 1)
+        self.assertEqual(package_count, 2)
         package = packagedb.models.Package.objects.all().first()
-        expected_download_url = self.download_url
 
-        self.assertEqual(package.purl, str(self.package_url))
-        self.assertEqual(package.download_url, expected_download_url)
+        self.assertEqual(package.purl, str(package_url))
+
+    @patch("minecode.collectors.swift.github.GithubSingleRepoVisitor")
+    def test_map_swift_package1(self, mock_github_visitor):
+        package_url = PackageURL.from_string(
+            "pkg:swift/github.com/erikdrobne/SwiftUICoordinator@3.0.0"
+        )
+
+        expected_json_loc = self.get_test_loc("swift/swift-ui-coordinator.json")
+
+        with open(expected_json_loc) as f:
+            expected_json_contents = json.load(f)
+            raw_repo_text = json.dumps(expected_json_contents)
+
+        mock_github_visitor.return_value = (None, raw_repo_text, None)
+        swift.map_swift_package(package_url, ("test_pipelines",))
+        package_count = packagedb.models.Package.objects.all().count()
+        self.assertEqual(package_count, 2)
+        package = packagedb.models.Package.objects.all().first()
+        self.assertEqual(package.purl, str(package_url))
