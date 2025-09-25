@@ -15,20 +15,15 @@ import saneyaml
 import yaml
 
 from django.test import TestCase
-from packageurl import PackageURL
 
-from minecode_pipelines.pipes.conan import add_purl_result, collect_and_write_purls_for_canon
+from minecode_pipelines.pipes import write_data_to_yaml_file
+from minecode_pipelines.pipes.conan import store_conan_packages
 
 DATA_DIR = Path(__file__).parent.parent / "test_data" / "conan"
 
 
 class ConanPipelineTests(TestCase):
-    def _get_temp_dir(self):
-        import tempfile
-
-        return tempfile.mkdtemp()
-
-    @patch("minecode_pipelines.pipes.conan.write_purls_to_repo")
+    @patch("minecode_pipelines.pipes.conan.write_data_to_yaml_file")
     def test_collect_packages_from_cargo_calls_write(self, mock_write):
         packages_file = DATA_DIR / "cairo-config.yml"
         expected_file = DATA_DIR / "expected-cairo-purls.yml"
@@ -39,34 +34,24 @@ class ConanPipelineTests(TestCase):
         with open(expected_file, encoding="utf-8") as f:
             expected = saneyaml.load(f)
 
-        repo = Mock()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo = Mock()
+            repo.working_dir = tmpdir
 
-        pacakge_name = "cairo"
-        result = collect_and_write_purls_for_canon(pacakge_name, versions_data, repo)
-        self.assertIsNone(result)
+            store_conan_packages("cairo", versions_data, repo)
 
-        mock_write.assert_called_once()
-        args, kwargs = mock_write.call_args
-        called_repo, base_purl, written_packages, push_commit = args
+            mock_write.assert_called_once()
+            args, kwargs = mock_write.call_args
+            base_purl, written_packages = kwargs["path"], kwargs["data"]
 
-        self.assertEqual(called_repo, repo)
+            expected_base_purl = (
+                Path(tmpdir) / "aboutcode-packages-conan-0" / "conan" / "cairo" / "purls.yml"
+            )
 
-        expected_base_purl = PackageURL(
-            type="conan",
-            name="cairo",
-        )
+            self.assertEqual(str(base_purl), str(expected_base_purl))
+            self.assertEqual(written_packages, expected)
 
-        self.assertEqual(str(base_purl), str(expected_base_purl))
-        self.assertEqual(written_packages, expected)
-
-    def test_add_purl_result_with_mock_repo(self):
-        purls = [
-            {"purl": "pkg:conan/cairo@1.18.0"},
-            {"purl": "pkg:conan/cairo@1.17.8"},
-            {"purl": "pkg:conan/cairo@1.17.6"},
-            {"purl": "pkg:conan/cairo@1.17.4"},
-        ]
-
+    def _assert_purls_written(self, purls):
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_dir = Path(tmpdir)
 
@@ -76,14 +61,24 @@ class ConanPipelineTests(TestCase):
 
             purls_file = repo_dir / "purls.yaml"
 
-            relative_path = add_purl_result(purls, mock_repo, purls_file)
+            write_data_to_yaml_file(purls_file, purls)
 
-            written_file = repo_dir / relative_path
-            self.assertTrue(written_file.exists())
+            self.assertTrue(purls_file.exists())
 
-            with open(written_file, encoding="utf-8") as f:
+            with open(purls_file, encoding="utf-8") as f:
                 content = saneyaml.load(f)
 
             self.assertEqual(content, purls)
 
-            mock_repo.index.add.assert_called_once_with([relative_path])
+    def test_add_purl_result_with_mock_repo(self):
+        purls = [
+            {"purl": "pkg:conan/cairo@1.18.0"},
+            {"purl": "pkg:conan/cairo@1.17.8"},
+            {"purl": "pkg:conan/cairo@1.17.6"},
+            {"purl": "pkg:conan/cairo@1.17.4"},
+        ]
+
+        self._assert_purls_written(purls)
+
+    def test_add_empty_purl_result_with_mock_repo(self):
+        self._assert_purls_written([])

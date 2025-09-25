@@ -26,7 +26,7 @@ from aboutcode import hashid
 from minecode_pipelines.pipes import write_data_to_yaml_file
 
 
-def store_canon_packages(pacakge_name, versions_data, fed_repo):
+def store_conan_packages(pacakge_name, versions_data, fed_repo):
     """Collect Conan package versions into purls and write them to the repo."""
 
     base_purl = PackageURL(type="conan", name=pacakge_name)

@@ -27,8 +27,9 @@ from minecode_pipelines.miners import conan
 from scanpipe.pipes import federatedcode
 
 MINECODE_CONAN_INDEX_REPO = "https://github.com/conan-io/conan-center-index"
+
 MINECODE_DATA_CONAN_REPO = os.environ.get(
-    "MINECODE_DATA_CONAN_REPO", "https://github.com/conan-io/conan-center-index"
+    "MINECODE_DATA_CONAN_REPO", "https://github.com/aboutcode-data/minecode-data-conan-test"
 )
 
 
