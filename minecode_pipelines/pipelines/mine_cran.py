@@ -24,13 +24,17 @@ import os
 from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
-from minecode_pipelines.miners.cran import get_cran_db
+from minecode_pipelines import pipes
+from minecode_pipelines.miners.cran import fetch_cran_db
 from minecode_pipelines.pipes import cran
 
-FEDERATEDCODE_CRAN_GIT_URL = os.environ.get("FEDERATEDCODE_CRAN_GIT_URL", "")
+
+MINECODE_DATA_CRAN_REPO = os.environ.get(
+    "MINECODE_DATA_CRAN_REPO", "https://github.com/aboutcode-data/minecode-data-cran-test"
+)
 
 
-class MineandPublishCRANPURLs(Pipeline):
+class MineCran(Pipeline):
     """
     Mine all packageURLs from a CRAN R index and publish them to a FederatedCode repo.
     """
@@ -48,15 +52,34 @@ class MineandPublishCRANPURLs(Pipeline):
         Check if the project fulfills the following criteria for
         pushing the project result to FederatedCode.
         """
-        federatedcode.check_federatedcode_configured_and_available()
+        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
     def setup_federatedcode_cran(self):
         """
         Clone the FederatedCode CRAN repository and download the CRAN DB JSON file.
         """
-        self.fed_repo = federatedcode.clone_repository(repo_url=FEDERATEDCODE_CRAN_GIT_URL)
-        self.db_path = get_cran_db()
+        self.cloned_data_repo = federatedcode.clone_repository(MINECODE_DATA_CRAN_REPO)
+        self.db_path = fetch_cran_db()
+
+        if self.log:
+            self.log(
+                f"{MINECODE_DATA_CRAN_REPO} repo cloned at: {self.cloned_data_repo.working_dir}"
+            )
 
     def mine_and_publish_cran_packageurls(self):
         """Get cran packageURLs for all mined cran package names."""
-        cran.mine_and_publish_cran_packageurls(fed_repo=self.fed_repo, db_path=self.db_path)
+        cran.mine_and_publish_cran_packageurls(
+            cloned_data_repo=self.cloned_data_repo, db_path=self.db_path, logger=self.log
+        )
+
+    def cleanup_db_and_repo(self):
+        self.log(f"Cleaning database file at: {self.db_path}")
+        os.remove(self.db_path)
+
+        self.log(
+            f"Deleting cloned repo {MINECODE_DATA_CRAN_REPO} from: {self.cloned_data_repo.working_dir}"
+        )
+        pipes.delete_cloned_repos(
+            repos=[self.cloned_data_repo],
+            logger=self.log,
+        )

@@ -10,7 +10,7 @@ from pathlib import Path
 import requests
 
 
-def get_cran_db(output_file="cran_db.json") -> Path:
+def fetch_cran_db(output_file="cran_db.json") -> Path:
     """
     Download the CRAN package database (~250MB JSON) in a memory-efficient way.
     Saves it to a file instead of loading everything into memory.
