@@ -1,0 +1,158 @@
+[
+  {
+    "type": "apk",
+    "namespace": "alpine",
+    "name": "prspkt",
+    "version": "0.3-r2",
+    "qualifiers": {
+      "arch": "x86_64",
+      "distro": "v3.22"
+    },
+    "subpath": null,
+    "primary_language": null,
+    "description": "Fast floating window manager",
+    "release_date": null,
+    "parties": [
+      {
+        "type": null,
+        "role": "maintainer",
+        "name": "prspkt",
+        "email": "prspkt@protonmail.com",
+        "url": null
+      }
+    ],
+    "keywords": [],
+    "homepage_url": null,
+    "download_url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/2bwm-0.3-r2.apk",
+    "size": 22917,
+    "sha1": "8aa3e0234f2e6cf74993d256c215a0439c5143c6",
+    "md5": null,
+    "sha256": null,
+    "sha512": null,
+    "bug_tracking_url": null,
+    "code_view_url": null,
+    "vcs_url": null,
+    "copyright": null,
+    "holder": null,
+    "declared_license_expression": "isc",
+    "declared_license_expression_spdx": "ISC",
+    "license_detections": [
+      {
+        "license_expression": "isc",
+        "license_expression_spdx": "ISC",
+        "matches": [
+          {
+            "license_expression": "isc",
+            "license_expression_spdx": "ISC",
+            "from_file": null,
+            "start_line": 1,
+            "end_line": 1,
+            "matcher": "1-spdx-id",
+            "score": 100.0,
+            "matched_length": 1,
+            "match_coverage": 100.0,
+            "rule_relevance": 100,
+            "rule_identifier": "spdx-license-identifier-isc-9931cb7ad33c2eb18f322c94660b670a84186baa",
+            "rule_url": null,
+            "matched_text": "ISC"
+          }
+        ],
+        "identifier": "isc-6c4320cc-eb5b-3792-8c56-b8565fff1119"
+      }
+    ],
+    "other_license_expression": null,
+    "other_license_expression_spdx": null,
+    "other_license_detections": [],
+    "extracted_license_statement": "ISC",
+    "notice_text": null,
+    "source_packages": [],
+    "file_references": [],
+    "is_private": false,
+    "is_virtual": false,
+    "extra_data": {},
+    "dependencies": [],
+    "repository_homepage_url": "https://github.com/venam/2bwm",
+    "repository_download_url": null,
+    "api_data_url": null,
+    "datasource_id": "alpine_metadata",
+    "purl": "pkg:apk/alpine/prspkt@0.3-r2?arch=x86_64&distro=v3.22"
+  },
+  {
+    "type": "apk",
+    "namespace": "alpine",
+    "name": "prspkt",
+    "version": "0.3-r2",
+    "qualifiers": {
+      "arch": "x86_64",
+      "distro": "v3.22"
+    },
+    "subpath": null,
+    "primary_language": null,
+    "description": "Fast floating window manager (documentation)",
+    "release_date": null,
+    "parties": [
+      {
+        "type": null,
+        "role": "maintainer",
+        "name": "prspkt",
+        "email": "prspkt@protonmail.com",
+        "url": null
+      }
+    ],
+    "keywords": [],
+    "homepage_url": null,
+    "download_url": "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/2bwm-doc-0.3-r2.apk",
+    "size": 4986,
+    "sha1": "5d8c51a6d982b544c31176478a3dd0c472642d7b",
+    "md5": null,
+    "sha256": null,
+    "sha512": null,
+    "bug_tracking_url": null,
+    "code_view_url": null,
+    "vcs_url": null,
+    "copyright": null,
+    "holder": null,
+    "declared_license_expression": "isc",
+    "declared_license_expression_spdx": "ISC",
+    "license_detections": [
+      {
+        "license_expression": "isc",
+        "license_expression_spdx": "ISC",
+        "matches": [
+          {
+            "license_expression": "isc",
+            "license_expression_spdx": "ISC",
+            "from_file": null,
+            "start_line": 1,
+            "end_line": 1,
+            "matcher": "1-spdx-id",
+            "score": 100.0,
+            "matched_length": 1,
+            "match_coverage": 100.0,
+            "rule_relevance": 100,
+            "rule_identifier": "spdx-license-identifier-isc-9931cb7ad33c2eb18f322c94660b670a84186baa",
+            "rule_url": null,
+            "matched_text": "ISC"
+          }
+        ],
+        "identifier": "isc-6c4320cc-eb5b-3792-8c56-b8565fff1119"
+      }
+    ],
+    "other_license_expression": null,
+    "other_license_expression_spdx": null,
+    "other_license_detections": [],
+    "extracted_license_statement": "ISC",
+    "notice_text": null,
+    "source_packages": [],
+    "file_references": [],
+    "is_private": false,
+    "is_virtual": false,
+    "extra_data": {},
+    "dependencies": [],
+    "repository_homepage_url": "https://github.com/venam/2bwm",
+    "repository_download_url": null,
+    "api_data_url": null,
+    "datasource_id": "alpine_metadata",
+    "purl": "pkg:apk/alpine/prspkt@0.3-r2?arch=x86_64&distro=v3.22"
+  }
+]

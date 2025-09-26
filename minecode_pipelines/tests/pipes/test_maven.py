@@ -9,8 +9,10 @@
 
 import os
 
-from minecode_pipelines.pipes import maven
+from commoncode.testcase import check_against_expected_json_file
 from commoncode.testcase import FileBasedTesting
+
+from minecode_pipelines.pipes import maven
 
 
 class MavenMiscTest(FileBasedTesting):
@@ -26,7 +28,7 @@ class MavenMiscTest(FileBasedTesting):
         fields = set(fields)
         result = list(maven.get_entries(index, fields=fields))
         expected_loc = self.get_test_loc("maven/index/expected_entries.json")
-        self.check_expected_results(result, expected_loc, regen=False)
+        check_against_expected_json_file(result, expected_loc, regen=False)
 
     def test_get_entries_increment(self):
         index = self.get_test_loc("maven/index/increment/nexus-maven-repository-index.445.gz")
@@ -38,7 +40,7 @@ class MavenMiscTest(FileBasedTesting):
         fields = set(fields)
         result = list(maven.get_entries(index, fields=fields))
         expected_loc = self.get_test_loc("maven/index/increment/expected_entries.json")
-        self.check_expected_results(result, expected_loc, regen=False)
+        check_against_expected_json_file(result, expected_loc, regen=False)
 
     def test_get_entries_buggy(self):
         index = self.get_test_loc("maven/index/buggy/nexus-maven-repository-index.gz")
@@ -50,7 +52,7 @@ class MavenMiscTest(FileBasedTesting):
         fields = set(fields)
         result = list(maven.get_entries(index, fields=fields))
         expected_loc = self.get_test_loc("maven/index/buggy/expected_entries.json")
-        self.check_expected_results(result, expected_loc, regen=False)
+        check_against_expected_json_file(result, expected_loc, regen=False)
 
     def test_get_artifacts_full(self):
         index = self.get_test_loc("maven/index/nexus-maven-repository-index.gz")
@@ -64,7 +66,7 @@ class MavenMiscTest(FileBasedTesting):
 
         result = [a.to_dict() for a in maven.get_artifacts(index, fields, include_all=True)]
         expected_loc = self.get_test_loc("maven/index/expected_artifacts.json")
-        self.check_expected_results(result, expected_loc, regen=False)
+        check_against_expected_json_file(result, expected_loc, regen=False)
 
     def test_get_artifacts_increment(self):
         index = self.get_test_loc("maven/index/increment/nexus-maven-repository-index.445.gz")
@@ -76,7 +78,7 @@ class MavenMiscTest(FileBasedTesting):
         fields = set(fields)
         result = [a.to_dict() for a in maven.get_artifacts(index, fields, include_all=True)]
         expected_loc = self.get_test_loc("maven/index/increment/expected_artifacts.json")
-        self.check_expected_results(result, expected_loc, regen=False)
+        check_against_expected_json_file(result, expected_loc, regen=False)
 
     def test_get_artifacts_buggy(self):
         index = self.get_test_loc("maven/index/buggy/nexus-maven-repository-index.gz")
@@ -88,13 +90,13 @@ class MavenMiscTest(FileBasedTesting):
         fields = set(fields)
         result = [a.to_dict() for a in maven.get_artifacts(index, fields, include_all=True)]
         expected_loc = self.get_test_loc("maven/index/buggy/expected_artifacts.json")
-        self.check_expected_results(result, expected_loc, regen=False)
+        check_against_expected_json_file(result, expected_loc, regen=False)
 
     def test_get_artifacts_defaults(self):
         index = self.get_test_loc("maven/index/nexus-maven-repository-index.gz")
         result = [a.to_dict() for a in maven.get_artifacts(index)]
         expected_loc = self.get_test_loc("maven/index/expected_artifacts-defaults.json")
-        self.check_expected_results(result, expected_loc)
+        check_against_expected_json_file(result, expected_loc)
 
     def test_get_artifacts_no_worthyness(self):
         index = self.get_test_loc("maven/index/nexus-maven-repository-index.gz")
@@ -104,19 +106,19 @@ class MavenMiscTest(FileBasedTesting):
 
         result = [a.to_dict() for a in maven.get_artifacts(index, worthyness=worth)]
         expected_loc = self.get_test_loc("maven/index/expected_artifacts-all-worthy.json")
-        self.check_expected_results(result, expected_loc)
+        check_against_expected_json_file(result, expected_loc)
 
     def test_get_artifacts_defaults_increment(self):
         index = self.get_test_loc("maven/index/increment/nexus-maven-repository-index.445.gz")
         result = [a.to_dict() for a in maven.get_artifacts(index)]
         expected_loc = self.get_test_loc("maven/index/increment/expected_artifacts-defaults.json")
-        self.check_expected_results(result, expected_loc)
+        check_against_expected_json_file(result, expected_loc)
 
     def test_get_artifacts_defaults_buggy(self):
         index = self.get_test_loc("maven/index/buggy/nexus-maven-repository-index.gz")
         result = [a.to_dict() for a in maven.get_artifacts(index)]
         expected_loc = self.get_test_loc("maven/index/buggy/expected_artifacts-defaults.json")
-        self.check_expected_results(result, expected_loc)
+        check_against_expected_json_file(result, expected_loc)
 
     def test_build_artifact(self):
         entry = {

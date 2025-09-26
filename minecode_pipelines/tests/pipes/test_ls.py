@@ -10,6 +10,7 @@
 
 import os
 
+from commoncode.testcase import check_against_expected_json_file
 from commoncode.testcase import FileBasedTesting
 
 from minecode_pipelines.pipes import ls
@@ -41,7 +42,7 @@ class ParseDirectoryListingTest(FileBasedTesting):
         results.sort()
         results = [r.to_dict() for r in results]
         expected_file = self.get_test_loc(expected_file)
-        self.check_expected_results(results, expected_file, regen=regen)
+        check_against_expected_json_file(results, expected_file, regen=regen)
 
     def test_parse_listing_from_findls(self):
         test_file = "directories/find-ls"
