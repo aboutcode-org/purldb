@@ -6,3 +6,15 @@
 # See https://github.com/aboutcode-org/purldb for support or download.
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
+
+import io
+
+
+class TestLogger:
+    buffer = io.StringIO()
+
+    def write(self, msg, level=None):
+        self.buffer.write(msg)
+
+    def getvalue(self):
+        return self.buffer.getvalue()

@@ -29,7 +29,7 @@ from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
 
-class MineAndPublishNuGetPURLs(Pipeline):
+class MineNuGet(Pipeline):
     """
     Mine and Publish NuGet PackageURLs.
 
