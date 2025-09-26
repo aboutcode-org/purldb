@@ -31,7 +31,12 @@ def mine_and_publish_conan_packageurls(conan_index_repo, cloned_data_repo, logge
     purl_files = []
     purls = []
 
+    total_files = len(yml_files)
+    logger.info(f"Processing total files: {total_files}")
     for idx, file_path in enumerate(yml_files, start=1):
+        # Example: file_path = Path("repo_path/recipes/7zip/config.yml")
+        # - file_path.parts = ("repo_path", "recipes", "7zip", "config.yml")
+        # - file_path.parts[-2] = "7zip"  (the package name)
         package = file_path.parts[-2]
         with open(file_path, encoding="utf-8") as f:
             versions = saneyaml.load(f)
@@ -40,7 +45,7 @@ def mine_and_publish_conan_packageurls(conan_index_repo, cloned_data_repo, logge
             continue
 
         file_counter += 1
-        push_commit = file_counter >= PACKAGE_BATCH_SIZE or idx == len(yml_files)
+        push_commit = file_counter >= PACKAGE_BATCH_SIZE or idx == total_files
 
         result_store = store_conan_packages(package, versions, cloned_data_repo)
         if result_store:
