@@ -23,8 +23,8 @@
 from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
-from minecode_pipelines.pipes import alpine
 from minecode_pipelines import pipes
+from minecode_pipelines.pipes import alpine
 
 
 class MineAlpine(Pipeline):
