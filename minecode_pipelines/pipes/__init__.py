@@ -7,15 +7,14 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import os
 import json
+import os
+from pathlib import Path
+
 import requests
 import saneyaml
 
-from pathlib import Path
-
 from aboutcode.hashid import PURLS_FILENAME
-
 
 # states:
 # note: a state is null when mining starts
@@ -37,6 +36,13 @@ def fetch_checkpoint_from_github(config_repo, checkpoint_path):
 
     checkpoint_data = json.loads(response.text)
     return checkpoint_data
+
+
+def get_checkpoint_from_file(cloned_repo, path):
+    checkpoint_path = os.path.join(cloned_repo.working_dir, path)
+    with open(checkpoint_path) as f:
+        checkpoint_data = json.load(f)
+    return checkpoint_data or {}
 
 
 def update_checkpoints_in_github(checkpoint, cloned_repo, path):

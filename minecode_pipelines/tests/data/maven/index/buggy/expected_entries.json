@@ -1,0 +1,81 @@
+[
+  {
+    "u":"org.apache.tez|tez-common|0.5.3|javadoc|jar",
+    "m":"1419160545440",
+    "i":"jar|1417731748000|120703|2|2|1|jar",
+    "1":"1c5bd507e2ee45fa44b06f1a7a5fca97deb8bf2f"
+  },
+  {
+    "u":"org.apache.tez|tez-api|0.5.3|NA",
+    "m":"1419160545842",
+    "i":"jar|1417731734000|815503|1|1|1|jar",
+    "1":"0a6bcfb101501dba56ecbca7ec63de9fc3fd5f1d"
+  },
+  {
+    "u":"org.apache.tez|tez-api|0.5.3|tests|jar",
+    "m":"1419160545940",
+    "i":"jar|1417731736000|76651|2|2|1|jar",
+    "1":"25ca28cf15ccb60dc3d4dd5e119ea138ededfee2"
+  },
+  {
+    "u":"org.apache.tez|tez-api|0.5.3|sources|jar",
+    "m":"1419160545976",
+    "i":"jar|1417731737000|337134|2|2|1|jar",
+    "1":"e4de1d4d12472f2092f9453db507c99f0c1dee2f"
+  },
+  {
+    "u":"org.apache.tez|tez-api|0.5.3|javadoc|jar",
+    "m":"1419160546013",
+    "i":"jar|1417731738000|1938942|2|2|1|jar",
+    "1":"c81f8665ecf5f6ae12be5c3ffa2bf33bfccd4920"
+  },
+  {
+    "u":"org.apache.tez|tez|0.5.3|tests|jar",
+    "m":"1419160546317",
+    "i":"jar|1417731714000|5863|2|2|1|jar",
+    "n":"tez",
+    "1":"a3d4b0b129463c2aa8ba01199074d2303431e785"
+  },
+  {
+    "u":"org.apache.tez|tez|0.5.3|NA",
+    "m":"1419160546356",
+    "i":"pom|1417731712000|34203|0|0|1|pom",
+    "n":"tez",
+    "1":"66cbf142fb1524acc3e7ac98a25ec59b790a3b67"
+  },
+  {
+    "u":"org.apache.spark|spark-streaming_2.11|1.2.0|NA",
+    "m":"1419160673816",
+    "i":"jar|1418205584000|1228583|1|1|1|jar",
+    "n":"Spark Project Streaming",
+    "1":"./spark-streaming_2.11/1.2.0/spark-streaming_2.11-1.2.0.jar:"
+  },
+  {
+    "u":"org.apache.spark|spark-streaming_2.11|1.2.0|tests|jar",
+    "m":"1419160673904",
+    "i":"jar|1418205585000|1021750|2|2|1|jar",
+    "n":"Spark Project Streaming",
+    "1":"./spark-streaming_2.11/1.2.0/spark-streaming_2.11-1.2.0-tests.jar:"
+  },
+  {
+    "u":"org.apache.spark|spark-streaming_2.11|1.2.0|sources|jar",
+    "m":"1419160673939",
+    "i":"jar|1418205586000|163021|2|2|1|jar",
+    "n":"Spark Project Streaming",
+    "1":"./spark-streaming_2.11/1.2.0/spark-streaming_2.11-1.2.0-sources.jar:"
+  },
+  {
+    "u":"org.apache.spark|spark-streaming_2.11|1.2.0|javadoc|jar",
+    "m":"1419160673989",
+    "i":"jar|1418205583000|640869|2|2|1|jar",
+    "n":"Spark Project Streaming",
+    "1":"./spark-streaming_2.11/1.2.0/spark-streaming_2.11-1.2.0-javadoc.jar:"
+  },
+  {
+    "u":"org.apache.spark|spark-streaming_2.10|1.2.0|NA",
+    "m":"1419160674127",
+    "i":"jar|1418205621000|1259191|1|1|1|jar",
+    "n":"Spark Project Streaming",
+    "1":"./spark-streaming_2.10/1.2.0/spark-streaming_2.10-1.2.0.jar:"
+  }
+]
