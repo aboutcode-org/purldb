@@ -1,0 +1,280 @@
+{
+  "tags_metadata": [{
+      "creator": 2215,
+      "id": 10128273,
+      "images": [
+        {
+          "architecture": "amd64",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:ae4329260d61f2cd8376d7dde32ecbd36a26da2f87eda80284ad888968e6f280",
+          "os": "linux",
+          "os_features": "",
+          "os_version": null,
+          "size": 83983956,
+          "status": "active",
+          "last_pulled": "2025-09-22T11:11:26.35526421Z",
+          "last_pushed": "2025-09-08T23:52:00.871964726Z"
+        },
+        {
+          "architecture": "unknown",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:895b35fd9cb21c316e35d00bf5505d7d5a582d0ebfa5d91b3d9816e994598755",
+          "os": "unknown",
+          "os_features": "",
+          "os_version": null,
+          "size": 4443101,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:11.783743654Z",
+          "last_pushed": "2025-09-08T23:52:01.531947731Z"
+        },
+        {
+          "architecture": "arm",
+          "features": "",
+          "variant": "v5",
+          "digest": "sha256:137b174397449a5b33d86f4ada51ffe7a8716b91af02dd5f0ae1b1e464fe8861",
+          "os": "linux",
+          "os_features": "",
+          "os_version": null,
+          "size": 73793789,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:12.393685434Z",
+          "last_pushed": "2025-09-09T02:51:04.603716563Z"
+        },
+        {
+          "architecture": "unknown",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:4c7bdbb990b1c20c9e4a74d613391abbdb351a85b7310c3735a685592eacfcf1",
+          "os": "unknown",
+          "os_features": "",
+          "os_version": null,
+          "size": 4473123,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:13.035962179Z",
+          "last_pushed": "2025-09-09T02:51:05.264957032Z"
+        },
+        {
+          "architecture": "arm",
+          "features": "",
+          "variant": "v7",
+          "digest": "sha256:b9b8205843ad185303be5c96b646674e6adebc52971b108fc21ea835610253ae",
+          "os": "linux",
+          "os_features": "",
+          "os_version": null,
+          "size": 71988281,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:13.659100042Z",
+          "last_pushed": "2025-09-09T05:50:44.513981592Z"
+        },
+        {
+          "architecture": "unknown",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:ba03a3e5ee7f618d4c62653c22b9dd6862f4c21fef27110893f7e314185f98f1",
+          "os": "unknown",
+          "os_features": "",
+          "os_version": null,
+          "size": 4472548,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:14.314294916Z",
+          "last_pushed": "2025-09-09T05:50:45.113664209Z"
+        },
+        {
+          "architecture": "arm64",
+          "features": "",
+          "variant": "v8",
+          "digest": "sha256:2229aa72c5249d8fb1db2af22ac3db865790a728a9672c4829b98967d7b0bf86",
+          "os": "linux",
+          "os_features": "",
+          "os_version": null,
+          "size": 80459697,
+          "status": "active",
+          "last_pulled": "2025-09-22T11:08:38.454268335Z",
+          "last_pushed": "2025-09-09T02:51:05.625010435Z"
+        },
+        {
+          "architecture": "unknown",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:735758021c4988f77f024ea0df5e1b39ce8dfd3266729f8b9c18a80979235e21",
+          "os": "unknown",
+          "os_features": "",
+          "os_version": null,
+          "size": 4449674,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:15.689710245Z",
+          "last_pushed": "2025-09-09T02:51:06.336802474Z"
+        },
+        {
+          "architecture": "386",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:daad7bb3ea782ff0b97634843ebe862b6a89cd74d9400b45ac9caf414b1bfaf2",
+          "os": "linux",
+          "os_features": "",
+          "os_version": null,
+          "size": 82398720,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:17:21.983321735Z",
+          "last_pushed": "2025-09-08T23:52:01.873060161Z"
+        },
+        {
+          "architecture": "unknown",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:c6b9f4e0524157ffbe3491f6f952dd204e2f15cddcd24a8c7c2065974dfdbe47",
+          "os": "unknown",
+          "os_features": "",
+          "os_version": null,
+          "size": 4466140,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:17.143266071Z",
+          "last_pushed": "2025-09-08T23:52:02.589898575Z"
+        },
+        {
+          "architecture": "mips64le",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:db25838f617c8e274a177925a65baaaf9b3f195c352bfb4d34b1035864e50577",
+          "os": "linux",
+          "os_features": "",
+          "os_version": null,
+          "size": 79911684,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:17.836823761Z",
+          "last_pushed": "2025-09-09T11:50:46.143638763Z"
+        },
+        {
+          "architecture": "unknown",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:3e28f41639af3b0a010f4d9641afd48bc4e13bf3a8f00e2ad51c731d8315b2b1",
+          "os": "unknown",
+          "os_features": "",
+          "os_version": null,
+          "size": 22923,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:18.539211394Z",
+          "last_pushed": "2025-09-09T11:50:46.928429477Z"
+        },
+        {
+          "architecture": "ppc64le",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:6957e53542f91029209132b63d15057584925661bb17d7755cc7824ddad42295",
+          "os": "linux",
+          "os_features": "",
+          "os_version": null,
+          "size": 89459917,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:19.12881464Z",
+          "last_pushed": "2025-09-09T14:50:57.495954996Z"
+        },
+        {
+          "architecture": "unknown",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:d3ef5f4a18837e6e80df1cec87a8f18bb1d8b27d2bf818847f2dd5cce8789d29",
+          "os": "unknown",
+          "os_features": "",
+          "os_version": null,
+          "size": 4484586,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:19.773221454Z",
+          "last_pushed": "2025-09-09T14:50:58.306843317Z"
+        },
+        {
+          "architecture": "s390x",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:ae6bd365a31acfae4485e5d82c5ce9fc06d10e55b71002bbd314ce113eae6e2d",
+          "os": "linux",
+          "os_features": "",
+          "os_version": null,
+          "size": 79523510,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:20.39563552Z",
+          "last_pushed": "2025-09-09T08:50:45.43988685Z"
+        },
+        {
+          "architecture": "unknown",
+          "features": "",
+          "variant": null,
+          "digest": "sha256:6089d397de3aefe3c126498da81b76e0af94d2cb10a63bd49f06f4da317d571d",
+          "os": "unknown",
+          "os_features": "",
+          "os_version": null,
+          "size": 4461386,
+          "status": "active",
+          "last_pulled": "2025-09-22T10:00:21.029495167Z",
+          "last_pushed": "2025-09-09T08:50:46.206710871Z"
+        }
+      ],
+      "last_updated": "2025-09-09T14:52:48.1674Z",
+      "last_updater": 1156886,
+      "last_updater_username": "doijanky",
+      "name": "stable-perl",
+      "repository": 21171,
+      "full_size": 83983956,
+      "v2": true,
+      "tag_status": "active",
+      "tag_last_pulled": "2025-09-22T11:21:05.539109077Z",
+      "tag_last_pushed": "2025-09-09T14:52:48.1674Z",
+      "media_type": "application/vnd.oci.image.index.v1+json",
+      "content_type": "image",
+      "digest": "sha256:3d8957cb61d0223de2ab1aa2ec91d29796eb82a81cdcc1e968c090c29606d648"
+  }],
+  "summary" : {
+        "user": "library",
+        "name": "nginx",
+        "namespace": "library",
+        "repository_type": "image",
+        "status": 1,
+        "status_description": "active",
+        "description": "Official build of Nginx.",
+        "is_private": false,
+        "is_automated": false,
+        "star_count": 20989,
+        "pull_count": 12512906275,
+        "last_updated": "2025-09-09T14:52:49.955258Z",
+        "last_modified": "2025-08-13T19:11:17.541808Z",
+        "date_registered": "2014-06-05T19:14:45Z",
+        "collaborator_count": 0,
+        "affiliation": null,
+        "hub_user": "stackbrew",
+        "has_starred": false,
+        "full_description": "# Quick reference\n\n-\t**Maintained by**:  \n\t[the NGINX Docker Maintainers](https://github.com/nginxinc/docker-nginx)\n\n-\t**Where to get help**:  \n\t[the Docker Community Slack](https://dockr.ly/comm-slack), [Server Fault](https://serverfault.com/help/on-topic), [Unix & Linux](https://unix.stackexchange.com/help/on-topic), or [Stack Overflow](https://stackoverflow.com/help/on-topic)\n\n# Supported tags and respective `Dockerfile` links\n\n-\t[`1.29.1`, `mainline`, `1`, `1.29`, `latest`, `1.29.1-bookworm`, `mainline-bookworm`, `1-bookworm`, `1.29-bookworm`, `bookworm`](https://github.com/nginx/docker-nginx/blob/5a4ad48c733b365d69a4d1c9946a9d8480469c7f/mainline/debian/Dockerfile)\n\n-\t[`1.29.1-perl`, `mainline-perl`, `1-perl`, `1.29-perl`, `perl`, `1.29.1-bookworm-perl`, `mainline-bookworm-perl`, `1-bookworm-perl`, `1.29-bookworm-perl`, `bookworm-perl`](https://github.com/nginx/docker-nginx/blob/5a4ad48c733b365d69a4d1c9946a9d8480469c7f/mainline/debian-perl/Dockerfile)\n\n-\t[`1.29.1-otel`, `mainline-otel`, `1-otel`, `1.29-otel`, `otel`, `1.29.1-bookworm-otel`, `mainline-bookworm-otel`, `1-bookworm-otel`, `1.29-bookworm-otel`, `bookworm-otel`](https://github.com/nginx/docker-nginx/blob/5a4ad48c733b365d69a4d1c9946a9d8480469c7f/mainline/debian-otel/Dockerfile)\n\n-\t[`1.29.1-alpine`, `mainline-alpine`, `1-alpine`, `1.29-alpine`, `alpine`, `1.29.1-alpine3.22`, `mainline-alpine3.22`, `1-alpine3.22`, `1.29-alpine3.22`, `alpine3.22`](https://github.com/nginx/docker-nginx/blob/5a4ad48c733b365d69a4d1c9946a9d8480469c7f/mainline/alpine/Dockerfile)\n\n-\t[`1.29.1-alpine-perl`, `mainline-alpine-perl`, `1-alpine-perl`, `1.29-alpine-perl`, `alpine-perl`, `1.29.1-alpine3.22-perl`, `mainline-alpine3.22-perl`, `1-alpine3.22-perl`, `1.29-alpine3.22-perl`, `alpine3.22-perl`](https://github.com/nginx/docker-nginx/blob/5a4ad48c733b365d69a4d1c9946a9d8480469c7f/mainline/alpine-perl/Dockerfile)\n\n-\t[`1.29.1-alpine-slim`, `mainline-alpine-slim`, `1-alpine-slim`, `1.29-alpine-slim`, `alpine-slim`, `1.29.1-alpine3.22-slim`, `mainline-alpine3.22-slim`, `1-alpine3.22-slim`, `1.29-alpine3.22-slim`, `alpine3.22-slim`](https://github.com/nginx/docker-nginx/blob/5a4ad48c733b365d69a4d1c9946a9d8480469c7f/mainline/alpine-slim/Dockerfile)\n\n-\t[`1.29.1-alpine-otel`, `mainline-alpine-otel`, `1-alpine-otel`, `1.29-alpine-otel`, `alpine-otel`, `1.29.1-alpine3.22-otel`, `mainline-alpine3.22-otel`, `1-alpine3.22-otel`, `1.29-alpine3.22-otel`, `alpine3.22-otel`](https://github.com/nginx/docker-nginx/blob/5a4ad48c733b365d69a4d1c9946a9d8480469c7f/mainline/alpine-otel/Dockerfile)\n\n-\t[`1.28.0`, `stable`, `1.28`, `1.28.0-bookworm`, `stable-bookworm`, `1.28-bookworm`](https://github.com/nginx/docker-nginx/blob/9b549fdf936778810dbe95a4813899c60444ef1c/stable/debian/Dockerfile)\n\n-\t[`1.28.0-perl`, `stable-perl`, `1.28-perl`, `1.28.0-bookworm-perl`, `stable-bookworm-perl`, `1.28-bookworm-perl`](https://github.com/nginx/docker-nginx/blob/7f1d49f6f222f7e588a9066fd53a0ce43c3466a5/stable/debian-perl/Dockerfile)\n\n-\t[`1.28.0-otel`, `stable-otel`, `1.28-otel`, `1.28.0-bookworm-otel`, `stable-bookworm-otel`, `1.28-bookworm-otel`](https://github.com/nginx/docker-nginx/blob/7f1d49f6f222f7e588a9066fd53a0ce43c3466a5/stable/debian-otel/Dockerfile)\n\n-\t[`1.28.0-alpine`, `stable-alpine`, `1.28-alpine`, `1.28.0-alpine3.21`, `stable-alpine3.21`, `1.28-alpine3.21`](https://github.com/nginx/docker-nginx/blob/7f1d49f6f222f7e588a9066fd53a0ce43c3466a5/stable/alpine/Dockerfile)\n\n-\t[`1.28.0-alpine-perl`, `stable-alpine-perl`, `1.28-alpine-perl`, `1.28.0-alpine3.21-perl`, `stable-alpine3.21-perl`, `1.28-alpine3.21-perl`](https://github.com/nginx/docker-nginx/blob/7f1d49f6f222f7e588a9066fd53a0ce43c3466a5/stable/alpine-perl/Dockerfile)\n\n-\t[`1.28.0-alpine-slim`, `stable-alpine-slim`, `1.28-alpine-slim`, `1.28.0-alpine3.21-slim`, `stable-alpine3.21-slim`, `1.28-alpine3.21-slim`](https://github.com/nginx/docker-nginx/blob/9b549fdf936778810dbe95a4813899c60444ef1c/stable/alpine-slim/Dockerfile)\n\n-\t[`1.28.0-alpine-otel`, `stable-alpine-otel`, `1.28-alpine-otel`, `1.28.0-alpine3.21-otel`, `stable-alpine3.21-otel`, `1.28-alpine3.21-otel`](https://github.com/nginx/docker-nginx/blob/7f1d49f6f222f7e588a9066fd53a0ce43c3466a5/stable/alpine-otel/Dockerfile)\n\n# Quick reference (cont.)\n\n-\t**Where to file issues**:  \n\t[https://github.com/nginxinc/docker-nginx/issues](https://github.com/nginxinc/docker-nginx/issues?q=)\n\n-\t**Supported architectures**: ([more info](https://github.com/docker-library/official-images#architectures-other-than-amd64))  \n\t[`amd64`](https://hub.docker.com/r/amd64/nginx/), [`arm32v5`](https://hub.docker.com/r/arm32v5/nginx/), [`arm32v6`](https://hub.docker.com/r/arm32v6/nginx/), [`arm32v7`](https://hub.docker.com/r/arm32v7/nginx/), [`arm64v8`](https://hub.docker.com/r/arm64v8/nginx/), [`i386`](https://hub.docker.com/r/i386/nginx/), [`mips64le`](https://hub.docker.com/r/mips64le/nginx/), [`ppc64le`](https://hub.docker.com/r/ppc64le/nginx/), [`riscv64`](https://hub.docker.com/r/riscv64/nginx/), [`s390x`](https://hub.docker.com/r/s390x/nginx/)\n\n-\t**Published image artifact details**:  \n\t[repo-info repo's `repos/nginx/` directory](https://github.com/docker-library/repo-info/blob/master/repos/nginx) ([history](https://github.com/docker-library/repo-info/commits/master/repos/nginx))  \n\t(image metadata, transfer size, etc)\n\n-\t**Image updates**:  \n\t[official-images repo's `library/nginx` label](https://github.com/docker-library/official-images/issues?q=label%3Alibrary%2Fnginx)  \n\t[official-images repo's `library/nginx` file](https://github.com/docker-library/official-images/blob/master/library/nginx) ([history](https://github.com/docker-library/official-images/commits/master/library/nginx))\n\n-\t**Source of this description**:  \n\t[docs repo's `nginx/` directory](https://github.com/docker-library/docs/tree/master/nginx) ([history](https://github.com/docker-library/docs/commits/master/nginx))\n\n# What is nginx?\n\nNginx (pronounced \"engine-x\") is an open source reverse proxy server for HTTP, HTTPS, SMTP, POP3, and IMAP protocols, as well as a load balancer, HTTP cache, and a web server (origin server). The nginx project started with a strong focus on high concurrency, high performance and low memory usage. It is licensed under the 2-clause BSD-like license and it runs on Linux, BSD variants, Mac OS X, Solaris, AIX, HP-UX, as well as on other *nix flavors. It also has a proof of concept port for Microsoft Windows.\n\n> [wikipedia.org/wiki/Nginx](https://en.wikipedia.org/wiki/Nginx)\n\n![logo](https://raw.githubusercontent.com/docker-library/docs/01c12653951b2fe592c1f93a13b4e289ada0e3a1/nginx/logo.png)\n\n# How to use this image\n\n## Hosting some simple static content\n\n```console\n$ docker run --name some-nginx -v /some/content:/usr/share/nginx/html:ro -d nginx\n```\n\nAlternatively, a simple `Dockerfile` can be used to generate a new image that includes the necessary content (which is a much cleaner solution than the bind mount above):\n\n```dockerfile\nFROM nginx\nCOPY static-html-directory /usr/share/nginx/html\n```\n\nPlace this file in the same directory as your directory of content (\"static-html-directory\"), then run these commands to build and start your container:\n\n```console\n$ docker build -t some-content-nginx .\n$ docker run --name some-nginx -d some-content-nginx\n```\n\n## Exposing external port\n\n```console\n$ docker run --name some-nginx -d -p 8080:80 some-content-nginx\n```\n\nThen you can hit `http://localhost:8080` or `http://host-ip:8080` in your browser.\n\n## Customize configuration\n\nYou can mount your configuration file, or build a new image with it.\n\nIf you wish to adapt the default configuration, use something like the following to get it from a running nginx container:\n\n```console\n$ docker run --rm --entrypoint=cat nginx /etc/nginx/nginx.conf > /host/path/nginx.conf\n```\n\nAnd then edit `/host/path/nginx.conf` in your host file system.\n\nFor information on the syntax of the nginx configuration files, see [the official documentation](http://nginx.org/en/docs/) (specifically the [Beginner's Guide](http://nginx.org/en/docs/beginners_guide.html#conf_structure)).\n\n### Mount your configuration file\n\n```console\n$ docker run --name my-custom-nginx-container -v /host/path/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx\n```\n\n### Build a new image with your configuration file\n\n```dockerfile\nFROM nginx\nCOPY nginx.conf /etc/nginx/nginx.conf\n```\n\nIf you add a custom `CMD` in the Dockerfile, be sure to include `-g daemon off;` in the `CMD` in order for nginx to stay in the foreground, so that Docker can track the process properly (otherwise your container will stop immediately after starting)!\n\nThen build the image with `docker build -t custom-nginx .` and run it as follows:\n\n```console\n$ docker run --name my-custom-nginx-container -d custom-nginx\n```\n\n### Using environment variables in nginx configuration (new in 1.19)\n\nOut-of-the-box, nginx doesn't support environment variables inside most configuration blocks. But this image has a function, which will extract environment variables before nginx starts.\n\nHere is an example using `compose.yaml`:\n\n```yaml\nweb:\n  image: nginx\n  volumes:\n   - ./templates:/etc/nginx/templates\n  ports:\n   - \"8080:80\"\n  environment:\n   - NGINX_HOST=foobar.com\n   - NGINX_PORT=80\n```\n\nBy default, this function reads template files in `/etc/nginx/templates/*.template` and outputs the result of executing `envsubst` to `/etc/nginx/conf.d`.\n\nSo if you place `templates/default.conf.template` file, which contains variable references like this:\n\n\tlisten       ${NGINX_PORT};\n\noutputs to `/etc/nginx/conf.d/default.conf` like this:\n\n\tlisten       80;\n\nThis behavior can be changed via the following environment variables:\n\n-\t`NGINX_ENVSUBST_TEMPLATE_DIR`\n\t-\tA directory which contains template files (default: `/etc/nginx/templates`)\n\t-\tWhen this directory doesn't exist, this function will do nothing about template processing.\n-\t`NGINX_ENVSUBST_TEMPLATE_SUFFIX`\n\t-\tA suffix of template files (default: `.template`)\n\t-\tThis function only processes the files whose name ends with this suffix.\n-\t`NGINX_ENVSUBST_OUTPUT_DIR`\n\t-\tA directory where the result of executing envsubst is output (default: `/etc/nginx/conf.d`)\n\t-\tThe output filename is the template filename with the suffix removed.\n\t\t-\tex.) `/etc/nginx/templates/default.conf.template` will be output with the filename `/etc/nginx/conf.d/default.conf`.\n\t-\tThis directory must be writable by the user running a container.\n\n## Running nginx in read-only mode\n\nTo run nginx in read-only mode, you will need to mount a Docker volume to every location where nginx writes information. The default nginx configuration requires write access to `/var/cache/nginx` and `/var/run`. This can be easily accomplished by running nginx as follows:\n\n```console\n$ docker run -d -p 80:80 --read-only -v $(pwd)/nginx-cache:/var/cache/nginx -v $(pwd)/nginx-pid:/var/run nginx\n```\n\nIf you have a more advanced configuration that requires nginx to write to other locations, simply add more volume mounts to those locations.\n\n## Running nginx in debug mode\n\nImages since version 1.9.8 come with `nginx-debug` binary that produces verbose output when using higher log levels. It can be used with simple CMD substitution:\n\n```console\n$ docker run --name my-nginx -v /host/path/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx nginx-debug -g 'daemon off;'\n```\n\nSimilar configuration in `compose.yaml` may look like this:\n\n```yaml\nweb:\n  image: nginx\n  volumes:\n    - ./nginx.conf:/etc/nginx/nginx.conf:ro\n  command: [nginx-debug, '-g', 'daemon off;']\n```\n\n## Entrypoint quiet logs\n\nSince version 1.19.0, a verbose entrypoint was added. It provides information on what's happening during container startup. You can silence this output by setting environment variable `NGINX_ENTRYPOINT_QUIET_LOGS`:\n\n```console\n$ docker run -d -e NGINX_ENTRYPOINT_QUIET_LOGS=1 nginx\n```\n\n## User and group id\n\nSince 1.17.0, both alpine- and debian-based images variants use the same user and group ids to drop the privileges for worker processes:\n\n```console\n$ id\nuid=101(nginx) gid=101(nginx) groups=101(nginx)\n```\n\n## Running nginx as a non-root user\n\nIt is possible to run the image as a less privileged arbitrary UID/GID. This, however, requires modification of nginx configuration to use directories writeable by that specific UID/GID pair:\n\n```console\n$ docker run -d -v $PWD/nginx.conf:/etc/nginx/nginx.conf nginx\n```\n\nwhere nginx.conf in the current directory should have the following directives re-defined:\n\n```nginx\npid        /tmp/nginx.pid;\n```\n\nAnd in the http context:\n\n```nginx\nhttp {\n    client_body_temp_path /tmp/client_temp;\n    proxy_temp_path       /tmp/proxy_temp_path;\n    fastcgi_temp_path     /tmp/fastcgi_temp;\n    uwsgi_temp_path       /tmp/uwsgi_temp;\n    scgi_temp_path        /tmp/scgi_temp;\n...\n}\n```\n\nAlternatively, check out the official [Docker NGINX unprivileged image](https://hub.docker.com/r/nginxinc/nginx-unprivileged).\n\n# Image Variants\n\nThe `nginx` images come in many flavors, each designed for a specific use case.\n\n## `nginx:<version>`\n\nThis is the defacto image. If you are unsure about what your needs are, you probably want to use this one. It is designed to be used both as a throw away container (mount your source code and start the container to start your app), as well as the base to build other images off of.\n\nSome of these tags may have names like bookworm in them. These are the suite code names for releases of [Debian](https://wiki.debian.org/DebianReleases) and indicate which release the image is based on. If your image needs to install any additional packages beyond what comes with the image, you'll likely want to specify one of these explicitly to minimize breakage when there are new releases of Debian.\n\n## `nginx:<version>-perl` / `nginx:<version>-alpine-perl`\n\nStarting with nginx:1.13.0 / mainline and nginx:1.12.0 / stable, the perl module has been removed from the default images. A separate `-perl` tag variant is available if you wish to use the perl module.\n\n## `nginx:<version>-alpine`\n\nThis image is based on the popular [Alpine Linux project](https://alpinelinux.org), available in [the `alpine` official image](https://hub.docker.com/_/alpine). Alpine Linux is much smaller than most distribution base images (~5MB), and thus leads to much slimmer images in general.\n\nThis variant is useful when final image size being as small as possible is your primary concern. The main caveat to note is that it does use [musl libc](https://musl.libc.org) instead of [glibc and friends](https://www.etalabs.net/compare_libcs.html), so software will often run into issues depending on the depth of their libc requirements/assumptions. See [this Hacker News comment thread](https://news.ycombinator.com/item?id=10782897) for more discussion of the issues that might arise and some pro/con comparisons of using Alpine-based images.\n\nTo minimize image size, it's uncommon for additional related tools (such as `git` or `bash`) to be included in Alpine-based images. Using this image as a base, add the things you need in your own Dockerfile (see the [`alpine` image description](https://hub.docker.com/_/alpine/) for examples of how to install packages if you are unfamiliar).\n\n## `nginx:<version>-slim`\n\nThis image does not contain the common packages contained in the default tag and only contains the minimal packages needed to run `nginx`. Unless you are working in an environment where *only* the `nginx` image will be deployed and you have space constraints, we highly recommend using the default image of this repository.\n\n# License\n\nView [license information](http://nginx.org/LICENSE) for the software contained in this image.\n\nAs with all Docker images, these likely also contain other software which may be under other licenses (such as Bash, etc from the base distribution, along with any direct or indirect dependencies of the primary software being contained).\n\nSome additional license information which was able to be auto-detected might be found in [the `repo-info` repository's `nginx/` directory](https://github.com/docker-library/repo-info/tree/master/repos/nginx).\n\nAs for any pre-built image usage, it is the image user's responsibility to ensure that any use of this image complies with any relevant licenses for all software contained within.",
+        "permissions": {
+          "read": true,
+          "write": false,
+          "admin": false
+        },
+        "media_types": [
+          "application/vnd.docker.distribution.manifest.v1+prettyjws",
+          "application/vnd.docker.distribution.manifest.list.v2+json",
+          "application/vnd.docker.container.image.v1+json",
+          "application/octet-stream",
+          "application/vnd.oci.image.index.v1+json"
+        ],
+        "content_types": [
+          "image",
+          "unrecognized"
+        ],
+        "categories": [
+          {
+            "name": "Web servers",
+            "slug": "web-servers"
+          }
+        ],
+        "immutable_tags_settings": {
+          "enabled": false,
+          "rules": [
+            ".*"
+          ]
+        },
+        "storage_size": 205822647778,
+        "source": null
+  }
+}

@@ -14,6 +14,7 @@ from datetime import datetime
 
 import attr
 import packagedcode.models as scan_models
+from github.GithubException import UnknownObjectException
 from github.MainClass import Github
 from packageurl import PackageURL
 
@@ -128,27 +129,30 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
             repo.origanization = repo.organization.name
 
         downloads = []
-        if repo.get_downloads():
-            for download in list(repo.get_downloads()):
-                downloads.append(
-                    dict(
-                        name=download.name,
-                        url=download.url,
-                        size=download.size,
-                        s3_url=download.s3_url,
-                        created_at=json_serial_date_obj(download.created_at),
-                        download_count=download.download_count,
-                        description=download.description,
-                        redirect=download.redirect,
-                        signature=download.signature,
-                        html_url=download.html_url,
-                        bucket=download.bucket,
-                        acl=download.acl,
-                        accesskeyid=download.accesskeyid,
-                        expirationdate=json_serial_date_obj(download.expirationdate),
+        try:
+            if repo.get_downloads():
+                for download in list(repo.get_downloads()):
+                    downloads.append(
+                        dict(
+                            name=download.name,
+                            url=download.url,
+                            size=download.size,
+                            s3_url=download.s3_url,
+                            created_at=json_serial_date_obj(download.created_at),
+                            download_count=download.download_count,
+                            description=download.description,
+                            redirect=download.redirect,
+                            signature=download.signature,
+                            html_url=download.html_url,
+                            bucket=download.bucket,
+                            acl=download.acl,
+                            accesskeyid=download.accesskeyid,
+                            expirationdate=json_serial_date_obj(download.expirationdate),
+                        )
                     )
-                )
-        common_data["downloads"] = downloads
+            common_data["downloads"] = downloads
+        except UnknownObjectException as e:
+            logger.error(f"Error fetching release assets for repo {repo.full_name}: {e}")
 
         tags = []
         if repo.get_tags():

@@ -115,7 +115,6 @@ ignore = [
     "S113", # request-without-timeout
     "S202", # tarfile-unsafe-members
     "S314", # suspicious-xml-element-tree-usage
-    "S320", # suspicious-xmle-tree-usage
     "S324", # hashlib-insecure-hash-function
     "S506", # unsafe-yaml-load
     "S602", # subprocess-popen-with-shell-equals-true

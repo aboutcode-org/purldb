@@ -24,26 +24,20 @@ from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
 from minecode_pipelines import pipes
-from minecode_pipelines.pipes import maven
+from minecode_pipelines.pipes import debian
 
 
-class MineMaven(Pipeline):
+class MineDebian(Pipeline):
     """
-    Create DiscoveredPackages for packages found on maven:
-    - input: url of maven repo
-    - process index
-      - collect purls, grouped by package
-      - write to files
-      - publish to fetchcode
-      - loop
-
+    Mine all packageURLs from a Debian index and publish them to
+    a FederatedCode repo.
     """
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.collect_packages_from_maven,
+            cls.collect_packages_from_debian,
             cls.delete_cloned_repos,
         )
 
@@ -54,8 +48,8 @@ class MineMaven(Pipeline):
         """
         federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
-    def collect_packages_from_maven(self):
-        self.repos = maven.collect_packages_from_maven(logger=self.log)
+    def collect_packages_from_debian(self):
+        self.repos = debian.collect_packages_from_debian(logger=self.log)
 
     def delete_cloned_repos(self):
         pipes.delete_cloned_repos(repos=self.repos, logger=self.log)
