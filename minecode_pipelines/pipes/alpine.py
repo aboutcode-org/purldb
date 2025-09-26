@@ -20,20 +20,19 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from minecode_pipelines import VERSION
-from aboutcode import hashid
-from shutil import rmtree
-from pathlib import Path
-from collections import defaultdict
 import base64
+from shutil import rmtree
+
+from aboutcode import hashid
+from packagedcode.models import PackageData
+from packagedcode.models import Party
 from packageurl import PackageURL
-from packagedcode.models import PackageData, Party
 from scanpipe.pipes import federatedcode
 from scanpipe.pipes.fetch import fetch_http
 from scanpipe.pipes.scancode import extract_archives
-from minecode_pipelines import pipes
-from minecode import debutils
 
+from minecode_pipelines import pipes
+from minecode_pipelines import VERSION
 
 ALPINE_CHECKPOINT_PATH = "alpine/checkpoints.json"
 
@@ -86,6 +85,20 @@ ALPINE_LINUX_ARCHS = [
 ]
 
 
+def parse_email(text):
+    """
+    Return a tuple of (name, email) extracted from a `text` string.
+        Debian TeX Maintainers <debian-tex-maint@lists.debian.org>
+    """
+    if not text:
+        return None, None
+    name, _, email = text.partition("<")
+    email = email.strip(">")
+    name = name.strip()
+    email = email.strip()
+    return name or None, email or None
+
+
 def build_package(extracted_pkginfo, distro, repo):
     name = extracted_pkginfo.get("name")
     version = extracted_pkginfo.get("version")
@@ -100,22 +113,20 @@ def build_package(extracted_pkginfo, distro, repo):
     size = extracted_pkginfo.get("size")
     apk_checksum = extracted_pkginfo.get("checksum")
     sha1 = apk_checksum_to_sha1(apk_checksum)
-    apk_download_url = f"https://dl-cdn.alpinelinux.org/alpine/{distro}/{repo}/{arch}/{name}-{version}.apk"
+    apk_download_url = (
+        f"https://dl-cdn.alpinelinux.org/alpine/{distro}/{repo}/{arch}/{name}-{version}.apk"
+    )
 
     parties = []
     maintainers = extracted_pkginfo.get("maintainer")
     if maintainers:
-        name, email = debutils.parse_email(maintainers)
+        name, email = parse_email(maintainers)
         if name:
             party = Party(name=name, role="maintainer", email=email)
             parties.append(party)
 
     purl = PackageURL(
-        type="apk",
-        namespace="alpine",
-        name=name,
-        version=version,
-        qualifiers=qualifiers
+        type="apk", namespace="alpine", name=name, version=version, qualifiers=qualifiers
     )
     download_data = dict(
         type=purl.type,
@@ -130,7 +141,7 @@ def build_package(extracted_pkginfo, distro, repo):
         size=size,
         sha1=sha1,
         download_url=apk_download_url,
-        datasource_id = "alpine_metadata",
+        datasource_id="alpine_metadata",
     )
     package = PackageData.from_data(download_data)
 
@@ -235,7 +246,9 @@ class AlpineCollector:
     def get_packages(self, logger=None):
         """Yield Package objects from alpine index"""
 
-        url_template = "https://dl-cdn.alpinelinux.org/alpine/{distro}/{repo}/{arch}/APKINDEX.tar.gz"
+        url_template = (
+            "https://dl-cdn.alpinelinux.org/alpine/{distro}/{repo}/{arch}/APKINDEX.tar.gz"
+        )
 
         for distro in ALPINE_LINUX_DISTROS:
             for repo in ALPINE_LINUX_REPOS:
@@ -275,10 +288,7 @@ def collect_packages_from_alpine(commits_per_push=PACKAGE_BATCH_SIZE, logger=Non
         package_base_dir = hashid.get_package_base_dir(purl=current_purl)
         purls = [package.purl]
         purl_file = pipes.write_packageurls_to_file(
-            repo=data_repo,
-            base_dir=package_base_dir,
-            packageurls=purls,
-            append=True
+            repo=data_repo, base_dir=package_base_dir, packageurls=purls, append=True
         )
 
         # commit changes
@@ -295,7 +305,7 @@ def collect_packages_from_alpine(commits_per_push=PACKAGE_BATCH_SIZE, logger=Non
         push_commit = not bool(i % commits_per_push)
         if push_commit:
             federatedcode.push_changes(repo=data_repo)
-    
+
     federatedcode.push_changes(repo=data_repo)
 
     repos_to_clean = [data_repo, config_repo]
