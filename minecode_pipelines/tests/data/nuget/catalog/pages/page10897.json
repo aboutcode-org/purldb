@@ -1,0 +1,345 @@
+{
+  "@id": "https://api.nuget.org/v3/catalog0/page10897.json",
+  "@type": "CatalogPage",
+  "commitId": "2e8b681f-be14-421b-b447-8db15ed2fbbe",
+  "commitTimeStamp": "2020-09-10T10:12:38.8387145Z",
+  "count": 543,
+  "parent": "https://api.nuget.org/v3/catalog0/index.json",
+  "items": [
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.12.38/jetbrains.resharper.testrunner.1.2.3.29.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "2e8b681f-be14-421b-b447-8db15ed2fbbe",
+      "commitTimeStamp": "2020-09-10T10:12:38.8387145Z",
+      "nuget:id": "JetBrains.ReSharper.TestRunner",
+      "nuget:version": "1.2.3.29"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.12.24/jetbrains.platform.interop.commandline.202.0.20200909.163932.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "cce38925-3137-4233-8e63-55c7cf65cba2",
+      "commitTimeStamp": "2020-09-10T10:12:24.301149Z",
+      "nuget:id": "JetBrains.Platform.Interop.CommandLine",
+      "nuget:version": "202.0.20200909.163932"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.12.09/assistant.configuration.0.1.5.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "6041ce4e-10e2-4c31-9d95-60fa1f176ee3",
+      "commitTimeStamp": "2020-09-10T10:12:09.5794603Z",
+      "nuget:id": "Assistant.Configuration",
+      "nuget:version": "0.1.5"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.12.09/assistant.commands.0.1.5.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "6041ce4e-10e2-4c31-9d95-60fa1f176ee3",
+      "commitTimeStamp": "2020-09-10T10:12:09.5794603Z",
+      "nuget:id": "Assistant.Commands",
+      "nuget:version": "0.1.5"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.12.09/assistant.messages.0.1.5.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "6041ce4e-10e2-4c31-9d95-60fa1f176ee3",
+      "commitTimeStamp": "2020-09-10T10:12:09.5794603Z",
+      "nuget:id": "Assistant.Messages",
+      "nuget:version": "0.1.5"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.11.48/cinegia_beta.1.0.0.117.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "e3322225-b631-4707-bd82-61cc437b9e11",
+      "commitTimeStamp": "2020-09-10T10:11:48.3169106Z",
+      "nuget:id": "Cinegia_beta",
+      "nuget:version": "1.0.0.117"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.11.48/jetbrains.platform.core.text.202.0.20200909.163932.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "e3322225-b631-4707-bd82-61cc437b9e11",
+      "commitTimeStamp": "2020-09-10T10:11:48.3169106Z",
+      "nuget:id": "JetBrains.Platform.Core.Text",
+      "nuget:version": "202.0.20200909.163932"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.11.48/jetbrains.resharperautomationtools.src.ridertutorials.202.0.20200909.170834.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "e3322225-b631-4707-bd82-61cc437b9e11",
+      "commitTimeStamp": "2020-09-10T10:11:48.3169106Z",
+      "nuget:id": "JetBrains.ReSharperAutomationTools.src.RiderTutorials",
+      "nuget:version": "202.0.20200909.170834"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.11.33/webvella.erp.plugins.sdk.1.1.1.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "95f6a589-4e24-4a04-b80c-cb9be957eb3d",
+      "commitTimeStamp": "2020-09-10T10:11:33.8561551Z",
+      "nuget:id": "WebVella.Erp.Plugins.SDK",
+      "nuget:version": "1.1.1"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.11.33/jetbrains.psi.features.src.202.0.20200909.164708.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "95f6a589-4e24-4a04-b80c-cb9be957eb3d",
+      "commitTimeStamp": "2020-09-10T10:11:33.8561551Z",
+      "nuget:id": "JetBrains.Psi.Features.src",
+      "nuget:version": "202.0.20200909.164708"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.11.33/assistant.application.0.1.5.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "95f6a589-4e24-4a04-b80c-cb9be957eb3d",
+      "commitTimeStamp": "2020-09-10T10:11:33.8561551Z",
+      "nuget:id": "Assistant.Application",
+      "nuget:version": "0.1.5"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.11.33/assistant.facade.0.1.5.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "95f6a589-4e24-4a04-b80c-cb9be957eb3d",
+      "commitTimeStamp": "2020-09-10T10:11:33.8561551Z",
+      "nuget:id": "Assistant.Facade",
+      "nuget:version": "0.1.5"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.11.19/jetbrains.psi.features.web.core.202.0.20200909.164708.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "e1adcefe-b6d3-4602-aaca-a701efd88258",
+      "commitTimeStamp": "2020-09-10T10:11:19.4512287Z",
+      "nuget:id": "JetBrains.Psi.Features.Web.Core",
+      "nuget:version": "202.0.20200909.164708"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.11.04/catel.mvvm.xamarin.forms.5.12.9-beta0019.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "cb3b29cd-84ae-464e-a953-c57115ea44c2",
+      "commitTimeStamp": "2020-09-10T10:11:04.3450248Z",
+      "nuget:id": "Catel.MVVM.Xamarin.Forms",
+      "nuget:version": "5.12.9-beta0019"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.11.04/else.webapi.swagger.1.0.7.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "cb3b29cd-84ae-464e-a953-c57115ea44c2",
+      "commitTimeStamp": "2020-09-10T10:11:04.3450248Z",
+      "nuget:id": "Else.WebApi.Swagger",
+      "nuget:version": "1.0.7"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.50/jetbrains.resharperautomationtools.native.windows.core.x86.debug.202.0.20200909.164000.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "1c249682-ba26-4aaa-9f6b-a59b4a6d3949",
+      "commitTimeStamp": "2020-09-10T10:10:50.6624794Z",
+      "nuget:id": "JetBrains.ReSharperAutomationTools.Native.Windows.Core.x86.Debug",
+      "nuget:version": "202.0.20200909.164000"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.36/catel.core.5.12.9-beta0019.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "b64a1d3c-ae82-45da-abd7-e9370d768976",
+      "commitTimeStamp": "2020-09-10T10:10:36.2269558Z",
+      "nuget:id": "Catel.Core",
+      "nuget:version": "5.12.9-beta0019"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.36/else.webapi.database.1.0.7.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "b64a1d3c-ae82-45da-abd7-e9370d768976",
+      "commitTimeStamp": "2020-09-10T10:10:36.2269558Z",
+      "nuget:id": "Else.WebApi.Database",
+      "nuget:version": "1.0.7"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.36/jetbrains.psi.features.unittesting.202.0.20200909.164708.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "b64a1d3c-ae82-45da-abd7-e9370d768976",
+      "commitTimeStamp": "2020-09-10T10:10:36.2269558Z",
+      "nuget:id": "JetBrains.Psi.Features.UnitTesting",
+      "nuget:version": "202.0.20200909.164708"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.36/catel.mvvm.5.12.9-beta0019.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "b64a1d3c-ae82-45da-abd7-e9370d768976",
+      "commitTimeStamp": "2020-09-10T10:10:36.2269558Z",
+      "nuget:id": "Catel.MVVM",
+      "nuget:version": "5.12.9-beta0019"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.36/jetbrains.platform.rdprotocol.202.0.20200909.163932.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "b64a1d3c-ae82-45da-abd7-e9370d768976",
+      "commitTimeStamp": "2020-09-10T10:10:36.2269558Z",
+      "nuget:id": "JetBrains.Platform.RdProtocol",
+      "nuget:version": "202.0.20200909.163932"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.36/webvella.erp.web.1.1.17.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "b64a1d3c-ae82-45da-abd7-e9370d768976",
+      "commitTimeStamp": "2020-09-10T10:10:36.2269558Z",
+      "nuget:id": "WebVella.Erp.Web",
+      "nuget:version": "1.1.17"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.21/jetbrains.rider.sdk.tests.2020.2.2.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "87b15fcc-c072-4bfc-8272-6b5f443f7a2f",
+      "commitTimeStamp": "2020-09-10T10:10:21.3262721Z",
+      "nuget:id": "JetBrains.Rider.SDK.Tests",
+      "nuget:version": "2020.2.2"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.21/jetbrains.resharperautomationtools.native.windows.core.x64.debug.202.0.20200909.164000.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "87b15fcc-c072-4bfc-8272-6b5f443f7a2f",
+      "commitTimeStamp": "2020-09-10T10:10:21.3262721Z",
+      "nuget:id": "JetBrains.ReSharperAutomationTools.Native.Windows.Core.x64.Debug",
+      "nuget:version": "202.0.20200909.164000"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.21/jetbrains.rider.sdk.2020.2.2.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "87b15fcc-c072-4bfc-8272-6b5f443f7a2f",
+      "commitTimeStamp": "2020-09-10T10:10:21.3262721Z",
+      "nuget:id": "JetBrains.Rider.SDK",
+      "nuget:version": "2020.2.2"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.21/jetbrains.resharperautomationtools.native.windows.core.x86.release.202.0.20200909.164000.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "87b15fcc-c072-4bfc-8272-6b5f443f7a2f",
+      "commitTimeStamp": "2020-09-10T10:10:21.3262721Z",
+      "nuget:id": "JetBrains.ReSharperAutomationTools.Native.Windows.Core.x86.Release",
+      "nuget:version": "202.0.20200909.164000"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.07/jetbrains.psi.features.xamlrenderer.202.0.20200909.164708.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "8996ade3-5212-4418-b048-002cebacda3d",
+      "commitTimeStamp": "2020-09-10T10:10:07.2537259Z",
+      "nuget:id": "JetBrains.Psi.Features.XamlRenderer",
+      "nuget:version": "202.0.20200909.164708"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.07/jetbrains.psi.features.solutionbuilder.202.0.20200909.164708.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "8996ade3-5212-4418-b048-002cebacda3d",
+      "commitTimeStamp": "2020-09-10T10:10:07.2537259Z",
+      "nuget:id": "JetBrains.Psi.Features.SolutionBuilder",
+      "nuget:version": "202.0.20200909.164708"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.07/jetbrains.platform.interop.dotmemoryunit.interop.ide.202.0.20200909.163932.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "8996ade3-5212-4418-b048-002cebacda3d",
+      "commitTimeStamp": "2020-09-10T10:10:07.2537259Z",
+      "nuget:id": "JetBrains.Platform.Interop.dotMemoryUnit.Interop.Ide",
+      "nuget:version": "202.0.20200909.163932"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.07/jetbrains.resharperautomationtools.external.debuggerlibs.202.0.20200909.170834.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "8996ade3-5212-4418-b048-002cebacda3d",
+      "commitTimeStamp": "2020-09-10T10:10:07.2537259Z",
+      "nuget:id": "JetBrains.ReSharperAutomationTools.External.DebuggerLibs",
+      "nuget:version": "202.0.20200909.170834"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.07/jetbrains.resharperautomationtools.src.commandlinecore.202.0.20200909.170834.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "8996ade3-5212-4418-b048-002cebacda3d",
+      "commitTimeStamp": "2020-09-10T10:10:07.2537259Z",
+      "nuget:id": "JetBrains.ReSharperAutomationTools.src.CommandLineCore",
+      "nuget:version": "202.0.20200909.170834"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.07/jetbrains.resharperautomationtools.src.resharperhost.202.0.20200909.170834.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "8996ade3-5212-4418-b048-002cebacda3d",
+      "commitTimeStamp": "2020-09-10T10:10:07.2537259Z",
+      "nuget:id": "JetBrains.ReSharperAutomationTools.src.ReSharperHost",
+      "nuget:version": "202.0.20200909.170834"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.10.07/jetbrains.resharperautomationtools.native.windows.core.x64.release.202.0.20200909.164000.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "8996ade3-5212-4418-b048-002cebacda3d",
+      "commitTimeStamp": "2020-09-10T10:10:07.2537259Z",
+      "nuget:id": "JetBrains.ReSharperAutomationTools.Native.Windows.Core.x64.Release",
+      "nuget:version": "202.0.20200909.164000"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.09.52/jetbrains.platform.sdk.202.0.20200909.163932.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "b21654b0-f4a5-4ba1-a034-00462ae71a65",
+      "commitTimeStamp": "2020-09-10T10:09:52.202882Z",
+      "nuget:id": "JetBrains.Platform.Sdk",
+      "nuget:version": "202.0.20200909.163932"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.09.52/jetbrains.psi.features.test.framework.202.0.20200909.164708.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "b21654b0-f4a5-4ba1-a034-00462ae71a65",
+      "commitTimeStamp": "2020-09-10T10:09:52.202882Z",
+      "nuget:id": "JetBrains.Psi.Features.test.Framework",
+      "nuget:version": "202.0.20200909.164708"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.09.52/jetbrains.resharperautomationtools.src.ridersdk.internal.202.0.20200909.170834.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "b21654b0-f4a5-4ba1-a034-00462ae71a65",
+      "commitTimeStamp": "2020-09-10T10:09:52.202882Z",
+      "nuget:id": "JetBrains.ReSharperAutomationTools.src.RiderSdk.Internal",
+      "nuget:version": "202.0.20200909.170834"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.09.52/else.webapi.events.1.0.7.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "b21654b0-f4a5-4ba1-a034-00462ae71a65",
+      "commitTimeStamp": "2020-09-10T10:09:52.202882Z",
+      "nuget:id": "Else.WebApi.Events",
+      "nuget:version": "1.0.7"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.10.09.37/else.webapi.1.0.7.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "4ce3545d-ef31-4bca-83e7-e1285c461408",
+      "commitTimeStamp": "2020-09-10T10:09:37.8403537Z",
+      "nuget:id": "Else.WebApi",
+      "nuget:version": "1.0.7"
+    },
+    {
+      "@id": "https://api.nuget.org/v3/catalog0/data/2020.09.10.09.13.13/hsharpns.swagger.3.1.3-preview9.10.0.json",
+      "@type": "nuget:PackageDetails",
+      "commitId": "bb6a0f6f-138a-4ab8-bf99-dfa6124f55c2",
+      "commitTimeStamp": "2020-09-10T09:13:13.748187Z",
+      "nuget:id": "HSharpNS.Swagger",
+      "nuget:version": "3.1.3-preview9.10.0"
+    }
+  ],
+  "@context": {
+    "@vocab": "http://schema.nuget.org/catalog#",
+    "nuget": "http://schema.nuget.org/schema#",
+    "items": {
+      "@id": "item",
+      "@container": "@set"
+    },
+    "parent": {
+      "@type": "@id"
+    },
+    "commitTimeStamp": {
+      "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+    },
+    "nuget:lastCreated": {
+      "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+    },
+    "nuget:lastEdited": {
+      "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+    },
+    "nuget:lastDeleted": {
+      "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+    }
+  }
+}

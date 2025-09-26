@@ -15,8 +15,6 @@ import requests
 import saneyaml
 
 from aboutcode.hashid import PURLS_FILENAME
-from scanpipe.pipes.federatedcode import delete_local_clone
-from scanpipe.pipes.federatedcode import commit_and_push_changes
 
 # states:
 # note: a state is null when mining starts
@@ -48,6 +46,8 @@ def get_checkpoint_from_file(cloned_repo, path):
 
 
 def update_checkpoints_in_github(checkpoint, cloned_repo, path):
+    from scanpipe.pipes.federatedcode import commit_and_push_changes
+
     checkpoint_path = os.path.join(cloned_repo.working_dir, path)
     write_data_to_json_file(path=checkpoint_path, data=checkpoint)
     commit_message = """Update federatedcode purl mining checkpoint"""
@@ -105,6 +105,8 @@ def write_data_to_json_file(path, data):
 
 
 def delete_cloned_repos(repos, logger=None):
+    from scanpipe.pipes.federatedcode import delete_local_clone
+
     if not repos:
         return
 
