@@ -21,7 +21,7 @@ def is_safe_repo_url(repo_url: str) -> bool:
     )
 
 
-def fetch_tags_raw(repo_url: str, timeout: int = 30, logger=None) -> str | None:
+def fetch_tags_raw(repo_url: str, timeout: int = 60, logger=None) -> str | None:
     """Run `git ls-remote` on a GitHub repo and return raw output, or None on error."""
     git_executable = shutil.which("git")
     if git_executable is None:

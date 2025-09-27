@@ -27,7 +27,7 @@ from aboutcode.hashid import get_core_purl
 from packageurl import PackageURL
 from minecode.miners.github import split_org_repo
 from minecode_pipelines.miners.swift import fetch_tags_raw
-from minecode_pipelines.pipes import write_packageurls_to_file
+from minecode_pipelines.pipes import write_data_to_yaml_file
 from scanpipe.pipes.federatedcode import commit_changes
 from scanpipe.pipes.federatedcode import push_changes
 from minecode_pipelines import VERSION
@@ -36,7 +36,7 @@ from purl2vcs.find_source_repo import get_tags_and_commits_from_git_output
 PACKAGE_BATCH_SIZE = 100
 
 
-def store_swift_packages(package_repo_url, tags_and_commits, repo):
+def store_swift_packages(package_repo_url, tags_and_commits, cloned_data_repo):
     """Collect Swift package versions into purls and write them to the repo."""
     org, name = split_org_repo(package_repo_url)
     org = "github.com/" + org
@@ -48,8 +48,11 @@ def store_swift_packages(package_repo_url, tags_and_commits, repo):
         purl = PackageURL(type="swift", namespace=org, name=name, version=tag).to_string()
         updated_purls.append(purl)
 
-    ppath = hashid.get_package_purls_yml_file_path(base_purl)
-    return write_packageurls_to_file(repo, ppath, updated_purls), base_purl
+    purl_yaml_path = cloned_data_repo.working_dir / hashid.get_package_purls_yml_file_path(
+        base_purl
+    )
+    write_data_to_yaml_file(path=purl_yaml_path, data=updated_purls)
+    return purl_yaml_path, base_purl
 
 
 def process_swift_packages(swift_index_repo, cloned_data_repo, logger):
@@ -65,16 +68,24 @@ def process_swift_packages(swift_index_repo, cloned_data_repo, logger):
 
     logger(f"Processing total files: {total_files}")
     for idx, package_repo_url in enumerate(packages_urls):
-        git_ls_remote = fetch_tags_raw(package_repo_url)
+        git_ls_remote = fetch_tags_raw(package_repo_url, 60, logger)
+        if not git_ls_remote:
+            continue
+
         tags_and_commits = get_tags_and_commits_from_git_output(git_ls_remote)
+        if not tags_and_commits:
+            continue
+
         purl_file, base_purl = store_swift_packages(
             package_repo_url, tags_and_commits, cloned_data_repo
         )
+
+        logger(f"writing packageURLs for package: {str(base_purl)} at: {purl_file}")
         purl_files.append(purl_file)
         purls.append(str(base_purl))
         counter += 1
 
-        if counter >= PACKAGE_BATCH_SIZE & idx == total_files:
+        if counter >= PACKAGE_BATCH_SIZE:
             commit_changes(
                 repo=cloned_data_repo,
                 files_to_commit=purl_files,
@@ -87,3 +98,15 @@ def process_swift_packages(swift_index_repo, cloned_data_repo, logger):
             push_changes(repo=cloned_data_repo)
             purl_files = []
             purls = []
+            counter = 0
+
+    commit_changes(
+        repo=cloned_data_repo,
+        files_to_commit=purl_files,
+        purls=purls,
+        mine_type="packageURL",
+        tool_name="pkg:pypi/minecode-pipelines",
+        tool_version=VERSION,
+    )
+
+    push_changes(repo=cloned_data_repo)

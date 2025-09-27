@@ -33,7 +33,7 @@ MINECODE_DATA_SWIFT_REPO = os.environ.get(
 MINECODE_SWIFT_INDEX_REPO = "https://github.com/SwiftPackageIndex/"
 
 
-class MineandPublishSwiftPURLs(Pipeline):
+class MineSwift(Pipeline):
     """
     Mine all packageURLs from a swift index and publish them to a FederatedCode repo.
     """
@@ -65,7 +65,7 @@ class MineandPublishSwiftPURLs(Pipeline):
 
         if self.log:
             self.log(
-                f"{MINECODE_SWIFT_INDEX_REPO} repo cloned at: {self.cargo_index_repo.working_dir}"
+                f"{MINECODE_SWIFT_INDEX_REPO} repo cloned at: {self.swift_index_repo.working_dir}"
             )
             self.log(
                 f"{MINECODE_DATA_SWIFT_REPO} repo cloned at: {self.cloned_data_repo.working_dir}"
