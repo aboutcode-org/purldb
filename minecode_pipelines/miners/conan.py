@@ -32,7 +32,7 @@ def mine_and_publish_conan_packageurls(conan_index_repo, cloned_data_repo, logge
     purls = []
 
     total_files = len(yml_files)
-    logger.info(f"Processing total files: {total_files}")
+    logger(f"Processing total files: {total_files}")
     for idx, file_path in enumerate(yml_files, start=1):
         # Example: file_path = Path("repo_path/recipes/7zip/config.yml")
         # - file_path.parts = ("repo_path", "recipes", "7zip", "config.yml")
