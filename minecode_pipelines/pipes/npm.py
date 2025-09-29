@@ -26,6 +26,7 @@ from minecode_pipelines import VERSION
 from minecode_pipelines.pipes import write_packageurls_to_file
 from minecode_pipelines.pipes import fetch_checkpoint_from_github
 from minecode_pipelines.pipes import update_checkpoints_in_github
+from minecode_pipelines.pipes import update_checkpoints_file_in_github
 from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
 from minecode_pipelines.pipes import update_mined_packages_in_checkpoint
 from minecode_pipelines.pipes import get_packages_file_from_checkpoint
@@ -34,6 +35,8 @@ from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
 from minecode_pipelines.pipes import INITIAL_SYNC_STATE
 from minecode_pipelines.pipes import PERIODIC_SYNC_STATE
 from minecode_pipelines.pipes import write_packages_json
+from minecode_pipelines.pipes import compress_packages_file
+from minecode_pipelines.pipes import decompress_packages_file
 
 
 from minecode_pipelines.miners.npm import get_npm_packages
@@ -57,7 +60,9 @@ from scanpipe.pipes.federatedcode import push_changes
 
 
 PACKAGE_FILE_NAME = "NPMPackages.json"
+COMPRESSED_PACKAGE_FILE_NAME = "NPMPackages.json.gz"
 NPM_REPLICATE_CHECKPOINT_PATH = "npm/" + PACKAGE_FILE_NAME
+COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH = "npm/" + COMPRESSED_PACKAGE_FILE_NAME
 NPM_CHECKPOINT_PATH = "npm/checkpoints.json"
 NPM_PACKAGES_CHECKPOINT_PATH = "npm/packages_checkpoint.json"
 
@@ -103,10 +108,15 @@ def mine_npm_packages(logger=None):
             packages=packages,
             name=PACKAGE_FILE_NAME,
         )
-        update_checkpoints_in_github(
-            checkpoint=packages,
+        compressed_packages_file = packages_file + ".gz"
+        compress_packages_file(
+            packages_file=packages_file,
+            compressed_packages_file=compressed_packages_file,
+        )
+        update_checkpoints_file_in_github(
+            checkpoints_file=compressed_packages_file,
             cloned_repo=cloned_repo,
-            path=NPM_REPLICATE_CHECKPOINT_PATH,
+            path=COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH,
         )
 
         if logger:
@@ -129,10 +139,15 @@ def mine_npm_packages(logger=None):
             settings_path=NPM_CHECKPOINT_PATH,
         )
 
-        packages_file = get_packages_file_from_checkpoint(
+        compressed_packages_file = get_packages_file_from_checkpoint(
             config_repo=MINECODE_PIPELINES_CONFIG_REPO,
-            checkpoint_path=NPM_REPLICATE_CHECKPOINT_PATH,
-            name=PACKAGE_FILE_NAME,
+            checkpoint_path=COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH,
+            name=COMPRESSED_PACKAGE_FILE_NAME,
+        )
+        packages_file = compressed_packages_file.replace(".gz", "")
+        decompress_packages_file(
+            packages_file=packages_file,
+            compressed_packages_file=compressed_packages_file,
         )
 
     elif state == PERIODIC_SYNC_STATE:

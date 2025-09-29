@@ -106,7 +106,7 @@ def get_npm_packages(replicate_url=NPM_REPLICATE_REPO):
 
     package_data = response.json()
     package_names, last_key = get_package_names_last_key(package_data)
-    all_package_names.append(package_names)
+    all_package_names.extend(package_names)
 
     total_rows = package_data.get("total_rows")
     iterations = int(total_rows / NPM_REPLICATE_BATCH_SIZE) + 1
@@ -121,7 +121,7 @@ def get_npm_packages(replicate_url=NPM_REPLICATE_REPO):
 
         package_data = response.json()
         package_names, last_key = get_package_names_last_key(package_data)
-        all_package_names.append(package_names)
+        all_package_names.extend(package_names)
 
     return {"packages": all_package_names}
 

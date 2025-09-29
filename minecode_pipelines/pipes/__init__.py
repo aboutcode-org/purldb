@@ -7,8 +7,10 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import gzip
 import json
 import os
+import shutil
 from pathlib import Path
 
 import requests
@@ -29,6 +31,18 @@ PERIODIC_SYNC_STATE = "periodic-sync"
 
 
 MINECODE_PIPELINES_CONFIG_REPO = "https://github.com/aboutcode-data/minecode-pipelines-config/"
+
+
+def compress_packages_file(packages_file, compressed_packages_file):
+    with open(packages_file, "rb") as f_in:
+        with gzip.open(compressed_packages_file, "wb") as f_out:
+            f_out.writelines(f_in)
+
+
+def decompress_packages_file(packages_file, compressed_packages_file):
+    with gzip.open(compressed_packages_file, "rb") as f_in:
+        with open(packages_file, "wb") as f_out:
+            f_out.writelines(f_in)
 
 
 def write_packages_json(packages, name):
@@ -60,6 +74,17 @@ def get_checkpoint_from_file(cloned_repo, path):
 def update_checkpoints_in_github(checkpoint, cloned_repo, path):
     checkpoint_path = os.path.join(cloned_repo.working_dir, path)
     write_data_to_json_file(path=checkpoint_path, data=checkpoint)
+    commit_message = """Update federatedcode purl mining checkpoint"""
+    commit_and_push_changes(
+        repo=cloned_repo,
+        files_to_commit=[checkpoint_path],
+        commit_message=commit_message,
+    )
+
+
+def update_checkpoints_file_in_github(checkpoints_file, cloned_repo, path):
+    checkpoint_path = os.path.join(cloned_repo.working_dir, path)
+    shutil.move(checkpoints_file, checkpoint_path)
     commit_message = """Update federatedcode purl mining checkpoint"""
     commit_and_push_changes(
         repo=cloned_repo,
