@@ -602,20 +602,19 @@ class MavenNexusCollector:
         else:
             self.index_properties = {}
 
-        if index_location:
-            self.index_location = index_location
-        else:
-            index_download = self._fetch_index()
-            self.index_location = index_download.path
-
         if last_incremental:
+            self.index_location = None
             index_increment_downloads = self._fetch_index_increments(
                 last_incremental=last_incremental
             )
             self.index_increment_locations = [
                 download.path for download in index_increment_downloads
             ]
+        elif index_location:
+            self.index_location = index_location
+            self.index_increment_locations = []
         else:
+            self.index_location = self._fetch_index()
             self.index_increment_locations = []
 
     def __del__(self):
