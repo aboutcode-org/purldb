@@ -50,6 +50,11 @@ from scanpipe.pipes.federatedcode import commit_changes
 from scanpipe.pipes.federatedcode import push_changes
 
 
+# If True, show full details on fetching packageURL for
+# a package name present in the index
+LOG_PACKAGEURL_DETAILS = False
+
+
 PACKAGE_FILE_NAME = "PypiPackages.json"
 PYPI_SIMPLE_CHECKPOINT_PATH = "pypi/simple_index/" + PACKAGE_FILE_NAME
 PYPI_CHECKPOINT_PATH = "pypi/checkpoints.json"
@@ -61,7 +66,7 @@ MINECODE_DATA_PYPI_REPO = "https://github.com/aboutcode-data/minecode-data-pypi-
 
 
 # Number of packages
-PACKAGE_BATCH_SIZE = 500
+PACKAGE_BATCH_SIZE = 1000
 
 
 def mine_pypi_packages(logger=None):
@@ -140,6 +145,7 @@ def update_checkpoint_state(
         checkpoint_path=checkpoint_path,
     )
     checkpoint["state"] = state
+    checkpoint["last_updated"] = str(datetime.now())
     update_checkpoints_in_github(
         checkpoint=checkpoint,
         cloned_repo=cloned_repo,
@@ -149,15 +155,17 @@ def update_checkpoint_state(
 
 def update_pypi_checkpoints(
     last_serial,
+    state,
     cloned_repo,
     checkpoint_path=PYPI_CHECKPOINT_PATH,
 ):
-    settings_data = {
-        "date": str(datetime.now()),
+    checkpoint = {
+        "last_updated": str(datetime.now()),
+        "state": state,
         "last_serial": last_serial,
     }
     update_checkpoints_in_github(
-        checkpoint=settings_data,
+        checkpoint=checkpoint,
         cloned_repo=cloned_repo,
         path=checkpoint_path,
     )
@@ -189,11 +197,14 @@ def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
     if not packages:
         return
 
+    synced_packages = get_mined_packages_from_checkpoint(
+        config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+        checkpoint_path=PYPI_PACKAGES_CHECKPOINT_PATH,
+    )
     if not state:
         if logger:
             logger("Initializing package mining:")
         packages_to_sync = packages
-        synced_packages = []
 
     elif state == PERIODIC_SYNC_STATE:
         # We are all synced up from the index
@@ -201,18 +212,18 @@ def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
             return
 
         packages_to_sync = [
-            package for package in packages if last_serial < package.get("_last-serial")
+            package
+            for package in packages
+            if last_serial_fetched < package.get("_last-serial")
+            and package.get("name") not in synced_packages
         ]
         if logger:
             logger(
-                f"Starting periodic package mining for {len(packages_to_sync)} packages, which has been released after serial: {last_serial}"
+                f"Starting periodic package mining for {len(packages_to_sync)} packages, "
+                f"which has been released after serial: {last_serial_fetched}"
             )
 
     elif state == INITIAL_SYNC_STATE:
-        synced_packages = get_mined_packages_from_checkpoint(
-            config_repo=MINECODE_PIPELINES_CONFIG_REPO,
-            checkpoint_path=PYPI_PACKAGES_CHECKPOINT_PATH,
-        )
         packages_to_sync = [
             package for package in packages if package.get("name") not in synced_packages
         ]
@@ -233,7 +244,7 @@ def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
         purls = []
         purl_files = []
 
-        if logger:
+        if logger and LOG_PACKAGEURL_DETAILS:
             logger("Starting package mining for a batch of packages")
 
         for package in package_batch:
@@ -242,20 +253,23 @@ def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
 
             # fetch packageURLs for package
             name = package.get("name")
-            if logger:
+            if logger and LOG_PACKAGEURL_DETAILS:
                 logger(f"getting packageURLs for package: {name}")
 
             packageurls = get_pypi_packageurls(name)
             if not packageurls:
-                if logger:
-                    logger(f"Could not fetch package versions for package: {name}")
+                if logger and LOG_PACKAGEURL_DETAILS:
+                    logger(f"Package versions not present for package: {name}")
+
+                # We don't want to try fetching versions for these again
+                packages_mined.append(name)
                 continue
 
             # get repo and path for package
             base_purl = PackageURL(type=PYPI_TYPE, name=name).to_string()
             package_base_dir = get_package_base_dir(purl=base_purl)
 
-            if logger:
+            if logger and LOG_PACKAGEURL_DETAILS:
                 logger(f"writing packageURLs for package: {base_purl} at: {package_base_dir}")
                 purls_string = " ".join(packageurls)
                 logger(f"packageURLs: {purls_string}")
@@ -289,34 +303,40 @@ def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
         # Push changes to remote repository
         push_changes(repo=cloned_data_repo)
 
-        # If we are mining the packages initially to sync with the index,
         # we need to update mined packages checkpoint for every batch
-        if state != PERIODIC_SYNC_STATE:
-            if logger:
-                logger("Checkpointing processed packages to: {PYPI_PACKAGES_CHECKPOINT_PATH}")
+        if logger:
+            logger(f"Checkpointing processed packages to: {PYPI_PACKAGES_CHECKPOINT_PATH}")
 
-            packages_checkpoint = packages_mined + synced_packages
-            update_mined_packages_in_checkpoint(
-                packages=packages_checkpoint,
-                cloned_repo=cloned_config_repo,
-                checkpoint_path=PYPI_PACKAGES_CHECKPOINT_PATH,
-            )
+        update_mined_packages_in_checkpoint(
+            packages=packages_mined,
+            cloned_repo=cloned_config_repo,
+            config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+            checkpoint_path=PYPI_PACKAGES_CHECKPOINT_PATH,
+        )
 
     # If we are finshed mining all the packages in the intial sync, we can now
     # periodically sync the packages from latest
     if state == INITIAL_SYNC_STATE:
         if logger:
             logger(f"{INITIAL_SYNC_STATE} completed. starting: {PERIODIC_SYNC_STATE}")
+
+        state = PERIODIC_SYNC_STATE
         update_checkpoint_state(
             cloned_repo=cloned_config_repo,
-            state=PERIODIC_SYNC_STATE,
+            state=state,
+        )
+        # refresh packages checkpoint once to only checkpoint new packages
+        update_checkpoints_in_github(
+            checkpoint={"packages_mined": []},
+            cloned_repo=cloned_config_repo,
+            path=PYPI_PACKAGES_CHECKPOINT_PATH,
         )
 
     # update last_serial to minecode checkpoints whenever we finish mining
     # either from checkpoints or from the latest pypi
     if logger:
         logger(f"Updating checkpoint at: {PYPI_CHECKPOINT_PATH} with last serial: {last_serial}")
-    update_pypi_checkpoints(last_serial=last_serial, cloned_repo=cloned_config_repo)
+    update_pypi_checkpoints(last_serial=last_serial, state=state, cloned_repo=cloned_config_repo)
 
     repos_to_clean = [cloned_data_repo, cloned_config_repo]
     return repos_to_clean

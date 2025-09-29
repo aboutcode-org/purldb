@@ -51,7 +51,7 @@ mine_cargo = "minecode_pipelines.pipelines.mine_cargo:MineCargo"
 mine_debian = "minecode_pipelines.pipelines.mine_debian:MineDebian"
 
 [tool.bumpversion]
-current_version = "0.0.1b1"
+current_version = "0.0.1b3"
 allow_dirty = true
 
 files = [
