@@ -37,6 +37,7 @@ from minecode_pipelines.pipes import PERIODIC_SYNC_STATE
 from minecode_pipelines.pipes import write_packages_json
 from minecode_pipelines.pipes import compress_packages_file
 from minecode_pipelines.pipes import decompress_packages_file
+from minecode_pipelines.pipes import fetch_checkpoint_by_git
 
 
 from minecode_pipelines.miners.npm import get_npm_packages
@@ -62,7 +63,7 @@ from scanpipe.pipes.federatedcode import push_changes
 PACKAGE_FILE_NAME = "NPMPackages.json"
 COMPRESSED_PACKAGE_FILE_NAME = "NPMPackages.json.gz"
 NPM_REPLICATE_CHECKPOINT_PATH = "npm/" + PACKAGE_FILE_NAME
-COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH = "npm/" + COMPRESSED_PACKAGE_FILE_NAME
+COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH  = "npm/" + COMPRESSED_PACKAGE_FILE_NAME
 NPM_CHECKPOINT_PATH = "npm/checkpoints.json"
 NPM_PACKAGES_CHECKPOINT_PATH = "npm/packages_checkpoint.json"
 
@@ -70,7 +71,7 @@ NPM_PACKAGES_CHECKPOINT_PATH = "npm/packages_checkpoint.json"
 MINECODE_DATA_NPM_REPO = "https://github.com/aboutcode-data/minecode-data-npm-test"
 
 
-PACKAGE_BATCH_SIZE = 1000
+PACKAGE_BATCH_SIZE = 700
 
 
 def mine_npm_packages(logger=None):
@@ -139,15 +140,13 @@ def mine_npm_packages(logger=None):
             settings_path=NPM_CHECKPOINT_PATH,
         )
 
-        compressed_packages_file = get_packages_file_from_checkpoint(
-            config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+        compressed_packages_file = fetch_checkpoint_by_git(
+            cloned_repo=cloned_repo,
             checkpoint_path=COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH,
-            name=COMPRESSED_PACKAGE_FILE_NAME,
         )
-        packages_file = compressed_packages_file.replace(".gz", "")
-        decompress_packages_file(
-            packages_file=packages_file,
+        packages_file = decompress_packages_file(
             compressed_packages_file=compressed_packages_file,
+            name=PACKAGE_FILE_NAME,
         )
 
     elif state == PERIODIC_SYNC_STATE:
@@ -311,11 +310,12 @@ def mine_and_publish_npm_packageurls(packages_file, state, last_seq, logger=None
         # we need to update mined packages checkpoint for every batch
         # so we can continue mining the other packages after restarting
         if logger:
-            logger("Checkpointing processed packages to: {NPM_PACKAGES_CHECKPOINT_PATH}")
+            logger(f"Checkpointing processed packages to: {NPM_PACKAGES_CHECKPOINT_PATH}")
 
         packages_checkpoint = packages_mined + synced_packages
         update_mined_packages_in_checkpoint(
             packages=packages_checkpoint,
+            config_repo=MINECODE_PIPELINES_CONFIG_REPO,
             cloned_repo=cloned_config_repo,
             checkpoint_path=NPM_PACKAGES_CHECKPOINT_PATH,
         )
@@ -328,6 +328,7 @@ def mine_and_publish_npm_packageurls(packages_file, state, last_seq, logger=None
         update_checkpoint_state(
             cloned_repo=cloned_config_repo,
             state=PERIODIC_SYNC_STATE,
+            checkpoint_path=NPM_CHECKPOINT_PATH,
         )
 
     # If we are finished mining all the packages in the periodic sync, we can now update

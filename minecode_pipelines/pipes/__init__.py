@@ -39,10 +39,14 @@ def compress_packages_file(packages_file, compressed_packages_file):
             f_out.writelines(f_in)
 
 
-def decompress_packages_file(packages_file, compressed_packages_file):
+def decompress_packages_file(compressed_packages_file, name):
+    
+    packages_file = get_temp_file(name)
     with gzip.open(compressed_packages_file, "rb") as f_in:
         with open(packages_file, "wb") as f_out:
             f_out.writelines(f_in)
+
+    return packages_file
 
 
 def write_packages_json(packages, name):
@@ -138,6 +142,12 @@ def get_packages_file_from_checkpoint(config_repo, checkpoint_path, name):
         checkpoint_path=checkpoint_path,
     )
     return write_packages_json(packages, name=name)
+
+
+def fetch_checkpoint_by_git(cloned_repo, checkpoint_path):
+
+    cloned_repo.remotes.origin.pull()
+    return os.path.join(cloned_repo.working_dir, checkpoint_path)
 
 
 def write_packageurls_to_file(repo, base_dir, packageurls):
