@@ -27,7 +27,7 @@ from minecode_pipelines.pipes import npm
 from minecode_pipelines import pipes
 
 
-class MineandPublishNPMPURLs(Pipeline):
+class MineNPM(Pipeline):
     """
     Mine all packageURLs from a npm index and publish them to
     a FederatedCode repo.
