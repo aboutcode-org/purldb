@@ -29,7 +29,6 @@ from minecode_pipelines.pipes import update_checkpoints_in_github
 from minecode_pipelines.pipes import update_checkpoints_file_in_github
 from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
 from minecode_pipelines.pipes import update_mined_packages_in_checkpoint
-from minecode_pipelines.pipes import get_packages_file_from_checkpoint
 from minecode_pipelines.pipes import update_checkpoint_state
 from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
 from minecode_pipelines.pipes import INITIAL_SYNC_STATE
@@ -63,7 +62,7 @@ from scanpipe.pipes.federatedcode import push_changes
 PACKAGE_FILE_NAME = "NPMPackages.json"
 COMPRESSED_PACKAGE_FILE_NAME = "NPMPackages.json.gz"
 NPM_REPLICATE_CHECKPOINT_PATH = "npm/" + PACKAGE_FILE_NAME
-COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH  = "npm/" + COMPRESSED_PACKAGE_FILE_NAME
+COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH = "npm/" + COMPRESSED_PACKAGE_FILE_NAME
 NPM_CHECKPOINT_PATH = "npm/checkpoints.json"
 NPM_PACKAGES_CHECKPOINT_PATH = "npm/packages_checkpoint.json"
 

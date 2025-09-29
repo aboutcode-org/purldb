@@ -53,6 +53,7 @@ mine_npm = "minecode_pipelines.pipelines.mine_npm:MineNPM"
 mine_maven = "minecode_pipelines.pipelines.mine_maven:MineMaven"
 mine_cargo = "minecode_pipelines.pipelines.mine_cargo:MineCargo"
 mine_debian = "minecode_pipelines.pipelines.mine_debian:MineDebian"
+mine_alpine = "minecode_pipelines.pipelines.mine_alpine:MineAlpine"
 
 [tool.bumpversion]
 current_version = "0.0.1b3"

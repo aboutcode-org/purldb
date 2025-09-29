@@ -1,0 +1,30 @@
+C:Q1iqPgI08ubPdJk9JWwhWgQ5xRQ8Y=
+P:2bwm
+V:0.3-r2
+A:x86_64
+S:22917
+I:59352
+T:Fast floating window manager
+U:https://github.com/venam/2bwm
+L:ISC
+o:2bwm
+m:prspkt <prspkt@protonmail.com>
+t:1681263464
+c:dcf926d126ee921df71282780cae6c160fe30783
+D:so:libc.musl-x86_64.so.1 so:libxcb-ewmh.so.2 so:libxcb-icccm.so.4 so:libxcb-keysyms.so.1 so:libxcb-randr.so.0 so:libxcb-xrm.so.0 so:libxcb.so.1
+p:cmd:2bwm=0.3-r2 cmd:hidden=0.3-r2
+
+C:Q1XYxRptmCtUTDEXZHij3QxHJkLXs=
+P:2bwm-doc
+V:0.3-r2
+A:x86_64
+S:4986
+I:3135
+T:Fast floating window manager (documentation)
+U:https://github.com/venam/2bwm
+L:ISC
+o:2bwm
+m:prspkt <prspkt@protonmail.com>
+t:1681263464
+c:dcf926d126ee921df71282780cae6c160fe30783
+i:docs 2bwm=0.3-r2

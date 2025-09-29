@@ -24,12 +24,12 @@ from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
 from minecode_pipelines import pipes
-from minecode_pipelines.pipes import pypi
+from minecode_pipelines.pipes import alpine
 
 
-class MinePypi(Pipeline):
+class MineAlpine(Pipeline):
     """
-    Mine all packageURLs from a pypi index and publish them to
+    Mine all packageURLs from an alpine index and publish them to
     a FederatedCode repo.
     """
 
@@ -37,8 +37,7 @@ class MinePypi(Pipeline):
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.mine_pypi_packages,
-            cls.mine_and_publish_pypi_packageurls,
+            cls.collect_packages_from_alpine,
             cls.delete_cloned_repos,
         )
 
@@ -49,17 +48,8 @@ class MinePypi(Pipeline):
         """
         federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
-    def mine_pypi_packages(self):
-        """Mine pypi package names from pypi indexes or checkpoint."""
-        self.pypi_packages, self.state = pypi.mine_pypi_packages(logger=self.log)
-
-    def mine_and_publish_pypi_packageurls(self):
-        """Get pypi packageURLs for all mined pypi package names."""
-        self.repos = pypi.mine_and_publish_pypi_packageurls(
-            packages_file=self.pypi_packages,
-            state=self.state,
-            logger=self.log,
-        )
+    def collect_packages_from_alpine(self):
+        self.repos = alpine.collect_packages_from_alpine(logger=self.log)
 
     def delete_cloned_repos(self):
         pipes.delete_cloned_repos(repos=self.repos, logger=self.log)

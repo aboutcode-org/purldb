@@ -40,7 +40,6 @@ def compress_packages_file(packages_file, compressed_packages_file):
 
 
 def decompress_packages_file(compressed_packages_file, name):
-    
     packages_file = get_temp_file(name)
     with gzip.open(compressed_packages_file, "rb") as f_in:
         with open(packages_file, "wb") as f_out:
@@ -145,16 +144,29 @@ def get_packages_file_from_checkpoint(config_repo, checkpoint_path, name):
 
 
 def fetch_checkpoint_by_git(cloned_repo, checkpoint_path):
-
     cloned_repo.remotes.origin.pull()
     return os.path.join(cloned_repo.working_dir, checkpoint_path)
 
 
-def write_packageurls_to_file(repo, base_dir, packageurls):
+def write_packageurls_to_file(repo, base_dir, packageurls, append=False):
+    if not isinstance(packageurls, list):
+        raise Exception("`packageurls` needs to be a list")
+
     purl_file_rel_path = os.path.join(base_dir, PURLS_FILENAME)
     purl_file_full_path = Path(repo.working_dir) / purl_file_rel_path
+    if append and purl_file_full_path.exists():
+        existing_purls = load_data_from_yaml_file(purl_file_full_path)
+        packageurls = existing_purls.extend(packageurls)
     write_data_to_yaml_file(path=purl_file_full_path, data=packageurls)
     return purl_file_rel_path
+
+
+def load_data_from_yaml_file(path):
+    if isinstance(path, str):
+        path = Path(path)
+
+    with open(path, encoding="utf-8") as f:
+        return saneyaml.load(f.read())
 
 
 def write_data_to_yaml_file(path, data):
