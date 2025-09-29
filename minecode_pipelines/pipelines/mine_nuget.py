@@ -38,9 +38,7 @@ class MineNuGet(Pipeline):
     """
 
     download_inputs = False
-    CATALOG_REPO_URL = (
-        "https://github.com/aboutcode-org/aboutcode-mirror-nuget-catalog.git"
-    )
+    CATALOG_REPO_URL = "https://github.com/aboutcode-org/aboutcode-mirror-nuget-catalog.git"
 
     @classmethod
     def steps(cls):
@@ -68,11 +66,9 @@ class MineNuGet(Pipeline):
 
     def mine_nuget_package_versions(self):
         """Mine NuGet package and versions from NuGet catalog."""
-        self.package_versions, self.skipped_packages = (
-            nuget.mine_nuget_package_versions(
-                catalog_path=Path(self.catalog_repo.working_dir),
-                logger=self.log,
-            )
+        self.package_versions, self.skipped_packages = nuget.mine_nuget_package_versions(
+            catalog_path=Path(self.catalog_repo.working_dir),
+            logger=self.log,
         )
 
     def mine_and_publish_nuget_packageurls(self):
