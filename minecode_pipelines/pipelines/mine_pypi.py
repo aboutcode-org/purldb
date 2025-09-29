@@ -27,7 +27,7 @@ from minecode_pipelines.pipes import pypi
 from minecode_pipelines import pipes
 
 
-class MineandPublishPypiPURLs(Pipeline):
+class MinePypi(Pipeline):
     """
     Mine all packageURLs from a pypi index and publish them to
     a FederatedCode repo.

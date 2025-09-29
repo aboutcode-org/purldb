@@ -7,14 +7,15 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import os
 import json
+import os
+from pathlib import Path
+
 import requests
 import saneyaml
 
-from pathlib import Path
-
 from aboutcode.hashid import PURLS_FILENAME
+from git import Repo
 
 from scanpipe.pipes.federatedcode import delete_local_clone
 from scanpipe.pipes.federatedcode import commit_and_push_changes
@@ -35,10 +36,17 @@ def fetch_checkpoint_from_github(config_repo, checkpoint_path):
     )
     response = requests.get(checkpoints_file)
     if not response.ok:
-        return
+        return {}
 
     checkpoint_data = json.loads(response.text)
     return checkpoint_data
+
+
+def get_checkpoint_from_file(cloned_repo, path):
+    checkpoint_path = os.path.join(cloned_repo.working_dir, path)
+    with open(checkpoint_path) as f:
+        checkpoint_data = json.load(f)
+    return checkpoint_data or {}
 
 
 def update_checkpoints_in_github(checkpoint, cloned_repo, path):
@@ -106,3 +114,66 @@ def delete_cloned_repos(repos, logger=None):
         if logger:
             logger(f"Deleting local clone at: {repo.working_dir}")
         delete_local_clone(repo)
+
+
+def get_changed_files(repo: Repo, commit_x: str = None, commit_y: str = None):
+    """
+    Return a list of files changed between two commits using GitPython.
+    Includes added, modified, deleted, and renamed files.
+    - commit_x: base commit (or the empty tree hash for the first commit)
+    - commit_y: target commit (defaults to HEAD if not provided)
+    """
+    EMPTY_TREE_HASH = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+
+    if commit_y is None:
+        commit_y = repo.head.commit.hexsha
+    commit_y_obj = repo.commit(commit_y)
+
+    if commit_x is None or commit_x == EMPTY_TREE_HASH:
+        # First commit case: diff against empty tree
+        diff_index = commit_y_obj.diff(EMPTY_TREE_HASH, R=True)
+    else:
+        commit_x_obj = repo.commit(commit_x)
+        diff_index = commit_x_obj.diff(commit_y_obj, R=True)
+
+    changed_files = {item.a_path or item.b_path for item in diff_index}
+    return list(changed_files)
+
+
+def get_last_commit(repo, ecosystem):
+    """
+    Retrieve the last mined commit for a given ecosystem.
+    This function reads a JSON checkpoint file from the repository, which stores
+    mining progress. Each checkpoint contains the "last_commit" from the package
+    index (e.g., PyPI) that was previously mined.
+    https://github.com/AyanSinhaMahapatra/minecode-test/blob/main/minecode_checkpoints/pypi.json
+    https://github.com/ziadhany/cargo-test/blob/main/minecode_checkpoints/cargo.json
+    """
+
+    last_commit_file_path = (
+        Path(repo.working_tree_dir) / "minecode_checkpoints" / f"{ecosystem}.json"
+    )
+    try:
+        with open(last_commit_file_path) as f:
+            settings_data = json.load(f)
+    except FileNotFoundError:
+        return
+    return settings_data.get("last_commit")
+
+
+def get_commit_at_distance_ahead(
+    repo: Repo,
+    current_commit: str,
+    num_commits_ahead: int = 10,
+    branch_name: str = "master",
+) -> str:
+    """
+    Return the commit hash that is `num_commits_ahead` commits ahead of `current_commit`
+    on the given branch.
+    """
+    if not current_commit:
+        current_commit = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+    revs = repo.git.rev_list(f"^{current_commit}", branch_name).splitlines()
+    if len(revs) < num_commits_ahead:
+        raise ValueError(f"Not enough commits ahead; only {len(revs)} available.")
+    return revs[-num_commits_ahead]

@@ -1,0 +1,16 @@
+{
+"version": "0.0.1",
+"pubspec": {
+"environment": {
+"sdk": ">=1.12.0 <2.0.0"
+},
+"homepage": "http://flutter.io",
+"version": "0.0.1",
+"name": "flutter",
+"author": "Flutter Authors <flutter-dev@googlegroups.com>",
+"description": "A framework for writing Flutter applications"
+},
+"archive_url": "https://pub.dev/api/archives/flutter-0.0.1.tar.gz",
+"archive_sha256": "aec09e0c68fe848fc37089e29a64cf8dbc1e232e1e98e05af9b68114c699447d",
+"published": "2015-09-19T17:58:43.990Z"
+}

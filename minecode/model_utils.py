@@ -391,8 +391,10 @@ def merge_or_create_package(scanned_package, visit_level, override=False, filena
 
         stringify_null_purl_fields(package_data)
 
-        created_package = Package.objects.create(**package_data)
-        created_package.append_to_history(f"New Package created from URI: {package_uri}")
+        # if we try to create a package more than once it should not fail
+        created_package, created = Package.objects.get_or_create(**package_data)
+        if created:
+            created_package.append_to_history(f"New Package created from URI: {package_uri}")
 
         # This is used in the case of Maven packages created from the priority queue
         for h in history:
