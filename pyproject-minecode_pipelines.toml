@@ -40,22 +40,19 @@ dependencies = [
     "aboutcode.hashid >= 0.2.0",
     "packageurl_python >= 0.15.6",
     "scancodeio >= 35.3.0",
-    "ftputil >= 5.1.0",
-    "jawa >= 2.2.0",
-    "arrow >= 1.3.0"
 ]
 
 urls = { Homepage = "https://github.com/aboutcode-org/purldb" }
 
 [project.entry-points."scancodeio_pipelines"]
 mine_pypi = "minecode_pipelines.pipelines.mine_pypi:MinePypi"
-mine_maven = "minecode_pipelines.pipelines.mine_maven:MineMaven"
+mine_maven = "minecode_pipeline.pipelines.mine_maven:MineMaven"
 mine_cargo = "minecode_pipelines.pipelines.mine_cargo:MineCargo"
 mine_debian = "minecode_pipelines.pipelines.mine_debian:MineDebian"
 mine_alpine = "minecode_pipelines.pipelines.mine_alpine:MineAlpine"
 
 [tool.bumpversion]
-current_version = "0.0.1b11"
+current_version = "0.0.1b3"
 allow_dirty = true
 
 files = [
