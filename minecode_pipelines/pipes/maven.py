@@ -792,7 +792,7 @@ def collect_packages_from_maven(commits_per_push=PACKAGE_BATCH_SIZE, logger=None
 
             current_purls = []
             prev_purl = current_purl
-        current_purls.append(package.to_string())
+        current_purls.append(package.purl)
 
     if current_purls:
         # write packageURLs to file
