@@ -57,7 +57,9 @@ class MineCargo(Pipeline):
         Clone the Cargo-related repositories (index, data, and pipelines config)
         and store their Repo objects in the corresponding instance variables.
         """
-        self.cargo_index_repo = federatedcode.clone_repository(MINECODE_CARGO_INDEX_REPO)
+        self.cargo_index_repo = federatedcode.clone_repository(
+            MINECODE_CARGO_INDEX_REPO, shallow_clone=False
+        )
         self.cloned_data_repo = federatedcode.clone_repository(MINECODE_DATA_CARGO_REPO)
         self.cloned_config_repo = federatedcode.clone_repository(MINECODE_PIPELINES_CONFIG_REPO)
 

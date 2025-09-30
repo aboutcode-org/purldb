@@ -7,4 +7,4 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-VERSION = "0.0.1b8"
+VERSION = "0.0.1b11"
