@@ -614,7 +614,8 @@ class MavenNexusCollector:
             self.index_location = index_location
             self.index_increment_locations = []
         else:
-            self.index_location = self._fetch_index()
+            index_download = self._fetch_index()
+            self.index_location = index_download.path
             self.index_increment_locations = []
 
     def __del__(self):
