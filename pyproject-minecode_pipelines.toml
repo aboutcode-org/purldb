@@ -42,7 +42,8 @@ dependencies = [
     "scancodeio >= 35.3.0",
     "ftputil >= 5.1.0",
     "jawa >= 2.2.0",
-    "arrow >= 1.3.0"
+    "arrow >= 1.3.0",
+    "beautifulsoup4 >= 4.13.4"
 ]
 
 urls = { Homepage = "https://github.com/aboutcode-org/purldb" }
@@ -54,6 +55,7 @@ mine_cargo = "minecode_pipelines.pipelines.mine_cargo:MineCargo"
 mine_debian = "minecode_pipelines.pipelines.mine_debian:MineDebian"
 mine_alpine = "minecode_pipelines.pipelines.mine_alpine:MineAlpine"
 mine_conan = "minecode_pipelines.pipelines.mine_conan:MineConan"
+mine_cpan = "minecode_pipelines.pipelines.mine_cpan:MineCpan"
 
 [tool.bumpversion]
 current_version = "0.0.1b13"
