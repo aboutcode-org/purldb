@@ -119,9 +119,12 @@ class DebianCollector:
                 previous_index_last_modified_date, "%Y-%m-%d %H:%M:%S"
             )
         for entry in ls.parse_directory_listing(content):
-            entry_date = datetime.strptime(entry.date, "%Y-%m-%d")
+            entry_date = None
+            if entry.date:
+                entry_date = datetime.strptime(entry.date, "%Y-%m-%d")
             if (entry.type != ls.FILE) or (
                 previous_index_last_modified_date
+                and entry_date
                 and (entry_date <= previous_index_last_modified_date)
             ):
                 continue
