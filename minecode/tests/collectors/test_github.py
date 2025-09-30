@@ -40,6 +40,13 @@ class GithubPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             "minecode-pipelines/v0.0.1b6",
             "minecode-pipelines/v0.0.1b7",
             "minecode-pipelines/v0.0.1b8",
+            "minecode-pipelines/v0.0.1b9",
+            "minecode-pipelines/v0.0.1b10",
+            "minecode-pipelines/v0.0.1b11",
+            "minecode-pipelines/v0.0.1b12",
+            "minecode-pipelines/v0.0.1b13",
+            "minecode-pipelines/v0.0.1b14",
+            "minecode-pipelines/v0.0.1b15",
         ]
         for item in versions:
             self.assertIn(item, expected)
