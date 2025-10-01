@@ -12,14 +12,12 @@ import json
 import os
 import shutil
 from pathlib import Path
-
+from git import Repo
 import requests
 import saneyaml
 
 from aboutcode.hashid import PURLS_FILENAME
-from git import Repo
 
-from scanpipe.pipes.federatedcode import delete_local_clone
 from scanpipe.pipes.federatedcode import commit_and_push_changes
 
 from minecode_pipelines.utils import get_temp_file
@@ -188,6 +186,8 @@ def write_data_to_json_file(path, data):
 
 
 def delete_cloned_repos(repos, logger=None):
+    from scanpipe.pipes.federatedcode import delete_local_clone
+
     if not repos:
         return
 

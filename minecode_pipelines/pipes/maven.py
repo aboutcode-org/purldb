@@ -614,7 +614,8 @@ class MavenNexusCollector:
             self.index_location = index_location
             self.index_increment_locations = []
         else:
-            self.index_location = self._fetch_index()
+            index_download = self._fetch_index()
+            self.index_location = index_download.path
             self.index_increment_locations = []
 
     def __del__(self):
@@ -759,12 +760,10 @@ def collect_packages_from_maven(commits_per_push=PACKAGE_BATCH_SIZE, logger=None
         logger(f"last_incremental: {last_incremental}")
 
     # download and iterate through maven nexus index
-    maven_nexus_collector = MavenNexusCollector()
+    maven_nexus_collector = MavenNexusCollector(last_incremental=last_incremental)
     prev_purl = None
     current_purls = []
-    for i, (current_purl, package) in enumerate(
-        maven_nexus_collector.get_packages(last_incremental=last_incremental), start=1
-    ):
+    for i, (current_purl, package) in enumerate(maven_nexus_collector.get_packages(), start=1):
         if not prev_purl:
             prev_purl = current_purl
         elif prev_purl != current_purl:
@@ -793,7 +792,7 @@ def collect_packages_from_maven(commits_per_push=PACKAGE_BATCH_SIZE, logger=None
 
             current_purls = []
             prev_purl = current_purl
-        current_purls.append(package.to_string())
+        current_purls.append(package.purl)
 
     if current_purls:
         # write packageURLs to file

@@ -119,9 +119,12 @@ class DebianCollector:
                 previous_index_last_modified_date, "%Y-%m-%d %H:%M:%S"
             )
         for entry in ls.parse_directory_listing(content):
-            entry_date = datetime.strptime(entry.date, "%Y-%m-%d")
+            entry_date = None
+            if entry.date:
+                entry_date = datetime.strptime(entry.date, "%Y-%m-%d")
             if (entry.type != ls.FILE) or (
                 previous_index_last_modified_date
+                and entry_date
                 and (entry_date <= previous_index_last_modified_date)
             ):
                 continue
@@ -158,8 +161,6 @@ class DebianCollector:
                 name=package_url.name,
                 version=package_url.version,
                 qualifiers=package_url.qualifiers,
-                file_name=file_name,
-                date=entry.date,
                 size=entry.size,
                 download_url=url_template.format(path=path),
             )
@@ -223,7 +224,7 @@ def collect_packages_from_debian(commits_per_push=PACKAGE_BATCH_SIZE, logger=Non
 
             current_purls = []
             prev_purl = current_purl
-        current_purls.append(package.to_string())
+        current_purls.append(package.purl)
 
     if current_purls:
         # write packageURLs to file
