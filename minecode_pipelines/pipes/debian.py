@@ -161,8 +161,6 @@ class DebianCollector:
                 name=package_url.name,
                 version=package_url.version,
                 qualifiers=package_url.qualifiers,
-                file_name=file_name,
-                date=entry.date,
                 size=entry.size,
                 download_url=url_template.format(path=path),
             )
