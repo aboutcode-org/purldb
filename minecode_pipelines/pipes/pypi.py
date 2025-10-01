@@ -28,6 +28,9 @@ from minecode_pipelines.pipes import fetch_checkpoint_from_github
 from minecode_pipelines.pipes import update_checkpoints_in_github
 from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
 from minecode_pipelines.pipes import update_mined_packages_in_checkpoint
+from minecode_pipelines.pipes import get_packages_file_from_checkpoint
+from minecode_pipelines.pipes import update_checkpoint_state
+from minecode_pipelines.pipes import write_packages_json
 from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
 from minecode_pipelines.pipes import INITIAL_SYNC_STATE
 from minecode_pipelines.pipes import PERIODIC_SYNC_STATE
@@ -37,7 +40,7 @@ from minecode_pipelines.miners.pypi import get_pypi_packages
 from minecode_pipelines.miners.pypi import get_pypi_packageurls
 from minecode_pipelines.miners.pypi import load_pypi_packages
 from minecode_pipelines.miners.pypi import PYPI_REPO
-from minecode_pipelines.miners.pypi import write_packages_json
+
 
 from minecode_pipelines.miners.pypi import PYPI_TYPE
 from minecode_pipelines.utils import grouper
@@ -114,7 +117,11 @@ def mine_pypi_packages(logger=None):
         )
         if logger:
             logger(f"Updating checkpoint mining state to: {INITIAL_SYNC_STATE}")
-        update_checkpoint_state(cloned_repo=cloned_repo, state=INITIAL_SYNC_STATE)
+        update_checkpoint_state(
+            cloned_repo=cloned_repo,
+            state=INITIAL_SYNC_STATE,
+            checkpoint_path=PYPI_CHECKPOINT_PATH,
+        )
 
     return packages_file, state
 
@@ -134,25 +141,6 @@ def fetch_last_serial_mined(config_repo, settings_path):
     return checkpoints.get("last_serial")
 
 
-def update_checkpoint_state(
-    cloned_repo,
-    state,
-    config_repo=MINECODE_PIPELINES_CONFIG_REPO,
-    checkpoint_path=PYPI_CHECKPOINT_PATH,
-):
-    checkpoint = fetch_checkpoint_from_github(
-        config_repo=config_repo,
-        checkpoint_path=checkpoint_path,
-    )
-    checkpoint["state"] = state
-    checkpoint["last_updated"] = str(datetime.now())
-    update_checkpoints_in_github(
-        checkpoint=checkpoint,
-        cloned_repo=cloned_repo,
-        path=checkpoint_path,
-    )
-
-
 def update_pypi_checkpoints(
     last_serial,
     state,
@@ -169,14 +157,6 @@ def update_pypi_checkpoints(
         cloned_repo=cloned_repo,
         path=checkpoint_path,
     )
-
-
-def get_packages_file_from_checkpoint(config_repo, checkpoint_path, name):
-    packages = fetch_checkpoint_from_github(
-        config_repo=config_repo,
-        checkpoint_path=checkpoint_path,
-    )
-    return write_packages_json(packages, name=name)
 
 
 def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
@@ -314,7 +294,7 @@ def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
             checkpoint_path=PYPI_PACKAGES_CHECKPOINT_PATH,
         )
 
-    # If we are finshed mining all the packages in the intial sync, we can now
+    # If we are finished mining all the packages in the intial sync, we can now
     # periodically sync the packages from latest
     if state == INITIAL_SYNC_STATE:
         if logger:
@@ -325,12 +305,13 @@ def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
             cloned_repo=cloned_config_repo,
             state=state,
         )
-        # refresh packages checkpoint once to only checkpoint new packages
-        update_checkpoints_in_github(
-            checkpoint={"packages_mined": []},
-            cloned_repo=cloned_config_repo,
-            path=PYPI_PACKAGES_CHECKPOINT_PATH,
-        )
+
+    # refresh packages checkpoint once to only checkpoint new packages
+    update_checkpoints_in_github(
+        checkpoint={"packages_mined": []},
+        cloned_repo=cloned_config_repo,
+        path=PYPI_PACKAGES_CHECKPOINT_PATH,
+    )
 
     # update last_serial to minecode checkpoints whenever we finish mining
     # either from checkpoints or from the latest pypi
