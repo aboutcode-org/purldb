@@ -35,6 +35,11 @@ class GithubPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             "matchcode-toolkit-v3.0.0",
             "matchcode-toolkit-v1.1.1",
             "minecode-pipelines/v0.0.1b3",
+            "minecode-pipelines/v0.0.1b4",
+            "minecode-pipelines/v0.0.1b5",
+            "minecode-pipelines/v0.0.1b6",
+            "minecode-pipelines/v0.0.1b7",
+            "minecode-pipelines/v0.0.1b8",
         ]
         for item in expected:
             self.assertIn(item, versions)

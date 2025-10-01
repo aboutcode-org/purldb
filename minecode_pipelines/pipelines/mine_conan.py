@@ -20,26 +20,28 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
+import os
 from scanpipe.pipelines import Pipeline
+from minecode_pipelines import pipes
+from minecode_pipelines.miners import conan
 from scanpipe.pipes import federatedcode
 
-from minecode_pipelines import pipes
-from minecode_pipelines.pipes import pypi
+MINECODE_CONAN_INDEX_REPO = "https://github.com/conan-io/conan-center-index"
+
+MINECODE_DATA_CONAN_REPO = os.environ.get(
+    "MINECODE_DATA_CONAN_REPO", "https://github.com/aboutcode-data/minecode-data-conan-test"
+)
 
 
-class MinePypi(Pipeline):
-    """
-    Mine all packageURLs from a pypi index and publish them to
-    a FederatedCode repo.
-    """
+class MineConan(Pipeline):
+    """Pipeline to mine Conan packages and publish them to FederatedCode repo."""
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.mine_pypi_packages,
-            cls.mine_and_publish_pypi_packageurls,
-            cls.delete_cloned_repos,
+            cls.clone_conan_repos,
+            cls.mine_and_publish_conan_package_urls,
         )
 
     def check_federatedcode_eligibility(self):
@@ -49,17 +51,29 @@ class MinePypi(Pipeline):
         """
         federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
-    def mine_pypi_packages(self):
-        """Mine pypi package names from pypi indexes or checkpoint."""
-        self.pypi_packages, self.state = pypi.mine_pypi_packages(logger=self.log)
+    def clone_conan_repos(self):
+        """
+        Clone the Conan-related repositories (index, data, and pipelines config)
+        and store their Repo objects in the corresponding instance variables.
+        """
+        self.conan_index_repo = federatedcode.clone_repository(MINECODE_CONAN_INDEX_REPO)
+        self.cloned_data_repo = federatedcode.clone_repository(MINECODE_DATA_CONAN_REPO)
 
-    def mine_and_publish_pypi_packageurls(self):
-        """Get pypi packageURLs for all mined pypi package names."""
-        self.repos = pypi.mine_and_publish_pypi_packageurls(
-            packages_file=self.pypi_packages,
-            state=self.state,
-            logger=self.log,
+        if self.log:
+            self.log(
+                f"{MINECODE_CONAN_INDEX_REPO} repo cloned at: {self.conan_index_repo.working_dir}"
+            )
+            self.log(
+                f"{MINECODE_DATA_CONAN_REPO} repo cloned at: {self.cloned_data_repo.working_dir}"
+            )
+
+    def mine_and_publish_conan_package_urls(self):
+        conan.mine_and_publish_conan_packageurls(
+            self.conan_index_repo, self.cloned_data_repo, self.log
         )
 
     def delete_cloned_repos(self):
-        pipes.delete_cloned_repos(repos=self.repos, logger=self.log)
+        pipes.delete_cloned_repos(
+            repos=[self.conan_index_repo, self.cloned_data_repo],
+            logger=self.log,
+        )

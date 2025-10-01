@@ -79,11 +79,25 @@ def update_mined_packages_in_checkpoint(packages, config_repo, cloned_repo, chec
     )
 
 
-def write_packageurls_to_file(repo, base_dir, packageurls):
+def write_packageurls_to_file(repo, base_dir, packageurls, append=False):
+    if not isinstance(packageurls, list):
+        raise Exception("`packageurls` needs to be a list")
+
     purl_file_rel_path = os.path.join(base_dir, PURLS_FILENAME)
     purl_file_full_path = Path(repo.working_dir) / purl_file_rel_path
+    if append and purl_file_full_path.exists():
+        existing_purls = load_data_from_yaml_file(purl_file_full_path)
+        packageurls = existing_purls.extend(packageurls)
     write_data_to_yaml_file(path=purl_file_full_path, data=packageurls)
     return purl_file_rel_path
+
+
+def load_data_from_yaml_file(path):
+    if isinstance(path, str):
+        path = Path(path)
+
+    with open(path, encoding="utf-8") as f:
+        return saneyaml.load(f.read())
 
 
 def write_data_to_yaml_file(path, data):
