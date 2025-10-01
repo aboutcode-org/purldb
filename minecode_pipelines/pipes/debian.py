@@ -205,6 +205,7 @@ def collect_packages_from_debian(commits_per_push=PACKAGE_BATCH_SIZE, logger=Non
                 repo=data_repo,
                 base_dir=package_base_dir,
                 packageurls=current_purls,
+                append=True,
             )
 
             # commit changes
@@ -233,6 +234,7 @@ def collect_packages_from_debian(commits_per_push=PACKAGE_BATCH_SIZE, logger=Non
             repo=data_repo,
             base_dir=package_base_dir,
             packageurls=current_purls,
+            append=True,
         )
 
         # commit changes
