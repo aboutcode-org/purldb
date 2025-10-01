@@ -52,6 +52,7 @@ mine_pypi = "minecode_pipelines.pipelines.mine_pypi:MinePypi"
 mine_maven = "minecode_pipelines.pipelines.mine_maven:MineMaven"
 mine_cargo = "minecode_pipelines.pipelines.mine_cargo:MineCargo"
 mine_debian = "minecode_pipelines.pipelines.mine_debian:MineDebian"
+mine_nuget = "minecode_pipelines.pipelines.mine_nuget:MineNuGet"
 mine_alpine = "minecode_pipelines.pipelines.mine_alpine:MineAlpine"
 mine_conan = "minecode_pipelines.pipelines.mine_conan:MineConan"
 
