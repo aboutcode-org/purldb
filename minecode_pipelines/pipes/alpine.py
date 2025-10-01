@@ -118,11 +118,11 @@ def build_package(extracted_pkginfo, distro, repo):
     )
 
     parties = []
-    maintainers = extracted_pkginfo.get("maintainer")
-    if maintainers:
-        name, email = parse_email(maintainers)
-        if name:
-            party = Party(name=name, role="maintainer", email=email)
+    maintainer = extracted_pkginfo.get("maintainer")
+    if maintainer:
+        maintainer_name, maintainer_email = parse_email(maintainer)
+        if maintainer_name:
+            party = Party(name=maintainer_name, role="maintainer", email=maintainer_email)
             parties.append(party)
 
     purl = PackageURL(
