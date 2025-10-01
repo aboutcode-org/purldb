@@ -10,7 +10,7 @@
 import saneyaml
 from pathlib import Path
 from unittest import TestCase
-from minecode_pipelines.pipes.cran import extract_cran_packages
+from minecode_pipelines.miners.cran import extract_cran_packages
 
 
 DATA_DIR = Path(__file__).parent.parent / "test_data" / "cran"
