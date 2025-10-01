@@ -40,7 +40,7 @@ ALPINE_CHECKPOINT_PATH = "alpine/checkpoints.json"
 MINECODE_DATA_ALPINE_REPO = "https://github.com/aboutcode-data/minecode-data-alpine-test"
 
 # Number of packages
-PACKAGE_BATCH_SIZE = 500
+PACKAGE_BATCH_SIZE = 1000
 ALPINE_LINUX_DISTROS = [
     "edge",
     "latest-stable",
@@ -268,7 +268,24 @@ class AlpineCollector:
                             yield current_purl, pd
 
 
-def collect_packages_from_alpine(commits_per_push=PACKAGE_BATCH_SIZE, logger=None):
+def commit_message(commit_batch, total_commit_batch="many"):
+    from django.conf import settings
+
+    author_name = settings.FEDERATEDCODE_GIT_SERVICE_NAME
+    author_email = settings.FEDERATEDCODE_GIT_SERVICE_EMAIL
+    tool_name = "pkg:github/aboutcode-org/scancode.io"
+
+    return f"""\
+        Collect PackageURLs from Alpine ({commit_batch}/{total_commit_batch})
+
+        Tool: {tool_name}@v{VERSION}
+        Reference: https://{settings.ALLOWED_HOSTS[0]}
+
+        Signed-off-by: {author_name} <{author_email}>
+        """
+
+
+def collect_packages_from_alpine(files_per_commit=PACKAGE_BATCH_SIZE, logger=None):
     # Clone data and config repo
     data_repo = federatedcode.clone_repository(
         repo_url=MINECODE_DATA_ALPINE_REPO,
@@ -284,29 +301,37 @@ def collect_packages_from_alpine(commits_per_push=PACKAGE_BATCH_SIZE, logger=Non
 
     # download and iterate through alpine indices
     alpine_collector = AlpineCollector()
-    for i, (current_purl, package) in enumerate(alpine_collector.get_packages(), start=1):
+    files_to_commit = []
+    commit_batch = 1
+    for current_purl, package in alpine_collector.get_packages():
+        # write packageURL to file
         package_base_dir = hashid.get_package_base_dir(purl=current_purl)
-        purls = [package.purl]
         purl_file = pipes.write_packageurls_to_file(
-            repo=data_repo, base_dir=package_base_dir, packageurls=purls, append=True
-        )
-
-        # commit changes
-        federatedcode.commit_changes(
             repo=data_repo,
-            files_to_commit=[purl_file],
-            purls=purls,
-            mine_type="packageURL",
-            tool_name="pkg:pypi/minecode-pipelines",
-            tool_version=VERSION,
+            base_dir=package_base_dir,
+            packageurls=[package.purl],
+            append=True,
         )
+        if purl_file not in files_to_commit:
+            files_to_commit.append(purl_file)
 
-        # Push changes to remote repository
-        push_commit = not bool(i % commits_per_push)
-        if push_commit:
-            federatedcode.push_changes(repo=data_repo)
+        if len(files_to_commit) == files_per_commit:
+            federatedcode.commit_and_push_changes(
+                commit_message=commit_message(commit_batch),
+                repo=data_repo,
+                files_to_commit=files_to_commit,
+                logger=logger,
+            )
+            files_to_commit.clear()
+            commit_batch += 1
 
-    federatedcode.push_changes(repo=data_repo)
+    if files_to_commit:
+        federatedcode.commit_and_push_changes(
+            commit_message=commit_message(commit_batch),
+            repo=data_repo,
+            files_to_commit=files_to_commit,
+            logger=logger,
+        )
 
     repos_to_clean = [data_repo, config_repo]
     return repos_to_clean
