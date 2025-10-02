@@ -44,7 +44,7 @@ DEBIAN_LSLR_URL = "http://ftp.debian.org/debian/ls-lR.gz"
 # We are testing and storing mined packageURLs in one single repo per ecosystem for now
 MINECODE_DATA_DEBIAN_REPO = "https://github.com/aboutcode-data/minecode-data-debian-test"
 
-PACKAGE_BATCH_SIZE = 500
+PACKAGE_BATCH_SIZE = 1000
 
 
 def is_collectible(file_name):
@@ -167,7 +167,24 @@ class DebianCollector:
             yield versionless_purl, packaged_data
 
 
-def collect_packages_from_debian(commits_per_push=PACKAGE_BATCH_SIZE, logger=None):
+def commit_message(commit_batch, total_commit_batch="many"):
+    from django.conf import settings
+
+    author_name = settings.FEDERATEDCODE_GIT_SERVICE_NAME
+    author_email = settings.FEDERATEDCODE_GIT_SERVICE_EMAIL
+    tool_name = "pkg:github/aboutcode-org/scancode.io"
+
+    return f"""\
+        Collect PackageURLs from Debian ({commit_batch}/{total_commit_batch})
+
+        Tool: {tool_name}@v{VERSION}
+        Reference: https://{settings.ALLOWED_HOSTS[0]}
+
+        Signed-off-by: {author_name} <{author_email}>
+        """
+
+
+def collect_packages_from_debian(files_per_commit=PACKAGE_BATCH_SIZE, logger=None):
     # Clone data and config repo
     data_repo = federatedcode.clone_repository(
         repo_url=MINECODE_DATA_DEBIAN_REPO,
@@ -191,62 +208,39 @@ def collect_packages_from_debian(commits_per_push=PACKAGE_BATCH_SIZE, logger=Non
 
     # download and iterate through debian index
     debian_collector = DebianCollector()
-    prev_purl = None
-    current_purls = []
-    for i, (current_purl, package) in enumerate(
-        debian_collector.get_packages(previous_index_last_modified_date=last_modified), start=1
+    files_to_commit = []
+    commit_batch = 1
+    for current_purl, package in debian_collector.get_packages(
+        previous_index_last_modified_date=last_modified
     ):
-        if not prev_purl:
-            prev_purl = current_purl
-        elif prev_purl != current_purl:
-            # write packageURLs to file
-            package_base_dir = hashid.get_package_base_dir(purl=prev_purl)
-            purl_file = pipes.write_packageurls_to_file(
-                repo=data_repo,
-                base_dir=package_base_dir,
-                packageurls=current_purls,
-            )
-
-            # commit changes
-            federatedcode.commit_changes(
-                repo=data_repo,
-                files_to_commit=[purl_file],
-                purls=current_purls,
-                mine_type="packageURL",
-                tool_name="pkg:pypi/minecode-pipelines",
-                tool_version=VERSION,
-            )
-
-            # Push changes to remote repository
-            push_commit = not bool(i % commits_per_push)
-            if push_commit:
-                federatedcode.push_changes(repo=data_repo)
-
-            current_purls = []
-            prev_purl = current_purl
-        current_purls.append(package.purl)
-
-    if current_purls:
-        # write packageURLs to file
-        package_base_dir = hashid.get_package_base_dir(purl=prev_purl)
+        # write packageURL to file
+        package_base_dir = hashid.get_package_base_dir(purl=current_purl)
         purl_file = pipes.write_packageurls_to_file(
             repo=data_repo,
             base_dir=package_base_dir,
-            packageurls=current_purls,
+            packageurls=[package.purl],
+            append=True,
         )
+        if purl_file not in files_to_commit:
+            files_to_commit.append(purl_file)
 
-        # commit changes
-        federatedcode.commit_changes(
+        if len(files_to_commit) == files_per_commit:
+            federatedcode.commit_and_push_changes(
+                commit_message=commit_message(commit_batch),
+                repo=data_repo,
+                files_to_commit=files_to_commit,
+                logger=logger,
+            )
+            files_to_commit.clear()
+            commit_batch += 1
+
+    if files_to_commit:
+        federatedcode.commit_and_push_changes(
+            commit_message=commit_message(commit_batch),
             repo=data_repo,
-            files_to_commit=[purl_file],
-            purls=current_purls,
-            mine_type="packageURL",
-            tool_name="pkg:pypi/minecode-pipelines",
-            tool_version=VERSION,
+            files_to_commit=files_to_commit,
+            logger=logger,
         )
-
-        # Push changes to remote repository
-        federatedcode.push_changes(repo=data_repo)
 
     last_modified = get_file_mtime(debian_collector.index_location)
     checkpoint = {"previous_debian_index_last_modified_date": last_modified}

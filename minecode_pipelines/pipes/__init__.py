@@ -87,7 +87,10 @@ def write_packageurls_to_file(repo, base_dir, packageurls, append=False):
     purl_file_full_path = Path(repo.working_dir) / purl_file_rel_path
     if append and purl_file_full_path.exists():
         existing_purls = load_data_from_yaml_file(purl_file_full_path)
-        packageurls = existing_purls.extend(packageurls)
+        for packageurl in packageurls:
+            if packageurl not in existing_purls:
+                existing_purls.append(packageurl)
+        packageurls = existing_purls
     write_data_to_yaml_file(path=purl_file_full_path, data=packageurls)
     return purl_file_rel_path
 
