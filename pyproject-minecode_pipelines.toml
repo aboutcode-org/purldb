@@ -55,6 +55,7 @@ mine_debian = "minecode_pipelines.pipelines.mine_debian:MineDebian"
 mine_nuget = "minecode_pipelines.pipelines.mine_nuget:MineNuGet"
 mine_alpine = "minecode_pipelines.pipelines.mine_alpine:MineAlpine"
 mine_conan = "minecode_pipelines.pipelines.mine_conan:MineConan"
+mine_cran = "minecode_pipelines.pipelines.mine_cran:MineCran"
 
 [tool.bumpversion]
 current_version = "0.0.1b20"
