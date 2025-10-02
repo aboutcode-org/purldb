@@ -71,7 +71,6 @@ ALPINE_LINUX_DISTROS = [
 ALPINE_LINUX_REPOS = [
     "community",
     "main",
-    "testing",
 ]
 ALPINE_LINUX_ARCHS = [
     "aarch64",
