@@ -24,7 +24,7 @@ import os
 from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
-from matchcode_pipeline import pipes
+from minecode_pipelines import pipes
 from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
 from minecode_pipelines.pipes.composer import mine_composer_packages
 from minecode_pipelines.pipes.composer import mine_and_publish_composer_purls

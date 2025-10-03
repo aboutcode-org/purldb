@@ -79,3 +79,18 @@ def split_org_repo(url_like):
     if name.endswith(".git"):
         name, _, _ = name.rpartition(".git")
     return org, name
+
+
+# FIXME duplicated with purl2vcs.find_source_repo.get_tags_and_commits_from_git_output
+def get_tags_and_commits_from_git_output(git_ls_remote):
+    """
+    Yield tuples of (tag, commit), given a git ls-remote output
+    """
+    for line in git_ls_remote.split("\n"):
+        # line: kjwfgeklngelkfjofjeo123   refs/tags/1.2.3
+        line_segments = line.split("\t")
+        # segments: ["kjwfgeklngelkfjofjeo123", "refs/tags/1.2.3"]
+        if len(line_segments) > 1 and line_segments[1].startswith("refs/tags/"):
+            commit = line_segments[0]
+            tag = line_segments[1].replace("refs/tags/", "")
+            yield tag, commit
