@@ -20,15 +20,14 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from aboutcode.hashid import get_package_purls_yml_file_path, get_core_purl
-from scanpipe.pipes.federatedcode import commit_changes
-from scanpipe.pipes.federatedcode import push_changes
-from minecode_pipelines import VERSION
+from aboutcode.hashid import get_package_purls_yml_file_path
+from aboutcode.hashid import get_core_purl
+from scanpipe.pipes.federatedcode import commit_and_push_changes
 from minecode_pipelines.miners.cran import extract_cran_packages
 from minecode_pipelines.pipes import write_data_to_yaml_file
 from minecode_pipelines.utils import grouper
 
-PACKAGE_BATCH_SIZE = 1000
+PACKAGE_BATCH_SIZE = 100
 
 
 def mine_and_publish_cran_packageurls(cloned_data_repo, db_path, logger):
@@ -38,7 +37,7 @@ def mine_and_publish_cran_packageurls(cloned_data_repo, db_path, logger):
     """
     packages_to_sync = list(extract_cran_packages(db_path))
 
-    for package_batch in grouper(packages_to_sync, PACKAGE_BATCH_SIZE):
+    for package_batch in grouper(n=PACKAGE_BATCH_SIZE, iterable=packages_to_sync):
         purl_files = []
         base_purls = []
 
@@ -62,12 +61,8 @@ def mine_and_publish_cran_packageurls(cloned_data_repo, db_path, logger):
 
         # After finishing the batch, commit & push if there’s something to save
         if purl_files and base_purls:
-            commit_changes(
+            commit_and_push_changes(
                 repo=cloned_data_repo,
                 files_to_commit=purl_files,
                 purls=base_purls,
-                mine_type="packageURL",
-                tool_name="pkg:pypi/minecode-pipelines",
-                tool_version=VERSION,
             )
-            push_changes(repo=cloned_data_repo)

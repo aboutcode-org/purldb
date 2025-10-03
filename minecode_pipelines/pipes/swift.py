@@ -28,7 +28,8 @@ from aboutcode import hashid
 from aboutcode.hashid import get_core_purl
 from packageurl import PackageURL
 
-from minecode_pipelines.miners.swift import fetch_git_tags_raw, get_tags_and_commits_from_git_output
+from minecode_pipelines.miners.swift import fetch_git_tags_raw
+from minecode_pipelines.miners.swift import get_tags_and_commits_from_git_output
 from minecode_pipelines.miners.swift import split_org_repo
 
 from minecode_pipelines.pipes import update_checkpoints_in_github
@@ -38,9 +39,7 @@ from minecode_pipelines.pipes import write_data_to_yaml_file
 from minecode_pipelines.pipes import get_checkpoint_from_file
 from scanpipe.pipes.federatedcode import clone_repository
 
-from scanpipe.pipes.federatedcode import commit_changes
-from scanpipe.pipes.federatedcode import push_changes
-from minecode_pipelines import VERSION
+from scanpipe.pipes.federatedcode import commit_and_push_changes
 from minecode_pipelines.utils import cycle_from_index
 
 PACKAGE_BATCH_SIZE = 100
@@ -49,7 +48,7 @@ SWIFT_CHECKPOINT_PATH = "swift/checkpoints.json"
 MINECODE_DATA_SWIFT_REPO = os.environ.get(
     "MINECODE_DATA_SWIFT_REPO", "https://github.com/aboutcode-data/minecode-data-swift-test"
 )
-MINECODE_SWIFT_INDEX_REPO = "https://github.com/SwiftPackageIndex/"
+MINECODE_SWIFT_INDEX_REPO = "https://github.com/SwiftPackageIndex/PackageList"
 
 
 def store_swift_packages(package_repo_url, tags_and_commits, cloned_data_repo):
@@ -133,16 +132,13 @@ def mine_and_publish_swift_packageurls(logger):
         counter += 1
 
         if counter >= PACKAGE_BATCH_SIZE:
-            commit_changes(
-                repo=cloned_data_repo,
-                files_to_commit=purl_files,
-                purls=purls,
-                mine_type="packageURL",
-                tool_name="pkg:pypi/minecode-pipelines",
-                tool_version=VERSION,
-            )
+            if purls and purl_files:
+                commit_and_push_changes(
+                    repo=cloned_data_repo,
+                    files_to_commit=purl_files,
+                    purls=purls,
+                )
 
-            push_changes(repo=cloned_data_repo)
             purl_files = []
             purls = []
             counter = 0
@@ -161,14 +157,11 @@ def mine_and_publish_swift_packageurls(logger):
                 path=SWIFT_CHECKPOINT_PATH,
             )
 
-    commit_changes(
-        repo=cloned_data_repo,
-        files_to_commit=purl_files,
-        purls=purls,
-        mine_type="packageURL",
-        tool_name="pkg:pypi/minecode-pipelines",
-        tool_version=VERSION,
-    )
+    if purls and purl_files:
+        commit_and_push_changes(
+            repo=cloned_data_repo,
+            files_to_commit=purl_files,
+            purls=purls,
+        )
 
-    push_changes(repo=cloned_data_repo)
     return [swift_index_repo, cloned_data_repo, cloned_config_repo]
