@@ -32,9 +32,7 @@ from minecode_pipelines.pipes import (
     get_checkpoint_from_file,
     update_checkpoints_in_github,
 )
-from scanpipe.pipes.federatedcode import commit_changes
-from scanpipe.pipes.federatedcode import push_changes
-from minecode_pipelines import VERSION
+from scanpipe.pipes.federatedcode import commit_and_push_changes
 from minecode_pipelines.utils import cycle_from_index, grouper
 
 PACKAGE_BATCH_SIZE = 100
@@ -89,23 +87,15 @@ def mine_and_publish_composer_purls(packages, cloned_data_repo, cloned_config_re
             purl_files.append(purl_file_full_path)
             purls.append(str(base_purl))
 
-        if purl_files:
-            commit_changes(
-                repo=cloned_data_repo,
-                files_to_commit=purl_files,
-                purls=purls,
-                mine_type="packageURL",
-                tool_name="pkg:composer/minecode-pipelines",
-                tool_version=VERSION,
-            )
-            push_changes(repo=cloned_data_repo)
+        if purls and purl_files:
+            commit_and_push_changes(repo=cloned_data_repo, files_to_commit=purl_files, purls=purls)
 
-            settings_data = {
-                "date": str(datetime.now()),
-                "start_index": start_index + (batch_index + 1) * PACKAGE_BATCH_SIZE,
-            }
-            update_checkpoints_in_github(
-                checkpoint=settings_data,
-                cloned_repo=cloned_config_repo,
-                path=COMPOSER_CHECKPOINT_PATH,
-            )
+        settings_data = {
+            "date": str(datetime.now()),
+            "start_index": start_index + (batch_index + 1) * PACKAGE_BATCH_SIZE,
+        }
+        update_checkpoints_in_github(
+            checkpoint=settings_data,
+            cloned_repo=cloned_config_repo,
+            path=COMPOSER_CHECKPOINT_PATH,
+        )
