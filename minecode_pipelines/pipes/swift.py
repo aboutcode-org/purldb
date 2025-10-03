@@ -27,9 +27,8 @@ from pathlib import Path
 from aboutcode import hashid
 from aboutcode.hashid import get_core_purl
 from packageurl import PackageURL
-from purl2vcs.find_source_repo import get_tags_and_commits_from_git_output
 
-from minecode_pipelines.miners.swift import fetch_git_tags_raw
+from minecode_pipelines.miners.swift import fetch_git_tags_raw, get_tags_and_commits_from_git_output
 from minecode_pipelines.miners.swift import split_org_repo
 
 from minecode_pipelines.pipes import update_checkpoints_in_github
