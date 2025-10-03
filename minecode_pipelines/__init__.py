@@ -8,4 +8,4 @@
 #
 
 
-VERSION = "0.0.1b21"
+VERSION = "0.0.1b22"
