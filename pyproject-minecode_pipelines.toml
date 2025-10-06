@@ -4,7 +4,7 @@ build-backend = "flot.buildapi"
 
 [project]
 name = "minecode_pipelines"
-version = "0.0.1b23"
+version = "0.0.1b24"
 description = "A library for mining packageURLs and package metadata from ecosystem repositories."
 readme = "minecode_pipelines/README.rst"
 license = { text = "Apache-2.0" }
@@ -60,7 +60,7 @@ mine_swift = "minecode_pipelines.pipelines.mine_swift:MineSwift"
 mine_composer = "minecode_pipelines.pipelines.mine_composer:MineComposer"
 
 [tool.bumpversion]
-current_version = "0.0.1b23"
+current_version = "0.0.1b24"
 allow_dirty = true
 
 files = [
