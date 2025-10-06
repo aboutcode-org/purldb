@@ -88,7 +88,9 @@ def mine_and_publish_composer_purls(packages, cloned_data_repo, cloned_config_re
             purls.append(str(base_purl))
 
         if purls and purl_files:
-            commit_and_push_changes(repo=cloned_data_repo, files_to_commit=purl_files, purls=purls)
+            commit_and_push_changes(
+                repo=cloned_data_repo, files_to_commit=purl_files, purls=purls, logger=logger
+            )
 
         settings_data = {
             "date": str(datetime.now()),

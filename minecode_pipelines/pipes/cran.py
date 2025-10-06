@@ -62,7 +62,5 @@ def mine_and_publish_cran_packageurls(cloned_data_repo, db_path, logger):
         # After finishing the batch, commit & push if there’s something to save
         if purl_files and base_purls:
             commit_and_push_changes(
-                repo=cloned_data_repo,
-                files_to_commit=purl_files,
-                purls=base_purls,
+                repo=cloned_data_repo, files_to_commit=purl_files, purls=base_purls, logger=logger
             )
