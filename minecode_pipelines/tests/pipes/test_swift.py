@@ -100,3 +100,20 @@ class SwiftPipelineTests(TestCase):
                 "purls.yml",
             ],
         )
+
+    @patch("minecode_pipelines.pipes.swift.write_data_to_yaml_file")
+    def test_swift_xcf_sodium(self, mock_write):
+        self._run_package_test(
+            mock_write,
+            package_repo_url="https://github.com/0xacdc/XCFSodium",
+            commits_tags_file=DATA_DIR / "commits_tags4.txt",
+            expected_file=DATA_DIR / "expected4.yaml",
+            expected_path_parts=[
+                "aboutcode-packages-swift-0",
+                "swift",
+                "github.com",
+                "0xacdc",
+                "XCFSodium",
+                "purls.yml",
+            ],
+        )
