@@ -28,5 +28,5 @@ def store_cargo_packages(packages, repo):
 
     ppath = hashid.get_package_purls_yml_file_path(base_purl)
     purl_file_full_path = Path(repo.working_dir) / ppath
-    write_data_to_yaml_file(path=purl_file_full_path, data=updated_purls)
+    write_data_to_yaml_file(path=purl_file_full_path, data=sorted(updated_purls))
     return purl_file_full_path, base_purl
