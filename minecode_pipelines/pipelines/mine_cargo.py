@@ -59,13 +59,8 @@ class MineCargo(Pipeline):
         self.cargo_index_repo = federatedcode.clone_repository(MINECODE_CARGO_INDEX_REPO)
         self.cloned_data_repo = federatedcode.clone_repository(MINECODE_DATA_CARGO_REPO)
 
-        if self.log:
-            self.log(
-                f"{MINECODE_CARGO_INDEX_REPO} repo cloned at: {self.cargo_index_repo.working_dir}"
-            )
-            self.log(
-                f"{MINECODE_DATA_CARGO_REPO} repo cloned at: {self.cloned_data_repo.working_dir}"
-            )
+        self.log(f"{MINECODE_CARGO_INDEX_REPO} repo cloned at: {self.cargo_index_repo.working_dir}")
+        self.log(f"{MINECODE_DATA_CARGO_REPO} repo cloned at: {self.cloned_data_repo.working_dir}")
 
     def mine_and_publish_cargo_packageurls(self):
         cargo.process_cargo_packages(self.cargo_index_repo, self.cloned_data_repo, self.log)
