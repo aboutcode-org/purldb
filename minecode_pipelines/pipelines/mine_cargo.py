@@ -25,7 +25,6 @@ from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 from minecode_pipelines.miners import cargo
 from minecode_pipelines import pipes
-from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
 
 MINECODE_DATA_CARGO_REPO = os.environ.get(
     "MINECODE_DATA_CARGO_REPO", "https://github.com/aboutcode-data/minecode-data-cargo-test"
@@ -59,26 +58,15 @@ class MineCargo(Pipeline):
         """
         self.cargo_index_repo = federatedcode.clone_repository(MINECODE_CARGO_INDEX_REPO)
         self.cloned_data_repo = federatedcode.clone_repository(MINECODE_DATA_CARGO_REPO)
-        self.cloned_config_repo = federatedcode.clone_repository(MINECODE_PIPELINES_CONFIG_REPO)
 
-        if self.log:
-            self.log(
-                f"{MINECODE_CARGO_INDEX_REPO} repo cloned at: {self.cargo_index_repo.working_dir}"
-            )
-            self.log(
-                f"{MINECODE_DATA_CARGO_REPO} repo cloned at: {self.cloned_data_repo.working_dir}"
-            )
-            self.log(
-                f"{MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {self.cloned_config_repo.working_dir}"
-            )
+        self.log(f"{MINECODE_CARGO_INDEX_REPO} repo cloned at: {self.cargo_index_repo.working_dir}")
+        self.log(f"{MINECODE_DATA_CARGO_REPO} repo cloned at: {self.cloned_data_repo.working_dir}")
 
     def mine_and_publish_cargo_packageurls(self):
-        cargo.process_cargo_packages(
-            self.cargo_index_repo, self.cloned_data_repo, self.cloned_config_repo, self.log
-        )
+        cargo.process_cargo_packages(self.cargo_index_repo, self.cloned_data_repo, self.log)
 
     def delete_cloned_repos(self):
         pipes.delete_cloned_repos(
-            repos=[self.cargo_index_repo, self.cloned_data_repo, self.cloned_config_repo],
+            repos=[self.cargo_index_repo, self.cloned_data_repo],
             logger=self.log,
         )
