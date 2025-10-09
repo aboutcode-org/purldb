@@ -59,3 +59,9 @@ def get_temp_file(file_name="data", extension=".file", dir_name=""):
     temp_dir = get_temp_dir(dir_name)
     location = os.path.join(temp_dir, file_name)
     return location
+
+
+def cycle_from_index(lst, x):
+    """Return list rotated so it starts from index x."""
+    x = x % len(lst)  # handle cases where x is out of bounds
+    return lst[x:] + lst[:x]
