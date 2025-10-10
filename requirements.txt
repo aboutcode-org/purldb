@@ -34,7 +34,7 @@ crispy-bootstrap3==2024.1
 crontab==1.0.4
 cryptography==45.0.4
 cyclonedx-python-lib==10.2.0
-debian_inspector==31.1.0
+debian_inspector==31.1.1
 defusedxml==0.7.1
 Deprecated==1.2.18
 Django==5.1.11

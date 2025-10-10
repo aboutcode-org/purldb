@@ -1,7 +1,7 @@
 # Copyright (c) nexB Inc. and others. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 LABEL org.opencontainers.image.source="https://github.com/aboutcode-org/purldb"
 LABEL org.opencontainers.image.description="PurlDB"
