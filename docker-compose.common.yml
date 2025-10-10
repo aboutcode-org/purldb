@@ -15,38 +15,6 @@ services:
       - redis_data:/data
     restart: always
 
-
-  # This service is responsible for ensuring the correct ownership of files
-  # in the shared volumes used by the application (static and workspace).
-  # It ensures that all files inside the `/var/purldb/` directory are owned
-  # by the user and group with the UID and GID defined in the environment variables
-  # APP_UID and APP_GID, which default to 1000 if not set.
-  #
-  # The service runs only once (due to "restart: no") and performs a `chown` operation
-  # to change the ownership of the static and workspace directories, ensuring proper
-  # file access rights for the running application containers.
-  #
-  # Volumes mounted:
-  # - static: Ensures the ownership of static files in the /var/purldb/static directory
-  # - media: Ensures the ownership of media files in the /var/purldb/workspace directory
-  #
-  # Notes: This service can be removed in future ScanCode.io release.
-  chown:
-    image: docker.io/library/alpine:latest
-    restart: "no"
-    command: sh -c "
-      if [ ! -f /var/purldb/workspace/.chown_done ]; then
-        chown -R ${APP_UID:-1000}:${APP_GID:-1000} /var/purldb/ &&
-        touch /var/purldb/workspace/.chown_done;
-        echo 'Chown applied!';
-      else
-        echo 'Chown already applied for /var/purldb/workspace/, skipping...';
-      fi;"
-    env_file:
-      - docker_purldb.env
-    volumes:
-      - static:/var/purldb/static/
-
   web:
     build: .
     command: wait-for-it --strict --timeout=60 db:5432 -- sh -c "
@@ -63,10 +31,7 @@ services:
       - temp_data:/tmp/minecode/
       - static:/var/purldb/static/
     depends_on:
-      db:
-        condition: service_healthy
-      chown:
-        condition: service_completed_successfully
+      - db
 
   priority_queue:
     build: .
