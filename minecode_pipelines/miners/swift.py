@@ -40,7 +40,7 @@ def fetch_git_tags_raw(repo_url: str, timeout: int = 60, logger=None) -> str | N
         raise ValueError(f"Unsafe repo URL: {repo_url}")
 
     try:
-        result = subprocess.run(
+        result = subprocess.run(  # NOQA
             [git_executable, "ls-remote", repo_url],
             capture_output=True,
             text=True,
