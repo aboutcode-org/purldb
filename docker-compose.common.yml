@@ -43,7 +43,7 @@ services:
         echo 'Chown already applied for /var/purldb/workspace/, skipping...';
       fi;"
     env_file:
-      - docker.env
+      - docker_purldb.env
     volumes:
       - static:/var/purldb/static/
 
