@@ -194,3 +194,40 @@ def get_commit_at_distance_ahead(
     if len(revs) < num_commits_ahead:
         raise ValueError(f"Not enough commits ahead; only {len(revs)} available.")
     return revs[-num_commits_ahead]
+
+
+def get_package_destination_repo(repo_root_name):
+    # TODO: Replace this with new hashid sharding mechanism.
+
+    repo_rank = int(repo_root_name.rpartition("-")[-1], 16)
+    repo_count = 5
+    return f"aboutcode-packages-data-{repo_rank % repo_count}"
+
+
+def init_local_checkout(repo_name, working_path, logger):
+    from scanpipe.pipes.federatedcode import get_or_create_repository
+
+    repo_obj = get_or_create_repository(
+        repo_name,
+        working_path,
+        logger,
+    )
+    return {
+        "repo": repo_obj[-1],
+        "file_to_commit": [],
+        "file_processed_count": 0,
+        "commit_count": 0,
+    }
+
+
+def commit_and_push_checkout(local_checkout, commit_message, logger):
+    from scanpipe.pipes.federatedcode import commit_and_push_changes
+
+    if commit_and_push_changes(
+        commit_message=commit_message,
+        repo=local_checkout["repo"],
+        files_to_commit=local_checkout["file_to_commit"],
+        logger=logger,
+    ):
+        local_checkout["commit_count"] += 1
+    local_checkout["file_to_commit"].clear()
