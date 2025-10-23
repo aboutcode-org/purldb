@@ -41,7 +41,7 @@ from scanpipe.pipes.federatedcode import clone_repository
 from scanpipe.pipes.federatedcode import commit_and_push_changes
 from minecode_pipelines.utils import cycle_from_index
 
-PACKAGE_BATCH_SIZE = 100
+PACKAGE_BATCH_SIZE = 1000
 SWIFT_CHECKPOINT_PATH = "swift/checkpoints.json"
 
 MINECODE_DATA_SWIFT_REPO = os.environ.get(
@@ -133,13 +133,13 @@ def mine_and_publish_swift_packageurls(logger):
             package_repo_url, tags_and_commits, cloned_data_repo
         )
 
-        logger(f"writing packageURLs for package: {str(base_purl)} at: {purl_file}")
         purl_files.append(purl_file)
         purls.append(str(base_purl))
         counter += 1
 
         if counter >= PACKAGE_BATCH_SIZE:
             if purls and purl_files:
+                logger(f"Committing packageURLs: {', '.join(purls)}")
                 commit_and_push_changes(
                     repo=cloned_data_repo, files_to_commit=purl_files, purls=purls, logger=logger
                 )
@@ -163,6 +163,7 @@ def mine_and_publish_swift_packageurls(logger):
             )
 
     if purls and purl_files:
+        logger(f"Committing packageURLs: {', '.join(purls)}")
         commit_and_push_changes(
             repo=cloned_data_repo, files_to_commit=purl_files, purls=purls, logger=logger
         )
