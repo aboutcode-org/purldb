@@ -55,14 +55,11 @@ def mine_and_publish_cran_packageurls(cloned_data_repo, db_path, logger):
             )
             write_data_to_yaml_file(path=purl_yaml_path, data=updated_purls)
 
-            logger(f"writing packageURLs for package: {str(base_purl)} at: {purl_yaml_path}")
             purl_files.append(purl_yaml_path)
             base_purls.append(str(base_purl))
 
-        # After finishing the batch, commit & push if there’s something to save
         if purl_files and base_purls:
+            logger(f"Committing packageURLs: {', '.join(base_purls)}")
             commit_and_push_changes(
-                repo=cloned_data_repo,
-                files_to_commit=purl_files,
-                purls=base_purls,
+                repo=cloned_data_repo, files_to_commit=purl_files, purls=base_purls, logger=logger
             )

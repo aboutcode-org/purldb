@@ -23,7 +23,6 @@
 from datetime import datetime
 from pathlib import Path
 from aboutcode import hashid
-from aboutcode.hashid import get_package_base_dir
 from minecode_pipelines.miners.composer import get_composer_packages
 from minecode_pipelines.miners.composer import load_composer_packages
 from minecode_pipelines.miners.composer import get_composer_purl
@@ -35,7 +34,7 @@ from minecode_pipelines.pipes import (
 from scanpipe.pipes.federatedcode import commit_and_push_changes
 from minecode_pipelines.utils import cycle_from_index, grouper
 
-PACKAGE_BATCH_SIZE = 100
+PACKAGE_BATCH_SIZE = 1000
 COMPOSER_CHECKPOINT_PATH = "composer/checkpoints.json"
 
 
@@ -66,17 +65,12 @@ def mine_and_publish_composer_purls(packages, cloned_data_repo, cloned_config_re
                 continue
 
             vendor, package = item
-            logger(f"getting packageURLs for package: {vendor}/{package}")
 
             updated_purls = get_composer_purl(vendor=vendor, package=package)
             if not updated_purls:
                 continue
 
             base_purl = updated_purls[0]
-            package_base_dir = get_package_base_dir(purl=base_purl)
-
-            logger(f"writing packageURLs for package: {base_purl} at: {package_base_dir}")
-            logger(f"packageURLs: {' '.join(updated_purls)}")
 
             purl_file_full_path = Path(
                 cloned_data_repo.working_dir
@@ -88,7 +82,10 @@ def mine_and_publish_composer_purls(packages, cloned_data_repo, cloned_config_re
             purls.append(str(base_purl))
 
         if purls and purl_files:
-            commit_and_push_changes(repo=cloned_data_repo, files_to_commit=purl_files, purls=purls)
+            logger(f"Committing packageURLs: {', '.join(purls)}")
+            commit_and_push_changes(
+                repo=cloned_data_repo, files_to_commit=purl_files, purls=purls, logger=logger
+            )
 
         settings_data = {
             "date": str(datetime.now()),

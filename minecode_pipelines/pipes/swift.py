@@ -25,7 +25,6 @@ import os
 from datetime import datetime
 from pathlib import Path
 from aboutcode import hashid
-from aboutcode.hashid import get_core_purl
 from packageurl import PackageURL
 
 from minecode_pipelines.miners.swift import fetch_git_tags_raw
@@ -42,7 +41,7 @@ from scanpipe.pipes.federatedcode import clone_repository
 from scanpipe.pipes.federatedcode import commit_and_push_changes
 from minecode_pipelines.utils import cycle_from_index
 
-PACKAGE_BATCH_SIZE = 100
+PACKAGE_BATCH_SIZE = 1000
 SWIFT_CHECKPOINT_PATH = "swift/checkpoints.json"
 
 MINECODE_DATA_SWIFT_REPO = os.environ.get(
@@ -55,13 +54,21 @@ def store_swift_packages(package_repo_url, tags_and_commits, cloned_data_repo):
     """Collect Swift package versions into purls and write them to the repo."""
     org, name = split_org_repo(package_repo_url)
     org = "github.com/" + org
-    purl = PackageURL(type="swift", namespace=org, name=name)
-    base_purl = get_core_purl(purl)
-
+    base_purl = PackageURL(type="swift", namespace=org, name=name)
     updated_purls = []
-    for tag, _ in tags_and_commits:
-        purl = PackageURL(type="swift", namespace=org, name=name, version=tag).to_string()
-        updated_purls.append(purl)
+
+    for tag, commit in tags_and_commits:
+        purl = None
+        if tag == "HEAD":
+            if len(tags_and_commits) == 1:
+                purl = PackageURL(
+                    type="swift", namespace=org, name=name, version=commit
+                ).to_string()
+        else:
+            purl = PackageURL(type="swift", namespace=org, name=name, version=tag).to_string()
+
+        if purl:
+            updated_purls.append(purl)
 
     purl_yaml_path = cloned_data_repo.working_dir / hashid.get_package_purls_yml_file_path(
         base_purl
@@ -126,17 +133,15 @@ def mine_and_publish_swift_packageurls(logger):
             package_repo_url, tags_and_commits, cloned_data_repo
         )
 
-        logger(f"writing packageURLs for package: {str(base_purl)} at: {purl_file}")
         purl_files.append(purl_file)
         purls.append(str(base_purl))
         counter += 1
 
         if counter >= PACKAGE_BATCH_SIZE:
             if purls and purl_files:
+                logger(f"Committing packageURLs: {', '.join(purls)}")
                 commit_and_push_changes(
-                    repo=cloned_data_repo,
-                    files_to_commit=purl_files,
-                    purls=purls,
+                    repo=cloned_data_repo, files_to_commit=purl_files, purls=purls, logger=logger
                 )
 
             purl_files = []
@@ -158,10 +163,9 @@ def mine_and_publish_swift_packageurls(logger):
             )
 
     if purls and purl_files:
+        logger(f"Committing packageURLs: {', '.join(purls)}")
         commit_and_push_changes(
-            repo=cloned_data_repo,
-            files_to_commit=purl_files,
-            purls=purls,
+            repo=cloned_data_repo, files_to_commit=purl_files, purls=purls, logger=logger
         )
 
     return [swift_index_repo, cloned_data_repo, cloned_config_repo]
