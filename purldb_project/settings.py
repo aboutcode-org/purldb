@@ -309,8 +309,14 @@ RQ_QUEUES = {
     "default": {
         "HOST": env.str("PURLDB_REDIS_HOST", default="localhost"),
         "PORT": env.str("PURLDB_REDIS_PORT", default="6379"),
+        "DB": env.int("PURLDB_REDIS_DB", default=0),
+        "USERNAME": env.str("PURLDB_REDIS_USERNAME", default=None),
         "PASSWORD": env.str("PURLDB_REDIS_PASSWORD", default=""),
         "DEFAULT_TIMEOUT": env.int("PURLDB_REDIS_DEFAULT_TIMEOUT", default=360),
+        # Enable SSL for Redis connections when deploying purldb in environments
+        # where Redis is hosted on a separate system (e.g., cloud deployment or remote
+        # Redis server) to secure data in transit.
+        "SSL": env.bool("PURLDB_REDIS_SSL", default=False)
     }
 }
 
