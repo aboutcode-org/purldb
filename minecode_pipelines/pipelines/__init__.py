@@ -14,7 +14,7 @@ import logging
 from minecode_pipelines import pipes
 from minecode_pipelines.pipes import write_packageurls_to_file
 
-from aboutcode.hashid import get_package_base_dir
+from aboutcode.federated import DataFederation
 from aboutcode.pipeline import LoopProgress
 from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
@@ -73,6 +73,11 @@ class MineCodeBasePipeline(Pipeline):
 
     def mine_and_publish_packageurls(self):
         """Mine and publish PackageURLs."""
+        data_federation = DataFederation.from_url(
+            name="aboutcode-data",
+            remote_root_url="https://github.com/aboutcode-data",
+        )
+        data_cluster = data_federation.get_cluster("purls")
         checked_out_repos = {}
         batch_size = 4000
         total_file_processed_count = 0
@@ -86,23 +91,20 @@ class MineCodeBasePipeline(Pipeline):
 
         self.log(f"Mine PackageURL for {package_count:,d} packages.")
         for base, purls in progress.iter(self.mine_packageurls()):
-            package_base_dir = get_package_base_dir(purl=base)
+            package_repo, datafile_path = data_cluster.get_datafile_repo_and_path(purl=base)
 
-            package_root_dir = package_base_dir.parts[0]
-            package_group = pipes.get_package_destination_repo(package_root_dir)
-
-            if package_group not in checked_out_repos:
-                checked_out_repos[package_group] = pipes.init_local_checkout(
-                    repo_name=package_group,
+            if package_repo not in checked_out_repos:
+                checked_out_repos[package_repo] = pipes.init_local_checkout(
+                    repo_name=package_repo,
                     working_path=self.working_path,
                     logger=self.log,
                 )
 
-            checkout = checked_out_repos[package_group]
+            checkout = checked_out_repos[package_repo]
 
             purl_file = write_packageurls_to_file(
                 repo=checkout["repo"],
-                base_dir=package_base_dir,
+                relative_datafile_path=datafile_path,
                 packageurls=sorted(purls),
             )
             checkout["file_to_commit"].append(purl_file)
@@ -165,5 +167,6 @@ class MineCodeBasePipeline(Pipeline):
         timestamp = now_local.strftime("%Y-%m-%d %T.%f %Z")
         message = f"{timestamp} {message}"
         module_logger.log(level, message)
-        self.append_to_log(message)
         print(message)
+        message = message.replace("\r", "\\r").replace("\n", "\\n")
+        self.append_to_log(message)

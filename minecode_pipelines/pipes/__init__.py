@@ -14,8 +14,6 @@ from git import Repo
 import requests
 import saneyaml
 
-from aboutcode.hashid import PURLS_FILENAME
-
 # states:
 # note: a state is null when mining starts
 INITIAL_SYNC_STATE = "initial-sync"
@@ -79,12 +77,12 @@ def update_mined_packages_in_checkpoint(packages, config_repo, cloned_repo, chec
     )
 
 
-def write_packageurls_to_file(repo, base_dir, packageurls, append=False):
+def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=False):
     if not isinstance(packageurls, list):
         raise Exception("`packageurls` needs to be a list")
 
-    purl_file_rel_path = os.path.join(base_dir, PURLS_FILENAME)
-    purl_file_full_path = Path(repo.working_dir) / purl_file_rel_path
+    # purl_file_rel_path = os.path.join(base_dir, PURLS_FILENAME)
+    purl_file_full_path = Path(repo.working_dir) / relative_datafile_path
     if append and purl_file_full_path.exists():
         existing_purls = load_data_from_yaml_file(purl_file_full_path)
         for packageurl in packageurls:
@@ -92,7 +90,7 @@ def write_packageurls_to_file(repo, base_dir, packageurls, append=False):
                 existing_purls.append(packageurl)
         packageurls = existing_purls
     write_data_to_yaml_file(path=purl_file_full_path, data=packageurls)
-    return purl_file_rel_path
+    return relative_datafile_path
 
 
 def load_data_from_yaml_file(path):
@@ -194,14 +192,6 @@ def get_commit_at_distance_ahead(
     if len(revs) < num_commits_ahead:
         raise ValueError(f"Not enough commits ahead; only {len(revs)} available.")
     return revs[-num_commits_ahead]
-
-
-def get_package_destination_repo(repo_root_name):
-    # TODO: Replace this with new hashid sharding mechanism.
-
-    repo_rank = int(repo_root_name.rpartition("-")[-1], 16)
-    repo_count = 5
-    return f"aboutcode-packages-data-{repo_rank % repo_count}"
 
 
 def init_local_checkout(repo_name, working_path, logger):
