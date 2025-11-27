@@ -14,8 +14,6 @@ from git import Repo
 import requests
 import saneyaml
 
-from aboutcode.hashid import PURLS_FILENAME
-
 # states:
 # note: a state is null when mining starts
 INITIAL_SYNC_STATE = "initial-sync"
@@ -79,12 +77,11 @@ def update_mined_packages_in_checkpoint(packages, config_repo, cloned_repo, chec
     )
 
 
-def write_packageurls_to_file(repo, base_dir, packageurls, append=False):
+def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=False):
     if not isinstance(packageurls, list):
         raise Exception("`packageurls` needs to be a list")
 
-    purl_file_rel_path = os.path.join(base_dir, PURLS_FILENAME)
-    purl_file_full_path = Path(repo.working_dir) / purl_file_rel_path
+    purl_file_full_path = Path(repo.working_dir) / relative_datafile_path
     if append and purl_file_full_path.exists():
         existing_purls = load_data_from_yaml_file(purl_file_full_path)
         for packageurl in packageurls:
@@ -92,7 +89,7 @@ def write_packageurls_to_file(repo, base_dir, packageurls, append=False):
                 existing_purls.append(packageurl)
         packageurls = existing_purls
     write_data_to_yaml_file(path=purl_file_full_path, data=packageurls)
-    return purl_file_rel_path
+    return relative_datafile_path
 
 
 def load_data_from_yaml_file(path):
@@ -194,3 +191,32 @@ def get_commit_at_distance_ahead(
     if len(revs) < num_commits_ahead:
         raise ValueError(f"Not enough commits ahead; only {len(revs)} available.")
     return revs[-num_commits_ahead]
+
+
+def init_local_checkout(repo_name, working_path, logger):
+    from scanpipe.pipes.federatedcode import get_or_create_repository
+
+    repo_obj = get_or_create_repository(
+        repo_name,
+        working_path,
+        logger,
+    )
+    return {
+        "repo": repo_obj[-1],
+        "file_to_commit": [],
+        "file_processed_count": 0,
+        "commit_count": 0,
+    }
+
+
+def commit_and_push_checkout(local_checkout, commit_message, logger):
+    from scanpipe.pipes.federatedcode import commit_and_push_changes
+
+    if commit_and_push_changes(
+        commit_message=commit_message,
+        repo=local_checkout["repo"],
+        files_to_commit=local_checkout["file_to_commit"],
+        logger=logger,
+    ):
+        local_checkout["commit_count"] += 1
+    local_checkout["file_to_commit"].clear()
