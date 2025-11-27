@@ -153,7 +153,6 @@ class MineCodeBasePipeline(Pipeline):
             Add newly mined PackageURLs ({commit_count}/{total_commit_count})
 
             Tool: {tool_name}@v{VERSION}
-            Reference: https://{settings.ALLOWED_HOSTS[0]}
 
             Signed-off-by: {author_name} <{author_email}>
             """

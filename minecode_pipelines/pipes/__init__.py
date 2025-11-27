@@ -81,7 +81,6 @@ def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=
     if not isinstance(packageurls, list):
         raise Exception("`packageurls` needs to be a list")
 
-    # purl_file_rel_path = os.path.join(base_dir, PURLS_FILENAME)
     purl_file_full_path = Path(repo.working_dir) / relative_datafile_path
     if append and purl_file_full_path.exists():
         existing_purls = load_data_from_yaml_file(purl_file_full_path)
