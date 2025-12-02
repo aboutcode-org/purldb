@@ -7,7 +7,7 @@ Maintaining an Up-to-Date PurlDB with PurlWatch
 PurlDB serves as a knowledge base for packages. It is essential to
 keep this knowledge base updated as new package versions are released daily.
 PurlWatch is responsible for keeping PurlDB up-to-date. Depending on the PurlDB
-size PurlWatch provides two different approach.
+size, PurlWatch provides two different approaches.
 
 Methods to Keep PurlDB Updated
 ------------------------------
@@ -48,7 +48,7 @@ watch. It creates watch task for the PURL and enqueues it in RQ for execution.
 Advantages
 ~~~~~~~~~~
     - Background tasks ensure that the PurlDB remains updated without manual intervention.
-    - The watch frequency can be customized to balance the resource uses.
+    - The watch frequency can be customized to balance the resource usage.
     - Users can define the depth of data collection based on their needs.
 
 .. tip::
