@@ -9,6 +9,7 @@
 
 import logging
 import sys
+import tempfile
 
 import os
 from commoncode.fileutils import walk
@@ -51,7 +52,7 @@ class Command(VerboseCommand):
 
     def handle(self, *args, **options):
         logger.setLevel(self.get_verbosity(**options))
-        working_path = ""
+        working_path = tempfile.mkdtemp()
 
         # Clone data and config repo
         data_federation = DataFederation.from_url(
