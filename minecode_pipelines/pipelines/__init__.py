@@ -91,6 +91,9 @@ class MineCodeBasePipeline(Pipeline):
 
         self.log(f"Mine PackageURL for {package_count:,d} packages.")
         for base, purls in progress.iter(self.mine_packageurls()):
+            if not purls or not base:
+                continue
+
             package_repo, datafile_path = data_cluster.get_datafile_repo_and_path(purl=base)
 
             if package_repo not in checked_out_repos:
