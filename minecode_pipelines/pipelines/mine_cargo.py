@@ -20,53 +20,44 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-import os
-from scanpipe.pipelines import Pipeline
+from pathlib import Path
+
+from minecode_pipelines.pipes import cargo
+from minecode_pipelines.pipelines import MineCodeBasePipeline
 from scanpipe.pipes import federatedcode
-from minecode_pipelines.miners import cargo
-from minecode_pipelines import pipes
-
-MINECODE_DATA_CARGO_REPO = os.environ.get(
-    "MINECODE_DATA_CARGO_REPO", "https://github.com/aboutcode-data/minecode-data-cargo-test"
-)
-MINECODE_CARGO_INDEX_REPO = "https://github.com/rust-lang/crates.io-index"
 
 
-class MineCargo(Pipeline):
+class MineCargo(MineCodeBasePipeline):
     """Pipeline to mine Cargo (crates.io) packages and publish them to FederatedCode."""
+
+    MINECODE_CARGO_INDEX_REPO = "https://github.com/rust-lang/crates.io-index"
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.clone_cargo_repos,
-            cls.mine_and_publish_cargo_packageurls,
-            cls.delete_cloned_repos,
+            cls.create_federatedcode_working_dir,
+            cls.clone_cargo_index,
+            cls.mine_and_publish_packageurls,
+            cls.delete_working_dir,
         )
 
-    def check_federatedcode_eligibility(self):
-        """
-        Check if the project fulfills the following criteria for
-        pushing the project result to FederatedCode.
-        """
-        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
+    def clone_cargo_index(self):
+        """Clone the Cargo index Repo."""
+        self.cargo_index_repo = federatedcode.clone_repository(
+            repo_url=self.MINECODE_CARGO_INDEX_REPO,
+            clone_path=self.working_path / "crates.io-index",
+            logger=self.log,
+        )
 
-    def clone_cargo_repos(self):
-        """
-        Clone the Cargo-related repositories (index, data, and pipelines config)
-        and store their Repo objects in the corresponding instance variables.
-        """
-        self.cargo_index_repo = federatedcode.clone_repository(MINECODE_CARGO_INDEX_REPO)
-        self.cloned_data_repo = federatedcode.clone_repository(MINECODE_DATA_CARGO_REPO)
+    def packages_count(self):
+        base_path = Path(self.cargo_index_repo.working_tree_dir)
+        package_dir = [p for p in base_path.iterdir() if p.is_dir() and not p.name.startswith(".")]
+        return sum(1 for dir in package_dir for f in dir.rglob("*") if f.is_file())
 
-        self.log(f"{MINECODE_CARGO_INDEX_REPO} repo cloned at: {self.cargo_index_repo.working_dir}")
-        self.log(f"{MINECODE_DATA_CARGO_REPO} repo cloned at: {self.cloned_data_repo.working_dir}")
-
-    def mine_and_publish_cargo_packageurls(self):
-        cargo.process_cargo_packages(self.cargo_index_repo, self.cloned_data_repo, self.log)
-
-    def delete_cloned_repos(self):
-        pipes.delete_cloned_repos(
-            repos=[self.cargo_index_repo, self.cloned_data_repo],
+    def mine_packageurls(self):
+        """Yield PackageURLs from Cargo index."""
+        return cargo.mine_cargo_packageurls(
+            cargo_index_repo=self.cargo_index_repo,
             logger=self.log,
         )
