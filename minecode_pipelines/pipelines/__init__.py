@@ -181,10 +181,10 @@ def _mine_and_publish_packageurls(
         purl_file = write_packageurls_to_file(
             repo=checkout["repo"],
             relative_datafile_path=datafile_path,
-            packageurls=sorted(purls),
+            packageurls=purls,
             append=append_purls,
         )
-        checkout["file_to_commit"].append(purl_file)
+        checkout["file_to_commit"].add(purl_file)
         checkout["file_processed_count"] += 1
 
         if len(checkout["file_to_commit"]) > batch_size:

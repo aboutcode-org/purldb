@@ -201,7 +201,7 @@ def init_local_checkout(repo_name, working_path, logger):
     )
     return {
         "repo": repo_obj[-1],
-        "file_to_commit": [],
+        "file_to_commit": set(),
         "file_processed_count": 0,
         "commit_count": 0,
     }
