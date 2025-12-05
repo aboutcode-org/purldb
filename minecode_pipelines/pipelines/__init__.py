@@ -181,10 +181,10 @@ def _mine_and_publish_packageurls(
         purl_file = write_packageurls_to_file(
             repo=checkout["repo"],
             relative_datafile_path=datafile_path,
-            packageurls=sorted(purls),
+            packageurls=purls,
             append=append_purls,
         )
-        checkout["file_to_commit"].append(purl_file)
+        checkout["file_to_commit"].add(purl_file)
         checkout["file_processed_count"] += 1
 
         if len(checkout["file_to_commit"]) > batch_size:
@@ -207,7 +207,7 @@ def _mine_and_publish_packageurls(
         total_commit_count += checkout["commit_count"]
         total_file_processed_count += checkout["file_processed_count"]
 
-    logger(f"Processed PackageURL for {total_file_processed_count:,d} NuGet packages.")
+    logger(f"Processed PackageURL for {total_file_processed_count:,d} packages.")
     logger(
         f"Pushed new PackageURL in {total_commit_count:,d} commits in {len(checked_out_repos):,d} repos."
     )
