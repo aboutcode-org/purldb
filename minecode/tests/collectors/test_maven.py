@@ -500,12 +500,247 @@ class MavenCrawlerFunctionsTest(JsonBasedTesting, DjangoTestCase):
 
     def test_get_classifier_from_artifact_url(self):
         artifact_url = "https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0-onejar.jar"
-        package_version_page_url = (
-            "https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/"
-        )
         package_name = "livereload-jvm"
         package_version = "0.2.0"
         classifier = maven.get_classifier_from_artifact_url(
-            artifact_url, package_version_page_url, package_name, package_version
+            artifact_url, package_name, package_version
         )
         self.assertEqual("onejar", classifier)
+
+    def test_collect_links_and_artifact_timestamps_repo_maven_apache_org(self):
+        # https://repo.maven.apache.org/maven2
+        text = """
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Central Repository: abbot/abbot</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+body {
+	background: #fff;
+}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>abbot/abbot</h1>
+	</header>
+	<hr/>
+	<main>
+		<pre id="contents">
+<a href="../">../</a>
+<a href="1.4.0/" title="1.4.0/">1.4.0/</a>                                            2015-09-22 16:03         -
+<a href="maven-metadata.xml" title="maven-metadata.xml">maven-metadata.xml</a>                                2015-09-24 14:18       402
+		</pre>
+	</main>
+	<hr/>
+</body>
+
+</html>
+        """
+        expected = [
+            ("1.4.0/", "2015-09-22 16:03"),
+            ("maven-metadata.xml", "2015-09-24 14:18"),
+        ]
+
+        self.assertEqual(
+            expected,
+            maven.collect_links_and_artifact_timestamps(text)
+        )
+
+    def test_collect_links_and_artifact_timestamps_repository_jboss_org(self):
+        # https://repository.jboss.org/nexus/service/rest/repository/browse/public/
+        # https://repository.jboss.org/nexus/service/rest/repository/browse/releases/
+        text = """
+<!DOCTYPE html>
+<html lang="en">
+<head><script type='text/javascript' src='https://repository.jboss.org/eaFxQQDFVh6y36ifuIoBMy9eim76g018PLCPbuNX2jmNM0o-uCRwMlRJvB57nm7NTucmPCa4YyJ3qZJWXVMDS1QBIdvZWrncZfS5PeibG5iSw9ihdGb152gmVZc4u4k6xX7fQL8wTq4id4hMAkgrwgfu7NXVEARqN5W2CuUzlhw='></script>
+    <title>Index of /apache-codec/commons-codec</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+
+    <link rel="icon" type="image/png" href="../../../../../../../static/rapture/resources/safari-favicon-32x32.png?3.77.2-02" sizes="32x32">
+    <link rel="mask-icon" href="../../../../../../../static/rapture/resources/favicon-white.svg?3.77.2-02" color="#00bb6c">
+    <link rel="icon" type="image/png" href="../../../../../../../static/rapture/resources/favicon.svg?3.77.2-02" sizes="16x16">
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../static/css/nexus-content.css?3.77.2-02"/>
+</head>
+<body class="htmlIndex">
+<h1>Index of /apache-codec/commons-codec</h1>
+
+
+<table cellspacing="10">
+    <tr>
+        <th align="left">Name</th>
+        <th>Last Modified</th>
+        <th>Size</th>
+        <th>Description</th>
+    </tr>
+        <tr>
+            <td><a href="../">Parent Directory</a></td>
+        </tr>
+        <tr>
+            <td><a href="1.2/">1.2</a></td>
+            <td>
+                    &nbsp;
+            </td>
+            <td align="right">
+                    &nbsp;
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><a href="https://repository.jboss.org/nexus/repository/public/apache-codec/commons-codec/maven-metadata.xml">maven-metadata.xml</a></td>
+            <td>
+                    Fri Sep 05 09:38:07 Z 2025
+            </td>
+            <td align="right">
+                    347
+            </td>
+            <td></td>
+        </tr>
+</table>
+</body>
+</html>
+        """
+        expected = [
+            ("1.2/", ""),
+            ("https://repository.jboss.org/nexus/repository/public/apache-codec/commons-codec/maven-metadata.xml", "Fri Sep 05 09:38:07 Z 2025")
+        ]
+
+        self.assertEqual(
+            expected,
+            maven.collect_links_and_artifact_timestamps(text)
+        )
+
+    def test_collect_links_and_artifact_timestamps_repository_apache_org(self):
+        # https://repository.apache.org/snapshots/
+        text = """
+<html>
+  <head><script type='text/javascript' src='https://repository.apache.org/A0HnoQhqkwFlCnYdGIUSeC6QxiXycDJQit71DQvwBneOTWUYqDfnR_rRZFOArTJIFfR1XaDdweihXOZeZY0IVNNCr8eYelM995osm88CBpWrw07LyaggpNRPkoPQFO9dPSmatFhFWILy9VivvOWnrB5M2ymOQX0LCcQpRa7ItTQ='></script>
+    <title>Index of /groups/snapshots/commons-chain/commons-chain</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link rel="icon" type="image/png" href="https://repository.apache.org/favicon.png">
+    <!--[if IE]>
+    <link rel="SHORTCUT ICON" href="https://repository.apache.org/favicon.ico"/>
+    <![endif]-->
+
+    <link rel="stylesheet" href="https://repository.apache.org/static/css/Sonatype-content.css?2.15.2-03" type="text/css" media="screen" title="no title" charset="utf-8">
+  </head>
+  <body>
+    <h1>Index of /groups/snapshots/commons-chain/commons-chain</h1>
+    <table cellspacing="10">
+      <tr>
+        <th align="left">Name</th>
+        <th>Last Modified</th>
+        <th>Size</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><a href="../">Parent Directory</a></td>
+      </tr>
+          <tr>
+            <td><a href="https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/1.3-SNAPSHOT/">1.3-SNAPSHOT/</a></td>
+            <td>Thu Jul 04 05:45:00 UTC 2013</td>
+            <td align="right">
+                &nbsp;
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><a href="https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/2.0-SNAPSHOT/">2.0-SNAPSHOT/</a></td>
+            <td>Tue Aug 21 20:26:48 UTC 2018</td>
+            <td align="right">
+                &nbsp;
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><a href="https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/maven-metadata.xml.md5">maven-metadata.xml.md5</a></td>
+            <td>Tue Aug 21 20:26:47 UTC 2018</td>
+            <td align="right">
+                33
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><a href="https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/maven-metadata.xml.sha1">maven-metadata.xml.sha1</a></td>
+            <td>Tue Aug 21 20:26:47 UTC 2018</td>
+            <td align="right">
+                41
+            </td>
+            <td></td>
+          </tr>
+    </table>
+  </body>
+</html>
+        """
+        expected = [
+            ("https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/1.3-SNAPSHOT/", "Thu Jul 04 05:45:00 UTC 2013"),
+            ("https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/2.0-SNAPSHOT/", "Tue Aug 21 20:26:48 UTC 2018"),
+            ("https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/maven-metadata.xml.md5", "Tue Aug 21 20:26:47 UTC 2018"),
+            ("https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/maven-metadata.xml.sha1", "Tue Aug 21 20:26:47 UTC 2018")
+        ]
+
+        self.assertEqual(
+            expected,
+            maven.collect_links_and_artifact_timestamps(text)
+        )
+
+    def test_collect_links_and_artifact_timestamps_repo_spring_io(self):
+        # https://repo.spring.io/release
+        text = """
+<!DOCTYPE html>
+<html>
+<head><meta name="robots" content="noindex" />
+<title>Index of milestone/com/albertoimpl/test/scstest/releasetest</title>
+</head>
+<body>
+<h1>Index of milestone/com/albertoimpl/test/scstest/releasetest</h1>
+<pre>Name                Last modified      Size</pre><hr/>
+<pre><a href="../">../</a>
+<a href="0.0.11.M2/">0.0.11.M2/</a>           07-Aug-2019 08:40    -
+<a href="0.0.11.RC2/">0.0.11.RC2/</a>          07-Aug-2019 08:36    -
+<a href="maven-metadata.xml">maven-metadata.xml</a>   07-Aug-2019 09:07  449 bytes
+</pre>
+<hr/><address style="font-size:small;">Artifactory Online Server</address></body></html>
+        """
+        expected = [
+            ("0.0.11.M2/", "07-Aug-2019 08:40"),
+            ("0.0.11.RC2/", "07-Aug-2019 08:36"),
+            ("maven-metadata.xml", "07-Aug-2019 09:07"),
+        ]
+
+        self.assertEqual(
+            expected,
+            maven.collect_links_and_artifact_timestamps(text)
+        )
+
+    def test_collect_links_and_artifact_timestamps_plugin_gradle_org(self):
+        # https://plugins.gradle.org/m2/
+        text = """
+<html>
+<head><script type='text/javascript' src='https://plugins.gradle.org/dozHnTTSNrd5c_IjGSXETRWLhbS7W7Sl-H-qWMlAJ-nnJaXDMcobTtriNFDE_NxL6mMWRjdcd0usaDqblFsN2Apks_z6IZCWIaCbLqGNPxgytmr6wYHb8SFa8Vogcg7u9QgA3Me1ndlareEd1AF6UF-iHMCznbe9q8_RnrT36M8='></script>
+</head>
+<body>
+<pre><a href="0.0.10/">0.0.10/</a></pre>
+<pre><a href="1.0.1/">1.0.1/</a></pre>
+<pre><a href="1.1.0/">1.1.0/</a></pre>
+<pre><a href="maven-metadata.xml">maven-metadata.xml</a></pre>
+</body>
+</html>
+        """
+        expected = [
+            ("0.0.10/", ""),
+            ("1.0.1/", ""),
+            ("1.1.0/", ""),
+            ("maven-metadata.xml", "")
+        ]
+
+        self.assertEqual(
+            expected,
+            maven.collect_links_and_artifact_timestamps(text)
+        )

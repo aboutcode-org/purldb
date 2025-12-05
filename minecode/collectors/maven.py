@@ -476,9 +476,6 @@ def process_request(purl_str, **kwargs):
 
 
 collect_links = re.compile(r'href="([^"]+)"').findall
-collect_links_and_artifact_timestamps = re.compile(
-    r'<a href="([^"]+)".*</a>\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}|-)'
-).findall
 
 
 def check_if_file_name_is_linked_on_page(file_name, links, **kwargs):
@@ -675,6 +672,61 @@ def filter_for_artifacts(timestamps_by_links):
     return timestamps_by_links_filtered
 
 
+def collect_links_and_artifact_timestamps(text):
+    # Return a list of sets containing all link locations and their
+    # corresponding timestamps extracted from a given HTML text.
+
+    # Pattern that matches with https://repo.maven.apache.org/maven2
+    maven_apache_pattern = re.compile(
+        r'<a href="([^"]+)"[^>]*>[^<]*</a>\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}|-)'
+    )
+    maven_apache_matches = maven_apache_pattern.findall(text)
+    if maven_apache_matches:
+        return maven_apache_matches
+
+    # Pattern that matces with
+    # both Apache (UTC) and Nexus (Z) formats
+    # https://repository.jboss.org/nexus/service/rest/repository/browse/releases/
+    # https://repository.jboss.org/nexus/service/rest/repository/browse/public/
+    # https://repository.apache.org/snapshots/
+    repo_jboss_apache_pattern = re.compile(
+        r'<a href="([^"]+)"[^>]*>[^<]*</a></td>\s*<td>\s*((?:[A-Z][a-z]{2}\s+[A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+(?:UTC|Z)\s+\d{4})|&nbsp;)\s*</td>'
+    )
+    repo_jboss_apache_matches = repo_jboss_apache_pattern.findall(text)
+    # Convert &nbsp; to empty string for table format
+    if repo_jboss_apache_matches:
+        return [(item, '' if timestamp == '&nbsp;' else timestamp)
+                for item, timestamp in repo_jboss_apache_matches]
+
+    # Pattern that matches with
+    # https://repo.spring.io/milestone
+    repo_spring_pattern = re.compile(
+        r'<a href="([^"]+)"[^>]*>[^<]*</a>\s+(\d{2}-[A-Z][a-z]{2}-\d{4}\s+\d{2}:\d{2})'
+    )
+    repo_spring_matches = repo_spring_pattern.findall(text)
+    if repo_spring_matches:
+        return repo_spring_matches
+
+    # Simple links in <pre> tags without timestamps (Gradle plugins format)
+    # https://plugins.gradle.org/m2/
+    plugins_gradle_pattern = re.compile(
+        r'<pre><a href="([^"]+)"[^>]*>[^<]*</a></pre>'
+    )
+    plugins_gradle_matches = plugins_gradle_pattern.findall(text)
+    if plugins_gradle_matches:
+        # Filter out parent directory link if present
+        filtered_matches = []
+        for href in plugins_gradle_matches:
+            # Skip parent directory links
+            if href != "../" and not href.startswith(".."):
+                filtered_matches.append((href, ""))
+
+        # Only return if we found non-parent links
+        if filtered_matches:
+            return filtered_matches
+
+    return []
+
 def collect_links_from_text(text, filter):
     """
     Return a mapping of link locations and their timestamps, given HTML `text`
@@ -700,7 +752,7 @@ def create_absolute_urls_for_links(text, url, filter):
     url = url.rstrip("/")
     timestamps_by_links = collect_links_from_text(text, filter)
     for link, timestamp in timestamps_by_links.items():
-        if not link.startswith(url):
+        if not link.startswith("http:") and not link.startswith("https:"):
             link = f"{url}/{link}"
         timestamps_by_absolute_links[link] = timestamp
     return timestamps_by_absolute_links
@@ -759,22 +811,21 @@ def get_artifact_sha1(artifact_url):
 
 
 def get_classifier_from_artifact_url(
-    artifact_url, package_version_page_url, package_name, package_version
+    artifact_url, package_name, package_version
 ):
     """
     Return the classifier from a Maven artifact URL `artifact_url`, otherwise
     return None if a classifier cannot be determined from `artifact_url`
     """
     classifier = None
-    # https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0
-    package_version_page_url = package_version_page_url.rstrip("/")
-    # https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0
-    leading_url_portion = f"{package_version_page_url}/{package_name}-{package_version}"
+    package_name_version_portion = f"{package_name}-{package_version}"
+    artifact_url_filename = artifact_url.rsplit("/", 1)[-1]
+    remaining_url_portion = artifact_url_filename.replace(package_name_version_portion, "")
     # artifact_url = 'https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0-onejar.jar'
-    # ['', '-onejar.jar']
-    _, remaining_url_portion = artifact_url.split(leading_url_portion)
-    # ['-onejar', 'jar']
+    # artifact_url_filename = 'livereload-jvm-0.2.0-onejar.jar'
+    # remaining_url_portion = '-onejar.jar'
     remaining_url_portions = remaining_url_portion.split(".")
+    # ['-onejar', 'jar']
     if remaining_url_portions and remaining_url_portions[0]:
         # '-onejar'
         classifier = remaining_url_portions[0]

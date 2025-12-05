@@ -133,12 +133,15 @@ def process_request(importable_uri):
         for artifact_link, timestamp in timestamps_by_artifact_links.items():
             sha1 = get_artifact_sha1(artifact_link)
             classifier = get_classifier_from_artifact_url(
-                artifact_link, version_page_url, name, version
+                artifact_link, name, version
             )
             qualifiers = None
             if classifier:
                 qualifiers = f"classifier={classifier}"
-            release_date = dateutil_parse(timestamp)
+            if timestamp:
+                release_date = dateutil_parse(timestamp)
+            else:
+                release_date = None
             package_data = PackageData(
                 type="maven",
                 namespace=namespace,
