@@ -46,6 +46,7 @@ class MineNuGet(MineCodeBasePipeline):
             cls.create_federatedcode_working_dir,
             cls.fetch_nuget_catalog,
             cls.mine_nuget_package_versions,
+            cls.fetch_federation_config,
             cls.mine_and_publish_packageurls,
             cls.delete_working_dir,
         )
