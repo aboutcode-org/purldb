@@ -10,6 +10,7 @@
 
 import logging
 import shutil
+import time
 from collections.abc import Callable
 from collections.abc import Iterable
 from pathlib import Path
@@ -150,11 +151,16 @@ def _mine_and_publish_packageurls(
     commit_msg_func: Callable,
     logger: Callable,
     batch_size: int = 4000,
+    checkpoint_func: Callable = None,
+    checkpoint_freq: int = 30,
 ):
     """Mine and publish PackageURLs."""
     total_file_processed_count = 0
     total_commit_count = 0
     iterator = packageurls
+
+    last_checkpoint_call = time.time()
+    checkpoint_interval = checkpoint_freq * 60
 
     if total_package_count:
         progress = LoopProgress(
@@ -194,6 +200,12 @@ def _mine_and_publish_packageurls(
                 logger=logger,
             )
 
+        time_now = time.time()
+        checkpoint_due = time_now - last_checkpoint_call >= checkpoint_interval
+        if checkpoint_func and checkpoint_due:
+            checkpoint_func()
+            last_checkpoint_call = time_now
+
     for checkout in checked_out_repos.values():
         final_commit_count = checkout["commit_count"] + 1
         pipes.commit_and_push_checkout(
@@ -206,6 +218,9 @@ def _mine_and_publish_packageurls(
         )
         total_commit_count += checkout["commit_count"]
         total_file_processed_count += checkout["file_processed_count"]
+
+    if checkpoint_func:
+        checkpoint_func()
 
     logger(f"Processed PackageURL for {total_file_processed_count:,d} packages.")
     logger(
