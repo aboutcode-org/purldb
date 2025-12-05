@@ -20,36 +20,28 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from scanpipe.pipelines import Pipeline
-from scanpipe.pipes import federatedcode
+from minecode_pipelines.pipelines import MineCodeBasePipeline
 
-from minecode_pipelines import pipes
 from minecode_pipelines.pipes import alpine
 
 
-class MineAlpine(Pipeline):
-    """
-    Mine all packageURLs from an alpine index and publish them to
-    a FederatedCode repo.
-    """
+class MineAlpine(MineCodeBasePipeline):
+    """Mine PackageURLs from alpine index and publish them to FederatedCode."""
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.collect_packages_from_alpine,
-            cls.delete_cloned_repos,
+            cls.create_federatedcode_working_dir,
+            cls.fetch_federation_config,
+            cls.mine_and_publish_alpine_packageurls,
+            cls.delete_working_dir,
         )
 
-    def check_federatedcode_eligibility(self):
-        """
-        Check if the project fulfills the following criteria for
-        pushing the project result to FederatedCode.
-        """
-        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
-
-    def collect_packages_from_alpine(self):
-        self.repos = alpine.collect_packages_from_alpine(logger=self.log)
-
-    def delete_cloned_repos(self):
-        pipes.delete_cloned_repos(repos=self.repos, logger=self.log)
+    def mine_and_publish_alpine_packageurls(self):
+        alpine.mine_and_publish_alpine_packageurls(
+            data_cluster=self.data_cluster,
+            checked_out_repos=self.checked_out_repos,
+            working_path=self.working_path,
+            logger=self.log,
+        )
