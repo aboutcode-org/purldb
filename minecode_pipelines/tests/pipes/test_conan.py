@@ -20,7 +20,7 @@ DATA_DIR = Path(__file__).parent.parent / "test_data" / "conan"
 
 class ConanPipelineTests(TestCase):
     def test_collect_packages_from_conan_calls_write(self, mock_write):
-        packages_file = DATA_DIR / "cairo-config.yml"
+        packages_file = DATA_DIR / "cairo" / "cairo-config.yml"
         expected_file = DATA_DIR / "expected-cairo-purls.yml"
 
         with open(packages_file, encoding="utf-8") as f:
@@ -29,6 +29,6 @@ class ConanPipelineTests(TestCase):
         with open(expected_file, encoding="utf-8") as f:
             expected = saneyaml.load(f)
 
-        base, purls = get_conan_packages("cairo", versions_data)
+        base, purls = get_conan_packages(packages_file, versions_data)
         self.assertEqual(purls, expected)
         self.assertEqual(str(base), "pkg:conan/cairo")

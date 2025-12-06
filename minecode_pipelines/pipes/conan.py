@@ -26,7 +26,13 @@ from packageurl import PackageURL
 from minecode import saneyaml
 
 
-def get_conan_packages(package_name, versions):
+def get_conan_packages(file_path, versions):
+    # Example: file_path = Path("repo_path/recipes/7zip/config.yml")
+    # - file_path.parts = ("repo_path", "recipes", "7zip", "config.yml")
+    # - file_path.parts[-2] = "7zip"  (the package name)
+    if len(file_path.parts) < 2:
+        return None, []
+    package_name = file_path.parts[-2]
     base_purl = PackageURL(type="conan", name=package_name)
 
     updated_purls = []
@@ -44,14 +50,10 @@ def mine_conan_packageurls(conan_index_repo, logger):
     for file_path in base_path.glob("recipes/**/*"):
         if not file_path.name == "config.yml":
             continue
-        # Example: file_path = Path("repo_path/recipes/7zip/config.yml")
-        # - file_path.parts = ("repo_path", "recipes", "7zip", "config.yml")
-        # - file_path.parts[-2] = "7zip"  (the package name)
-        package = file_path.parts[-2]
         with open(file_path, encoding="utf-8") as f:
             versions = saneyaml.load(f)
 
         if not versions:
             continue
 
-        yield get_conan_packages(package, versions)
+        yield get_conan_packages(file_path=file_path, versions=versions)
