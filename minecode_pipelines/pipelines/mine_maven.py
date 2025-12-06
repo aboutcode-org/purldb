@@ -84,4 +84,5 @@ class MineMaven(MineCodeBasePipeline):
             checkpoint=checkpoint,
             cloned_repo=self.checkpoint_config_repo,
             path=self.checkpoint_path,
+            logger=self.log,
         )
