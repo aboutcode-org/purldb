@@ -10,21 +10,19 @@
 import tempfile
 from pathlib import Path
 from unittest import mock
-from unittest.mock import Mock, patch
 import saneyaml
 import yaml
 
 from django.test import TestCase
 
 from minecode_pipelines.pipes import write_data_to_yaml_file
-from minecode_pipelines.pipes.conan import store_conan_packages
+from minecode_pipelines.pipes.conan import get_conan_packages
 
 DATA_DIR = Path(__file__).parent.parent / "test_data" / "conan"
 
 
 class ConanPipelineTests(TestCase):
-    @patch("minecode_pipelines.pipes.conan.write_data_to_yaml_file")
-    def test_collect_packages_from_cargo_calls_write(self, mock_write):
+    def test_collect_packages_from_conan_calls_write(self, mock_write):
         packages_file = DATA_DIR / "cairo-config.yml"
         expected_file = DATA_DIR / "expected-cairo-purls.yml"
 
@@ -34,22 +32,9 @@ class ConanPipelineTests(TestCase):
         with open(expected_file, encoding="utf-8") as f:
             expected = saneyaml.load(f)
 
-        with tempfile.TemporaryDirectory() as tmpdir:
-            repo = Mock()
-            repo.working_dir = tmpdir
-
-            store_conan_packages("cairo", versions_data, repo)
-
-            mock_write.assert_called_once()
-            args, kwargs = mock_write.call_args
-            base_purl, written_packages = kwargs["path"], kwargs["data"]
-
-            expected_base_purl = (
-                Path(tmpdir) / "aboutcode-packages-conan-0" / "conan" / "cairo" / "purls.yml"
-            )
-
-            self.assertEqual(str(base_purl), str(expected_base_purl))
-            self.assertEqual(written_packages, expected)
+        base, purls = get_conan_packages("cairo", versions_data)
+        self.assertEqual(purls, expected)
+        self.assertEqual(str(base), "pkg:cargo/c5store")
 
     def _assert_purls_written(self, purls):
         with tempfile.TemporaryDirectory() as tmpdir:
