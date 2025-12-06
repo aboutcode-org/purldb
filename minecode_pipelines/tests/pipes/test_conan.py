@@ -31,4 +31,4 @@ class ConanPipelineTests(TestCase):
 
         base, purls = get_conan_packages("cairo", versions_data)
         self.assertEqual(purls, expected)
-        self.assertEqual(str(base), "pkg:cargo/c5store")
+        self.assertEqual(str(base), "pkg:conan/cairo")
