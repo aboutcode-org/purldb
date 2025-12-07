@@ -37,6 +37,7 @@ class MineConan(MineCodeBasePipeline):
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
             cls.clone_conan_index,
+            cls.fetch_federation_config,
             cls.mine_and_publish_packageurls,
             cls.delete_working_dir,
         )
