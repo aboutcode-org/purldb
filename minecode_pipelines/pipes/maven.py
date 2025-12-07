@@ -7,29 +7,24 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import gzip
+import io
+import os
 from collections import namedtuple
 from itertools import chain
 from shutil import rmtree
-import os
-import gzip
-import io
 
-from dateutil import tz
-from jawa.util.utf import decode_modified_utf8
 import arrow
 import javaproperties
-
-from aboutcode import hashid
+from dateutil import tz
+from jawa.util.utf import decode_modified_utf8
 from packagedcode.maven import build_filename
 from packagedcode.maven import build_url
 from packagedcode.maven import get_urls
 from packagedcode.models import PackageData
 from packageurl import PackageURL
-from scanpipe.pipes.fetch import fetch_http
-from scanpipe.pipes import federatedcode
 
-from minecode_pipelines import pipes
-from minecode_pipelines import VERSION
+
 from minecode_pipelines.pipes import java_stream
 
 TRACE = False
@@ -43,12 +38,6 @@ MAVEN_INDEX_INCREMENT_BASE_URL = (
 MAVEN_INDEX_PROPERTIES_URL = (
     "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties"
 )
-MAVEN_CHECKPOINT_PATH = "maven/checkpoints.json"
-
-# We are testing and storing mined packageURLs in one single repo per ecosystem for now
-MINECODE_DATA_MAVEN_REPO = "https://github.com/aboutcode-data/minecode-data-maven-test"
-
-PACKAGE_BATCH_SIZE = 1000
 
 
 def is_worthy_artifact(artifact):
@@ -624,6 +613,8 @@ class MavenNexusCollector:
                 rmtree(download.directory)
 
     def _fetch_http(self, uri):
+        from scanpipe.pipes.fetch import fetch_http
+
         fetched = fetch_http(uri)
         self.downloads.append(fetched)
         return fetched
@@ -724,7 +715,7 @@ class MavenNexusCollector:
                 name=artifact_id,
                 version=version,
             )
-            yield current_purl, package
+            yield current_purl, [package.purl]
 
     def _get_packages_from_index_increments(self):
         for index_increment in self.index_increment_locations:
@@ -737,87 +728,3 @@ class MavenNexusCollector:
         else:
             packages = self._get_packages(content=self.index_location)
         return packages
-
-
-def commit_message(commit_batch, total_commit_batch="many"):
-    from django.conf import settings
-
-    author_name = settings.FEDERATEDCODE_GIT_SERVICE_NAME
-    author_email = settings.FEDERATEDCODE_GIT_SERVICE_EMAIL
-    tool_name = "pkg:github/aboutcode-org/scancode.io"
-
-    return f"""\
-        Collect PackageURLs from Maven ({commit_batch}/{total_commit_batch})
-
-        Tool: {tool_name}@v{VERSION}
-        Reference: https://{settings.ALLOWED_HOSTS[0]}
-
-        Signed-off-by: {author_name} <{author_email}>
-        """
-
-
-def collect_packages_from_maven(files_per_commit=PACKAGE_BATCH_SIZE, logger=None):
-    # Clone data and config repo
-    data_repo = federatedcode.clone_repository(
-        repo_url=MINECODE_DATA_MAVEN_REPO,
-        logger=logger,
-    )
-    config_repo = federatedcode.clone_repository(
-        repo_url=pipes.MINECODE_PIPELINES_CONFIG_REPO,
-        logger=logger,
-    )
-    if logger:
-        logger(f"{MINECODE_DATA_MAVEN_REPO} repo cloned at: {data_repo.working_dir}")
-        logger(f"{pipes.MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {config_repo.working_dir}")
-
-    # get last_incremental to see if we can start from incrementals
-    checkpoint = pipes.get_checkpoint_from_file(cloned_repo=config_repo, path=MAVEN_CHECKPOINT_PATH)
-    last_incremental = checkpoint.get("last_incremental")
-    if logger:
-        logger(f"last_incremental: {last_incremental}")
-
-    # download and iterate through maven nexus index
-    maven_nexus_collector = MavenNexusCollector(last_incremental=last_incremental)
-    files_to_commit = []
-    commit_batch = 1
-    for current_purl, package in maven_nexus_collector.get_packages():
-        # write packageURL to file
-        package_base_dir = hashid.get_package_base_dir(purl=current_purl)
-        purl_file = pipes.write_packageurls_to_file(
-            repo=data_repo,
-            base_dir=package_base_dir,
-            packageurls=[package.purl],
-            append=True,
-        )
-        if purl_file not in files_to_commit:
-            files_to_commit.append(purl_file)
-
-        if len(files_to_commit) == files_per_commit:
-            federatedcode.commit_and_push_changes(
-                commit_message=commit_message(commit_batch),
-                repo=data_repo,
-                files_to_commit=files_to_commit,
-                logger=logger,
-            )
-            files_to_commit.clear()
-            commit_batch += 1
-
-    if files_to_commit:
-        federatedcode.commit_and_push_changes(
-            commit_message=commit_message(commit_batch),
-            repo=data_repo,
-            files_to_commit=files_to_commit,
-            logger=logger,
-        )
-
-    # update last_incremental so we can pick up from the proper place next time
-    last_incremental = maven_nexus_collector.index_properties.get("nexus.index.last-incremental")
-    checkpoint = {"last_incremental": last_incremental}
-    if logger:
-        logger(f"checkpoint: {checkpoint}")
-    pipes.update_checkpoints_in_github(
-        checkpoint=checkpoint, cloned_repo=config_repo, path=MAVEN_CHECKPOINT_PATH
-    )
-
-    repos_to_clean = [data_repo, config_repo]
-    return repos_to_clean

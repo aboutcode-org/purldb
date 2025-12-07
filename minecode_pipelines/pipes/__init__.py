@@ -43,7 +43,7 @@ def get_checkpoint_from_file(cloned_repo, path):
     return checkpoint_data or {}
 
 
-def update_checkpoints_in_github(checkpoint, cloned_repo, path):
+def update_checkpoints_in_github(checkpoint, cloned_repo, path, logger):
     from scanpipe.pipes.federatedcode import commit_and_push_changes
 
     checkpoint_path = os.path.join(cloned_repo.working_dir, path)
@@ -53,6 +53,7 @@ def update_checkpoints_in_github(checkpoint, cloned_repo, path):
         repo=cloned_repo,
         files_to_commit=[checkpoint_path],
         commit_message=commit_message,
+        logger=logger,
     )
 
 
