@@ -23,7 +23,7 @@
 from pathlib import Path
 from packageurl import PackageURL
 
-from minecode import saneyaml
+import saneyaml
 
 
 def get_conan_packages(file_path, versions):
