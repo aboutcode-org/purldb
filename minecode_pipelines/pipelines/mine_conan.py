@@ -25,11 +25,11 @@ from minecode_pipelines.pipes import conan
 from minecode_pipelines.pipelines import MineCodeBasePipeline
 from scanpipe.pipes import federatedcode
 
-MINECODE_CONAN_INDEX_REPO = "https://github.com/conan-io/conan-center-index"
-
 
 class MineConan(MineCodeBasePipeline):
     """Pipeline to mine Conan packages and publish them to FederatedCode repo."""
+
+    MINECODE_CONAN_INDEX_REPO = "https://github.com/conan-io/conan-center-index"
 
     @classmethod
     def steps(cls):
