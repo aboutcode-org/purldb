@@ -20,63 +20,85 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-import os
-from scanpipe.pipelines import Pipeline
+from datetime import datetime
 from scanpipe.pipes import federatedcode
 
 from minecode_pipelines import pipes
-from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
-from minecode_pipelines.pipes.composer import mine_composer_packages
-from minecode_pipelines.pipes.composer import mine_and_publish_composer_purls
-
-MINECODE_COMPOSER_GIT_URL = os.environ.get(
-    "MINECODE_COMPOSER_GIT_URL", "https://github.com/aboutcode-data/minecode-data-composer-test"
-)
+from minecode_pipelines.pipelines import MineCodeBasePipeline
+from minecode_pipelines.pipes import composer
+from minecode_pipelines.pipes.composer import mine_composer_packages, PACKAGE_BATCH_SIZE
+from minecode_pipelines.pipelines import _mine_and_publish_packageurls
 
 
-class MineComposer(Pipeline):
+class MineComposer(MineCodeBasePipeline):
     """
-    Mine all packageURLs from a composer index and publish them to a FederatedCode repo.
+    Pipeline to mine Composer PHP packages and publish them to FederatedCode.
     """
+
+    pipeline_config_repo = "https://github.com/aboutcode-data/minecode-pipelines-config/"
+    checkpoint_path = "composer/checkpoints.json"
+    checkpoint_freq = 200
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.clone_composer_repo,
-            cls.mine_and_publish_composer_purls,
+            cls.create_federatedcode_working_dir,
+            cls.fetch_checkpoint_and_start_index,
+            cls.fetch_federation_config,
+            cls.mine_and_publish_packageurls,
+            cls.delete_working_dir,
         )
 
-    def check_federatedcode_eligibility(self):
-        """
-        Check if the project fulfills the following criteria for
-        pushing the project result to FederatedCode.
-        """
-        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
-
-    def clone_composer_repo(self):
-        """
-        Clone the federatedcode composer url and return the Repo object
-        """
-        self.cloned_data_repo = federatedcode.clone_repository(MINECODE_COMPOSER_GIT_URL)
-        self.cloned_config_repo = federatedcode.clone_repository(MINECODE_PIPELINES_CONFIG_REPO)
-
-    def mine_and_publish_composer_purls(self):
-        """
-        Mine Composer package names from Composer indexes and generate
-        package URLs (pURLs) for all mined Composer packages.
-        """
-
-        composer_packages = mine_composer_packages()
-        mine_and_publish_composer_purls(
-            packages=composer_packages,
-            cloned_data_repo=self.cloned_data_repo,
-            cloned_config_repo=self.cloned_config_repo,
+    def fetch_checkpoint_and_start_index(self):
+        self.checkpoint_config_repo = federatedcode.clone_repository(
+            repo_url=self.pipeline_config_repo,
+            clone_path=self.working_path / "minecode-pipelines-config",
             logger=self.log,
         )
+        checkpoint = pipes.get_checkpoint_from_file(
+            cloned_repo=self.checkpoint_config_repo,
+            path=self.checkpoint_path,
+        )
 
-    def delete_cloned_repos(self):
-        pipes.delete_cloned_repos(
-            repos=[self.cloned_data_repo, self.cloned_config_repo],
+        self.start_index = checkpoint.get("start_index", 0)
+        self.log(f"start_index: {self.start_index}")
+
+    def packages_count(self):
+        return len(self.composer_packages) if self.composer_packages else None
+
+    def mine_packageurls(self):
+        self.composer_packages = mine_composer_packages()
+        return composer.mine_composer_packageurls(
+            packages=self.composer_packages,
+            start_index=self.start_index,
+        )
+
+    def mine_and_publish_packageurls(self):
+        """Mine and publish PackageURLs."""
+        _mine_and_publish_packageurls(
+            packageurls=self.mine_packageurls(),
+            total_package_count=self.packages_count(),
+            data_cluster=self.data_cluster,
+            checked_out_repos=self.checked_out_repos,
+            working_path=self.working_path,
+            append_purls=self.append_purls,
+            commit_msg_func=self.commit_message,
+            logger=self.log,
+            checkpoint_func=self.save_check_point,
+            checkpoint_freq=self.checkpoint_freq,
+        )
+
+    def save_check_point(self):
+        checkpoint = {
+            "date": str(datetime.now()),
+            "start_index": self.start_index + self.checkpoint_freq * PACKAGE_BATCH_SIZE,
+        }
+
+        self.log(f"Saving checkpoint: {checkpoint}")
+        pipes.update_checkpoints_in_github(
+            checkpoint=checkpoint,
+            cloned_repo=self.checkpoint_config_repo,
+            path=self.checkpoint_path,
             logger=self.log,
         )

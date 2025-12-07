@@ -51,7 +51,8 @@ class ComposerPipelineTests(SimpleTestCase):
 
         all_purls = []
         for vendor, package in packages:
-            purls = get_composer_purl(vendor, package)
+            base_purl, purls = get_composer_purl(vendor, package)
+            assert str(base_purl) == "pkg:composer/monolog/monolog"
             all_purls.extend(purls)
 
         assert len(all_purls) == 85

@@ -9,6 +9,7 @@
 
 import json
 from minecode_pipelines.utils import get_temp_file
+from aboutcode.hashid import get_core_purl
 import requests
 from packageurl import PackageURL
 
@@ -67,7 +68,7 @@ def get_composer_purl(vendor, package):
         response = requests.get(url, timeout=10)
         response.raise_for_status()
     except requests.RequestException:
-        return purls
+        return None, purls
 
     data = response.json()
     packages = data.get("packages", {})
@@ -84,7 +85,11 @@ def get_composer_purl(vendor, package):
             )
             purls.append(purl.to_string())
 
-    return purls
+    base_purl = None
+    if purls:
+        first_purl = purls[0]
+        base_purl = get_core_purl(first_purl)
+    return base_purl, purls
 
 
 def load_composer_packages(packages_file):
