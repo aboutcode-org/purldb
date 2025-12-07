@@ -12,9 +12,9 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 from django.test import SimpleTestCase
 
-from minecode_pipelines.miners.composer import get_composer_packages
-from minecode_pipelines.miners.composer import load_composer_packages
-from minecode_pipelines.miners.composer import get_composer_purl
+from minecode_pipelines.pipes.composer import get_composer_packages
+from minecode_pipelines.pipes.composer import load_composer_packages
+from minecode_pipelines.pipes.composer import get_composer_purl
 
 DATA_DIR = Path(__file__).parent.parent / "test_data" / "composer"
 
