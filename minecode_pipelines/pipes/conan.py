@@ -37,8 +37,7 @@ def get_conan_packages(file_path, versions):
 
     updated_purls = []
     for version in versions:
-        version_str = version.get("version")
-        purl = PackageURL(type="conan", name=package_name, version=version_str).to_string()
+        purl = PackageURL(type="conan", name=package_name, version=str(version)).to_string()
         updated_purls.append(purl)
     return base_purl, updated_purls
 
