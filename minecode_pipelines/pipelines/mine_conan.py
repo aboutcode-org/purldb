@@ -57,6 +57,6 @@ class MineConan(MineCodeBasePipeline):
     def mine_packageurls(self):
         """Yield PackageURLs from Cargo index."""
         return conan.mine_conan_packageurls(
-            cargo_index_repo=self.conan_index_repo,
+            conan_index_repo=self.conan_index_repo,
             logger=self.log,
         )
