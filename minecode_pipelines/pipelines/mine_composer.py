@@ -20,33 +20,37 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
+from datetime import datetime
 from scanpipe.pipes import federatedcode
 
 from minecode_pipelines import pipes
 from minecode_pipelines.pipelines import MineCodeBasePipeline
+from minecode_pipelines.pipes import composer
+from minecode_pipelines.pipes.composer import mine_composer_packages, PACKAGE_BATCH_SIZE
 from minecode_pipelines.pipelines import _mine_and_publish_packageurls
-from minecode_pipelines.pipes import maven
 
 
-class MineMaven(MineCodeBasePipeline):
-    """Mine PackageURLs from maven index and publish them to FederatedCode."""
+class MineComposer(MineCodeBasePipeline):
+    """
+    Pipeline to mine Composer PHP packages and publish them to FederatedCode.
+    """
 
     pipeline_config_repo = "https://github.com/aboutcode-data/minecode-pipelines-config/"
-    checkpoint_path = "maven/checkpoints.json"
-    append_purls = True
+    checkpoint_path = "composer/checkpoints.json"
+    checkpoint_freq = 200
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
+            cls.fetch_checkpoint_and_start_index,
             cls.fetch_federation_config,
-            cls.fetch_checkpoint_and_maven_index,
-            cls.mine_and_publish_alpine_packageurls,
+            cls.mine_and_publish_packageurls,
             cls.delete_working_dir,
         )
 
-    def fetch_checkpoint_and_maven_index(self):
+    def fetch_checkpoint_and_start_index(self):
         self.checkpoint_config_repo = federatedcode.clone_repository(
             repo_url=self.pipeline_config_repo,
             clone_path=self.working_path / "minecode-pipelines-config",
@@ -57,14 +61,24 @@ class MineMaven(MineCodeBasePipeline):
             path=self.checkpoint_path,
         )
 
-        last_incremental = checkpoint.get("last_incremental")
-        self.log(f"last_incremental: {last_incremental}")
-        self.maven_nexus_collector = maven.MavenNexusCollector(last_incremental=last_incremental)
+        self.start_index = checkpoint.get("start_index", 0)
+        self.log(f"start_index: {self.start_index}")
 
-    def mine_and_publish_alpine_packageurls(self):
+    def packages_count(self):
+        return len(self.composer_packages) if self.composer_packages else None
+
+    def mine_packageurls(self):
+        self.composer_packages = mine_composer_packages()
+        return composer.mine_composer_packageurls(
+            packages=self.composer_packages,
+            start_index=self.start_index,
+        )
+
+    def mine_and_publish_packageurls(self):
+        """Mine and publish PackageURLs."""
         _mine_and_publish_packageurls(
-            packageurls=self.maven_nexus_collector.get_packages(),
-            total_package_count=None,
+            packageurls=self.mine_packageurls(),
+            total_package_count=self.packages_count(),
             data_cluster=self.data_cluster,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
@@ -72,13 +86,15 @@ class MineMaven(MineCodeBasePipeline):
             commit_msg_func=self.commit_message,
             logger=self.log,
             checkpoint_func=self.save_check_point,
+            checkpoint_freq=self.checkpoint_freq,
         )
 
     def save_check_point(self):
-        last_incremental = self.maven_nexus_collector.index_properties.get(
-            "nexus.index.last-incremental"
-        )
-        checkpoint = {"last_incremental": last_incremental}
+        checkpoint = {
+            "date": str(datetime.now()),
+            "start_index": self.start_index + self.checkpoint_freq * PACKAGE_BATCH_SIZE,
+        }
+
         self.log(f"Saving checkpoint: {checkpoint}")
         pipes.update_checkpoints_in_github(
             checkpoint=checkpoint,

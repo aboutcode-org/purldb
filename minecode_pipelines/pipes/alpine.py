@@ -23,65 +23,345 @@
 import base64
 from shutil import rmtree
 
-from aboutcode import hashid
+from aboutcode.pipeline import LoopProgress
 from packagedcode.models import PackageData
 from packagedcode.models import Party
 from packageurl import PackageURL
-from scanpipe.pipes import federatedcode
 from scanpipe.pipes.fetch import fetch_http
 from scanpipe.pipes.scancode import extract_archives
 
-from minecode_pipelines import pipes
-from minecode_pipelines import VERSION
+from minecode_pipelines.pipelines import _mine_and_publish_packageurls
 
 ALPINE_CHECKPOINT_PATH = "alpine/checkpoints.json"
 
-# We are testing and storing mined packageURLs in one single repo per ecosystem for now
-MINECODE_DATA_ALPINE_REPO = "https://github.com/aboutcode-data/minecode-data-alpine-test"
 
 # Number of packages
-PACKAGE_BATCH_SIZE = 500
-ALPINE_LINUX_DISTROS = [
-    "edge",
-    "latest-stable",
-    "v3.0",
-    "v3.1",
-    "v3.10",
-    "v3.11",
-    "v3.12",
-    "v3.13",
-    "v3.14",
-    "v3.15",
-    "v3.16",
-    "v3.17",
-    "v3.18",
-    "v3.19",
-    "v3.2",
-    "v3.20",
-    "v3.21",
-    "v3.22",
-    "v3.3",
-    "v3.4",
-    "v3.5",
-    "v3.6",
-    "v3.7",
-    "v3.8",
-    "v3.9",
-]
-ALPINE_LINUX_REPOS = [
-    "community",
-    "main",
-    "releases",
-    "testing",
-]
-ALPINE_LINUX_ARCHS = [
-    "aarch64",
-    "armhf",
-    "armv7",
-    "ppc64le",
-    "s390x",
-    "x86",
-    "x86_64",
+PACKAGE_BATCH_SIZE = 1000
+ALPINE_LINUX_APKINDEX_URLS = [
+    "https://dl-cdn.alpinelinux.org/alpine/edge/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/community/loongarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/community/riscv64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/main/loongarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/main/riscv64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/testing/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/testing/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/testing/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/testing/loongarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/testing/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/testing/riscv64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/testing/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/testing/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/edge/testing/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/loongarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/riscv64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/loongarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/riscv64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.0/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.0/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.0/testing/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.0/testing/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.1/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.1/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.1/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.1/testing/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.10/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/community/mips64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/main/mips64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.12/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/community/mips64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/main/mips64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.13/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/community/mips64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/main/mips64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.14/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.15/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.16/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.17/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.18/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.19/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.2/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.2/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.2/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/community/riscv64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/main/riscv64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.20/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/community/loongarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/community/riscv64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/loongarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/riscv64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/loongarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/riscv64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/loongarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/riscv64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.3/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.3/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.3/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.3/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.3/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.3/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.4/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.4/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.4/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.4/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.4/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.4/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.5/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.5/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.5/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.5/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.5/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.5/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.5/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.5/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.6/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.8/main/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/community/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/community/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/community/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/community/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/community/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/community/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/community/x86_64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/main/aarch64/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/main/armhf/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/main/armv7/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/main/ppc64le/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/main/s390x/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/main/x86/APKINDEX.tar.gz",
+    "https://dl-cdn.alpinelinux.org/alpine/v3.9/main/x86_64/APKINDEX.tar.gz",
 ]
 
 
@@ -118,11 +398,11 @@ def build_package(extracted_pkginfo, distro, repo):
     )
 
     parties = []
-    maintainers = extracted_pkginfo.get("maintainer")
-    if maintainers:
-        name, email = parse_email(maintainers)
-        if name:
-            party = Party(name=name, role="maintainer", email=email)
+    maintainer = extracted_pkginfo.get("maintainer")
+    if maintainer:
+        maintainer_name, maintainer_email = parse_email(maintainer)
+        if maintainer_name:
+            party = Party(name=maintainer_name, role="maintainer", email=maintainer_email)
             parties.append(party)
 
     purl = PackageURL(
@@ -245,68 +525,53 @@ class AlpineCollector:
 
     def get_packages(self, logger=None):
         """Yield Package objects from alpine index"""
+        for apkindex_url in ALPINE_LINUX_APKINDEX_URLS:
+            self.get_package_from_index(apkindex_url)
 
-        url_template = (
-            "https://dl-cdn.alpinelinux.org/alpine/{distro}/{repo}/{arch}/APKINDEX.tar.gz"
-        )
-
-        for distro in ALPINE_LINUX_DISTROS:
-            for repo in ALPINE_LINUX_REPOS:
-                for arch in ALPINE_LINUX_ARCHS:
-                    index_download_url = url_template.format(distro=distro, repo=repo, arch=arch)
-                    index = self._fetch_index(uri=index_download_url)
-                    extract_archives(location=index.path)
-                    index_location = f"{index.path}-extract/APKINDEX"
-                    with open(index_location, encoding="utf-8") as f:
-                        for pkg in parse_apkindex(f.read()):
-                            pd = build_package(pkg, distro=distro, repo=repo)
-                            current_purl = PackageURL(
-                                type=pd.type,
-                                namespace=pd.namespace,
-                                name=pd.name,
-                            )
-                            yield current_purl, pd
+    def get_package_from_index(self, apkindex_url, logger=None):
+        _, subpath = apkindex_url.split("https://dl-cdn.alpinelinux.org/alpine/")
+        distro, repo, _, _ = subpath.split("/")
+        index = self._fetch_index(uri=apkindex_url)
+        extract_archives(location=index.path)
+        index_location = f"{index.path}-extract/APKINDEX"
+        with open(index_location, encoding="utf-8") as f:
+            for pkg in parse_apkindex(f.read()):
+                pd = build_package(pkg, distro=distro, repo=repo)
+                current_purl = PackageURL(
+                    type=pd.type,
+                    namespace=pd.namespace,
+                    name=pd.name,
+                )
+                yield current_purl, [pd.purl]
 
 
-def collect_packages_from_alpine(commits_per_push=PACKAGE_BATCH_SIZE, logger=None):
-    # Clone data and config repo
-    data_repo = federatedcode.clone_repository(
-        repo_url=MINECODE_DATA_ALPINE_REPO,
+def mine_and_publish_alpine_packageurls(
+    data_cluster,
+    checked_out_repos,
+    working_path,
+    commit_msg_func,
+    logger,
+):
+    """Yield PackageURLs from Alpine index."""
+
+    index_count = len(ALPINE_LINUX_APKINDEX_URLS)
+    progress = LoopProgress(
+        total_iterations=index_count,
         logger=logger,
+        progress_step=1,
     )
-    config_repo = federatedcode.clone_repository(
-        repo_url=pipes.MINECODE_PIPELINES_CONFIG_REPO,
-        logger=logger,
-    )
-    if logger:
-        logger(f"{MINECODE_DATA_ALPINE_REPO} repo cloned at: {data_repo.working_dir}")
-        logger(f"{pipes.MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {config_repo.working_dir}")
 
-    # download and iterate through alpine indices
+    logger(f"Mine PackageURL from {index_count:,d} alpine index.")
     alpine_collector = AlpineCollector()
-    for i, (current_purl, package) in enumerate(alpine_collector.get_packages(), start=1):
-        package_base_dir = hashid.get_package_base_dir(purl=current_purl)
-        purls = [package.purl]
-        purl_file = pipes.write_packageurls_to_file(
-            repo=data_repo, base_dir=package_base_dir, packageurls=purls, append=True
+    for index in progress.iter(ALPINE_LINUX_APKINDEX_URLS):
+        logger(f"Mine PackageURL from {index} index.")
+        _mine_and_publish_packageurls(
+            packageurls=alpine_collector.get_package_from_index(index),
+            total_package_count=None,
+            data_cluster=data_cluster,
+            checked_out_repos=checked_out_repos,
+            working_path=working_path,
+            append_purls=True,
+            commit_msg_func=commit_msg_func,
+            logger=logger,
         )
-
-        # commit changes
-        federatedcode.commit_changes(
-            repo=data_repo,
-            files_to_commit=[purl_file],
-            purls=purls,
-            mine_type="packageURL",
-            tool_name="pkg:pypi/minecode-pipelines",
-            tool_version=VERSION,
-        )
-
-        # Push changes to remote repository
-        push_commit = not bool(i % commits_per_push)
-        if push_commit:
-            federatedcode.push_changes(repo=data_repo)
-
-    federatedcode.push_changes(repo=data_repo)
-
-    repos_to_clean = [data_repo, config_repo]
-    return repos_to_clean

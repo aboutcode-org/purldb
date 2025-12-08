@@ -20,44 +20,61 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
+
 from pathlib import Path
-from minecode_pipelines.pipes import conan
+
+from minecode_pipelines.pipes import nuget
+
 from minecode_pipelines.pipelines import MineCodeBasePipeline
 from scanpipe.pipes import federatedcode
 
 
-class MineConan(MineCodeBasePipeline):
-    """Pipeline to mine Conan packages and publish them to FederatedCode repo."""
+class MineNuGet(MineCodeBasePipeline):
+    """
+    Mine and Publish NuGet PackageURLs.
 
-    MINECODE_CONAN_INDEX_REPO = "https://github.com/conan-io/conan-center-index"
+    Mine PackageURLs from AboutCode NuGet catalog mirror and publish
+    them to FederatedCode Git repository.
+    """
+
+    CATALOG_REPO_URL = "https://github.com/aboutcode-org/aboutcode-mirror-nuget-catalog.git"
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
-            cls.clone_conan_index,
+            cls.fetch_nuget_catalog,
+            cls.mine_nuget_package_versions,
             cls.fetch_federation_config,
             cls.mine_and_publish_packageurls,
             cls.delete_working_dir,
         )
 
-    def clone_conan_index(self):
-        """Clone the Cargo index Repo."""
-        self.conan_index_repo = federatedcode.clone_repository(
-            repo_url=self.MINECODE_CONAN_INDEX_REPO,
-            clone_path=self.working_path / "conan-index",
+    def fetch_nuget_catalog(self):
+        """Fetch NuGet package catalog from AboutCode mirror."""
+        self.catalog_repo = federatedcode.clone_repository(
+            repo_url=self.CATALOG_REPO_URL,
+            clone_path=self.working_path / "aboutcode-mirror-nuget-catalog",
+            logger=self.log,
+        )
+
+    def mine_nuget_package_versions(self):
+        """Mine NuGet package and versions from NuGet catalog."""
+        self.package_versions, self.skipped_packages = nuget.mine_nuget_package_versions(
+            catalog_path=Path(self.catalog_repo.working_dir),
             logger=self.log,
         )
 
     def packages_count(self):
-        base_path = Path(self.conan_index_repo.working_tree_dir)
-        package_dir = [p for p in base_path.iterdir() if p.is_dir() and not p.name.startswith(".")]
-        return sum(1 for dir in package_dir for f in dir.rglob("*") if f.is_file())
+        return len(self.package_versions)
 
     def mine_packageurls(self):
-        """Yield PackageURLs from Cargo index."""
-        return conan.mine_conan_packageurls(
-            conan_index_repo=self.conan_index_repo,
-            logger=self.log,
-        )
+        """Yield PackageURLs from NuGet package versions."""
+
+        for base, versions in self.package_versions.items():
+            packageurls = nuget.get_nuget_purls_from_versions(
+                base_purl=base,
+                versions=versions,
+            )
+            yield base, packageurls
