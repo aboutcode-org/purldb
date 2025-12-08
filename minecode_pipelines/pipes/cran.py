@@ -22,19 +22,21 @@
 
 import json
 from pathlib import Path
+from typing import Iterable
+from typing import Tuple
+from typing import List
+
 import requests
 from packageurl import PackageURL
 from aboutcode.hashid import get_core_purl
-import tempfile
 
 
-def fetch_cran_db(logger) -> Path:
+def fetch_cran_db(working_path, logger) -> Path:
     """
     Download the CRAN package database (~250MB JSON) in a memory-efficient way.
     Saves it to a file instead of loading everything into memory.
     """
-    temp_dir = Path(tempfile.mkdtemp())
-    output_path = temp_dir / "cran_db.json"
+    output_path = working_path / "cran_db.json"
     logger(f"Target download path: {output_path}")
 
     url = "https://crandb.r-pkg.org/-/all"
@@ -47,7 +49,7 @@ def fetch_cran_db(logger) -> Path:
     return output_path
 
 
-def mine_cran_packageurls(db_path: Path) -> list:
+def mine_cran_packageurls(db_path: Path) -> Iterable[Tuple[str, List[str]]]:
     """
     Extract package names and their versions from a CRAN DB JSON file.
     Yields a tuple: (base_purl, list_of_purls)

@@ -44,7 +44,7 @@ class MineCran(MineCodeBasePipeline):
         """
         Download the full CRAN package database
         """
-        self.db_path = fetch_cran_db(logger=self.log)
+        self.db_path = fetch_cran_db(working_path=self.working_path, logger=self.log)
 
     def packages_count(self):
         """

@@ -4,7 +4,7 @@ build-backend = "flot.buildapi"
 
 [project]
 name = "minecode_pipelines"
-version = "0.0.1b56"
+version = "0.0.1b57"
 description = "A library for mining packageURLs and package metadata from ecosystem repositories."
 readme = "minecode_pipelines/README.rst"
 license = { text = "Apache-2.0" }
