@@ -7,35 +7,39 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import tempfile
 from pathlib import Path
 from unittest import TestCase
-from unittest.mock import Mock, patch
 import saneyaml
 from minecode_pipelines.pipes.swift import (
     get_tags_and_commits_from_git_output,
+    generate_package_urls,
 )
 
 DATA_DIR = Path(__file__).parent.parent / "data" / "swift"
 
 
+def logger(msg):
+    print(msg)
+
+
 class SwiftPipelineTests(TestCase):
-    def _run_package_test(
-        self, package_repo_url, commits_tags_file, expected_file, expected_path_parts
-    ):
-        # Load test input and expected output
+    def _run_package_test(self, package_repo_url, commits_tags_file, expected_file):
         with open(commits_tags_file, encoding="utf-8") as f:
             git_ls_remote = f.read()
+
         with open(expected_file, encoding="utf-8") as f:
             expected = saneyaml.load(f)
 
-        # Create a temporary working directory for the repo
-        with tempfile.TemporaryDirectory() as tmpdir:
-            repo = Mock()
-            repo.working_dir = tmpdir
+        tags_and_commits = get_tags_and_commits_from_git_output(git_ls_remote)
 
-            # Execute function under test
-            tags_and_commits = get_tags_and_commits_from_git_output(git_ls_remote)
+        base_purl, generated_purls = generate_package_urls(
+            package_repo_url=package_repo_url,
+            tags_and_commits=tags_and_commits,
+            logger=logger,
+        )
+
+        assert base_purl.to_string() == expected["base_purl"]
+        assert sorted(generated_purls) == sorted(expected["purls"])
 
     def test_swift_safe_collection_access(self, mock_write):
         self._run_package_test(
