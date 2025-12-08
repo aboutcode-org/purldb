@@ -32,9 +32,9 @@ class Command(VerboseCommand):
             "https://repo.maven.apache.org/maven2",
             "https://repo.spring.io/artifactory/milestone",
             "https://plugins.gradle.org/m2",
-            "https://repository.apache.org/snapshots/",
-            "https://repository.jboss.org/nexus/service/rest/repository/browse/releases/",
-            "https://repository.jboss.org/nexus/service/rest/repository/browse/public/",
+            "https://repository.apache.org/content/groups/snapshots",
+            "https://repository.jboss.org/nexus/service/rest/repository/browse/releases",
+            "https://repository.jboss.org/nexus/service/rest/repository/browse/public",
         ]
         for maven_root_url in maven_root_urls:
             crawl_maven_repo_from_root(root_url=maven_root_url)
