@@ -37,7 +37,7 @@ class MineSwift(MineCodeBasePipeline):
 
     pipeline_config_repo = "https://github.com/aboutcode-data/minecode-pipelines-config/"
     checkpoint_path = "swift/checkpoints.json"
-    checkpoint_freq = 200
+    checkpoint_freq = 30
     swift_index_repo_url = "https://github.com/SwiftPackageIndex/PackageList"
 
     @classmethod
