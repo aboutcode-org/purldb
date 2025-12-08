@@ -24,10 +24,10 @@ import json
 from pathlib import Path
 from packageurl import PackageURL
 
-from minecode_pipelines.miners.swift import fetch_git_tags_raw
-from minecode_pipelines.miners.swift import get_tags_and_commits_from_git_output
-from minecode_pipelines.miners.swift import split_org_repo
 from minecode_pipelines.utils import cycle_from_index, grouper
+import shutil
+import subprocess
+from urllib.parse import urlparse
 
 PACKAGE_BATCH_SIZE = 100
 
@@ -39,10 +39,10 @@ def mine_swift_packageurls(packages_urls, start_index, logger):
     for batch_index, package_batch in enumerate(
         grouper(n=PACKAGE_BATCH_SIZE, iterable=packages_iter)
     ):
-        for item in package_batch:
-            if not item:
+        for package_repo_url in package_batch:
+            if not package_repo_url:
                 continue
-        package_repo_url = item
+        logger(f"Processing package repo URL: {package_repo_url}")
         git_ls_remote = fetch_git_tags_raw(package_repo_url, 60, logger)
         if not git_ls_remote:
             continue
@@ -83,3 +83,81 @@ def generate_package_urls(package_repo_url, tags_and_commits):
             updated_purls.append(purl)
 
     return base_purl, updated_purls
+
+
+def is_safe_repo_url(repo_url: str) -> bool:
+    """Return True if the URL is HTTPS GitHub with .git suffix or has at least two path segments."""
+    parsed = urlparse(repo_url)
+    return (
+        parsed.scheme == "https" and parsed.netloc == "github.com" and parsed.path.endswith(".git")
+    )
+
+
+def fetch_git_tags_raw(repo_url: str, timeout: int = 60, logger=None) -> str | None:
+    """Run `git ls-remote` on a GitHub repo and return raw output, or None on error."""
+    git_executable = shutil.which("git")
+    if git_executable is None:
+        logger("Git executable not found in PATH")
+        return None
+
+    if not is_safe_repo_url(repo_url):
+        raise ValueError(f"Unsafe repo URL: {repo_url}")
+
+    try:
+        result = subprocess.run(  # NOQA
+            [git_executable, "ls-remote", repo_url],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=timeout,
+        )
+        return result.stdout.strip()
+    except subprocess.CalledProcessError as e:
+        logger(f"Failed to fetch tags for {repo_url}: {e}")
+    except subprocess.TimeoutExpired:
+        logger(f"Timeout fetching tags for {repo_url}")
+    return None
+
+
+# FIXME duplicated with miners github
+def split_org_repo(url_like):
+    """
+    Given a URL-like string to a GitHub repo or a repo name as in org/name,
+    split and return the org and name.
+
+    For example:
+    >>> split_org_repo('foo/bar')
+    ('foo', 'bar')
+    >>> split_org_repo('https://api.github.com/repos/foo/bar/')
+    ('foo', 'bar')
+    >>> split_org_repo('github.com/foo/bar/')
+    ('foo', 'bar')
+    >>> split_org_repo('git://github.com/foo/bar.git')
+    ('foo', 'bar')
+    """
+    segments = [s.strip() for s in url_like.split("/") if s.strip()]
+    if not len(segments) >= 2:
+        raise ValueError(f"Not a GitHub-like URL: {url_like}")
+    org = segments[-2]
+    name = segments[-1]
+    if name.endswith(".git"):
+        name, _, _ = name.rpartition(".git")
+    return org, name
+
+
+def get_tags_and_commits_from_git_output(git_ls_remote):
+    """
+    Yield tuples of (tag, commit), given a git ls-remote output
+    """
+    tags_and_commits = []
+    for line in git_ls_remote.split("\n"):
+        # line: kjwfgeklngelkfjofjeo123   refs/tags/1.2.3
+        line_segments = line.split("\t")
+        # segments: ["kjwfgeklngelkfjofjeo123", "refs/tags/1.2.3"]
+        if len(line_segments) > 1 and (
+            line_segments[1].startswith("refs/tags/") or line_segments[1] == "HEAD"
+        ):
+            commit = line_segments[0]
+            tag = line_segments[1].replace("refs/tags/", "")
+            tags_and_commits.append((tag, commit))
+    return tags_and_commits

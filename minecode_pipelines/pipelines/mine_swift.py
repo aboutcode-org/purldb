@@ -79,6 +79,7 @@ class MineSwift(MineCodeBasePipeline):
 
     def mine_packageurls(self):
         self.swift_packages_urls = load_swift_package_urls(swift_index_repo=self.swift_index_repo)
+        self.log(f"Total Swift packages to process: {len(self.swift_packages_urls)}")
         return mine_swift_packageurls(
             packages_urls=self.swift_packages_urls,
             start_index=self.start_index,
