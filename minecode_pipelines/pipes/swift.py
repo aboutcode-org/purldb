@@ -42,18 +42,18 @@ def mine_swift_packageurls(packages_urls, start_index, logger):
         for package_repo_url in package_batch:
             if not package_repo_url:
                 continue
-        logger(f"Processing package repo URL: {package_repo_url}")
-        git_ls_remote = fetch_git_tags_raw(package_repo_url, 60, logger)
-        if not git_ls_remote:
-            continue
+            logger(f"Processing package repo URL: {package_repo_url}")
+            git_ls_remote = fetch_git_tags_raw(package_repo_url, 60, logger)
+            if not git_ls_remote:
+                continue
 
-        tags_and_commits = get_tags_and_commits_from_git_output(git_ls_remote)
-        if not tags_and_commits:
-            continue
+            tags_and_commits = get_tags_and_commits_from_git_output(git_ls_remote)
+            if not tags_and_commits:
+                continue
 
-        yield generate_package_urls(
-            package_repo_url=package_repo_url, tags_and_commits=tags_and_commits
-        )
+            yield generate_package_urls(
+                package_repo_url=package_repo_url, tags_and_commits=tags_and_commits, logger=logger
+            )
 
 
 def load_swift_package_urls(swift_index_repo):
@@ -63,8 +63,10 @@ def load_swift_package_urls(swift_index_repo):
     return packages_urls
 
 
-def generate_package_urls(package_repo_url, tags_and_commits):
-    org, name = split_org_repo(package_repo_url)
+def generate_package_urls(package_repo_url, tags_and_commits, logger):
+    org, name = split_org_repo(package_repo_url, logger)
+    if not org or not name:
+        return None, []
     org = "github.com/" + org
     base_purl = PackageURL(type="swift", namespace=org, name=name)
     updated_purls = []
@@ -99,9 +101,14 @@ def fetch_git_tags_raw(repo_url: str, timeout: int = 60, logger=None) -> str | N
     if git_executable is None:
         logger("Git executable not found in PATH")
         return None
+    
+    if not repo_url:
+        logger("No repository URL provided")
+        return None
 
     if not is_safe_repo_url(repo_url):
-        raise ValueError(f"Unsafe repo URL: {repo_url}")
+        logger(f"Unsafe repository URL: {repo_url}")
+        return None
 
     try:
         result = subprocess.run(  # NOQA
@@ -120,7 +127,7 @@ def fetch_git_tags_raw(repo_url: str, timeout: int = 60, logger=None) -> str | N
 
 
 # FIXME duplicated with miners github
-def split_org_repo(url_like):
+def split_org_repo(url_like, logger):
     """
     Given a URL-like string to a GitHub repo or a repo name as in org/name,
     split and return the org and name.
@@ -137,7 +144,8 @@ def split_org_repo(url_like):
     """
     segments = [s.strip() for s in url_like.split("/") if s.strip()]
     if not len(segments) >= 2:
-        raise ValueError(f"Not a GitHub-like URL: {url_like}")
+        logger(f"Could not parse org and name from URL-like: {url_like}")
+        return None, None
     org = segments[-2]
     name = segments[-1]
     if name.endswith(".git"):
