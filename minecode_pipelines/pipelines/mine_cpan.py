@@ -20,14 +20,14 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from scanpipe.pipelines import Pipeline
-from scanpipe.pipes import federatedcode
 
 from minecode_pipelines import pipes
 from minecode_pipelines.pipes import cpan
+from minecode_pipelines.pipelines import MineCodeBasePipeline
+from scanpipe.pipes import federatedcode
 
 
-class MineCpan(Pipeline):
+class MineCpan(MineCodeBasePipeline):
     """
     Mine all packageURLs from a cpan index and publish them to
     a FederatedCode repo.
@@ -37,28 +37,24 @@ class MineCpan(Pipeline):
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
+            cls.create_federatedcode_working_dir,
             cls.mine_cpan_packages,
+            cls.fetch_federation_config,
             cls.mine_and_publish_cpan_packageurls,
-            cls.delete_cloned_repos,
+            cls.mine_and_publish_packageurls,
+            cls.delete_working_dir,
         )
-
-    def check_federatedcode_eligibility(self):
-        """
-        Check if the project fulfills the following criteria for
-        pushing the project result to FederatedCode.
-        """
-        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
     def mine_cpan_packages(self):
         """Mine cpan package names from cpan indexes or checkpoint."""
         self.cpan_packages_path_by_name = cpan.mine_cpan_packages(logger=self.log)
 
-    def mine_and_publish_cpan_packageurls(self):
+    def packages_count(self):
+        return len(self.cpan_packages_path_by_name)
+
+    def mine_packageurls(self):
         """Get cpan packageURLs for all mined cpan package names."""
-        self.repos = cpan.mine_and_publish_cpan_packageurls(
+        cpan.mine_and_publish_cpan_packageurls(
             package_path_by_name=self.cpan_packages_path_by_name,
             logger=self.log,
         )
-
-    def delete_cloned_repos(self):
-        pipes.delete_cloned_repos(repos=self.repos, logger=self.log)

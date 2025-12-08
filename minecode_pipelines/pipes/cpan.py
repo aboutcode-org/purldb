@@ -20,9 +20,6 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from minecode_pipelines import VERSION
-from minecode_pipelines.pipes import write_packageurls_to_file
-
 from minecode_pipelines.miners.cpan import get_cpan_packages
 from minecode_pipelines.miners.cpan import get_cpan_packageurls
 from minecode_pipelines.miners.cpan import CPAN_REPO
@@ -32,21 +29,12 @@ from minecode_pipelines.utils import grouper
 
 from aboutcode.hashid import get_package_base_dir
 from packageurl import PackageURL
-from scanpipe.pipes.federatedcode import clone_repository
-
-from scanpipe.pipes.federatedcode import commit_changes
-from scanpipe.pipes.federatedcode import push_changes
-
 
 # If True, show full details on fetching packageURL for
 # a package name present in the index
 LOG_PACKAGEURL_DETAILS = False
 
 PACKAGE_BATCH_SIZE = 500
-
-
-# We are testing and storing mined packageURLs in one single repo per ecosystem for now
-MINECODE_DATA_CPAN_REPO = "https://github.com/aboutcode-data/minecode-data-cpan-test"
 
 
 def mine_cpan_packages(logger=None):
@@ -66,21 +54,15 @@ def mine_and_publish_cpan_packageurls(package_path_by_name, logger=None):
     if not package_path_by_name:
         return
 
-    # clone repo
-    cloned_data_repo = clone_repository(repo_url=MINECODE_DATA_CPAN_REPO)
-    if logger:
-        logger(f"{MINECODE_DATA_CPAN_REPO} repo cloned at: {cloned_data_repo.working_dir}")
-
+    packageurls_by_base_purl = {}
     for package_batch in grouper(n=PACKAGE_BATCH_SIZE, iterable=package_path_by_name.keys()):
         packages_mined = []
-        purls = []
-        purl_files = []
 
         if logger and LOG_PACKAGEURL_DETAILS:
             logger("Starting package mining for a batch of packages")
 
         for package_name in package_batch:
-            if not package_name:
+            if not package_name or package_name in packages_mined:
                 continue
 
             # fetch packageURLs for package
@@ -106,41 +88,12 @@ def mine_and_publish_cpan_packageurls(package_path_by_name, logger=None):
 
             # get repo and path for package
             base_purl = PackageURL(type=CPAN_TYPE, name=package_name).to_string()
-            package_base_dir = get_package_base_dir(purl=base_purl)
-
             if logger and LOG_PACKAGEURL_DETAILS:
-                logger(f"writing packageURLs for package: {base_purl} at: {package_base_dir}")
+                logger(f"fetched packageURLs for package: {base_purl}")
                 purls_string = " ".join(packageurls)
                 logger(f"packageURLs: {purls_string}")
 
-            # write packageURLs to file
-            purl_file = write_packageurls_to_file(
-                repo=cloned_data_repo,
-                base_dir=package_base_dir,
-                packageurls=packageurls,
-            )
-            purl_files.append(purl_file)
-            purls.append(base_purl)
-
             packages_mined.append(package_name)
-
-        if logger:
-            purls_string = " ".join(purls)
-            logger("Committing and pushing changes for a batch of packages: ")
-            logger(f"{purls_string}")
-
-        # commit changes
-        commit_changes(
-            repo=cloned_data_repo,
-            files_to_commit=purl_files,
-            purls=purls,
-            mine_type="packageURL",
-            tool_name="pkg:cpan/minecode-pipelines",
-            tool_version=VERSION,
-        )
-
-        # Push changes to remote repository
-        push_changes(repo=cloned_data_repo)
-
-    repos_to_clean = [cloned_data_repo]
-    return repos_to_clean
+            packageurls_by_base_purl[base_purl] = packageurls
+    
+    return packageurls_by_base_purl
