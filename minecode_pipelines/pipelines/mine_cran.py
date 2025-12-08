@@ -35,11 +35,12 @@ class MineCran(MineCodeBasePipeline):
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
             cls.fetch_federation_config,
+            cls.download_cran_db,
             cls.mine_and_publish_packageurls,
             cls.delete_working_dir,
         )
 
-    def fetch_cran_db(self):
+    def download_cran_db(self):
         """
         Download the full CRAN package database
         """
@@ -57,4 +58,4 @@ class MineCran(MineCodeBasePipeline):
 
     def mine_packageurls(self):
         """Mine Cran PackageURLs from cran package database."""
-        cran.mine_cran_packageurls(db_path=self.db_path)
+        return cran.mine_cran_packageurls(db_path=self.db_path)
