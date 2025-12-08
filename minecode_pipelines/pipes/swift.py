@@ -83,7 +83,9 @@ def generate_package_urls(package_repo_url, tags_and_commits, logger):
 
         if purl:
             updated_purls.append(purl)
-    logger(f"Generated {len(updated_purls)} and base PURL: {base_purl} PackageURLs for {package_repo_url}")
+    logger(
+        f"Generated {len(updated_purls)} and base PURL: {base_purl} PackageURLs for {package_repo_url}"
+    )
     return base_purl, updated_purls
 
 
@@ -101,7 +103,7 @@ def fetch_git_tags_raw(repo_url: str, timeout: int = 60, logger=None) -> str | N
     if git_executable is None:
         logger("Git executable not found in PATH")
         return None
-    
+
     if not repo_url:
         logger("No repository URL provided")
         return None
