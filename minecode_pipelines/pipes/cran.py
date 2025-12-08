@@ -20,46 +20,69 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from aboutcode.hashid import get_package_purls_yml_file_path
+import json
+from pathlib import Path
+import requests
+from packageurl import PackageURL
 from aboutcode.hashid import get_core_purl
-from scanpipe.pipes.federatedcode import commit_and_push_changes
-from minecode_pipelines.miners.cran import extract_cran_packages
-from minecode_pipelines.pipes import write_data_to_yaml_file
-from minecode_pipelines.utils import grouper
-
-PACKAGE_BATCH_SIZE = 100
+import tempfile
 
 
-def mine_and_publish_cran_packageurls(cloned_data_repo, db_path, logger):
+def fetch_cran_db(logger) -> Path:
     """
-    Extract CRAN packages from the database, write their package URLs (purls) to YAML,
-    and commit changes in batches to the given cloned repository.
+    Download the CRAN package database (~250MB JSON) in a memory-efficient way.
+    Saves it to a file instead of loading everything into memory.
     """
-    packages_to_sync = list(extract_cran_packages(db_path))
+    temp_dir = Path(tempfile.mkdtemp())
+    output_path = temp_dir / "cran_db.json"
+    logger(f"Target download path: {output_path}")
 
-    for package_batch in grouper(n=PACKAGE_BATCH_SIZE, iterable=packages_to_sync):
-        purl_files = []
-        base_purls = []
+    url = "https://crandb.r-pkg.org/-/all"
+    with requests.get(url, stream=True) as response:
+        response.raise_for_status()
+        with output_path.open("wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
 
-        if logger:
-            logger(f"Starting package mining for a batch of {PACKAGE_BATCH_SIZE} packages")
+    return output_path
 
-        for updated_purls in package_batch:
-            if not updated_purls:
-                continue  # skip padded None values or empty
 
-            first_purl = updated_purls[0]
+def mine_cran_packageurls(db_path: Path) -> list:
+    """
+    Extract package names and their versions from a CRAN DB JSON file.
+    Yields a tuple: (base_purl, list_of_purls)
+    ex:
+    {
+      "AATtools": {
+      "_id": "AATtools",
+      "_rev": "8-9ebb721d05b946f2b437b49e892c9e8c",
+      "name": "AATtools",
+      "versions": {
+         "0.0.1": {...},
+         "0.0.2": {...},
+         "0.0.3": {...}
+      }
+    }
+    """
+    if not db_path.exists():
+        raise FileNotFoundError(f"File not found: {db_path}")
+
+    with open(db_path, encoding="utf-8") as f:
+        data = json.load(f)
+
+    for pkg_name, pkg_data in data.items():
+        versions = list(pkg_data.get("versions", {}).keys())
+        purls = []
+        for version in versions:
+            purl = PackageURL(
+                type="cran",
+                name=pkg_name,
+                version=version,
+            )
+            purls.append(purl.to_string())
+
+        base_purl = None
+        if purls:
+            first_purl = purls[0]
             base_purl = get_core_purl(first_purl)
-            purl_yaml_path = cloned_data_repo.working_dir / get_package_purls_yml_file_path(
-                first_purl
-            )
-            write_data_to_yaml_file(path=purl_yaml_path, data=updated_purls)
-
-            purl_files.append(purl_yaml_path)
-            base_purls.append(str(base_purl))
-
-        if purl_files and base_purls:
-            logger(f"Committing packageURLs: {', '.join(base_purls)}")
-            commit_and_push_changes(
-                repo=cloned_data_repo, files_to_commit=purl_files, purls=base_purls, logger=logger
-            )
+        yield base_purl, purls
