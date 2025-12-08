@@ -42,7 +42,7 @@ class MineMaven(MineCodeBasePipeline):
             cls.create_federatedcode_working_dir,
             cls.fetch_federation_config,
             cls.fetch_checkpoint_and_maven_index,
-            cls.mine_and_publish_alpine_packageurls,
+            cls.mine_and_publish_maven_packageurls,
             cls.delete_working_dir,
         )
 
@@ -61,7 +61,7 @@ class MineMaven(MineCodeBasePipeline):
         self.log(f"last_incremental: {last_incremental}")
         self.maven_nexus_collector = maven.MavenNexusCollector(last_incremental=last_incremental)
 
-    def mine_and_publish_alpine_packageurls(self):
+    def mine_and_publish_maven_packageurls(self):
         _mine_and_publish_packageurls(
             packageurls=self.maven_nexus_collector.get_packages(),
             total_package_count=None,

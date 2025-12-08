@@ -151,6 +151,7 @@ def _mine_and_publish_packageurls(
     commit_msg_func: Callable,
     logger: Callable,
     batch_size: int = 4000,
+    checkpoint_on_commit: bool = False,
     checkpoint_func: Callable = None,
     checkpoint_freq: int = 30,
 ):
@@ -199,12 +200,15 @@ def _mine_and_publish_packageurls(
                 commit_message=commit_msg_func(checkout["commit_count"] + 1),
                 logger=logger,
             )
+            if checkpoint_on_commit and checkpoint_func:
+                checkpoint_func()
 
-        time_now = time.time()
-        checkpoint_due = time_now - last_checkpoint_call >= checkpoint_interval
-        if checkpoint_func and checkpoint_due:
-            checkpoint_func()
-            last_checkpoint_call = time_now
+        if not checkpoint_on_commit:
+            time_now = time.time()
+            checkpoint_due = time_now - last_checkpoint_call >= checkpoint_interval
+            if checkpoint_func and checkpoint_due:
+                checkpoint_func()
+                last_checkpoint_call = time_now
 
     for checkout in checked_out_repos.values():
         final_commit_count = checkout["commit_count"] + 1
