@@ -118,7 +118,7 @@ class DebianCollector:
         url_template = DEBIAN_LSLR_URL.replace("ls-lR.gz", "{path}")
         if previous_index_last_modified_date:
             previous_index_last_modified_date = datetime.strptime(
-                previous_index_last_modified_date, "%Y-%m-%d %H:%M:%S"
+                previous_index_last_modified_date, "%Y-%m-%d %H:%M:%S.%f"
             )
         for entry in ls.parse_directory_listing(content):
             entry_date = None
