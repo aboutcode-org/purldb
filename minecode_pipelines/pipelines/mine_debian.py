@@ -20,36 +20,72 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
 from minecode_pipelines import pipes
+from minecode_pipelines.pipelines import MineCodeBasePipeline
+from minecode_pipelines.pipelines import _mine_and_publish_packageurls
 from minecode_pipelines.pipes import debian
 
 
-class MineDebian(Pipeline):
-    """
-    Mine all packageURLs from a Debian index and publish them to
-    a FederatedCode repo.
-    """
+class MineDebian(MineCodeBasePipeline):
+    """Mine PackageURLs from Debian index and publish them to FederatedCode."""
+
+    pipeline_config_repo = "https://github.com/aboutcode-data/minecode-pipelines-config/"
+    checkpoint_path = "debian/checkpoints.json"
+    append_purls = True
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.collect_packages_from_debian,
-            cls.delete_cloned_repos,
+            cls.create_federatedcode_working_dir,
+            cls.fetch_federation_config,
+            cls.fetch_checkpoint_and_debian_index,
+            cls.mine_and_publish_alpine_packageurls,
+            cls.save_check_point,
+            cls.delete_working_dir,
         )
 
-    def check_federatedcode_eligibility(self):
-        """
-        Check if the project fulfills the following criteria for
-        pushing the project result to FederatedCode.
-        """
-        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
+    def fetch_checkpoint_and_debian_index(self):
+        self.checkpoint_config_repo = federatedcode.clone_repository(
+            repo_url=self.pipeline_config_repo,
+            clone_path=self.working_path / "minecode-pipelines-config",
+            logger=self.log,
+        )
+        checkpoint = pipes.get_checkpoint_from_file(
+            cloned_repo=self.checkpoint_config_repo,
+            path=self.checkpoint_path,
+        )
 
-    def collect_packages_from_debian(self):
-        self.repos = debian.collect_packages_from_debian(logger=self.log)
+        self.last_checkpoint = checkpoint.get("previous_debian_index_last_modified_date")
+        self.log(f"last_checkpoint: {self.last_checkpoint}")
+        self.debian_collector = debian.DebianCollector(logger=self.log)
 
-    def delete_cloned_repos(self):
-        pipes.delete_cloned_repos(repos=self.repos, logger=self.log)
+    def mine_and_publish_alpine_packageurls(self):
+        _mine_and_publish_packageurls(
+            packageurls=self.debian_collector.get_packages(
+                previous_index_last_modified_date=self.last_checkpoint,
+            ),
+            total_package_count=None,
+            data_cluster=self.data_cluster,
+            checked_out_repos=self.checked_out_repos,
+            working_path=self.working_path,
+            append_purls=self.append_purls,
+            commit_msg_func=self.commit_message,
+            logger=self.log,
+        )
+
+    def save_check_point(self):
+        """Save Debian checkpoint only after successful completion of PURL mining"""
+        from commoncode.date import get_file_mtime
+
+        last_modified = get_file_mtime(self.debian_collector.index_location)
+        checkpoint = {"previous_debian_index_last_modified_date": last_modified}
+        self.log(f"Saving checkpoint: {checkpoint}")
+        pipes.update_checkpoints_in_github(
+            checkpoint=checkpoint,
+            cloned_repo=self.pipeline_config_repo,
+            path=self.checkpoint_path,
+            logger=self.log,
+        )
