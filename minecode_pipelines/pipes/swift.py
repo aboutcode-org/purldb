@@ -24,36 +24,27 @@ import json
 from pathlib import Path
 from packageurl import PackageURL
 
-from minecode_pipelines.utils import cycle_from_index, grouper
 import shutil
 import subprocess
 from urllib.parse import urlparse
 
-PACKAGE_BATCH_SIZE = 100
 
-
-def mine_swift_packageurls(packages_urls, start_index, logger):
+def mine_swift_packageurls(packages_urls, logger):
     """Mine Swift PackageURLs from package index."""
 
-    packages_iter = cycle_from_index(packages_urls, start_index)
-    for batch_index, package_batch in enumerate(
-        grouper(n=PACKAGE_BATCH_SIZE, iterable=packages_iter)
-    ):
-        for package_repo_url in package_batch:
-            if not package_repo_url:
-                continue
-            logger(f"Processing package repo URL: {package_repo_url}")
-            git_ls_remote = fetch_git_tags_raw(package_repo_url, 60, logger)
-            if not git_ls_remote:
-                continue
+    for package_repo_url in packages_urls:
+        logger(f"Processing package repo URL: {package_repo_url}")
+        git_ls_remote = fetch_git_tags_raw(package_repo_url, 60, logger)
+        if not git_ls_remote:
+            continue
 
-            tags_and_commits = get_tags_and_commits_from_git_output(git_ls_remote)
-            if not tags_and_commits:
-                continue
+        tags_and_commits = get_tags_and_commits_from_git_output(git_ls_remote)
+        if not tags_and_commits:
+            continue
 
-            yield generate_package_urls(
-                package_repo_url=package_repo_url, tags_and_commits=tags_and_commits, logger=logger
-            )
+        yield generate_package_urls(
+            package_repo_url=package_repo_url, tags_and_commits=tags_and_commits, logger=logger
+        )
 
 
 def load_swift_package_urls(swift_index_repo):

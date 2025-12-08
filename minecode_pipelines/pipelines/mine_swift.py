@@ -20,14 +20,11 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from datetime import datetime
 from scanpipe.pipes import federatedcode
 
-from minecode_pipelines import pipes
 from minecode_pipelines.pipelines import MineCodeBasePipeline
-from minecode_pipelines.pipes.swift import PACKAGE_BATCH_SIZE, mine_swift_packageurls
+from minecode_pipelines.pipes.swift import mine_swift_packageurls
 from minecode_pipelines.pipes.swift import load_swift_package_urls
-from minecode_pipelines.pipelines import _mine_and_publish_packageurls
 
 
 class MineSwift(MineCodeBasePipeline):
@@ -35,9 +32,6 @@ class MineSwift(MineCodeBasePipeline):
     Pipeline to mine Swift packages and publish them to FederatedCode.
     """
 
-    pipeline_config_repo = "https://github.com/aboutcode-data/minecode-pipelines-config/"
-    checkpoint_path = "swift/checkpoints.json"
-    checkpoint_freq = 30
     swift_index_repo_url = "https://github.com/SwiftPackageIndex/PackageList"
 
     @classmethod
@@ -45,7 +39,6 @@ class MineSwift(MineCodeBasePipeline):
         return (
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
-            cls.fetch_checkpoint_and_start_index,
             cls.fetch_federation_config,
             cls.clone_swift_index,
             cls.mine_and_publish_packageurls,
@@ -60,20 +53,6 @@ class MineSwift(MineCodeBasePipeline):
             logger=self.log,
         )
 
-    def fetch_checkpoint_and_start_index(self):
-        self.checkpoint_config_repo = federatedcode.clone_repository(
-            repo_url=self.pipeline_config_repo,
-            clone_path=self.working_path / "minecode-pipelines-config",
-            logger=self.log,
-        )
-        checkpoint = pipes.get_checkpoint_from_file(
-            cloned_repo=self.checkpoint_config_repo,
-            path=self.checkpoint_path,
-        )
-
-        self.start_index = checkpoint.get("start_index", 0)
-        self.log(f"start_index: {self.start_index}")
-
     def packages_count(self):
         return len(self.swift_packages_urls) if self.swift_packages_urls else None
 
@@ -82,35 +61,5 @@ class MineSwift(MineCodeBasePipeline):
         self.log(f"Total Swift packages to process: {len(self.swift_packages_urls)}")
         return mine_swift_packageurls(
             packages_urls=self.swift_packages_urls,
-            start_index=self.start_index,
-            logger=self.log,
-        )
-
-    def mine_and_publish_packageurls(self):
-        """Mine and publish PackageURLs."""
-        _mine_and_publish_packageurls(
-            packageurls=self.mine_packageurls(),
-            total_package_count=self.packages_count(),
-            data_cluster=self.data_cluster,
-            checked_out_repos=self.checked_out_repos,
-            working_path=self.working_path,
-            append_purls=self.append_purls,
-            commit_msg_func=self.commit_message,
-            logger=self.log,
-            checkpoint_func=self.save_check_point,
-            checkpoint_freq=self.checkpoint_freq,
-        )
-
-    def save_check_point(self):
-        checkpoint = {
-            "date": str(datetime.now()),
-            "start_index": self.start_index + self.checkpoint_freq * PACKAGE_BATCH_SIZE,
-        }
-
-        self.log(f"Saving checkpoint: {checkpoint}")
-        pipes.update_checkpoints_in_github(
-            checkpoint=checkpoint,
-            cloned_repo=self.checkpoint_config_repo,
-            path=self.checkpoint_path,
             logger=self.log,
         )
