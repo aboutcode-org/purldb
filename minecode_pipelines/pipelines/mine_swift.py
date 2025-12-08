@@ -30,9 +30,9 @@ from minecode_pipelines.pipes.swift import load_swift_package_urls
 from minecode_pipelines.pipelines import _mine_and_publish_packageurls
 
 
-class MineComposer(MineCodeBasePipeline):
+class MineSwift(MineCodeBasePipeline):
     """
-    Pipeline to mine Composer PHP packages and publish them to FederatedCode.
+    Pipeline to mine Swift packages and publish them to FederatedCode.
     """
 
     pipeline_config_repo = "https://github.com/aboutcode-data/minecode-pipelines-config/"
