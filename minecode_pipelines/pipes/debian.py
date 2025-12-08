@@ -22,6 +22,7 @@
 
 import gzip
 from datetime import datetime
+import logging
 from shutil import rmtree
 
 import debian_inspector
@@ -36,7 +37,7 @@ from scanpipe.pipes.fetch import fetch_http
 from minecode_pipelines import pipes
 from minecode_pipelines import VERSION
 from minecode_pipelines.pipes import ls
-
+from traceback import format_exc as traceback_format_exc
 
 DEBIAN_CHECKPOINT_PATH = "debian/checkpoints.json"
 DEBIAN_LSLR_URL = "http://ftp.debian.org/debian/ls-lR.gz"
@@ -82,7 +83,8 @@ class DebianCollector:
     Download and process a Debian ls-lR.gz file for Packages
     """
 
-    def __init__(self, index_location=None):
+    def __init__(self, logger, index_location=None):
+        self.logger = logger
         self.downloads = []
         if index_location:
             self.index_location = index_location
@@ -136,7 +138,14 @@ class DebianCollector:
                 continue
 
             if file_name.endswith((".deb", ".udeb", ".tar.gz", ".tar.xz", ".tar.bz2", ".tar.lzma")):
-                name, version, arch = debian_inspector.package.get_nva(file_name)
+                try:
+                    name, version, arch = debian_inspector.package.get_nva(file_name)
+                except Exception as e:
+                    self.logger(
+                        f"Failed to get PURL field from: {file_name} with error {e!r}:\n{traceback_format_exc()}",
+                        level=logging.ERROR,
+                    )
+
                 package_url = PackageURL(
                     type="deb",
                     namespace="debian",
