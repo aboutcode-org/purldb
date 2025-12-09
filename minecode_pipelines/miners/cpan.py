@@ -13,8 +13,7 @@ import requests
 from bs4 import BeautifulSoup
 from packageurl import PackageURL
 
-from scanpipe.pipes.fetch import fetch_http
-
+from minecode_pipelines.utils import get_temp_file
 
 """
 Visitors for cpan and cpan-like perl package repositories.
@@ -33,9 +32,19 @@ def get_cpan_packages(cpan_repo=CPAN_REPO, logger=None):
     path_prefixes with author page path from this list.
     """
     cpan_packages_url = cpan_repo + "modules/02packages.details.txt.gz"
-    cpan_packages_gz_download = fetch_http(cpan_packages_url)
-    with gzip.open(cpan_packages_gz_download, "rb") as file_content:
-        packages_content = file_content.read()
+    packages_archive = get_temp_file(file_name="cpan_packages", extension=".gz")
+    packages_content = get_temp_file(file_name="cpan_packages", extension=".txt")
+    response = requests.get(cpan_packages_url, stream=True)
+    with open(packages_archive, 'wb') as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            f.write(chunk)
+
+    with gzip.open(packages_archive, "rb") as f_in:
+        with open(packages_content, "wb") as f_out:
+            f_out.writelines(f_in)
+
+    with open(packages_content, 'r', encoding='utf-8') as file:
+        packages_content = file.read()
 
     package_path_by_name = {}
 

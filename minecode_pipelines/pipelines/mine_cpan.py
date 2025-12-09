@@ -40,7 +40,6 @@ class MineCpan(MineCodeBasePipeline):
             cls.create_federatedcode_working_dir,
             cls.mine_cpan_packages,
             cls.fetch_federation_config,
-            cls.mine_and_publish_cpan_packageurls,
             cls.mine_and_publish_packageurls,
             cls.delete_working_dir,
         )
@@ -54,7 +53,8 @@ class MineCpan(MineCodeBasePipeline):
 
     def mine_packageurls(self):
         """Get cpan packageURLs for all mined cpan package names."""
-        cpan.mine_and_publish_cpan_packageurls(
+        yield from cpan.mine_and_publish_cpan_packageurls(
             package_path_by_name=self.cpan_packages_path_by_name,
             logger=self.log,
         )
+

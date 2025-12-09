@@ -27,7 +27,6 @@ from minecode_pipelines.miners.cpan import CPAN_REPO
 from minecode_pipelines.miners.cpan import CPAN_TYPE
 from minecode_pipelines.utils import grouper
 
-from aboutcode.hashid import get_package_base_dir
 from packageurl import PackageURL
 
 # If True, show full details on fetching packageURL for
@@ -54,7 +53,6 @@ def mine_and_publish_cpan_packageurls(package_path_by_name, logger=None):
     if not package_path_by_name:
         return
 
-    packageurls_by_base_purl = {}
     for package_batch in grouper(n=PACKAGE_BATCH_SIZE, iterable=package_path_by_name.keys()):
         packages_mined = []
 
@@ -94,6 +92,4 @@ def mine_and_publish_cpan_packageurls(package_path_by_name, logger=None):
                 logger(f"packageURLs: {purls_string}")
 
             packages_mined.append(package_name)
-            packageurls_by_base_purl[base_purl] = packageurls
-    
-    return packageurls_by_base_purl
+            yield base_purl, packageurls
