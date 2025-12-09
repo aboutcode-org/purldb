@@ -240,16 +240,13 @@ def get_pypi_packages_to_sync(packages_file, state, logger=None):
 
 def mine_and_publish_pypi_packageurls(packages_to_sync, packages_mined, logger=None):
 
-    if logger and LOG_PACKAGEURL_DETAILS:
-        logger("Starting package mining for a batch of packages")
-
     for package in packages_to_sync:
         if not package:
             continue
 
         # fetch packageURLs for package
         name = package.get("name")
-        if logger and LOG_PACKAGEURL_DETAILS:
+        if logger:
             logger(f"getting packageURLs for package: {name}")
 
         # get repo and path for package
