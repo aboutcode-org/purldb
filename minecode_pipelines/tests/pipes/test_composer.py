@@ -12,9 +12,9 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 from django.test import SimpleTestCase
 
-from minecode_pipelines.miners.composer import get_composer_packages
-from minecode_pipelines.miners.composer import load_composer_packages
-from minecode_pipelines.miners.composer import get_composer_purl
+from minecode_pipelines.pipes.composer import get_composer_packages
+from minecode_pipelines.pipes.composer import load_composer_packages
+from minecode_pipelines.pipes.composer import get_composer_purl
 
 DATA_DIR = Path(__file__).parent.parent / "test_data" / "composer"
 
@@ -51,7 +51,8 @@ class ComposerPipelineTests(SimpleTestCase):
 
         all_purls = []
         for vendor, package in packages:
-            purls = get_composer_purl(vendor, package)
+            base_purl, purls = get_composer_purl(vendor, package)
+            assert str(base_purl) == "pkg:composer/monolog/monolog"
             all_purls.extend(purls)
 
         assert len(all_purls) == 85

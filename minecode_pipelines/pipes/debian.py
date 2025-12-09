@@ -21,30 +21,20 @@
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
 import gzip
+import logging
 from datetime import datetime
 from shutil import rmtree
+from traceback import format_exc as traceback_format_exc
 
 import debian_inspector
-from aboutcode import hashid
 from commoncode import fileutils
-from commoncode.date import get_file_mtime
 from packagedcode.models import PackageData
 from packageurl import PackageURL
-from scanpipe.pipes import federatedcode
 from scanpipe.pipes.fetch import fetch_http
 
-from minecode_pipelines import pipes
-from minecode_pipelines import VERSION
 from minecode_pipelines.pipes import ls
 
-
-DEBIAN_CHECKPOINT_PATH = "debian/checkpoints.json"
 DEBIAN_LSLR_URL = "http://ftp.debian.org/debian/ls-lR.gz"
-
-# We are testing and storing mined packageURLs in one single repo per ecosystem for now
-MINECODE_DATA_DEBIAN_REPO = "https://github.com/aboutcode-data/minecode-data-debian-test"
-
-PACKAGE_BATCH_SIZE = 1000
 
 
 def is_collectible(file_name):
@@ -82,7 +72,8 @@ class DebianCollector:
     Download and process a Debian ls-lR.gz file for Packages
     """
 
-    def __init__(self, index_location=None):
+    def __init__(self, logger, index_location=None):
+        self.logger = logger
         self.downloads = []
         if index_location:
             self.index_location = index_location
@@ -116,7 +107,7 @@ class DebianCollector:
         url_template = DEBIAN_LSLR_URL.replace("ls-lR.gz", "{path}")
         if previous_index_last_modified_date:
             previous_index_last_modified_date = datetime.strptime(
-                previous_index_last_modified_date, "%Y-%m-%d %H:%M:%S"
+                previous_index_last_modified_date, "%Y-%m-%d %H:%M:%S.%f"
             )
         for entry in ls.parse_directory_listing(content):
             entry_date = None
@@ -136,7 +127,14 @@ class DebianCollector:
                 continue
 
             if file_name.endswith((".deb", ".udeb", ".tar.gz", ".tar.xz", ".tar.bz2", ".tar.lzma")):
-                name, version, arch = debian_inspector.package.get_nva(file_name)
+                try:
+                    name, version, arch = debian_inspector.package.get_nva(file_name)
+                except Exception as e:
+                    self.logger(
+                        f"Failed to get PURL field from: {file_name} with error {e!r}:\n{traceback_format_exc()}",
+                        level=logging.ERROR,
+                    )
+
                 package_url = PackageURL(
                     type="deb",
                     namespace="debian",
@@ -164,91 +162,4 @@ class DebianCollector:
                 size=entry.size,
                 download_url=url_template.format(path=path),
             )
-            yield versionless_purl, packaged_data
-
-
-def commit_message(commit_batch, total_commit_batch="many"):
-    from django.conf import settings
-
-    author_name = settings.FEDERATEDCODE_GIT_SERVICE_NAME
-    author_email = settings.FEDERATEDCODE_GIT_SERVICE_EMAIL
-    tool_name = "pkg:github/aboutcode-org/scancode.io"
-
-    return f"""\
-        Collect PackageURLs from Debian ({commit_batch}/{total_commit_batch})
-
-        Tool: {tool_name}@v{VERSION}
-        Reference: https://{settings.ALLOWED_HOSTS[0]}
-
-        Signed-off-by: {author_name} <{author_email}>
-        """
-
-
-def collect_packages_from_debian(files_per_commit=PACKAGE_BATCH_SIZE, logger=None):
-    # Clone data and config repo
-    data_repo = federatedcode.clone_repository(
-        repo_url=MINECODE_DATA_DEBIAN_REPO,
-        logger=logger,
-    )
-    config_repo = federatedcode.clone_repository(
-        repo_url=pipes.MINECODE_PIPELINES_CONFIG_REPO,
-        logger=logger,
-    )
-    if logger:
-        logger(f"{MINECODE_DATA_DEBIAN_REPO} repo cloned at: {data_repo.working_dir}")
-        logger(f"{pipes.MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {config_repo.working_dir}")
-
-    # get last_modified to see if we can skip files
-    checkpoint = pipes.get_checkpoint_from_file(
-        cloned_repo=config_repo, path=DEBIAN_CHECKPOINT_PATH
-    )
-    last_modified = checkpoint.get("previous_debian_index_last_modified_date")
-    if logger:
-        logger(f"previous_debian_index_last_modified_date: {last_modified}")
-
-    # download and iterate through debian index
-    debian_collector = DebianCollector()
-    files_to_commit = []
-    commit_batch = 1
-    for current_purl, package in debian_collector.get_packages(
-        previous_index_last_modified_date=last_modified
-    ):
-        # write packageURL to file
-        package_base_dir = hashid.get_package_base_dir(purl=current_purl)
-        purl_file = pipes.write_packageurls_to_file(
-            repo=data_repo,
-            base_dir=package_base_dir,
-            packageurls=[package.purl],
-            append=True,
-        )
-        if purl_file not in files_to_commit:
-            files_to_commit.append(purl_file)
-
-        if len(files_to_commit) == files_per_commit:
-            federatedcode.commit_and_push_changes(
-                commit_message=commit_message(commit_batch),
-                repo=data_repo,
-                files_to_commit=files_to_commit,
-                logger=logger,
-            )
-            files_to_commit.clear()
-            commit_batch += 1
-
-    if files_to_commit:
-        federatedcode.commit_and_push_changes(
-            commit_message=commit_message(commit_batch),
-            repo=data_repo,
-            files_to_commit=files_to_commit,
-            logger=logger,
-        )
-
-    last_modified = get_file_mtime(debian_collector.index_location)
-    checkpoint = {"previous_debian_index_last_modified_date": last_modified}
-    if logger:
-        logger(f"checkpoint: {checkpoint}")
-    pipes.update_checkpoints_in_github(
-        checkpoint=checkpoint, cloned_repo=config_repo, path=DEBIAN_CHECKPOINT_PATH
-    )
-
-    repos_to_clean = [data_repo, config_repo]
-    return repos_to_clean
+            yield versionless_purl, [packaged_data.purl]

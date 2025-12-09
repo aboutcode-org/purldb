@@ -16,8 +16,6 @@ from git import Repo
 import requests
 import saneyaml
 
-from aboutcode.hashid import PURLS_FILENAME
-
 from scanpipe.pipes.federatedcode import commit_and_push_changes
 
 from minecode_pipelines.utils import get_temp_file
@@ -72,7 +70,9 @@ def get_checkpoint_from_file(cloned_repo, path):
     return checkpoint_data or {}
 
 
-def update_checkpoints_in_github(checkpoint, cloned_repo, path):
+def update_checkpoints_in_github(checkpoint, cloned_repo, path, logger):
+    from scanpipe.pipes.federatedcode import commit_and_push_changes
+
     checkpoint_path = os.path.join(cloned_repo.working_dir, path)
     write_data_to_json_file(path=checkpoint_path, data=checkpoint)
     commit_message = """Update federatedcode purl mining checkpoint"""
@@ -80,6 +80,7 @@ def update_checkpoints_in_github(checkpoint, cloned_repo, path):
         repo=cloned_repo,
         files_to_commit=[checkpoint_path],
         commit_message=commit_message,
+        logger=logger,
     )
 
 
@@ -146,20 +147,17 @@ def fetch_checkpoint_by_git(cloned_repo, checkpoint_path):
     return os.path.join(cloned_repo.working_dir, checkpoint_path)
 
 
-def write_packageurls_to_file(repo, base_dir, packageurls, append=False):
+def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=False):
     if not isinstance(packageurls, list):
         raise Exception("`packageurls` needs to be a list")
 
-    purl_file_rel_path = os.path.join(base_dir, PURLS_FILENAME)
-    purl_file_full_path = Path(repo.working_dir) / purl_file_rel_path
+    purl_file_full_path = Path(repo.working_dir) / relative_datafile_path
     if append and purl_file_full_path.exists():
-        existing_purls = load_data_from_yaml_file(purl_file_full_path)
-        for packageurl in packageurls:
-            if packageurl not in existing_purls:
-                existing_purls.append(packageurl)
-        packageurls = existing_purls
-    write_data_to_yaml_file(path=purl_file_full_path, data=packageurls)
-    return purl_file_rel_path
+        existing_purls = load_data_from_yaml_file(purl_file_full_path) or []
+        existing_purls.extend(packageurls)
+        packageurls = list(set(existing_purls))
+    write_data_to_yaml_file(path=purl_file_full_path, data=sorted(packageurls))
+    return relative_datafile_path
 
 
 def load_data_from_yaml_file(path):
@@ -261,3 +259,32 @@ def get_commit_at_distance_ahead(
     if len(revs) < num_commits_ahead:
         raise ValueError(f"Not enough commits ahead; only {len(revs)} available.")
     return revs[-num_commits_ahead]
+
+
+def init_local_checkout(repo_name, working_path, logger):
+    from scanpipe.pipes.federatedcode import get_or_create_repository
+
+    repo_obj = get_or_create_repository(
+        repo_name,
+        working_path,
+        logger,
+    )
+    return {
+        "repo": repo_obj[-1],
+        "file_to_commit": set(),
+        "file_processed_count": 0,
+        "commit_count": 0,
+    }
+
+
+def commit_and_push_checkout(local_checkout, commit_message, logger):
+    from scanpipe.pipes.federatedcode import commit_and_push_changes
+
+    if commit_and_push_changes(
+        commit_message=commit_message,
+        repo=local_checkout["repo"],
+        files_to_commit=local_checkout["file_to_commit"],
+        logger=logger,
+    ):
+        local_checkout["commit_count"] += 1
+    local_checkout["file_to_commit"].clear()

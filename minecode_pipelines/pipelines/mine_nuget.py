@@ -25,11 +25,11 @@ from pathlib import Path
 
 from minecode_pipelines.pipes import nuget
 
-from scanpipe.pipelines import Pipeline
+from minecode_pipelines.pipelines import MineCodeBasePipeline
 from scanpipe.pipes import federatedcode
 
 
-class MineNuGet(Pipeline):
+class MineNuGet(MineCodeBasePipeline):
     """
     Mine and Publish NuGet PackageURLs.
 
@@ -37,30 +37,25 @@ class MineNuGet(Pipeline):
     them to FederatedCode Git repository.
     """
 
-    download_inputs = False
     CATALOG_REPO_URL = "https://github.com/aboutcode-org/aboutcode-mirror-nuget-catalog.git"
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
+            cls.create_federatedcode_working_dir,
             cls.fetch_nuget_catalog,
             cls.mine_nuget_package_versions,
-            cls.mine_and_publish_nuget_packageurls,
-            cls.delete_cloned_repos,
+            cls.fetch_federation_config,
+            cls.mine_and_publish_packageurls,
+            cls.delete_working_dir,
         )
-
-    def check_federatedcode_eligibility(self):
-        """
-        Check if the project fulfills the following criteria for
-        pushing the project result to FederatedCode.
-        """
-        federatedcode.check_federatedcode_configured_and_available()
 
     def fetch_nuget_catalog(self):
         """Fetch NuGet package catalog from AboutCode mirror."""
         self.catalog_repo = federatedcode.clone_repository(
             repo_url=self.CATALOG_REPO_URL,
+            clone_path=self.working_path / "aboutcode-mirror-nuget-catalog",
             logger=self.log,
         )
 
@@ -71,15 +66,15 @@ class MineNuGet(Pipeline):
             logger=self.log,
         )
 
-    def mine_and_publish_nuget_packageurls(self):
-        """Mine and publish PackageURLs from NuGet package versions."""
-        nuget.mine_and_publish_nuget_packageurls(
-            package_versions=self.package_versions,
-            logger=self.log,
-        )
+    def packages_count(self):
+        return len(self.package_versions)
 
-    def delete_cloned_repos(self):
-        """Remove cloned catalog repository."""
-        if self.catalog_repo:
-            self.log("Removing cloned repository")
-            federatedcode.delete_local_clone(repo=self.catalog_repo)
+    def mine_packageurls(self):
+        """Yield PackageURLs from NuGet package versions."""
+
+        for base, versions in self.package_versions.items():
+            packageurls = nuget.get_nuget_purls_from_versions(
+                base_purl=base,
+                versions=versions,
+            )
+            yield base, packageurls

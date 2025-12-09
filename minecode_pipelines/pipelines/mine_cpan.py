@@ -20,44 +20,41 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from pathlib import Path
-from minecode_pipelines.pipes import conan
+
+from minecode_pipelines import pipes
+from minecode_pipelines.pipes import cpan
 from minecode_pipelines.pipelines import MineCodeBasePipeline
 from scanpipe.pipes import federatedcode
 
 
-class MineConan(MineCodeBasePipeline):
-    """Pipeline to mine Conan packages and publish them to FederatedCode repo."""
-
-    MINECODE_CONAN_INDEX_REPO = "https://github.com/conan-io/conan-center-index"
+class MineCpan(MineCodeBasePipeline):
+    """
+    Mine all packageURLs from a cpan index and publish them to
+    a FederatedCode repo.
+    """
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
-            cls.clone_conan_index,
+            cls.mine_cpan_packages,
             cls.fetch_federation_config,
             cls.mine_and_publish_packageurls,
             cls.delete_working_dir,
         )
 
-    def clone_conan_index(self):
-        """Clone the Cargo index Repo."""
-        self.conan_index_repo = federatedcode.clone_repository(
-            repo_url=self.MINECODE_CONAN_INDEX_REPO,
-            clone_path=self.working_path / "conan-index",
-            logger=self.log,
-        )
+    def mine_cpan_packages(self):
+        """Mine cpan package names from cpan indexes or checkpoint."""
+        self.cpan_packages_path_by_name = cpan.mine_cpan_packages(logger=self.log)
 
     def packages_count(self):
-        base_path = Path(self.conan_index_repo.working_tree_dir)
-        package_dir = [p for p in base_path.iterdir() if p.is_dir() and not p.name.startswith(".")]
-        return sum(1 for dir in package_dir for f in dir.rglob("*") if f.is_file())
+        return len(self.cpan_packages_path_by_name)
 
     def mine_packageurls(self):
-        """Yield PackageURLs from Cargo index."""
-        return conan.mine_conan_packageurls(
-            conan_index_repo=self.conan_index_repo,
+        """Get cpan packageURLs for all mined cpan package names."""
+        yield from cpan.mine_and_publish_cpan_packageurls(
+            package_path_by_name=self.cpan_packages_path_by_name,
             logger=self.log,
         )
+
