@@ -14,11 +14,15 @@ import tempfile
 import os
 from commoncode.fileutils import walk
 from aboutcode.federated import DataFederation
-from minecode_pipelines import pipes
 from minecode.management.commands import VerboseCommand
 from packagedb import models as packagedb_models
 from packageurl import PackageURL
 import saneyaml
+from pathlib import Path
+from minecode.management import federatedcode
+from django.conf import settings
+from urllib.parse import urljoin
+import requests
 
 """
 Utility command to find license oddities.
@@ -52,7 +56,9 @@ class Command(VerboseCommand):
 
     def handle(self, *args, **options):
         logger.setLevel(self.get_verbosity(**options))
-        working_path = tempfile.mkdtemp()
+        working_path = Path("/home/jono/tmp/")
+
+        account_url = f"{settings.FEDERATEDCODE_GIT_ACCOUNT_URL}/"
 
         # Clone data and config repo
         data_federation = DataFederation.from_url(
@@ -60,19 +66,40 @@ class Command(VerboseCommand):
             remote_root_url="https://github.com/aboutcode-data",
         )
         data_cluster = data_federation.get_cluster("purls")
+        debian_data_repositories = data_cluster._data_repositories_by_purl_type.get("deb") or []
 
         checked_out_repos = {}
-        for purl_type, data_repository in data_cluster._data_repositories_by_purl_type.items():
+        for data_repository in debian_data_repositories:
             repo_name = data_repository.name
-            checked_out_repos[repo_name] = pipes.init_local_checkout(
-                repo_name=repo_name,
-                working_path=working_path,
-                logger=logger,
-            )
+            repo_url = urljoin(account_url, repo_name)
+            if requests.get(repo_url).ok:
+                clone_path = working_path / repo_name
+                checked_out_repos[repo_name] = federatedcode.clone_repository(
+                    repo_url=repo_url,
+                    clone_path=clone_path,
+                    logger=print,
+                )
+            else:
+                break
 
         # iterate through checked out repos and import data
-        for repo_name, repo_data in checked_out_repos.items():
-            repo = repo_data.get("repo")
-            for purl in yield_purls_from_yaml_files(repo.working_dir):
-                # TODO: use batch create for efficiency
-                package = packagedb_models.Package.objects.create(**purl.to_dict())
+        packages_to_write = []
+        for repo_name, repo in checked_out_repos.items():
+            for i, purl in enumerate(yield_purls_from_yaml_files(repo.working_dir)):
+                if packages_to_write and not i % 5000:
+                    packagedb_models.Package.objects.bulk_create(packages_to_write)
+                    packages_to_write.clear()
+                package = packagedb_models.Package(
+                    type=purl.type,
+                    namespace=purl.namespace,
+                    name=purl.name,
+                    version=purl.version,
+                    qualifiers=purl.qualifiers,
+                    subpath=purl.subpath or "",
+                    download_url=f"{purl}"
+                )
+                packages_to_write.append(package)
+
+        if packages_to_write:
+            packagedb_models.Package.objects.bulk_create(packages_to_write)
+            packages_to_write.clear()
