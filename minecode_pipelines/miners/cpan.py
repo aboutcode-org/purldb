@@ -120,7 +120,11 @@ def get_cpan_packageurls(name, path_prefix, logger=None):
     soup = BeautifulSoup(response.text, "html.parser")
 
     # We get all the listed packages in the author page index
-    package_list_elements = soup.find("ul").text.split("\n")
+    package_list = soup.find("ul")
+    if not package_list:
+        return packageurls
+
+    package_list_elements = package_list.text.split("\n")
 
     package_elements = [
         element.replace(" ", "")
