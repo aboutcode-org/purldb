@@ -22,8 +22,6 @@
 
 from datetime import datetime
 
-from minecode_pipelines import VERSION
-from minecode_pipelines.pipes import write_packageurls_to_file
 from minecode_pipelines.pipes import fetch_checkpoint_from_github
 from minecode_pipelines.pipes import update_checkpoints_in_github
 from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
@@ -43,15 +41,11 @@ from minecode_pipelines.miners.pypi import PYPI_REPO
 
 
 from minecode_pipelines.miners.pypi import PYPI_TYPE
-from minecode_pipelines.utils import grouper
+from minecode_pipelines.utils import get_temp_dir
 
-from aboutcode.hashid import get_package_base_dir
+from scanpipe.pipes.federatedcode import delete_local_clone
 from packageurl import PackageURL
 from scanpipe.pipes.federatedcode import clone_repository
-
-from scanpipe.pipes.federatedcode import commit_changes
-from scanpipe.pipes.federatedcode import push_changes
-
 
 # If True, show full details on fetching packageURL for
 # a package name present in the index
@@ -66,10 +60,6 @@ PYPI_PACKAGES_CHECKPOINT_PATH = "pypi/packages_checkpoint.json"
 
 # We are testing and storing mined packageURLs in one single repo per ecosystem for now
 MINECODE_DATA_PYPI_REPO = "https://github.com/aboutcode-data/minecode-data-pypi-test"
-
-
-# Number of packages
-PACKAGE_BATCH_SIZE = 1000
 
 
 def mine_pypi_packages(logger=None):
@@ -89,7 +79,11 @@ def mine_pypi_packages(logger=None):
     if logger:
         logger(f"Mining state from checkpoint: {state}")
 
-    cloned_repo = clone_repository(repo_url=MINECODE_PIPELINES_CONFIG_REPO)
+    config_repo = clone_repository(
+        repo_url=MINECODE_PIPELINES_CONFIG_REPO,
+        clone_path=get_temp_dir(),
+        logger=logger,
+    )
 
     if state == INITIAL_SYNC_STATE:
         if logger:
@@ -99,7 +93,7 @@ def mine_pypi_packages(logger=None):
             checkpoint_path=PYPI_SIMPLE_CHECKPOINT_PATH,
             name=PACKAGE_FILE_NAME,
         )
-        return packages_file, state
+        return packages_file, state, config_repo
 
     if logger:
         logger("Getting packages from pypi simple index")
@@ -112,18 +106,20 @@ def mine_pypi_packages(logger=None):
             logger("Checkpointing packages from pypi simple index")
         update_checkpoints_in_github(
             checkpoint=packages,
-            cloned_repo=cloned_repo,
+            cloned_repo=config_repo,
             path=PYPI_SIMPLE_CHECKPOINT_PATH,
+            logger=logger,
         )
         if logger:
             logger(f"Updating checkpoint mining state to: {INITIAL_SYNC_STATE}")
         update_checkpoint_state(
-            cloned_repo=cloned_repo,
+            cloned_repo=config_repo,
             state=INITIAL_SYNC_STATE,
             checkpoint_path=PYPI_CHECKPOINT_PATH,
+            logger=logger,
         )
 
-    return packages_file, state
+    return packages_file, state, config_repo
 
 
 def fetch_last_serial_mined(config_repo, settings_path):
@@ -141,11 +137,33 @@ def fetch_last_serial_mined(config_repo, settings_path):
     return checkpoints.get("last_serial")
 
 
+def update_checkpoint_state(
+    cloned_repo,
+    state,
+    config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+    checkpoint_path=PYPI_CHECKPOINT_PATH,
+    logger=None,
+):
+    checkpoint = fetch_checkpoint_from_github(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    checkpoint["state"] = state
+    checkpoint["last_updated"] = str(datetime.now())
+    update_checkpoints_in_github(
+        checkpoint=checkpoint,
+        cloned_repo=cloned_repo,
+        path=checkpoint_path,
+        logger=logger,
+    )
+
+
 def update_pypi_checkpoints(
     last_serial,
     state,
     cloned_repo,
     checkpoint_path=PYPI_CHECKPOINT_PATH,
+    logger=None,
 ):
     checkpoint = {
         "last_updated": str(datetime.now()),
@@ -156,10 +174,19 @@ def update_pypi_checkpoints(
         checkpoint=checkpoint,
         cloned_repo=cloned_repo,
         path=checkpoint_path,
+        logger=logger,
     )
 
 
-def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
+def get_packages_file_from_checkpoint(config_repo, checkpoint_path, name):
+    packages = fetch_checkpoint_from_github(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    return write_packages_json(packages, name=name)
+
+
+def get_pypi_packages_to_sync(packages_file, state, logger=None):
     last_serial_fetched = fetch_last_serial_mined(
         config_repo=MINECODE_PIPELINES_CONFIG_REPO,
         settings_path=PYPI_CHECKPOINT_PATH,
@@ -175,7 +202,7 @@ def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
         logger(f"# of package names fetched from index/checkpoint: {len(packages)}")
 
     if not packages:
-        return
+        return packages, last_serial
 
     synced_packages = get_mined_packages_from_checkpoint(
         config_repo=MINECODE_PIPELINES_CONFIG_REPO,
@@ -189,7 +216,7 @@ def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
     elif state == PERIODIC_SYNC_STATE:
         # We are all synced up from the index
         if last_serial == last_serial_fetched:
-            return
+            return [], last_serial
 
         packages_to_sync = [
             package
@@ -212,89 +239,55 @@ def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
                 f"Starting initial package mining for {len(packages_to_sync)} packages from checkpoint"
             )
 
-    # clone repo
-    cloned_data_repo = clone_repository(repo_url=MINECODE_DATA_PYPI_REPO)
-    cloned_config_repo = clone_repository(repo_url=MINECODE_PIPELINES_CONFIG_REPO)
-    if logger:
-        logger(f"{MINECODE_DATA_PYPI_REPO} repo cloned at: {cloned_data_repo.working_dir}")
-        logger(f"{MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {cloned_config_repo.working_dir}")
+    return packages_to_sync, last_serial
 
-    for package_batch in grouper(n=PACKAGE_BATCH_SIZE, iterable=packages_to_sync):
-        packages_mined = []
-        purls = []
-        purl_files = []
+
+def mine_and_publish_pypi_packageurls(packages_to_sync, packages_mined, logger=None):
+
+    for package in packages_to_sync:
+        if not package:
+            continue
+
+        # fetch packageURLs for package
+        name = package.get("name")
+        if logger and LOG_PACKAGEURL_DETAILS:
+            logger(f"getting packageURLs for package: {name}")
+
+        # get repo and path for package
+        base_purl = PackageURL(type=PYPI_TYPE, name=name).to_string()
+        packageurls = get_pypi_packageurls(name)
+        if not packageurls:
+            if logger and LOG_PACKAGEURL_DETAILS:
+                logger(f"Package versions not present for package: {name}")
+
+            # We don't want to try fetching versions for these again
+            packages_mined.append(base_purl)
+            continue
 
         if logger and LOG_PACKAGEURL_DETAILS:
-            logger("Starting package mining for a batch of packages")
+            logger(f"getting packageURLs for package: {base_purl}:")
+            purls_string = " ".join(packageurls)
+            logger(f"packageURLs: {purls_string}")
 
-        for package in package_batch:
-            if not package:
-                continue
+        yield base_purl, packageurls
 
-            # fetch packageURLs for package
-            name = package.get("name")
-            if logger and LOG_PACKAGEURL_DETAILS:
-                logger(f"getting packageURLs for package: {name}")
 
-            packageurls = get_pypi_packageurls(name)
-            if not packageurls:
-                if logger and LOG_PACKAGEURL_DETAILS:
-                    logger(f"Package versions not present for package: {name}")
+def save_mined_packages_in_checkpoint(packages_mined, config_repo, logger=None):
+    """Update mined packages checkpoint after processing a batch of packages."""
+    if logger:
+        logger(f"Checkpointing processed packages to: {PYPI_PACKAGES_CHECKPOINT_PATH}")
 
-                # We don't want to try fetching versions for these again
-                packages_mined.append(name)
-                continue
+    update_mined_packages_in_checkpoint(
+        packages=packages_mined,
+        cloned_repo=config_repo,
+        config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+        checkpoint_path=PYPI_PACKAGES_CHECKPOINT_PATH,
+        logger=logger,
+    )
 
-            # get repo and path for package
-            base_purl = PackageURL(type=PYPI_TYPE, name=name).to_string()
-            package_base_dir = get_package_base_dir(purl=base_purl)
 
-            if logger and LOG_PACKAGEURL_DETAILS:
-                logger(f"writing packageURLs for package: {base_purl} at: {package_base_dir}")
-                purls_string = " ".join(packageurls)
-                logger(f"packageURLs: {purls_string}")
-
-            # write packageURLs to file
-            purl_file = write_packageurls_to_file(
-                repo=cloned_data_repo,
-                base_dir=package_base_dir,
-                packageurls=packageurls,
-            )
-            purl_files.append(purl_file)
-            purls.append(base_purl)
-
-            packages_mined.append(name)
-
-        if logger:
-            purls_string = " ".join(purls)
-            logger("Committing and pushing changes for a batch of packages: ")
-            logger(f"{purls_string}")
-
-        # commit changes
-        commit_changes(
-            repo=cloned_data_repo,
-            files_to_commit=purl_files,
-            purls=purls,
-            mine_type="packageURL",
-            tool_name="pkg:pypi/minecode-pipelines",
-            tool_version=VERSION,
-        )
-
-        # Push changes to remote repository
-        push_changes(repo=cloned_data_repo)
-
-        # we need to update mined packages checkpoint for every batch
-        if logger:
-            logger(f"Checkpointing processed packages to: {PYPI_PACKAGES_CHECKPOINT_PATH}")
-
-        update_mined_packages_in_checkpoint(
-            packages=packages_mined,
-            cloned_repo=cloned_config_repo,
-            config_repo=MINECODE_PIPELINES_CONFIG_REPO,
-            checkpoint_path=PYPI_PACKAGES_CHECKPOINT_PATH,
-        )
-
-    # If we are finished mining all the packages in the intial sync, we can now
+def update_state_and_checkpoints(config_repo, last_serial, logger=None):
+    # If we are finshed mining all the packages in the intial sync, we can now
     # periodically sync the packages from latest
     if state == INITIAL_SYNC_STATE:
         if logger:
@@ -302,22 +295,30 @@ def mine_and_publish_pypi_packageurls(packages_file, state, logger=None):
 
         state = PERIODIC_SYNC_STATE
         update_checkpoint_state(
-            cloned_repo=cloned_config_repo,
+            cloned_repo=config_repo,
             state=state,
+            logger=logger,
         )
 
     # refresh packages checkpoint once to only checkpoint new packages
     update_checkpoints_in_github(
         checkpoint={"packages_mined": []},
-        cloned_repo=cloned_config_repo,
+        cloned_repo=config_repo,
         path=PYPI_PACKAGES_CHECKPOINT_PATH,
+        logger=logger,
     )
 
     # update last_serial to minecode checkpoints whenever we finish mining
     # either from checkpoints or from the latest pypi
     if logger:
         logger(f"Updating checkpoint at: {PYPI_CHECKPOINT_PATH} with last serial: {last_serial}")
-    update_pypi_checkpoints(last_serial=last_serial, state=state, cloned_repo=cloned_config_repo)
+    update_pypi_checkpoints(
+        last_serial=last_serial,
+        state=state,
+        cloned_repo=config_repo,
+        logger=logger,
+    )
 
-    repos_to_clean = [cloned_data_repo, cloned_config_repo]
-    return repos_to_clean
+    if logger:
+        logger(f"Deleting local clone at: {config_repo.working_dir}")
+    delete_local_clone(config_repo)

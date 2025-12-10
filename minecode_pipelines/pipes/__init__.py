@@ -70,7 +70,7 @@ def get_checkpoint_from_file(cloned_repo, path):
     return checkpoint_data or {}
 
 
-def update_checkpoints_in_github(checkpoint, cloned_repo, path, logger):
+def update_checkpoints_in_github(checkpoint, cloned_repo, path, logger=None):
     from scanpipe.pipes.federatedcode import commit_and_push_changes
 
     checkpoint_path = os.path.join(cloned_repo.working_dir, path)
@@ -103,16 +103,17 @@ def get_mined_packages_from_checkpoint(config_repo, checkpoint_path):
     return checkpoint.get("packages_mined", [])
 
 
-def update_mined_packages_in_checkpoint(packages, config_repo, cloned_repo, checkpoint_path):
+def update_mined_packages_in_checkpoint(packages, config_repo, cloned_repo, checkpoint_path, logger=None):
     mined_packages = get_mined_packages_from_checkpoint(
         config_repo=config_repo,
         checkpoint_path=checkpoint_path,
     )
-    packages = {"packages_mined": packages + mined_packages}
+    packages_to_update = {"packages_mined": packages + mined_packages}
     update_checkpoints_in_github(
-        checkpoint=packages,
+        checkpoint=packages_to_update,
         cloned_repo=cloned_repo,
         path=checkpoint_path,
+        logger=logger,
     )
 
 

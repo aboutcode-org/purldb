@@ -20,46 +20,83 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from scanpipe.pipelines import Pipeline
-from scanpipe.pipes import federatedcode
-
-from minecode_pipelines import pipes
 from minecode_pipelines.pipes import pypi
+from minecode_pipelines.pipelines import MineCodeBasePipeline
+from minecode_pipelines.pipelines import _mine_and_publish_packageurls
 
-
-class MinePypi(Pipeline):
+class MinePypi(MineCodeBasePipeline):
     """
     Mine all packageURLs from a pypi index and publish them to
     a FederatedCode repo.
     """
 
+    package_batch_size = 100
+
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
+            cls.create_federatedcode_working_dir,
             cls.mine_pypi_packages,
-            cls.mine_and_publish_pypi_packageurls,
-            cls.delete_cloned_repos,
+            cls.get_pypi_packages_to_sync,
+            cls.fetch_federation_config,
+            cls.mine_and_publish_packageurls,
+            cls.update_state_and_checkpoints,
+            cls.delete_working_dir,
         )
-
-    def check_federatedcode_eligibility(self):
-        """
-        Check if the project fulfills the following criteria for
-        pushing the project result to FederatedCode.
-        """
-        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
     def mine_pypi_packages(self):
         """Mine pypi package names from pypi indexes or checkpoint."""
-        self.pypi_packages, self.state = pypi.mine_pypi_packages(logger=self.log)
+        self.pypi_packages, self.state, self.config_repo = pypi.mine_pypi_packages(logger=self.log)
 
-    def mine_and_publish_pypi_packageurls(self):
-        """Get pypi packageURLs for all mined pypi package names."""
-        self.repos = pypi.mine_and_publish_pypi_packageurls(
+    def get_pypi_packages_to_sync(self):
+        """Get pypi packages which needs to be synced using checkpoint."""
+        self.packages, self.last_serial = pypi.get_pypi_packages_to_sync(
             packages_file=self.pypi_packages,
             state=self.state,
             logger=self.log,
         )
 
-    def delete_cloned_repos(self):
-        pipes.delete_cloned_repos(repos=self.repos, logger=self.log)
+    def packages_count(self):
+        return len(self.packages)
+
+    def mine_packageurls(self):
+        """Yield pypi packageURLs for all mined pypi package names."""
+        self.packages_mined = []
+        yield from pypi.mine_and_publish_pypi_packageurls(
+            packages_to_sync=self.packages,
+            packages_mined=self.packages_mined,
+            logger=self.log,
+        )
+
+    def save_check_point(self):
+        pypi.save_mined_packages_in_checkpoint(
+            packages_mined=self.packages_mined,
+            config_repo=self.config_repo,
+            logger=self.log,
+        )
+        self.packages_mined = []
+
+    def mine_and_publish_packageurls(self):
+        """Mine and publish PackageURLs."""
+
+        _mine_and_publish_packageurls(
+            packageurls=self.mine_packageurls(),
+            total_package_count=self.packages_count(),
+            data_cluster=self.data_cluster,
+            checked_out_repos=self.checked_out_repos,
+            working_path=self.working_path,
+            append_purls=self.append_purls,
+            commit_msg_func=self.commit_message,
+            logger=self.log,
+            checkpoint_func=self.save_check_point,
+            checkpoint_on_commit=True,
+            batch_size=self.package_batch_size,
+        )
+
+    def update_state_and_checkpoints(self):
+        pypi.update_state_and_checkpoints(
+            config_repo=self.config_repo,
+            last_serial=self.last_serial,
+            logger=self.log,
+        )
