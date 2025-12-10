@@ -193,8 +193,6 @@ def _mine_and_publish_packageurls(
         )
         checkout["file_to_commit"].add(purl_file)
         checkout["file_processed_count"] += 1
-        if logger:
-            logger(f"{checkout['repo'].working_dir}: {checkout['file_processed_count']} / {batch_size}")
 
         if len(checkout["file_to_commit"]) > batch_size:
             if logger:

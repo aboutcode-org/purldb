@@ -31,7 +31,7 @@ class MineNPM(MineCodeBasePipeline):
     a FederatedCode repo.
     """
 
-    package_batch_size = 70
+    package_batch_size = 5
 
     @classmethod
     def steps(cls):

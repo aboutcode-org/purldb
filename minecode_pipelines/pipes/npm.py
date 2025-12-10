@@ -228,6 +228,8 @@ def get_npm_packages_to_sync(packages_file, state, logger=None):
         if logger:
             logger(f"Starting package mining for {len(packages_to_sync)} packages")
 
+        synced_packages = []
+
     elif state == INITIAL_SYNC_STATE or state == PERIODIC_SYNC_STATE:
         synced_packages = get_mined_packages_from_checkpoint(
             config_repo=MINECODE_PIPELINES_CONFIG_REPO,
