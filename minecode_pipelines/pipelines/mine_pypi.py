@@ -30,7 +30,7 @@ class MinePypi(MineCodeBasePipeline):
     a FederatedCode repo.
     """
 
-    package_batch_size = 1000
+    package_batch_size = 100
 
     @classmethod
     def steps(cls):
@@ -70,7 +70,7 @@ class MinePypi(MineCodeBasePipeline):
         )
 
     def save_check_point(self):
-        pypi.update_mined_packages_in_checkpoint(
+        pypi.save_mined_packages_in_checkpoint(
             packages_mined=self.packages_mined,
             config_repo=self.config_repo,
             logger=self.log,

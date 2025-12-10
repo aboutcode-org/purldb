@@ -246,7 +246,7 @@ def mine_and_publish_pypi_packageurls(packages_to_sync, packages_mined, logger=N
 
         # fetch packageURLs for package
         name = package.get("name")
-        if logger:
+        if logger and LOG_PACKAGEURL_DETAILS:
             logger(f"getting packageURLs for package: {name}")
 
         # get repo and path for package
@@ -268,7 +268,7 @@ def mine_and_publish_pypi_packageurls(packages_to_sync, packages_mined, logger=N
         yield base_purl, packageurls
 
 
-def update_mined_packages_in_checkpoint(packages_mined, config_repo, logger=None):
+def save_mined_packages_in_checkpoint(packages_mined, config_repo, logger=None):
     """Update mined packages checkpoint after processing a batch of packages."""
     if logger:
         logger(f"Checkpointing processed packages to: {PYPI_PACKAGES_CHECKPOINT_PATH}")
