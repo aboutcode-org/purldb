@@ -26,6 +26,9 @@ from minecode_pipelines.pipes import fetch_checkpoint_from_github
 from minecode_pipelines.pipes import update_checkpoints_in_github
 from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
 from minecode_pipelines.pipes import update_mined_packages_in_checkpoint
+from minecode_pipelines.pipes import get_packages_file_from_checkpoint
+from minecode_pipelines.pipes import update_checkpoint_state
+from minecode_pipelines.pipes import write_packages_json
 from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
 from minecode_pipelines.pipes import INITIAL_SYNC_STATE
 from minecode_pipelines.pipes import PERIODIC_SYNC_STATE
@@ -35,7 +38,7 @@ from minecode_pipelines.miners.pypi import get_pypi_packages
 from minecode_pipelines.miners.pypi import get_pypi_packageurls
 from minecode_pipelines.miners.pypi import load_pypi_packages
 from minecode_pipelines.miners.pypi import PYPI_REPO
-from minecode_pipelines.miners.pypi import write_packages_json
+
 
 from minecode_pipelines.miners.pypi import PYPI_TYPE
 from minecode_pipelines.utils import get_temp_dir
@@ -112,6 +115,7 @@ def mine_pypi_packages(logger=None):
         update_checkpoint_state(
             cloned_repo=config_repo,
             state=INITIAL_SYNC_STATE,
+            checkpoint_path=PYPI_CHECKPOINT_PATH,
             logger=logger,
         )
 
@@ -295,13 +299,14 @@ def update_state_and_checkpoints(config_repo, last_serial, logger=None):
             state=state,
             logger=logger,
         )
-        # refresh packages checkpoint once to only checkpoint new packages
-        update_checkpoints_in_github(
-            checkpoint={"packages_mined": []},
-            cloned_repo=config_repo,
-            path=PYPI_PACKAGES_CHECKPOINT_PATH,
-            logger=logger,
-        )
+
+    # refresh packages checkpoint once to only checkpoint new packages
+    update_checkpoints_in_github(
+        checkpoint={"packages_mined": []},
+        cloned_repo=config_repo,
+        path=PYPI_PACKAGES_CHECKPOINT_PATH,
+        logger=logger,
+    )
 
     # update last_serial to minecode checkpoints whenever we finish mining
     # either from checkpoints or from the latest pypi

@@ -7,12 +7,18 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import gzip
 import json
 import os
+import shutil
 from pathlib import Path
 from git import Repo
 import requests
 import saneyaml
+
+from scanpipe.pipes.federatedcode import commit_and_push_changes
+
+from minecode_pipelines.utils import get_temp_file
 
 # states:
 # note: a state is null when mining starts
@@ -21,6 +27,27 @@ PERIODIC_SYNC_STATE = "periodic-sync"
 
 
 MINECODE_PIPELINES_CONFIG_REPO = "https://github.com/aboutcode-data/minecode-pipelines-config/"
+
+
+def compress_packages_file(packages_file, compressed_packages_file):
+    with open(packages_file, "rb") as f_in:
+        with gzip.open(compressed_packages_file, "wb") as f_out:
+            f_out.writelines(f_in)
+
+
+def decompress_packages_file(compressed_packages_file, name):
+    packages_file = get_temp_file(name)
+    with gzip.open(compressed_packages_file, "rb") as f_in:
+        with open(packages_file, "wb") as f_out:
+            f_out.writelines(f_in)
+
+    return packages_file
+
+
+def write_packages_json(packages, name):
+    temp_file = get_temp_file(name)
+    write_data_to_json_file(path=temp_file, data=packages)
+    return temp_file
 
 
 def fetch_checkpoint_from_github(config_repo, checkpoint_path):
@@ -57,6 +84,17 @@ def update_checkpoints_in_github(checkpoint, cloned_repo, path, logger=None):
     )
 
 
+def update_checkpoints_file_in_github(checkpoints_file, cloned_repo, path):
+    checkpoint_path = os.path.join(cloned_repo.working_dir, path)
+    shutil.move(checkpoints_file, checkpoint_path)
+    commit_message = """Update federatedcode purl mining checkpoint"""
+    commit_and_push_changes(
+        repo=cloned_repo,
+        files_to_commit=[checkpoint_path],
+        commit_message=commit_message,
+    )
+
+
 def get_mined_packages_from_checkpoint(config_repo, checkpoint_path):
     checkpoint = fetch_checkpoint_from_github(
         config_repo=config_repo,
@@ -77,6 +115,37 @@ def update_mined_packages_in_checkpoint(packages, config_repo, cloned_repo, chec
         path=checkpoint_path,
         logger=logger,
     )
+
+
+def update_checkpoint_state(
+    cloned_repo,
+    state,
+    checkpoint_path,
+    config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+):
+    checkpoint = fetch_checkpoint_from_github(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    checkpoint["state"] = state
+    update_checkpoints_in_github(
+        checkpoint=checkpoint,
+        cloned_repo=cloned_repo,
+        path=checkpoint_path,
+    )
+
+
+def get_packages_file_from_checkpoint(config_repo, checkpoint_path, name):
+    packages = fetch_checkpoint_from_github(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    return write_packages_json(packages, name=name)
+
+
+def fetch_checkpoint_by_git(cloned_repo, checkpoint_path):
+    cloned_repo.remotes.origin.pull()
+    return os.path.join(cloned_repo.working_dir, checkpoint_path)
 
 
 def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=False):

@@ -20,40 +20,42 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from minecode_pipelines.pipes import pypi
+from minecode_pipelines.pipes import npm
 from minecode_pipelines.pipelines import MineCodeBasePipeline
 from minecode_pipelines.pipelines import _mine_and_publish_packageurls
 
 
-class MinePypi(MineCodeBasePipeline):
+class MineNPM(MineCodeBasePipeline):
     """
-    Mine all packageURLs from a pypi index and publish them to
+    Mine all packageURLs from a npm index and publish them to
     a FederatedCode repo.
     """
 
-    package_batch_size = 100
+    package_batch_size = 5
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
-            cls.mine_pypi_packages,
-            cls.get_pypi_packages_to_sync,
+            cls.mine_npm_packages,
+            cls.get_npm_packages_to_sync,
             cls.fetch_federation_config,
             cls.mine_and_publish_packageurls,
             cls.update_state_and_checkpoints,
             cls.delete_working_dir,
         )
 
-    def mine_pypi_packages(self):
-        """Mine pypi package names from pypi indexes or checkpoint."""
-        self.pypi_packages, self.state, self.config_repo = pypi.mine_pypi_packages(logger=self.log)
+    def mine_npm_packages(self):
+        """Mine npm package names from npm indexes or checkpoint."""
+        (
+            self.npm_packages, self.state, self.last_seq, self.config_repo
+        ) = npm.mine_npm_packages(logger=self.log)
 
-    def get_pypi_packages_to_sync(self):
-        """Get pypi packages which needs to be synced using checkpoint."""
-        self.packages, self.last_serial = pypi.get_pypi_packages_to_sync(
-            packages_file=self.pypi_packages,
+    def get_npm_packages_to_sync(self):
+        """Get npm packages which needs to be synced using checkpoint."""
+        self.packages, self.synced_packages = npm.get_npm_packages_to_sync(
+            packages_file=self.npm_packages,
             state=self.state,
             logger=self.log,
         )
@@ -62,17 +64,18 @@ class MinePypi(MineCodeBasePipeline):
         return len(self.packages)
 
     def mine_packageurls(self):
-        """Yield pypi packageURLs for all mined pypi package names."""
+        """Yield npm packageURLs for all mined npm package names."""
         self.packages_mined = []
-        yield from pypi.mine_and_publish_pypi_packageurls(
+        yield from npm.mine_and_publish_npm_packageurls(
             packages_to_sync=self.packages,
             packages_mined=self.packages_mined,
             logger=self.log,
         )
 
     def save_check_point(self):
-        pypi.save_mined_packages_in_checkpoint(
+        npm.save_mined_packages_in_checkpoint(
             packages_mined=self.packages_mined,
+            synced_packages=self.synced_packages,
             config_repo=self.config_repo,
             logger=self.log,
         )
@@ -96,8 +99,9 @@ class MinePypi(MineCodeBasePipeline):
         )
 
     def update_state_and_checkpoints(self):
-        pypi.update_state_and_checkpoints(
+        npm.update_state_and_checkpoints(
+            state=self.state,
+            last_seq=self.last_seq,
             config_repo=self.config_repo,
-            last_serial=self.last_serial,
             logger=self.log,
         )

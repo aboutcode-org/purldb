@@ -4,7 +4,7 @@ build-backend = "flot.buildapi"
 
 [project]
 name = "minecode_pipelines"
-version = "0.0.1b60"
+version = "0.1.0"
 description = "A library for mining packageURLs and package metadata from ecosystem repositories."
 readme = "minecode_pipelines/README.rst"
 license = { text = "Apache-2.0" }
@@ -51,6 +51,7 @@ urls = { Homepage = "https://github.com/aboutcode-org/purldb" }
 
 [project.entry-points."scancodeio_pipelines"]
 mine_pypi = "minecode_pipelines.pipelines.mine_pypi:MinePypi"
+mine_npm = "minecode_pipelines.pipelines.mine_npm:MineNPM"
 mine_maven = "minecode_pipelines.pipelines.mine_maven:MineMaven"
 mine_cargo = "minecode_pipelines.pipelines.mine_cargo:MineCargo"
 mine_debian = "minecode_pipelines.pipelines.mine_debian:MineDebian"
@@ -63,7 +64,7 @@ mine_swift = "minecode_pipelines.pipelines.mine_swift:MineSwift"
 mine_composer = "minecode_pipelines.pipelines.mine_composer:MineComposer"
 
 [tool.bumpversion]
-current_version = "0.0.1b60"
+current_version = "0.1.0"
 allow_dirty = true
 
 files = [
