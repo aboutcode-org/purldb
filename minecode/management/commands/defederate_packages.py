@@ -17,6 +17,7 @@ from aboutcode.federated import DataFederation
 from minecode.management.commands import VerboseCommand
 from packagedb import models as packagedb_models
 from packageurl import PackageURL
+from packageurl.contrib import purl2url
 import saneyaml
 from pathlib import Path
 from minecode.management import federatedcode
@@ -36,7 +37,7 @@ if TRACE:
     logger.setLevel(logging.DEBUG)
 
 
-def yield_purls_from_yaml_files(location):
+def yield_purl_strs_from_yaml_files(location):
     for root, _, files in walk(location):
         for file in files:
             if not (file == "purls.yml"):
@@ -45,18 +46,22 @@ def yield_purls_from_yaml_files(location):
             with open(fp) as f:
                 purl_strs = saneyaml.load(f.read()) or []
             for purl_str in purl_strs:
-                yield PackageURL.from_string(purl_str)
+                yield purl_str
 
 
 class Command(VerboseCommand):
     help = "Find packages with an ambiguous declared license."
 
     def add_arguments(self, parser):
-        parser.add_argument("-i", "--input", type=str, help="Define the input file name")
+        parser.add_argument("-d", "--working-directory", type=str, help="Directory where federatedcode repos will be cloned")
 
     def handle(self, *args, **options):
         logger.setLevel(self.get_verbosity(**options))
-        working_path = Path("/home/jono/tmp/")
+        working_dir = options.get("working_directory")
+        if working_dir:
+            working_path = Path(working_dir)
+        else:
+            working_path = Path(tempfile.mkdtemp())
 
         account_url = f"{settings.FEDERATEDCODE_GIT_ACCOUNT_URL}/"
 
@@ -66,26 +71,27 @@ class Command(VerboseCommand):
             remote_root_url="https://github.com/aboutcode-data",
         )
         data_cluster = data_federation.get_cluster("purls")
-        debian_data_repositories = data_cluster._data_repositories_by_purl_type.get("deb") or []
 
         checked_out_repos = {}
-        for data_repository in debian_data_repositories:
-            repo_name = data_repository.name
-            repo_url = urljoin(account_url, repo_name)
-            if requests.get(repo_url).ok:
-                clone_path = working_path / repo_name
-                checked_out_repos[repo_name] = federatedcode.clone_repository(
-                    repo_url=repo_url,
-                    clone_path=clone_path,
-                    logger=print,
-                )
-            else:
-                break
+        for package_type, data_repositories in data_cluster._data_repositories_by_purl_type.items():
+            for data_repository in data_repositories:
+                repo_name = data_repository.name
+                repo_url = urljoin(account_url, repo_name)
+                if requests.get(repo_url).ok:
+                    clone_path = working_path / repo_name
+                    checked_out_repos[repo_name] = federatedcode.clone_repository(
+                        repo_url=repo_url,
+                        clone_path=clone_path,
+                        logger=print,
+                    )
+                else:
+                    break
 
         # iterate through checked out repos and import data
         packages_to_write = []
         for repo_name, repo in checked_out_repos.items():
-            for i, purl in enumerate(yield_purls_from_yaml_files(repo.working_dir)):
+            for i, purl_str in enumerate(yield_purl_strs_from_yaml_files(repo.working_dir)):
+                purl = PackageURL.from_string(purl_str)
                 if packages_to_write and not i % 5000:
                     packagedb_models.Package.objects.bulk_create(packages_to_write)
                     packages_to_write.clear()
@@ -96,7 +102,8 @@ class Command(VerboseCommand):
                     version=purl.version,
                     qualifiers=purl.qualifiers,
                     subpath=purl.subpath or "",
-                    download_url=f"{purl}"
+                    download_url=purl2url.get_download_url(purl_str),
+                    repository_download_url=purl2url.get_repo_download_url(purl_str),
                 )
                 packages_to_write.append(package)
 
