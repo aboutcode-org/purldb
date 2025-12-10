@@ -70,12 +70,14 @@ def get_current_last_seq(replicate_url=NPM_REPLICATE_REPO):
     return last_seq
 
 
-def get_updated_npm_packages(last_seq, replicate_url=NPM_REPLICATE_REPO):
+def get_updated_npm_packages(last_seq, replicate_url=NPM_REPLICATE_REPO, logger=None):
     all_package_names = []
     i = 0
 
     while True:
-        print(f"Processing iteration: {i}: changes after seq: {last_seq}")
+        if logger:
+            logger(f"Processing iteration: {i}: changes after seq: {last_seq}")
+
         npm_replicate_changes = (
             replicate_url + "_changes?" + f"limit={NPM_REPLICATE_BATCH_SIZE}" + f"&since={last_seq}"
         )
@@ -96,7 +98,7 @@ def get_updated_npm_packages(last_seq, replicate_url=NPM_REPLICATE_REPO):
     return {"packages": all_package_names}, last_seq
 
 
-def get_npm_packages(replicate_url=NPM_REPLICATE_REPO):
+def get_npm_packages(replicate_url=NPM_REPLICATE_REPO, logger=None):
     all_package_names = []
 
     npm_replicate_all = replicate_url + "_all_docs?" + f"limit={NPM_REPLICATE_BATCH_SIZE}"
@@ -113,7 +115,8 @@ def get_npm_packages(replicate_url=NPM_REPLICATE_REPO):
 
     for i in range(iterations):
         npm_replicate_from_id = npm_replicate_all + f'&start_key="{last_key}"'
-        print(f"Processing iteration: {i}: {npm_replicate_from_id}")
+        if logger:
+            logger(f"Processing iteration: {i}: {npm_replicate_from_id}")
 
         response = requests.get(npm_replicate_from_id)
         if not response.ok:

@@ -101,7 +101,7 @@ def mine_npm_packages(logger=None):
                 f"Starting initial checkpointing of packages from npm replicate till seq: {last_seq}"
             )
 
-        packages = get_npm_packages(replicate_url=NPM_REPLICATE_REPO)
+        packages = get_npm_packages(replicate_url=NPM_REPLICATE_REPO, logger=logger)
         packages_file = write_packages_json(
             packages=packages,
             name=PACKAGE_FILE_NAME,
@@ -160,6 +160,7 @@ def mine_npm_packages(logger=None):
         packages, last_seq = get_updated_npm_packages(
             last_seq=last_seq,
             replicate_url=NPM_REPLICATE_REPO,
+            logger=logger,
         )
         packages_file = write_packages_json(
             packages=packages,
