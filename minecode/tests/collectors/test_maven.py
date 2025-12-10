@@ -607,7 +607,10 @@ body {
         """
         expected = [
             ("1.2/", ""),
-            ("https://repository.jboss.org/nexus/repository/public/apache-codec/commons-codec/maven-metadata.xml", "Fri Sep 05 09:38:07 Z 2025")
+            (
+                "https://repository.jboss.org/nexus/repository/public/apache-codec/commons-codec/maven-metadata.xml",
+                "Fri Sep 05 09:38:07 Z 2025",
+            ),
         ]
 
         self.assertEqual(
@@ -679,10 +682,22 @@ body {
 </html>
         """
         expected = [
-            ("https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/1.3-SNAPSHOT/", "Thu Jul 04 05:45:00 UTC 2013"),
-            ("https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/2.0-SNAPSHOT/", "Tue Aug 21 20:26:48 UTC 2018"),
-            ("https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/maven-metadata.xml.md5", "Tue Aug 21 20:26:47 UTC 2018"),
-            ("https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/maven-metadata.xml.sha1", "Tue Aug 21 20:26:47 UTC 2018")
+            (
+                "https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/1.3-SNAPSHOT/",
+                "Thu Jul 04 05:45:00 UTC 2013",
+            ),
+            (
+                "https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/2.0-SNAPSHOT/",
+                "Tue Aug 21 20:26:48 UTC 2018",
+            ),
+            (
+                "https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/maven-metadata.xml.md5",
+                "Tue Aug 21 20:26:47 UTC 2018",
+            ),
+            (
+                "https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/maven-metadata.xml.sha1",
+                "Tue Aug 21 20:26:47 UTC 2018",
+            ),
         ]
 
         self.assertEqual(

@@ -695,8 +695,10 @@ def collect_links_and_artifact_timestamps(text):
     repo_jboss_apache_matches = repo_jboss_apache_pattern.findall(text)
     # Convert &nbsp; to empty string for table format
     if repo_jboss_apache_matches:
-        return [(item, '' if timestamp == '&nbsp;' else timestamp)
-                for item, timestamp in repo_jboss_apache_matches]
+        return [
+            (item, "" if timestamp == "&nbsp;" else timestamp)
+            for item, timestamp in repo_jboss_apache_matches
+        ]
 
     # Pattern that matches with
     # https://repo.spring.io/milestone
@@ -726,6 +728,7 @@ def collect_links_and_artifact_timestamps(text):
             return filtered_matches
 
     return []
+
 
 def collect_links_from_text(text, filter):
     """

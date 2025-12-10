@@ -13,6 +13,7 @@ from shutil import rmtree
 import os
 import gzip
 import io
+import tempfile
 
 from dateutil import tz
 from jawa.util.utf import decode_modified_utf8
@@ -44,6 +45,29 @@ MAVEN_INDEX_PROPERTIES_URL = (
     "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties"
 )
 MAVEN_CHECKPOINT_PATH = "maven/checkpoints.json"
+
+MAVEN_BASE_URLS = [
+    {
+        "url": "https://repo1.maven.org/maven2",
+        "checkpoint_path": "maven/repo.maven.org/checkpoints.json",
+    },
+    {
+        "url": "https://repo.spring.io/artifactory/release",
+        "checkpoint_path": "maven/repo.spring.io-release/checkpoints.json",
+    },
+    {
+        "url": "https://repo.spring.io/artifactory/milestone",
+        "checkpoint_path": "maven/repo.spring.io-milestone/checkpoints.json",
+    },
+    {
+        "url": "https://plugins.gradle.org/m2",
+        "checkpoint_path": "maven/https://plugins.gradle.org/checkpoints.json",
+    },
+    {
+        "url": "https://repository.apache.org/snapshots",
+        "checkpoint_path": "maven/repository.apache.org/checkpoints.json",
+    },
+]
 
 # We are testing and storing mined packageURLs in one single repo per ecosystem for now
 MINECODE_DATA_MAVEN_REPO = "https://github.com/aboutcode-data/minecode-data-maven-test"
@@ -580,7 +604,13 @@ class MavenNexusCollector:
     WARNING: Processing is rather long: a full index is ~600MB.
     """
 
-    def __init__(self, index_location=None, index_properties_location=None, last_incremental=None):
+    def __init__(
+        self,
+        maven_url=MAVEN_BASE_URL,
+        index_location=None,
+        index_properties_location=None,
+        last_incremental=None,
+    ):
         if index_location and last_incremental:
             raise Exception(
                 "index_location and last_incremental cannot both be set at the same time. "
@@ -593,7 +623,8 @@ class MavenNexusCollector:
         if index_properties_location:
             self.index_properties_location = index_properties_location
         else:
-            index_property_download = self._fetch_index_properties()
+            uri = maven_url.rstrip("/") + "/.index/nexus-maven-repository-index.properties"
+            index_property_download = self._fetch_index_properties(uri=uri)
             self.index_properties_location = index_property_download.path
 
         if self.index_properties_location:
@@ -604,8 +635,12 @@ class MavenNexusCollector:
 
         if last_incremental:
             self.index_location = None
+            maven_index_increment_base_url = (
+                maven_url.rstrip("/") + "/.index/nexus-maven-repository-index.{index}.gz"
+            )
             index_increment_downloads = self._fetch_index_increments(
-                last_incremental=last_incremental
+                last_incremental=last_incremental,
+                maven_index_increment_base_url=maven_index_increment_base_url,
             )
             self.index_increment_locations = [
                 download.path for download in index_increment_downloads
@@ -614,7 +649,8 @@ class MavenNexusCollector:
             self.index_location = index_location
             self.index_increment_locations = []
         else:
-            index_download = self._fetch_index()
+            uri = maven_url.rstrip("/") + "/.index/nexus-maven-repository-index.gz"
+            index_download = self._fetch_index(uri=uri)
             self.index_location = index_download.path
             self.index_increment_locations = []
 
@@ -644,7 +680,9 @@ class MavenNexusCollector:
         index_properties = self._fetch_http(uri)
         return index_properties
 
-    def _fetch_index_increments(self, last_incremental):
+    def _fetch_index_increments(
+        self, last_incremental, maven_index_increment_base_url=MAVEN_INDEX_INCREMENT_BASE_URL
+    ):
         """
         Fetch maven index increments, starting past `last_incremental`, and
         return a list of Downloads with information about where they were saved.
@@ -654,7 +692,7 @@ class MavenNexusCollector:
             if increment_index <= last_incremental:
                 continue
             if key.startswith("nexus.index.incremental"):
-                index_increment_url = MAVEN_INDEX_INCREMENT_BASE_URL.format(index=increment_index)
+                index_increment_url = maven_index_increment_base_url.format(index=increment_index)
                 index_increment = self._fetch_http(index_increment_url)
                 index_increment_downloads.append(index_increment)
         return index_increment_downloads
@@ -757,67 +795,82 @@ def commit_message(commit_batch, total_commit_batch="many"):
 
 
 def collect_packages_from_maven(files_per_commit=PACKAGE_BATCH_SIZE, logger=None):
+    tmp_dir_data = tempfile.mkdtemp()
+    tmp_dir_config = tempfile.mkdtemp()
     # Clone data and config repo
     data_repo = federatedcode.clone_repository(
         repo_url=MINECODE_DATA_MAVEN_REPO,
+        clone_path=tmp_dir_data,
         logger=logger,
     )
+
     config_repo = federatedcode.clone_repository(
         repo_url=pipes.MINECODE_PIPELINES_CONFIG_REPO,
+        clone_path=tmp_dir_config,
         logger=logger,
     )
     if logger:
         logger(f"{MINECODE_DATA_MAVEN_REPO} repo cloned at: {data_repo.working_dir}")
         logger(f"{pipes.MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {config_repo.working_dir}")
 
-    # get last_incremental to see if we can start from incrementals
-    checkpoint = pipes.get_checkpoint_from_file(cloned_repo=config_repo, path=MAVEN_CHECKPOINT_PATH)
-    last_incremental = checkpoint.get("last_incremental")
-    if logger:
-        logger(f"last_incremental: {last_incremental}")
-
-    # download and iterate through maven nexus index
-    maven_nexus_collector = MavenNexusCollector(last_incremental=last_incremental)
-    files_to_commit = []
-    commit_batch = 1
-    for current_purl, package in maven_nexus_collector.get_packages():
-        # write packageURL to file
-        package_base_dir = hashid.get_package_base_dir(purl=current_purl)
-        purl_file = pipes.write_packageurls_to_file(
-            repo=data_repo,
-            base_dir=package_base_dir,
-            packageurls=[package.purl],
-            append=True,
+    for base in MAVEN_BASE_URLS:
+        if logger:
+            logger(f"Collecting packages from Maven base repo: {base['url']}")
+        # get last_incremental to see if we can start from incrementals
+        checkpoint = pipes.get_checkpoint_from_file(
+            cloned_repo=config_repo, path=base["checkpoint_path"]
         )
-        if purl_file not in files_to_commit:
-            files_to_commit.append(purl_file)
+        last_incremental = checkpoint.get("last_incremental")
+        if logger:
+            logger(f"last_incremental: {last_incremental}")
 
-        if len(files_to_commit) == files_per_commit:
+        # download and iterate through maven nexus index
+        maven_nexus_collector = MavenNexusCollector(
+            maven_url=base["url"], last_incremental=last_incremental
+        )
+        files_to_commit = []
+        commit_batch = 1
+        for current_purl, package in maven_nexus_collector.get_packages():
+            # write packageURL to file
+            package_base_dir = hashid.get_package_base_dir(purl=current_purl)
+            relative_datafile_path = os.path.join(package_base_dir, hashid.PURLS_FILENAME)
+            purl_file = pipes.write_packageurls_to_file(
+                repo=data_repo,
+                relative_datafile_path=relative_datafile_path,
+                packageurls=[package.purl],
+                append=True,
+            )
+            if purl_file not in files_to_commit:
+                files_to_commit.append(purl_file)
+
+            if len(files_to_commit) == files_per_commit:
+                federatedcode.commit_and_push_changes(
+                    commit_message=commit_message(commit_batch),
+                    repo=data_repo,
+                    files_to_commit=files_to_commit,
+                    logger=logger,
+                )
+                files_to_commit.clear()
+                commit_batch += 1
+
+        if files_to_commit:
             federatedcode.commit_and_push_changes(
                 commit_message=commit_message(commit_batch),
                 repo=data_repo,
                 files_to_commit=files_to_commit,
                 logger=logger,
             )
-            files_to_commit.clear()
-            commit_batch += 1
 
-    if files_to_commit:
-        federatedcode.commit_and_push_changes(
-            commit_message=commit_message(commit_batch),
-            repo=data_repo,
-            files_to_commit=files_to_commit,
-            logger=logger,
+        # update last_incremental so we can pick up from the proper place next time
+        last_incremental = maven_nexus_collector.index_properties.get(
+            "nexus.index.last-incremental"
         )
-
-    # update last_incremental so we can pick up from the proper place next time
-    last_incremental = maven_nexus_collector.index_properties.get("nexus.index.last-incremental")
-    checkpoint = {"last_incremental": last_incremental}
-    if logger:
-        logger(f"checkpoint: {checkpoint}")
-    pipes.update_checkpoints_in_github(
-        checkpoint=checkpoint, cloned_repo=config_repo, path=MAVEN_CHECKPOINT_PATH
-    )
+        checkpoint = {"last_incremental": last_incremental}
+        if logger:
+            logger(f"checkpoint: {checkpoint}")
+        pipes.update_checkpoints_in_github(
+            checkpoint=checkpoint, cloned_repo=config_repo, path=base["checkpoint_path"]
+        )
 
     repos_to_clean = [data_repo, config_repo]
     return repos_to_clean
