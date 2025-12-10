@@ -8,16 +8,21 @@
 #
 
 
-import shutil
-from collections.abc import Iterable
 import logging
-from minecode_pipelines import pipes
-from minecode_pipelines.pipes import write_packageurls_to_file
+import shutil
+import time
+from collections.abc import Callable
+from collections.abc import Iterable
+from pathlib import Path
 
+from aboutcode.federated import DataCluster
 from aboutcode.federated import DataFederation
 from aboutcode.pipeline import LoopProgress
 from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
+
+from minecode_pipelines import pipes
+from minecode_pipelines.pipes import write_packageurls_to_file
 
 module_logger = logging.getLogger(__name__)
 
@@ -33,12 +38,18 @@ class MineCodeBasePipeline(Pipeline):
 
     download_inputs = False
 
+    # Control wether to ovewrite or append mined purls to existing `purls.yml` file
+    append_purls = False
+
+    checked_out_repos = {}
+
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
             # Add step(s) for downloading/cloning resource as required.
+            cls.fetch_federation_config,
             cls.mine_and_publish_packageurls,
             cls.delete_working_dir,
         )
@@ -57,6 +68,7 @@ class MineCodeBasePipeline(Pipeline):
         Return the estimated number of packages for which PackageURLs are to be mined.
 
         Used by ``mine_and_publish_packageurls`` to log the progress of PackageURL mining.
+        Note: If estimating package count is not feasable return `None`
         """
         raise NotImplementedError
 
@@ -71,68 +83,26 @@ class MineCodeBasePipeline(Pipeline):
         """Create temporary working dir."""
         self.working_path = federatedcode.create_federatedcode_working_dir()
 
-    def mine_and_publish_packageurls(self):
-        """Mine and publish PackageURLs."""
+    def fetch_federation_config(self):
+        """Fetch config for PackageURL Federation."""
         data_federation = DataFederation.from_url(
             name="aboutcode-data",
             remote_root_url="https://github.com/aboutcode-data",
         )
-        data_cluster = data_federation.get_cluster("purls")
-        checked_out_repos = {}
-        batch_size = 4000
-        total_file_processed_count = 0
-        total_commit_count = 0
-        package_count = self.packages_count()
-        progress = LoopProgress(
-            total_iterations=package_count,
+        self.data_cluster = data_federation.get_cluster("purls")
+
+    def mine_and_publish_packageurls(self):
+        """Mine and publish PackageURLs."""
+
+        _mine_and_publish_packageurls(
+            packageurls=self.mine_packageurls(),
+            total_package_count=self.packages_count(),
+            data_cluster=self.data_cluster,
+            checked_out_repos=self.checked_out_repos,
+            working_path=self.working_path,
+            append_purls=self.append_purls,
+            commit_msg_func=self.commit_message,
             logger=self.log,
-            progress_step=1,
-        )
-
-        self.log(f"Mine PackageURL for {package_count:,d} packages.")
-        for base, purls in progress.iter(self.mine_packageurls()):
-            package_repo, datafile_path = data_cluster.get_datafile_repo_and_path(purl=base)
-
-            if package_repo not in checked_out_repos:
-                checked_out_repos[package_repo] = pipes.init_local_checkout(
-                    repo_name=package_repo,
-                    working_path=self.working_path,
-                    logger=self.log,
-                )
-
-            checkout = checked_out_repos[package_repo]
-
-            purl_file = write_packageurls_to_file(
-                repo=checkout["repo"],
-                relative_datafile_path=datafile_path,
-                packageurls=sorted(purls),
-            )
-            checkout["file_to_commit"].append(purl_file)
-            checkout["file_processed_count"] += 1
-
-            if len(checkout["file_to_commit"]) > batch_size:
-                pipes.commit_and_push_checkout(
-                    local_checkout=checkout,
-                    commit_message=self.commit_message(checkout["commit_count"] + 1),
-                    logger=self.log,
-                )
-
-        for checkout in checked_out_repos.values():
-            final_commit_count = checkout["commit_count"] + 1
-            pipes.commit_and_push_checkout(
-                local_checkout=checkout,
-                commit_message=self.commit_message(
-                    commit_count=final_commit_count,
-                    total_commit_count=final_commit_count,
-                ),
-                logger=self.log,
-            )
-            total_commit_count += checkout["commit_count"]
-            total_file_processed_count += checkout["file_processed_count"]
-
-        self.log(f"Processed PackageURL for {total_file_processed_count:,d} NuGet packages.")
-        self.log(
-            f"Pushed new PackageURL in {total_commit_count:,d} commits in {len(checked_out_repos):,d} repos."
         )
 
     def delete_working_dir(self):
@@ -169,3 +139,90 @@ class MineCodeBasePipeline(Pipeline):
         print(message)
         message = message.replace("\r", "\\r").replace("\n", "\\n")
         self.append_to_log(message)
+
+
+def _mine_and_publish_packageurls(
+    packageurls: Iterable,
+    total_package_count: int,
+    data_cluster: DataCluster,
+    checked_out_repos: dict,
+    working_path: Path,
+    append_purls: bool,
+    commit_msg_func: Callable,
+    logger: Callable,
+    batch_size: int = 4000,
+    checkpoint_func: Callable = None,
+    checkpoint_freq: int = 30,
+):
+    """Mine and publish PackageURLs."""
+    total_file_processed_count = 0
+    total_commit_count = 0
+    iterator = packageurls
+
+    last_checkpoint_call = time.time()
+    checkpoint_interval = checkpoint_freq * 60
+
+    if total_package_count:
+        progress = LoopProgress(
+            total_iterations=total_package_count,
+            logger=logger,
+            progress_step=1,
+        )
+        iterator = progress.iter(iterator)
+        logger(f"Mine PackageURL for {total_package_count:,d} packages.")
+
+    for base, purls in iterator:
+        if not purls or not base:
+            continue
+
+        package_repo, datafile_path = data_cluster.get_datafile_repo_and_path(purl=base)
+        if package_repo not in checked_out_repos:
+            checked_out_repos[package_repo] = pipes.init_local_checkout(
+                repo_name=package_repo,
+                working_path=working_path,
+                logger=logger,
+            )
+
+        checkout = checked_out_repos[package_repo]
+        purl_file = write_packageurls_to_file(
+            repo=checkout["repo"],
+            relative_datafile_path=datafile_path,
+            packageurls=purls,
+            append=append_purls,
+        )
+        checkout["file_to_commit"].add(purl_file)
+        checkout["file_processed_count"] += 1
+
+        if len(checkout["file_to_commit"]) > batch_size:
+            pipes.commit_and_push_checkout(
+                local_checkout=checkout,
+                commit_message=commit_msg_func(checkout["commit_count"] + 1),
+                logger=logger,
+            )
+
+        time_now = time.time()
+        checkpoint_due = time_now - last_checkpoint_call >= checkpoint_interval
+        if checkpoint_func and checkpoint_due:
+            checkpoint_func()
+            last_checkpoint_call = time_now
+
+    for checkout in checked_out_repos.values():
+        final_commit_count = checkout["commit_count"] + 1
+        pipes.commit_and_push_checkout(
+            local_checkout=checkout,
+            commit_message=commit_msg_func(
+                commit_count=final_commit_count,
+                total_commit_count=final_commit_count,
+            ),
+            logger=logger,
+        )
+        total_commit_count += checkout["commit_count"]
+        total_file_processed_count += checkout["file_processed_count"]
+
+    if checkpoint_func:
+        checkpoint_func()
+
+    logger(f"Processed PackageURL for {total_file_processed_count:,d} packages.")
+    logger(
+        f"Pushed new PackageURL in {total_commit_count:,d} commits in {len(checked_out_repos):,d} repos."
+    )

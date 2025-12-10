@@ -20,67 +20,42 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-import os
-from scanpipe.pipelines import Pipeline
-from scanpipe.pipes import federatedcode
-
-from minecode_pipelines import pipes
-from minecode_pipelines.miners.cran import fetch_cran_db
+import json
+from minecode_pipelines.pipelines import MineCodeBasePipeline
 from minecode_pipelines.pipes import cran
+from minecode_pipelines.pipes.cran import fetch_cran_db
 
 
-MINECODE_DATA_CRAN_REPO = os.environ.get(
-    "MINECODE_DATA_CRAN_REPO", "https://github.com/aboutcode-data/minecode-data-cran-test"
-)
-
-
-class MineCran(Pipeline):
-    """
-    Mine all packageURLs from a CRAN R index and publish them to a FederatedCode repo.
-    """
+class MineCran(MineCodeBasePipeline):
+    """Pipeline to mine CRAN R packages and publish them to FederatedCode."""
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.setup_federatedcode_cran,
-            cls.mine_and_publish_cran_packageurls,
-            cls.cleanup_db_and_repo,
+            cls.create_federatedcode_working_dir,
+            cls.fetch_federation_config,
+            cls.download_cran_db,
+            cls.mine_and_publish_packageurls,
+            cls.delete_working_dir,
         )
 
-    def check_federatedcode_eligibility(self):
+    def download_cran_db(self):
         """
-        Check if the project fulfills the following criteria for
-        pushing the project result to FederatedCode.
+        Download the full CRAN package database
         """
-        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
+        self.db_path = fetch_cran_db(working_path=self.working_path, logger=self.log)
 
-    def setup_federatedcode_cran(self):
+    def packages_count(self):
         """
-        Clone the FederatedCode CRAN repository and download the CRAN DB JSON file.
+        Return the count of packages found in the downloaded CRAN JSON database.
         """
-        self.cloned_data_repo = federatedcode.clone_repository(MINECODE_DATA_CRAN_REPO)
-        self.db_path = fetch_cran_db()
+        if not getattr(self, "db_path", None) or not self.db_path.exists():
+            return None
 
-        if self.log:
-            self.log(
-                f"{MINECODE_DATA_CRAN_REPO} repo cloned at: {self.cloned_data_repo.working_dir}"
-            )
+        with open(self.db_path, encoding="utf-8") as f:
+            return sum(1 for _ in json.load(f))
 
-    def mine_and_publish_cran_packageurls(self):
-        """Get cran packageURLs for all mined cran package names."""
-        cran.mine_and_publish_cran_packageurls(
-            cloned_data_repo=self.cloned_data_repo, db_path=self.db_path, logger=self.log
-        )
-
-    def cleanup_db_and_repo(self):
-        self.log(f"Cleaning database file at: {self.db_path}")
-        os.remove(self.db_path)
-
-        self.log(
-            f"Deleting cloned repo {MINECODE_DATA_CRAN_REPO} from: {self.cloned_data_repo.working_dir}"
-        )
-        pipes.delete_cloned_repos(
-            repos=[self.cloned_data_repo],
-            logger=self.log,
-        )
+    def mine_packageurls(self):
+        """Mine Cran PackageURLs from cran package database."""
+        return cran.mine_cran_packageurls(db_path=self.db_path)

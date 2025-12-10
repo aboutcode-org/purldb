@@ -46,7 +46,7 @@ def get_checkpoint_from_file(cloned_repo, path):
         return {}
 
 
-def update_checkpoints_in_github(checkpoint, cloned_repo, path):
+def update_checkpoints_in_github(checkpoint, cloned_repo, path, logger):
     from scanpipe.pipes.federatedcode import commit_and_push_changes
 
     checkpoint_path = os.path.join(cloned_repo.working_dir, path)
@@ -56,6 +56,7 @@ def update_checkpoints_in_github(checkpoint, cloned_repo, path):
         repo=cloned_repo,
         files_to_commit=[checkpoint_path],
         commit_message=commit_message,
+        logger=logger,
     )
 
 
@@ -86,12 +87,10 @@ def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=
 
     purl_file_full_path = Path(repo.working_dir) / relative_datafile_path
     if append and purl_file_full_path.exists():
-        existing_purls = load_data_from_yaml_file(purl_file_full_path)
-        for packageurl in packageurls:
-            if packageurl not in existing_purls:
-                existing_purls.append(packageurl)
-        packageurls = existing_purls
-    write_data_to_yaml_file(path=purl_file_full_path, data=packageurls)
+        existing_purls = load_data_from_yaml_file(purl_file_full_path) or []
+        existing_purls.extend(packageurls)
+        packageurls = list(set(existing_purls))
+    write_data_to_yaml_file(path=purl_file_full_path, data=sorted(packageurls))
     return relative_datafile_path
 
 
@@ -206,7 +205,7 @@ def init_local_checkout(repo_name, working_path, logger):
     )
     return {
         "repo": repo_obj[-1],
-        "file_to_commit": [],
+        "file_to_commit": set(),
         "file_processed_count": 0,
         "commit_count": 0,
     }
