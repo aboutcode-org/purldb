@@ -22,8 +22,6 @@
 
 from datetime import datetime
 
-from minecode_pipelines import VERSION
-from minecode_pipelines.pipes import write_packageurls_to_file
 from minecode_pipelines.pipes import fetch_checkpoint_from_github
 from minecode_pipelines.pipes import update_checkpoints_in_github
 from minecode_pipelines.pipes import update_checkpoints_file_in_github
@@ -45,18 +43,14 @@ from minecode_pipelines.miners.npm import get_current_last_seq
 from minecode_pipelines.miners.npm import load_npm_packages
 from minecode_pipelines.miners.npm import get_npm_packageurls
 from minecode_pipelines.miners.npm import NPM_REPLICATE_REPO
-
 from minecode_pipelines.miners.npm import NPM_TYPE
-from minecode_pipelines.utils import grouper
+
+from minecode_pipelines.utils import get_temp_dir
 
 from packageurl import PackageURL
 
-from aboutcode.hashid import get_package_base_dir
-
-
 from scanpipe.pipes.federatedcode import clone_repository
-from scanpipe.pipes.federatedcode import commit_changes
-from scanpipe.pipes.federatedcode import push_changes
+from scanpipe.pipes.federatedcode import delete_local_clone
 
 
 PACKAGE_FILE_NAME = "NPMPackages.json"
@@ -93,7 +87,11 @@ def mine_npm_packages(logger=None):
     if logger:
         logger(f"Mining state from checkpoint: {state}")
 
-    cloned_repo = clone_repository(repo_url=MINECODE_PIPELINES_CONFIG_REPO)
+    config_repo = clone_repository(
+        repo_url=MINECODE_PIPELINES_CONFIG_REPO,
+        clone_path=get_temp_dir(),
+        logger=logger,
+    )
 
     # This is the first time we are syncing from npm replicate
     if not state:
@@ -115,7 +113,7 @@ def mine_npm_packages(logger=None):
         )
         update_checkpoints_file_in_github(
             checkpoints_file=compressed_packages_file,
-            cloned_repo=cloned_repo,
+            cloned_repo=config_repo,
             path=COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH,
         )
 
@@ -124,10 +122,11 @@ def mine_npm_packages(logger=None):
             logger(f"Updating checkpoint mining last_seq to: {last_seq}")
 
         update_npm_checkpoints(
-            cloned_repo=cloned_repo,
+            cloned_repo=config_repo,
             state=INITIAL_SYNC_STATE,
             last_seq=last_seq,
             checkpoint_path=NPM_CHECKPOINT_PATH,
+            logger=logger,
         )
 
     elif state == INITIAL_SYNC_STATE:
@@ -140,7 +139,7 @@ def mine_npm_packages(logger=None):
         )
 
         compressed_packages_file = fetch_checkpoint_by_git(
-            cloned_repo=cloned_repo,
+            cloned_repo=config_repo,
             checkpoint_path=COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH,
         )
         packages_file = decompress_packages_file(
@@ -167,7 +166,7 @@ def mine_npm_packages(logger=None):
             name=PACKAGE_FILE_NAME,
         )
 
-    return packages_file, state, last_seq
+    return packages_file, state, last_seq, config_repo
 
 
 def update_npm_checkpoints(
@@ -176,6 +175,7 @@ def update_npm_checkpoints(
     state=None,
     last_seq=None,
     config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+    logger=None,
 ):
     checkpoint = fetch_checkpoint_from_github(
         config_repo=config_repo,
@@ -191,6 +191,7 @@ def update_npm_checkpoints(
         checkpoint=checkpoint,
         cloned_repo=cloned_repo,
         path=checkpoint_path,
+        logger=logger,
     )
 
 
@@ -209,9 +210,9 @@ def fetch_last_seq_mined(config_repo, settings_path):
     return checkpoints.get("last_seq")
 
 
-def mine_and_publish_npm_packageurls(packages_file, state, last_seq, logger=None):
+def get_npm_packages_to_sync(packages_file, state, logger=None):
+
     if logger:
-        logger(f"Last serial number mined: {last_seq}")
         logger(f"Mining state: {state}")
 
     # this is either from npm replicate or from checkpoints
@@ -237,95 +238,61 @@ def mine_and_publish_npm_packageurls(packages_file, state, last_seq, logger=None
             logger(
                 f"Starting initial package mining for {len(packages_to_sync)} packages from checkpoint"
             )
+    
+    return packages_to_sync, synced_packages
 
-    # clone repo
-    cloned_data_repo = clone_repository(repo_url=MINECODE_DATA_NPM_REPO)
-    cloned_config_repo = clone_repository(repo_url=MINECODE_PIPELINES_CONFIG_REPO)
+
+def mine_and_publish_npm_packageurls(packages_to_sync, packages_mined, logger=None):
+
     if logger:
-        logger(f"{MINECODE_DATA_NPM_REPO} repo cloned at: {cloned_data_repo.working_dir}")
-        logger(f"{MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {cloned_config_repo.working_dir}")
+        logger("Starting package mining for a batch of packages")
 
-    for package_batch in grouper(n=PACKAGE_BATCH_SIZE, iterable=packages_to_sync):
-        packages_mined = []
-        purls = []
-        purl_files = []
+    for package_name in packages_to_sync:
+        if not package_name:
+            continue
 
+        # fetch packageURLs for package
         if logger:
-            logger("Starting package mining for a batch of packages")
+            logger(f"getting packageURLs for package: {package_name}")
 
-        for package_name in package_batch:
-            if not package_name:
-                continue
-
-            # fetch packageURLs for package
+        packageurls = get_npm_packageurls(package_name)
+        if not packageurls:
             if logger:
-                logger(f"getting packageURLs for package: {package_name}")
+                logger(f"Could not fetch package versions for package: {package_name}")
+            continue
 
-            packageurls = get_npm_packageurls(package_name)
-            if not packageurls:
-                if logger:
-                    logger(f"Could not fetch package versions for package: {package_name}")
-                continue
+        base_purl = PackageURL(type=NPM_TYPE, name=package_name).to_string()
+        packages_mined.append(base_purl)
 
-            # get repo and path for package
-            base_purl = PackageURL(type=NPM_TYPE, name=package_name).to_string()
-            package_base_dir = get_package_base_dir(purl=base_purl)
+        yield base_purl, packageurls
 
-            if logger:
-                logger(f"writing packageURLs for package: {base_purl} at: {package_base_dir}")
-                purls_string = " ".join(packageurls)
-                logger(f"packageURLs: {purls_string}")
 
-            # write packageURLs to file
-            purl_file = write_packageurls_to_file(
-                repo=cloned_data_repo,
-                base_dir=package_base_dir,
-                packageurls=packageurls,
-            )
-            purl_files.append(purl_file)
-            purls.append(base_purl)
+def save_mined_packages_in_checkpoint(packages_mined, synced_packages, config_repo, logger=None):
 
-            packages_mined.append(package_name)
+    # As we are mining the packages to sync with the index,
+    # we need to update mined packages checkpoint for every batch
+    # so we can continue mining the other packages after restarting
+    if logger:
+        logger(f"Checkpointing processed packages to: {NPM_PACKAGES_CHECKPOINT_PATH}")
 
-        if logger:
-            purls_string = " ".join(purls)
-            logger("Committing and pushing changes for a batch of packages: ")
-            logger(f"{purls_string}")
+    packages_checkpoint = packages_mined + synced_packages
+    update_mined_packages_in_checkpoint(
+        packages=packages_checkpoint,
+        config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+        cloned_repo=config_repo,
+        checkpoint_path=NPM_PACKAGES_CHECKPOINT_PATH,
+        logger=logger,
+    )
 
-        # commit changes
-        commit_changes(
-            repo=cloned_data_repo,
-            files_to_commit=purl_files,
-            purls=purls,
-            mine_type="packageURL",
-            tool_name="pkg:pypi/minecode-pipelines",
-            tool_version=VERSION,
-        )
 
-        # Push changes to remote repository
-        push_changes(repo=cloned_data_repo)
-
-        # As we are mining the packages to sync with the index,
-        # we need to update mined packages checkpoint for every batch
-        # so we can continue mining the other packages after restarting
-        if logger:
-            logger(f"Checkpointing processed packages to: {NPM_PACKAGES_CHECKPOINT_PATH}")
-
-        packages_checkpoint = packages_mined + synced_packages
-        update_mined_packages_in_checkpoint(
-            packages=packages_checkpoint,
-            config_repo=MINECODE_PIPELINES_CONFIG_REPO,
-            cloned_repo=cloned_config_repo,
-            checkpoint_path=NPM_PACKAGES_CHECKPOINT_PATH,
-        )
-
+def update_state_and_checkpoints(state, last_seq, config_repo, logger=None):
     # If we are finished mining all the packages in the intial sync, we can now
     # periodically sync the packages from latest
     if state == INITIAL_SYNC_STATE:
         if logger:
             logger(f"{INITIAL_SYNC_STATE} completed. starting: {PERIODIC_SYNC_STATE}")
         update_checkpoint_state(
-            cloned_repo=cloned_config_repo,
+            cloned_repo=config_repo,
             state=PERIODIC_SYNC_STATE,
             checkpoint_path=NPM_CHECKPOINT_PATH,
         )
@@ -337,18 +304,21 @@ def mine_and_publish_npm_packageurls(packages_file, state, last_seq, logger=None
             logger(f"{PERIODIC_SYNC_STATE} completed. Updating last seq to: {last_seq}")
 
         update_npm_checkpoints(
-            cloned_repo=cloned_config_repo,
+            cloned_repo=config_repo,
             checkpoint_path=NPM_CHECKPOINT_PATH,
             state=PERIODIC_SYNC_STATE,
             last_seq=last_seq,
+            logger=logger,
         )
 
     # Refresh mined packages checkpoint
     update_checkpoints_in_github(
         checkpoint={"packages_mined": []},
-        cloned_repo=cloned_config_repo,
+        cloned_repo=config_repo,
         path=NPM_PACKAGES_CHECKPOINT_PATH,
+        logger=logger,
     )
 
-    repos_to_clean = [cloned_data_repo, cloned_config_repo]
-    return repos_to_clean
+    if logger:
+        logger(f"Deleting local clone at: {config_repo.working_dir}")
+    delete_local_clone(config_repo)

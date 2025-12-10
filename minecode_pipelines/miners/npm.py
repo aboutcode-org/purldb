@@ -43,7 +43,7 @@ downloads available for this release.
 
 NPM_REPLICATE_REPO = "https://replicate.npmjs.com/"
 NPM_REGISTRY_REPO = "https://registry.npmjs.org/"
-NPM_TYPE = "NPM"
+NPM_TYPE = "npm"
 NPM_REPLICATE_BATCH_SIZE = 10000
 
 

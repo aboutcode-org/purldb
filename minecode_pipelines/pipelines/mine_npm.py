@@ -20,47 +20,88 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from scanpipe.pipelines import Pipeline
-from scanpipe.pipes import federatedcode
-
 from minecode_pipelines.pipes import npm
-from minecode_pipelines import pipes
+from minecode_pipelines.pipelines import MineCodeBasePipeline
+from minecode_pipelines.pipelines import _mine_and_publish_packageurls
 
 
-class MineNPM(Pipeline):
+class MineNPM(MineCodeBasePipeline):
     """
     Mine all packageURLs from a npm index and publish them to
     a FederatedCode repo.
     """
 
+    package_batch_size = 70
+
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
+            cls.create_federatedcode_working_dir,
             cls.mine_npm_packages,
-            cls.mine_and_publish_npm_packageurls,
-            cls.delete_cloned_repos,
+            cls.get_npm_packages_to_sync,
+            cls.fetch_federation_config,
+            cls.mine_and_publish_packageurls,
+            cls.update_state_and_checkpoints,
+            cls.delete_working_dir,
         )
-
-    def check_federatedcode_eligibility(self):
-        """
-        Check if the project fulfills the following criteria for
-        pushing the project result to FederatedCode.
-        """
-        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
     def mine_npm_packages(self):
         """Mine npm package names from npm indexes or checkpoint."""
-        self.npm_packages, self.state, self.last_seq = npm.mine_npm_packages(logger=self.log)
+        (
+            self.npm_packages, self.state, self.last_seq, self.config_repo
+        ) = npm.mine_npm_packages(logger=self.log)
 
-    def mine_and_publish_npm_packageurls(self):
-        """Get npm packageURLs for all mined npm package names."""
-        self.repos = npm.mine_and_publish_npm_packageurls(
+    def get_npm_packages_to_sync(self):
+        """Get npm packages which needs to be synced using checkpoint."""
+        self.packages, self.synced_packages = npm.get_npm_packages_to_sync(
             packages_file=self.npm_packages,
             state=self.state,
-            last_seq=self.last_seq,
             logger=self.log,
         )
 
-    def delete_cloned_repos(self):
-        pipes.delete_cloned_repos(repos=self.repos, logger=self.log)
+    def packages_count(self):
+        return len(self.packages)
+
+    def mine_packageurls(self):
+        """Yield npm packageURLs for all mined npm package names."""
+        self.packages_mined = []
+        yield from npm.mine_and_publish_npm_packageurls(
+            packages_to_sync=self.packages,
+            packages_mined=self.packages_mined,
+            logger=self.log,
+        )
+
+    def save_check_point(self):
+        npm.save_mined_packages_in_checkpoint(
+            packages_mined=self.packages_mined,
+            synced_packages=self.synced_packages,
+            config_repo=self.config_repo,
+            logger=self.log,
+        )
+        self.packages_mined = []
+
+    def mine_and_publish_packageurls(self):
+        """Mine and publish PackageURLs."""
+
+        _mine_and_publish_packageurls(
+            packageurls=self.mine_packageurls(),
+            total_package_count=self.packages_count(),
+            data_cluster=self.data_cluster,
+            checked_out_repos=self.checked_out_repos,
+            working_path=self.working_path,
+            append_purls=self.append_purls,
+            commit_msg_func=self.commit_message,
+            logger=self.log,
+            checkpoint_func=self.save_check_point,
+            checkpoint_on_commit=True,
+            batch_size=self.package_batch_size,
+        )
+
+    def update_state_and_checkpoints(self):
+        npm.update_state_and_checkpoints(
+            state=self.state,
+            last_seq=self.last_seq,
+            config_repo=self.config_repo,
+            logger=self.log,
+        )

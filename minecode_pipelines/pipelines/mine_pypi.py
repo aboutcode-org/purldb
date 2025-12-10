@@ -24,6 +24,7 @@ from minecode_pipelines.pipes import pypi
 from minecode_pipelines.pipelines import MineCodeBasePipeline
 from minecode_pipelines.pipelines import _mine_and_publish_packageurls
 
+
 class MinePypi(MineCodeBasePipeline):
     """
     Mine all packageURLs from a pypi index and publish them to
