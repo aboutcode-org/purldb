@@ -93,9 +93,7 @@ def get_package_repository(project_purl, logger=None):
     package_base_dir = hashid.get_package_base_dir(purl=project_purl)
     package_repo_name = package_base_dir.parts[0]
 
-    package_scan_path = (
-        package_base_dir / project_package_url.version / "scancodeio.json"
-    )
+    package_scan_path = package_base_dir / project_package_url.version / "scancodeio.json"
     package_git_repo_url = urljoin(git_account_url, f"{package_repo_name}.git")
 
     return package_repo_name, package_git_repo_url, package_scan_path
@@ -118,13 +116,9 @@ def check_federatedcode_eligibility(project):
     if not is_available():
         raise Exception("FederatedCode Git account is not available.")
 
-    all_executed_pipeline_successful = all(
-        run.task_succeeded for run in project.runs.executed()
-    )
+    all_executed_pipeline_successful = all(run.task_succeeded for run in project.runs.executed())
 
-    source_is_download_url = any(
-        source.download_url for source in project.inputsources.all()
-    )
+    source_is_download_url = any(source.download_url for source in project.inputsources.all())
 
     if not all_executed_pipeline_successful:
         raise Exception("Make sure all the pipelines has completed successfully.")
