@@ -57,6 +57,7 @@ class Command(VerboseCommand):
             "-d",
             "--working-directory",
             type=str,
+            required=False,
             help="Directory where FederatedCode repos will be cloned",
         )
 
@@ -95,10 +96,12 @@ class Command(VerboseCommand):
             # iterate through checked out repos and import data
             packages_to_write = []
             for repo_name, repo in checked_out_repos.items():
-                for i, purl_str in enumerate(yield_purl_strs_from_yaml_files(repo.working_dir)):
+                logger.log(f"Creating Packages from {repo_name}")
+                for i, purl_str in enumerate(yield_purl_strs_from_yaml_files(repo.working_dir), start=1):
                     purl = PackageURL.from_string(purl_str)
                     if packages_to_write and not i % 5000:
                         packagedb_models.Package.objects.bulk_create(packages_to_write)
+                        logger.log(f"Created {i} Packages from {repo_name}")
                         packages_to_write.clear()
                     package = packagedb_models.Package(
                         type=purl.type,
@@ -114,6 +117,7 @@ class Command(VerboseCommand):
 
             if packages_to_write:
                 packagedb_models.Package.objects.bulk_create(packages_to_write)
+                logger.log(f"Created {i} Packages from {repo_name}")
                 packages_to_write.clear()
 
             # clean up
