@@ -21,43 +21,38 @@
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
 import json
+import os
+from datetime import datetime
 from pathlib import Path
+from aboutcode import hashid
 from packageurl import PackageURL
 
-import shutil
-import subprocess
-from urllib.parse import urlparse
+from minecode_pipelines.miners.swift import fetch_git_tags_raw
+from minecode_pipelines.miners.swift import get_tags_and_commits_from_git_output
+from minecode_pipelines.miners.swift import split_org_repo
+
+from minecode_pipelines.pipes import update_checkpoints_in_github
+from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
+from minecode_pipelines.pipes import write_data_to_yaml_file
+
+from minecode_pipelines.pipes import get_checkpoint_from_file
+from scanpipe.pipes.federatedcode import clone_repository
+
+from scanpipe.pipes.federatedcode import commit_and_push_changes
+from minecode_pipelines.utils import cycle_from_index
+
+PACKAGE_BATCH_SIZE = 1000
+SWIFT_CHECKPOINT_PATH = "swift/checkpoints.json"
+
+MINECODE_DATA_SWIFT_REPO = os.environ.get(
+    "MINECODE_DATA_SWIFT_REPO", "https://github.com/aboutcode-data/minecode-data-swift-test"
+)
+MINECODE_SWIFT_INDEX_REPO = "https://github.com/SwiftPackageIndex/PackageList"
 
 
-def mine_swift_packageurls(packages_urls, logger):
-    """Mine Swift PackageURLs from package index."""
-
-    for package_repo_url in packages_urls:
-        logger(f"Processing package repo URL: {package_repo_url}")
-        git_ls_remote = fetch_git_tags_raw(package_repo_url, 60, logger)
-        if not git_ls_remote:
-            continue
-
-        tags_and_commits = get_tags_and_commits_from_git_output(git_ls_remote)
-        if not tags_and_commits:
-            continue
-
-        yield generate_package_urls(
-            package_repo_url=package_repo_url, tags_and_commits=tags_and_commits, logger=logger
-        )
-
-
-def load_swift_package_urls(swift_index_repo):
-    packages_path = Path(swift_index_repo.working_dir) / "packages.json"
-    with open(packages_path) as f:
-        packages_urls = json.load(f)
-    return packages_urls
-
-
-def generate_package_urls(package_repo_url, tags_and_commits, logger):
-    org, name = split_org_repo(package_repo_url, logger)
-    if not org or not name:
-        return None, []
+def store_swift_packages(package_repo_url, tags_and_commits, cloned_data_repo):
+    """Collect Swift package versions into purls and write them to the repo."""
+    org, name = split_org_repo(package_repo_url)
     org = "github.com/" + org
     base_purl = PackageURL(type="swift", namespace=org, name=name)
     updated_purls = []
@@ -74,91 +69,103 @@ def generate_package_urls(package_repo_url, tags_and_commits, logger):
 
         if purl:
             updated_purls.append(purl)
-    logger(
-        f"Generated {len(updated_purls)} and base PURL: {base_purl} PackageURLs for {package_repo_url}"
+
+    purl_yaml_path = cloned_data_repo.working_dir / hashid.get_package_purls_yml_file_path(
+        base_purl
     )
-    return base_purl, updated_purls
+    write_data_to_yaml_file(path=purl_yaml_path, data=updated_purls)
+    return purl_yaml_path, base_purl
 
 
-def is_safe_repo_url(repo_url: str) -> bool:
-    """Return True if the URL is HTTPS GitHub with .git suffix or has at least two path segments."""
-    parsed = urlparse(repo_url)
-    return (
-        parsed.scheme == "https" and parsed.netloc == "github.com" and parsed.path.endswith(".git")
+def mine_and_publish_swift_packageurls(logger):
+    """
+    Clone Swift-related repositories, process Swift packages, and publish their
+    Package URLs (purls) to the data repository.
+
+    This function:
+      1. Clones the Swift index, data, and pipelines config repositories.
+      2. Loads the list of Swift package repositories from `packages.json`.
+      3. Iterates over each package, fetching tags/commits and generating purls.
+      4. Commits and pushes purl files to the data repository in batches.
+      5. Updates checkpoint information in the config repository to track progress.
+
+    logger (callable): Optional logging function for status updates.
+    Returns: list: A list of cloned repository objects in the order:
+    [swift_index_repo, cloned_data_repo, cloned_config_repo]
+    """
+
+    swift_index_repo = clone_repository(MINECODE_SWIFT_INDEX_REPO)
+    cloned_data_repo = clone_repository(MINECODE_DATA_SWIFT_REPO)
+    cloned_config_repo = clone_repository(MINECODE_PIPELINES_CONFIG_REPO)
+
+    if logger:
+        logger(f"{MINECODE_SWIFT_INDEX_REPO} repo cloned at: {swift_index_repo.working_dir}")
+        logger(f"{MINECODE_DATA_SWIFT_REPO} repo cloned at: {cloned_data_repo.working_dir}")
+        logger(f"{MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {cloned_config_repo.working_dir}")
+
+    packages_path = Path(swift_index_repo.working_dir) / "packages.json"
+    with open(packages_path) as f:
+        packages_urls = json.load(f)
+
+    counter = 0
+    purl_files = []
+    purls = []
+
+    swift_checkpoint = get_checkpoint_from_file(
+        cloned_repo=cloned_config_repo, path=SWIFT_CHECKPOINT_PATH
     )
 
+    start_index = swift_checkpoint.get("start_index", 0)
 
-def fetch_git_tags_raw(repo_url: str, timeout: int = 60, logger=None) -> str | None:
-    """Run `git ls-remote` on a GitHub repo and return raw output, or None on error."""
-    git_executable = shutil.which("git")
-    if git_executable is None:
-        logger("Git executable not found in PATH")
-        return None
+    if logger:
+        logger(f"Processing total files: {len(packages_urls)}")
 
-    if not repo_url:
-        logger("No repository URL provided")
-        return None
+    for idx, package_repo_url in enumerate(cycle_from_index(packages_urls, start_index)):
+        git_ls_remote = fetch_git_tags_raw(package_repo_url, 60, logger)
+        if not git_ls_remote:
+            continue
 
-    if not is_safe_repo_url(repo_url):
-        logger(f"Unsafe repository URL: {repo_url}")
-        return None
+        tags_and_commits = get_tags_and_commits_from_git_output(git_ls_remote)
+        if not tags_and_commits:
+            continue
 
-    try:
-        result = subprocess.run(  # NOQA
-            [git_executable, "ls-remote", repo_url],
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=timeout,
+        purl_file, base_purl = store_swift_packages(
+            package_repo_url, tags_and_commits, cloned_data_repo
         )
-        return result.stdout.strip()
-    except subprocess.CalledProcessError as e:
-        logger(f"Failed to fetch tags for {repo_url}: {e}")
-    except subprocess.TimeoutExpired:
-        logger(f"Timeout fetching tags for {repo_url}")
-    return None
 
+        purl_files.append(purl_file)
+        purls.append(str(base_purl))
+        counter += 1
 
-# FIXME duplicated with miners github
-def split_org_repo(url_like, logger):
-    """
-    Given a URL-like string to a GitHub repo or a repo name as in org/name,
-    split and return the org and name.
+        if counter >= PACKAGE_BATCH_SIZE:
+            if purls and purl_files:
+                logger(f"Committing packageURLs: {', '.join(purls)}")
+                commit_and_push_changes(
+                    repo=cloned_data_repo, files_to_commit=purl_files, purls=purls, logger=logger
+                )
 
-    For example:
-    >>> split_org_repo('foo/bar')
-    ('foo', 'bar')
-    >>> split_org_repo('https://api.github.com/repos/foo/bar/')
-    ('foo', 'bar')
-    >>> split_org_repo('github.com/foo/bar/')
-    ('foo', 'bar')
-    >>> split_org_repo('git://github.com/foo/bar.git')
-    ('foo', 'bar')
-    """
-    segments = [s.strip() for s in url_like.split("/") if s.strip()]
-    if not len(segments) >= 2:
-        logger(f"Could not parse org and name from URL-like: {url_like}")
-        return None, None
-    org = segments[-2]
-    name = segments[-1]
-    if name.endswith(".git"):
-        name, _, _ = name.rpartition(".git")
-    return org, name
+            purl_files = []
+            purls = []
+            counter = 0
 
+            if start_index == idx:
+                continue
 
-def get_tags_and_commits_from_git_output(git_ls_remote):
-    """
-    Yield tuples of (tag, commit), given a git ls-remote output
-    """
-    tags_and_commits = []
-    for line in git_ls_remote.split("\n"):
-        # line: kjwfgeklngelkfjofjeo123   refs/tags/1.2.3
-        line_segments = line.split("\t")
-        # segments: ["kjwfgeklngelkfjofjeo123", "refs/tags/1.2.3"]
-        if len(line_segments) > 1 and (
-            line_segments[1].startswith("refs/tags/") or line_segments[1] == "HEAD"
-        ):
-            commit = line_segments[0]
-            tag = line_segments[1].replace("refs/tags/", "")
-            tags_and_commits.append((tag, commit))
-    return tags_and_commits
+            settings_data = {
+                "date": str(datetime.now()),
+                "start_index": idx,
+            }
+
+            update_checkpoints_in_github(
+                checkpoint=settings_data,
+                cloned_repo=cloned_config_repo,
+                path=SWIFT_CHECKPOINT_PATH,
+            )
+
+    if purls and purl_files:
+        logger(f"Committing packageURLs: {', '.join(purls)}")
+        commit_and_push_changes(
+            repo=cloned_data_repo, files_to_commit=purl_files, purls=purls, logger=logger
+        )
+
+    return [swift_index_repo, cloned_data_repo, cloned_config_repo]

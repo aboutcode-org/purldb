@@ -20,40 +20,24 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from pathlib import Path
 from packageurl import PackageURL
+from pathlib import Path
+from aboutcode import hashid
+from minecode_pipelines.pipes import write_data_to_yaml_file
 
-import saneyaml
 
+def store_conan_packages(pacakge_name, versions_data, fed_repo):
+    """Collect Conan package versions into purls and write them to the repo."""
 
-def get_conan_packages(file_path, file_versions_data):
-    # Example: file_path = Path("repo_path/recipes/7zip/config.yml")
-    # - file_path.parts = ("repo_path", "recipes", "7zip", "config.yml")
-    # - file_path.parts[-2] = "7zip"  (the package name)
-    if len(file_path.parts) < 2:
-        return None, []
-    package_name = file_path.parts[-2]
-    base_purl = PackageURL(type="conan", name=package_name)
+    base_purl = PackageURL(type="conan", name=pacakge_name)
 
     updated_purls = []
-    versions = file_versions_data.get("versions") or []
+    versions = list(versions_data["versions"].keys())
     for version in versions:
-        purl = PackageURL(type="conan", name=package_name, version=str(version)).to_string()
+        purl = PackageURL(type="conan", name=pacakge_name, version=version).to_string()
         updated_purls.append(purl)
-    return base_purl, updated_purls
 
-
-def mine_conan_packageurls(conan_index_repo, logger):
-    """Mine Conan PackageURLs from package index."""
-
-    base_path = Path(conan_index_repo.working_dir)
-    for file_path in base_path.glob("recipes/**/*"):
-        if not file_path.name == "config.yml":
-            continue
-        with open(file_path, encoding="utf-8") as f:
-            versions = saneyaml.load(f)
-
-        if not versions:
-            continue
-
-        yield get_conan_packages(file_path=file_path, file_versions_data=versions)
+    ppath = hashid.get_package_purls_yml_file_path(base_purl)
+    purl_file_full_path = Path(fed_repo.working_dir) / ppath
+    write_data_to_yaml_file(path=purl_file_full_path, data=updated_purls)
+    return purl_file_full_path, base_purl

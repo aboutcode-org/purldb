@@ -42,7 +42,7 @@ What can you do PurlDB?
   :ref:`symbols_and_strings`.
 
 - Detect software supply chain issues by mapping package binaries to their corresponding source code
-  and determining if there are possible discrepancies between sources and binaries (such as with the
+  and determining if there are possible discrepancies between sources and sources (such as with the
   XZ utils attack, or sources and binaries, where package may not report the exact source code
   used to build binaries with the :ref:`deploy_to_devel` mapping analysis.
 

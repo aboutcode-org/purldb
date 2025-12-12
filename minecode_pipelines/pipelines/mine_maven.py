@@ -20,69 +20,42 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
+from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
 from minecode_pipelines import pipes
-from minecode_pipelines.pipelines import MineCodeBasePipeline
-from minecode_pipelines.pipelines import _mine_and_publish_packageurls
 from minecode_pipelines.pipes import maven
 
 
-class MineMaven(MineCodeBasePipeline):
-    """Mine PackageURLs from maven index and publish them to FederatedCode."""
+class MineMaven(Pipeline):
+    """
+    Create DiscoveredPackages for packages found on maven:
+    - input: url of maven repo
+    - process index
+      - collect purls, grouped by package
+      - write to files
+      - publish to fetchcode
+      - loop
 
-    pipeline_config_repo = "https://github.com/aboutcode-data/minecode-pipelines-config/"
-    checkpoint_path = "maven/checkpoints.json"
-    append_purls = True
+    """
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.create_federatedcode_working_dir,
-            cls.fetch_federation_config,
-            cls.fetch_checkpoint_and_maven_index,
-            cls.mine_and_publish_alpine_packageurls,
-            cls.delete_working_dir,
+            cls.collect_packages_from_maven,
+            cls.delete_cloned_repos,
         )
 
-    def fetch_checkpoint_and_maven_index(self):
-        self.checkpoint_config_repo = federatedcode.clone_repository(
-            repo_url=self.pipeline_config_repo,
-            clone_path=self.working_path / "minecode-pipelines-config",
-            logger=self.log,
-        )
-        checkpoint = pipes.get_checkpoint_from_file(
-            cloned_repo=self.checkpoint_config_repo,
-            path=self.checkpoint_path,
-        )
+    def check_federatedcode_eligibility(self):
+        """
+        Check if the project fulfills the following criteria for
+        pushing the project result to FederatedCode.
+        """
+        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
-        last_incremental = checkpoint.get("last_incremental")
-        self.log(f"last_incremental: {last_incremental}")
-        self.maven_nexus_collector = maven.MavenNexusCollector(last_incremental=last_incremental)
+    def collect_packages_from_maven(self):
+        self.repos = maven.collect_packages_from_maven(logger=self.log)
 
-    def mine_and_publish_alpine_packageurls(self):
-        _mine_and_publish_packageurls(
-            packageurls=self.maven_nexus_collector.get_packages(),
-            total_package_count=None,
-            data_cluster=self.data_cluster,
-            checked_out_repos=self.checked_out_repos,
-            working_path=self.working_path,
-            append_purls=self.append_purls,
-            commit_msg_func=self.commit_message,
-            logger=self.log,
-            checkpoint_func=self.save_check_point,
-        )
-
-    def save_check_point(self):
-        last_incremental = self.maven_nexus_collector.index_properties.get(
-            "nexus.index.last-incremental"
-        )
-        checkpoint = {"last_incremental": last_incremental}
-        self.log(f"Saving checkpoint: {checkpoint}")
-        pipes.update_checkpoints_in_github(
-            checkpoint=checkpoint,
-            cloned_repo=self.checkpoint_config_repo,
-            path=self.checkpoint_path,
-            logger=self.log,
-        )
+    def delete_cloned_repos(self):
+        pipes.delete_cloned_repos(repos=self.repos, logger=self.log)

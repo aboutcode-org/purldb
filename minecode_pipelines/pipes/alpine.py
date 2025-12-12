@@ -23,17 +23,21 @@
 import base64
 from shutil import rmtree
 
-from aboutcode.pipeline import LoopProgress
+from aboutcode import hashid
 from packagedcode.models import PackageData
 from packagedcode.models import Party
 from packageurl import PackageURL
+from scanpipe.pipes import federatedcode
 from scanpipe.pipes.fetch import fetch_http
 from scanpipe.pipes.scancode import extract_archives
 
-from minecode_pipelines.pipelines import _mine_and_publish_packageurls
+from minecode_pipelines import pipes
+from minecode_pipelines import VERSION
 
 ALPINE_CHECKPOINT_PATH = "alpine/checkpoints.json"
 
+# We are testing and storing mined packageURLs in one single repo per ecosystem for now
+MINECODE_DATA_ALPINE_REPO = "https://github.com/aboutcode-data/minecode-data-alpine-test"
 
 # Number of packages
 PACKAGE_BATCH_SIZE = 1000
@@ -526,52 +530,86 @@ class AlpineCollector:
     def get_packages(self, logger=None):
         """Yield Package objects from alpine index"""
         for apkindex_url in ALPINE_LINUX_APKINDEX_URLS:
-            self.get_package_from_index(apkindex_url)
-
-    def get_package_from_index(self, apkindex_url, logger=None):
-        _, subpath = apkindex_url.split("https://dl-cdn.alpinelinux.org/alpine/")
-        distro, repo, _, _ = subpath.split("/")
-        index = self._fetch_index(uri=apkindex_url)
-        extract_archives(location=index.path)
-        index_location = f"{index.path}-extract/APKINDEX"
-        with open(index_location, encoding="utf-8") as f:
-            for pkg in parse_apkindex(f.read()):
-                pd = build_package(pkg, distro=distro, repo=repo)
-                current_purl = PackageURL(
-                    type=pd.type,
-                    namespace=pd.namespace,
-                    name=pd.name,
-                )
-                yield current_purl, [pd.purl]
+            _, subpath = apkindex_url.split("https://dl-cdn.alpinelinux.org/alpine/")
+            distro, repo, _, _ = subpath.split("/")
+            index = self._fetch_index(uri=apkindex_url)
+            extract_archives(location=index.path)
+            index_location = f"{index.path}-extract/APKINDEX"
+            with open(index_location, encoding="utf-8") as f:
+                for pkg in parse_apkindex(f.read()):
+                    pd = build_package(pkg, distro=distro, repo=repo)
+                    current_purl = PackageURL(
+                        type=pd.type,
+                        namespace=pd.namespace,
+                        name=pd.name,
+                    )
+                    yield current_purl, pd
 
 
-def mine_and_publish_alpine_packageurls(
-    data_cluster,
-    checked_out_repos,
-    working_path,
-    commit_msg_func,
-    logger,
-):
-    """Yield PackageURLs from Alpine index."""
+def commit_message(commit_batch, total_commit_batch="many"):
+    from django.conf import settings
 
-    index_count = len(ALPINE_LINUX_APKINDEX_URLS)
-    progress = LoopProgress(
-        total_iterations=index_count,
+    author_name = settings.FEDERATEDCODE_GIT_SERVICE_NAME
+    author_email = settings.FEDERATEDCODE_GIT_SERVICE_EMAIL
+    tool_name = "pkg:github/aboutcode-org/scancode.io"
+
+    return f"""\
+        Collect PackageURLs from Alpine ({commit_batch}/{total_commit_batch})
+
+        Tool: {tool_name}@v{VERSION}
+        Reference: https://{settings.ALLOWED_HOSTS[0]}
+
+        Signed-off-by: {author_name} <{author_email}>
+        """
+
+
+def collect_packages_from_alpine(files_per_commit=PACKAGE_BATCH_SIZE, logger=None):
+    # Clone data and config repo
+    data_repo = federatedcode.clone_repository(
+        repo_url=MINECODE_DATA_ALPINE_REPO,
         logger=logger,
-        progress_step=1,
     )
+    config_repo = federatedcode.clone_repository(
+        repo_url=pipes.MINECODE_PIPELINES_CONFIG_REPO,
+        logger=logger,
+    )
+    if logger:
+        logger(f"{MINECODE_DATA_ALPINE_REPO} repo cloned at: {data_repo.working_dir}")
+        logger(f"{pipes.MINECODE_PIPELINES_CONFIG_REPO} repo cloned at: {config_repo.working_dir}")
 
-    logger(f"Mine PackageURL from {index_count:,d} alpine index.")
+    # download and iterate through alpine indices
     alpine_collector = AlpineCollector()
-    for index in progress.iter(ALPINE_LINUX_APKINDEX_URLS):
-        logger(f"Mine PackageURL from {index} index.")
-        _mine_and_publish_packageurls(
-            packageurls=alpine_collector.get_package_from_index(index),
-            total_package_count=None,
-            data_cluster=data_cluster,
-            checked_out_repos=checked_out_repos,
-            working_path=working_path,
-            append_purls=True,
-            commit_msg_func=commit_msg_func,
+    files_to_commit = []
+    commit_batch = 1
+    for current_purl, package in alpine_collector.get_packages():
+        # write packageURL to file
+        package_base_dir = hashid.get_package_base_dir(purl=current_purl)
+        purl_file = pipes.write_packageurls_to_file(
+            repo=data_repo,
+            base_dir=package_base_dir,
+            packageurls=[package.purl],
+            append=True,
+        )
+        if purl_file not in files_to_commit:
+            files_to_commit.append(purl_file)
+
+        if len(files_to_commit) == files_per_commit:
+            federatedcode.commit_and_push_changes(
+                commit_message=commit_message(commit_batch),
+                repo=data_repo,
+                files_to_commit=files_to_commit,
+                logger=logger,
+            )
+            files_to_commit.clear()
+            commit_batch += 1
+
+    if files_to_commit:
+        federatedcode.commit_and_push_changes(
+            commit_message=commit_message(commit_batch),
+            repo=data_repo,
+            files_to_commit=files_to_commit,
             logger=logger,
         )
+
+    repos_to_clean = [data_repo, config_repo]
+    return repos_to_clean

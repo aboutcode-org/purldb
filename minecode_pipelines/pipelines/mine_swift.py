@@ -20,46 +20,38 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
+from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
-
-from minecode_pipelines.pipelines import MineCodeBasePipeline
-from minecode_pipelines.pipes.swift import mine_swift_packageurls
-from minecode_pipelines.pipes.swift import load_swift_package_urls
+from minecode_pipelines import pipes
+from minecode_pipelines.pipes.swift import mine_and_publish_swift_packageurls
 
 
-class MineSwift(MineCodeBasePipeline):
+class MineSwift(Pipeline):
     """
-    Pipeline to mine Swift packages and publish them to FederatedCode.
+    Mine all packageURLs from a swift index and publish them to a FederatedCode repo.
     """
-
-    swift_index_repo_url = "https://github.com/SwiftPackageIndex/PackageList"
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
-            cls.create_federatedcode_working_dir,
-            cls.fetch_federation_config,
-            cls.clone_swift_index,
-            cls.mine_and_publish_packageurls,
-            cls.delete_working_dir,
+            cls.mine_and_publish_swift_packageurls,
+            cls.delete_cloned_repos,
         )
 
-    def clone_swift_index(self):
-        """Clone the Cargo index Repo."""
-        self.swift_index_repo = federatedcode.clone_repository(
-            repo_url=self.swift_index_repo_url,
-            clone_path=self.working_path / "swift-index",
-            logger=self.log,
-        )
+    def check_federatedcode_eligibility(self):
+        """
+        Check if the project fulfills the following criteria for
+        pushing the project result to FederatedCode.
+        """
+        federatedcode.check_federatedcode_configured_and_available(logger=self.log)
 
-    def packages_count(self):
-        return len(self.swift_packages_urls) if self.swift_packages_urls else None
+    def mine_and_publish_swift_packageurls(self):
+        """Mine swift package names from swift indexes or checkpoint."""
+        self.repos = mine_and_publish_swift_packageurls(self.log)
 
-    def mine_packageurls(self):
-        self.swift_packages_urls = load_swift_package_urls(swift_index_repo=self.swift_index_repo)
-        self.log(f"Total Swift packages to process: {len(self.swift_packages_urls)}")
-        return mine_swift_packageurls(
-            packages_urls=self.swift_packages_urls,
+    def delete_cloned_repos(self):
+        pipes.delete_cloned_repos(
+            repos=self.repos,
             logger=self.log,
         )

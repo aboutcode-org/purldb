@@ -906,9 +906,9 @@ Also each package can have list of ``addon_pipelines`` to run on the package.
 Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html>`_
 
 
-If the ``reindex`` flag is set to True, existing package will be rescanned and all the non existing package will be indexed.
-If the ``reindex_set`` flag is set to True, then all the package in the same set will be rescanned.
-
+If ``reindex`` flag is True then existing package will be rescanned, if ``reindex_set``
+is True then all the package in the same set will be rescanned.
+If reindex flag is set to true then all the non existing package will be indexed.
 
 .. Note::
 
@@ -970,11 +970,7 @@ Then return a mapping containing:
     - The number of package urls that are not processable by the index queue.
 - unsupported_packages
     - A list of package urls that are not processable by the index queue.
-        The package indexing queue can handle certain supported purl
-        types such as npm, pypi, maven, etc. See "supported_ecosystems"
-        list in
-        https://github.com/aboutcode-org/purldb/blob/main/packagedb/api.py
-        for details.
+        The package indexing queue can only handle npm and maven purls.
 - unsupported_vers_count
     - The number of vers range that are not supported by the univers or package_manager.
 - unsupported_vers
@@ -1076,9 +1072,8 @@ Package Update Set List
 Take a list of purls (where each item is a mapping containing PURL and
 content_type).
 
-If uuid is given, all purls will be added to the package set if it exists;
-otherwise, a new set will be created and all the purls will be added to
-that set.
+If uuid is given then all purls will be added to package set if it exists else a
+new set would be created and all the purls will be added to that new set.
 
 .. Note::
 
@@ -1120,7 +1115,7 @@ Package Set List
 
 Return a list of package sets and the package data of packages within
 
-``GET /api/package_sets/``
+``GET /api/projects/0bbdcf88-ad07-4970-9272-7d5f4c82cc7b/``
 
 .. code-block:: json
 

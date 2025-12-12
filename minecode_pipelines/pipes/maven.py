@@ -7,25 +7,30 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-import gzip
-import io
-import os
-import tempfile
 from collections import namedtuple
 from itertools import chain
 from shutil import rmtree
+import os
+import gzip
+import io
+import tempfile
 
-import arrow
-import javaproperties
 from dateutil import tz
 from jawa.util.utf import decode_modified_utf8
+import arrow
+import javaproperties
+
+from aboutcode import hashid
 from packagedcode.maven import build_filename
 from packagedcode.maven import build_url
 from packagedcode.maven import get_urls
 from packagedcode.models import PackageData
 from packageurl import PackageURL
+from scanpipe.pipes.fetch import fetch_http
+from scanpipe.pipes import federatedcode
 
-
+from minecode_pipelines import pipes
+from minecode_pipelines import VERSION
 from minecode_pipelines.pipes import java_stream
 
 TRACE = False
@@ -654,8 +659,6 @@ class MavenNexusCollector:
                 rmtree(download.directory)
 
     def _fetch_http(self, uri):
-        from scanpipe.pipes.fetch import fetch_http
-
         fetched = fetch_http(uri)
         self.downloads.append(fetched)
         return fetched
@@ -758,7 +761,7 @@ class MavenNexusCollector:
                 name=artifact_id,
                 version=version,
             )
-            yield current_purl, [package.purl]
+            yield current_purl, package
 
     def _get_packages_from_index_increments(self):
         for index_increment in self.index_increment_locations:
