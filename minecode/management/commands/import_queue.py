@@ -132,9 +132,7 @@ def process_request(importable_uri):
         timestamps_by_artifact_links = get_artifact_links(version_page_url)
         for artifact_link, timestamp in timestamps_by_artifact_links.items():
             sha1 = get_artifact_sha1(artifact_link)
-            classifier = get_classifier_from_artifact_url(
-                artifact_link, name, version
-            )
+            classifier = get_classifier_from_artifact_url(artifact_link, name, version)
             qualifiers = None
             if classifier:
                 qualifiers = f"classifier={classifier}"

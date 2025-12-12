@@ -711,9 +711,7 @@ def collect_links_and_artifact_timestamps(text):
 
     # Simple links in <pre> tags without timestamps (Gradle plugins format)
     # https://plugins.gradle.org/m2/
-    plugins_gradle_pattern = re.compile(
-        r'<pre><a href="([^"]+)"[^>]*>[^<]*</a></pre>'
-    )
+    plugins_gradle_pattern = re.compile(r'<pre><a href="([^"]+)"[^>]*>[^<]*</a></pre>')
     plugins_gradle_matches = plugins_gradle_pattern.findall(text)
     if plugins_gradle_matches:
         # Filter out parent directory link if present
@@ -813,9 +811,7 @@ def get_artifact_sha1(artifact_url):
     return sha1
 
 
-def get_classifier_from_artifact_url(
-    artifact_url, package_name, package_version
-):
+def get_classifier_from_artifact_url(artifact_url, package_name, package_version):
     """
     Return the classifier from a Maven artifact URL `artifact_url`, otherwise
     return None if a classifier cannot be determined from `artifact_url`
