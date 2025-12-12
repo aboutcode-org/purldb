@@ -39,7 +39,6 @@ MAVEN_INDEX_INCREMENT_BASE_URL = (
 MAVEN_INDEX_PROPERTIES_URL = (
     "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.properties"
 )
-MAVEN_CHECKPOINT_PATH = "maven/checkpoints.json"
 
 MAVEN_BASE_URLS = [
     {
