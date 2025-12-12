@@ -43,7 +43,7 @@ def commit_message(commit_batch, total_commit_batch="many"):
     return f"""\
         Save PackageURLs from PurlDB ({commit_batch}/{total_commit_batch})
 
-        Tool: {tool_name}@v{VERSION}
+        Tool: {tool_name}@v{settings.PURLDB_VERSION}
         Reference: https://{settings.ALLOWED_HOSTS[0]}
 
         Signed-off-by: {author_name} <{author_email}>
