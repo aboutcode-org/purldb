@@ -178,14 +178,6 @@ def update_pypi_checkpoints(
     )
 
 
-def get_packages_file_from_checkpoint(config_repo, checkpoint_path, name):
-    packages = fetch_checkpoint_from_github(
-        config_repo=config_repo,
-        checkpoint_path=checkpoint_path,
-    )
-    return write_packages_json(packages, name=name)
-
-
 def get_pypi_packages_to_sync(packages_file, state, logger=None):
     last_serial_fetched = fetch_last_serial_mined(
         config_repo=MINECODE_PIPELINES_CONFIG_REPO,
@@ -243,7 +235,6 @@ def get_pypi_packages_to_sync(packages_file, state, logger=None):
 
 
 def mine_and_publish_pypi_packageurls(packages_to_sync, packages_mined, logger=None):
-
     for package in packages_to_sync:
         if not package:
             continue

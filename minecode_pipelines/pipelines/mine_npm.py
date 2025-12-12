@@ -48,9 +48,9 @@ class MineNPM(MineCodeBasePipeline):
 
     def mine_npm_packages(self):
         """Mine npm package names from npm indexes or checkpoint."""
-        (
-            self.npm_packages, self.state, self.last_seq, self.config_repo
-        ) = npm.mine_npm_packages(logger=self.log)
+        (self.npm_packages, self.state, self.last_seq, self.config_repo) = npm.mine_npm_packages(
+            logger=self.log
+        )
 
     def get_npm_packages_to_sync(self):
         """Get npm packages which needs to be synced using checkpoint."""

@@ -35,7 +35,7 @@ def get_cpan_packages(cpan_repo=CPAN_REPO, logger=None):
     packages_archive = get_temp_file(file_name="cpan_packages", extension=".gz")
     packages_content = get_temp_file(file_name="cpan_packages", extension=".txt")
     response = requests.get(cpan_packages_url, stream=True)
-    with open(packages_archive, 'wb') as f:
+    with open(packages_archive, "wb") as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
 
@@ -43,7 +43,7 @@ def get_cpan_packages(cpan_repo=CPAN_REPO, logger=None):
         with open(packages_content, "wb") as f_out:
             f_out.writelines(f_in)
 
-    with open(packages_content, 'r', encoding='utf-8') as file:
+    with open(packages_content, encoding="utf-8") as file:
         packages_content = file.read()
 
     package_path_by_name = {}

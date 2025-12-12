@@ -9,7 +9,6 @@
 
 import logging
 import sys
-from aboutcode import hashid
 
 from aboutcode.federated import DataFederation
 from scanpipe.pipes import federatedcode
@@ -69,7 +68,7 @@ class Command(VerboseCommand):
         # TODO: do something more efficient
         files_to_commit = []
         commit_batch = 1
-        files_per_commit=PACKAGE_BATCH_SIZE
+        files_per_commit = PACKAGE_BATCH_SIZE
         for package in packagedb_models.Package.objects.all():
             package_repo, datafile_path = data_cluster.get_datafile_repo_and_path(purl=package.purl)
             purl_file = pipes.write_packageurls_to_file(
