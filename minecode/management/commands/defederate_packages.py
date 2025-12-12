@@ -40,7 +40,7 @@ if TRACE:
 
 def yield_purl_strs_from_yaml_files(location):
     for root, _, files in fileutils.walk(location):
-        if not "purls.yml" in files:
+        if "purls.yml" not in files:
             continue
         for file in files:
             fp = os.path.join(root, file)
@@ -97,7 +97,9 @@ class Command(VerboseCommand):
             packages_to_write = []
             for repo_name, repo in checked_out_repos.items():
                 logger.log(f"Creating Packages from {repo_name}")
-                for i, purl_str in enumerate(yield_purl_strs_from_yaml_files(repo.working_dir), start=1):
+                for i, purl_str in enumerate(
+                    yield_purl_strs_from_yaml_files(repo.working_dir), start=1
+                ):
                     purl = PackageURL.from_string(purl_str)
                     if packages_to_write and not i % 5000:
                         packagedb_models.Package.objects.bulk_create(packages_to_write)
