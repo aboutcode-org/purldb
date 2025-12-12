@@ -212,7 +212,6 @@ def fetch_last_seq_mined(config_repo, settings_path):
 
 
 def get_npm_packages_to_sync(packages_file, state, logger=None):
-
     if logger:
         logger(f"Mining state: {state}")
 
@@ -241,12 +240,11 @@ def get_npm_packages_to_sync(packages_file, state, logger=None):
             logger(
                 f"Starting initial package mining for {len(packages_to_sync)} packages from checkpoint"
             )
-    
+
     return packages_to_sync, synced_packages
 
 
 def mine_and_publish_npm_packageurls(packages_to_sync, packages_mined, logger=None):
-
     if logger:
         logger("Starting package mining for a batch of packages")
 
@@ -271,7 +269,6 @@ def mine_and_publish_npm_packageurls(packages_to_sync, packages_mined, logger=No
 
 
 def save_mined_packages_in_checkpoint(packages_mined, synced_packages, config_repo, logger=None):
-
     # As we are mining the packages to sync with the index,
     # we need to update mined packages checkpoint for every batch
     # so we can continue mining the other packages after restarting

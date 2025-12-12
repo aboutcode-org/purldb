@@ -43,6 +43,7 @@ class MineMaven(MineCodeBasePipeline):
             cls.fetch_federation_config,
             cls.fetch_checkpoint_and_maven_index,
             cls.mine_and_publish_maven_packageurls,
+            cls.save_check_point,
             cls.delete_working_dir,
         )
 
@@ -59,7 +60,10 @@ class MineMaven(MineCodeBasePipeline):
 
         last_incremental = checkpoint.get("last_incremental")
         self.log(f"last_incremental: {last_incremental}")
-        self.maven_nexus_collector = maven.MavenNexusCollector(last_incremental=last_incremental)
+        self.maven_nexus_collector = maven.MavenNexusCollector(
+            last_incremental=last_incremental,
+            logger=self.log,
+        )
 
     def mine_and_publish_maven_packageurls(self):
         _mine_and_publish_packageurls(
@@ -71,7 +75,6 @@ class MineMaven(MineCodeBasePipeline):
             append_purls=self.append_purls,
             commit_msg_func=self.commit_message,
             logger=self.log,
-            checkpoint_func=self.save_check_point,
         )
 
     def save_check_point(self):

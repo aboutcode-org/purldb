@@ -103,7 +103,9 @@ def get_mined_packages_from_checkpoint(config_repo, checkpoint_path):
     return checkpoint.get("packages_mined", [])
 
 
-def update_mined_packages_in_checkpoint(packages, config_repo, cloned_repo, checkpoint_path, logger=None):
+def update_mined_packages_in_checkpoint(
+    packages, config_repo, cloned_repo, checkpoint_path, logger=None
+):
     mined_packages = get_mined_packages_from_checkpoint(
         config_repo=config_repo,
         checkpoint_path=checkpoint_path,

@@ -569,7 +569,13 @@ class MavenNexusCollector:
     WARNING: Processing is rather long: a full index is ~600MB.
     """
 
-    def __init__(self, index_location=None, index_properties_location=None, last_incremental=None):
+    def __init__(
+        self,
+        index_location=None,
+        index_properties_location=None,
+        last_incremental=None,
+        logger=None,
+    ):
         if index_location and last_incremental:
             raise Exception(
                 "index_location and last_incremental cannot both be set at the same time. "
@@ -599,6 +605,8 @@ class MavenNexusCollector:
             self.index_increment_locations = [
                 download.path for download in index_increment_downloads
             ]
+            if logger and not self.index_increment_locations:
+                logger("No new index increment to mine.")
         elif index_location:
             self.index_location = index_location
             self.index_increment_locations = []
@@ -723,8 +731,9 @@ class MavenNexusCollector:
 
     def get_packages(self):
         """Yield Package objects from maven index or index increments"""
+        packages = []
         if self.index_increment_locations:
             packages = chain(self._get_packages_from_index_increments())
-        else:
+        elif self.index_location:
             packages = self._get_packages(content=self.index_location)
         return packages

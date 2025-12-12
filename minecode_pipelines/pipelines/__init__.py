@@ -196,7 +196,7 @@ def _mine_and_publish_packageurls(
 
         if len(checkout["file_to_commit"]) > batch_size:
             if logger:
-                logger(f"Trying to commit PackageURLs.")
+                logger("Trying to commit PackageURLs.")
             pipes.commit_and_push_checkout(
                 local_checkout=checkout,
                 commit_message=commit_msg_func(checkout["commit_count"] + 1),

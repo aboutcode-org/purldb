@@ -22,9 +22,7 @@
 
 import json
 from pathlib import Path
-from typing import Iterable
-from typing import Tuple
-from typing import List
+from collections.abc import Iterable
 
 import requests
 from packageurl import PackageURL
@@ -49,7 +47,7 @@ def fetch_cran_db(working_path, logger) -> Path:
     return output_path
 
 
-def mine_cran_packageurls(db_path: Path) -> Iterable[Tuple[str, List[str]]]:
+def mine_cran_packageurls(db_path: Path) -> Iterable[tuple[str, list[str]]]:
     """
     Extract package names and their versions from a CRAN DB JSON file.
     Yields a tuple: (base_purl, list_of_purls)

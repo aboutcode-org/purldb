@@ -15,6 +15,7 @@ from minecode_pipelines.pipes.cran import mine_cran_packageurls
 
 DATA_DIR = Path(__file__).parent.parent / "test_data" / "cran"
 
+
 class CranPipelineTests(TestCase):
     def test_mine_cran_packageurls_from_testdata(self):
         """
@@ -33,7 +34,9 @@ class CranPipelineTests(TestCase):
         expected_base_purls = ["pkg:cran/abbreviate", "pkg:cran/abc", "pkg:cran/abc.data"]
         assert len(results) == len(expected_files)
 
-        for result, expected_base_purl, expected_file in zip(results, expected_base_purls, expected_files):
+        for result, expected_base_purl, expected_file in zip(
+            results, expected_base_purls, expected_files
+        ):
             with open(expected_file, encoding="utf-8") as f:
                 expected_purls = saneyaml.load(f)
 

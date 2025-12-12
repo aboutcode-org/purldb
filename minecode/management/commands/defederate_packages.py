@@ -75,6 +75,4 @@ class Command(VerboseCommand):
             repo = repo_data.get("repo")
             for purl in yield_purls_from_yaml_files(repo.working_dir):
                 # TODO: use batch create for efficiency
-                package = packagedb_models.Package.objects.create(
-                    **purl.to_dict()
-                )
+                package = packagedb_models.Package.objects.create(**purl.to_dict())

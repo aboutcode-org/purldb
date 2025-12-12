@@ -21,10 +21,8 @@
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
 
-from minecode_pipelines import pipes
 from minecode_pipelines.pipes import cpan
 from minecode_pipelines.pipelines import MineCodeBasePipeline
-from scanpipe.pipes import federatedcode
 
 
 class MineCpan(MineCodeBasePipeline):
@@ -57,4 +55,3 @@ class MineCpan(MineCodeBasePipeline):
             package_path_by_name=self.cpan_packages_path_by_name,
             logger=self.log,
         )
-
