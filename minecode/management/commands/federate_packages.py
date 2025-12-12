@@ -51,10 +51,16 @@ def commit_message(commit_batch, total_commit_batch="many"):
 
 
 class Command(VerboseCommand):
-    help = "Find packages with an ambiguous declared license."
+    help = "Save and commit purls from PackageDB to FederatedCode repos."
 
     def add_arguments(self, parser):
-        parser.add_argument("-i", "--input", type=str, help="Define the input file name")
+        parser.add_argument(
+            "-d",
+            "--working-directory",
+            type=str,
+            required=False,
+            help="Directory where FederatedCode repos will be cloned",
+        )
 
     def handle(self, *args, **options):
         logger.setLevel(self.get_verbosity(**options))
