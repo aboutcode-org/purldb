@@ -175,8 +175,9 @@ Make sure those are installed before attempting the ScanCode.io installation::
         bzip2 xz-utils zlib1g libxml2-dev libxslt1-dev libpopt0 \
         libgpgme11 libdevmapper1.02.1 libguestfs-tools
 
-See also `ScanCode-toolkit Prerequisites <https://scancode-toolkit.readthedocs.io/en/
-latest/getting-started/install.html#prerequisites>`_ for more details.
+See also `ScanCode-toolkit Prerequisites
+<https://scancode-toolkit.readthedocs.io/en/stable/getting-started/install.html#prerequisites>`_
+for more details.
 
 
 Clone and Configure
