@@ -56,8 +56,10 @@ envfile:
 	@echo SECRET_KEY=\"${GET_SECRET_KEY}\" > ${ENV_FILE}
 
 envfile_testing: envfile
+	@echo PACKAGEDB_DB_NAME=\"postgres\" >> ${ENV_FILE}
 	@echo PACKAGEDB_DB_USER=\"postgres\" >> ${ENV_FILE}
 	@echo PACKAGEDB_DB_PASSWORD=\"postgres\" >> ${ENV_FILE}
+	@echo SCANCODEIO_DB_NAME=\"postgres\" >> ${ENV_FILE}
 	@echo SCANCODEIO_DB_USER=\"postgres\" >> ${ENV_FILE}
 	@echo SCANCODEIO_DB_PASSWORD=\"postgres\" >> ${ENV_FILE}
 
