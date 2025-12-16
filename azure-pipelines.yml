@@ -30,7 +30,7 @@ jobs:
           image_name: ubuntu-24.04
           python_versions: ['3.10', '3.11', '3.12', '3.13']
           test_suites:
-              all: make postgres && make test
+              all: make test
 
     - template: etc/ci/azure-posix.yml
       parameters:

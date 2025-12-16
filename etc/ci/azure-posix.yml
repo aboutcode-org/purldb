@@ -19,13 +19,7 @@ jobs:
                      test_suite: ${{ tsuite.value }}
 
       services:
-        postgres:
-          image: postgres:13
-          env:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_DB: postgres
-          ports: ['5432:5432']
+        postgres: postgres
 
       steps:
           - checkout: self
