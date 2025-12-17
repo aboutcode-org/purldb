@@ -59,11 +59,6 @@ NPM_REPLICATE_CHECKPOINT_PATH = "npm/" + PACKAGE_FILE_NAME
 COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH = "npm/" + COMPRESSED_PACKAGE_FILE_NAME
 NPM_CHECKPOINT_PATH = "npm/checkpoints.json"
 NPM_PACKAGES_CHECKPOINT_PATH = "npm/packages_checkpoint.json"
-
-# We are testing and storing mined packageURLs in one single repo per ecosystem for now
-MINECODE_DATA_NPM_REPO = "https://github.com/aboutcode-data/minecode-data-npm-test"
-
-
 PACKAGE_BATCH_SIZE = 700
 
 
