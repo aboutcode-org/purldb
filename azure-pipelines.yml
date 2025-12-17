@@ -10,6 +10,7 @@ resources:
     - container: postgres
       image: postgres:13
       env:
+        POSTGRES_DB: packagedb
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: postgres
       ports:

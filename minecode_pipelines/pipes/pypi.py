@@ -137,27 +137,6 @@ def fetch_last_serial_mined(config_repo, settings_path):
     return checkpoints.get("last_serial")
 
 
-def update_checkpoint_state(
-    cloned_repo,
-    state,
-    config_repo=MINECODE_PIPELINES_CONFIG_REPO,
-    checkpoint_path=PYPI_CHECKPOINT_PATH,
-    logger=None,
-):
-    checkpoint = fetch_checkpoint_from_github(
-        config_repo=config_repo,
-        checkpoint_path=checkpoint_path,
-    )
-    checkpoint["state"] = state
-    checkpoint["last_updated"] = str(datetime.now())
-    update_checkpoints_in_github(
-        checkpoint=checkpoint,
-        cloned_repo=cloned_repo,
-        path=checkpoint_path,
-        logger=logger,
-    )
-
-
 def update_pypi_checkpoints(
     last_serial,
     state,
@@ -277,7 +256,7 @@ def save_mined_packages_in_checkpoint(packages_mined, config_repo, logger=None):
     )
 
 
-def update_state_and_checkpoints(config_repo, last_serial, logger=None):
+def update_state_and_checkpoints(state, config_repo, last_serial, logger=None):
     # If we are finshed mining all the packages in the intial sync, we can now
     # periodically sync the packages from latest
     if state == INITIAL_SYNC_STATE:
