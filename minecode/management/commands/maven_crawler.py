@@ -26,5 +26,15 @@ class Command(VerboseCommand):
     help = "Run a Package request queue."
 
     def handle(self, *args, **options):
-        maven_root_url = "https://repo.maven.apache.org/maven2"
-        crawl_maven_repo_from_root(root_url=maven_root_url)
+        # Add the maven root URLs
+        # Ref: https://github.com/aboutcode-org/purldb/issues/630#issuecomment-3599942716
+        maven_root_urls = [
+            "https://repo.maven.apache.org/maven2",
+            "https://repo.spring.io/artifactory/milestone",
+            "https://plugins.gradle.org/m2",
+            "https://repository.apache.org/content/groups/snapshots",
+            "https://repository.jboss.org/nexus/service/rest/repository/browse/releases",
+            "https://repository.jboss.org/nexus/service/rest/repository/browse/public",
+        ]
+        for maven_root_url in maven_root_urls:
+            crawl_maven_repo_from_root(root_url=maven_root_url)
