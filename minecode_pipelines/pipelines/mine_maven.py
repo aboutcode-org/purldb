@@ -33,7 +33,6 @@ class MineMaven(MineCodeBasePipeline):
     """Mine PackageURLs from maven index and publish them to FederatedCode."""
 
     pipeline_config_repo = "https://github.com/aboutcode-data/minecode-pipelines-config/"
-    checkpoint_path = "maven/checkpoints.json"
 
     append_purls = True
 
@@ -43,40 +42,41 @@ class MineMaven(MineCodeBasePipeline):
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
             cls.fetch_federation_config,
-            cls.fetch_checkpoint_and_maven_index_repo1_maven_org,
+            cls.fetch_checkpoint_config_repo,
+            cls.fetch_maven_index_repo1_maven_org,
             cls.mine_and_publish_maven_packageurls_repo1_maven_org,
             cls.save_check_point_repo1_maven_org,
-            cls.fetch_checkpoint_and_maven_index_repo_spring_io_release,
+            cls.fetch_maven_index_repo_spring_io_release,
             cls.mine_and_publish_maven_packageurls_repo_spring_io_release,
             cls.save_check_point_repo_spring_io_release,
-            cls.fetch_checkpoint_and_maven_index_repo_spring_io_milestone,
+            cls.fetch_maven_index_repo_spring_io_milestone,
             cls.mine_and_publish_maven_packageurls_repo_spring_io_milestone,
             cls.save_check_point_repo_spring_io_milestone,
-            cls.fetch_checkpoint_and_maven_index_plugins_gradle_org,
+            cls.fetch_maven_index_plugins_gradle_org,
             cls.mine_and_publish_maven_packageurls_plugins_gradle_org,
             cls.save_check_point_plugins_gradle_org,
-            cls.fetch_checkpoint_and_maven_index_repository_apache_org,
+            cls.fetch_maven_index_repository_apache_org,
             cls.mine_and_publish_maven_packageurls_repository_apache_org,
             cls.save_check_point_repository_apache_org,
             cls.delete_working_dir,
         )
 
-    @optional_step("repo1.maven.org")
-    def fetch_checkpoint_and_maven_index_repo1_maven_org(self):
-        checkpoint_path = "maven/repo.maven.org/checkpoints.json"
-        maven_url = "https://repo1.maven.org/maven2"
+    def fetch_checkpoint_config_repo(self):
         self.checkpoint_config_repo = federatedcode.clone_repository(
             repo_url=self.pipeline_config_repo,
             clone_path=self.working_path / "minecode-pipelines-config",
             logger=self.log,
         )
+
+    @optional_step("repo1.maven.org")
+    def fetch_maven_index_repo1_maven_org(self):
+        checkpoint_path = "maven/repo.maven.org/checkpoints.json"
+        maven_url = "https://repo1.maven.org/maven2"
         checkpoint = pipes.get_checkpoint_from_file(
             cloned_repo=self.checkpoint_config_repo,
             path=checkpoint_path,
         )
-
         last_incremental = checkpoint.get("last_incremental")
-
         self.log(f"last_incremental: {last_incremental}")
         self.maven_nexus_collector = maven.MavenNexusCollector(
             maven_url=maven_url,
@@ -113,21 +113,14 @@ class MineMaven(MineCodeBasePipeline):
         )
 
     @optional_step("repo.spring.io/release")
-    def fetch_checkpoint_and_maven_index_repo_spring_io_release(self):
+    def fetch_maven_index_repo_spring_io_release(self):
         checkpoint_path = "maven/repo.spring.io/release/checkpoints.json"
         maven_url = "https://repo.spring.io/artifactory/release"
-        self.checkpoint_config_repo = federatedcode.clone_repository(
-            repo_url=self.pipeline_config_repo,
-            clone_path=self.working_path / "minecode-pipelines-config",
-            logger=self.log,
-        )
         checkpoint = pipes.get_checkpoint_from_file(
             cloned_repo=self.checkpoint_config_repo,
             path=checkpoint_path,
         )
-
         last_incremental = checkpoint.get("last_incremental")
-
         self.log(f"last_incremental: {last_incremental}")
         self.maven_nexus_collector = maven.MavenNexusCollector(
             maven_url=maven_url,
@@ -164,21 +157,14 @@ class MineMaven(MineCodeBasePipeline):
         )
 
     @optional_step("repo.spring.io/milestone")
-    def fetch_checkpoint_and_maven_index_repo_spring_io_milestone(self):
+    def fetch_maven_index_repo_spring_io_milestone(self):
         checkpoint_path = "maven/repo.spring.io/milestone/checkpoints.json"
         maven_url = "https://repo.spring.io/artifactory/milestone"
-        self.checkpoint_config_repo = federatedcode.clone_repository(
-            repo_url=self.pipeline_config_repo,
-            clone_path=self.working_path / "minecode-pipelines-config",
-            logger=self.log,
-        )
         checkpoint = pipes.get_checkpoint_from_file(
             cloned_repo=self.checkpoint_config_repo,
             path=checkpoint_path,
         )
-
         last_incremental = checkpoint.get("last_incremental")
-
         self.log(f"last_incremental: {last_incremental}")
         self.maven_nexus_collector = maven.MavenNexusCollector(
             maven_url=maven_url,
@@ -215,21 +201,14 @@ class MineMaven(MineCodeBasePipeline):
         )
 
     @optional_step("plugins.gradle.org")
-    def fetch_checkpoint_and_maven_index_plugins_gradle_org(self):
+    def fetch_maven_index_plugins_gradle_org(self):
         checkpoint_path = "maven/plugins.gradle.org/checkpoints.json"
         maven_url = "https://plugins.gradle.org/m2"
-        self.checkpoint_config_repo = federatedcode.clone_repository(
-            repo_url=self.pipeline_config_repo,
-            clone_path=self.working_path / "minecode-pipelines-config",
-            logger=self.log,
-        )
         checkpoint = pipes.get_checkpoint_from_file(
             cloned_repo=self.checkpoint_config_repo,
             path=checkpoint_path,
         )
-
         last_incremental = checkpoint.get("last_incremental")
-
         self.log(f"last_incremental: {last_incremental}")
         self.maven_nexus_collector = maven.MavenNexusCollector(
             maven_url=maven_url,
@@ -266,21 +245,14 @@ class MineMaven(MineCodeBasePipeline):
         )
 
     @optional_step("repository.apache.org")
-    def fetch_checkpoint_and_maven_index_repository_apache_org(self):
+    def fetch_maven_index_repository_apache_org(self):
         checkpoint_path = "maven/repository.apache.org/checkpoints.json"
         maven_url = "https://repository.apache.org/snapshots"
-        self.checkpoint_config_repo = federatedcode.clone_repository(
-            repo_url=self.pipeline_config_repo,
-            clone_path=self.working_path / "minecode-pipelines-config",
-            logger=self.log,
-        )
         checkpoint = pipes.get_checkpoint_from_file(
             cloned_repo=self.checkpoint_config_repo,
             path=checkpoint_path,
         )
-
         last_incremental = checkpoint.get("last_incremental")
-
         self.log(f"last_incremental: {last_incremental}")
         self.maven_nexus_collector = maven.MavenNexusCollector(
             maven_url=maven_url,
