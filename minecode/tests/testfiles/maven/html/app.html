@@ -1,14 +1,21 @@
 <html>
 <head>
 <script>
-//1522643335415
-function navi(e){
-	location.href = e.target.href.replace('/:','/'); e.preventDefault();
+function nav(e){
+  location.href = e.target.href.replace(/;.+/, '');
+  e.preventDefault();
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  var links = document.querySelectorAll('a[data-nav]');
+  for (var i = 0; i < links.length; i++) {
+    links[i].addEventListener('click', nav);
+  }
+});
 </script>
 </head>
 <body>
-<pre><a onclick="navi(event)" href=":0.0.1/" rel="nofollow">0.0.1/</a></pre>
-<pre><a onclick="navi(event)" href=":maven-metadata.xml" rel="nofollow">maven-metadata.xml</a></pre>
+<pre><a data-nav href="0.0.1/" rel="nofollow">0.0.1/</a></pre>
+<pre><a data-nav href="maven-metadata.xml" rel="nofollow">maven-metadata.xml</a></pre>
 </body>
 </html>
