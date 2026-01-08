@@ -24,6 +24,7 @@ from datetime import datetime
 
 from minecode_pipelines.pipes import fetch_checkpoint_from_github
 from minecode_pipelines.pipes import update_checkpoints_in_github
+from minecode_pipelines.pipes import update_checkpoint_state
 from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
 from minecode_pipelines.pipes import update_mined_packages_in_checkpoint
 from minecode_pipelines.pipes import get_packages_file_from_checkpoint
@@ -130,27 +131,6 @@ def fetch_last_serial_mined(config_repo, settings_path):
         checkpoint_path=settings_path,
     )
     return checkpoints.get("last_serial")
-
-
-def update_checkpoint_state(
-    cloned_repo,
-    state,
-    config_repo=MINECODE_PIPELINES_CONFIG_REPO,
-    checkpoint_path=PYPI_CHECKPOINT_PATH,
-    logger=None,
-):
-    checkpoint = fetch_checkpoint_from_github(
-        config_repo=config_repo,
-        checkpoint_path=checkpoint_path,
-    )
-    checkpoint["state"] = state
-    checkpoint["last_updated"] = str(datetime.now())
-    update_checkpoints_in_github(
-        checkpoint=checkpoint,
-        cloned_repo=cloned_repo,
-        path=checkpoint_path,
-        logger=logger,
-    )
 
 
 def update_pypi_checkpoints(

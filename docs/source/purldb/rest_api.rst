@@ -906,7 +906,8 @@ Also each package can have list of ``addon_pipelines`` to run on the package.
 Find all addon pipelines `here. <https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html>`_
 
 
-If the ``reindex`` flag is set to True, existing package will be rescanned and all the non existing package will be indexed.
+If the ``reindex`` flag is set to True, existing package will be rescanned and
+all the non existing package will be indexed.
 If the ``reindex_set`` flag is set to True, then all the package in the same set will be rescanned.
 
 

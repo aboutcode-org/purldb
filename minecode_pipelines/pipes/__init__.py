@@ -16,8 +16,6 @@ from git import Repo
 import requests
 import saneyaml
 
-from scanpipe.pipes.federatedcode import commit_and_push_changes
-
 from minecode_pipelines.utils import get_temp_file
 
 # states:
@@ -85,6 +83,8 @@ def update_checkpoints_in_github(checkpoint, cloned_repo, path, logger=None):
 
 
 def update_checkpoints_file_in_github(checkpoints_file, cloned_repo, path):
+    from scanpipe.pipes.federatedcode import commit_and_push_changes
+
     checkpoint_path = os.path.join(cloned_repo.working_dir, path)
     shutil.move(checkpoints_file, checkpoint_path)
     commit_message = """Update federatedcode purl mining checkpoint"""

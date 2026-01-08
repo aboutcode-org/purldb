@@ -24,9 +24,9 @@ class GitlabPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         expected = [
             ("v0.0.5", "Richard T. Carback III", "rick.carback@gmail.com"),
             ("v0.0.4", "Richard T. Carback III", "rick.carback@gmail.com"),
-            ("v0.0.3", "Benjamin Wenger", "ben@privategrity.com"),
+            ("v0.0.3", "Richard T. Carback III", "rick.carback@gmail.com"),
             ("v0.0.2", "Richard T. Carback III", "rick.carback@gmail.com"),
-            ("v0.0.1", "Jonathan Wenger", "jono@elixxir.io"),
+            ("v0.0.1", "Richard T. Carback III", "rick.carback@gmail.com"),
             ("v0.0.0", "Sydney Anne Erickson", "sydney@elixxir.io"),
         ]
         for item in version_author_list:
