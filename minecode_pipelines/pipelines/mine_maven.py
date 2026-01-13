@@ -185,7 +185,7 @@ class MineMaven(MineCodeBasePipeline):
             logger=self.log,
         )
 
-    @optional_step("plugins.gradle.org")
+    @optional_step("repo.spring.io/milestone")
     def save_check_point_repo_spring_io_milestone(self):
         checkpoint_path = "maven/repo.spring.io/milestone/checkpoints.json"
         last_incremental = self.maven_nexus_collector.index_properties.get(
