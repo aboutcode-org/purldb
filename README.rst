@@ -2,7 +2,8 @@
 PurlDB
 ======
 
-PurlDB provides tools to create and update a database of package metadata keyed by PURL (Package URL) and an API for the PURL data.
+PurlDB provides tools to create and update a database of package metadata keyed by PURL (Package URL) and an API for the PURL data. PurlDB is an `AboutCode project <https://aboutcode.org>`_.
+
 
 Why Use PurlDB? 
 ===============
