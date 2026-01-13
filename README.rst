@@ -1,33 +1,29 @@
-==========
-The purldb
-==========
+======
+PurlDB
+======
 
-This purldb consists of these main tools:
+PurlDB provides tools to create and update a database of package metadata keyed by PURL (Package URL) and an API for the PURL data.
 
-- PackageDB that is the reference model (based on ScanCode toolkit) that contains package data with
-  PURL (Package URLs) being a first class citizen.
-- MineCode that contains utilities to mine package repositories
-- MatchCode that contains utilities to index package metadata and resources for matching
-- MatchCode.io that provides package matching functionalities for codebases
-- ClearCode that contains utilities to mine Clearlydefined for package data
-- purldb-toolkit CLI utility and library to use the PurlDB, its API and various related libraries.
+Why Use PurlDB? 
+===============
 
-These are designed to be used first for reference such that one can query for packages by purl and
-validate purl existence.
+Take advantage of PurlDB to get fast pre-scanned metadata for popular software packages, integrated with other AboutCode projects. 
 
-In the future, the collected packages will be used as reference for dependency resolution, as a
-reference knowledge base for all package data, as a reference for vulnerable range resolution and
-more.
+Getting Started
+===============
 
-Documentation
--------------
+Instructions to get you up and running on your local machine are at `Getting Started <https://aboutcode.readthedocs.io/projects/PURLdb/en/stable/>`_ .
 
-See https://aboutcode.readthedocs.io/projects/PURLdb/en/latest/ for PurlDB
-documentation.
+The PurlDB documentation also provides: 
 
+- prerequisites for installing the software.
+- identification of the various tools that contribute to the PurlDB project, including `PackageDB <https://github.com/aboutcode-org/purldb/tree/main/packagedb>`_ , `MineCode <https://github.com/aboutcode-org/purldb/tree/main/minecode>`_, `MatchCode <https://github.com/aboutcode-org/purldb/tree/main/matchcode>`_, `purldb-toolkit <https://github.com/aboutcode-org/purldb-toolkit>`_ and others. 
+- guidelines for contributing to code development.
+- how to get started with the REST API. 
+- guidelines for contributing to code development.
 
 Acknowledgements, Funding, Support and Sponsoring
---------------------------------------------------------
+=================================================
 
 This project is funded, supported and sponsored by:
 
