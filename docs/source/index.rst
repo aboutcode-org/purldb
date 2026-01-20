@@ -1,28 +1,12 @@
-=========================================
-   Welcome to PurlDB documentation!
-=========================================
+PurlDB Documentation
+====================
 
+PurlDB provides tools to create and update a database of package metadata keyed by 
+PURL (Package URL) and an API for the PURL data. PurlDB is an `AboutCode project <https://aboutcode.org>`_.
 
-PurlDB aka. ``Package URL Database`` is a database of software package metadata keyed by Package-URL
-or purl that offers information and indentication services about software packages.
+Details of the Package URL specification are available `here <https://github.com/package-url>`_.
 
-A PURL or Package-URL is an attempt to standardize existing approaches to reliably identify and
-locate software packages in general and Free and Open Source Software (FOSS) packages in
-particular.
-
-A PURL is a URL string used to identify and locate a software package in a mostly universal and
-uniform way across programming languages, package managers, packaging conventions, tools, APIs and
-databases.
-
-Why PurlDB?
-------------------
-
-Modern software is assembled from 1000's of FOSS packages: being able to catalog these, normalize
-their metadata, track their versions, licenses and dependencies and being able to discover, locate
-and identify them as used in a codebase is essential to healthy, sustainable and secure modern
-software development.
-
-This what PurlDB is all about and it offers:
+PurlDB offers: 
 
 - An active, continuously updated reference for FOSS packages origin, information and licensing,
   aka. open code knowledge base.
@@ -31,9 +15,76 @@ This what PurlDB is all about and it offers:
 - Additional utilities to help asses the quality and integrity of software packages as used in the
   software supply chain.
 
+Documentation overview
+~~~~~~~~~~~~~~~~~~~~~~
 
-What can you do PurlDB?
-------------------------
+The overview below outlines how the documentation is structured
+to help you know where to look for certain things.
+
+.. rst-class:: clearfix row
+
+.. rst-class:: column column2 top-left
+
+Getting started
+~~~~~~~~~~~~~~~~~~~~~~
+
+Start here if you are new to PurlDB.
+
+- :ref:`getting-started/index`
+
+.. rst-class:: column column2 top-right
+
+How-To
+~~~~~~~~~~~~~~~~~~~~~~
+
+Learn via practical step-by-step guides.
+
+- :ref:`how-to-guides/index`
+
+.. rst-class:: column column2 bottom-left
+
+Reference Docs
+~~~~~~~~~~~~~~~~~~
+
+Reference documentation for PurlDB features and customizations.
+
+- :ref:`matchcode/index`
+
+.. rst-class:: column column2 bottom-right
+
+Explanations
+~~~~~~~~~~~~~~~~~~
+
+Consult the reference to understand PurlDB concepts.
+
+- :ref:`purldb/index`
+
+.. rst-class:: row clearfix
+
+Misc
+~~~~~~~~~~~~~~~
+
+- :ref:`license`
+- :ref:`funding`
+- :ref:`contributing`
+- :ref:`testing`
+- :ref:`changelog`
+
+.. include:: improve-docs.rst
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+
+.. toctree::
+    :maxdepth: 2
+    :hidden:
+
+What can you do with PurlDB?
+============================
 
 - Build a comprehensive open source software packages knowledge base. This includes the extensive
   scan of package code for origin, dependencies, embedded packages and licenses.
@@ -49,9 +100,8 @@ What can you do PurlDB?
 - Access multiple services keyed by PURL, such as metadata, package versions, packages URLs, or
   dependencies.
 
-
 What's in PurlDB?
--------------------
+=================
 
 The PurlDB project consists of these main tools:
 
@@ -71,97 +121,3 @@ The PurlDB project consists of these main tools:
 
 - ClearCode that contains utilities to mine Clearlydefined for package data.
 
-
-These are designed to be used first for reference such that one can query for
-packages by purl and validate purl existence.
-
-Collected packages can be used as reference for dependency resolution, as a reference knowledge base
-for all package data, as a reference for vulnerable range resolution and more use cases. All of
-these are important to support modern software development open source assembly.
-
-
-Getting Started
----------------
-
-.. toctree::
-   :maxdepth: 2
-
-   getting-started/index
-
-----
-
-PurlDB
-------
-
-PurlDB is a database of packages, with package metadata and indexes for package
-files and archives, and various API endpoints to get data about these packages
-and match to other codebases.
-
-.. toctree::
-   :maxdepth: 2
-
-   purldb/index
-
-----
-
-PurlDB toolkit
---------------
-
-purldb-toolkit is command line utility and library to use the PurlDB, its API
-and various related libraries.
-
-.. note::
-
-    purldb-toolkit has moved to its own repo at https://github.com/aboutcode-org/purldb-toolkit
-    from its previous location at https://github.com/aboutcode-org/purldb/tree/main/purldb-toolkit
-
-----
-
-Matchcode
----------
-
-Matchcode has the functionalities to index archives, files and directories for purldb
-packages and API endpoints to make matching available. A ScanCode.io pipeline for
-matching is also present to match scanned codebases.
-
-.. toctree::
-   :maxdepth: 2
-
-   matchcode/index
-
-
-----
-
-How-To Documents
-----------------
-
-How-To documents explain how to accomplish specific tasks.
-
-.. toctree::
-   :maxdepth: 2
-
-   how-to-guides/index
-
-----
-
-See also
--------------
-
-.. toctree::
-   :maxdepth: 2
-
-   license
-   funding
-   contributing
-   testing
-   changelog
-
-----
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
