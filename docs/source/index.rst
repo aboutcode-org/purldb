@@ -76,8 +76,8 @@ Misc
 Indices and tables
 ==================
 
-* :doc:`genindex`
-* :doc:`search`
+* :ref:`genindex`
+* :ref:`search`
 
 .. toctree::
     :maxdepth: 2
@@ -90,12 +90,12 @@ What can you do with PurlDB?
   scan of package code for origin, dependencies, embedded packages and licenses.
 
 - Create advanced analysis for open source packages by collecting
-  :doc:`symbols_and_strings`.
+  :ref:`symbols_and_strings`.
 
 - Detect software supply chain issues by mapping package binaries to their corresponding source code
   and determining if there are possible discrepancies between sources and binaries (such as with the
   XZ utils attack, or sources and binaries, where package may not report the exact source code
-  used to build binaries with the :doc:`deploy_to_devel` mapping analysis.
+  used to build binaries with the :ref:`deploy_to_devel` mapping analysis.
 
 - Access multiple services keyed by PURL, such as metadata, package versions, packages URLs, or
   dependencies.
