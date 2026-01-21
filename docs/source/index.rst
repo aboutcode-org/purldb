@@ -30,7 +30,7 @@ Getting started
 
 Start here if you are new to PurlDB.
 
-- :ref:`getting-started/index`
+- :doc:`getting-started/index`
 
 .. rst-class:: column column2 top-right
 
@@ -39,7 +39,7 @@ How-To
 
 Learn via practical step-by-step guides.
 
-- :ref:`how-to-guides/index`
+- :doc:`how-to-guides/index`
 
 .. rst-class:: column column2 bottom-left
 
@@ -48,7 +48,7 @@ Reference Docs
 
 Reference documentation for PurlDB features and customizations.
 
-- :ref:`matchcode/index`
+- :doc:`matchcode/index`
 
 .. rst-class:: column column2 bottom-right
 
@@ -57,18 +57,18 @@ Explanations
 
 Consult the reference to understand PurlDB concepts.
 
-- :ref:`purldb/index`
+- :doc:`purldb/index`
 
 .. rst-class:: row clearfix
 
 Misc
 ~~~~~~~~~~~~~~~
 
-- :ref:`license`
-- :ref:`funding`
-- :ref:`contributing`
-- :ref:`testing`
-- :ref:`changelog`
+- :doc:`license`
+- :doc:`funding`
+- :doc:`contributing`
+- :doc:`testing`
+- :doc:`changelog`
 
 .. include:: improve-docs.rst
 
@@ -76,8 +76,8 @@ Misc
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`search`
+* :doc:`genindex`
+* :doc:`search`
 
 .. toctree::
     :maxdepth: 2
@@ -90,12 +90,12 @@ What can you do with PurlDB?
   scan of package code for origin, dependencies, embedded packages and licenses.
 
 - Create advanced analysis for open source packages by collecting
-  :ref:`symbols_and_strings`.
+  :doc:`symbols_and_strings`.
 
 - Detect software supply chain issues by mapping package binaries to their corresponding source code
   and determining if there are possible discrepancies between sources and binaries (such as with the
   XZ utils attack, or sources and binaries, where package may not report the exact source code
-  used to build binaries with the :ref:`deploy_to_devel` mapping analysis.
+  used to build binaries with the :doc:`deploy_to_devel` mapping analysis.
 
 - Access multiple services keyed by PURL, such as metadata, package versions, packages URLs, or
   dependencies.
