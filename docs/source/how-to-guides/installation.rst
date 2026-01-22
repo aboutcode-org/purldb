@@ -176,7 +176,7 @@ Make sure those are installed before attempting the ScanCode.io installation::
         libgpgme11 libdevmapper1.02.1 libguestfs-tools
 
 See also `ScanCode-toolkit Prerequisites
-<https://scancode-toolkit.readthedocs.io/en/stable/getting-started/install.html#prerequisites>`_
+<https://scancode-toolkit.readthedocs.io/en/stable/getting-started/installation/index.html#installation-prerequisites>`_
 for more details.
 
 
