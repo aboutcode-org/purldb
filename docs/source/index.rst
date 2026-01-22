@@ -1,12 +1,12 @@
 PurlDB Documentation
 ====================
 
-PurlDB provides tools to create and update a database of package metadata keyed by 
+PurlDB provides tools to create and update a database of package metadata keyed by
 PURL (Package URL) and an API for the PURL data. PurlDB is an `AboutCode project <https://aboutcode.org>`_.
 
 Details of the Package URL specification are available `here <https://github.com/package-url>`_.
 
-PurlDB offers: 
+PurlDB offers:
 
 - An active, continuously updated reference for FOSS packages origin, information and licensing,
   aka. open code knowledge base.

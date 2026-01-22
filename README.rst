@@ -5,22 +5,23 @@ PurlDB
 PurlDB provides tools to create and update a database of package metadata keyed by PURL (Package URL) and an API for the PURL data. PurlDB is an `AboutCode project <https://aboutcode.org>`_.
 
 
-Why Use PurlDB? 
+Why Use PurlDB?
 ===============
 
-Take advantage of PurlDB to get fast pre-scanned metadata for popular software packages, integrated with other AboutCode projects. 
+Take advantage of PurlDB to get fast pre-scanned metadata for popular software
+packages, integrated with other AboutCode projects.
 
 Getting Started
 ===============
 
 Instructions to get you up and running on your local machine are at `Getting Started <https://aboutcode.readthedocs.io/projects/PURLdb/en/stable/>`_ .
 
-The PurlDB documentation also provides: 
+The PurlDB documentation also provides:
 
 - prerequisites for installing the software.
-- identification of the various tools that contribute to the PurlDB project, including `PackageDB <https://github.com/aboutcode-org/purldb/tree/main/packagedb>`_ , `MineCode <https://github.com/aboutcode-org/purldb/tree/main/minecode>`_, `MatchCode <https://github.com/aboutcode-org/purldb/tree/main/matchcode>`_, `purldb-toolkit <https://github.com/aboutcode-org/purldb-toolkit>`_ and others. 
+- identification of the various tools that contribute to the PurlDB project, including `PackageDB <https://github.com/aboutcode-org/purldb/tree/main/packagedb>`_ , `MineCode <https://github.com/aboutcode-org/purldb/tree/main/minecode>`_, `MatchCode <https://github.com/aboutcode-org/purldb/tree/main/matchcode>`_, `purldb-toolkit <https://github.com/aboutcode-org/purldb-toolkit>`_ and others.
 - guidelines for contributing to code development.
-- how to get started with the REST API. 
+- how to get started with the REST API.
 - guidelines for contributing to code development.
 
 Acknowledgements, Funding, Support and Sponsoring
