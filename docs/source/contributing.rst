@@ -1,3 +1,5 @@
+:orphan:
+
 .. _contributing:
 
 Contributing to PurlDB
@@ -106,7 +108,7 @@ See also :ref:`testing` for module-specific testing commands.
 
   **You must include a "Signed-off-by" to your commit messages**::
 
-    Signed-off-by: Philippe Ombredanne <pombredanne@nexb.com>
+    Signed-off-by: Philippe Ombredanne <pombredanne@aboutcode.org>
 
 4. **Your code is now ready to be pushed as a PR**
 

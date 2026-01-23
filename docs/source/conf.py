@@ -9,16 +9,16 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "purldb_project.settings")
+sys.path.insert(0, os.path.abspath("../../."))
 
 # -- Project information -----------------------------------------------------
 
 project = "PurlDB"
-copyright = "nexB Inc. and others."
+copyright = "AboutCode, nexB Inc. and others."
 author = "AboutCode.org authors and contributors"
 
 
@@ -31,7 +31,6 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_reredirects",
     "sphinx_rtd_theme",
-    "sphinx_rtd_dark_mode",
     "sphinx.ext.extlinks",
     "sphinx_copybutton",
     "sphinx.ext.autodoc",
@@ -39,20 +38,11 @@ extensions = [
 ]
 
 
-# Redirects for olds pages
-# See https://documatt.gitlab.io/sphinx-reredirects/usage.html
-redirects = {}
-
 # This points to aboutcode.readthedocs.io
 # In case of "undefined label" ERRORS check docs on intersphinx to troubleshoot
 # Link was created at commit - https://github.com/aboutcode-org/aboutcode/commit/faea9fcf3248f8f198844fe34d43833224ac4a83
 
 intersphinx_mapping = {
-    "aboutcode": ("https://aboutcode.readthedocs.io/en/latest/", None),
-    "scancode-workbench": (
-        "https://scancode-workbench.readthedocs.io/en/develop/",
-        None,
-    ),
     "scancode.io": (
         "https://scancodeio.readthedocs.io/en/latest/",
         None,
@@ -66,14 +56,13 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
 html_theme = "sphinx_rtd_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -85,7 +74,7 @@ master_doc = "index"
 
 html_context = {
     "display_github": True,
-    "github_user": "nexB",
+    "github_user": "aboutcode-org",
     "github_repo": "purldb",
     "github_version": "main",  # branch
     "conf_py_path": "/docs/source/",  # path in the checkout to the docs root

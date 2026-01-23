@@ -1,7 +1,9 @@
+:orphan:
+
 License
 =======
 
-Copyright (c) nexB Inc. and others. All rights reserved.
+Copyright (c) AboutCode, nexB Inc. and others. All rights reserved.
 
 purldb is a trademark of nexB Inc.
 

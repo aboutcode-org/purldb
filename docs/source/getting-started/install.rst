@@ -21,7 +21,7 @@ Installation steps
 Once the prerequisites have been installed, set up PurlDB with the following commands:
 ::
 
-    git clone https://github.com/nexb/purldb
+    git clone https://github.com/aboutcode-org/purldb
     cd purldb
     make dev
     make envfile
