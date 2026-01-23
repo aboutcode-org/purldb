@@ -1,8 +1,8 @@
 :orphan:
 
-===========
- Matchcode
-===========
+===============================
+ Code Matching Reference
+===============================
 
 MatchCode.io
 ------------
@@ -11,14 +11,11 @@ MatchCode.io is a Django app, based off of ScanCode.io, that exposes one API
 endpoint, ``api/matching``, which takes a ScanCode.io codebase scan, and
 performs Package matching on it.
 
-Currently, it performs three matching steps, using the PackageDB indices:
+MatchCode performs three matching steps, using the PackageDB indices:
 
 * Match codebase files against whole Packages archives
 * Match exactly codebase files against files
 * Match codebase directories exactly and approximately against directory indices
-
-Upcoming features include:
-
 * Match codebase files approximately
 * Match codebase file fragments (aka. snippets) including attempting to match AI-generated code
 
@@ -48,8 +45,8 @@ endpoint are routed to the MatchCode.io service.
 To run PurlDB and Matchcode.io with Docker:
 ::
 
-  docker compose -f docker-compose.yml up -d
-  docker compose -f docker-compose.matchcodeio.yml up -d
+    docker compose -f docker-compose.yml up -d
+    docker compose -f docker-compose.matchcodeio.yml up -d
 
 
 Scancode.io pipeline

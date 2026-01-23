@@ -1,7 +1,7 @@
 :orphan:
 
-PURLdb
-======
+Explanations
+======================
 
 .. toctree::
    :maxdepth: 2

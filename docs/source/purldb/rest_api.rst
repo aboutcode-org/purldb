@@ -1,7 +1,7 @@
 .. _rest_api:
 
-REST API
-========
+Understanding the PurlDB REST API
+====================================
 
 To get started with the REST API, visit the **PurlDB API endpoints** at
 http://localhost/api/ or http://localhost:8001/api/ if you run on a

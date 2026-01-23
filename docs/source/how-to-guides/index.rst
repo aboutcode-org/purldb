@@ -1,9 +1,7 @@
-:orphan:
-
-How-To-Guides
+Tutorials
 =============
 
-Here are the various how-to guides for various purldb modules designed to guide you
+Here are the various how-to guides for various PurlDB modules designed to guide you
 through specific use cases:
 
 .. toctree::
