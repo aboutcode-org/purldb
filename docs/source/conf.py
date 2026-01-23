@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = "PurlDB"
-copyright = "nexB Inc. and others."
+copyright = "AboutCode, nexB Inc. and others."
 author = "AboutCode.org authors and contributors"
 
 
@@ -85,7 +85,7 @@ master_doc = "index"
 
 html_context = {
     "display_github": True,
-    "github_user": "nexB",
+    "github_user": "abouctde-org",
     "github_repo": "purldb",
     "github_version": "main",  # branch
     "conf_py_path": "/docs/source/",  # path in the checkout to the docs root
