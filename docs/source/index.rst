@@ -12,8 +12,9 @@ PurlDB offers:
   aka. open code knowledge base.
 - A code matching capability to identify and find similar code to existing indexed FOSS code using
   this knowledge base.
-- Additional utilities to help asses the quality and integrity of software packages as used in the
+- Additional utilities to help assess the quality and integrity of software packages as used in the
   software supply chain.
+
 
 Documentation overview
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -25,6 +26,7 @@ to help you know where to look for certain things.
 
 .. rst-class:: column column2 top-left
 
+
 Getting started
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -33,6 +35,7 @@ Start here if you are new to PurlDB.
 - :doc:`getting-started/index`
 
 .. rst-class:: column column2 top-right
+
 
 How-To
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -82,42 +85,4 @@ Indices and tables
 .. toctree::
     :maxdepth: 2
     :hidden:
-
-What can you do with PurlDB?
-============================
-
-- Build a comprehensive open source software packages knowledge base. This includes the extensive
-  scan of package code for origin, dependencies, embedded packages and licenses.
-
-- Create advanced analysis for open source packages by collecting
-  :ref:`symbols_and_strings`.
-
-- Detect software supply chain issues by mapping package binaries to their corresponding source code
-  and determining if there are possible discrepancies between sources and binaries (such as with the
-  XZ utils attack, or sources and binaries, where package may not report the exact source code
-  used to build binaries with the :ref:`deploy_to_devel` mapping analysis.
-
-- Access multiple services keyed by PURL, such as metadata, package versions, packages URLs, or
-  dependencies.
-
-What's in PurlDB?
-=================
-
-The PurlDB project consists of these main tools:
-
-- PackageDB that is the database and reference model (based on ScanCode toolkit)
-  that contains package data with PURL (Package URLs) being a first class citizen and the primaty
-  key to access information.
-
-- MineCode that contains utilities to mine package repositories and populate the PackageDB
-
-- MatchCode that contains utilities to index package metadata and resources for
-  matching
-
-- MatchCode.io that provides code package and files matching functionalities for codebases
-
-- purldb-toolkit with its "purlcli" command line (CLI) utility and library to use the PurlDB, its
-  API and various related libraries.
-
-- ClearCode that contains utilities to mine Clearlydefined for package data.
 
