@@ -14,7 +14,7 @@ packages, integrated with other AboutCode projects.
 Getting Started
 ===============
 
-Instructions to get you up and running on your local machine are at `Getting Started <https://aboutcode.readthedocs.io/projects/PURLdb/en/stable/>`_ .
+Instructions to get you up and running on your local machine are at `Getting Started <https://purldb.readthedocs.io/en/latest/>`_ .
 
 The PurlDB documentation also provides:
 
