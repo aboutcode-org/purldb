@@ -125,6 +125,11 @@ class PypiPackageReleaseVisitor(HttpJsonVisitor):
             if not url:
                 continue
             package_url = PackageURL(type="pypi", name=name, version=version).to_string()
+            digests = download.get("digests")
+            if digests:
+                sha256_digest = digests.get("sha256")
+            else:
+                sha256_digest = None
             yield URI(
                 url,
                 package_url=package_url,
@@ -132,6 +137,7 @@ class PypiPackageReleaseVisitor(HttpJsonVisitor):
                 size=download.get("size"),
                 date=download.get("upload_time"),
                 md5=download.get("md5_digest"),
+                sha256=sha256_digest,
                 source_uri=self.uri,
             )
 
@@ -268,6 +274,9 @@ def build_packages(metadata, purl=None):
         )
         # TODO: Check for other checksums
         download_data["md5"] = download.get("md5_digest")
+        digests = download.get("digests")
+        if digests and (sha256_digest := digests.get("sha256")):
+            download_data["sha256"] = sha256_digest
         download_data.update(common_data)
         package = scan_models.PackageData.from_data(download_data)
         package.datasource_id = "pypi_api_metadata"
