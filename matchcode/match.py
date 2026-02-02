@@ -173,7 +173,7 @@ def individual_file_match(codebase):
 
 def approximate_file_match(codebase):
     """
-    Update Matches from approximatly matched Package files in `codebase`.
+    Update Matches from approximately matched Package files in `codebase`.
 
     Return  the number of approximate matches found in `codebase`.
     """

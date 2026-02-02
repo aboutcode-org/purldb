@@ -72,7 +72,7 @@ class HaxeVersionsVisitor(HttpVisitor):
                 continue
             href = a["href"]
             if href and href.startswith("/p/") and href.endswith("/"):
-                # Parse if the href contains the versino info: <a href="/p/openfl/8.6.3/">
+                # Parse if the href contains the version info: <a href="/p/openfl/8.6.3/">
                 project_version = href.replace("/p/", "").rstrip("/")
                 project_version = project_version.split("/")
                 if len(project_version) == 2:

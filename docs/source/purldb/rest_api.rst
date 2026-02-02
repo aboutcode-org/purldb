@@ -133,7 +133,7 @@ An API endpoint that provides the ability to list and get packages.
                 "parties": [
                     {
                         "type": "person",
-                        "role": "developper",
+                        "role": "developer",
                         "name": "Elastic",
                         "email": null,
                         "url": "https://www.elastic.co"
@@ -277,7 +277,7 @@ The package details view returns all information available about a package.
         "parties": [
             {
                 "type": "person",
-                "role": "developper",
+                "role": "developer",
                 "name": "Elastic",
                 "email": null,
                 "url": "https://www.elastic.co"
@@ -468,7 +468,7 @@ Using cURL to get enhanced package data:
         "parties": [
             {
                 "type": "person",
-                "role": "developper",
+                "role": "developer",
                 "name": "Elastic",
                 "email": null,
                 "url": "https://www.elastic.co"
@@ -550,7 +550,7 @@ Using cURL to reindex a package:
 Filter by checksum
 ~~~~~~~~~~~~~~~~~~
 
-Take a mapping, where the keys are the names of the checksum algorthm and the
+Take a mapping, where the keys are the names of the checksum algorithm and the
 values is a list of checksum values and query those values against the
 packagedb.
 
@@ -666,7 +666,7 @@ One action is available on resources:
 Filter by checksum
 ~~~~~~~~~~~~~~~~~~
 
-Take a mapping, where the keys are the names of the checksum algorthm and the
+Take a mapping, where the keys are the names of the checksum algorithm and the
 values is a list of checksum values and query those values against the
 packagedb.
 

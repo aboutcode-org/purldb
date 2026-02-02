@@ -200,7 +200,7 @@ def index_resource_fingerprints(codebase, package):
     Return a tuple of integers, `indexed_adci`, `indexed_adsi`, and
     `indexed_arci` that represent the number of indexed
     ApproximateDirectoryContentIndex, ApproximateDirectoryStructureIndex, and
-    ApproximateResourceContentIndex created, respectivly.
+    ApproximateResourceContentIndex created, respectively.
     """
     from matchcode.models import ApproximateDirectoryContentIndex
     from matchcode.models import ApproximateDirectoryStructureIndex
@@ -252,7 +252,7 @@ def index_package_directories(package):
     Return a tuple of integers, `indexed_adci`, `indexed_adsi`, and
     `indexed_arci` that represent the number of indexed
     ApproximateDirectoryContentIndex, ApproximateDirectoryStructureIndex, and
-    ApproximateResourceContentIndex created, respectivly.
+    ApproximateResourceContentIndex created, respectively.
 
     Return 0, 0, 0 if a VirtualCodebase cannot be created from the Resources of
     a Package.

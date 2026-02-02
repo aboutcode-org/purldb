@@ -27,7 +27,7 @@ CPAN_TYPE = "cpan"
 def get_cpan_packages(cpan_repo=CPAN_REPO, logger=None):
     """
     Get cpan package names parsed from the `02packages.details.txt`
-    which conatins a list of all modules and their respective
+    which contains a list of all modules and their respective
     package archive paths. We parse the package names and their respective
     path_prefixes with author page path from this list.
     """

@@ -11,9 +11,9 @@ pipeline and stores them in the ``extra_data`` field of the resource model.
 What are symbols?
 ------------------
 
-Source code symbols are the names of the functions, methods, classes, varibales and data structures
-as found in source code. Another name is "identifiers". Source code iterals (or "strings") are the
-string values of variables, such as messages asssigned to a variable or constant in the source code
+Source code symbols are the names of the functions, methods, classes, variables and data structures
+as found in source code. Another name is "identifiers". Source code literals (or "strings") are the
+string values of variables, such as messages assigned to a variable or constant in the source code
 of a program.
 
 Why would you want to collect source symbols?

@@ -68,15 +68,15 @@ The processing is organized around these key objects:
   was built for and these tags can be matched to an Environment.
 
 - An Environment is a combination of a Python version and operating system
-  (e.g., platfiorm and ABI tags.) and is represented by the "tags" it supports.
+  (e.g., platform and ABI tags.) and is represented by the "tags" it supports.
 
 - A plain LinksRepository which is just a collection of URLs scrape from a web
-  page such as HTTP diretory listing. It is used either with pip "--find-links"
+  page such as HTTP directory listing. It is used either with pip "--find-links"
   option or to fetch ABOUT and LICENSE files.
 
 - A PypiSimpleRepository is a PyPI "simple" index where a HTML page is listing
   package name links. Each such link points to an HTML page listing URLs to all
-  wheels and sdsist of all versions of this package.
+  wheels and sdist of all versions of this package.
 
 PypiSimpleRepository and Packages are related through packages name, version and
 filenames.
@@ -265,7 +265,7 @@ def download_wheel(name, version, environment, dest_dir=THIRDPARTY_DIR, repos=tu
             fetched_wheel_filenames.append(fetched_wheel_filename)
 
         if fetched_wheel_filenames:
-            # do not futher fetch from other repos if we find in first, typically PyPI
+            # do not further fetch from other repos if we find in first, typically PyPI
             break
 
     return fetched_wheel_filenames
@@ -305,7 +305,7 @@ def download_sdist(name, version, dest_dir=THIRDPARTY_DIR, repos=tuple()):
         fetched_sdist_filename = package.sdist.download(dest_dir=dest_dir)
 
         if fetched_sdist_filename:
-            # do not futher fetch from other repos if we find in first, typically PyPI
+            # do not further fetch from other repos if we find in first, typically PyPI
             break
 
     return fetched_sdist_filename
@@ -1648,7 +1648,7 @@ class PypiSimpleRepository:
             self.fetched_package_normalized_names.add(normalized_name)
             try:
                 links = self.fetch_links(normalized_name=normalized_name)
-                # note that thsi is sorted so the mapping is also sorted
+                # note that this is sorted so the mapping is also sorted
                 versions = {
                     package.version: package
                     for package in PypiPackage.packages_from_many_paths_or_urls(paths_or_urls=links)
