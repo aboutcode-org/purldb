@@ -70,6 +70,10 @@ def get_checkpoint_from_file(cloned_repo, path):
         return checkpoint_data or {}
     except FileNotFoundError:
         return {}
+    except FileNotFoundError:
+        return {}
+    except json.JSONDecodeError:
+        return {}
 
 
 def update_checkpoints_in_github(checkpoint, cloned_repo, path, logger=None):
