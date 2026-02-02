@@ -67,9 +67,11 @@ def get_checkpoint_from_file(cloned_repo, path):
     try:
         with open(checkpoint_path) as f:
             checkpoint_data = json.load(f)
-        return checkpoint_data or {}
     except FileNotFoundError:
         return {}
+    except json.JSONDecodeError:
+        return {}
+    return checkpoint_data
 
 
 def update_checkpoints_in_github(checkpoint, cloned_repo, path, logger=None):
