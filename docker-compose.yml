@@ -8,7 +8,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.web.rule=
         Host(`127.0.0.1`)
-        || Host(`localhost`)"
+        || Host(`localhost`)
+        || Host(`192.168.1.12`)"
       - "traefik.http.routers.web.entrypoints=web"
     volumes:
       - ./etc/nginx/conf.d/:/etc/nginx/conf.d/
@@ -19,7 +20,7 @@ services:
     restart: always
 
   traefik:
-    image: "traefik:v2.10"
+    image: "traefik:v3.6.8"
     container_name: "traefik"
     hostname: "traefik"
     ports:
