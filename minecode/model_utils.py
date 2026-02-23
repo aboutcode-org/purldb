@@ -16,10 +16,10 @@ from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
 from packagedb.models import Party
 from packagedb.models import Resource
-from packagedb.models import VcsAlias
 
 from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import PartySerializer
+
 TRACE = False
 
 logger = logging.getLogger(__name__)
@@ -72,17 +72,18 @@ def _create_vcs_aliases(old_url, new_url):
     try:
         from purl2vcs.find_source_repo import convert_repo_urls_to_purls
         from packagedb.models import VcsAlias
+
         old_purls = list(convert_repo_urls_to_purls([old_url]))
         new_purls = list(convert_repo_urls_to_purls([new_url]))
 
         for old_purl in old_purls:
             for new_purl in new_purls:
                 VcsAlias.objects.get_or_create(
-                    old_vcs_purl=str(old_purl),
-                    new_vcs_purl=str(new_purl)
+                    old_vcs_purl=str(old_purl), new_vcs_purl=str(new_purl)
                 )
     except Exception as e:
         logger.error(f"Failed to create VcsAlias: {e}")
+
 
 def merge_packages(existing_package, new_package_data, replace=False):
     """
@@ -414,7 +415,7 @@ def merge_or_create_package(scanned_package, visit_level, override=False, filena
         created_package, created = Package.objects.get_or_create(**package_data)
         if created:
             created_package.append_to_history(f"New Package created from URI: {package_uri}")
-            
+
             older_packages = Package.objects.filter(
                 type=scanned_package.type or "",
                 namespace=scanned_package.namespace or "",
@@ -422,10 +423,18 @@ def merge_or_create_package(scanned_package, visit_level, override=False, filena
             ).exclude(version=scanned_package.version)
 
             if older_packages.exists():
-                older_package = older_packages.order_by('-pk').first()
-                if older_package.vcs_url and created_package.vcs_url and older_package.vcs_url != created_package.vcs_url:
+                older_package = older_packages.order_by("-pk").first()
+                if (
+                    older_package.vcs_url
+                    and created_package.vcs_url
+                    and older_package.vcs_url != created_package.vcs_url
+                ):
                     _create_vcs_aliases(older_package.vcs_url, created_package.vcs_url)
-                if older_package.homepage_url and created_package.homepage_url and older_package.homepage_url != created_package.homepage_url:
+                if (
+                    older_package.homepage_url
+                    and created_package.homepage_url
+                    and older_package.homepage_url != created_package.homepage_url
+                ):
                     # Some packages have their homepage url set to their vcs url, so we should create an alias for that too
                     _create_vcs_aliases(older_package.homepage_url, created_package.homepage_url)
 
