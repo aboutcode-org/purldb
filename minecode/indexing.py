@@ -174,7 +174,9 @@ def check_for_duplicate_packages(package):
     ]
 
     # Check for dupes
-    existing_packages = Package.objects.filter(sha1=package.sha1, is_duplicate=False)
+    existing_packages = Package.objects.filter(sha1=package.sha1, is_duplicate=False).exclude(
+        pk=package.pk
+    )
     for existing_package in existing_packages:
         # see if the package we are indexing is older than the package we have
         # TODO: This will probably have to be a task
