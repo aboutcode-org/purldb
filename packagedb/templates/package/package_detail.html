@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Package Details</h1>
+
+<ul>
+    <li><strong>Package URL:</strong> {{ package.package_url }}</li>
+    <li><strong>Filename:</strong> {{ package.filename }}</li>
+    <li><strong>Download URL:</strong> {{ package.download_url }}</li>
+    <li><strong>Size:</strong> {{ package.size }}</li>
+    <li><strong>Release Date:</strong> {{ package.release_date }}</li>
+    <li><strong>Primary language:</strong> {{ package.primary_language }}</li>
+    <li><strong>Description:</strong> {{ package.description }}</li>
+    <li><strong>Type:</strong> {{ package.type }}</li>
+    <li><strong>Namespace:</strong> {{ package.namespace }}</li>
+    <li><strong>Name:</strong> {{ package.name }}</li>
+    <li><strong>Version:</strong> {{ package.version }}</li>
+    <li><strong>Homepage URL:</strong> {{ package.homepage_url }}</li>
+    <li><strong>SHA1:</strong> {{ package.sha1 }}</li>
+    <li><strong>Declared license:</strong> {{ package.declared_license_expression_spdx }}</li>
+</ul>
+
+<h2>Dependencies</h2>
+{% if package.dependencies.all %}
+    <ul>
+        {% for dep in package.dependencies.all %}
+            <li>{{ dep }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No dependencies listed.</p>
+{% endif %}
+
+<h2>Source Packages</h2>
+{% if package.source_packages.all %}
+  <ul>
+    {% for sp in package.source_packages.all %}
+      <li>
+        <strong>{{ sp.name }}</strong>
+        {% if sp.version %} — v{{ sp.version }}{% endif %}
+        {% if sp.package_url %}<br>PURL: {{ sp.package_url }}{% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No source packages linked.</p>
+{% endif %}
+
+<h2>Parties</h2>
+{% if package.parties.all %}
+    <ul>
+        {% for party in package.parties.all %}
+            <li>
+                <strong>Type:</strong> {{ party.type }}<br>
+                <strong>Role:</strong> {{ party.role }}<br>
+                <strong>Name:</strong> {{ party.name }}<br>
+                <strong>Email:</strong> {{ party.email }}<br>
+                {% if party.url %}
+                    <strong>URL:</strong> <a href="{{ party.url }}">{{ party.url }}</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No parties listed.</p>
+{% endif %}
+{% endblock %}
