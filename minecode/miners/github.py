@@ -94,7 +94,18 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
         The main idea is to fetch download_url...
         """
         full_name = uri.replace("https://api.github.com/repos/", "")
+
         g = Github()
+
+        rate_limit = g.get_rate_limit().core
+        if rate_limit.remaining == 0:
+            import calendar
+            from minecode.utils import set_github_rate_limit
+
+            reset_epoch = calendar.timegm(rate_limit.reset.timetuple())
+            set_github_rate_limit(reset_epoch)
+            raise Exception("GitHub API Rate Limit Exceeded: Bailing to allow queue to continue")
+
         repo = g.get_repo(full_name)
 
         common_data = dict(
