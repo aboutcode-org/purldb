@@ -20,6 +20,7 @@ from packagedb.models import Package
 from packagedb.models import PackageWatch
 from packagedb.models import Party
 from packagedb.models import Resource
+from packagedb.models import sort_version
 
 
 class ResourceModelTestCase(TransactionTestCase):
@@ -494,3 +495,125 @@ class PackageWatchModelTestCase(TransactionTestCase):
         package = Package.objects.filter(download_url="http://a.ab").get_or_none()
         assert package
         assert Package.objects.filter(download_url="http://a.ab-foobar").get_or_none() is None
+
+
+class SortVersionTestCase(TransactionTestCase):
+    """Comprehensive tests for the sort_version function."""
+
+    def tearDown(self):
+        Package.objects.all().delete()
+
+    def _create_packages(self, pkg_type, versions, **kwargs):
+        """Create packages with given versions."""
+        return [
+            Package.objects.create(
+                download_url=f"http://{pkg_type}-{hash(version)}.com",
+                type=pkg_type,
+                version=version,
+                **kwargs,
+            )
+            for version in versions
+        ]
+
+    def test_sort_version_empty_list(self):
+        """Test sorting an empty list."""
+        self.assertEqual([], sort_version([]))
+
+    def test_ecosystem_versions(self):
+        """Test version sorting across multiple package ecosystems."""
+        test_cases = [
+            (
+                "npm",
+                ["1.10.0", "2.0.0", "1.0.0", "1.2.0"],
+                ["1.0.0", "1.2.0", "1.10.0", "2.0.0"],
+                {"name": "lodash"},
+            ),
+            (
+                "pypi",
+                ["1.0.1", "1.0rc1", "1.0", "1.0a1", "1.0b1"],
+                ["1.0a1", "1.0b1", "1.0rc1", "1.0", "1.0.1"],
+                {"name": "django"},
+            ),
+            (
+                "maven",
+                ["4.10", "4.0", "4.2"],
+                ["4.0", "4.2", "4.10"],
+                {"namespace": "junit", "name": "junit"},
+            ),
+            (
+                "swift",
+                ["2.0.0", "1.1.5", "1.0.0", "1.1.5^{}"],
+                ["1.0.0", "1.1.5", "1.1.5^{}", "2.0.0"],
+                {"name": "alamofire"},
+            ),
+            ("gem", ["4.0.0", "3.0.0", "3.2.0"], ["3.0.0", "3.2.0", "4.0.0"], {"name": "rails"}),
+            (
+                "deb",
+                ["1.0-10", "1.0-1", "1.0-2"],
+                ["1.0-1", "1.0-2", "1.0-10"],
+                {"name": "deb-pkg"},
+            ),
+            (
+                "nuget",
+                ["11.0.0", "10.0.0", "9.0.0"],
+                ["9.0.0", "10.0.0", "11.0.0"],
+                {"name": "Newtonsoft.Json"},
+            ),
+            ("generic", ["1.10", "1.0", "1.2"], ["1.0", "1.2", "1.10"], {"name": "gen-pkg"}),
+            (
+                "cargo",
+                ["1.0.100", "1.0.0", "1.0.20"],
+                ["1.0.0", "1.0.20", "1.0.100"],
+                {"name": "serde"},
+            ),
+            (
+                "composer",
+                ["4.0.0", "3.0.0", "3.1.0"],
+                ["3.0.0", "3.1.0", "4.0.0"],
+                {"name": "sf-console"},
+            ),
+            (
+                "golang",
+                ["v0.9.1", "v0.8.0", "v0.9.0"],
+                ["v0.8.0", "v0.9.0", "v0.9.1"],
+                {"namespace": "github.com/pkg", "name": "errors"},
+            ),
+            (
+                "rpm",
+                ["3.10.0-10", "3.10.0-1", "3.10.0-2"],
+                ["3.10.0-1", "3.10.0-2", "3.10.0-10"],
+                {"name": "kernel"},
+            ),
+            ("unknown-type", ["1.10", "1.0", "1.2"], ["1.0", "1.2", "1.10"], {"name": "unk-pkg"}),
+            (
+                "npm",
+                ["invalid-10", "invalid-1", "invalid-2"],
+                ["invalid-1", "invalid-2", "invalid-10"],
+                {"name": "inv-test"},
+            ),
+        ]
+
+        for pkg_type, unsorted, expected, kwargs in test_cases:
+            with self.subTest(pkg_type=pkg_type):
+                packages = self._create_packages(pkg_type, unsorted, **kwargs)
+                sorted_versions = [p.version for p in sort_version(packages)]
+                self.assertEqual(expected, sorted_versions, f"Failed for {pkg_type}")
+
+    def test_sort_version_generator_input(self):
+        """Test with generator input."""
+        packages = self._create_packages("npm", ["1.10.0", "1.0.0", "1.5.0"], name="gen-pkg")
+        gen = (p for p in packages)
+        sorted_packages = sort_version(gen)
+        self.assertEqual(3, len(sorted_packages))
+
+    def test_sort_version_explicit_type(self):
+        """Test with explicit package_type parameter."""
+        packages = self._create_packages("npm", ["1.10.0", "1.2.0", "1.0.0"], name="exp-pkg")
+        sorted_packages = sort_version(packages, package_type="npm")
+        self.assertEqual("1.0.0", sorted_packages[0].version)
+
+    def test_get_latest_version_integration(self):
+        """Test get_latest_version uses sort_version correctly."""
+        packages = self._create_packages("npm", ["1.0.0", "1.10.0", "1.2.0"], name="test-pkg")
+        latest = packages[0].get_latest_version()
+        self.assertEqual("1.10.0", latest.version)
