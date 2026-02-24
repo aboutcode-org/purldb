@@ -27,7 +27,7 @@ What tools are available in PurlDB?
 The PurlDB project consists of these main tools:
 
 - PackageDB that is the database and reference model (based on ScanCode toolkit)
-  that contains package data with PURL (Package URLs) being a first class citizen and the primaty
+  that contains package data with PURL (Package URLs) being a first class citizen and the primary
   key to access information.
 
 - MineCode that contains utilities to mine package repositories and populate the PackageDB
