@@ -102,7 +102,7 @@ def is_source(classifier):
 
 
 ########################################################################
-# DOCUMENTAION OF the FIELDS aka. Records:
+# DOCUMENTATION OF the FIELDS aka. Records:
 #
 # Constants and information for field names can be found in
 # https://github.com/apache/maven-indexer/tree/ecddb3c18ee1ee1357a01bffa7f9cb5252f21209
@@ -683,7 +683,7 @@ class MavenNexusCollector:
 
             # build a URL: This is the real JAR download URL
             # FIXME: this should be set at the time of creating Artifacts
-            # instead togther with the filename... especially we could use
+            # instead together with the filename... especially we could use
             # different REPOs.
             jar_download_url, _ = build_url_and_filename(
                 group_id, artifact_id, version, extension, classifier

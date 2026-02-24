@@ -76,7 +76,7 @@ Binary analysis
 ~~~~~~~~~~~~~~~~
 
 Once we have collected symbols and strings from the source code, we can search these in a binary.
-The presence of these symbols in the binaries can be used to find the origin of code complied in
+The presence of these symbols in the binaries can be used to find the origin of code compiled in
 binaries with a lightweight "reverse" engineering process. For instance, a tool like BANG
 <https://github.com/armijnhemel/binaryanalysis-ng/>_ can use the source symbols to build
 automatons-based search indexes to support an efficient binary origin analysis.

@@ -67,16 +67,16 @@ class Command(BaseCommand):
         # TODO: add if the uri be resolved by visit and/or map router
         for uri in uris:
             try:
-                # FIXME: resolve() returns an acutal Visitor object, using module names for now
+                # FIXME: resolve() returns an actual Visitor object, using module names for now
                 visit_route_resolve = repr(visit_router.resolve(uri.uri))
             except NoRouteAvailable:
-                visit_route_resolve = "No Route Availible"
+                visit_route_resolve = "No Route Available"
 
             try:
-                # FIXME: resolve() returns an acutal Mapper object, using module names for now
+                # FIXME: resolve() returns an actual Mapper object, using module names for now
                 map_route_resolve = repr(map_router.resolve(uri.uri))
             except NoRouteAvailable:
-                map_route_resolve = "No Route Availible"
+                map_route_resolve = "No Route Available"
 
             if uri.last_visit_date:
                 last_visit_date = uri.last_visit_date.isoformat()

@@ -33,7 +33,7 @@ class Matching(ScanCodebase, LoadInventory):
     2. Match archive to Resources
     3. Match directory exactly
     4. Match files exactly
-    5. Match directories approximatly
+    5. Match directories approximately
     6. Match files approximately
     7. Matching on similar file attributes (path, type, extension, size, Java classpath, etc.)
     8. Return only the best matches (We could inject some user input, policies, we could provide a list of purls to guide matching, )

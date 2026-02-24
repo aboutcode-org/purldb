@@ -74,7 +74,7 @@ def mine_npm_packages(logger=None):
 
     1. first sync: we get latest set of packages from the "_all_docs" API endpoint
        of npm replicate and save this and last sequence of the package to checkpoints.
-    2. intial sync: we get packages from checkpoint which we're trying to sync upto
+    2. initial sync: we get packages from checkpoint which we're trying to sync up to
     3. periodic sync: we get latest packages newly released in npm through the
        "_changes" API, for a period, from our last mined sequence of package.
     """
@@ -286,7 +286,7 @@ def save_mined_packages_in_checkpoint(packages_mined, synced_packages, config_re
 
 
 def update_state_and_checkpoints(state, last_seq, config_repo, logger=None):
-    # If we are finished mining all the packages in the intial sync, we can now
+    # If we are finished mining all the packages in the initial sync, we can now
     # periodically sync the packages from latest
     if state == INITIAL_SYNC_STATE:
         if logger:

@@ -28,7 +28,7 @@ This NPMJS replicate API serves as an index to get all npm packages and their re
 in paginated queries.
 
 https://replicate.npmjs.com/_changes
-This NPMJS replicate API serves as a CHANGELOG of npm packages with update sequneces which
+This NPMJS replicate API serves as a CHANGELOG of npm packages with update sequences which
 can be fetched in paginated queries.
 
 https://registry.npmjs.org/{namespace/name}

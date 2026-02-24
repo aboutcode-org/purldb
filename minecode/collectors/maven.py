@@ -97,7 +97,7 @@ class MavenNexusCollector:
 
             # build a URL: This is the real JAR download URL
             # FIXME: this should be set at the time of creating Artifacts
-            # instead togther with the filename... especially we could use
+            # instead together with the filename... especially we could use
             # different REPOs.
             jar_download_url, _ = build_url_and_filename(
                 group_id, artifact_id, version, extension, classifier
@@ -262,7 +262,7 @@ def map_maven_package(package_url, package_content, pipelines, priority=0, reind
     """
     Add a maven `package_url` to the PackageDB.
 
-    Return an error string if errors have occured in the process.
+    Return an error string if errors have occurred in the process.
 
     if ``reindex_metadata`` is True, only reindex metadata and DO NOT rescan the full package.
     """
@@ -457,7 +457,7 @@ def process_request(purl_str, **kwargs):
     try:
         package_url = PackageURL.from_string(purl_str)
     except ValueError as e:
-        error = f"error occured when parsing {purl_str}: {e}"
+        error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
     has_version = bool(package_url.version)

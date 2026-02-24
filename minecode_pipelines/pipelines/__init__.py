@@ -38,7 +38,7 @@ class MineCodeBasePipeline(Pipeline):
 
     download_inputs = False
 
-    # Control wether to ovewrite or append mined purls to existing `purls.yml` file
+    # Control whether to overwrite or append mined purls to existing `purls.yml` file
     append_purls = False
 
     checked_out_repos = {}
@@ -68,7 +68,7 @@ class MineCodeBasePipeline(Pipeline):
         Return the estimated number of packages for which PackageURLs are to be mined.
 
         Used by ``mine_and_publish_packageurls`` to log the progress of PackageURL mining.
-        Note: If estimating package count is not feasable return `None`
+        Note: If estimating package count is not feasible return `None`
         """
         raise NotImplementedError
 

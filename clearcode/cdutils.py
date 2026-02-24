@@ -34,7 +34,7 @@ import requests
 from packageurl import PackageURL
 
 """
-ClearlyDefined utlities.
+ClearlyDefined utilities.
 """
 
 TRACE_FETCH = False
@@ -532,7 +532,7 @@ def str2coord(s):
     segments = s.strip(splitter).split(splitter)
     if is_urn or is_url:
         segments = segments[1:]
-    # ignore extra segments for now beyond the 5 fisrt (such as the PR of a curation)
+    # ignore extra segments for now beyond the 5 first (such as the PR of a curation)
     segments = segments[:5]
 
     fields = (

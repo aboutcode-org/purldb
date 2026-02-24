@@ -15,7 +15,7 @@ from minecode.utils import fetch_http
 from minecode.utils import get_temp_file
 
 
-# FIXME: use attr or use a plain ResourceURI object insteaad
+# FIXME: use attr or use a plain ResourceURI object instead
 @total_ordering
 class URI:
     """
@@ -98,7 +98,7 @@ class URI:
 
     def to_dict(self, data_is_json=False):
         """
-        Return an ordered seralization of self.
+        Return an ordered serialization of self.
         Treat data as JSON if `data_is_json` is True
         """
         ordered_dict = dict()
@@ -173,7 +173,7 @@ class Visitor:
 
     def dumps(self, content):
         """
-        Return the content seralized as a string suitable for storing in a
+        Return the content serialized as a string suitable for storing in a
         database text blob. Subclasses should override when they support
         structured content (such as JSON).
         """
@@ -181,7 +181,7 @@ class Visitor:
 
     def loads(self, content):
         """
-        Return a Python data structure loaded from a content seralized as a
+        Return a Python data structure loaded from a content serialized as a
         string either as fetched or loaded from the database. Subclasses should
         override when they support structured content (such as JSON).
         """

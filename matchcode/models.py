@@ -496,7 +496,7 @@ class BaseSnippetIndexMixin(PackageRelatedMixin, models.Model):
         # strip positions
         only_fings = [hexstring_to_binarray(fing["snippet"]) for fing in fingerprints]
 
-        # Step 0: get all fingerprint records that match whith the input
+        # Step 0: get all fingerprint records that match with the input
         matched_fps = cls.objects.filter(fingerprint__in=only_fings)
 
         # Step 1: count Packages whose fingerprints appear
@@ -559,7 +559,7 @@ class BaseSnippetIndexMixin(PackageRelatedMixin, models.Model):
 
         # TODO: track matched package and package resource in ExtendedFileFragmentMatch
 
-        # Step 0: get all fingerprint records that match whith the input
+        # Step 0: get all fingerprint records that match with the input
         matched_fps = cls.objects.filter(fingerprint__in=only_fings)
 
         # Step 1: get Resources that show up in the query

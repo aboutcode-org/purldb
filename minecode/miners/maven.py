@@ -98,7 +98,7 @@ class MavenSeed(seed.Seeder):
         # other repos: http://stackoverflow.com/a/161846/302521
         # 1. google has a mirror https://www.infoq.com/news/2015/11/maven-central-at-google
         #     https://maven-central.storage.googleapis.com/repos/central/data/.index/nexus-maven-repository-index.properties
-        # 2. apache has a possible mirro at http://repo.maven.apache.org/maven2/.index/nexus-maven-repository-index.properties
+        # 2. apache has a possible mirror at http://repo.maven.apache.org/maven2/.index/nexus-maven-repository-index.properties
         # 3. ibiblio has an out of date mirror that has no directory listing and was last updated on 20161121171437
         # clojars is not a mirror, but its own repo: https://clojars.org/repo/.index/
         # other mirrors https://www.google.com/search?q=allinurl%3A%20.index%2Fnexus-maven-repository-index.properties&pws=0&gl=us&gws_rd=cr
@@ -121,7 +121,7 @@ class MavenNexusPropertiesVisitor(NonPersistentHttpVisitor):
             nexus.index.incremental-15=526
             nexus.index.incremental-14=527
 
-        Each value points to a fragment increamental index that has the same
+        Each value points to a fragment incremental index that has the same
         format as the bigger one.
         """
         base_url = "https://repo1.maven.org/maven2/.index/nexus-maven-repository-index.{index}.gz"
@@ -190,7 +190,7 @@ class MavenNexusIndexVisitor(NonPersistentHttpVisitor):
 
             # build a URL: This is the real JAR download URL
             # FIXME: this should be set at the time of creating Artifacts
-            # instead togther with the filename... especially we could use
+            # instead together with the filename... especially we could use
             # different REPOs.
             jar_download_url, file_name = build_url_and_filename(
                 group_id, artifact_id, version, extension, classifier
@@ -258,7 +258,7 @@ class MavenNexusIndexVisitor(NonPersistentHttpVisitor):
 class MavenHTMLPageVisitor(HttpVisitor):
     """
     Parse the HTML page and yield all necessary uris from the page and its sub pages.
-    Note that the regex of the route expression is using . to map any characters except new line is becasue of the case:
+    Note that the regex of the route expression is using . to map any characters except new line is because of the case:
     http://jcenter.bintray.com/'com/virtualightning'/, this is in the test too.
     """
 
@@ -292,7 +292,7 @@ class MavenMetaDataVisitor(HttpVisitor):
         # FIXME this may not be correct. The only thing we can infer from the maven
         # metadata is wha are the groupid/artifactid and available versions
         # The actual download files likely need to be obtained from directory listing
-        # or infered from parsing the POM???
+        # or inferred from parsing the POM???
 
         base_url = self.uri.partition("maven-metadata.xml")[0] + "{version}/"
         pom_url = base_url + "{artifactId}-{version}.pom"
@@ -447,7 +447,7 @@ def is_source(classifier):
 
 
 ########################################################################
-# DOCUMENTAION OF the FIELDS aka. Records:
+# DOCUMENTATION OF the FIELDS aka. Records:
 #
 # Constants and information for field names can be found in
 # https://github.com/apache/maven-indexer/tree/ecddb3c18ee1ee1357a01bffa7f9cb5252f21209
