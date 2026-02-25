@@ -24,10 +24,10 @@ from datetime import datetime
 
 from minecode_pipelines.pipes import fetch_checkpoint_from_github
 from minecode_pipelines.pipes import update_checkpoints_in_github
+from minecode_pipelines.pipes import update_checkpoint_state
 from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
 from minecode_pipelines.pipes import update_mined_packages_in_checkpoint
 from minecode_pipelines.pipes import get_packages_file_from_checkpoint
-from minecode_pipelines.pipes import update_checkpoint_state
 from minecode_pipelines.pipes import write_packages_json
 from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
 from minecode_pipelines.pipes import INITIAL_SYNC_STATE
@@ -56,10 +56,6 @@ PACKAGE_FILE_NAME = "PypiPackages.json"
 PYPI_SIMPLE_CHECKPOINT_PATH = "pypi/simple_index/" + PACKAGE_FILE_NAME
 PYPI_CHECKPOINT_PATH = "pypi/checkpoints.json"
 PYPI_PACKAGES_CHECKPOINT_PATH = "pypi/packages_checkpoint.json"
-
-
-# We are testing and storing mined packageURLs in one single repo per ecosystem for now
-MINECODE_DATA_PYPI_REPO = "https://github.com/aboutcode-data/minecode-data-pypi-test"
 
 
 def mine_pypi_packages(logger=None):
@@ -256,8 +252,8 @@ def save_mined_packages_in_checkpoint(packages_mined, config_repo, logger=None):
     )
 
 
-def update_state_and_checkpoints(state, config_repo, last_serial, logger=None):
-    # If we are finished mining all the packages in the initial sync, we can now
+def update_state_and_checkpoints(config_repo, state, last_serial, logger=None):
+    # If we are finshed mining all the packages in the intial sync, we can now
     # periodically sync the packages from latest
     if state == INITIAL_SYNC_STATE:
         if logger:

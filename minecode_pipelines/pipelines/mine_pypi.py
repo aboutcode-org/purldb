@@ -98,6 +98,7 @@ class MinePypi(MineCodeBasePipeline):
     def update_state_and_checkpoints(self):
         pypi.update_state_and_checkpoints(
             config_repo=self.config_repo,
+            state=self.state,
             last_serial=self.last_serial,
             logger=self.log,
         )
