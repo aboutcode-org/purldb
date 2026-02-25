@@ -1,1 +1,3 @@
+:orphan:
+
 .. include:: ../../CHANGELOG.rst

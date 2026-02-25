@@ -204,7 +204,7 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=["post"])
     def filter_by_checksums(self, request, *args, **kwargs):
         """
-        Take a mapping, where the keys are the names of the checksum algorthm
+        Take a mapping, where the keys are the names of the checksum algorithm
         and the values is a list of checksum values and query those values
         against the packagedb.
 
@@ -417,7 +417,7 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=["post"])
     def filter_by_checksums(self, request, *args, **kwargs):
         """
-        Take a mapping, where the keys are the names of the checksum algorthm
+        Take a mapping, where the keys are the names of the checksum algorithm
         and the values is a list of checksum values and query those values
         against the packagedb.
 
@@ -749,7 +749,7 @@ class CollectViewSet(viewsets.ViewSet):
     Optionally, use a list of `addon_pipelines` to use for the scan.
     See add-on pipelines at https://scancodeio.readthedocs.io/en/latest/built-in-pipelines.html
 
-    Paremeters:
+    Parameters:
 
     - `purl`: (required, string) a PURL, with a version.
 

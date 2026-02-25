@@ -63,7 +63,7 @@ def mine_pypi_packages(logger=None):
     Mine pypi package names from pypi simple and save to checkpoints,
     or get packages from saved checkpoints. We have 3 cases:
     1. periodic sync: we get latest packages newly released in pypi, for a period
-    2. intial sync: we get packages from checkpoint which we're trying to sync upto
+    2. initial sync: we get packages from checkpoint which we're trying to sync up to
     3. first sync: we get latest packages from pypi and save to checkpoints
     """
 

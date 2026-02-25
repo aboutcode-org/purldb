@@ -18,10 +18,10 @@ callable.
 
 There are several routing implementations available in Rails, Django, Flask,
 Paste, etc. However, these all assume that the routed processing is to craft a
-response to an incomming external HTTP request.
+response to an incoming external HTTP request.
 
 Here we are instead doing the opposite: given a URI (and no request yet) we are
-routing the processing to emitt a request extrenally (HTTP or other protocol)
+routing the processing to emit a request externally (HTTP or other protocol)
 and handling its response.
 
 Also we crawl a lot and not only HTTP: git, svn, ftp, rsync and more.

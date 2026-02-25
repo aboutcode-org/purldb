@@ -56,7 +56,7 @@ def process_request(purl_str, **kwargs):
             source_package_url = PackageURL.from_string(source_purl)
 
     except ValueError as e:
-        error = f"error occured when parsing purl: {purl_str} source_purl: {source_purl} : {e}"
+        error = f"error occurred when parsing purl: {purl_str} source_purl: {source_purl} : {e}"
         return error
 
     has_version = bool(package_url.version)
@@ -75,7 +75,7 @@ def map_debian_package(debian_package, package_content, pipelines, priority=0):
     """
     Add a debian `package_url` to the PackageDB.
 
-    Return an error string if errors have occured in the process.
+    Return an error string if errors have occurred in the process.
     """
     from minecode.model_utils import add_package_to_scan_queue
     from minecode.model_utils import merge_or_create_package

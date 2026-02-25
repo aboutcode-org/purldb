@@ -10,7 +10,7 @@ Requirements
 * Python 3.11 or later
 * Postgres 13
 * git
-* scancode-toolkit runtime dependencies (https://scancode-toolkit.readthedocs.io/en/stable/getting-started/install.html#install-prerequisites)
+* scancode-toolkit runtime dependencies (https://scancode-toolkit.readthedocs.io/en/stable/getting-started/installation/index.html#installation-prerequisites)
 * ``libpq-dev``
 *     If you are using Debian or Ubuntu : ``sudo apt install libpq-dev``
 *     If you are using Fedora: ``sudo dnf install libpq-devel``
@@ -21,7 +21,7 @@ Installation steps
 Once the prerequisites have been installed, set up PurlDB with the following commands:
 ::
 
-    git clone https://github.com/nexb/purldb
+    git clone https://github.com/aboutcode-org/purldb
     cd purldb
     make dev
     make envfile

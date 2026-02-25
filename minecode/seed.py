@@ -21,8 +21,8 @@ except NameError:  # pragma: nocover
 class Seeder:
     """
     Abstract base class for seeding URIs to visit. Each visitor should create a
-    subclass of Seeder and implement the get_seeds method to yield the top levle
-    URIs required to bootstrap the visiting process. The framework decides waht
+    subclass of Seeder and implement the get_seeds method to yield the top level
+    URIs required to bootstrap the visiting process. The framework decides what
     to do with these seeds, but will typically ensure they exist as ResourceURIs
     in the DB. To be used, seeder classes must be added to the list of active
     Seeders in the settings module.

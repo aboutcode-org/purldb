@@ -123,7 +123,7 @@ class ScanningCommand(VerboseCommand):
     def process_scan(scannable_uri, **kwargs):
         """
         Process a single `scannable_uri` ScannableURI. Subclasses must implement.
-        If sucessfully processed the ScannableURI must be updated accordingly.
+        If successfully processed the ScannableURI must be updated accordingly.
         """
         pass
 

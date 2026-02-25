@@ -174,7 +174,7 @@ def map_uri(resource_uri, _map_router=map_router):
     resource_uri.last_map_date = timezone.now()
     resource_uri.wip_date = None
     # always set the map error, resetting it to empty if the mapping was
-    # succesful
+    # successful
     if map_error:
         resource_uri.map_error = map_error
     else:
