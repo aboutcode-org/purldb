@@ -201,7 +201,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
 
 
 class MavenCrawlerFunctionsTest(JsonBasedTesting, DjangoTestCase):
-    test_data_dir = os.path.join(os.path.dirname(__file__), "testfiles")
+    test_data_dir = os.path.join(os.path.dirname(__file__), "../testfiles")
 
     def test_check_if_file_name_is_linked_on_page(self):
         links = ["foo/", "bar/", "baz/"]
@@ -500,12 +500,80 @@ class MavenCrawlerFunctionsTest(JsonBasedTesting, DjangoTestCase):
 
     def test_get_classifier_from_artifact_url(self):
         artifact_url = "https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/livereload-jvm-0.2.0-onejar.jar"
-        package_version_page_url = (
-            "https://repo1.maven.org/maven2/net/alchim31/livereload-jvm/0.2.0/"
-        )
         package_name = "livereload-jvm"
         package_version = "0.2.0"
         classifier = maven.get_classifier_from_artifact_url(
-            artifact_url, package_version_page_url, package_name, package_version
+            artifact_url, package_name, package_version
         )
         self.assertEqual("onejar", classifier)
+
+    def test_collect_links_and_artifact_timestamps_repo_maven_apache_org(self):
+        # https://repo.maven.apache.org/maven2
+        with open(self.get_test_loc("maven/html/maven.apache.org/abbot.html")) as file:
+            text = file.read()
+        expected = [
+            ("1.4.0/", "2015-09-22 16:03"),
+            ("maven-metadata.xml", "2015-09-24 14:18"),
+        ]
+
+        self.assertEqual(expected, maven.collect_links_and_artifact_timestamps(text))
+
+    def test_collect_links_and_artifact_timestamps_repository_jboss_org(self):
+        # https://repository.jboss.org/nexus/service/rest/repository/browse/public/
+        # https://repository.jboss.org/nexus/service/rest/repository/browse/releases/
+        with open(self.get_test_loc("maven/html/repository.jboss.org/commons-codec.html")) as file:
+            text = file.read()
+        expected = [
+            ("1.2/", ""),
+            (
+                "https://repository.jboss.org/nexus/repository/public/apache-codec/commons-codec/maven-metadata.xml",
+                "Fri Sep 05 09:38:07 Z 2025",
+            ),
+        ]
+
+        self.assertEqual(expected, maven.collect_links_and_artifact_timestamps(text))
+
+    def test_collect_links_and_artifact_timestamps_repository_apache_org(self):
+        # https://repository.apache.org/snapshots/
+        with open(self.get_test_loc("maven/html/repository.apache.org/common-chain.html")) as file:
+            text = file.read()
+        expected = [
+            (
+                "https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/1.3-SNAPSHOT/",
+                "Thu Jul 04 05:45:00 UTC 2013",
+            ),
+            (
+                "https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/2.0-SNAPSHOT/",
+                "Tue Aug 21 20:26:48 UTC 2018",
+            ),
+            (
+                "https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/maven-metadata.xml.md5",
+                "Tue Aug 21 20:26:47 UTC 2018",
+            ),
+            (
+                "https://repository.apache.org/content/groups/snapshots/commons-chain/commons-chain/maven-metadata.xml.sha1",
+                "Tue Aug 21 20:26:47 UTC 2018",
+            ),
+        ]
+
+        self.assertEqual(expected, maven.collect_links_and_artifact_timestamps(text))
+
+    def test_collect_links_and_artifact_timestamps_repo_spring_io(self):
+        # https://repo.spring.io/release
+        with open(self.get_test_loc("maven/html/repo.spring.io/scstest.html")) as file:
+            text = file.read()
+        expected = [
+            ("0.0.11.M2/", "07-Aug-2019 08:40"),
+            ("0.0.11.RC2/", "07-Aug-2019 08:36"),
+            ("maven-metadata.xml", "07-Aug-2019 09:07"),
+        ]
+
+        self.assertEqual(expected, maven.collect_links_and_artifact_timestamps(text))
+
+    def test_collect_links_and_artifact_timestamps_plugin_gradle_org(self):
+        # https://plugins.gradle.org/m2/
+        with open(self.get_test_loc("maven/html/plugins.gradle.org/test.html")) as file:
+            text = file.read()
+        expected = [("0.0.10/", ""), ("1.0.1/", ""), ("1.1.0/", ""), ("maven-metadata.xml", "")]
+
+        self.assertEqual(expected, maven.collect_links_and_artifact_timestamps(text))
