@@ -1,0 +1,83 @@
+name: CI Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Python ${{ matrix.python-version }} - Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: packagedb
+          POSTGRES_USER: packagedb
+          POSTGRES_PASSWORD: packagedb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DJANGO_SETTINGS_MODULE: purldb_project.settings
+      DATABASE_URL: postgres://packagedb:packagedb@localhost:5432/packagedb
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            bzip2 \
+            xz-utils \
+            zlib1g \
+            libxml2-dev \
+            libxslt1-dev \
+            libgomp1 \
+            libsqlite3-0 \
+            libgcrypt20 \
+            libpopt0 \
+            libzstd1 \
+            git \
+            universal-ctags \
+            gettext \
+            tar \
+            unzip \
+            zip \
+            libsasl2-dev \
+            libldap-dev \
+            openssl
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -e .[dev]
+
+      - name: Run purldb tests
+        run: |
+          pytest -vvs minecode packagedb purl2vcs purldb_project purldb_public_project \
+            --ignore packagedb/tests/test_throttling.py
