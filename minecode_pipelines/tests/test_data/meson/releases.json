@@ -1,0 +1,33 @@
+{
+    "ogg": {
+        "dependency_names": [
+            "ogg"
+        ],
+        "versions": [
+            "1.3.6-1",
+            "1.3.5-3",
+            "1.3.5-2",
+            "1.3.5-1"
+        ]
+    },
+    "zlib": {
+        "dependency_names": [
+            "zlib"
+        ],
+        "versions": [
+            "1.3.1-1",
+            "1.2.13-2",
+            "1.2.13-1"
+        ]
+    },
+    "catch2": {
+        "dependency_names": [
+            "catch2",
+            "catch2-with-main"
+        ],
+        "versions": [
+            "3.5.2-1",
+            "3.4.0-1"
+        ]
+    }
+}
