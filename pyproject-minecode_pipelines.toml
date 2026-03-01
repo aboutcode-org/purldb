@@ -62,6 +62,7 @@ mine_cpan = "minecode_pipelines.pipelines.mine_cpan:MineCpan"
 mine_cran = "minecode_pipelines.pipelines.mine_cran:MineCran"
 mine_swift = "minecode_pipelines.pipelines.mine_swift:MineSwift"
 mine_composer = "minecode_pipelines.pipelines.mine_composer:MineComposer"
+mine_crates = "minecode_pipelines.pipelines.mine_crates:MineCrates"
 
 [tool.bumpversion]
 current_version = "0.1.1"
