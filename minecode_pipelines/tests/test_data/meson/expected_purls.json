@@ -1,0 +1,17 @@
+{
+  "pkg:meson/ogg": [
+    "pkg:meson/ogg@1.3.5-1",
+    "pkg:meson/ogg@1.3.5-2",
+    "pkg:meson/ogg@1.3.5-3",
+    "pkg:meson/ogg@1.3.6-1"
+  ],
+  "pkg:meson/zlib": [
+    "pkg:meson/zlib@1.2.13-1",
+    "pkg:meson/zlib@1.2.13-2",
+    "pkg:meson/zlib@1.3.1-1"
+  ],
+  "pkg:meson/catch2": [
+    "pkg:meson/catch2@3.4.0-1",
+    "pkg:meson/catch2@3.5.2-1"
+  ]
+}

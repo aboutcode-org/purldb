@@ -20,8 +20,7 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-import json
-from pathlib import Path
+import requests
 
 from minecode_pipelines.pipes import meson
 from minecode_pipelines.pipelines import MineCodeBasePipeline
@@ -31,38 +30,34 @@ from scanpipe.pipes import federatedcode
 class MineMeson(MineCodeBasePipeline):
     """Pipeline to mine Meson WrapDB packages and publish them to FederatedCode repo."""
 
-    MESON_WRAPDB_REPO = "https://github.com/mesonbuild/wrapdb"
+    MESON_WRAPDB_RELEASES_URL = (
+        "https://raw.githubusercontent.com/mesonbuild/wrapdb/master/releases.json"
+    )
 
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
-            cls.clone_wrapdb_index,
+            cls.fetch_wrapdb_releases,
             cls.fetch_federation_config,
             cls.mine_and_publish_packageurls,
             cls.delete_working_dir,
         )
 
-    def clone_wrapdb_index(self):
-        """Clone the Meson WrapDB repository."""
-        self.wrapdb_repo = federatedcode.clone_repository(
-            repo_url=self.MESON_WRAPDB_REPO,
-            clone_path=self.working_path / "wrapdb",
-            logger=self.log,
-        )
+    def fetch_wrapdb_releases(self):
+        """Fetch the Meson WrapDB releases.json index."""
+        try:
+            response = requests.get(self.MESON_WRAPDB_RELEASES_URL, timeout=30)
+            response.raise_for_status()
+            self.releases = response.json()
+        except Exception as e:
+            self.log(f"Failed to fetch releases.json: {e}")
+            self.releases = {}
 
     def packages_count(self):
-        releases_path = Path(self.wrapdb_repo.working_dir) / "releases.json"
-        if not releases_path.exists():
-            return 0
-        with open(releases_path, encoding="utf-8") as f:
-            releases = json.load(f)
-        return len(releases)
+        return len(self.releases) if hasattr(self, "releases") and self.releases else 0
 
     def mine_packageurls(self):
         """Yield PackageURLs from Meson WrapDB releases.json."""
-        return meson.mine_meson_packageurls(
-            wrapdb_repo=self.wrapdb_repo,
-            logger=self.log,
-        )
+        return meson.mine_meson_packageurls(releases=self.releases, logger=self.log)

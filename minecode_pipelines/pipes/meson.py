@@ -20,9 +20,6 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-import json
-from pathlib import Path
-
 from packageurl import PackageURL
 
 
@@ -59,19 +56,11 @@ def get_meson_packages(package_name, package_data):
     return base_purl, versioned_purls
 
 
-def mine_meson_packageurls(wrapdb_repo, logger):
+def mine_meson_packageurls(releases, logger):
     """
-    Yield ``(base_purl, [versioned_purl_strings])`` tuples from a cloned
-    Meson WrapDB repository by parsing its ``releases.json``.
+    Yield ``(base_purl, [versioned_purl_strings])`` tuples from a
+    Meson WrapDB ``releases.json`` mapping.
     """
-    releases_path = Path(wrapdb_repo.working_dir) / "releases.json"
-    if not releases_path.exists():
-        logger(f"releases.json not found at {releases_path}")
-        return
-
-    with open(releases_path, encoding="utf-8") as f:
-        releases = json.load(f)
-
     for package_name, package_data in releases.items():
         if not package_data:
             continue

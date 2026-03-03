@@ -15,6 +15,7 @@ from django.test import TestCase
 from minecode_pipelines.pipes.meson import get_meson_packages
 
 DATA_DIR = Path(__file__).parent.parent / "test_data" / "meson"
+EXPECTED_PATH = DATA_DIR / "expected_purls.json"
 
 
 class MesonPipeTests(TestCase):
@@ -53,36 +54,22 @@ class MesonPipeTests(TestCase):
         self.assertEqual(versioned_purls, [])
 
     def test_get_meson_packages_from_releases_json(self):
-        """Test parsing packages from the test releases.json fixture."""
+        """Test parsing packages from the test releases.json fixture with data-driven expected output."""
         releases_path = DATA_DIR / "releases.json"
         with open(releases_path, encoding="utf-8") as f:
             releases = json.load(f)
 
-        all_results = []
+        actual = {}
         for package_name, package_data in releases.items():
             if not package_data:
                 continue
-            all_results.append(
-                get_meson_packages(
-                    package_name=package_name,
-                    package_data=package_data,
-                )
+            base_purl, versioned_purls = get_meson_packages(
+                package_name=package_name,
+                package_data=package_data,
             )
+            actual[str(base_purl)] = sorted(versioned_purls)
 
-        self.assertEqual(len(all_results), 3)  # ogg, zlib, catch2
-
-        # Check ogg
-        ogg_base, ogg_purls = all_results[0]
-        self.assertEqual(str(ogg_base), "pkg:meson/ogg")
-        self.assertEqual(len(ogg_purls), 4)
-
-        # Check zlib
-        zlib_base, zlib_purls = all_results[1]
-        self.assertEqual(str(zlib_base), "pkg:meson/zlib")
-        self.assertEqual(len(zlib_purls), 3)
-
-        # Check catch2
-        catch2_base, catch2_purls = all_results[2]
-        self.assertEqual(str(catch2_base), "pkg:meson/catch2")
-        self.assertEqual(len(catch2_purls), 2)
-        self.assertIn("pkg:meson/catch2@3.5.2-1", catch2_purls)
+        with open(EXPECTED_PATH, encoding="utf-8") as ef:
+            expected = json.load(ef)
+        filtered_actual = {k: actual[k] for k in expected.keys()}
+        self.assertEqual(filtered_actual, expected)
