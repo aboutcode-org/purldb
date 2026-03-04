@@ -23,11 +23,6 @@
 from packageurl import PackageURL
 
 
-MESON_WRAPDB_RELEASES_URL = (
-    "https://raw.githubusercontent.com/mesonbuild/wrapdb/master/releases.json"
-)
-
-
 def get_meson_packages(package_name, package_data):
     """
     Return a tuple of (base_purl, [versioned_purl_strings]) for a single

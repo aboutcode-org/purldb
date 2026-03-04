@@ -24,7 +24,6 @@ import requests
 
 from minecode_pipelines.pipes import meson
 from minecode_pipelines.pipelines import MineCodeBasePipeline
-from scanpipe.pipes import federatedcode
 
 
 class MineMeson(MineCodeBasePipeline):
@@ -56,6 +55,10 @@ class MineMeson(MineCodeBasePipeline):
             self.releases = {}
 
     def packages_count(self):
+        """Return the number of packages in the WrapDB releases index.
+
+        Used by MineCodeBasePipeline to report mining progress.
+        """
         return len(self.releases) if hasattr(self, "releases") and self.releases else 0
 
     def mine_packageurls(self):
