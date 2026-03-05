@@ -2,7 +2,7 @@
   {
     "type": "apk",
     "namespace": "alpine",
-    "name": "prspkt",
+    "name": "2bwm",
     "version": "0.3-r2",
     "qualifiers": {
       "arch": "x86_64",
@@ -75,12 +75,12 @@
     "repository_download_url": null,
     "api_data_url": null,
     "datasource_id": "alpine_metadata",
-    "purl": "pkg:apk/alpine/prspkt@0.3-r2?arch=x86_64&distro=v3.22"
+    "purl": "pkg:apk/alpine/2bwm@0.3-r2?arch=x86_64&distro=v3.22"
   },
   {
     "type": "apk",
     "namespace": "alpine",
-    "name": "prspkt",
+    "name": "2bwm-doc",
     "version": "0.3-r2",
     "qualifiers": {
       "arch": "x86_64",
@@ -153,6 +153,6 @@
     "repository_download_url": null,
     "api_data_url": null,
     "datasource_id": "alpine_metadata",
-    "purl": "pkg:apk/alpine/prspkt@0.3-r2?arch=x86_64&distro=v3.22"
+    "purl": "pkg:apk/alpine/2bwm-doc@0.3-r2?arch=x86_64&distro=v3.22"
   }
 ]

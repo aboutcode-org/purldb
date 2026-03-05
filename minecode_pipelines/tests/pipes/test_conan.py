@@ -19,7 +19,7 @@ DATA_DIR = Path(__file__).parent.parent / "test_data" / "conan"
 
 
 class ConanPipelineTests(TestCase):
-    def test_collect_packages_from_conan_calls_write(self, mock_write):
+    def test_collect_packages_from_conan_calls_write(self):
         packages_file = DATA_DIR / "cairo" / "cairo-config.yml"
         expected_file = DATA_DIR / "expected-cairo-purls.yml"
 

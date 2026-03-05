@@ -551,10 +551,29 @@ def mine_and_publish_alpine_packageurls(
     working_path,
     commit_msg_func,
     logger,
+    processed_indexes=None,
+    checkpoint_func=None,
 ):
     """Yield PackageURLs from Alpine index."""
 
-    index_count = len(ALPINE_LINUX_APKINDEX_URLS)
+    if processed_indexes is None:
+        processed_indexes = set()
+
+    indexes_to_process = [
+        url for url in ALPINE_LINUX_APKINDEX_URLS
+        if url not in processed_indexes
+    ]
+
+    index_count = len(indexes_to_process)
+    total_count = len(ALPINE_LINUX_APKINDEX_URLS)
+    skipped_count = total_count - index_count
+
+    if skipped_count:
+        logger(
+            f"Skipping {skipped_count:,d} already-processed indexes. "
+            f"Processing {index_count:,d} remaining indexes."
+        )
+
     progress = LoopProgress(
         total_iterations=index_count,
         logger=logger,
@@ -563,7 +582,7 @@ def mine_and_publish_alpine_packageurls(
 
     logger(f"Mine PackageURL from {index_count:,d} alpine index.")
     alpine_collector = AlpineCollector()
-    for index in progress.iter(ALPINE_LINUX_APKINDEX_URLS):
+    for index in progress.iter(indexes_to_process):
         logger(f"Mine PackageURL from {index} index.")
         _mine_and_publish_packageurls(
             packageurls=alpine_collector.get_package_from_index(index),
@@ -575,3 +594,6 @@ def mine_and_publish_alpine_packageurls(
             commit_msg_func=commit_msg_func,
             logger=logger,
         )
+        processed_indexes.add(index)
+        if checkpoint_func:
+            checkpoint_func()
