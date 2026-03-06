@@ -65,6 +65,7 @@ INSTALLED_APPS = (
     "minecode",
     "matchcode",
     "packagedb",
+"scanpipe",
     # Django built-in
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -74,6 +75,7 @@ INSTALLED_APPS = (
     "django.contrib.admin",
     "django.contrib.humanize",
     # Third-party apps
+    "taggit",
     "django_filters",
     "rest_framework",
     "drf_spectacular",
@@ -332,3 +334,33 @@ FEDERATEDCODE_GIT_ACCOUNT_URL = env.str("FEDERATEDCODE_GIT_ACCOUNT_URL", default
 FEDERATEDCODE_GIT_SERVICE_TOKEN = env.str("FEDERATEDCODE_GIT_SERVICE_TOKEN", default="")
 FEDERATEDCODE_GIT_SERVICE_NAME = env.str("FEDERATEDCODE_GIT_SERVICE_NAME", default="")
 FEDERATEDCODE_GIT_SERVICE_EMAIL = env.str("FEDERATEDCODE_GIT_SERVICE_EMAIL", default="")
+
+VULNERABLECODE_URL = env.str("VULNERABLECODE_URL", default="")
+VULNERABLECODE_USER = env.str("VULNERABLECODE_USER", default="")
+VULNERABLECODE_PASSWORD = env.str("VULNERABLECODE_PASSWORD", default="")
+VULNERABLECODE_API_KEY = env.str("VULNERABLECODE_API_KEY", default="")
+
+MATCHCODEIO_URL = env.str("MATCHCODEIO_URL", default="")
+MATCHCODEIO_USER = env.str("MATCHCODEIO_USER", default="")
+MATCHCODEIO_PASSWORD = env.str("MATCHCODEIO_PASSWORD", default="")
+MATCHCODEIO_API_KEY = env.str("MATCHCODEIO_API_KEY", default="")
+
+PURLDB_URL = env.str("PURLDB_URL", default="")
+PURLDB_USER = env.str("PURLDB_USER", default="")
+PURLDB_PASSWORD = env.str("PURLDB_PASSWORD", default="")
+PURLDB_API_KEY = env.str("PURLDB_API_KEY", default="")
+
+SCANCODEIO_WORKSPACE_LOCATION = "/tmp/scancodeio-workspace"
+SCANCODEIO_WORKSPACE_LOCATION = "/tmp/scancodeio-workspace"
+SCANCODEIO_STORAGE_LOCATION = "/tmp/scancodeio-storage"
+SCANCODEIO_MOST_COMMON_LIMIT = 50	
+SCANCODEIO_SCAN_FILE_TIMEOUT = 3600
+PURLDB_URL = "http://localhost:8000"
+PURLDB_USER = "test-user"
+PURLDB_PASSWORD = "test-password"
+PURLDB_API_KEY = "test-api-key"
+MATCHCODEIO_URL = "http://localhost:8001"
+MATCHCODEIO_USER = "test-user"
+MATCHCODEIO_PASSWORD = "test-password"
+MATCHCODEIO_API_KEY = "test-api-key"
+SCANCODEIO_ASYNC = False

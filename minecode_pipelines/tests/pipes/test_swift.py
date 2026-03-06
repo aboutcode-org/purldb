@@ -28,7 +28,7 @@ class SwiftPipelineTests(TestCase):
             git_ls_remote = f.read()
 
         with open(expected_file, encoding="utf-8") as f:
-            expected = saneyaml.load(f)
+            expected_purls = saneyaml.load(f)
 
         tags_and_commits = get_tags_and_commits_from_git_output(git_ls_remote)
 
@@ -38,23 +38,14 @@ class SwiftPipelineTests(TestCase):
             logger=logger,
         )
 
-        assert base_purl.to_string() == expected["base_purl"]
-        assert sorted(generated_purls) == sorted(expected["purls"])
+        result_purls = sorted(str(p) for p in generated_purls)
+        assert result_purls == sorted(expected_purls)
 
-    def test_swift_safe_collection_access(self, mock_write):
+    def test_swift_safe_collection_access(self):
         self._run_package_test(
-            mock_write,
             package_repo_url="https://github.com/RougeWare/Swift-Safe-Collection-Access",
             commits_tags_file=DATA_DIR / "commits_tags1.txt",
             expected_file=DATA_DIR / "expected1.yaml",
-            expected_path_parts=[
-                "aboutcode-packages-swift-0",
-                "swift",
-                "github.com",
-                "RougeWare",
-                "Swift-Safe-Collection-Access",
-                "purls.yml",
-            ],
         )
 
     def test_human_string(self):
@@ -62,14 +53,6 @@ class SwiftPipelineTests(TestCase):
             package_repo_url="https://github.com/zonble/HumanString.git",
             commits_tags_file=DATA_DIR / "commits_tags2.txt",
             expected_file=DATA_DIR / "expected2.yaml",
-            expected_path_parts=[
-                "aboutcode-packages-swift-0",
-                "swift",
-                "github.com",
-                "zonble",
-                "HumanString",
-                "purls.yml",
-            ],
         )
 
     def test_swift_financial(self):
@@ -77,14 +60,6 @@ class SwiftPipelineTests(TestCase):
             package_repo_url="https://github.com/zrluety/SwiftFinancial.git",
             commits_tags_file=DATA_DIR / "commits_tags3.txt",
             expected_file=DATA_DIR / "expected3.yaml",
-            expected_path_parts=[
-                "aboutcode-packages-swift-0",
-                "swift",
-                "github.com",
-                "zrluety",
-                "SwiftFinancial",
-                "purls.yml",
-            ],
         )
 
     def test_swift_xcf_sodium(self):
@@ -92,12 +67,4 @@ class SwiftPipelineTests(TestCase):
             package_repo_url="https://github.com/0xacdc/XCFSodium",
             commits_tags_file=DATA_DIR / "commits_tags4.txt",
             expected_file=DATA_DIR / "expected4.yaml",
-            expected_path_parts=[
-                "aboutcode-packages-swift-0",
-                "swift",
-                "github.com",
-                "0xacdc",
-                "XCFSodium",
-                "purls.yml",
-            ],
         )

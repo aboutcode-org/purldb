@@ -7,6 +7,7 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+import hashlib
 import os
 
 from commoncode.testcase import check_against_expected_json_file
@@ -17,6 +18,82 @@ from minecode_pipelines.pipes import maven
 
 class MavenMiscTest(FileBasedTesting):
     test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+
+    def test_maven_collector_index_checksum(self):
+        index = self.get_test_loc("maven/index/nexus-maven-repository-index.gz")
+        props = self.get_test_loc("maven/index/nexus-maven-repository-index.properties")
+        collector = maven.MavenNexusCollector(
+            index_location=index,
+            index_properties_location=props,
+        )
+        self.assertIsNotNone(collector.index_checksum)
+        self.assertEqual(len(collector.index_checksum), 64)
+        int(collector.index_checksum, 16)
+
+        collector2 = maven.MavenNexusCollector(
+            index_location=index,
+            index_properties_location=props,
+        )
+        self.assertEqual(collector.index_checksum, collector2.index_checksum)
+
+    def test_maven_get_packages_resume(self):
+        index = self.get_test_loc("maven/index/nexus-maven-repository-index.gz")
+        props = self.get_test_loc("maven/index/nexus-maven-repository-index.properties")
+        collector = maven.MavenNexusCollector(
+            index_location=index,
+            index_properties_location=props,
+        )
+
+        all_packages = list(collector.get_packages())
+
+        if len(all_packages) < 2:
+            return
+
+        first_purl = str(all_packages[0][0])
+        collector2 = maven.MavenNexusCollector(
+            index_location=index,
+            index_properties_location=props,
+        )
+        resumed_packages = list(collector2.get_packages(last_processed_purl=first_purl))
+
+        self.assertEqual(len(resumed_packages), len(all_packages) - 1)
+        for resumed, original in zip(resumed_packages, all_packages[1:]):
+            self.assertEqual(str(resumed[0]), str(original[0]))
+
+    def test_maven_get_packages_resume_nonexistent_purl(self):
+        index = self.get_test_loc("maven/index/nexus-maven-repository-index.gz")
+        props = self.get_test_loc("maven/index/nexus-maven-repository-index.properties")
+        collector = maven.MavenNexusCollector(
+            index_location=index,
+            index_properties_location=props,
+        )
+
+        all_packages = list(collector.get_packages())
+        collector2 = maven.MavenNexusCollector(
+            index_location=index,
+            index_properties_location=props,
+        )
+        resumed_packages = list(
+            collector2.get_packages(last_processed_purl="pkg:maven/nonexistent/package@0.0.0")
+        )
+
+        self.assertEqual(len(resumed_packages), 0)
+
+    def test_maven_collector_tracks_last_processed_purl(self):
+        index = self.get_test_loc("maven/index/nexus-maven-repository-index.gz")
+        props = self.get_test_loc("maven/index/nexus-maven-repository-index.properties")
+        collector = maven.MavenNexusCollector(
+            index_location=index,
+            index_properties_location=props,
+        )
+        self.assertIsNone(collector.last_processed_purl)
+
+        packages = list(collector.get_packages())
+        if packages:
+            self.assertIsNotNone(collector.last_processed_purl)
+            self.assertEqual(
+                collector.last_processed_purl, str(packages[-1][0])
+            )
 
     def test_get_entries(self):
         index = self.get_test_loc("maven/index/nexus-maven-repository-index.gz")

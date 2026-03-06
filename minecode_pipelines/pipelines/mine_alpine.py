@@ -20,6 +20,9 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
+from scanpipe.pipes import federatedcode
+
+from minecode_pipelines import pipes
 from minecode_pipelines.pipelines import MineCodeBasePipeline
 
 from minecode_pipelines.pipes import alpine
@@ -28,14 +31,36 @@ from minecode_pipelines.pipes import alpine
 class MineAlpine(MineCodeBasePipeline):
     """Mine PackageURLs from alpine index and publish them to FederatedCode."""
 
+    pipeline_config_repo = "https://github.com/aboutcode-data/minecode-pipelines-config/"
+    checkpoint_path = "alpine/checkpoints.json"
+
     @classmethod
     def steps(cls):
         return (
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
             cls.fetch_federation_config,
+            cls.fetch_checkpoint,
             cls.mine_and_publish_alpine_packageurls,
+            cls.save_checkpoint,
             cls.delete_working_dir,
+        )
+
+    def fetch_checkpoint(self):
+        """Fetch the list of already-processed Alpine index URLs."""
+        self.checkpoint_config_repo = federatedcode.clone_repository(
+            repo_url=self.pipeline_config_repo,
+            clone_path=self.working_path / "minecode-pipelines-config",
+            logger=self.log,
+        )
+        checkpoint = pipes.get_checkpoint_from_file(
+            cloned_repo=self.checkpoint_config_repo,
+            path=self.checkpoint_path,
+        )
+        self.processed_indexes = set(checkpoint.get("processed_indexes", []))
+        self.log(
+            f"Loaded checkpoint with {len(self.processed_indexes)} "
+            f"already-processed indexes."
         )
 
     def mine_and_publish_alpine_packageurls(self):
@@ -45,4 +70,22 @@ class MineAlpine(MineCodeBasePipeline):
             working_path=self.working_path,
             commit_msg_func=self.commit_message,
             logger=self.log,
+            processed_indexes=self.processed_indexes,
+            checkpoint_func=self._save_checkpoint,
         )
+
+    def _save_checkpoint(self):
+        """Save current set of processed indexes as a checkpoint."""
+        checkpoint = {"processed_indexes": sorted(self.processed_indexes)}
+        self.log(
+            f"Saving checkpoint with {len(self.processed_indexes)} processed indexes."
+        )
+        pipes.update_checkpoints_in_github(
+            checkpoint=checkpoint,
+            cloned_repo=self.checkpoint_config_repo,
+            path=self.checkpoint_path,
+            logger=self.log,
+        )
+
+    def save_checkpoint(self):
+        self._save_checkpoint()

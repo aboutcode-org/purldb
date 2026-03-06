@@ -8,6 +8,7 @@
 #
 
 import gzip
+import hashlib
 import io
 import os
 from collections import namedtuple
@@ -574,6 +575,7 @@ class MavenNexusCollector:
         index_location=None,
         index_properties_location=None,
         last_incremental=None,
+        last_processed_purl=None,
         logger=None,
     ):
         if index_location and last_incremental:
@@ -584,6 +586,7 @@ class MavenNexusCollector:
             )
 
         self.downloads = []
+        self.last_processed_purl = last_processed_purl
 
         if index_properties_location:
             self.index_properties_location = index_properties_location
@@ -614,6 +617,25 @@ class MavenNexusCollector:
             index_download = self._fetch_index()
             self.index_location = index_download.path
             self.index_increment_locations = []
+
+            self.index_checksum = self._compute_index_checksum()
+
+        def _compute_index_checksum(self):
+            """Compute SHA-256 checksum of the index file(s) for checkpoint validation."""
+            locations = []
+            if self.index_location:
+                locations.append(self.index_location)
+            locations.extend(self.index_increment_locations)
+
+            if not locations:
+                return None
+
+            sha256 = hashlib.sha256()
+            for location in sorted(locations):
+                with open(location, "rb") as f:
+                    for chunk in iter(lambda: f.read(8192), b""):
+                        sha256.update(chunk)
+            return sha256.hexdigest()
 
     def __del__(self):
         if self.downloads:
@@ -658,8 +680,9 @@ class MavenNexusCollector:
                 index_increment_downloads.append(index_increment)
         return index_increment_downloads
 
-    def _get_packages(self, content=None):
+    def _get_packages(self, content=None, last_processed_purl=None):
         artifacts = get_artifacts(content, worthyness=is_worthy_artifact)
+        skipping = bool(last_processed_purl)
 
         for artifact in artifacts:
             # we cannot do much without these
@@ -723,17 +746,27 @@ class MavenNexusCollector:
                 name=artifact_id,
                 version=version,
             )
+
+            if skipping:
+                if str(current_purl) == last_processed_purl:
+                    skipping = False
+                continue
+
+            self.last_processed_purl = str(current_purl)
             yield current_purl, [package.purl]
 
     def _get_packages_from_index_increments(self):
         for index_increment in self.index_increment_locations:
             yield self._get_packages(content=index_increment)
 
-    def get_packages(self):
+    def get_packages(self, last_processed_purl=None):
         """Yield Package objects from maven index or index increments"""
         packages = []
         if self.index_increment_locations:
             packages = chain(self._get_packages_from_index_increments())
         elif self.index_location:
-            packages = self._get_packages(content=self.index_location)
+            packages = self._get_packages(
+                content=self.index_location,
+                last_processed_purl=last_processed_purl,
+            )
         return packages

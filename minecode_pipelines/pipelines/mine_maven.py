@@ -65,9 +65,27 @@ class MineMaven(MineCodeBasePipeline):
             logger=self.log,
         )
 
+        # Determine if we can resume from the last processed purl
+        saved_checksum = checkpoint.get("index_checksum")
+        current_checksum = self.maven_nexus_collector.index_checksum
+        self.last_processed_purl = None
+
+        if saved_checksum and saved_checksum == current_checksum:
+            self.last_processed_purl = checkpoint.get("last_processed_purl")
+            if self.last_processed_purl:
+                self.log(
+                    f"Index checksum matches. Resuming from: {self.last_processed_purl}"
+                )
+        elif saved_checksum and saved_checksum != current_checksum:
+            self.log(
+                "Index checksum changed. Starting from beginning."
+            )
+
     def mine_and_publish_maven_packageurls(self):
         _mine_and_publish_packageurls(
-            packageurls=self.maven_nexus_collector.get_packages(),
+            packageurls=self.maven_nexus_collector.get_packages(
+                last_processed_purl=self.last_processed_purl,
+            ),
             total_package_count=None,
             data_cluster=self.data_cluster,
             checked_out_repos=self.checked_out_repos,
@@ -75,13 +93,19 @@ class MineMaven(MineCodeBasePipeline):
             append_purls=self.append_purls,
             commit_msg_func=self.commit_message,
             logger=self.log,
+            checkpoint_func=self._save_checkpoint,
         )
 
-    def save_check_point(self):
+    def _save_checkpoint(self):
+        """Save current progress as a checkpoint."""
         last_incremental = self.maven_nexus_collector.index_properties.get(
             "nexus.index.last-incremental"
         )
-        checkpoint = {"last_incremental": last_incremental}
+        checkpoint = {
+            "last_incremental": last_incremental,
+            "index_checksum": self.maven_nexus_collector.index_checksum,
+            "last_processed_purl": self.maven_nexus_collector.last_processed_purl,
+        }
         self.log(f"Saving checkpoint: {checkpoint}")
         pipes.update_checkpoints_in_github(
             checkpoint=checkpoint,
@@ -89,3 +113,6 @@ class MineMaven(MineCodeBasePipeline):
             path=self.checkpoint_path,
             logger=self.log,
         )
+
+    def save_check_point(self):
+        self._save_checkpoint()
