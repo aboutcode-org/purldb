@@ -36,7 +36,7 @@ Restore PurlDB database from backup
 .. code-block:: console
 
     docker compose stop
-    docker compose up --detatch db
+    docker compose up --detach db
 
 2. Drop current PurlDB database.
 
@@ -55,5 +55,4 @@ Restore PurlDB database from backup
 .. code-block:: console
 
     docker cp <path to backup.dump> purldb-db-1:/tmp
-    docker compose exec db bash
-    pg_restore --verbose -U packagedb -d packagedb /tmp/backup.dump
+    docker compose exec db pg_restore --verbose -U packagedb -d packagedb /tmp/backup.dump
