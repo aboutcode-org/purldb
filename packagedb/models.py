@@ -1446,3 +1446,25 @@ class PackageActivity(FederatedCodePackageActivityMixin):
     is_processed = models.BooleanField(
         default=False, help_text=_("True if this activity has been processed.")
     )
+
+
+class MetadataFile(models.Model):
+    package = models.ForeignKey(
+        Package,
+        related_name="metadata_files",
+        on_delete=models.CASCADE,
+        help_text=_("The Package that this metadata file is from"),
+    )
+    filename = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text=_(
+            "File name of the metadata file as collected from upstream"
+        ),
+    )
+    content = models.TextField(
+        null=True,
+        blank=True,
+        help_text="Content of the metadata file",
+    )
