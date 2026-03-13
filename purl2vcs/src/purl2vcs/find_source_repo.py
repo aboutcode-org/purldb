@@ -196,14 +196,11 @@ def get_source_repo(package: Package) -> PackageURL:
     repo_urls = list(get_repo_urls(package))
     if not repo_urls:
         return
-
     # dedupe repo urls
     repo_urls = list(set(repo_urls))
-
     source_purls = list(convert_repo_urls_to_purls(repo_urls))
     if not source_purls:
         return
-
     # Filter out clearly unrelated repositories
     pkg_name = package.name.lower()
     filtered_source_purls = []
@@ -217,11 +214,9 @@ def get_source_repo(package: Package) -> PackageURL:
         source_purls = filtered_source_purls
 
     source_purls = list(set(source_purls))
-
     source_purl_with_tag = find_package_version_tag_and_commit(
         version=package.version, source_purls=source_purls
     )
-
     if source_purl_with_tag:
         return source_purl_with_tag
 
