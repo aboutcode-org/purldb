@@ -138,7 +138,8 @@ def get_npm_packageurls(name, npm_repo=NPM_REGISTRY_REPO):
         return packageurls
 
     project_data = response.json()
-    for version in project_data.get("versions"):
+    versions = project_data.get("versions") or []
+    for version in versions:
         purl = PackageURL(
             type=NPM_TYPE,
             name=name,
