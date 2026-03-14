@@ -300,7 +300,16 @@ class ResourceURIManager(models.Manager):
         # inconsistent view of the data, so this is not suitable for
         # general purpose work, but can be used to avoid lock contention
         # with multiple consumers accessing a queue-like table.
-        resource_uri = self.get_visitables().select_for_update(skip_locked=True).first()
+
+        visitables = self.get_visitables()
+
+        from minecode.utils import is_github_rate_limit_active
+
+        if is_github_rate_limit_active():
+            # Exclude all URIs that start with the GitHub API
+            visitables = visitables.exclude(uri__startswith="https://api.github.com")
+
+        resource_uri = visitables.select_for_update(skip_locked=True).first()
         if not resource_uri:
             return
 

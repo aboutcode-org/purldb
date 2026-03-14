@@ -404,3 +404,31 @@ def get_webhook_url(view_name, user_uuid):
     site_url = settings.SITE_URL.rstrip("/")
     webhook_url = site_url + target_url
     return webhook_url
+
+
+def is_github_rate_limit_active():
+    """
+    Check if the GitHub API rate limit is currently active.
+    Returns True if the limit is active, False otherwise.
+    """
+    from django.core.cache import cache
+    import time
+
+    gh_reset = cache.get("github_limit_reset")
+    if gh_reset and time.time() < gh_reset:
+        return True
+    return False
+
+
+def set_github_rate_limit(reset_epoch=None):
+    """
+    Set the GitHub API rate limit in the cache using the provided reset epoch timestamp.
+    If no reset timestamp is provided, defaults to 1 hour from now.
+    """
+    from django.core.cache import cache
+    import time
+
+    if reset_epoch:
+        cache.set("github_limit_reset", int(reset_epoch), timeout=3600 * 24)
+    else:
+        cache.set("github_limit_reset", int(time.time()) + 3600, timeout=3600)
