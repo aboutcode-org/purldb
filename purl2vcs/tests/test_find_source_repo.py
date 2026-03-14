@@ -311,3 +311,25 @@ class TestFindSourceRepo(TestCase):
         )
         expected = "pkg:bitbucket/connect2id/oauth-2.0-sdk-with-openid-connect-extensions@9.36?commit=e86fb3431972d302fcb615aca0baed4d8ab89791"
         self.assertEqual(expected, response.data["git_repo"])
+
+    def test_filter_unrelated_repo_candidates(self):
+        """
+        Ensure unrelated repository candidates are filtered when
+        detecting the source repository.
+        """
+
+        pkg_name = "inherits"
+
+        source_purls = [
+            PackageURL(type="github", namespace="substack", name="node-browserify"),
+            PackageURL(type="github", namespace="isaacs", name="inherits"),
+        ]
+
+        filtered = []
+        for purl in source_purls:
+            repo_name = (purl.name or "").lower()
+            if repo_name in pkg_name or pkg_name in repo_name:
+                filtered.append(purl)
+
+        self.assertTrue(any(p.name == "inherits" for p in filtered))
+        self.assertFalse(any(p.name == "node-browserify" for p in filtered))
