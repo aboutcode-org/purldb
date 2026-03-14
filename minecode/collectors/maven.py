@@ -163,7 +163,11 @@ def fetch_parent(pom_text, base_url=MAVEN_BASE_URL):
     """Return the parent pom text of `pom_text`, or None if `pom_text` has no parent."""
     if not pom_text:
         return
-    pom = get_maven_pom(text=pom_text)
+    try:
+        pom = get_maven_pom(text=pom_text)
+    except Exception as e:
+        logger.error(f"Failed to parse POM text: {e}")
+        return
     if pom.parent and pom.parent.group_id and pom.parent.artifact_id and pom.parent.version.version:
         parent_namespace = pom.parent.group_id
         parent_name = pom.parent.artifact_id
@@ -289,14 +293,19 @@ def map_maven_package(package_url, package_content, pipelines, priority=0, reind
         error += msg + "\n"
         logger.error(msg)
         return db_package, error
-
-    package = _parse(
+    try:
+       package = _parse(
         "maven_pom",
         "maven",
         "Java",
         text=pom_text,
         base_url=base_url,
-    )
+       )
+    except Exception as e:
+        msg = f"Failed to parse POM for {package_url}: {e}"
+        error += msg + "\n"
+        logger.error(msg)
+        return db_package, error 
     ancestor_pom_texts = get_ancestry(pom_text=pom_text, base_url=base_url)
     package = merge_ancestors(ancestor_pom_texts=ancestor_pom_texts, package=package)
 
