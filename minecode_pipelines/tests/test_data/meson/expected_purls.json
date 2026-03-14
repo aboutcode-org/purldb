@@ -1,0 +1,46 @@
+{
+  "pkg:meson/adamyaxley-obfuscate": [
+    "pkg:meson/adamyaxley-obfuscate@1.0.0-1"
+  ],
+  "pkg:meson/aklomp-base64": [
+    "pkg:meson/aklomp-base64@0.5.2-1"
+  ],
+  "pkg:meson/apache-orc": [
+    "pkg:meson/apache-orc@2.2.0-1",
+    "pkg:meson/apache-orc@2.2.1-1",
+    "pkg:meson/apache-orc@2.2.2-1"
+  ],
+  "pkg:meson/bzip2": [
+    "pkg:meson/bzip2@1.0.8-1"
+  ],
+  "pkg:meson/catch2": [
+    "pkg:meson/catch2@2.11.1-1",
+    "pkg:meson/catch2@2.11.3-1",
+    "pkg:meson/catch2@2.13.3-1",
+    "pkg:meson/catch2@2.13.3-2",
+    "pkg:meson/catch2@2.13.7-1",
+    "pkg:meson/catch2@2.13.8-1",
+    "pkg:meson/catch2@2.4.1-1",
+    "pkg:meson/catch2@2.5.0-1",
+    "pkg:meson/catch2@2.7.2-1",
+    "pkg:meson/catch2@2.8.0-1",
+    "pkg:meson/catch2@2.9.0-1",
+    "pkg:meson/catch2@3.1.0-1",
+    "pkg:meson/catch2@3.10.0-1",
+    "pkg:meson/catch2@3.11.0-1",
+    "pkg:meson/catch2@3.12.0-1",
+    "pkg:meson/catch2@3.13.0-1",
+    "pkg:meson/catch2@3.2.0-1",
+    "pkg:meson/catch2@3.3.2-1",
+    "pkg:meson/catch2@3.4.0-1",
+    "pkg:meson/catch2@3.5.2-1",
+    "pkg:meson/catch2@3.5.3-1",
+    "pkg:meson/catch2@3.5.4-1",
+    "pkg:meson/catch2@3.6.0-1",
+    "pkg:meson/catch2@3.7.0-1",
+    "pkg:meson/catch2@3.7.1-1",
+    "pkg:meson/catch2@3.8.0-1",
+    "pkg:meson/catch2@3.8.1-1",
+    "pkg:meson/catch2@3.9.1-1"
+  ]
+}
