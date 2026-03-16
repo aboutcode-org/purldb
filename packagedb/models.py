@@ -1429,6 +1429,39 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.get_or_create(user_id=instance.pk)
 
 
+class VcsAlias(models.Model):
+    old_vcs_purl = models.CharField(max_length=2048, db_index=True)
+    new_vcs_purl = models.CharField(max_length=2048, db_index=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ["old_vcs_purl", "new_vcs_purl"]
+        indexes = [
+            models.Index(fields=["old_vcs_purl"]),
+            models.Index(fields=["new_vcs_purl"]),
+        ]
+
+    @classmethod
+    def resolve_purl(cls, vcs_purl_str):
+        """
+        Given a VCS PURL string, follows the VcsAlias chain to find and return
+        the latest active PURL. Returns the original string if no alias exists.
+        """
+        current_purl = vcs_purl_str
+        visited = set()
+
+        while current_purl not in visited:
+            visited.add(current_purl)
+            alias = cls.objects.filter(old_vcs_purl=current_purl).first()
+
+            if not alias:
+                break
+
+            current_purl = alias.new_vcs_purl
+
+        return current_purl
+
+
 class PackageActivity(FederatedCodePackageActivityMixin):
     """Record of package activity from a FederatedCode."""
 
