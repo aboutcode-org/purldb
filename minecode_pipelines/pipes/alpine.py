@@ -364,6 +364,18 @@ ALPINE_LINUX_APKINDEX_URLS = [
     "https://dl-cdn.alpinelinux.org/alpine/v3.9/main/x86_64/APKINDEX.tar.gz",
 ]
 
+EDGE_APKINDEX_URLS = [url for url in ALPINE_LINUX_APKINDEX_URLS if "/edge/" in url]
+
+LATEST_STABLE_APKINDEX_URLS = [
+    url for url in ALPINE_LINUX_APKINDEX_URLS if "/latest-stable/" in url
+]
+
+VERSIONED_APKINDEX_URLS = [
+    url
+    for url in ALPINE_LINUX_APKINDEX_URLS
+    if "/edge/" not in url and "/latest-stable/" not in url
+]
+
 
 def parse_email(text):
     """
@@ -545,16 +557,17 @@ class AlpineCollector:
                 yield current_purl, [pd.purl]
 
 
-def mine_and_publish_alpine_packageurls(
+def mine_alpine_indexes(
+    index_urls,
     data_cluster,
     checked_out_repos,
     working_path,
     commit_msg_func,
     logger,
 ):
-    """Yield PackageURLs from Alpine index."""
+    """Mine and publish Alpine package URLs from a list of index URLs."""
 
-    index_count = len(ALPINE_LINUX_APKINDEX_URLS)
+    index_count = len(index_urls)
     progress = LoopProgress(
         total_iterations=index_count,
         logger=logger,
@@ -563,7 +576,8 @@ def mine_and_publish_alpine_packageurls(
 
     logger(f"Mine PackageURL from {index_count:,d} alpine index.")
     alpine_collector = AlpineCollector()
-    for index in progress.iter(ALPINE_LINUX_APKINDEX_URLS):
+
+    for index in progress.iter(index_urls):
         logger(f"Mine PackageURL from {index} index.")
         _mine_and_publish_packageurls(
             packageurls=alpine_collector.get_package_from_index(index),
@@ -575,3 +589,40 @@ def mine_and_publish_alpine_packageurls(
             commit_msg_func=commit_msg_func,
             logger=logger,
         )
+
+
+def mine_and_publish_alpine_packageurls(
+    data_cluster,
+    checked_out_repos,
+    working_path,
+    commit_msg_func,
+    logger,
+):
+    """Mine PackageURLs from Alpine indexes."""
+
+    mine_alpine_indexes(
+        EDGE_APKINDEX_URLS,
+        data_cluster,
+        checked_out_repos,
+        working_path,
+        commit_msg_func,
+        logger,
+    )
+
+    mine_alpine_indexes(
+        LATEST_STABLE_APKINDEX_URLS,
+        data_cluster,
+        checked_out_repos,
+        working_path,
+        commit_msg_func,
+        logger,
+    )
+
+    mine_alpine_indexes(
+        VERSIONED_APKINDEX_URLS,
+        data_cluster,
+        checked_out_repos,
+        working_path,
+        commit_msg_func,
+        logger,
+    )
