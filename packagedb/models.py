@@ -26,6 +26,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 import natsort
+from univers.version_range import RANGE_CLASS_BY_SCHEMES
 from aboutcode.federatedcode.contrib.django.models import (
     FederatedCodePackageActivityMixin,
 )
@@ -46,9 +47,36 @@ logging.basicConfig(stream=sys.stdout)
 logger.setLevel(logging.INFO)
 
 
-def sort_version(packages):
-    """Return the packages sorted by version."""
-    return natsort.natsorted(packages, key=lambda p: p.version.replace(".", "~") + "z")
+def sort_version(packages, package_type=None):
+    """Return the packages sorted by version using proper version scheme."""
+    if not packages:
+        return []
+
+    # Get the first package to determine the type
+    try:
+        sample_package = packages[0]
+    except TypeError:
+        # Fallback for generators
+        packages = list(packages)
+        if not packages:
+            return []
+        sample_package = packages[0]
+
+    pkg_type = package_type or sample_package.type
+
+    # Get the appropriate version class for this package type
+    range_class = RANGE_CLASS_BY_SCHEMES.get(pkg_type)
+    if range_class:
+        version_class = range_class.version_class
+        try:
+            return sorted(packages, key=lambda p: version_class(p.version))
+        except Exception as e:
+            logger.warning(
+                f"Version parsing failed for {package_type}, using natsort fallback: {e}"
+            )
+
+    # Fallback to natural sorting
+    return natsort.natsorted(packages, key=lambda p: p.version)
 
 
 class PackageQuerySet(PackageURLQuerySetMixin, models.QuerySet):
