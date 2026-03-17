@@ -68,6 +68,7 @@ class MinePypi(MineCodeBasePipeline):
             packages_to_sync=self.packages,
             packages_mined=self.packages_mined,
             logger=self.log,
+            save_api_calls=False,
         )
 
     def save_check_point(self):

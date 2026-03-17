@@ -35,9 +35,10 @@ from minecode_pipelines.pipes import PERIODIC_SYNC_STATE
 
 
 from minecode_pipelines.miners.pypi import get_pypi_packages
+from minecode_pipelines.miners.pypi import get_pypi_package_data
 from minecode_pipelines.miners.pypi import get_pypi_packageurls
 from minecode_pipelines.miners.pypi import load_pypi_packages
-from minecode_pipelines.miners.pypi import PYPI_REPO
+from minecode_pipelines.miners.pypi import PYPI_SIMPLE_REPO
 
 
 from minecode_pipelines.miners.pypi import PYPI_TYPE
@@ -94,7 +95,7 @@ def mine_pypi_packages(logger=None):
     if logger:
         logger("Getting packages from pypi simple index")
 
-    packages = get_pypi_packages(pypi_repo=PYPI_REPO, logger=logger)
+    packages = get_pypi_packages(pypi_repo=PYPI_SIMPLE_REPO, logger=logger)
     packages_file = write_packages_json(packages=packages, name=PACKAGE_FILE_NAME)
 
     if not state:
@@ -209,7 +210,7 @@ def get_pypi_packages_to_sync(packages_file, state, logger=None):
     return packages_to_sync, last_serial
 
 
-def mine_and_publish_pypi_packageurls(packages_to_sync, packages_mined, logger=None):
+def mine_and_publish_pypi_packageurls(packages_to_sync, packages_mined, logger=None, save_api_calls=False,):
     for package in packages_to_sync:
         if not package:
             continue
@@ -230,12 +231,13 @@ def mine_and_publish_pypi_packageurls(packages_to_sync, packages_mined, logger=N
             packages_mined.append(base_purl)
             continue
 
+        package_data = get_pypi_package_data(name)
         if logger and LOG_PACKAGEURL_DETAILS:
             logger(f"getting packageURLs for package: {base_purl}:")
             purls_string = " ".join(packageurls)
             logger(f"packageURLs: {purls_string}")
 
-        yield base_purl, packageurls
+        yield base_purl, packageurls, package_data
 
 
 def save_mined_packages_in_checkpoint(packages_mined, config_repo, logger=None):

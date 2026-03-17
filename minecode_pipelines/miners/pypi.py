@@ -37,7 +37,8 @@ downloads available for this release.
 pypi_json_headers = {"Accept": "application/vnd.pypi.simple.v1+json"}
 
 
-PYPI_REPO = "https://pypi.org/simple/"
+PYPI_SIMPLE_REPO = "https://pypi.org/simple"
+PYPI_METADATA_REPO = "https://pypi.org/pypi"
 PYPI_TYPE = "pypi"
 
 
@@ -49,16 +50,23 @@ def get_pypi_packages(pypi_repo, logger=None):
     return response.json()
 
 
+def get_pypi_package_versions(name):
+    versions = []
+
+    project_index_api_url = PYPI_SIMPLE_REPO + "/" + name
+    response = requests.get(project_index_api_url, headers=pypi_json_headers)
+    if not response.ok:
+        return versions
+
+    project_data = response.json()
+    versions = project_data.get("versions", [])
+    return versions
+
+
 def get_pypi_packageurls(name):
     packageurls = []
 
-    project_index_api_url = PYPI_REPO + name
-    response = requests.get(project_index_api_url, headers=pypi_json_headers)
-    if not response.ok:
-        return packageurls
-
-    project_data = response.json()
-    for version in project_data.get("versions"):
+    for version in get_pypi_package_versions(name=name):
         purl = PackageURL(
             type=PYPI_TYPE,
             name=name,
@@ -67,6 +75,19 @@ def get_pypi_packageurls(name):
         packageurls.append(purl.to_string())
 
     return packageurls
+
+
+def get_pypi_package_data(name):
+    package_data_by_purl = {}
+
+    for purl in get_pypi_packageurls(name):
+        package_data_url = PYPI_METADATA_REPO + "/" + name + "/" + purl.version
+        response = requests.get(package_data_url, headers=pypi_json_headers)
+        if not response.ok:
+            continue
+        package_data_by_purl[purl.to_string()] = response.json()
+
+    return package_data_by_purl
 
 
 def load_pypi_packages(packages_file):

@@ -154,6 +154,7 @@ def _mine_and_publish_packageurls(
     checkpoint_on_commit: bool = False,
     checkpoint_func: Callable = None,
     checkpoint_freq: int = 30,
+    save_api_calls=False,
 ):
     """Mine and publish PackageURLs."""
     total_file_processed_count = 0
@@ -172,7 +173,7 @@ def _mine_and_publish_packageurls(
         iterator = progress.iter(iterator)
         logger(f"Mine PackageURL for {total_package_count:,d} packages.")
 
-    for base, purls in iterator:
+    for base, purls, package_datas in iterator:
         if not purls or not base:
             continue
 
@@ -190,6 +191,7 @@ def _mine_and_publish_packageurls(
             relative_datafile_path=datafile_path,
             packageurls=purls,
             append=append_purls,
+            save_api_calls=save_api_calls,
         )
         checkout["file_to_commit"].add(purl_file)
         checkout["file_processed_count"] += 1
