@@ -22,6 +22,7 @@ from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
 from minecode_pipelines import pipes
+from minecode_pipelines.pipes import write_package_data_to_file
 from minecode_pipelines.pipes import write_packageurls_to_file
 
 module_logger = logging.getLogger(__name__)
@@ -173,7 +174,7 @@ def _mine_and_publish_packageurls(
         iterator = progress.iter(iterator)
         logger(f"Mine PackageURL for {total_package_count:,d} packages.")
 
-    for base, purls, package_datas in iterator:
+    for base, purls, package_data_by_purls in iterator:
         if not purls or not base:
             continue
 
@@ -186,16 +187,20 @@ def _mine_and_publish_packageurls(
             )
 
         checkout = checked_out_repos[package_repo]
+        repo=checkout["repo"],
         purl_file = write_packageurls_to_file(
-            repo=checkout["repo"],
+            repo=repo,
             relative_datafile_path=datafile_path,
             packageurls=purls,
             append=append_purls,
-            save_api_calls=save_api_calls,
         )
         checkout["file_to_commit"].add(purl_file)
         checkout["file_processed_count"] += 1
 
+        write_package_data_to_file(
+            repo=repo,
+            package_data_by_purls=package_data_by_purls
+        )
         if len(checkout["file_to_commit"]) > batch_size:
             if logger:
                 logger("Trying to commit PackageURLs.")
