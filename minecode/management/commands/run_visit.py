@@ -279,7 +279,7 @@ def visit_uri(resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_rout
         # FIXME: is catching all exceptions here correct?
         msg = f"Visit error for URI: {uri_to_visit}"
         msg += "\n"
-        msg += str(visit_error)
+        msg += get_error_message(e)
         visit_errors.append(msg)
         logger.error(msg)
 
