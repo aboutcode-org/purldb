@@ -15,7 +15,7 @@ from django.utils import timezone
 
 from dateutil.parser import parse as dateutil_parse
 
-from packagedb.models import DependentPackage
+from packagedb.models import DependentPackage, PackageMetadataFile
 from packagedb.models import Package
 from packagedb.models import PackageWatch
 from packagedb.models import Party
@@ -494,3 +494,20 @@ class PackageWatchModelTestCase(TransactionTestCase):
         package = Package.objects.filter(download_url="http://a.ab").get_or_none()
         assert package
         assert Package.objects.filter(download_url="http://a.ab-foobar").get_or_none() is None
+    def test_package_metadata_file_creation(self):
+        package = Package.objects.create(
+            download_url="https://example.com/package.tar.gz",
+            type="pypi",
+            name="example-pkg",
+            version="1.0.0",
+        )
+        metadata_file = PackageMetadataFile.objects.create(
+            package=package,
+            filename="setup.py",
+            filetype="pypi",
+            content="from setuptools import setup\nsetup(name='example-pkg')",
+            sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        )
+        assert metadata_file.filename == "setup.py"
+        assert metadata_file.package == package
+        assert str(metadata_file) == "setup.py for pkg:pypi/example-pkg@1.0.0"
