@@ -1446,3 +1446,66 @@ class PackageActivity(FederatedCodePackageActivityMixin):
     is_processed = models.BooleanField(
         default=False, help_text=_("True if this activity has been processed.")
     )
+
+class PackageMetadataFile(models.Model):
+    """
+    Stores a metadata file associated with a Package,
+    such as package.json, setup.py, pom.xml, etc.
+    These can be federated and defederated alongside purls.
+    """
+
+    package = models.ForeignKey(
+        Package,
+        related_name="metadata_files",
+        on_delete=models.CASCADE,
+        help_text=_("The Package this metadata file belongs to"),
+    )
+
+    filename = models.CharField(
+        max_length=255,
+        help_text=_("Name of the metadata file, e.g. 'package.json'"),
+    )
+
+    filetype = models.CharField(
+        max_length=64,
+        blank=True,
+        null=True,
+        help_text=_("Type of metadata file, e.g. 'npm', 'pypi', 'maven'"),
+    )
+
+    content = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_("The raw text content of the metadata file"),
+    )
+
+    download_url = models.CharField(
+        max_length=2048,
+        blank=True,
+        null=True,
+        help_text=_("URL from which this metadata file was retrieved"),
+    )
+
+    sha1 = models.CharField(
+        max_length=40,
+        blank=True,
+        null=True,
+        db_index=True,
+        help_text=_("SHA1 checksum of the file content"),
+    )
+
+    class Meta:
+        unique_together = [("package", "filename")]
+        ordering = ["id"]
+
+    def __str__(self):
+        return f"{self.filename} for {self.package.package_url}"
+
+    def to_dict(self):
+        return {
+            "filename": self.filename,
+            "filetype": self.filetype,
+            "content": self.content,
+            "download_url": self.download_url,
+            "sha1": self.sha1,
+        }
