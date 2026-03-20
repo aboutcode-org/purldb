@@ -10,7 +10,7 @@
 from unittest.mock import patch
 
 from django.contrib.auth.models import User
-
+from django.core.cache import cache
 from rest_framework.test import APIClient
 from rest_framework.test import APITestCase
 
@@ -18,7 +18,9 @@ from rest_framework.test import APITestCase
 @patch("rest_framework.throttling.UserRateThrottle.get_rate", lambda x: "20/day")
 @patch("rest_framework.throttling.AnonRateThrottle.get_rate", lambda x: "10/day")
 class ThrottleApiTests(APITestCase):
+
     def setUp(self):
+        cache.clear()
         # create a basic user
         self.user = User.objects.create_user(
             username="username",
