@@ -278,8 +278,8 @@ def visit_uri(resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_rout
     except (ConnectionError, Timeout, Exception) as e:
         # FIXME: is catching all exceptions here correct?
         msg = f"Visit error for URI: {uri_to_visit}"
-        msg += "\n".format()
-        msg += get_error_message(e)
+        msg += "\n"
+        msg += str(visit_error)
         visit_errors.append(msg)
         logger.error(msg)
 
@@ -287,8 +287,8 @@ def visit_uri(resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_rout
     # Also log visit errors!!!1
     if visit_error:
         msg = f"Visit error for URI: {uri_to_visit}"
-        msg += "\n".format()
-        msg += get_error_message(e)  # NOQA
+        msg += "\n"
+        msg += str(visit_error)
         visit_errors.append(msg)
         logger.error(msg)
 
