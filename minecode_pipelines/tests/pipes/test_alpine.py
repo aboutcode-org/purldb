@@ -27,3 +27,21 @@ class AlpineMapperTest(FileBasedTesting):
                 packages.append(pd.to_dict())
         expected_loc = self.get_test_loc("alpine/expected_packages.json")
         check_against_expected_json_file(packages, expected_loc, regen=False)
+
+    def test_alpine_url_grouping(self):
+        from minecode_pipelines.pipes.alpine import (
+            ALPINE_LINUX_APKINDEX_URLS,
+            EDGE_APKINDEX_URLS,
+            LATEST_STABLE_APKINDEX_URLS,
+            VERSIONED_APKINDEX_URLS,
+        )
+
+        combined = EDGE_APKINDEX_URLS + LATEST_STABLE_APKINDEX_URLS + VERSIONED_APKINDEX_URLS
+
+        # Ensure all URLs are included
+        assert sorted(combined) == sorted(ALPINE_LINUX_APKINDEX_URLS)
+
+        # Ensure no overlap
+        assert not set(EDGE_APKINDEX_URLS) & set(LATEST_STABLE_APKINDEX_URLS)
+        assert not set(EDGE_APKINDEX_URLS) & set(VERSIONED_APKINDEX_URLS)
+        assert not set(LATEST_STABLE_APKINDEX_URLS) & set(VERSIONED_APKINDEX_URLS)
