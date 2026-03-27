@@ -45,8 +45,8 @@ class PackageVersion:
 
 @dataclasses.dataclass
 class VersionResponse:
-    valid_versions: set[str] = dataclasses.field(default_factory=set)
-    newer_versions: set[str] = dataclasses.field(default_factory=set)
+    valid_versions: list[str] = dataclasses.field(default_factory=list)
+    newer_versions: list[str] = dataclasses.field(default_factory=list)
 
 
 def get_response(url, content_type="json", headers=None):
@@ -112,14 +112,19 @@ class VersionAPI:
         optional ``until`` datetime object for a date "until" which to fetch
         versions.
         """
-        new_versions = set()
-        valid_versions = set()
+        new_versions = []
+        valid_versions = []
+        seen_new_versions = set()
+        seen_valid_versions = set()
 
         for version in self.fetch(package_name):
             if until and version.release_date and version.release_date > until:
-                new_versions.add(version.value)
-            else:
-                valid_versions.add(version.value)
+                if version.value not in seen_new_versions:
+                    new_versions.append(version.value)
+                    seen_new_versions.add(version.value)
+            elif version.value not in seen_valid_versions:
+                valid_versions.append(version.value)
+                seen_valid_versions.add(version.value)
 
         return VersionResponse(valid_versions=valid_versions, newer_versions=new_versions)
 
