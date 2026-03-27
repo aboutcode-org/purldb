@@ -540,6 +540,181 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         self.assertEqual(expected_status, response.data["status"])
 
 
+class PackageApiDependentsTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        # Target package: the package we want to find dependents of.
+        self.target_package = Package.objects.create(
+            download_url="https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz",
+            type="npm",
+            name="lodash",
+            version="4.17.21",
+        )
+        self.target_package.refresh_from_db()
+
+        # Package A depends on the target package.
+        self.package_a = Package.objects.create(
+            download_url="https://registry.npmjs.org/express/-/express-4.18.2.tgz",
+            type="npm",
+            name="express",
+            version="4.18.2",
+        )
+        self.package_a.refresh_from_db()
+        from packagedb.models import DependentPackage
+
+        DependentPackage.objects.create(
+            package=self.package_a,
+            purl="pkg:npm/lodash@>=4.0.0",
+            scope="runtime",
+            is_runtime=True,
+            is_optional=False,
+        )
+
+        # Package B also depends on the target package (as optional).
+        self.package_b = Package.objects.create(
+            download_url="https://registry.npmjs.org/webpack/-/webpack-5.88.0.tgz",
+            type="npm",
+            name="webpack",
+            version="5.88.0",
+        )
+        self.package_b.refresh_from_db()
+        DependentPackage.objects.create(
+            package=self.package_b,
+            purl="pkg:npm/lodash",
+            scope="develop",
+            is_runtime=False,
+            is_optional=True,
+        )
+
+        # Package C does NOT depend on the target package.
+        self.package_c = Package.objects.create(
+            download_url="https://registry.npmjs.org/react/-/react-18.2.0.tgz",
+            type="npm",
+            name="react",
+            version="18.2.0",
+        )
+        self.package_c.refresh_from_db()
+        DependentPackage.objects.create(
+            package=self.package_c,
+            purl="pkg:npm/scheduler@>=0.20.0",
+            scope="runtime",
+            is_runtime=True,
+            is_optional=False,
+        )
+
+    def test_api_package_dependents_action(self):
+        response = self.client.get(
+            reverse("api:package-dependents", args=[self.target_package.uuid])
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(2, response.data["count"])
+        result_purls = {r["purl"] for r in response.data["results"]}
+        self.assertIn(self.package_a.purl, result_purls)
+        self.assertIn(self.package_b.purl, result_purls)
+        self.assertNotIn(self.package_c.purl, result_purls)
+
+    def test_api_package_dependents_filter_by_scope(self):
+        response = self.client.get(
+            reverse("api:package-dependents", args=[self.target_package.uuid]),
+            {"scope": "runtime"},
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, response.data["count"])
+        self.assertEqual(self.package_a.purl, response.data["results"][0]["purl"])
+
+    def test_api_package_dependents_filter_by_is_runtime(self):
+        response = self.client.get(
+            reverse("api:package-dependents", args=[self.target_package.uuid]),
+            {"is_runtime": "false"},
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, response.data["count"])
+        self.assertEqual(self.package_b.purl, response.data["results"][0]["purl"])
+
+    def test_api_package_dependents_filter_by_is_optional(self):
+        response = self.client.get(
+            reverse("api:package-dependents", args=[self.target_package.uuid]),
+            {"is_optional": "true"},
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, response.data["count"])
+        self.assertEqual(self.package_b.purl, response.data["results"][0]["purl"])
+
+    def test_api_package_dependents_empty_results(self):
+        # react has no dependents
+        response = self.client.get(
+            reverse("api:package-dependents", args=[self.package_c.uuid])
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(0, response.data["count"])
+
+    def test_api_package_dependents_with_namespace(self):
+        """Test that dependents lookup works correctly for packages with namespaces."""
+        namespaced_package = Package.objects.create(
+            download_url="https://repo1.maven.org/org/apache/commons/commons-lang3-3.12.jar",
+            type="maven",
+            namespace="org.apache.commons",
+            name="commons-lang3",
+            version="3.12.0",
+        )
+        namespaced_package.refresh_from_db()
+
+        dependent = Package.objects.create(
+            download_url="https://repo1.maven.org/org/example/myapp-1.0.jar",
+            type="maven",
+            namespace="org.example",
+            name="myapp",
+            version="1.0",
+        )
+        dependent.refresh_from_db()
+        from packagedb.models import DependentPackage
+
+        DependentPackage.objects.create(
+            package=dependent,
+            purl="pkg:maven/org.apache.commons/commons-lang3@>=3.0",
+            scope="compile",
+            is_runtime=True,
+            is_optional=False,
+        )
+
+        response = self.client.get(
+            reverse("api:package-dependents", args=[namespaced_package.uuid])
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, response.data["count"])
+        self.assertEqual(dependent.purl, response.data["results"][0]["purl"])
+
+    def test_api_package_dependents_no_false_positive_on_similar_names(self):
+        """Test that 'lodash' does not match 'lodash-es' dependencies."""
+        from packagedb.models import DependentPackage
+
+        # Package D depends on lodash-es (not lodash).
+        package_d = Package.objects.create(
+            download_url="https://registry.npmjs.org/some-pkg/-/some-pkg-1.0.0.tgz",
+            type="npm",
+            name="some-pkg",
+            version="1.0.0",
+        )
+        DependentPackage.objects.create(
+            package=package_d,
+            purl="pkg:npm/lodash-es@4.17.21",
+            scope="runtime",
+            is_runtime=True,
+            is_optional=False,
+        )
+
+        response = self.client.get(
+            reverse("api:package-dependents", args=[self.target_package.uuid])
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result_purls = {r["purl"] for r in response.data["results"]}
+        # Should NOT include package_d which depends on lodash-es.
+        self.assertNotIn(package_d.purl, result_purls)
+        # Should still include the two legitimate dependents.
+        self.assertEqual(2, response.data["count"])
+
+
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):
     test_data_dir = os.path.join(os.path.dirname(__file__), "testfiles")
 
