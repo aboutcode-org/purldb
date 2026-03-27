@@ -38,6 +38,7 @@ from packageurl.contrib.django.models import PackageURLQuerySetMixin
 from rest_framework.authtoken.models import Token
 
 from packagedb import schedules
+from packagedb.purl_url_utils import derive_download_url
 
 TRACE = False
 
@@ -574,6 +575,19 @@ class Package(
     def __str__(self):
         return self.package_url
 
+    def save(self, *args, **kwargs):
+        """
+        Override save to auto-derive download_url from PURL if not provided.
+
+        Packages coming from federatedcode repos may not have a download_url.
+        We use purl2url to infer a real download URL when possible, and fall
+        back to a synthetic unique URL derived from the PURL components.
+        """
+        if not self.download_url and self.purl:
+            self.download_url = derive_download_url(self.purl)
+
+        super().save(*args, **kwargs)
+    
     @property
     def purl(self):
         return self.package_url
