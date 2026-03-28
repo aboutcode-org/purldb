@@ -49,6 +49,7 @@ from minecode import priority_router
 from minecode.models import PriorityResourceURI
 from minecode.route import NoRouteAvailable
 from packagedb.filters import PackageSearchFilter
+from packagedb.models import DependentPackage
 from packagedb.models import Package
 from packagedb.models import PackageActivity
 from packagedb.models import PackageContentType
@@ -413,6 +414,65 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         package = self.get_object()
         package_data = get_enhanced_package(package)
         return Response(package_data)
+
+    @action(detail=True, methods=["get"])
+    def dependents(self, request, *args, **kwargs):
+        """
+        Return Packages that depend on the current Package.
+
+        This finds all DependentPackage entries whose ``purl`` references
+        the current Package (matched by type, namespace, and name), and
+        returns the parent packages that declare those dependencies.
+
+        Optional query parameters for filtering:
+
+        - ``scope``: filter by dependency scope (e.g., ``runtime``,
+          ``install``, ``develop``).
+        - ``is_runtime``: filter by runtime dependency flag
+          (``true`` or ``false``).
+        - ``is_optional``: filter by optional dependency flag
+          (``true`` or ``false``).
+        """
+        package = self.get_object()
+
+        # Build a versionless PURL string to match against DependentPackage.purl.
+        # Dependencies often store version ranges or no version, so we match
+        # on the package type, namespace, and name.
+        # A PURL after the name can only have "@version" or nothing, so we
+        # match the exact name with either end-of-string or "@" following it.
+        purl_prefix = f"pkg:{package.type}"
+        if package.namespace:
+            purl_prefix += f"/{package.namespace}"
+        purl_prefix += f"/{package.name}"
+
+        dep_qs = DependentPackage.objects.filter(
+            Q(purl=purl_prefix) | Q(purl__startswith=f"{purl_prefix}@")
+        )
+
+        # Apply optional filters.
+        scope = request.query_params.get("scope")
+        if scope:
+            dep_qs = dep_qs.filter(scope=scope)
+
+        is_runtime = request.query_params.get("is_runtime")
+        if is_runtime is not None:
+            dep_qs = dep_qs.filter(is_runtime=is_runtime.lower() == "true")
+
+        is_optional = request.query_params.get("is_optional")
+        if is_optional is not None:
+            dep_qs = dep_qs.filter(is_optional=is_optional.lower() == "true")
+
+        # Get the distinct parent packages that declare these dependencies.
+        package_ids = dep_qs.values_list("package_id", flat=True).distinct()
+        qs = Package.objects.filter(id__in=package_ids).prefetch_related(
+            "dependencies", "parties"
+        )
+
+        paginated_qs = self.paginate_queryset(qs)
+        serializer = PackageAPISerializer(
+            paginated_qs, many=True, context={"request": request}
+        )
+        return self.get_paginated_response(serializer.data)
 
     @action(detail=False, methods=["post"])
     def filter_by_checksums(self, request, *args, **kwargs):
