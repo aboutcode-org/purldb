@@ -37,6 +37,7 @@ from minecode_pipelines.pipes import decompress_packages_file
 from minecode_pipelines.pipes import fetch_checkpoint_by_git
 
 
+from minecode_pipelines.miners.npm import get_npm_package_data
 from minecode_pipelines.miners.npm import get_npm_packages
 from minecode_pipelines.miners.npm import get_updated_npm_packages
 from minecode_pipelines.miners.npm import get_current_last_seq
@@ -257,10 +258,12 @@ def mine_and_publish_npm_packageurls(packages_to_sync, packages_mined, logger=No
                 logger(f"Could not fetch package versions for package: {package_name}")
             continue
 
+        package_data = get_npm_package_data(package_name, packageurls)
+
         base_purl = PackageURL(type=NPM_TYPE, name=package_name).to_string()
         packages_mined.append(base_purl)
 
-        yield base_purl, packageurls
+        yield base_purl, packageurls, package_data
 
 
 def save_mined_packages_in_checkpoint(packages_mined, synced_packages, config_repo, logger=None):

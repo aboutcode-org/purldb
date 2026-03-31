@@ -90,7 +90,10 @@ class MineCodeBasePipeline(Pipeline):
             name="aboutcode-data",
             remote_root_url="https://github.com/aboutcode-data",
         )
-        self.data_cluster = data_federation.get_cluster("purls")
+        self.data_clusters = {
+            "purls": data_federation.get_cluster("purls"),
+            "api_package_metadata": data_federation.get_cluster("api_package_metadata"),
+        }
 
     def mine_and_publish_packageurls(self):
         """Mine and publish PackageURLs."""
@@ -145,7 +148,7 @@ class MineCodeBasePipeline(Pipeline):
 def _mine_and_publish_packageurls(
     packageurls: Iterable,
     total_package_count: int,
-    data_cluster: DataCluster,
+    data_clusters,
     checked_out_repos: dict,
     working_path: Path,
     append_purls: bool,
@@ -155,7 +158,7 @@ def _mine_and_publish_packageurls(
     checkpoint_on_commit: bool = False,
     checkpoint_func: Callable = None,
     checkpoint_freq: int = 30,
-    save_api_calls=False,
+    save_api_data=False,
 ):
     """Mine and publish PackageURLs."""
     total_file_processed_count = 0
@@ -178,37 +181,60 @@ def _mine_and_publish_packageurls(
         if not purls or not base:
             continue
 
-        package_repo, datafile_path = data_cluster.get_datafile_repo_and_path(purl=base)
-        if package_repo not in checked_out_repos:
-            checked_out_repos[package_repo] = pipes.init_local_checkout(
-                repo_name=package_repo,
+        purls_data_cluster = data_clusters["purls"]
+        purls_package_repo, purls_datafile_path = purls_data_cluster.get_datafile_repo_and_path(purl=base)
+        if purls_package_repo not in checked_out_repos:
+            checked_out_repos[purls_package_repo] = pipes.init_local_checkout(
+                repo_name=purls_package_repo,
                 working_path=working_path,
                 logger=logger,
             )
 
-        checkout = checked_out_repos[package_repo]
-        repo=checkout["repo"],
+        purls_package_repo_checkout = checked_out_repos[purls_package_repo]
         purl_file = write_packageurls_to_file(
-            repo=repo,
-            relative_datafile_path=datafile_path,
+            repo=purls_package_repo_checkout["repo"],
+            relative_datafile_path=purls_datafile_path,
             packageurls=purls,
             append=append_purls,
         )
-        checkout["file_to_commit"].add(purl_file)
-        checkout["file_processed_count"] += 1
+        purls_package_repo_checkout["file_to_commit"].add(purl_file)
+        purls_package_repo_checkout["file_processed_count"] += 1
 
-        write_package_data_to_file(
-            repo=repo,
+        api_package_metadata_data_cluster = data_clusters["api_package_metadata"]
+        api_package_metadata_repo, api_package_metadata_datafile_path = api_package_metadata_data_cluster.get_datafile_repo_and_path(purl=base)
+        if api_package_metadata_repo not in checked_out_repos:
+            checked_out_repos[api_package_metadata_repo] = pipes.init_local_checkout(
+                repo_name=api_package_metadata_repo,
+                working_path=working_path,
+                logger=logger,
+            )
+
+        api_package_metadata_repo_checkout = checked_out_repos[api_package_metadata_repo]
+        package_data_file_paths = write_package_data_to_file(
+            repo=api_package_metadata_repo_checkout["repo"],
+            relative_package_datafile_path=api_package_metadata_datafile_path,
             package_data_by_purls=package_data_by_purls
         )
-        if len(checkout["file_to_commit"]) > batch_size:
+        api_package_metadata_repo_checkout["file_to_commit"].update(package_data_file_paths)
+        api_package_metadata_repo_checkout["file_processed_count"] += len(package_data_file_paths)
+
+        if len(purls_package_repo_checkout["file_to_commit"]) > batch_size:
             if logger:
                 logger("Trying to commit PackageURLs.")
             pipes.commit_and_push_checkout(
-                local_checkout=checkout,
-                commit_message=commit_msg_func(checkout["commit_count"] + 1),
+                local_checkout=purls_package_repo_checkout,
+                commit_message=commit_msg_func(purls_package_repo_checkout["commit_count"] + 1),
                 logger=logger,
             )
+
+            if logger:
+                logger("Trying to commit API package metadata.")
+            pipes.commit_and_push_checkout(
+                local_checkout=api_package_metadata_repo_checkout,
+                commit_message=commit_msg_func(api_package_metadata_repo_checkout["commit_count"] + 1),
+                logger=logger,
+            )
+
             if checkpoint_on_commit and checkpoint_func:
                 checkpoint_func()
 

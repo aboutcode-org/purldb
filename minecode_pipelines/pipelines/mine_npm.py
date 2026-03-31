@@ -87,7 +87,7 @@ class MineNPM(MineCodeBasePipeline):
         _mine_and_publish_packageurls(
             packageurls=self.mine_packageurls(),
             total_package_count=self.packages_count(),
-            data_cluster=self.data_cluster,
+            data_clusters=self.data_clusters,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
             append_purls=self.append_purls,
@@ -96,6 +96,7 @@ class MineNPM(MineCodeBasePipeline):
             checkpoint_func=self.save_check_point,
             checkpoint_on_commit=True,
             batch_size=self.package_batch_size,
+            save_api_data=True,
         )
 
     def update_state_and_checkpoints(self):

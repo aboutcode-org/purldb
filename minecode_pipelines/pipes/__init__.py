@@ -54,6 +54,7 @@ def fetch_checkpoint_from_github(config_repo, checkpoint_path):
     checkpoints_file = (
         "https://raw.githubusercontent.com/" + repo_name + "refs/heads/main/" + checkpoint_path
     )
+    print(checkpoints_file)
     response = requests.get(checkpoints_file)
     if not response.ok:
         return {}
@@ -167,12 +168,18 @@ def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=
     return relative_datafile_path
 
 
-def write_package_data_to_file(repo, package_data_by_purls):
+def write_package_data_to_file(repo, relative_package_datafile_path, package_data_by_purls):
+    package_data_file_paths = []
+
+    relative_package_datafile_template_path = relative_package_datafile_path.replace("purls.yml", "{}")
     for purl, package_data in package_data_by_purls.items():
         package_url = PackageURL.from_string(purl)
-        package_data_file_full_path = Path(repo.working_dir) / package_url.version / "package_data.json"
-        with open(file=package_data_file_full_path, mode="w") as f:
-            json.dump(package_data, f)
+        datafile_subpath = f"{package_url.version}/package_datafile.json"
+        relative_package_datafile_path = relative_package_datafile_template_path.format(datafile_subpath)
+        package_datafile_full_path = Path(repo.working_dir) / relative_package_datafile_path
+        write_data_to_json_file(package_datafile_full_path, package_data)
+        package_data_file_paths.append(package_datafile_full_path)
+    return package_data_file_paths
 
 
 def load_data_from_yaml_file(path):
