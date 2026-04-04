@@ -105,6 +105,24 @@ class TestPackageManagers(TestCase):
         results = list(PypiVersionAPI().fetch("django"))
         assert results == []
 
+    def test_pypi_get_latest_date_skips_missing_upload_time(self):
+        downloads = [
+            {},
+            {"upload_time_iso_8601": "2010-12-23T05:14:23.509436Z"},
+            {"upload_time_iso_8601": "2010-12-23T05:20:23.509436Z"},
+        ]
+
+        latest_date = PypiVersionAPI().get_latest_date(downloads)
+
+        assert latest_date == dt_local(2010, 12, 23, 5, 20, 23, 509436)
+
+    def test_pypi_get_latest_date_with_no_valid_upload_time(self):
+        downloads = [{}, {"url": "https://files.pythonhosted.org/example.whl"}]
+
+        latest_date = PypiVersionAPI().get_latest_date(downloads)
+
+        assert latest_date is None
+
     @mock.patch("packagedb.package_managers.get_response")
     def test_ruby_fetch_with_no_release(self, mock_response):
         with open(os.path.join(TEST_DATA, "gem.json")) as f:
