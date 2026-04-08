@@ -210,7 +210,12 @@ def get_pypi_packages_to_sync(packages_file, state, logger=None):
     return packages_to_sync, last_serial
 
 
-def mine_and_publish_pypi_packageurls(packages_to_sync, packages_mined, logger=None, save_api_calls=False,):
+def mine_and_publish_pypi_packageurls(
+    packages_to_sync,
+    packages_mined,
+    logger=None,
+    save_api_calls=False,
+):
     for package in packages_to_sync:
         if not package:
             continue

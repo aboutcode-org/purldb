@@ -37,12 +37,12 @@ from minecode_pipelines.pipes import decompress_packages_file
 from minecode_pipelines.pipes import fetch_checkpoint_by_git
 
 
-from minecode_pipelines.miners.npm import get_npm_package_data
 from minecode_pipelines.miners.npm import get_npm_packages
 from minecode_pipelines.miners.npm import get_updated_npm_packages
 from minecode_pipelines.miners.npm import get_current_last_seq
 from minecode_pipelines.miners.npm import load_npm_packages
 from minecode_pipelines.miners.npm import get_npm_packageurls
+from minecode_pipelines.miners.npm import yield_npm_package_data
 from minecode_pipelines.miners.npm import NPM_REPLICATE_REPO
 from minecode_pipelines.miners.npm import NPM_TYPE
 
@@ -231,7 +231,7 @@ def get_npm_packages_to_sync(packages_file, state, logger=None):
             config_repo=MINECODE_PIPELINES_CONFIG_REPO,
             checkpoint_path=NPM_PACKAGES_CHECKPOINT_PATH,
         )
-        packages_to_sync = [package for package in packages if package not in synced_packages]
+        packages_to_sync = list(set(packages).difference(set(synced_packages)))
         if logger:
             logger(
                 f"Starting initial package mining for {len(packages_to_sync)} packages from checkpoint"
@@ -258,12 +258,13 @@ def mine_and_publish_npm_packageurls(packages_to_sync, packages_mined, logger=No
                 logger(f"Could not fetch package versions for package: {package_name}")
             continue
 
-        package_data = get_npm_package_data(package_name, packageurls)
+        # this yields a tuple containing purl str, dict containing api info
+        purls_and_package_data = yield_npm_package_data(package_name, packageurls)
 
         base_purl = PackageURL(type=NPM_TYPE, name=package_name).to_string()
         packages_mined.append(base_purl)
 
-        yield base_purl, packageurls, package_data
+        yield base_purl, packageurls, purls_and_package_data
 
 
 def save_mined_packages_in_checkpoint(packages_mined, synced_packages, config_repo, logger=None):

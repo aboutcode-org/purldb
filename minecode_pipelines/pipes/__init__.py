@@ -17,7 +17,6 @@ import requests
 import saneyaml
 
 from minecode_pipelines.utils import get_temp_file
-from packageurl import PackageURL
 
 # states:
 # note: a state is null when mining starts
@@ -168,18 +167,12 @@ def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=
     return relative_datafile_path
 
 
-def write_package_data_to_file(repo, relative_package_datafile_path, package_data_by_purls):
-    package_data_file_paths = []
-
-    relative_package_datafile_template_path = relative_package_datafile_path.replace("purls.yml", "{}")
-    for purl, package_data in package_data_by_purls.items():
-        package_url = PackageURL.from_string(purl)
-        datafile_subpath = f"{package_url.version}/package_datafile.json"
-        relative_package_datafile_path = relative_package_datafile_template_path.format(datafile_subpath)
-        package_datafile_full_path = Path(repo.working_dir) / relative_package_datafile_path
-        write_data_to_json_file(package_datafile_full_path, package_data)
-        package_data_file_paths.append(package_datafile_full_path)
-    return package_data_file_paths
+def write_package_data_to_file(repo, relative_api_package_metadata_datafile_path, package_data):
+    api_package_metadata_datafile_full_path = (
+        Path(repo.working_dir) / relative_api_package_metadata_datafile_path
+    )
+    write_data_to_json_file(api_package_metadata_datafile_full_path, package_data)
+    return api_package_metadata_datafile_full_path
 
 
 def load_data_from_yaml_file(path):
