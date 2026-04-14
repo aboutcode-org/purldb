@@ -53,7 +53,7 @@ def fetch_checkpoint_from_github(config_repo, checkpoint_path):
     checkpoints_file = (
         "https://raw.githubusercontent.com/" + repo_name + "refs/heads/main/" + checkpoint_path
     )
-    print(checkpoints_file)
+
     response = requests.get(checkpoints_file)
     if not response.ok:
         return {}

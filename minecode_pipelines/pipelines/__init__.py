@@ -91,7 +91,7 @@ class MineCodeBasePipeline(Pipeline):
         )
         self.data_clusters = {
             "purls": data_federation.get_cluster("purls"),
-            "api_package_metadata": data_federation.get_cluster("api_package_metadata"),
+            "api_package_version_responses": data_federation.get_cluster("api_package_version_responses"),
         }
 
     def mine_and_publish_packageurls(self):
@@ -220,7 +220,7 @@ def _mine_and_publish_packageurls(
         logger(f"Mine PackageURL for {total_package_count:,d} packages.")
 
     purls_data_cluster = data_clusters["purls"]
-    api_package_metadata_data_cluster = data_clusters["api_package_metadata"]
+    api_package_version_responses_data_cluster = data_clusters["api_package_version_responses"]
     for base, purls, purls_and_package_data in iterator:
         if not purls or not base:
             continue
@@ -252,26 +252,26 @@ def _mine_and_publish_packageurls(
             logger=logger,
         )
 
-        for purl, api_package_metadata in purls_and_package_data:
-            api_package_metadata_repo_checkout, api_package_metadata_datafile_path = (
+        for purl, api_package_version_response in purls_and_package_data:
+            api_package_version_responses_repo_checkout, api_package_metadata_datafile_path = (
                 get_repo_checkout_from_data_cluster(
-                    data_cluster=api_package_metadata_data_cluster,
+                    data_cluster=api_package_version_responses_data_cluster,
                     purl=purl,
                     checked_out_repos=checked_out_repos,
                     working_path=working_path,
                     logger=logger,
                 )
             )
-            api_package_metadata_file = write_package_data_to_file(
-                repo=api_package_metadata_repo_checkout["repo"],
+            api_package_version_response_file = write_package_data_to_file(
+                repo=api_package_version_responses_repo_checkout["repo"],
                 relative_api_package_metadata_datafile_path=api_package_metadata_datafile_path,
-                package_data=api_package_metadata,
+                package_data=api_package_version_response,
             )
-            api_package_metadata_repo_checkout["file_to_commit"].add(api_package_metadata_file)
-            api_package_metadata_repo_checkout["file_processed_count"] += 1
+            api_package_version_responses_repo_checkout["file_to_commit"].add(api_package_version_response_file)
+            api_package_version_responses_repo_checkout["file_processed_count"] += 1
 
             commit_and_push_packageurls(
-                repo_checkout=api_package_metadata_repo_checkout,
+                repo_checkout=api_package_version_responses_repo_checkout,
                 commit_msg_func=commit_msg_func,
                 checkpoint_func=checkpoint_func,
                 checkpoint_on_commit=checkpoint_on_commit,
