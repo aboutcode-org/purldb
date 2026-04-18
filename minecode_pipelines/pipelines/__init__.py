@@ -88,10 +88,13 @@ class MineCodeBasePipeline(Pipeline):
         data_federation = DataFederation.from_url(
             name="aboutcode-data",
             remote_root_url="https://github.com/aboutcode-data",
+            branch="add-datafile_name"
         )
         self.data_clusters = {
             "purls": data_federation.get_cluster("purls"),
-            "api_package_version_responses": data_federation.get_cluster("api_package_version_responses"),
+            "api_package_version_responses": data_federation.get_cluster(
+                "api_package_version_responses"
+            ),
         }
 
     def mine_and_publish_packageurls(self):
@@ -175,9 +178,11 @@ def commit_and_push_packageurls(
 
 
 def get_repo_checkout_from_data_cluster(
-    data_cluster, purl, checked_out_repos, working_path, logger
+    data_cluster, purl, checked_out_repos, working_path, logger, datafile_name=None
 ):
-    repo, datafile_path = data_cluster.get_datafile_repo_and_path(purl=purl)
+    repo, datafile_path = data_cluster.get_datafile_repo_and_path(
+        purl=purl, datafile_name=datafile_name
+    )
     if repo not in checked_out_repos:
         checked_out_repos[repo] = pipes.init_local_checkout(
             repo_name=repo,
@@ -262,12 +267,16 @@ def _mine_and_publish_packageurls(
                     logger=logger,
                 )
             )
+
             api_package_version_response_file = write_package_data_to_file(
                 repo=api_package_version_responses_repo_checkout["repo"],
                 relative_api_package_metadata_datafile_path=api_package_metadata_datafile_path,
                 package_data=api_package_version_response,
             )
-            api_package_version_responses_repo_checkout["file_to_commit"].add(api_package_version_response_file)
+
+            api_package_version_responses_repo_checkout["file_to_commit"].add(
+                api_package_version_response_file
+            )
             api_package_version_responses_repo_checkout["file_processed_count"] += 1
 
             commit_and_push_packageurls(

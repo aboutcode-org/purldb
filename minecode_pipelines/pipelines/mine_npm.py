@@ -96,7 +96,6 @@ class MineNPM(MineCodeBasePipeline):
             checkpoint_func=self.save_check_point,
             checkpoint_on_commit=True,
             batch_size=self.package_batch_size,
-            save_api_data=True,
         )
 
     def update_state_and_checkpoints(self):
