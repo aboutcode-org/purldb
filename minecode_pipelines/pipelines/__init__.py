@@ -17,6 +17,7 @@ from pathlib import Path
 
 from aboutcode.federated import DataFederation
 from aboutcode.pipeline import LoopProgress
+from packageurl import PackageURL
 from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
@@ -226,6 +227,7 @@ def _mine_and_publish_packageurls(
 
     purls_data_cluster = data_clusters["purls"]
     api_package_version_responses_data_cluster = data_clusters["api_package_version_responses"]
+    checked_out_repos_count = 0
     for base, purls, purls_and_package_data in iterator:
         if not purls or not base:
             continue
@@ -258,6 +260,14 @@ def _mine_and_publish_packageurls(
         )
 
         for purl, api_package_version_response in purls_and_package_data:
+            if not isinstance(purl, PackageURL):
+                package_url = PackageURL.from_string(purl)
+            else:
+                package_url = purl
+            if package_url.type == 'maven':
+                datafile_name = 'pom.xml'
+            else:
+                datafile_name = 'api_package_version_response.json'
             api_package_version_responses_repo_checkout, api_package_metadata_datafile_path = (
                 get_repo_checkout_from_data_cluster(
                     data_cluster=api_package_version_responses_data_cluster,
@@ -265,6 +275,7 @@ def _mine_and_publish_packageurls(
                     checked_out_repos=checked_out_repos,
                     working_path=working_path,
                     logger=logger,
+                    datafile_name=datafile_name,
                 )
             )
 

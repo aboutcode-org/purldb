@@ -171,7 +171,12 @@ def write_package_data_to_file(repo, relative_api_package_metadata_datafile_path
     api_package_metadata_datafile_full_path = (
         Path(repo.working_dir) / relative_api_package_metadata_datafile_path
     )
-    write_data_to_json_file(api_package_metadata_datafile_full_path, package_data)
+    if str(api_package_metadata_datafile_full_path).endswith(".json"):
+        write_data_to_json_file(api_package_metadata_datafile_full_path, package_data)
+    else:
+        api_package_metadata_datafile_full_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(api_package_metadata_datafile_full_path, "wb") as f:
+            f.write(package_data)
     return api_package_metadata_datafile_full_path
 
 

@@ -26,6 +26,8 @@ from pathlib import Path
 from aboutcode.hashid import get_core_purl
 from packageurl import PackageURL
 
+import requests
+
 
 def get_cargo_packages(packages):
     """Return base_purl and list of PackageURLs from cargo packages."""
@@ -39,14 +41,24 @@ def get_cargo_packages(packages):
     purl = PackageURL(type="cargo", name=name, version=version)
     base_purl = get_core_purl(purl)
 
-    updated_purls = []
+    packageurls = []
     for package in packages:
         name = package.get("name")
         version = package.get("vers")
         purl = PackageURL(type="cargo", name=name, version=version).to_string()
-        updated_purls.append(purl)
+        packageurls.append(purl)
 
-    return base_purl, updated_purls
+    return base_purl, packageurls
+
+
+def yield_cargo_package_data(name, packageurls=[]):
+    api_url_template = "https://crates.io/api/v1/crates/{name}/{version}"
+    for purl in packageurls:
+        package_data_url = api_url_template.format(name=name, version=purl.version)
+        response = requests.get(package_data_url)
+        if not response.ok:
+            continue
+        yield purl, response.json()
 
 
 def mine_cargo_packageurls(cargo_index_repo, logger):
@@ -69,4 +81,7 @@ def mine_cargo_packageurls(cargo_index_repo, logger):
                 except json.JSONDecodeError as e:
                     logger(f"Skipping invalid JSON in {path} at line {line_number}: {e}")
 
-        yield get_cargo_packages(packages)
+        base_purl, packageurls = get_cargo_packages(packages)
+        purls_and_package_data = yield_cargo_package_data(name=base_purl.name, packageurls=packageurls)
+
+        yield base_purl, packageurls, purls_and_package_data

@@ -77,17 +77,13 @@ def get_pypi_packageurls(name):
     return packageurls
 
 
-def get_pypi_package_data(name):
-    package_data_by_purl = {}
-
-    for purl in get_pypi_packageurls(name):
+def yield_pypi_package_data(name, packageurls=[]):
+    for purl in packageurls or get_pypi_packageurls(name):
         package_data_url = PYPI_METADATA_REPO + "/" + name + "/" + purl.version
         response = requests.get(package_data_url, headers=pypi_json_headers)
         if not response.ok:
             continue
-        package_data_by_purl[purl.to_string()] = response.json()
-
-    return package_data_by_purl
+        yield purl, response.json()
 
 
 def load_pypi_packages(packages_file):
