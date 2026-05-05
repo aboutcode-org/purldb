@@ -54,7 +54,8 @@ def get_cargo_packages(packages):
 def yield_cargo_package_data(name, packageurls=[]):
     api_url_template = "https://crates.io/api/v1/crates/{name}/{version}"
     for purl in packageurls:
-        package_data_url = api_url_template.format(name=name, version=purl.version)
+        package_url = PackageURL.from_string(purl)
+        package_data_url = api_url_template.format(name=name, version=package_url.version)
         response = requests.get(package_data_url)
         if not response.ok:
             continue

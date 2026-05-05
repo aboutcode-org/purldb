@@ -104,7 +104,7 @@ class MineCodeBasePipeline(Pipeline):
         _mine_and_publish_packageurls(
             packageurls=self.mine_packageurls(),
             total_package_count=self.packages_count(),
-            data_cluster=self.data_cluster,
+            data_clusters=self.data_clusters,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
             append_purls=self.append_purls,
@@ -149,33 +149,40 @@ class MineCodeBasePipeline(Pipeline):
 
 
 def commit_and_push_packageurls(
-    repo_checkout,
+    current_working_repos,
     commit_msg_func,
     checkpoint_func,
     checkpoint_on_commit,
     checkpoint_interval,
     last_checkpoint_call,
+    currently_processed_files_count,
     batch_size,
     logger,
 ):
-    if len(repo_checkout["file_to_commit"]) > batch_size:
+    if currently_processed_files_count > batch_size:
         if logger:
             logger("Trying to commit PackageURLs.")
-        pipes.commit_and_push_checkout(
-            local_checkout=repo_checkout,
-            commit_message=commit_msg_func(repo_checkout["commit_count"] + 1),
-            logger=logger,
-        )
 
-        if checkpoint_on_commit and checkpoint_func:
-            checkpoint_func()
+        for repo_checkout in current_working_repos:
+            pipes.commit_and_push_checkout(
+                local_checkout=repo_checkout,
+                commit_message=commit_msg_func(repo_checkout["commit_count"] + 1),
+                logger=logger,
+            )
 
-    if not checkpoint_on_commit:
-        time_now = time.time()
-        checkpoint_due = time_now - last_checkpoint_call >= checkpoint_interval
-        if checkpoint_func and checkpoint_due:
-            checkpoint_func()
-            last_checkpoint_call = time_now
+            if checkpoint_on_commit and checkpoint_func:
+                checkpoint_func()
+
+        if not checkpoint_on_commit:
+            time_now = time.time()
+            checkpoint_due = time_now - last_checkpoint_call >= checkpoint_interval
+            if checkpoint_func and checkpoint_due:
+                checkpoint_func()
+                last_checkpoint_call = time_now
+
+        current_working_repos = []
+        currently_processed_files_count = 0
+    return current_working_repos, currently_processed_files_count
 
 
 def get_repo_checkout_from_data_cluster(
@@ -203,7 +210,7 @@ def _mine_and_publish_packageurls(
     append_purls: bool,
     commit_msg_func: Callable,
     logger: Callable,
-    batch_size: int = 4000,
+    batch_size: int = 100,
     checkpoint_on_commit: bool = False,
     checkpoint_func: Callable = None,
     checkpoint_freq: int = 30,
@@ -227,7 +234,9 @@ def _mine_and_publish_packageurls(
 
     purls_data_cluster = data_clusters["purls"]
     api_package_version_responses_data_cluster = data_clusters["api_package_version_responses"]
-    checked_out_repos_count = 0
+
+    current_working_repos = []
+    currently_processed_files_count = 0
     for base, purls, purls_and_package_data in iterator:
         if not purls or not base:
             continue
@@ -239,6 +248,9 @@ def _mine_and_publish_packageurls(
             working_path=working_path,
             logger=logger,
         )
+        if purls_package_repo_checkout not in current_working_repos:
+            current_working_repos.append(purls_package_repo_checkout)
+
         purl_file = write_packageurls_to_file(
             repo=purls_package_repo_checkout["repo"],
             relative_datafile_path=purls_datafile_path,
@@ -247,14 +259,16 @@ def _mine_and_publish_packageurls(
         )
         purls_package_repo_checkout["file_to_commit"].add(purl_file)
         purls_package_repo_checkout["file_processed_count"] += 1
+        currently_processed_files_count += 1
 
-        commit_and_push_packageurls(
-            repo_checkout=purls_package_repo_checkout,
+        current_working_repos, currently_processed_files_count = commit_and_push_packageurls(
+            current_working_repos=current_working_repos,
             commit_msg_func=commit_msg_func,
             checkpoint_func=checkpoint_func,
             checkpoint_on_commit=checkpoint_on_commit,
             checkpoint_interval=checkpoint_interval,
             last_checkpoint_call=last_checkpoint_call,
+            currently_processed_files_count=currently_processed_files_count,
             batch_size=batch_size,
             logger=logger,
         )
@@ -278,6 +292,8 @@ def _mine_and_publish_packageurls(
                     datafile_name=datafile_name,
                 )
             )
+            if api_package_version_responses_repo_checkout not in current_working_repos:
+                current_working_repos.append(api_package_version_responses_repo_checkout)
 
             api_package_version_response_file = write_package_data_to_file(
                 repo=api_package_version_responses_repo_checkout["repo"],
@@ -289,14 +305,16 @@ def _mine_and_publish_packageurls(
                 api_package_version_response_file
             )
             api_package_version_responses_repo_checkout["file_processed_count"] += 1
+            currently_processed_files_count += 1
 
-            commit_and_push_packageurls(
-                repo_checkout=api_package_version_responses_repo_checkout,
+            current_working_repos, currently_processed_files_count = commit_and_push_packageurls(
+                current_working_repos=current_working_repos,
                 commit_msg_func=commit_msg_func,
                 checkpoint_func=checkpoint_func,
                 checkpoint_on_commit=checkpoint_on_commit,
                 checkpoint_interval=checkpoint_interval,
                 last_checkpoint_call=last_checkpoint_call,
+                currently_processed_files_count=currently_processed_files_count,
                 batch_size=batch_size,
                 logger=logger,
             )
