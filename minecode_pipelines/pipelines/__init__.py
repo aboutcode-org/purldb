@@ -155,34 +155,27 @@ def commit_and_push_packageurls(
     checkpoint_on_commit,
     checkpoint_interval,
     last_checkpoint_call,
-    currently_processed_files_count,
-    batch_size,
     logger,
 ):
-    if currently_processed_files_count > batch_size:
-        if logger:
-            logger("Trying to commit PackageURLs.")
+    if logger:
+        logger("Trying to commit PackageURLs.")
 
-        for repo_checkout in current_working_repos:
-            pipes.commit_and_push_checkout(
-                local_checkout=repo_checkout,
-                commit_message=commit_msg_func(repo_checkout["commit_count"] + 1),
-                logger=logger,
-            )
+    for repo_checkout in current_working_repos:
+        pipes.commit_and_push_checkout(
+            local_checkout=repo_checkout,
+            commit_message=commit_msg_func(repo_checkout["commit_count"] + 1),
+            logger=logger,
+        )
 
-            if checkpoint_on_commit and checkpoint_func:
-                checkpoint_func()
+        if checkpoint_on_commit and checkpoint_func:
+            checkpoint_func()
 
-        if not checkpoint_on_commit:
-            time_now = time.time()
-            checkpoint_due = time_now - last_checkpoint_call >= checkpoint_interval
-            if checkpoint_func and checkpoint_due:
-                checkpoint_func()
-                last_checkpoint_call = time_now
-
-        current_working_repos = []
-        currently_processed_files_count = 0
-    return current_working_repos, currently_processed_files_count
+    if not checkpoint_on_commit:
+        time_now = time.time()
+        checkpoint_due = time_now - last_checkpoint_call >= checkpoint_interval
+        if checkpoint_func and checkpoint_due:
+            checkpoint_func()
+            last_checkpoint_call = time_now
 
 
 def get_repo_checkout_from_data_cluster(
@@ -261,17 +254,18 @@ def _mine_and_publish_packageurls(
         purls_package_repo_checkout["file_processed_count"] += 1
         currently_processed_files_count += 1
 
-        current_working_repos, currently_processed_files_count = commit_and_push_packageurls(
-            current_working_repos=current_working_repos,
-            commit_msg_func=commit_msg_func,
-            checkpoint_func=checkpoint_func,
-            checkpoint_on_commit=checkpoint_on_commit,
-            checkpoint_interval=checkpoint_interval,
-            last_checkpoint_call=last_checkpoint_call,
-            currently_processed_files_count=currently_processed_files_count,
-            batch_size=batch_size,
-            logger=logger,
-        )
+        if currently_processed_files_count > batch_size:
+            commit_and_push_packageurls(
+                current_working_repos=current_working_repos,
+                commit_msg_func=commit_msg_func,
+                checkpoint_func=checkpoint_func,
+                checkpoint_on_commit=checkpoint_on_commit,
+                checkpoint_interval=checkpoint_interval,
+                last_checkpoint_call=last_checkpoint_call,
+                logger=logger,
+            )
+            current_working_repos = []
+            currently_processed_files_count = 0
 
         for purl, api_package_version_response in purls_and_package_data:
             if not isinstance(purl, PackageURL):
@@ -307,17 +301,18 @@ def _mine_and_publish_packageurls(
             api_package_version_responses_repo_checkout["file_processed_count"] += 1
             currently_processed_files_count += 1
 
-            current_working_repos, currently_processed_files_count = commit_and_push_packageurls(
-                current_working_repos=current_working_repos,
-                commit_msg_func=commit_msg_func,
-                checkpoint_func=checkpoint_func,
-                checkpoint_on_commit=checkpoint_on_commit,
-                checkpoint_interval=checkpoint_interval,
-                last_checkpoint_call=last_checkpoint_call,
-                currently_processed_files_count=currently_processed_files_count,
-                batch_size=batch_size,
-                logger=logger,
-            )
+            if currently_processed_files_count > batch_size:
+                commit_and_push_packageurls(
+                    current_working_repos=current_working_repos,
+                    commit_msg_func=commit_msg_func,
+                    checkpoint_func=checkpoint_func,
+                    checkpoint_on_commit=checkpoint_on_commit,
+                    checkpoint_interval=checkpoint_interval,
+                    last_checkpoint_call=last_checkpoint_call,
+                    logger=logger,
+                )
+                current_working_repos = []
+                currently_processed_files_count = 0
 
     for checkout in checked_out_repos.values():
         final_commit_count = checkout["commit_count"] + 1
