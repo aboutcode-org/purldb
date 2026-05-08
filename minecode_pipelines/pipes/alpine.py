@@ -542,7 +542,7 @@ class AlpineCollector:
                     namespace=pd.namespace,
                     name=pd.name,
                 )
-                yield current_purl, [pd.purl]
+                yield current_purl, [pd.purl], []
 
 
 def mine_and_publish_alpine_packageurls(

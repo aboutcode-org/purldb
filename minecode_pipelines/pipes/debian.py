@@ -162,4 +162,4 @@ class DebianCollector:
                 size=entry.size,
                 download_url=url_template.format(path=path),
             )
-            yield versionless_purl, [packaged_data.purl]
+            yield versionless_purl, [packaged_data.purl], []
