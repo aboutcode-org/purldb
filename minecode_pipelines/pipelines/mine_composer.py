@@ -79,7 +79,7 @@ class MineComposer(MineCodeBasePipeline):
         _mine_and_publish_packageurls(
             packageurls=self.mine_packageurls(),
             total_package_count=self.packages_count(),
-            data_cluster=self.data_cluster,
+            data_clusters=self.data_clusters,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
             append_purls=self.append_purls,
