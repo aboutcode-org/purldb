@@ -157,6 +157,14 @@ def commit_and_push_packageurls(
     last_checkpoint_call,
     logger,
 ):
+    """
+    Given a list of `current_working_repos`, commit and push changes to each repo with the commit message returned from `commit_msg_func`.
+
+    If `checkpoint_on_commit` is True and `checkpoint_func` exists, then we execute `checkpoint_func`.
+
+    If `checkpoint_on_commit` is False, then we determine if it is time to call `checkpoint_func` or not.
+    """
+
     if logger:
         logger("Trying to commit PackageURLs.")
 
@@ -181,6 +189,11 @@ def commit_and_push_packageurls(
 def get_repo_checkout_from_data_cluster(
     data_cluster, purl, checked_out_repos, working_path, logger, datafile_name=None
 ):
+    """
+    Return a `repo_checkout` and `datafile_path` for a given `purl`, `data_cluster`, and `working_path`.
+
+    Add `repo_checkout` to `checked_out_repos`.
+    """
     repo, datafile_path = data_cluster.get_datafile_repo_and_path(
         purl=purl, datafile_name=datafile_name
     )
