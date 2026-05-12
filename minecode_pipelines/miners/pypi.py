@@ -80,7 +80,9 @@ def get_pypi_packageurls(name):
 def yield_pypi_package_data(name, packageurls=[]):
     for purl in packageurls or get_pypi_packageurls(name):
         package_url = PackageURL.from_string(purl)
-        package_data_url = PYPI_METADATA_REPO + "/" + name + "/" + package_url.version + "/" + "json"
+        package_data_url = (
+            PYPI_METADATA_REPO + "/" + name + "/" + package_url.version + "/" + "json"
+        )
         response = requests.get(package_data_url, headers=pypi_json_headers)
         if not response.ok:
             continue

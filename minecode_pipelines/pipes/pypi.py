@@ -243,7 +243,6 @@ def mine_and_publish_pypi_packageurls(
         # this yields a tuple containing purl str, dict containing api info
         purls_and_package_data = yield_pypi_package_data(name, packageurls)
 
-
         yield base_purl, packageurls, purls_and_package_data
 
 

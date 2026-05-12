@@ -83,6 +83,8 @@ def mine_cargo_packageurls(cargo_index_repo, logger):
                     logger(f"Skipping invalid JSON in {path} at line {line_number}: {e}")
 
         base_purl, packageurls = get_cargo_packages(packages)
-        purls_and_package_data = yield_cargo_package_data(name=base_purl.name, packageurls=packageurls)
+        purls_and_package_data = yield_cargo_package_data(
+            name=base_purl.name, packageurls=packageurls
+        )
 
         yield base_purl, packageurls, purls_and_package_data

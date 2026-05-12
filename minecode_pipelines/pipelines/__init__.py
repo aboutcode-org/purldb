@@ -89,7 +89,7 @@ class MineCodeBasePipeline(Pipeline):
         data_federation = DataFederation.from_url(
             name="aboutcode-data",
             remote_root_url="https://github.com/aboutcode-data",
-            branch="add-datafile_name"
+            branch="add-datafile_name",
         )
         self.data_clusters = {
             "purls": data_federation.get_cluster("purls"),
@@ -285,10 +285,10 @@ def _mine_and_publish_packageurls(
                 package_url = PackageURL.from_string(purl)
             else:
                 package_url = purl
-            if package_url.type == 'maven':
-                datafile_name = 'pom.xml'
+            if package_url.type == "maven":
+                datafile_name = "pom.xml"
             else:
-                datafile_name = 'api_package_version_response.json'
+                datafile_name = "api_package_version_response.json"
             api_package_version_responses_repo_checkout, api_package_metadata_datafile_path = (
                 get_repo_checkout_from_data_cluster(
                     data_cluster=api_package_version_responses_data_cluster,
