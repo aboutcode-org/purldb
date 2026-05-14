@@ -38,7 +38,7 @@ classifiers = [
 
 dependencies = [
     "aboutcode.hashid >= 0.2.0",
-    "aboutcode.federated >= 0.1.0",
+    "aboutcode.federated >= 1.0.1",
     "packageurl_python >= 0.15.6",
     "scancodeio >= 35.3.0",
     "ftputil >= 5.1.0",
