@@ -89,7 +89,7 @@ class MineMaven(MineCodeBasePipeline):
         _mine_and_publish_packageurls(
             packageurls=self.maven_nexus_collector.get_packages(),
             total_package_count=None,
-            data_cluster=self.data_cluster,
+            data_clusters=self.data_clusters,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
             append_purls=self.append_purls,
@@ -133,7 +133,7 @@ class MineMaven(MineCodeBasePipeline):
         _mine_and_publish_packageurls(
             packageurls=self.maven_nexus_collector.get_packages(),
             total_package_count=None,
-            data_cluster=self.data_cluster,
+            data_clusters=self.data_clusters,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
             append_purls=self.append_purls,
@@ -177,7 +177,7 @@ class MineMaven(MineCodeBasePipeline):
         _mine_and_publish_packageurls(
             packageurls=self.maven_nexus_collector.get_packages(),
             total_package_count=None,
-            data_cluster=self.data_cluster,
+            data_clusters=self.data_clusters,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
             append_purls=self.append_purls,
@@ -221,7 +221,7 @@ class MineMaven(MineCodeBasePipeline):
         _mine_and_publish_packageurls(
             packageurls=self.maven_nexus_collector.get_packages(),
             total_package_count=None,
-            data_cluster=self.data_cluster,
+            data_clusters=self.data_clusters,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
             append_purls=self.append_purls,
@@ -265,7 +265,7 @@ class MineMaven(MineCodeBasePipeline):
         _mine_and_publish_packageurls(
             packageurls=self.maven_nexus_collector.get_packages(),
             total_package_count=None,
-            data_cluster=self.data_cluster,
+            data_clusters=self.data_clusters,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
             append_purls=self.append_purls,

@@ -89,7 +89,6 @@ class MineCodeBasePipeline(Pipeline):
         data_federation = DataFederation.from_url(
             name="aboutcode-data",
             remote_root_url="https://github.com/aboutcode-data",
-            branch="add-datafile_name",
         )
         self.data_clusters = {
             "purls": data_federation.get_cluster("purls"),
