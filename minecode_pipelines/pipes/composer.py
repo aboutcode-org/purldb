@@ -30,6 +30,9 @@ from minecode_pipelines.utils import cycle_from_index, grouper
 PACKAGE_BATCH_SIZE = 100
 
 
+COMPOSER_REPO = "https://packagist.org/packages"
+
+
 def get_composer_packages():
     """
     Fetch all Composer packages from Packagist and save them to a temporary JSON file.
@@ -141,4 +144,6 @@ def mine_composer_packageurls(packages, start_index):
                 continue
 
             vendor, package = item
-            yield get_composer_purl(vendor=vendor, package=package)
+            base_purl, packageurls = get_composer_purl(vendor=vendor, package=package)
+
+            yield base_purl, packageurls, []

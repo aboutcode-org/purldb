@@ -42,7 +42,7 @@ class MineDebian(MineCodeBasePipeline):
             cls.create_federatedcode_working_dir,
             cls.fetch_federation_config,
             cls.fetch_checkpoint_and_debian_index,
-            cls.mine_and_publish_alpine_packageurls,
+            cls.mine_and_publish_debian_packageurls,
             cls.save_check_point,
             cls.delete_working_dir,
         )
@@ -62,13 +62,13 @@ class MineDebian(MineCodeBasePipeline):
         self.log(f"last_checkpoint: {self.last_checkpoint}")
         self.debian_collector = debian.DebianCollector(logger=self.log)
 
-    def mine_and_publish_alpine_packageurls(self):
+    def mine_and_publish_debian_packageurls(self):
         _mine_and_publish_packageurls(
             packageurls=self.debian_collector.get_packages(
                 previous_index_last_modified_date=self.last_checkpoint,
             ),
             total_package_count=None,
-            data_cluster=self.data_cluster,
+            data_clusters=self.data_clusters,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
             append_purls=self.append_purls,

@@ -15,13 +15,14 @@ from collections.abc import Callable
 from collections.abc import Iterable
 from pathlib import Path
 
-from aboutcode.federated import DataCluster
 from aboutcode.federated import DataFederation
 from aboutcode.pipeline import LoopProgress
+from packageurl import PackageURL
 from scanpipe.pipelines import Pipeline
 from scanpipe.pipes import federatedcode
 
 from minecode_pipelines import pipes
+from minecode_pipelines.pipes import write_package_data_to_file
 from minecode_pipelines.pipes import write_packageurls_to_file
 
 module_logger = logging.getLogger(__name__)
@@ -89,7 +90,12 @@ class MineCodeBasePipeline(Pipeline):
             name="aboutcode-data",
             remote_root_url="https://github.com/aboutcode-data",
         )
-        self.data_cluster = data_federation.get_cluster("purls")
+        self.data_clusters = {
+            "purls": data_federation.get_cluster("purls"),
+            "api_package_version_responses": data_federation.get_cluster(
+                "api_package_version_responses"
+            ),
+        }
 
     def mine_and_publish_packageurls(self):
         """Mine and publish PackageURLs."""
@@ -97,7 +103,7 @@ class MineCodeBasePipeline(Pipeline):
         _mine_and_publish_packageurls(
             packageurls=self.mine_packageurls(),
             total_package_count=self.packages_count(),
-            data_cluster=self.data_cluster,
+            data_clusters=self.data_clusters,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
             append_purls=self.append_purls,
@@ -141,16 +147,75 @@ class MineCodeBasePipeline(Pipeline):
         self.append_to_log(message)
 
 
+def commit_and_push_packageurls(
+    current_working_repos,
+    commit_msg_func,
+    checkpoint_func,
+    checkpoint_on_commit,
+    checkpoint_interval,
+    last_checkpoint_call,
+    logger,
+):
+    """
+    Given a list of `current_working_repos`, commit and push changes to each repo with the commit message returned from `commit_msg_func`.
+
+    If `checkpoint_on_commit` is True and `checkpoint_func` exists, then we execute `checkpoint_func`.
+
+    If `checkpoint_on_commit` is False, then we determine if it is time to call `checkpoint_func` or not.
+    """
+
+    if logger:
+        logger("Trying to commit PackageURLs.")
+
+    for repo_checkout in current_working_repos:
+        pipes.commit_and_push_checkout(
+            local_checkout=repo_checkout,
+            commit_message=commit_msg_func(repo_checkout["commit_count"] + 1),
+            logger=logger,
+        )
+
+        if checkpoint_on_commit and checkpoint_func:
+            checkpoint_func()
+
+    if not checkpoint_on_commit:
+        time_now = time.time()
+        checkpoint_due = time_now - last_checkpoint_call >= checkpoint_interval
+        if checkpoint_func and checkpoint_due:
+            checkpoint_func()
+            last_checkpoint_call = time_now
+
+
+def get_repo_checkout_from_data_cluster(
+    data_cluster, purl, checked_out_repos, working_path, logger, datafile_name=None
+):
+    """
+    Return a `repo_checkout` and `datafile_path` for a given `purl`, `data_cluster`, and `working_path`.
+
+    Add `repo_checkout` to `checked_out_repos`.
+    """
+    repo, datafile_path = data_cluster.get_datafile_repo_and_path(
+        purl=purl, datafile_name=datafile_name
+    )
+    if repo not in checked_out_repos:
+        checked_out_repos[repo] = pipes.init_local_checkout(
+            repo_name=repo,
+            working_path=working_path,
+            logger=logger,
+        )
+    repo_checkout = checked_out_repos[repo]
+    return repo_checkout, datafile_path
+
+
 def _mine_and_publish_packageurls(
     packageurls: Iterable,
     total_package_count: int,
-    data_cluster: DataCluster,
+    data_clusters,
     checked_out_repos: dict,
     working_path: Path,
     append_purls: bool,
     commit_msg_func: Callable,
     logger: Callable,
-    batch_size: int = 4000,
+    batch_size: int = 100,
     checkpoint_on_commit: bool = False,
     checkpoint_func: Callable = None,
     checkpoint_freq: int = 30,
@@ -172,45 +237,94 @@ def _mine_and_publish_packageurls(
         iterator = progress.iter(iterator)
         logger(f"Mine PackageURL for {total_package_count:,d} packages.")
 
-    for base, purls in iterator:
+    purls_data_cluster = data_clusters["purls"]
+    api_package_version_responses_data_cluster = data_clusters["api_package_version_responses"]
+
+    current_working_repos = []
+    currently_processed_files_count = 0
+    for base, purls, purls_and_package_data in iterator:
         if not purls or not base:
             continue
 
-        package_repo, datafile_path = data_cluster.get_datafile_repo_and_path(purl=base)
-        if package_repo not in checked_out_repos:
-            checked_out_repos[package_repo] = pipes.init_local_checkout(
-                repo_name=package_repo,
-                working_path=working_path,
-                logger=logger,
-            )
+        purls_package_repo_checkout, purls_datafile_path = get_repo_checkout_from_data_cluster(
+            data_cluster=purls_data_cluster,
+            purl=base,
+            checked_out_repos=checked_out_repos,
+            working_path=working_path,
+            logger=logger,
+        )
+        if purls_package_repo_checkout not in current_working_repos:
+            current_working_repos.append(purls_package_repo_checkout)
 
-        checkout = checked_out_repos[package_repo]
         purl_file = write_packageurls_to_file(
-            repo=checkout["repo"],
-            relative_datafile_path=datafile_path,
+            repo=purls_package_repo_checkout["repo"],
+            relative_datafile_path=purls_datafile_path,
             packageurls=purls,
             append=append_purls,
         )
-        checkout["file_to_commit"].add(purl_file)
-        checkout["file_processed_count"] += 1
+        purls_package_repo_checkout["file_to_commit"].add(purl_file)
+        purls_package_repo_checkout["file_processed_count"] += 1
+        currently_processed_files_count += 1
 
-        if len(checkout["file_to_commit"]) > batch_size:
-            if logger:
-                logger("Trying to commit PackageURLs.")
-            pipes.commit_and_push_checkout(
-                local_checkout=checkout,
-                commit_message=commit_msg_func(checkout["commit_count"] + 1),
+        if currently_processed_files_count > batch_size:
+            commit_and_push_packageurls(
+                current_working_repos=current_working_repos,
+                commit_msg_func=commit_msg_func,
+                checkpoint_func=checkpoint_func,
+                checkpoint_on_commit=checkpoint_on_commit,
+                checkpoint_interval=checkpoint_interval,
+                last_checkpoint_call=last_checkpoint_call,
                 logger=logger,
             )
-            if checkpoint_on_commit and checkpoint_func:
-                checkpoint_func()
+            current_working_repos = []
+            currently_processed_files_count = 0
 
-        if not checkpoint_on_commit:
-            time_now = time.time()
-            checkpoint_due = time_now - last_checkpoint_call >= checkpoint_interval
-            if checkpoint_func and checkpoint_due:
-                checkpoint_func()
-                last_checkpoint_call = time_now
+        for purl, api_package_version_response in purls_and_package_data:
+            if not isinstance(purl, PackageURL):
+                package_url = PackageURL.from_string(purl)
+            else:
+                package_url = purl
+            if package_url.type == "maven":
+                datafile_name = "pom.xml"
+            else:
+                datafile_name = "api_package_version_response.json"
+            api_package_version_responses_repo_checkout, api_package_metadata_datafile_path = (
+                get_repo_checkout_from_data_cluster(
+                    data_cluster=api_package_version_responses_data_cluster,
+                    purl=purl,
+                    checked_out_repos=checked_out_repos,
+                    working_path=working_path,
+                    logger=logger,
+                    datafile_name=datafile_name,
+                )
+            )
+            if api_package_version_responses_repo_checkout not in current_working_repos:
+                current_working_repos.append(api_package_version_responses_repo_checkout)
+
+            api_package_version_response_file = write_package_data_to_file(
+                repo=api_package_version_responses_repo_checkout["repo"],
+                relative_api_package_metadata_datafile_path=api_package_metadata_datafile_path,
+                package_data=api_package_version_response,
+            )
+
+            api_package_version_responses_repo_checkout["file_to_commit"].add(
+                api_package_version_response_file
+            )
+            api_package_version_responses_repo_checkout["file_processed_count"] += 1
+            currently_processed_files_count += 1
+
+            if currently_processed_files_count > batch_size:
+                commit_and_push_packageurls(
+                    current_working_repos=current_working_repos,
+                    commit_msg_func=commit_msg_func,
+                    checkpoint_func=checkpoint_func,
+                    checkpoint_on_commit=checkpoint_on_commit,
+                    checkpoint_interval=checkpoint_interval,
+                    last_checkpoint_call=last_checkpoint_call,
+                    logger=logger,
+                )
+                current_working_repos = []
+                currently_processed_files_count = 0
 
     for checkout in checked_out_repos.values():
         final_commit_count = checkout["commit_count"] + 1

@@ -77,4 +77,4 @@ class MineNuGet(MineCodeBasePipeline):
                 base_purl=base,
                 versions=versions,
             )
-            yield base, packageurls
+            yield base, packageurls, []

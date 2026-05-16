@@ -46,7 +46,7 @@ class MineSwift(MineCodeBasePipeline):
         )
 
     def clone_swift_index(self):
-        """Clone the Cargo index Repo."""
+        """Clone the Swift index Repo."""
         self.swift_index_repo = federatedcode.clone_repository(
             repo_url=self.swift_index_repo_url,
             clone_path=self.working_path / "swift-index",

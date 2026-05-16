@@ -53,6 +53,7 @@ def fetch_checkpoint_from_github(config_repo, checkpoint_path):
     checkpoints_file = (
         "https://raw.githubusercontent.com/" + repo_name + "refs/heads/main/" + checkpoint_path
     )
+
     response = requests.get(checkpoints_file)
     if not response.ok:
         return {}
@@ -164,6 +165,19 @@ def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=
         packageurls = list(set(existing_purls))
     write_data_to_yaml_file(path=purl_file_full_path, data=sorted(packageurls))
     return relative_datafile_path
+
+
+def write_package_data_to_file(repo, relative_api_package_metadata_datafile_path, package_data):
+    api_package_metadata_datafile_full_path = (
+        Path(repo.working_dir) / relative_api_package_metadata_datafile_path
+    )
+    if str(api_package_metadata_datafile_full_path).endswith(".json"):
+        write_data_to_json_file(api_package_metadata_datafile_full_path, package_data)
+    else:
+        api_package_metadata_datafile_full_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(api_package_metadata_datafile_full_path, "wb") as f:
+            f.write(package_data)
+    return api_package_metadata_datafile_full_path
 
 
 def load_data_from_yaml_file(path):

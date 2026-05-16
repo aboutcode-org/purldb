@@ -16,8 +16,10 @@ from shutil import rmtree
 
 import arrow
 import javaproperties
+import requests
 from dateutil import tz
 from jawa.util.utf import decode_modified_utf8
+
 from packagedcode.maven import build_filename
 from packagedcode.maven import build_url
 from packagedcode.maven import get_urls
@@ -728,8 +730,17 @@ class MavenNexusCollector:
                 namespace=group_id,
                 name=artifact_id,
                 version=version,
+                qualifiers=qualifiers,
             )
-            yield current_purl, [package.purl]
+            packageurls = [package.purl]
+
+            # this yields a tuple containing purl str, dict containing api info
+
+            purls_and_package_data = yield_maven_package_data(
+                purl=current_purl, pom_urls=[api_data_url]
+            )
+
+            yield current_purl, packageurls, purls_and_package_data
 
     def _get_packages_from_index_increments(self):
         for index_increment in self.index_increment_locations:
@@ -743,3 +754,11 @@ class MavenNexusCollector:
         elif self.index_location:
             packages = self._get_packages(content=self.index_location)
         return packages
+
+
+def yield_maven_package_data(purl, pom_urls=[]):
+    for pom_url in pom_urls:
+        response = requests.get(pom_url)
+        if not response.ok:
+            continue
+        yield purl, response.content

@@ -92,4 +92,4 @@ def mine_and_publish_cpan_packageurls(package_path_by_name, logger=None):
                 logger(f"packageURLs: {purls_string}")
 
             packages_mined.append(package_name)
-            yield base_purl, packageurls
+            yield base_purl, packageurls, []

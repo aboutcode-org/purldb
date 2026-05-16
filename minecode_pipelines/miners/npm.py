@@ -150,6 +150,16 @@ def get_npm_packageurls(name, npm_repo=NPM_REGISTRY_REPO):
     return packageurls
 
 
+def yield_npm_package_data(name, packageurls=[]):
+    for purl in packageurls or get_npm_packageurls(name):
+        package_url = PackageURL.from_string(purl)
+        package_data_url = NPM_REGISTRY_REPO + name + "/" + package_url.version
+        response = requests.get(package_data_url)
+        if not response.ok:
+            continue
+        yield purl, response.json()
+
+
 def load_npm_packages(packages_file):
     with open(packages_file) as f:
         packages_data = json.load(f)
