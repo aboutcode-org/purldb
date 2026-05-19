@@ -92,8 +92,8 @@ class MineCodeBasePipeline(Pipeline):
         )
         self.data_clusters = {
             "purls": data_federation.get_cluster("purls"),
-            "api_package_version_responses": data_federation.get_cluster(
-                "api_package_version_responses"
+            "api_package_version_response": data_federation.get_cluster(
+                "api_package_version_response"
             ),
         }
 
@@ -238,7 +238,7 @@ def _mine_and_publish_packageurls(
         logger(f"Mine PackageURL for {total_package_count:,d} packages.")
 
     purls_data_cluster = data_clusters["purls"]
-    api_package_version_responses_data_cluster = data_clusters["api_package_version_responses"]
+    api_package_version_response_data_cluster = data_clusters["api_package_version_response"]
 
     current_working_repos = []
     currently_processed_files_count = 0
@@ -288,9 +288,9 @@ def _mine_and_publish_packageurls(
                 datafile_name = "pom.xml"
             else:
                 datafile_name = "api_package_version_response.json"
-            api_package_version_responses_repo_checkout, api_package_metadata_datafile_path = (
+            api_package_version_response_repo_checkout, api_package_metadata_datafile_path = (
                 get_repo_checkout_from_data_cluster(
-                    data_cluster=api_package_version_responses_data_cluster,
+                    data_cluster=api_package_version_response_data_cluster,
                     purl=purl,
                     checked_out_repos=checked_out_repos,
                     working_path=working_path,
@@ -298,19 +298,19 @@ def _mine_and_publish_packageurls(
                     datafile_name=datafile_name,
                 )
             )
-            if api_package_version_responses_repo_checkout not in current_working_repos:
-                current_working_repos.append(api_package_version_responses_repo_checkout)
+            if api_package_version_response_repo_checkout not in current_working_repos:
+                current_working_repos.append(api_package_version_response_repo_checkout)
 
             api_package_version_response_file = write_package_data_to_file(
-                repo=api_package_version_responses_repo_checkout["repo"],
+                repo=api_package_version_response_repo_checkout["repo"],
                 relative_api_package_metadata_datafile_path=api_package_metadata_datafile_path,
                 package_data=api_package_version_response,
             )
 
-            api_package_version_responses_repo_checkout["file_to_commit"].add(
+            api_package_version_response_repo_checkout["file_to_commit"].add(
                 api_package_version_response_file
             )
-            api_package_version_responses_repo_checkout["file_processed_count"] += 1
+            api_package_version_response_repo_checkout["file_processed_count"] += 1
             currently_processed_files_count += 1
 
             if currently_processed_files_count > batch_size:
