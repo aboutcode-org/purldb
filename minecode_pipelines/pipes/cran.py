@@ -85,4 +85,4 @@ def mine_cran_packageurls(db_path: Path) -> Iterable[tuple[str, list[str]]]:
         if purls:
             first_purl = purls[0]
             base_purl = get_core_purl(first_purl)
-        yield base_purl, purls
+        yield base_purl, purls, []

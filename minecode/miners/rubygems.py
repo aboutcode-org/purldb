@@ -342,7 +342,7 @@ def get_dependencies_from_meta(content):
             continue
 
         requirement = dependency.get("requirement") or {}
-        # FIXME when upating to the ScanCode package model
+        # FIXME when updating to the ScanCode package model
         scope = dependency.get("type")
         scope = scope and scope.lstrip(":")
 

@@ -40,7 +40,7 @@ class MineAlpine(MineCodeBasePipeline):
 
     def mine_and_publish_alpine_packageurls(self):
         alpine.mine_and_publish_alpine_packageurls(
-            data_cluster=self.data_cluster,
+            data_clusters=self.data_clusters,
             checked_out_repos=self.checked_out_repos,
             working_path=self.working_path,
             commit_msg_func=self.commit_message,

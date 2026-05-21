@@ -154,9 +154,9 @@ class CpanProjectHTMLVisitors(HttpVisitor):
             else:
                 name = url
                 name = name.replace("tar.gz", "").replace(".readme", "").replace(".meta", "")
-                partions = name.rpartition("-")
-                name = partions[0]
-                version = partions[-1]
+                partitions = name.rpartition("-")
+                name = partitions[0]
+                version = partitions[-1]
                 package_url = None
                 if name and version:
                     package_url = PackageURL(type="cpan", name=name, version=version).to_string()
@@ -329,7 +329,7 @@ def build_packages_from_metafile(metadata, uri=None, purl=None):
     uri: the uri of the ResourceURI object
     purl: String value of the package url of the ResourceURI object
     """
-    # FIXME: it does not make sense to use a single functin tod eal with the two
+    # FIXME: it does not make sense to use a single function tod eal with the two
     # formats IMHO
     if is_json(metadata):
         content = json.loads(metadata)

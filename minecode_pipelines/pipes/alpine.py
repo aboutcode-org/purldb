@@ -542,11 +542,11 @@ class AlpineCollector:
                     namespace=pd.namespace,
                     name=pd.name,
                 )
-                yield current_purl, [pd.purl]
+                yield current_purl, [pd.purl], []
 
 
 def mine_and_publish_alpine_packageurls(
-    data_cluster,
+    data_clusters,
     checked_out_repos,
     working_path,
     commit_msg_func,
@@ -568,7 +568,7 @@ def mine_and_publish_alpine_packageurls(
         _mine_and_publish_packageurls(
             packageurls=alpine_collector.get_package_from_index(index),
             total_package_count=None,
-            data_cluster=data_cluster,
+            data_clusters=data_clusters,
             checked_out_repos=checked_out_repos,
             working_path=working_path,
             append_purls=True,

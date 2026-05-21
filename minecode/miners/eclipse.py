@@ -267,7 +267,7 @@ def build_packages(html_text, purl=None, uri=None):
         if "class" not in div.attrs:
             continue
         if "field-name-field-project-licenses" in div.attrs.get("class"):
-            # Visit div element whose class atttribute is field-name-field-project-licenses
+            # Visit div element whose class attribute is field-name-field-project-licenses
             for a in div.find_all(name="a"):
                 if "href" not in a.attrs:
                     continue

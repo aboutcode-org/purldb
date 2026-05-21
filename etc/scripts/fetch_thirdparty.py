@@ -166,7 +166,7 @@ def fetch_thirdparty(
     Download the PyPI packages listed in the combination of:
     - the pip requirements --requirements REQUIREMENT-FILE(s),
     - the pip name==version --specifier SPECIFIER(s)
-    - any pre-existing wheels or sdsists found in --dest-dir THIRDPARTY_DIR.
+    - any pre-existing wheels or sdists found in --dest-dir THIRDPARTY_DIR.
 
     Download wheels with the --wheels option for the ``--python-version``
     PYVER(s) and ``--operating_system`` OS(s) combinations defaulting to all

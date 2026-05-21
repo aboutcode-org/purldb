@@ -34,8 +34,8 @@ from clearcode.models import CDitem
 
 """
 The input is a bunch of scans from ClearlyDefined and
-the output is a bunch of git repositories with commited and
-pushed scans such that we balance the scans roughly evenly accross
+the output is a bunch of git repositories with committed and
+pushed scans such that we balance the scans roughly evenly across
 different repositories.
 
 The primary reason for multiple repositories is size of a single
@@ -127,7 +127,7 @@ def get_cd_item_by_purl_hash(cd_items):
 def add_scancode_scan(repo, purl, scancode_scan):
     """
     Save and commit scancode scan for purl to git repo.
-    Return true if we commited else false
+    Return true if we committed else false
     """
     purl_data_dir = get_or_create_dir_for_purl(purl=purl, repo=repo)
     scancode_scan_path = purl_data_dir / "scancode-toolkit-scan.json"

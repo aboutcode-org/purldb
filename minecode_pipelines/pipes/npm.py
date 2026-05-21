@@ -42,6 +42,7 @@ from minecode_pipelines.miners.npm import get_updated_npm_packages
 from minecode_pipelines.miners.npm import get_current_last_seq
 from minecode_pipelines.miners.npm import load_npm_packages
 from minecode_pipelines.miners.npm import get_npm_packageurls
+from minecode_pipelines.miners.npm import yield_npm_package_data
 from minecode_pipelines.miners.npm import NPM_REPLICATE_REPO
 from minecode_pipelines.miners.npm import NPM_TYPE
 
@@ -59,11 +60,6 @@ NPM_REPLICATE_CHECKPOINT_PATH = "npm/" + PACKAGE_FILE_NAME
 COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH = "npm/" + COMPRESSED_PACKAGE_FILE_NAME
 NPM_CHECKPOINT_PATH = "npm/checkpoints.json"
 NPM_PACKAGES_CHECKPOINT_PATH = "npm/packages_checkpoint.json"
-
-# We are testing and storing mined packageURLs in one single repo per ecosystem for now
-MINECODE_DATA_NPM_REPO = "https://github.com/aboutcode-data/minecode-data-npm-test"
-
-
 PACKAGE_BATCH_SIZE = 700
 
 
@@ -74,7 +70,7 @@ def mine_npm_packages(logger=None):
 
     1. first sync: we get latest set of packages from the "_all_docs" API endpoint
        of npm replicate and save this and last sequence of the package to checkpoints.
-    2. intial sync: we get packages from checkpoint which we're trying to sync upto
+    2. initial sync: we get packages from checkpoint which we're trying to sync up to
     3. periodic sync: we get latest packages newly released in npm through the
        "_changes" API, for a period, from our last mined sequence of package.
     """
@@ -235,7 +231,7 @@ def get_npm_packages_to_sync(packages_file, state, logger=None):
             config_repo=MINECODE_PIPELINES_CONFIG_REPO,
             checkpoint_path=NPM_PACKAGES_CHECKPOINT_PATH,
         )
-        packages_to_sync = [package for package in packages if package not in synced_packages]
+        packages_to_sync = list(set(packages).difference(set(synced_packages)))
         if logger:
             logger(
                 f"Starting initial package mining for {len(packages_to_sync)} packages from checkpoint"
@@ -262,10 +258,13 @@ def mine_and_publish_npm_packageurls(packages_to_sync, packages_mined, logger=No
                 logger(f"Could not fetch package versions for package: {package_name}")
             continue
 
+        # this yields a tuple containing purl str, dict containing api info
+        purls_and_package_data = yield_npm_package_data(package_name, packageurls)
+
         base_purl = PackageURL(type=NPM_TYPE, name=package_name).to_string()
         packages_mined.append(base_purl)
 
-        yield base_purl, packageurls
+        yield base_purl, packageurls, purls_and_package_data
 
 
 def save_mined_packages_in_checkpoint(packages_mined, synced_packages, config_repo, logger=None):
@@ -286,7 +285,7 @@ def save_mined_packages_in_checkpoint(packages_mined, synced_packages, config_re
 
 
 def update_state_and_checkpoints(state, last_seq, config_repo, logger=None):
-    # If we are finished mining all the packages in the intial sync, we can now
+    # If we are finished mining all the packages in the initial sync, we can now
     # periodically sync the packages from latest
     if state == INITIAL_SYNC_STATE:
         if logger:

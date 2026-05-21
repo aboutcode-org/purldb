@@ -26,7 +26,7 @@ MatchCode.io API Endpoints
 * ``api/matching``
 
   * Performs Package matching on an uploaded ScanCode.io scan
-  * Intended to be used with the ``match_to_purldb`` pipeline in ScanCode.io
+  * Intended to be used with the ``match_to_matchcode`` pipeline in ScanCode.io
 
 
 Docker Setup for Local Development and Testing

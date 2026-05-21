@@ -19,7 +19,7 @@ services:
     restart: always
 
   traefik:
-    image: "traefik:v2.10"
+    image: "traefik:v2.11"
     container_name: "traefik"
     hostname: "traefik"
     ports:

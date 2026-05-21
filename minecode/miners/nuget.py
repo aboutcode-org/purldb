@@ -287,7 +287,7 @@ def build_packages_from_html(metadata, uri, purl=None):
         h2s = soup.find_all("h2")
         for h2 in h2s:
             # Copyright will be after the copyright h2 node
-            # The exmaple is like this:
+            # The example is like this:
             #        <h2>Copyright</h2>
             #        <p>Copyright 2004-2017 The Apache Software Foundation</p>
             if h2.string and h2.string == "Copyright":

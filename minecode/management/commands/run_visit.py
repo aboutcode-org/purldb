@@ -276,7 +276,7 @@ def visit_uri(resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_rout
         # a route is added.
         return 0
     except (ConnectionError, Timeout, Exception) as e:
-        # FIXME: is catching all expections here correct?
+        # FIXME: is catching all exceptions here correct?
         msg = f"Visit error for URI: {uri_to_visit}"
         msg += "\n".format()
         msg += get_error_message(e)
@@ -341,7 +341,7 @@ def visit_uri(resource_uri, max_uris=0, uri_counter_by_visitor=None, _visit_rout
                         logger.debug(f" + NOT Inserted:\t{uri_str}")
 
             except Exception as e:
-                # FIXME: is catching all expections here correct?
+                # FIXME: is catching all exceptions here correct?
                 msg = f"ERROR while processing URI from a visit through: {uri_str}"
                 msg += "\n"
                 msg += repr(visited_uri)

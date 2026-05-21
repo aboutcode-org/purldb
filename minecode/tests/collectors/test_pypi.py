@@ -16,6 +16,7 @@ from packageurl import PackageURL
 
 import packagedb
 from minecode.collectors import pypi
+from minecode.tests import FIXTURES_REGEN
 from minecode.utils_test import JsonBasedTesting
 
 
@@ -28,11 +29,15 @@ class PypiPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         with open(self.expected_json_loc) as f:
             self.expected_json_contents = json.load(f)
 
-    def test_get_package_json(self):
+    def test_get_package_json(self, regen=FIXTURES_REGEN):
         json_contents = pypi.get_package_json(
             name="cage",
             version="1.1.4",
         )
+        if regen:
+            self.expected_json_contents = json_contents
+            with open(self.expected_json_loc, "w") as f:
+                json.dump(json_contents, f)
         self.assertEqual(self.expected_json_contents, json_contents)
 
     def test_get_all_package_version(self):

@@ -125,6 +125,11 @@ class PypiPackageReleaseVisitor(HttpJsonVisitor):
             if not url:
                 continue
             package_url = PackageURL(type="pypi", name=name, version=version).to_string()
+            digests = download.get("digests")
+            if digests:
+                sha256_digest = digests.get("sha256")
+            else:
+                sha256_digest = None
             yield URI(
                 url,
                 package_url=package_url,
@@ -132,6 +137,7 @@ class PypiPackageReleaseVisitor(HttpJsonVisitor):
                 size=download.get("size"),
                 date=download.get("upload_time"),
                 md5=download.get("md5_digest"),
+                sha256=sha256_digest,
                 source_uri=self.uri,
             )
 
@@ -222,7 +228,7 @@ def build_packages(metadata, purl=None):
 
     # FIXME: we should either support "extra" data in a ScannedPackage or just ignore this kind of FIXME comments for now
 
-    # FIXME: not supported in ScanCode Package: info.platform may provide some platform infor (possibly UNKNOWN)
+    # FIXME: not supported in ScanCode Package: info.platform may provide some platform info (possibly UNKNOWN)
     # FIXME: not supported in ScanCode Package: info.docs_url
     # FIXME: not supported in ScanCode Package: info.release_url "http://pypi.python.org/pypi/Django/1.10b1"
     # FIXME: not supported in ScanCode Package: info.classifiers: this contains a lot of other info (platform, license, etc)
@@ -232,7 +238,7 @@ def build_packages(metadata, purl=None):
     # FIXME: Package Index Owner: seems to be only available on the web page
 
     # A download_url may be provided for off Pypi download: we yield a package if relevant
-    # FIXME: do not prioritize the download_url outside Pypi over actual exact Pypi donwload URL
+    # FIXME: do not prioritize the download_url outside Pypi over actual exact Pypi download URL
     download_url = info.get("download_url")
     if download_url and download_url != "UNKNOWN":
         download_data = dict(
@@ -268,6 +274,9 @@ def build_packages(metadata, purl=None):
         )
         # TODO: Check for other checksums
         download_data["md5"] = download.get("md5_digest")
+        digests = download.get("digests")
+        if digests and (sha256_digest := digests.get("sha256")):
+            download_data["sha256"] = sha256_digest
         download_data.update(common_data)
         package = scan_models.PackageData.from_data(download_data)
         package.datasource_id = "pypi_api_metadata"

@@ -304,7 +304,7 @@ class JsonBasedTesting(JsonBasedTestingMixin, FileBasedTesting):
             if uri_dict.get("date"):
                 # Parse date since date will be used as Date field in
                 # ResourceURI object, to make it as string format is just for
-                # test comparation.
+                # test comparison.
                 # FIXME: we should ONLY have strings there!!!
                 uri_dict["date"] = str(uri_dict.get("date"))
             results.append(uri_dict)

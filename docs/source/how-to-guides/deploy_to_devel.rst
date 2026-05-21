@@ -4,7 +4,7 @@
 Map deployed code back to source code aka. back2source
 =======================================================
 
-In this tutorial we excercise the ScanCode.io pipeline used map the deployed binaries back to the
+In this tutorial we exercise the ScanCode.io pipeline used map the deployed binaries back to the
 assumed source code of a package, or map source archives to the sources from a version control
 system (VCS) checkout.
 
@@ -59,17 +59,17 @@ Yet these assumption are often proven wrong and the potential for many issues:
   <https://en.wikipedia.org/wiki/XZ_Utils_backdoor>_ incident where the source archive of the XZ
   Utils packages had been modified to create a malicious SSH backdoor. These cases need to be
   detected ideally before the source code is even built. back2source has been detecting the
-  XZ malicious automake build scripts as requring review, and this using code available before the
+  XZ malicious automake build scripts as requiring review, and this using code available before the
   XZ backdoor issue was known.
 
-- Extra code may be provisioned and routinely injected or complied in the final binary without
+- Extra code may be provisioned and routinely injected or compiled in the final binary without
   malice.
 
   - For instance, an "UberJAR" is created as a larger Java JAR
     <https://en.wikipedia.org/wiki/JAR_(file_format)>_
     as the combination of multiple JARS. The other JARs are fetched at built time and not present in
     source code form and commonly without metadata to help track their origin. This means that using
-    package A, means really using unknowningly A, but also B and C. There are license and security
+    package A, means really using unknowingly A, but also B and C. There are license and security
     implications when the license, origin and vulnerability status of B and C goes undetected. Most
     tools do not detect these extra package inclusions.
 
@@ -102,12 +102,12 @@ The ScanCode.io pipeline supports these technologies:
 
 - end-to-end ELF binaries package binary to source analysis. The focus is on on binaries compiled
   from C (C++ will be implemented separately in the future as it requires additional demangling of
-  function signatures). This analysis is based extracting DWARF debug symbols compliation unit
+  function signatures). This analysis is based extracting DWARF debug symbols compilation unit
   references.
 
-- end-to-end Go binary executable to source analysis o binary to source analysis. Note that Go is
-  special, as while its targets binaries are compiled to ELF, Macho-O and Windows PE/COFF formats,
-  depending on the operating system target and can also be anlyzed as an ELF for Linux, a Go
+- end-to-end Go binary executable to source analysis or binary to source analysis. Note that Go is
+  special, as while its targets binaries are compiled to ELF, Mach-O and Windows PE/COFF formats,
+  depending on the operating system target and can also be analyzed as an ELF for Linux, a Go
   binary also contains extra information to map source and binaries together through a specific
   data structure. This pipeline will be using this data structure (aka. the pclntab).
 
@@ -450,6 +450,6 @@ Here is how the project creation looks like:
 .. image:: images/d2d-images/43a5ff56-fb36-45c7-82bb-8b5256759eee.png
 
 
-- Inthe resource page, there are also file-level mappings details:
+- In the resource page, there are also file-level mappings details:
 
 .. image:: images/d2d-images/4acd087e-0cd1-4361-a8ee-f7af7681c74e.png

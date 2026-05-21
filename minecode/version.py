@@ -192,5 +192,5 @@ def strip_pre_releases(version_string):
     for tag in PRE_RELEASE_TAGS:
         if tag not in version_string:
             continue
-        splitted = version_string.split(tag)
-        return splitted[0]
+        split_parts = version_string.split(tag)
+        return split_parts[0]

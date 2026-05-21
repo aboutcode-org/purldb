@@ -76,7 +76,7 @@ def process_request(purl_str, **kwargs):
     try:
         package_url = PackageURL.from_string(purl_str)
     except ValueError as e:
-        error = f"error occured when parsing {purl_str}: {e}"
+        error = f"error occurred when parsing {purl_str}: {e}"
         return error
 
     download_url = package_url.qualifiers.get("download_url")

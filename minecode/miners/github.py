@@ -90,7 +90,7 @@ class GithubSingleRepoVisitor(HttpJsonVisitor):
     def fetch(self, uri, timeout=None):
         """
         Having its own fetch function instead of inheriting from HttpJsonVisitor class is because:
-        The json itself has lots of URL info, the Github API can get content without acccessing the URLs inside the json explicitly.
+        The json itself has lots of URL info, the Github API can get content without accessing the URLs inside the json explicitly.
         The main idea is to fetch download_url...
         """
         full_name = uri.replace("https://api.github.com/repos/", "")

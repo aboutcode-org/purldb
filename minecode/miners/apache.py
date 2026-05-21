@@ -318,14 +318,14 @@ class ApacheProjectsJsonVisitor(HttpJsonVisitor):
 class ApacheSingleProjectJsonVisitor(HttpJsonVisitor):
     """
     Collect json content from single project json file. It does not
-    return any URI as the json contains the project meatadata only, so
+    return any URI as the json contains the project metadata only, so
     this visitor is getting the json to pass to mapper.
     """
 
     pass
 
 
-# FIXME: what can we do with a homepage and nam, packagedb wise??
+# FIXME: what can we do with a homepage and name, packagedb wise??
 # @visit_router.route('https://projects.apache.org/json/foundation/podlings.json')
 class ApachePodlingsJsonVisitor(HttpJsonVisitor):
     """
@@ -582,7 +582,7 @@ def get_name_version(uri):
             if is_all_int:
                 version = segment
         except ValueError:
-            # Connect the package_name with - because we split it with - eariler, util
+            # Connect the package_name with - because we split it with - earlier, util
             # when we meet version, package_name should be good.
             if not package_name:
                 package_name = segment

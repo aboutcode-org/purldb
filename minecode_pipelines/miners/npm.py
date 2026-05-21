@@ -28,7 +28,7 @@ This NPMJS replicate API serves as an index to get all npm packages and their re
 in paginated queries.
 
 https://replicate.npmjs.com/_changes
-This NPMJS replicate API serves as a CHANGELOG of npm packages with update sequneces which
+This NPMJS replicate API serves as a CHANGELOG of npm packages with update sequences which
 can be fetched in paginated queries.
 
 https://registry.npmjs.org/{namespace/name}
@@ -138,7 +138,8 @@ def get_npm_packageurls(name, npm_repo=NPM_REGISTRY_REPO):
         return packageurls
 
     project_data = response.json()
-    for version in project_data.get("versions"):
+    versions = project_data.get("versions") or []
+    for version in versions:
         purl = PackageURL(
             type=NPM_TYPE,
             name=name,
@@ -147,6 +148,16 @@ def get_npm_packageurls(name, npm_repo=NPM_REGISTRY_REPO):
         packageurls.append(purl.to_string())
 
     return packageurls
+
+
+def yield_npm_package_data(name, packageurls=[]):
+    for purl in packageurls or get_npm_packageurls(name):
+        package_url = PackageURL.from_string(purl)
+        package_data_url = NPM_REGISTRY_REPO + name + "/" + package_url.version
+        response = requests.get(package_data_url)
+        if not response.ok:
+            continue
+        yield purl, response.json()
 
 
 def load_npm_packages(packages_file):

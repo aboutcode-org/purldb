@@ -163,7 +163,7 @@ class BaseURI(models.Model):
 
     def normalize_fields(self, exclude=None):
         """
-        Why do we normalize? In some weird cases wee may receive damaged
+        Why do we normalize? In some weird cases we may receive damaged
         data (e.g. a very long SHA1) and rather than push down the
         validation or fail an insert we can normalize the data in a
         single place.
@@ -313,7 +313,7 @@ class ResourceURIManager(models.Manager):
     def never_mapped(self):
         """
         Limit the QuerySet to ResourceURIs that have never been mapped.
-        This is usually the state of a ResourceURI after its succesful visit.
+        This is usually the state of a ResourceURI after its successful visit.
         """
         return self.successfully_visited().filter(last_map_date__isnull=True, wip_date__isnull=True)
 
@@ -370,7 +370,7 @@ class ResourceURI(BaseURI):
 
     # This is a text blob that contains either HTML, JSON or anything
     # stored as a string. This is the raw content of visiting a URI.
-    # NOTE: some visited URLS (such as an actual package archive will/shoud NOT be stored there)
+    # NOTE: some visited URLS (such as an actual package archive will/should NOT be stored there)
     data = models.TextField(
         null=True,
         blank=True,
@@ -406,7 +406,7 @@ class ResourceURI(BaseURI):
         db_index=True,
         default=False,
         help_text="When set to True (Yes), this field indicates that "
-        "an error has occured when visiting this URI.",
+        "an error has occurred when visiting this URI.",
     )
 
     visit_error = models.TextField(
@@ -434,7 +434,7 @@ class ResourceURI(BaseURI):
         db_index=True,
         default=False,
         help_text="When set to True (Yes), this field indicates that "
-        "an error has occured when mapping this URI.",
+        "an error has occurred when mapping this URI.",
     )
 
     map_error = models.TextField(
@@ -896,7 +896,7 @@ class PriorityResourceURI(BaseURI):
 
     # This is a text blob that contains either HTML, JSON or anything
     # stored as a string. This is the raw content of visiting a URI.
-    # NOTE: some visited URLS (such as an actual package archive will/shoud NOT be stored there)
+    # NOTE: some visited URLS (such as an actual package archive will/should NOT be stored there)
     data = models.TextField(
         null=True,
         blank=True,
@@ -931,7 +931,7 @@ class PriorityResourceURI(BaseURI):
         db_index=True,
         default=False,
         help_text="When set to True (Yes), this field indicates that "
-        "an error has occured when processing this URI.",
+        "an error has occurred when processing this URI.",
     )
 
     processing_error = models.TextField(
@@ -1025,7 +1025,7 @@ class ImportableURI(BaseURI):
 
     # This is a text blob that contains either HTML, JSON or anything
     # stored as a string. This is the raw content of visiting a URI.
-    # NOTE: some visited URLS (such as an actual package archive will/shoud NOT be stored there)
+    # NOTE: some visited URLS (such as an actual package archive will/should NOT be stored there)
     data = models.TextField(
         null=True,
         blank=True,
@@ -1052,7 +1052,7 @@ class ImportableURI(BaseURI):
         db_index=True,
         default=False,
         help_text="When set to True (Yes), this field indicates that "
-        "an error has occured when processing this URI.",
+        "an error has occurred when processing this URI.",
     )
 
     processing_error = models.TextField(
@@ -1077,14 +1077,14 @@ class ProcessingError(BaseURI):
         max_length=100,
         null=True,
         blank=True,
-        help_text="The name of the service running where the error occured.",
+        help_text="The name of the service running where the error occurred.",
     )
 
     date = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True,
-        help_text="Timestamp set to the date of when this error occured.",
+        help_text="Timestamp set to the date of when this error occurred.",
     )
 
     error_message = models.TextField(

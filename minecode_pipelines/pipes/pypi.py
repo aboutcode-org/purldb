@@ -24,10 +24,10 @@ from datetime import datetime
 
 from minecode_pipelines.pipes import fetch_checkpoint_from_github
 from minecode_pipelines.pipes import update_checkpoints_in_github
+from minecode_pipelines.pipes import update_checkpoint_state
 from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
 from minecode_pipelines.pipes import update_mined_packages_in_checkpoint
 from minecode_pipelines.pipes import get_packages_file_from_checkpoint
-from minecode_pipelines.pipes import update_checkpoint_state
 from minecode_pipelines.pipes import write_packages_json
 from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
 from minecode_pipelines.pipes import INITIAL_SYNC_STATE
@@ -37,7 +37,8 @@ from minecode_pipelines.pipes import PERIODIC_SYNC_STATE
 from minecode_pipelines.miners.pypi import get_pypi_packages
 from minecode_pipelines.miners.pypi import get_pypi_packageurls
 from minecode_pipelines.miners.pypi import load_pypi_packages
-from minecode_pipelines.miners.pypi import PYPI_REPO
+from minecode_pipelines.miners.pypi import yield_pypi_package_data
+from minecode_pipelines.miners.pypi import PYPI_SIMPLE_REPO
 
 
 from minecode_pipelines.miners.pypi import PYPI_TYPE
@@ -58,16 +59,12 @@ PYPI_CHECKPOINT_PATH = "pypi/checkpoints.json"
 PYPI_PACKAGES_CHECKPOINT_PATH = "pypi/packages_checkpoint.json"
 
 
-# We are testing and storing mined packageURLs in one single repo per ecosystem for now
-MINECODE_DATA_PYPI_REPO = "https://github.com/aboutcode-data/minecode-data-pypi-test"
-
-
 def mine_pypi_packages(logger=None):
     """
     Mine pypi package names from pypi simple and save to checkpoints,
     or get packages from saved checkpoints. We have 3 cases:
     1. periodic sync: we get latest packages newly released in pypi, for a period
-    2. intial sync: we get packages from checkpoint which we're trying to sync upto
+    2. initial sync: we get packages from checkpoint which we're trying to sync up to
     3. first sync: we get latest packages from pypi and save to checkpoints
     """
 
@@ -98,7 +95,7 @@ def mine_pypi_packages(logger=None):
     if logger:
         logger("Getting packages from pypi simple index")
 
-    packages = get_pypi_packages(pypi_repo=PYPI_REPO, logger=logger)
+    packages = get_pypi_packages(pypi_repo=PYPI_SIMPLE_REPO, logger=logger)
     packages_file = write_packages_json(packages=packages, name=PACKAGE_FILE_NAME)
 
     if not state:
@@ -213,7 +210,11 @@ def get_pypi_packages_to_sync(packages_file, state, logger=None):
     return packages_to_sync, last_serial
 
 
-def mine_and_publish_pypi_packageurls(packages_to_sync, packages_mined, logger=None):
+def mine_and_publish_pypi_packageurls(
+    packages_to_sync,
+    packages_mined,
+    logger=None,
+):
     for package in packages_to_sync:
         if not package:
             continue
@@ -239,7 +240,10 @@ def mine_and_publish_pypi_packageurls(packages_to_sync, packages_mined, logger=N
             purls_string = " ".join(packageurls)
             logger(f"packageURLs: {purls_string}")
 
-        yield base_purl, packageurls
+        # this yields a tuple containing purl str, dict containing api info
+        purls_and_package_data = yield_pypi_package_data(name, packageurls)
+
+        yield base_purl, packageurls, purls_and_package_data
 
 
 def save_mined_packages_in_checkpoint(packages_mined, config_repo, logger=None):
@@ -256,7 +260,7 @@ def save_mined_packages_in_checkpoint(packages_mined, config_repo, logger=None):
     )
 
 
-def update_state_and_checkpoints(state, config_repo, last_serial, logger=None):
+def update_state_and_checkpoints(config_repo, state, last_serial, logger=None):
     # If we are finshed mining all the packages in the intial sync, we can now
     # periodically sync the packages from latest
     if state == INITIAL_SYNC_STATE:

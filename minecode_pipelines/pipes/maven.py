@@ -16,8 +16,10 @@ from shutil import rmtree
 
 import arrow
 import javaproperties
+import requests
 from dateutil import tz
 from jawa.util.utf import decode_modified_utf8
+
 from packagedcode.maven import build_filename
 from packagedcode.maven import build_url
 from packagedcode.maven import get_urls
@@ -102,7 +104,7 @@ def is_source(classifier):
 
 
 ########################################################################
-# DOCUMENTAION OF the FIELDS aka. Records:
+# DOCUMENTATION OF the FIELDS aka. Records:
 #
 # Constants and information for field names can be found in
 # https://github.com/apache/maven-indexer/tree/ecddb3c18ee1ee1357a01bffa7f9cb5252f21209
@@ -571,6 +573,7 @@ class MavenNexusCollector:
 
     def __init__(
         self,
+        maven_url=MAVEN_BASE_URL,
         index_location=None,
         index_properties_location=None,
         last_incremental=None,
@@ -588,7 +591,7 @@ class MavenNexusCollector:
         if index_properties_location:
             self.index_properties_location = index_properties_location
         else:
-            index_property_download = self._fetch_index_properties()
+            index_property_download = self._fetch_index_properties(maven_url=maven_url)
             self.index_properties_location = index_property_download.path
 
         if self.index_properties_location:
@@ -600,7 +603,7 @@ class MavenNexusCollector:
         if last_incremental:
             self.index_location = None
             index_increment_downloads = self._fetch_index_increments(
-                last_incremental=last_incremental
+                last_incremental=last_incremental, maven_url=maven_url
             )
             self.index_increment_locations = [
                 download.path for download in index_increment_downloads
@@ -611,7 +614,7 @@ class MavenNexusCollector:
             self.index_location = index_location
             self.index_increment_locations = []
         else:
-            index_download = self._fetch_index()
+            index_download = self._fetch_index(maven_url=maven_url)
             self.index_location = index_download.path
             self.index_increment_locations = []
 
@@ -627,23 +630,25 @@ class MavenNexusCollector:
         self.downloads.append(fetched)
         return fetched
 
-    def _fetch_index(self, uri=MAVEN_INDEX_URL):
+    def _fetch_index(self, maven_url=MAVEN_BASE_URL):
         """
         Fetch the maven index at `uri` and return a Download with information
         about where it was saved.
         """
+        uri = maven_url.rstrip("/") + "/.index/nexus-maven-repository-index.gz"
         index = self._fetch_http(uri)
         return index
 
-    def _fetch_index_properties(self, uri=MAVEN_INDEX_PROPERTIES_URL):
+    def _fetch_index_properties(self, maven_url=MAVEN_BASE_URL):
         """
         Fetch the maven index properties file at `uri` and return a Download
         with information about where it was saved.
         """
+        uri = maven_url.rstrip("/") + "/.index/nexus-maven-repository-index.properties"
         index_properties = self._fetch_http(uri)
         return index_properties
 
-    def _fetch_index_increments(self, last_incremental):
+    def _fetch_index_increments(self, last_incremental, maven_url=MAVEN_BASE_URL):
         """
         Fetch maven index increments, starting past `last_incremental`, and
         return a list of Downloads with information about where they were saved.
@@ -653,7 +658,10 @@ class MavenNexusCollector:
             if increment_index <= last_incremental:
                 continue
             if key.startswith("nexus.index.incremental"):
-                index_increment_url = MAVEN_INDEX_INCREMENT_BASE_URL.format(index=increment_index)
+                index_increment_url = (
+                    maven_url.rstrip("/")
+                    + f"/.index/nexus-maven-repository-index.{increment_index}.gz"
+                )
                 index_increment = self._fetch_http(index_increment_url)
                 index_increment_downloads.append(index_increment)
         return index_increment_downloads
@@ -683,7 +691,7 @@ class MavenNexusCollector:
 
             # build a URL: This is the real JAR download URL
             # FIXME: this should be set at the time of creating Artifacts
-            # instead togther with the filename... especially we could use
+            # instead together with the filename... especially we could use
             # different REPOs.
             jar_download_url, _ = build_url_and_filename(
                 group_id, artifact_id, version, extension, classifier
@@ -722,8 +730,17 @@ class MavenNexusCollector:
                 namespace=group_id,
                 name=artifact_id,
                 version=version,
+                qualifiers=qualifiers,
             )
-            yield current_purl, [package.purl]
+            packageurls = [package.purl]
+
+            # this yields a tuple containing purl str, dict containing api info
+
+            purls_and_package_data = yield_maven_package_data(
+                purl=current_purl, pom_urls=[api_data_url]
+            )
+
+            yield current_purl, packageurls, purls_and_package_data
 
     def _get_packages_from_index_increments(self):
         for index_increment in self.index_increment_locations:
@@ -737,3 +754,11 @@ class MavenNexusCollector:
         elif self.index_location:
             packages = self._get_packages(content=self.index_location)
         return packages
+
+
+def yield_maven_package_data(purl, pom_urls=[]):
+    for pom_url in pom_urls:
+        response = requests.get(pom_url)
+        if not response.ok:
+            continue
+        yield purl, response.content
