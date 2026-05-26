@@ -69,11 +69,23 @@ class CratesCollector:
                         if not homepage_url:
                             homepage_url = crate_version_info.get("repository", "")
 
-                        package = PackageData(
-                            type="maven",
-                            namespace=None,
+                        package_url = PackageURL(
+                            type="cargo",
                             name=name,
-                            version=version,
+                            version=str(version),
+                        )
+
+                        versionless_purl = PackageURL(
+                            type=package_url.type,
+                            namespace=package_url.namespace,
+                            name=package_url.name,
+                        )
+
+                        packaged_data = PackageData(
+                            type=package_url.type,
+                            namespace=None,
+                            name=package_url.name,
+                            version=package_url.version,
                             qualifiers=None,
                             download_url=download_url,
                             sha256=sha256,
@@ -81,9 +93,5 @@ class CratesCollector:
                             repository_homepage_url=homepage_url,
                             repository_download_url=download_url,
                         )
-                        current_purl = PackageURL(
-                            type="maven",
-                            name=name,
-                            version=version,
-                        )
-                        yield current_purl, [package.purl]
+
+                        yield versionless_purl, [packaged_data.purl], []
