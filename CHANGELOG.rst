@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v6.1.0
+---------
+
+- Add SBOM API action on packages (`/api/packages/<package uuid>/sbom/`)
+
+
 v6.0.0
 ---------
 

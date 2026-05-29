@@ -70,7 +70,7 @@ def build_packages(metadata_dict, purl):
             # "/api/v1/crates/purl/0.1.5/download"), we need to obtain the
             # redirected URL to ensure the filename is not simply
             # "download."
-            download_url = "https://crates.io/" + download_path
+            download_url = "https://crates.io" + download_path
             response = requests.head(download_url, allow_redirects=True)
             download_url = response.url
 

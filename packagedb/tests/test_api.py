@@ -25,6 +25,7 @@ from minecode.models import ScannableURI
 from minecode.tests import FIXTURES_REGEN
 from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
+from packagedb.models import DependentPackage
 from packagedb.models import PackageActivity
 from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
@@ -376,6 +377,15 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
 
         self.client = APIClient()
 
+        self.package_dependency = DependentPackage.objects.create(
+            package=self.package,
+            purl="pkg:generic/dep1",
+        )
+        self.package_dependency2 = DependentPackage.objects.create(
+            package=self.package,
+            purl="pkg:generic/dep2",
+        )
+
     def test_package_api_list_endpoint(self):
         response = self.client.get("/api/packages/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -538,6 +548,17 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         expected_status = "No values provided"
         self.assertEqual(expected_status, response.data["status"])
+
+    def test_package_api_sbom_endpoint(self):
+        response = self.client.get(f"/api/packages/{self.package.uuid}/sbom/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        expected = self.get_test_loc("sbom/package-sbom-expected.json")
+        self.check_expected_results(
+            response.data,
+            expected,
+            fields_to_remove=["serialNumber", "bom-ref", "timestamp", "ref", "properties"],
+            regen=FIXTURES_REGEN,
+        )
 
 
 class PackageApiReindexingTestCase(JsonBasedTesting, TestCase):

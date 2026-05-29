@@ -34,7 +34,24 @@
     "notice_text":null,
     "source_packages":[],
     "extra_data":{},
-    "dependencies":[],
+    "dependencies":[
+      {
+        "purl":"pkg:generic/dep1",
+        "extracted_requirement":null,
+        "scope":null,
+        "is_runtime":true,
+        "is_optional":false,
+        "is_pinned":false
+      },
+      {
+        "purl":"pkg:generic/dep2",
+        "extracted_requirement":null,
+        "scope":null,
+        "is_runtime":true,
+        "is_optional":false,
+        "is_pinned":false
+      }
+    ],
     "package_uid":"pkg:generic/generic/Foo@12.34?test_qual=qual&uuid=fixed-uid-done-for-testing-5642512d1758#test_subpath",
     "datasource_id":null,
     "purl":"pkg:generic/generic/Foo@12.34?test_qual=qual#test_subpath",
