@@ -246,7 +246,22 @@ class TestMavenVersionAPI(TestCase):
             mock_response.return_value = f.read()
 
         assert MavenVersionAPI().get_until("org.apache:kafka") == VersionResponse(
-            valid_versions={"1.3.0", "1.2.2", "1.2.3"}, newer_versions=set()
+            valid_versions=["1.3.0", "1.2.2", "1.2.3q"], newer_versions=[]
+        )
+
+    def test_get_until_preserves_fetch_order_and_deduplicates(self):
+        class DummyVersionAPI(MavenVersionAPI):
+            def fetch(self, package_name):
+                yield PackageVersion("1.0.0", release_date=dt_local(2024, 1, 1, 0, 0, 0))
+                yield PackageVersion("1.0.0", release_date=dt_local(2024, 1, 1, 0, 0, 0))
+                yield PackageVersion("1.1.0", release_date=dt_local(2024, 2, 1, 0, 0, 0))
+                yield PackageVersion("0.9.0", release_date=dt_local(2023, 12, 1, 0, 0, 0))
+
+        until = dt_local(2024, 1, 15, 0, 0, 0)
+
+        assert DummyVersionAPI().get_until("unused", until=until) == VersionResponse(
+            valid_versions=["1.0.0", "0.9.0"],
+            newer_versions=["1.1.0"],
         )
 
     @mock.patch("packagedb.package_managers.get_response")
