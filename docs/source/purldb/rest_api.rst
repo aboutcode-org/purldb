@@ -547,6 +547,28 @@ Using cURL to reindex a package:
         "status": "pkg:maven/org.elasticsearch/elasticsearch@7.17.9 has been queued for reindexing"
     }
 
+sbom
+^^^^^
+
+Generate a CycloneDX SBOM from this package instance.
+
+Using cURL to get an SBOM for a package:
+
+.. code-block:: console
+
+    api_url="https://public.purldb.io/api/packages/0bbdcf88-ad07-4970-9272-7d5f4c82cc7b/sbom/"
+    content_type="Content-Type: application/json"
+
+    curl -X GET "$api_url" -H "$content_type"
+
+.. code-block:: json
+
+    {
+        "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.6",
+    }
+
 Filter by checksum
 ~~~~~~~~~~~~~~~~~~
 
