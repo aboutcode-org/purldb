@@ -432,7 +432,10 @@ class PackageModelTestCase(TransactionTestCase):
 
     def test_packagedb_package_model_as_cyclonedx(self):
         p1 = Package.objects.create(
-            download_url="http://a.a", type="generic", name="name", version="1.0",
+            download_url="http://a.a",
+            type="generic",
+            name="name",
+            version="1.0",
         )
         cyclonedx_component = p1.as_cyclonedx()
 
