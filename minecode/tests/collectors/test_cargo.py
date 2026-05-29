@@ -50,6 +50,6 @@ class CargoPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         self.assertEqual(1, package_count)
         package = packagedb.models.Package.objects.all().first()
         expected_purl_str = "pkg:cargo/sam@0.3.1"
-        expected_download_url = "https://static.crates.io/crates/sam/sam-0.3.1.crate"
+        expected_download_url = "https://crates.io/api/v1/crates/sam/0.3.1/download"
         self.assertEqual(expected_purl_str, package.purl)
         self.assertEqual(expected_download_url, package.download_url)
