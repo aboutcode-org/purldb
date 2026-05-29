@@ -17,6 +17,7 @@ from django.conf import settings
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
 from django.core import exceptions
+from django.core.validators import EMPTY_VALUES
 from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -29,6 +30,10 @@ import natsort
 from aboutcode.federatedcode.contrib.django.models import (
     FederatedCodePackageActivityMixin,
 )
+from cyclonedx import model as cyclonedx_model
+from cyclonedx.model import component as cyclonedx_component
+from cyclonedx.model import contact as cyclonedx_contact
+from cyclonedx.model import license as cyclonedx_license
 from dateutil.parser import parse as dateutil_parse
 from licensedcode.cache import build_spdx_license_expression
 from packagedcode.models import normalize_qualifiers
@@ -796,6 +801,93 @@ class Package(
             updated_fields = list(set(updated_fields))
 
         return self, updated_fields
+
+    def as_cyclonedx(self):
+        """Return this Package as an CycloneDX Component entry."""
+        licenses = []
+        if expression_spdx := self.declared_license_expression_spdx:
+            # Using the LicenseExpression directly as the make_with_expression method
+            # does not support the "LicenseRef-" keys.
+            licenses = [cyclonedx_license.LicenseExpression(value=expression_spdx)]
+
+        hash_fields = {
+            "md5": cyclonedx_model.HashAlgorithm.MD5,
+            "sha1": cyclonedx_model.HashAlgorithm.SHA_1,
+            "sha256": cyclonedx_model.HashAlgorithm.SHA_256,
+            "sha512": cyclonedx_model.HashAlgorithm.SHA_512,
+        }
+        hashes = [
+            cyclonedx_model.HashType(alg=algorithm, content=hash_value)
+            for field_name, algorithm in hash_fields.items()
+            if (hash_value := getattr(self, field_name))
+        ]
+
+        authors = [
+            cyclonedx_contact.OrganizationalContact(
+                name=party.name,
+                email=party.email,
+            )
+            for party in self.parties.all()
+        ]
+
+        # Those fields are not supported natively by CycloneDX but are required to
+        # load the BOM without major data loss.
+        # See https://github.com/nexB/aboutcode-cyclonedx-taxonomy
+        property_prefix = "aboutcode"
+        property_fields = [
+            "filename",
+            "primary_language",
+            "download_url",
+            "homepage_url",
+            "notice_text",
+            "package_uid",
+        ]
+        properties = [
+            cyclonedx_model.Property(name=f"{property_prefix}:{field_name}", value=value)
+            for field_name in property_fields
+            if (value := getattr(self, field_name)) not in EMPTY_VALUES
+        ]
+
+        reference_type = cyclonedx_model.ExternalReferenceType
+        url_field_to_cdx_type = {
+            "api_data_url": reference_type.BOM,
+            "bug_tracking_url": reference_type.ISSUE_TRACKER,
+            "code_view_url": reference_type.OTHER,
+            "download_url": reference_type.DISTRIBUTION,
+            "homepage_url": reference_type.WEBSITE,
+            "repository_download_url": reference_type.DISTRIBUTION,
+            "repository_homepage_url": reference_type.WEBSITE,
+            "vcs_url": reference_type.VCS,
+        }
+        external_references = [
+            cyclonedx_model.ExternalReference(type=reference_type, url=url)
+            for field_name, reference_type in url_field_to_cdx_type.items()
+            if (url := getattr(self, field_name)) and field_name not in property_fields
+        ]
+
+        evidence = None
+        if self.other_license_expression_spdx:
+            evidence = cyclonedx_component.ComponentEvidence(
+                licenses=[
+                    cyclonedx_license.LicenseExpression(value=self.other_license_expression_spdx)
+                ],
+            )
+
+        return cyclonedx_component.Component(
+            name=self.name,
+            version=self.version,
+            bom_ref=self.package_uid,
+            # Warning: Use the real purl and not package_uid here.
+            purl=self.get_package_url(),
+            licenses=licenses,
+            copyright=self.copyright,
+            description=self.description,
+            hashes=hashes,
+            properties=properties,
+            external_references=external_references,
+            evidence=evidence,
+            authors=authors,
+        )
 
 
 party_person = "person"
