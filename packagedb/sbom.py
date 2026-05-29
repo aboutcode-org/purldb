@@ -34,7 +34,7 @@ from purldb_project import __version__ as purldb_version
 
 def get_cyclonedx_bom(package):
     """
-    Return a CycloneDX `Bom` object filled with provided `project` data.
+    Return a CycloneDX `Bom` object filled with data from `package`.
     See https://cyclonedx.org/use-cases/#dependency-graph
     """
 
@@ -76,9 +76,7 @@ def sort_bom_with_schema_ordering(bom_as_dict, schema_version):
 
 def to_cyclonedx(package, cyclonedx_version="1.6"):
     """
-    Generate output for the provided ``project`` in CycloneDX BOM format.
-    The output file is created in the ``project`` "output/" directory.
-    Return the path of the generated output file.
+    Return a CycloneDX SBOM of `package` as a Python dictionary.
     """
     schema_version = SchemaVersion.from_version(cyclonedx_version)
 
