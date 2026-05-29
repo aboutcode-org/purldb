@@ -5,6 +5,7 @@ v7.1.0
 ---------
 
 - Add SBOM API action on packages (`/api/packages/<package uuid>/sbom/`)
+- Create command, ``federate_sboms``, to federate CycloneDX 1.6 SBOMs using stored package data
 
 
 v6.0.0
