@@ -26,7 +26,13 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 
-def get_package_json(name):
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "Content-type": "application/json",
+}
+
+
+def get_package_json(name, headers=HEADERS):
     """
     Return the contents of the JSON file of the package.
     """
@@ -34,7 +40,7 @@ def get_package_json(name):
     url = f"https://crates.io/api/v1/crates/{name}"
 
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers=headers)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.HTTPError as err:
