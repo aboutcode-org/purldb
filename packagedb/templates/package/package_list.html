@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Package List</h1>
+
+<!-- Filter form -->
+<h2>Package Filters</h2>
+<form method="get">
+    {{ filter.form.as_p }}
+    <button type="submit">Filter</button>
+</form>
+
+<!-- Table to display the packages -->
+<h2>Packages</h2>
+<table>
+    <thead>
+        <tr>
+            {% for column in columns_data %}
+                <th>{{ column.label }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for package in object_list %}
+            <tr>
+                <td>
+                    <a href="{% url 'package_detail' package.uuid %}"> {{ package.package_url }} </a>
+                </td>
+                <td>
+                    {{ package.name }}
+                </td>
+                <td>
+                    {{ package.type }}
+                </td>
+                <td>
+                    {{ package.other_license_expression_spdx }}
+                </td>
+                <td>
+                    <a href="{{ package.download_url }}"> Download </a>
+                </td>
+                <td>
+                    {{ package.created_date }}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="{{ table_columns|length }}">No packages found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% for num in paginator.page_range %}
+        {% if num == page_obj.number %}
+            <strong>{{ num }}</strong>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+</div>
+{% endblock %}
