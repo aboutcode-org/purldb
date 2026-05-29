@@ -58,6 +58,7 @@ from packagedb.models import Resource
 from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
 from packagedb.package_managers import get_api_package_name
 from packagedb.package_managers import get_version_fetcher
+from packagedb.sbom import to_cyclonedx
 from packagedb.serializers import CollectPackageSerializer
 from packagedb.serializers import DependentPackageSerializer
 from packagedb.serializers import IndexPackagesResponseSerializer
@@ -498,6 +499,12 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
             serializer = PackageAPISerializer(paginated_qs, many=True, context={"request": request})
             serialized_package_data = serializer.data
         return self.get_paginated_response(serialized_package_data)
+
+    @action(detail=True)
+    def sbom(self, request, *args, **kwargs):
+        """Return a CycloneDX JSON SBOM for this Package"""
+        package = self.get_object()
+        return Response(to_cyclonedx(package))
 
 
 class PackageViewSet(PackagePublicViewSet):

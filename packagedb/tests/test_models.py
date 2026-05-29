@@ -430,6 +430,19 @@ class PackageModelTestCase(TransactionTestCase):
         with self.assertRaises(ValueError):
             p1.update_fields(parties=[1])
 
+    def test_packagedb_package_model_as_cyclonedx(self):
+        p1 = Package.objects.create(
+            download_url="http://a.a", type="generic", name="name", version="1.0",
+        )
+        cyclonedx_component = p1.as_cyclonedx()
+
+        self.assertEqual("library", cyclonedx_component.type)
+        self.assertEqual("name", cyclonedx_component.name)
+        self.assertEqual("1.0", cyclonedx_component.version)
+        bom_ref = p1.package_uid
+        self.assertEqual(bom_ref, str(cyclonedx_component.bom_ref))
+        self.assertEqual(p1.package_url, str(cyclonedx_component.purl))
+
 
 class PackageWatchModelTestCase(TransactionTestCase):
     @patch("packagedb.models.PackageWatch.create_new_job")
