@@ -26,6 +26,7 @@ from minecode_pipelines.pipes import nix
 from minecode_pipelines.pipelines import MineCodeBasePipeline
 from minecode_pipelines.pipelines import _mine_and_publish_packageurls
 
+
 class MineNix(MineCodeBasePipeline):
     """
     Mine PackageURLs from NixOS-Packages and publish them to FederatedCode.
@@ -64,8 +65,7 @@ class MineNix(MineCodeBasePipeline):
     def mine_nix_packages(self):
         """Mine Nix package names from NixOS packages or checkpoint."""
         (self.nix_packages, self.state, self.last_seq, self.config_repo) = nix.mine_nix_packages(
-            nixpkgs_repo=self.nixpkgs_repo,
-            logger=self.log
+            nixpkgs_repo=self.nixpkgs_repo, logger=self.log
         )
 
     def get_nixpkgs_packages_to_sync(self):

@@ -13,6 +13,7 @@ import subprocess
 from pathlib import Path
 import requests
 import time
+import shutil
 
 from packageurl import PackageURL
 
@@ -28,11 +29,15 @@ def get_nix_packages(nixpkgs_repo, logger=None):
 
     repo_path = Path(nixpkgs_repo.working_dir).resolve()
 
+    nix_env_path = shutil.which("nix-env")
+    if nix_env_path is None:
+        raise RuntimeError("nix-env is not available. Nix is required to run this pipeline.")
     # Use the `nix-env -qaP` to collect all the packages
+    # ruff: noqa: S603
     result = subprocess.run(
-        ["nix-env", "-qaP", "-f", str(repo_path)],
+        [nix_env_path, "-qaP", "-f", str(repo_path)],
         capture_output=True,
-        text=True
+        text=True,
     )
     for line in result.stdout.strip().split("\n"):
         if line.strip():
@@ -70,7 +75,7 @@ def get_nix_packageurls(name, repo_path, logger=None):
                 if retry_after:
                     wait_time = int(retry_after)
                 else:
-                    wait_time = DELAY_MULTIPLIER ** attempt
+                    wait_time = DELAY_MULTIPLIER**attempt
                 if logger:
                     logger(f"Rate limited (429). Waiting {wait_time}s before retry...")
                 time.sleep(wait_time)
@@ -120,8 +125,19 @@ def get_nix_packageurls(name, repo_path, logger=None):
 
 def get_version_from_nix(name, repo_path):
     pattern = f"{name}.version"
+    nix_env_path = shutil.which("nix")
+    # ruff: noqa: S603
     result = subprocess.run(
-        ["nix", "--experimental-features", "nix-command", "eval", "-f", str(repo_path), pattern, "--json"],
+        [
+            nix_env_path,
+            "--experimental-features",
+            "nix-command",
+            "eval",
+            "-f",
+            str(repo_path),
+            pattern,
+            "--json",
+        ],
         capture_output=True,
         text=True,
     )
@@ -138,7 +154,9 @@ def get_version_from_nix(name, repo_path):
 def yield_nix_package_data(name, packageurls=[]):
     for purl in packageurls:
         package_url = PackageURL.from_string(purl)
-        package_data_url = f"https://search.devbox.sh/v2/resolve?name={name}&version={package_url.version}"
+        package_data_url = (
+            f"https://search.devbox.sh/v2/resolve?name={name}&version={package_url.version}"
+        )
         response = requests.get(package_data_url)
         if not response.ok:
             continue

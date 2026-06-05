@@ -20,6 +20,7 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
+import shutil
 import subprocess
 from datetime import datetime
 
@@ -63,21 +64,33 @@ PACKAGE_BATCH_SIZE = 700
 
 
 def check_nix_availability(logger=None):
+    nix_env_path = shutil.which("nix")
+    if nix_env_path is None:
+        raise RuntimeError("Nix is not available. Nix is required to run this pipeline.")
     try:
-        subprocess.run(["nix", "--version"], check=True)
+        # ruff: noqa: S603
+        subprocess.run(
+            [nix_env_path, "--version"],
+            check=True,
+        )
         if logger:
             logger("Nix is available.")
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        raise Exception("Nix is not available. Nix is required to run this pipeline.")
+    except subprocess.CalledProcessError:
+        raise RuntimeError("Nix is installed but not functioning correctly.")
 
 
 def get_latest_commit_short_hash(repo_path):
+    git_env_path = shutil.which("git")
+    if git_env_path is None:
+        raise RuntimeError("git is not installed or not in PATH")
     # Get the latest commit hash (shortened)
+    # ruff: noqa: S603
     result = subprocess.run(
-        ["git", "rev-parse", "--short", "HEAD"],
+        [git_env_path, "rev-parse", "--short", "HEAD"],
         cwd=repo_path,
         capture_output=True,
-        text=True
+        text=True,
+        check=True,
     )
     return result.stdout.strip()
 
@@ -114,9 +127,7 @@ def mine_nix_packages(nixpkgs_repo, logger=None):
     if not state:
         commit_hash = get_latest_commit_short_hash(repo_path=nixpkgs_repo.working_dir)
         if logger:
-            logger(
-                f"Current commit hash: {commit_hash}"
-            )
+            logger(f"Current commit hash: {commit_hash}")
 
         packages = get_nix_packages(nixpkgs_repo=nixpkgs_repo, logger=logger)
         packages_file = write_packages_json(
@@ -172,10 +183,8 @@ def mine_nix_packages(nixpkgs_repo, logger=None):
             settings_path=NIX_CHECKPOINT_PATH,
         )
         if logger:
-            logger(
-                f"Getting latest packages from nixpkgs."
-            )
-        #FIXME: This is still getting the entire package list
+            logger("Getting latest packages from nixpkgs.")
+        # FIXME: This is still getting the entire package list
         packages = get_nix_packages(nixpkgs_repo=nixpkgs_repo, logger=logger)
         packages_file = write_packages_json(
             packages=packages,
@@ -271,7 +280,9 @@ def mine_and_publish_nix_packageurls(nixpkgs_repo, packages_to_sync, packages_mi
         if logger:
             logger(f"getting packageURLs for package: {package_name}")
 
-        packageurls = get_nix_packageurls(package_name, repo_path=nixpkgs_repo.working_dir, logger=logger)
+        packageurls = get_nix_packageurls(
+            package_name, repo_path=nixpkgs_repo.working_dir, logger=logger
+        )
         if not packageurls:
             if logger:
                 logger(f"Could not fetch package versions for package: {package_name}")
