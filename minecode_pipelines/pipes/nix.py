@@ -316,7 +316,7 @@ def save_mined_packages_in_checkpoint(packages_mined, synced_packages, config_re
     )
 
 
-def update_state_and_checkpoints(state, last_seq, config_repo, logger=None):
+def update_state_and_checkpoints(state, last_commit_hash, config_repo, logger=None):
     # If we are finished mining all the packages in the initial sync, we can now
     # periodically sync the packages from latest
     if state == INITIAL_SYNC_STATE:
@@ -332,13 +332,13 @@ def update_state_and_checkpoints(state, last_seq, config_repo, logger=None):
     # the last sequence updated
     if state == PERIODIC_SYNC_STATE:
         if logger:
-            logger(f"{PERIODIC_SYNC_STATE} completed. Updating last seq to: {last_seq}")
+            logger(f"{PERIODIC_SYNC_STATE} completed. Updating last commit_hash to: {last_commit_hash}")
 
         update_nix_checkpoints(
             cloned_repo=config_repo,
             checkpoint_path=NIX_CHECKPOINT_PATH,
             state=PERIODIC_SYNC_STATE,
-            last_seq=last_seq,
+            last_commit_hash=last_commit_hash,
             logger=logger,
         )
 

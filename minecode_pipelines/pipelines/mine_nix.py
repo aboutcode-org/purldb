@@ -64,7 +64,7 @@ class MineNix(MineCodeBasePipeline):
 
     def mine_nix_packages(self):
         """Mine Nix package names from NixOS packages or checkpoint."""
-        (self.nix_packages, self.state, self.last_seq, self.config_repo) = nix.mine_nix_packages(
+        (self.nix_packages, self.state, self.last_commit, self.config_repo) = nix.mine_nix_packages(
             nixpkgs_repo=self.nixpkgs_repo, logger=self.log
         )
 
@@ -118,7 +118,7 @@ class MineNix(MineCodeBasePipeline):
     def update_state_and_checkpoints(self):
         nix.update_state_and_checkpoints(
             state=self.state,
-            last_seq=self.last_seq,
+            last_commit_hash=self.last_commit,
             config_repo=self.config_repo,
             logger=self.log,
         )
