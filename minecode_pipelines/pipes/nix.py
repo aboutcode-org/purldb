@@ -20,8 +20,6 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-import shutil
-import subprocess
 from datetime import datetime
 
 
@@ -39,7 +37,8 @@ from minecode_pipelines.pipes import compress_packages_file
 from minecode_pipelines.pipes import decompress_packages_file
 from minecode_pipelines.pipes import fetch_checkpoint_by_git
 
-from minecode_pipelines.miners.nix import get_nix_packages
+from minecode_pipelines.miners.nix import get_all_nix_packages
+from minecode_pipelines.miners.nix import get_all_nix_packages_name
 from minecode_pipelines.miners.nix import load_nix_packages
 from minecode_pipelines.miners.nix import get_nix_packageurls
 from minecode_pipelines.miners.nix import yield_nix_package_data
@@ -62,51 +61,19 @@ NIX_CHECKPOINT_PATH = "nix/checkpoints.json"
 NIX_PACKAGES_CHECKPOINT_PATH = "nix/packages_checkpoint.json"
 PACKAGE_BATCH_SIZE = 700
 
-
-def check_nix_availability(logger=None):
-    nix_env_path = shutil.which("nix")
-    if nix_env_path is None:
-        raise RuntimeError("Nix is not available. Nix is required to run this pipeline.")
-    try:
-        # ruff: noqa: S603
-        subprocess.run(
-            [nix_env_path, "--version"],
-            check=True,
-        )
-        if logger:
-            logger("Nix is available.")
-    except subprocess.CalledProcessError:
-        raise RuntimeError("Nix is installed but not functioning correctly.")
+CHANNEL_URL = "https://channels.nixos.org/nixos-unstable/packages.json.br"
 
 
-def get_latest_commit_short_hash(repo_path):
-    git_env_path = shutil.which("git")
-    if git_env_path is None:
-        raise RuntimeError("git is not installed or not in PATH")
-    # Get the latest commit hash (shortened)
-    # ruff: noqa: S603
-    result = subprocess.run(
-        [git_env_path, "rev-parse", "--short", "HEAD"],
-        cwd=repo_path,
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    return result.stdout.strip()
-
-
-def mine_nix_packages(nixpkgs_repo, logger=None):
+def mine_nix_packages(logger=None):
     """
-    Mine nix package names from nixpkgs repo and save to checkpoints,
+    Mine nix package names from nixos.org and save to checkpoints,
     or get packages from saved checkpoints. We have 3 cases:
 
-    1. first sync: we get latest set of packages from nixpkgs and save last
-       commit hash of the package to checkpoints.
+    1. first sync: we get latest set of packages from nixos.org and save the
+       timestamp to checkpoints.
     2. initial sync: we get packages from checkpoint which we're trying to
        sync up to date
-    3. periodic sync: pull in newly released packages from nixpkgs.
-       Functionally similar to the first sync, since it refreshes the
-       entire package set.
+    3. periodic sync: pull in newly released packages from nixos.org.
     """
     nix_checkpoints = fetch_checkpoint_from_github(
         config_repo=MINECODE_PIPELINES_CONFIG_REPO,
@@ -122,14 +89,11 @@ def mine_nix_packages(nixpkgs_repo, logger=None):
         logger=logger,
     )
 
-    # There is no "last_seq" data as similar as npm/pypi, we will use the commit hash
-    # to identify the checkpoint
-    if not state:
-        commit_hash = get_latest_commit_short_hash(repo_path=nixpkgs_repo.working_dir)
-        if logger:
-            logger(f"Current commit hash: {commit_hash}")
+    packages_dict = {}
 
-        packages = get_nix_packages(nixpkgs_repo=nixpkgs_repo, logger=logger)
+    if not state:
+        packages_dict = get_all_nix_packages(CHANNEL_URL, logger=logger)
+        packages = get_all_nix_packages_name(packages_dict, logger=logger)
         packages_file = write_packages_json(
             packages=packages,
             name=PACKAGE_FILE_NAME,
@@ -149,12 +113,10 @@ def mine_nix_packages(nixpkgs_repo, logger=None):
 
         if logger:
             logger(f"Updating checkpoint mining state to: {INITIAL_SYNC_STATE}")
-            logger(f"Updating checkpoint mining last_commit_hash to: {commit_hash}")
 
         update_nix_checkpoints(
             cloned_repo=config_repo,
             state=INITIAL_SYNC_STATE,
-            last_commit_hash=commit_hash,
             checkpoint_path=NIX_CHECKPOINT_PATH,
             logger=logger,
         )
@@ -162,11 +124,6 @@ def mine_nix_packages(nixpkgs_repo, logger=None):
     elif state == INITIAL_SYNC_STATE:
         if logger:
             logger("Getting packages to sync from nix checkpoint")
-
-        commit_hash = fetch_last_commit_mined(
-            config_repo=MINECODE_PIPELINES_CONFIG_REPO,
-            settings_path=NIX_CHECKPOINT_PATH,
-        )
 
         compressed_packages_file = fetch_checkpoint_by_git(
             cloned_repo=config_repo,
@@ -178,27 +135,20 @@ def mine_nix_packages(nixpkgs_repo, logger=None):
         )
 
     elif state == PERIODIC_SYNC_STATE:
-        commit_hash = fetch_last_commit_mined(
-            config_repo=MINECODE_PIPELINES_CONFIG_REPO,
-            settings_path=NIX_CHECKPOINT_PATH,
-        )
-        if logger:
-            logger("Getting latest packages from nixpkgs.")
-        # FIXME: This is still getting the entire package list
-        packages = get_nix_packages(nixpkgs_repo=nixpkgs_repo, logger=logger)
+        packages_dict = get_all_nix_packages(CHANNEL_URL, logger=logger)
+        packages = get_all_nix_packages_name(packages_dict, logger=logger)
         packages_file = write_packages_json(
             packages=packages,
             name=PACKAGE_FILE_NAME,
         )
 
-    return packages_file, state, commit_hash, config_repo
+    return packages_dict, packages_file, state, config_repo
 
 
 def update_nix_checkpoints(
     cloned_repo,
     checkpoint_path,
     state=None,
-    last_commit_hash=None,
     config_repo=MINECODE_PIPELINES_CONFIG_REPO,
     logger=None,
 ):
@@ -208,8 +158,6 @@ def update_nix_checkpoints(
     )
     if state:
         checkpoint["state"] = state
-    if last_commit_hash:
-        checkpoint["last_commit_hash"] = last_commit_hash
 
     checkpoint["date"] = str(datetime.now())
     update_checkpoints_in_github(
@@ -218,20 +166,6 @@ def update_nix_checkpoints(
         path=checkpoint_path,
         logger=logger,
     )
-
-
-def fetch_last_commit_mined(config_repo, settings_path):
-    """
-    Fetch "last_commit_hash" for the last mined packages.
-
-    This is a simple JSON in a github repo containing mining checkpoints
-    with the "last_commit_hash" which was mined.
-    """
-    checkpoints = fetch_checkpoint_from_github(
-        config_repo=config_repo,
-        checkpoint_path=settings_path,
-    )
-    return checkpoints.get("last_commit_hash")
 
 
 def get_nix_packages_to_sync(packages_file, state, logger=None):
@@ -257,22 +191,23 @@ def get_nix_packages_to_sync(packages_file, state, logger=None):
             config_repo=MINECODE_PIPELINES_CONFIG_REPO,
             checkpoint_path=NIX_PACKAGES_CHECKPOINT_PATH,
         )
-        packages_to_sync = list(set(packages).difference(set(synced_packages)))
-        if logger:
-            logger(
-                f"Starting initial package mining for {len(packages_to_sync)} packages from checkpoint"
-            )
+        if state == INITIAL_SYNC_STATE:
+            packages_to_sync = synced_packages
+        else:
+            packages_to_sync = list(set(packages).difference(set(synced_packages)))
+            if logger:
+                logger(
+                    f"Starting initial package mining for {len(packages_to_sync)} packages from checkpoint"
+                )
 
     return packages_to_sync, synced_packages
 
 
-def mine_and_publish_nix_packageurls(nixpkgs_repo, packages_to_sync, packages_mined, logger=None):
+def mine_and_publish_nix_packageurls(packages_dict, packages_to_sync, packages_mined, logger=None):
     if logger:
         logger("Starting package mining for a batch of packages")
 
-    for index, package_name in enumerate(packages_to_sync):
-        if index > 50:
-            break
+    for package_name in packages_to_sync:
         if not package_name:
             continue
 
@@ -280,19 +215,16 @@ def mine_and_publish_nix_packageurls(nixpkgs_repo, packages_to_sync, packages_mi
         if logger:
             logger(f"getting packageURLs for package: {package_name}")
 
-        packageurls = get_nix_packageurls(
-            package_name, repo_path=nixpkgs_repo.working_dir, logger=logger
-        )
+        packageurls = get_nix_packageurls(package_name, packages_dict, logger=logger)
         if not packageurls:
             if logger:
                 logger(f"Could not fetch package versions for package: {package_name}")
             continue
 
-        # this yields a tuple containing purl str, dict containing api info
         purls_and_package_data = yield_nix_package_data(package_name, packageurls)
 
         base_purl = PackageURL(type=NIX_TYPE, name=package_name).to_string()
-        packages_mined.append(base_purl)
+        packages_mined.append(package_name)
         if purls_and_package_data:
             yield base_purl, packageurls, purls_and_package_data
         else:
@@ -316,7 +248,7 @@ def save_mined_packages_in_checkpoint(packages_mined, synced_packages, config_re
     )
 
 
-def update_state_and_checkpoints(state, last_commit_hash, config_repo, logger=None):
+def update_state_and_checkpoints(state, config_repo, logger=None):
     # If we are finished mining all the packages in the initial sync, we can now
     # periodically sync the packages from latest
     if state == INITIAL_SYNC_STATE:
@@ -331,14 +263,10 @@ def update_state_and_checkpoints(state, last_commit_hash, config_repo, logger=No
     # If we are finished mining all the packages in the periodic sync, we can now update
     # the last sequence updated
     if state == PERIODIC_SYNC_STATE:
-        if logger:
-            logger(f"{PERIODIC_SYNC_STATE} completed. Updating last commit_hash to: {last_commit_hash}")
-
         update_nix_checkpoints(
             cloned_repo=config_repo,
             checkpoint_path=NIX_CHECKPOINT_PATH,
             state=PERIODIC_SYNC_STATE,
-            last_commit_hash=last_commit_hash,
             logger=logger,
         )
 

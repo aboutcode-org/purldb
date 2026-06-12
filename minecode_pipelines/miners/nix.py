@@ -8,44 +8,44 @@
 #
 
 
+import brotli
 import json
-import subprocess
-from pathlib import Path
 import requests
 import time
-import shutil
 
 from packageurl import PackageURL
 
 
 NIX_TYPE = "nix"
+NIXPKGS = "nixpkgs"
 DELAY_MULTIPLIER = 2
 MAX_RETRIES = 3
 
 
-def get_nix_packages(nixpkgs_repo, logger=None):
-    """Get ALL Nix package names from the nixpkgs repository"""
-    all_package_names = []
-
-    repo_path = Path(nixpkgs_repo.working_dir).resolve()
-
-    nix_env_path = shutil.which("nix-env")
-    if nix_env_path is None:
-        raise RuntimeError("nix-env is not available. Nix is required to run this pipeline.")
-    # Use the `nix-env -qaP` to collect all the packages
-    # ruff: noqa: S603
-    result = subprocess.run(
-        [nix_env_path, "-qaP", "-f", str(repo_path)],
-        capture_output=True,
-        text=True,
-    )
-    for line in result.stdout.strip().split("\n"):
-        if line.strip():
-            name = line.split()
-            if name:
-                all_package_names.append(name[0])
+def get_all_nix_packages(channel_url, logger=None):
+    """Get all Nix packages"""
     if logger:
-        logger(f"Total packages found in nixpkgs: {len(all_package_names)}")
+        logger(f"Fetching Nix packages from: {channel_url}")
+    response = requests.get(channel_url)
+    response.raise_for_status()
+
+    try:
+        decompressed_data = brotli.decompress(response.content)
+        data = json.loads(decompressed_data)
+    except brotli.error:
+        data = response.json()
+
+    packages_dict = data.get("packages", {})
+    return packages_dict
+
+
+def get_all_nix_packages_name(packages_dict, logger=None):
+    """Get all Nix packages name"""
+    all_package_names = []
+    packages = list(packages_dict.keys())
+    for attr_path in packages:
+        all_package_names.append(attr_path)
+
     return {"packages": all_package_names}
 
 
@@ -56,7 +56,7 @@ def load_nix_packages(packages_file):
     return packages_data.get("packages", [])
 
 
-def get_nix_packageurls(name, repo_path, logger=None):
+def get_nix_packageurls(name, packages_dict, logger=None):
     packageurls = []
     data = []
     # Get all the version of a package from the following API:
@@ -68,7 +68,7 @@ def get_nix_packageurls(name, repo_path, logger=None):
             response = requests.get(url)
             response.raise_for_status()
             data = response.json()
-            break  # success, exit retry loop
+            break
         except requests.HTTPError as e:
             if response.status_code == 429:
                 retry_after = response.headers.get("Retry-After")
@@ -81,16 +81,16 @@ def get_nix_packageurls(name, repo_path, logger=None):
                 time.sleep(wait_time)
                 continue
             elif response.status_code == 404:
-                # Use `nix --experimental-features "nix-command" eval` to
-                # get the version
+                # The package_dict contains the package's current version
                 # devbox.sh may have only index the top
-                # level, all others deeper level may not be indexed, so we
-                # need to use the `nix` to get the package's version
+                # level, all others deeper level may not be indexed
                 # TODO: This can only get the current version.
-                version = get_version_from_nix(name, repo_path)
+                version = get_version_from_package_dict(name, packages_dict)
                 if version:
-                    purl = PackageURL(type=NIX_TYPE, name=name, version=version)
-                    packageurls.append(purl.to_string())
+                    purl = PackageURL(type=NIX_TYPE, namespace=NIXPKGS, name=name, version=version)
+                else:
+                    purl = PackageURL(type=NIX_TYPE, namespace=NIXPKGS, name=name)
+                packageurls.append(purl.to_string())
                 return packageurls
             else:
                 if logger:
@@ -115,7 +115,7 @@ def get_nix_packageurls(name, repo_path, logger=None):
     for release in releases:
         version = release.get("version")
         if version:
-            purl = PackageURL(type=NIX_TYPE, name=name, version=version)
+            purl = PackageURL(type=NIX_TYPE, namespace=NIXPKGS, name=name, version=version)
             purl_string = purl.to_string()
             if purl_string not in packageurls:
                 packageurls.append(purl_string)
@@ -123,32 +123,12 @@ def get_nix_packageurls(name, repo_path, logger=None):
     return packageurls
 
 
-def get_version_from_nix(name, repo_path):
-    pattern = f"{name}.version"
-    nix_env_path = shutil.which("nix")
-    # ruff: noqa: S603
-    result = subprocess.run(
-        [
-            nix_env_path,
-            "--experimental-features",
-            "nix-command",
-            "eval",
-            "-f",
-            str(repo_path),
-            pattern,
-            "--json",
-        ],
-        capture_output=True,
-        text=True,
-    )
-
-    if result.returncode == 0 and result.stdout.strip():
-        info = json.loads(result.stdout)
-        # info should be just a string
-        version = info.strip('"') if isinstance(info, str) else info
-        return version
-
-    return None
+def get_version_from_package_dict(name, package_dict):
+    """Get the version data from the package_dict"""
+    package_info = package_dict.get(name)
+    if not package_info:
+        return None
+    return package_info.get('version')
 
 
 def yield_nix_package_data(name, packageurls=[]):

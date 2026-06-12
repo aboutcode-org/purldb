@@ -38,10 +38,8 @@ class MineNix(MineCodeBasePipeline):
     @classmethod
     def steps(cls):
         return (
-            cls.check_nix_availability,
             cls.check_federatedcode_eligibility,
             cls.create_federatedcode_working_dir,
-            cls.fetch_nixpkgs_repo,
             cls.mine_nix_packages,
             cls.get_nixpkgs_packages_to_sync,
             cls.fetch_federation_config,
@@ -50,23 +48,9 @@ class MineNix(MineCodeBasePipeline):
             cls.delete_working_dir,
         )
 
-    def check_nix_availability(self):
-        """Check if Nix is available on the system."""
-        nix.check_nix_availability(logger=self.log)
-
-    def fetch_nixpkgs_repo(self):
-        """Fetch the Nixpkgs repository."""
-        self.nixpkgs_repo = federatedcode.clone_repository(
-            repo_url=self.nixpkgs_repo_url,
-            clone_path=self.working_path / "nixpkgs_repo",
-            logger=self.log,
-        )
-
     def mine_nix_packages(self):
         """Mine Nix package names from NixOS packages or checkpoint."""
-        (self.nix_packages, self.state, self.last_commit, self.config_repo) = nix.mine_nix_packages(
-            nixpkgs_repo=self.nixpkgs_repo, logger=self.log
-        )
+        (self.nix_packages_dict, self.nix_packages, self.state, self.config_repo) = nix.mine_nix_packages(logger=self.log)
 
     def get_nixpkgs_packages_to_sync(self):
         """Get Nixpkgs packages which needs to be synced using checkpoint."""
@@ -83,7 +67,7 @@ class MineNix(MineCodeBasePipeline):
         """Yield Nix packageURLs for all mined Nix package names."""
         self.packages_mined = []
         yield from nix.mine_and_publish_nix_packageurls(
-            nixpkgs_repo=self.nixpkgs_repo,
+            packages_dict=self.nix_packages_dict,
             packages_to_sync=self.packages,
             packages_mined=self.packages_mined,
             logger=self.log,
@@ -100,7 +84,6 @@ class MineNix(MineCodeBasePipeline):
 
     def mine_and_publish_packageurls(self):
         """Mine and publish PackageURLs."""
-
         _mine_and_publish_packageurls(
             packageurls=self.mine_packageurls(),
             total_package_count=self.packages_count(),
@@ -118,7 +101,6 @@ class MineNix(MineCodeBasePipeline):
     def update_state_and_checkpoints(self):
         nix.update_state_and_checkpoints(
             state=self.state,
-            last_commit_hash=self.last_commit,
             config_repo=self.config_repo,
             logger=self.log,
         )
