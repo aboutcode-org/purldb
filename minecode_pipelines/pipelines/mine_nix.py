@@ -20,7 +20,6 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from scanpipe.pipes import federatedcode
 
 from minecode_pipelines.pipes import nix
 from minecode_pipelines.pipelines import MineCodeBasePipeline
@@ -50,7 +49,9 @@ class MineNix(MineCodeBasePipeline):
 
     def mine_nix_packages(self):
         """Mine Nix package names from NixOS packages or checkpoint."""
-        (self.nix_packages_dict, self.nix_packages, self.state, self.config_repo) = nix.mine_nix_packages(logger=self.log)
+        (self.nix_packages_dict, self.nix_packages, self.state, self.config_repo) = (
+            nix.mine_nix_packages(logger=self.log)
+        )
 
     def get_nixpkgs_packages_to_sync(self):
         """Get Nixpkgs packages which needs to be synced using checkpoint."""

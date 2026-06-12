@@ -128,7 +128,7 @@ def get_version_from_package_dict(name, package_dict):
     package_info = package_dict.get(name)
     if not package_info:
         return None
-    return package_info.get('version')
+    return package_info.get("version")
 
 
 def yield_nix_package_data(name, packageurls=[]):
