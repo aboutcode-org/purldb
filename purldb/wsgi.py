@@ -1,6 +1,6 @@
 #
 # Copyright (c) nexB Inc. and others. All rights reserved.
-# PurlDB is a trademark of nexB Inc.
+# purldb is a trademark of nexB Inc.
 # SPDX-License-Identifier: Apache-2.0
 # See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
 # See https://github.com/aboutcode-org/purldb for support or download.
@@ -8,14 +8,16 @@
 #
 
 import os
-import sys
 
-__version__ = "7.1.0"
+from django.core.wsgi import get_wsgi_application
+
+"""
+WSGI config for purldb.
+
+It exposes the WSGI callable as a module-level variable named ``application``.
+"""
 
 
-def command_line():
-    """Command line entry point."""
-    from django.core.management import execute_from_command_line
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "purldb.settings")
 
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "purldb_project.settings")
-    execute_from_command_line(sys.argv)
+application = get_wsgi_application()

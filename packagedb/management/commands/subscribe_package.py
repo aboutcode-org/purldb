@@ -12,7 +12,7 @@ from django.core.management.base import BaseCommand
 
 from aboutcode.federatedcode.client import subscribe_package
 
-from purldb_project import settings
+from purldb import settings
 
 
 class Command(BaseCommand):

@@ -12,7 +12,7 @@
 import os
 import sys
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "purldb_project.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "purldb.settings")
 sys.path.insert(0, os.path.abspath("../../."))
 
 # -- Project information -----------------------------------------------------

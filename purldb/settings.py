@@ -12,7 +12,7 @@ from pathlib import Path
 
 import environ
 
-from purldb_project import __version__
+from purldb import __version__
 
 PURLDB_VERSION = __version__
 
@@ -91,9 +91,9 @@ MIDDLEWARE = (
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 )
 
-ROOT_URLCONF = "purldb_project.urls"
+ROOT_URLCONF = "purldb.urls"
 
-WSGI_APPLICATION = "purldb_project.wsgi.application"
+WSGI_APPLICATION = "purldb.wsgi.application"
 
 SECURE_PROXY_SSL_HEADER = env.tuple(
     "SECURE_PROXY_SSL_HEADER", default=("HTTP_X_FORWARDED_PROTO", "https")

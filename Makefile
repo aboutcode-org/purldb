@@ -26,7 +26,7 @@ MATCHCODEIO_DB_PASSWORD=matchcodeio
 SCANCODEIO_DB_PASSWORD=scancodeio
 
 # Django settings shortcuts
-DJSM_PDB=DJANGO_SETTINGS_MODULE=purldb_project.settings
+DJSM_PDB=DJANGO_SETTINGS_MODULE=purldb.settings
 DJSM_MAT=DJANGO_SETTINGS_MODULE=matchcode_project.settings
 
 # Use sudo for postgres, but only on Linux
@@ -128,7 +128,7 @@ run_map:
 	${MANAGE} run_map
 
 test_purldb:
-	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf minecode packagedb purl2vcs purldb_project --ignore packagedb/tests/test_throttling.py
+	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf minecode packagedb purl2vcs purldb --ignore packagedb/tests/test_throttling.py
 	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf packagedb/tests/test_throttling.py
 
 test_clearcode:
