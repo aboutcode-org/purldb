@@ -145,7 +145,6 @@ max-complexity = 10
 "test_*.py" = ["S101"] # Use of assert detected
 "**/testfiles/**.py" = ["F821"] # Ignore undefined names from test files
 "matchcode_project/settings.py" = ["F403", "F405"] # Ignore undefined names from star imports and star imports
-"purldb_public_project/settings.py" = ["F403", "F405"]  # Ignore undefined names from star imports and star imports
 "etc/scripts/update_skeleton.py" = ["S108", "S603", "S605", "S607"]
 "purl2vcs/src/purl2vcs/find_source_repo.py" = ["S605"]
 
