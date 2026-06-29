@@ -162,7 +162,6 @@ class ApacheCollector:
             size = package.get("size", "")
             release_date = package.get("date", "")
             """
-
             namespace, name, version, qualifiers = determine_purl_elements(package)
 
             purl = PackageURL(
@@ -334,6 +333,12 @@ def extract_archives(archive_path):
 
 
 def parse_apache_path_common(path):
+    """
+    Parse standard Apache paths following a strict
+    '{name}/{version}/{filename}' structure. Requires the version segment
+    to start with a digit and the component name to be a substring of the
+    filename.
+    """
     segments = path.strip().split("/")
 
     # The minimum required segments for {name}/{version}/{filename} is 3
@@ -367,6 +372,14 @@ def parse_apache_path_common(path):
 
 
 def parse_apache_path_complex(path):
+    """
+    Parse non-standard Apache paths by locating a version or keyword
+    boundary.
+
+    Scans left-to-right for a "marker" segment (a semantic version or words
+    like 'bin', 'rc1'). The segment right before this marker becomes the
+    'name'. Falls back to the parent directory if no marker is found.
+    """
     segments = path.strip().split("/")
 
     if len(segments) < 2:
@@ -391,8 +404,9 @@ def parse_apache_path_complex(path):
     version = ""
 
     for i, seg in enumerate(path_segments):
-        # Look for numeric version groupings
-        version_match = re.search(r"(\d+(?:\.\d+)+)", seg)
+        # Match standard versions (e.g., 1.2.0) OR release candidates (e.g., rc1, rc1.1)
+        # Added re.IGNORECASE to safely handle 'RC1' or 'rc1'
+        version_match = re.search(r"(\d+(?:\.\d+)+|rc\d+(?:\.\d+)*)", seg, re.IGNORECASE)
 
         is_version = False
         if version_match:
@@ -400,9 +414,8 @@ def parse_apache_path_complex(path):
             if not version:
                 version = version_match.group(1)
 
-        # Dynamic check: Matches hardcoded words OR 'rc' + numbers (e.g., rc1, rc2)
-        # This will completely ignore "release-candidates"
-        is_special = (seg.lower() in special_words) or bool(re.match(r"^rc\d+$", seg.lower()))
+        # Check only against the hardcoded metadata keywords
+        is_special = seg.lower() in special_words
 
         if (is_version or is_special) and marker_idx is None:
             marker_idx = i
