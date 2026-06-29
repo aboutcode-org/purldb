@@ -359,10 +359,6 @@ def parse_apache_path_common(path):
     # name is the segment before the version
     name = segments[-3]
 
-    # Ensure the name exists as part of the filename
-    if name not in file_name:
-        return None
-
     # namespace consists of all segments from the beginning up to the name
     # segment
     namespace_segments = segments[:-3]
@@ -398,6 +394,7 @@ def parse_apache_path_complex(path):
         "bin",
         "dist",
         "old",
+        "obsolete",
     }
 
     marker_idx = None

@@ -27,6 +27,8 @@ class ApacheMiscTest(FileBasedTesting):
             "ws/commons/axiom/1_2_2/axiom-1.2.2-bin.zip",
             "avalon/framework/jars/avalon-framework-excalibur-test-4.0b1.jar",
             "avalon/logkit/v1.2/LogKit-1.2-bin.tar.gz",
+            "airflow/providers/2.11/apache_airflow_providers_fab-1.5.4-py3-none-any.whl",
+            "beam/vendor/beam-vendor-calcite-1_40_0/0.1/apache-beam-f6ec9cb0c167815f942cf70a674f92a04819c83b-source-release.zip",
         ]
         expected = [
             {
@@ -67,6 +69,18 @@ class ApacheMiscTest(FileBasedTesting):
             },
             None,
             None,
+            {
+                "namespace": "airflow",
+                "name": "providers",
+                "version": "2.11",
+                "file_name": "apache_airflow_providers_fab-1.5.4-py3-none-any.whl",
+            },
+            {
+                "namespace": "beam/vendor",
+                "name": "beam-vendor-calcite-1_40_0",
+                "version": "0.1",
+                "file_name": "apache-beam-f6ec9cb0c167815f942cf70a674f92a04819c83b-source-release.zip",
+            },
         ]
 
         for i, p in enumerate(paths):
@@ -148,24 +162,6 @@ class ApacheMiscTest(FileBasedTesting):
                     "name": "avro",
                     "version": "1.10.0",
                     "file_name": "avro-grpc-1.10.0-sources.jar",
-                },
-            ),
-            (
-                "airflow/providers/2.11/apache_airflow_providers_fab-1.5.4-py3-none-any.whl",
-                {
-                    "namespace": "airflow",
-                    "name": "providers",
-                    "version": "2.11",
-                    "file_name": "apache_airflow_providers_fab-1.5.4-py3-none-any.whl",
-                },
-            ),
-            (
-                "beam/vendor/beam-vendor-calcite-1_40_0/0.1/apache-beam-f6ec9cb0c167815f942cf70a674f92a04819c83b-source-release.zip",
-                {
-                    "namespace": "beam/vendor",
-                    "name": "beam-vendor-calcite-1_40_0",
-                    "version": "0.1",
-                    "file_name": "apache-beam-f6ec9cb0c167815f942cf70a674f92a04819c83b-source-release.zip",
                 },
             ),
             (
