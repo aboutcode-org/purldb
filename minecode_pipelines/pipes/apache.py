@@ -7,20 +7,39 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
+from datetime import datetime
+
+from minecode_pipelines.pipes import fetch_checkpoint_from_github
+from minecode_pipelines.pipes import update_checkpoints_in_github
+from minecode_pipelines.pipes import update_checkpoints_file_in_github
+from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
+from minecode_pipelines.pipes import update_mined_packages_in_checkpoint
+from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
+from minecode_pipelines.pipes import write_packages_json
+from minecode_pipelines.pipes import compress_packages_file
+
+from minecode_pipelines.utils import get_temp_dir
+
+from packageurl import PackageURL
+
+from scanpipe.pipes.federatedcode import clone_repository
+from scanpipe.pipes.federatedcode import delete_local_clone
+
+from scanpipe.pipes.fetch import fetch_http
+
 import gzip
 import shutil
 import json
 import os
-from shutil import rmtree
 import re
 
 import requests
 
-from packageurl import PackageURL
-
 
 TRACE = False
 TRACE_DEEP = False
+
+SID_TYPE = "sid"
 
 
 FIND_LS_URL = "https://archive.apache.org/dist/zzz/find-ls2.txt.gz"
@@ -28,6 +47,13 @@ PROJECT_JSON = "https://projects.apache.org/json/foundation/projects.json"
 BASE_URL = "https://archive.apache.org/dist/"
 BASE_NAMESPACE = "apache.org/"
 
+
+PACKAGE_FILE_NAME = "ApachePackages.json"
+COMPRESSED_PACKAGE_FILE_NAME = "ApachePackages.json.gz"
+COMPRESSED_APACHE_PACKAGES_PATH = "apache/" + COMPRESSED_PACKAGE_FILE_NAME
+APACHE_CHECKPOINT_PATH = "apache/checkpoints.json"
+APACHE_PACKAGES_CHECKPOINT_PATH = "apache/packages_checkpoint.json"
+PACKAGE_BATCH_SIZE = 700
 
 CHECKSUM_EXTS = (
     ".sha256",
@@ -107,97 +133,11 @@ IGNORED_PATH_CONTAINS = (
 # /*/apache-log4j-*-site.zip
 
 
-class ApacheCollector:
-    """
-    Download and process the find-ls file.
-    """
-
-    def __init__(
-        self,
-        find_ls_url=None,
-        project_json=None,
-        logger=None,
-    ):
-        self.downloads = []
-
-        if not find_ls_url:
-            find_ls_url = FIND_LS_URL
-
-        if not project_json:
-            project_json = PROJECT_JSON
-
-        find_ls_download = self._fetch_http(find_ls_url)
-        project_json_download = self._fetch_http(project_json)
-        self.find_ls_location = find_ls_download.path
-        self.project_json_location = project_json_download.path
-
-    def __del__(self):
-        if self.downloads:
-            for download in self.downloads:
-                rmtree(download.directory)
-
-    def _fetch_http(self, uri):
-        from scanpipe.pipes.fetch import fetch_http
-
-        fetched = fetch_http(uri)
-        self.downloads.append(fetched)
-        return fetched
-
-    def get_packages(self):
-        """Yield Package objects from the find_ls list"""
-        txt_path = extract_archives(archive_path=self.find_ls_location)
-        packages_data, packages_checksum = get_archives_and_checksum(txt_path)
-        updated_packages_list = update_package_data(
-            packages_data, packages_checksum, project_json_location=self.project_json_location
-        )
-
-        current_base = None
-        current_purls = []
-
-        for package in updated_packages_list:
-            """
-            repository_homepage_url = package.get("repository_homepage_url", "")
-            repository_download_url = package.get("repository_download_url", "")
-            download_url = package.get("download_url", "")
-            size = package.get("size", "")
-            release_date = package.get("date", "")
-            """
-            namespace, name, version, qualifiers = determine_purl_elements(package)
-
-            purl = PackageURL(
-                type="sid",
-                namespace=namespace,
-                name=name,
-                version=version,
-                qualifiers=qualifiers,
-            ).to_string()
-
-            base_purl = PackageURL(
-                type="sid",
-                namespace=namespace,
-                name=name,
-            ).to_string()
-
-            if current_base is None:
-                current_base = base_purl
-                current_purls.append(purl)
-            elif base_purl == current_base:
-                current_purls.append(purl)
-            else:
-                yield current_base, current_purls, []
-                current_base = base_purl
-                current_purls = [purl]
-
-        if current_base is not None:
-            yield current_base, current_purls, []
-
-
-def determine_purl_elements(package):
+def determine_purl_elements(path):
     """
     Determine and return the namespace, name, version and qualifier based
     on the path info
     """
-    path = package.get("filepath").lstrip("./")
     parsed_result = parse_apache_path_common(path)
     if parsed_result:
         namespace = BASE_NAMESPACE + parsed_result.get("namespace")
@@ -255,7 +195,7 @@ def get_archives_and_checksum(txt_path):
     return packages_data, packages_checksum
 
 
-def update_package_data(packages_data, packages_checksum, project_json_location):
+def update_package_data(packages_data, packages_checksum):
     """
     Update package metadata with:
     - Project information from
@@ -266,7 +206,8 @@ def update_package_data(packages_data, packages_checksum, project_json_location)
     """
     updated_package_data = []
     data = ""
-    with open(project_json_location, encoding="utf-8") as f:
+    project_json_download = fetch_http(PROJECT_JSON)
+    with open(project_json_download.path, encoding="utf-8") as f:
         data = json.load(f)
 
     for package in packages_data:
@@ -290,6 +231,8 @@ def update_package_data(packages_data, packages_checksum, project_json_location)
                     "homepage": "repository_homepage_url",
                     "download-page": "repository_download_url",
                     "description": "description",
+                    "mailing-list": "mailing_list",
+                    "programming-language": "programming_language",
                 }.items():
                     value = package_metadata.get(key)
                     if value:
@@ -427,3 +370,238 @@ def parse_apache_path_complex(path):
     namespace = "/".join(namespace_segments)
 
     return {"namespace": namespace, "name": name, "version": version, "file_name": file_name}
+
+
+def mine_apache_packages(logger=None):
+    """
+    Mine apache packages names from "https://archive.apache.org/dist/zzz/find-ls2.txt.gz"
+
+    Apache.org does not provide an index file, so we have no way
+    to check the index and determine which packages are new and
+    need to be synced, unlike npm.
+
+    We will use the timestamp to log when the packages were mined.
+    """
+
+    config_repo = clone_repository(
+        repo_url=MINECODE_PIPELINES_CONFIG_REPO,
+        clone_path=get_temp_dir(),
+        logger=logger,
+    )
+
+    packages, packages_metadata = get_find_ls_archive_paths_and_metadata(logger=logger)
+    packages_file = write_packages_json(
+        packages=packages,
+        name=PACKAGE_FILE_NAME,
+    )
+    compressed_packages_file = packages_file + ".gz"
+    compress_packages_file(
+        packages_file=packages_file,
+        compressed_packages_file=compressed_packages_file,
+    )
+    update_checkpoints_file_in_github(
+        checkpoints_file=compressed_packages_file,
+        cloned_repo=config_repo,
+        path=COMPRESSED_APACHE_PACKAGES_PATH,
+    )
+
+    update_apache_checkpoints(
+        cloned_repo=config_repo,
+        checkpoint_path=APACHE_CHECKPOINT_PATH,
+        logger=logger,
+    )
+
+    return packages_file, packages_metadata, config_repo
+
+
+def get_find_ls_archive_paths_and_metadata(logger=None):
+    find_ls_download = fetch_http(FIND_LS_URL)
+    txt_path = extract_archives(find_ls_download.path)
+    packages_data, packages_checksum = get_archives_and_checksum(txt_path)
+    updated_packages_list = update_package_data(packages_data, packages_checksum)
+    all_package_paths = []
+    for package in packages_data:
+        all_package_paths.append(package.get("filepath"))
+    if logger:
+        logger(f"Collected: {len(all_package_paths)} package archive files.")
+
+    return {"packages": all_package_paths}, updated_packages_list
+
+
+def update_apache_checkpoints(
+    cloned_repo,
+    checkpoint_path,
+    state=None,
+    config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+    logger=None,
+):
+    checkpoint = fetch_checkpoint_from_github(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    if state:
+        checkpoint["state"] = state
+
+    checkpoint["date"] = str(datetime.now())
+    update_checkpoints_in_github(
+        checkpoint=checkpoint,
+        cloned_repo=cloned_repo,
+        path=checkpoint_path,
+        logger=logger,
+    )
+
+
+def get_apache_packages_to_sync(packages_file, logger=None):
+    packages = load_apache_packages(packages_file)
+    if logger:
+        logger(f"# of package archives found from apache.org: {len(packages)}")
+
+    if not packages:
+        return
+
+    synced_packages = get_mined_packages_from_checkpoint(
+        config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+        checkpoint_path=APACHE_PACKAGES_CHECKPOINT_PATH,
+    )
+    packages_to_sync = list(set(packages).difference(set(synced_packages)))
+    if logger:
+        logger(
+            f"Starting initial package mining for {len(packages_to_sync)} packages archives from checkpoint"
+        )
+
+    return packages_to_sync, synced_packages
+
+
+def load_apache_packages(packages_file):
+    with open(packages_file) as f:
+        packages_data = json.load(f)
+
+    return packages_data.get("packages", [])
+
+
+def mine_and_publish_apache_packageurls(
+    packages_to_sync, packages_mined, packages_metadata, logger=None
+):
+    if logger:
+        logger("Starting package mining for a batch of packages")
+
+    handled_base = None
+    for i, package_path in enumerate(packages_to_sync):
+        current_base = None
+        current_purls = []
+        purls_and_package_data = []
+
+        if i > 10:
+            break
+
+        if not package_path:
+            continue
+
+        # fetch packageURLs for package
+        if logger:
+            logger(f"getting packageURLs for package: {package_path}")
+
+        packages_mined.append(package_path)
+
+        package_path = package_path.lstrip("./")
+        namespace, name, _version, _qualifiers = determine_purl_elements(package_path)
+        current_base = PackageURL(
+            type=SID_TYPE,
+            namespace=namespace,
+            name=name,
+        ).to_string()
+
+        if handled_base and handled_base == current_base:
+            continue
+        else:
+            handled_base = current_base
+
+        for package in packages_metadata:
+            path = package.get("filepath").lstrip("./")
+            package_namespace, package_name, package_version, package_qualifiers = (
+                determine_purl_elements(path)
+            )
+
+            base_purl = PackageURL(
+                type=SID_TYPE,
+                namespace=package_namespace,
+                name=package_name,
+            ).to_string()
+
+            if current_base == base_purl:
+                purl = PackageURL(
+                    type=SID_TYPE,
+                    namespace=package_namespace,
+                    name=package_name,
+                    version=package_version,
+                    qualifiers=package_qualifiers,
+                ).to_string()
+
+                if purl not in current_purls:
+                    package_metadata = {}
+                    package_metadata["name"] = package_name
+                    package_metadata["version"] = package_version
+                    package_metadata["repository_homepage_url"] = package.get(
+                        "repository_homepage_url", ""
+                    )
+                    package_metadata["repository_download_url"] = package.get(
+                        "repository_download_url", ""
+                    )
+                    package_metadata["description"] = package.get("description", "")
+                    package_metadata["download_url"] = package.get("download_url", "")
+                    package_metadata["size"] = package.get("size", "")
+                    package_metadata["release_date"] = package.get("date", "")
+                    package_metadata["mailing_list"] = package.get("mailing_list", "")
+                    package_metadata["programming_language"] = package.get(
+                        "programming_language", ""
+                    )
+
+                    package_data = (purl, package_metadata)
+
+                    current_purls.append(purl)
+                    purls_and_package_data.append(package_data)
+
+            else:
+                if current_purls:
+                    yield current_base, current_purls, purls_and_package_data
+                    # Reset
+                    current_base = None
+                    current_purls = []
+                    purls_and_package_data = []
+                    # packages_metadata should be ordered so that we can
+                    # break the loop once all relevant entries have been
+                    # found.
+                    break
+
+        if current_base is not None:
+            yield current_base, current_purls, purls_and_package_data
+
+
+def update_mined_checkpoints(config_repo, logger=None):
+    # Refresh mined packages checkpoint
+    update_checkpoints_in_github(
+        checkpoint={"packages_mined": []},
+        cloned_repo=config_repo,
+        path=APACHE_PACKAGES_CHECKPOINT_PATH,
+        logger=logger,
+    )
+
+    if logger:
+        logger(f"Deleting local clone at: {config_repo.working_dir}")
+    delete_local_clone(config_repo)
+
+
+def save_mined_packages_in_checkpoint(packages_mined, synced_packages, config_repo, logger=None):
+    # Update mined packages checkpoint for every batch
+    # so we can continue mining the other packages after restarting
+    if logger:
+        logger(f"Checkpointing processed packages to: {APACHE_PACKAGES_CHECKPOINT_PATH}")
+
+    packages_checkpoint = packages_mined + synced_packages
+    update_mined_packages_in_checkpoint(
+        packages=packages_checkpoint,
+        config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+        cloned_repo=config_repo,
+        checkpoint_path=APACHE_PACKAGES_CHECKPOINT_PATH,
+        logger=logger,
+    )
