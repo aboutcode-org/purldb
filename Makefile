@@ -10,7 +10,7 @@
 # Python version can be specified with `$ PYTHON_EXE=python3.x make conf`
 PYTHON_EXE?=python3
 VENV=venv
-MANAGE=${VENV}/bin/python manage_purldb.py
+MANAGE=${VENV}/bin/python manage.py
 MATCHCODE_MANAGE=${VENV}/bin/python manage_matchcode.py
 ACTIVATE?=. ${VENV}/bin/activate;
 VIRTUALENV_PYZ=../etc/thirdparty/virtualenv.pyz

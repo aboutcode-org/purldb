@@ -16,7 +16,7 @@ Using the Management Command
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For a relatively small and focused PurlDB, one can use the management
-command ``python manage_purldb.py watch_packages``. This command can be
+command ``python manage.py watch_packages``. This command can be
 run periodically using a cron job to watch all the PURLs in your PurlDB for
 new versions. Upon detecting new versions, it collects and indexes the new package.
 This approach is efficient for smaller databases.
