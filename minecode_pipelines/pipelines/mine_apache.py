@@ -41,7 +41,7 @@ class MineApache(MineCodeBasePipeline):
             cls.fetch_federation_config,
             cls.mine_and_publish_packageurls,
             cls.update_mined_checkpoints,
-            # cls.delete_working_dir,
+            cls.delete_working_dir,
         )
 
     def mine_apache_packages(self):
