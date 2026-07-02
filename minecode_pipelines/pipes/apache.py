@@ -7,16 +7,11 @@
 # See https://aboutcode.org for more information about nexB OSS projects.
 #
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from minecode_pipelines.pipes import fetch_checkpoint_from_github
 from minecode_pipelines.pipes import update_checkpoints_in_github
-from minecode_pipelines.pipes import update_checkpoints_file_in_github
-from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
-from minecode_pipelines.pipes import update_mined_packages_in_checkpoint
 from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
-from minecode_pipelines.pipes import write_packages_json
-from minecode_pipelines.pipes import compress_packages_file
 
 from minecode_pipelines.utils import get_temp_dir
 
@@ -53,7 +48,6 @@ COMPRESSED_PACKAGE_FILE_NAME = "ApachePackages.json.gz"
 COMPRESSED_APACHE_PACKAGES_PATH = "apache/" + COMPRESSED_PACKAGE_FILE_NAME
 APACHE_CHECKPOINT_PATH = "apache/checkpoints.json"
 APACHE_PACKAGES_CHECKPOINT_PATH = "apache/packages_checkpoint.json"
-PACKAGE_BATCH_SIZE = 700
 
 CHECKSUM_EXTS = (
     ".sha256",
@@ -389,49 +383,37 @@ def mine_apache_packages(logger=None):
         logger=logger,
     )
 
-    packages, packages_metadata = get_find_ls_archive_paths_and_metadata(logger=logger)
-    packages_file = write_packages_json(
-        packages=packages,
-        name=PACKAGE_FILE_NAME,
-    )
-    compressed_packages_file = packages_file + ".gz"
-    compress_packages_file(
-        packages_file=packages_file,
-        compressed_packages_file=compressed_packages_file,
-    )
-    update_checkpoints_file_in_github(
-        checkpoints_file=compressed_packages_file,
-        cloned_repo=config_repo,
-        path=COMPRESSED_APACHE_PACKAGES_PATH,
-    )
+    packages_metadata = get_find_ls_archive_paths_and_metadata(logger=logger)
 
-    update_apache_checkpoints(
+    last_mined_date = get_and_update_apache_checkpoints(
         cloned_repo=config_repo,
         checkpoint_path=APACHE_CHECKPOINT_PATH,
         logger=logger,
     )
 
-    return packages_file, packages_metadata, config_repo
+    delete_local_clone(config_repo)
+
+    return packages_metadata, last_mined_date
 
 
 def get_find_ls_archive_paths_and_metadata(logger=None):
+    """
+    Get the archive paths and metadata from the find-ls file.
+    """
     find_ls_download = fetch_http(FIND_LS_URL)
     txt_path = extract_archives(find_ls_download.path)
     packages_data, packages_checksum = get_archives_and_checksum(txt_path)
-    updated_packages_list = update_package_data(packages_data, packages_checksum)
-    all_package_paths = []
-    for package in packages_data:
-        all_package_paths.append(package.get("filepath"))
+    packages_metadata = update_package_data(packages_data, packages_checksum)
+
     if logger:
-        logger(f"Collected: {len(all_package_paths)} package archive files.")
+        logger(f"Collected: {len(packages_metadata)} package archive files.")
 
-    return {"packages": all_package_paths}, updated_packages_list
+    return packages_metadata
 
 
-def update_apache_checkpoints(
+def get_and_update_apache_checkpoints(
     cloned_repo,
     checkpoint_path,
-    state=None,
     config_repo=MINECODE_PIPELINES_CONFIG_REPO,
     logger=None,
 ):
@@ -439,10 +421,14 @@ def update_apache_checkpoints(
         config_repo=config_repo,
         checkpoint_path=checkpoint_path,
     )
-    if state:
-        checkpoint["state"] = state
 
-    checkpoint["date"] = str(datetime.now())
+    last_mined_date = checkpoint.get("date", "")
+    if logger:
+        logger(f"Last mined date from checkpoint: {last_mined_date}")
+
+    now = datetime.now(timezone.utc)
+    formatted_now = now.strftime("%Y-%m-%d %H:%M UTC")
+    checkpoint["date"] = formatted_now
     update_checkpoints_in_github(
         checkpoint=checkpoint,
         cloned_repo=cloned_repo,
@@ -450,49 +436,59 @@ def update_apache_checkpoints(
         logger=logger,
     )
 
+    return last_mined_date
 
-def get_apache_packages_to_sync(packages_file, logger=None):
-    packages = load_apache_packages(packages_file)
+
+def get_apache_packages_to_sync(packages_metadata, last_mined_date, logger=None):
+    """
+    Get the list of Apache packages that need to be synced based on the
+    timestamp.
+
+    Was thinking to record all mined archives, but even when processing
+    only 10 packages it produced about 62k archive paths (all versions
+    included) totaling 4.2 MB. Scaling this to all ~10,000 Apache packages
+    would make the checkpoint file far too large. Instead, we will log only
+    the timestamp indicating when the packages were mined.
+    """
+
     if logger:
-        logger(f"# of package archives found from apache.org: {len(packages)}")
+        logger(f"# of package archives found from apache.org: {len(packages_metadata)}")
 
-    if not packages:
+    if not packages_metadata:
         return
 
-    synced_packages = get_mined_packages_from_checkpoint(
-        config_repo=MINECODE_PIPELINES_CONFIG_REPO,
-        checkpoint_path=APACHE_PACKAGES_CHECKPOINT_PATH,
-    )
-    packages_to_sync = list(set(packages).difference(set(synced_packages)))
+    packages_to_sync = []
+    for package in packages_metadata:
+        path = package.get("filepath")
+        release_date = package.get("date", "")
+        if not last_mined_date:
+            packages_to_sync.append(path)
+        else:
+            if release_date:
+                fmt = "%Y-%m-%d %H:%M UTC"
+                release_date_format = datetime.strptime(release_date, fmt).replace(
+                    tzinfo=timezone.utc
+                )
+                last_mined_date_format = datetime.strptime(last_mined_date, fmt).replace(
+                    tzinfo=timezone.utc
+                )
+                if release_date_format > last_mined_date_format:
+                    packages_to_sync.append(path)
     if logger:
-        logger(
-            f"Starting initial package mining for {len(packages_to_sync)} packages archives from checkpoint"
-        )
+        logger(f"Starting initial package mining for {len(packages_to_sync)} packages archives.")
 
-    return packages_to_sync, synced_packages
+    return packages_to_sync
 
 
-def load_apache_packages(packages_file):
-    with open(packages_file) as f:
-        packages_data = json.load(f)
-
-    return packages_data.get("packages", [])
-
-
-def mine_and_publish_apache_packageurls(
-    packages_to_sync, packages_mined, packages_metadata, logger=None
-):
+def mine_and_publish_apache_packageurls(packages_to_sync, packages_metadata, logger=None):
     if logger:
         logger("Starting package mining for a batch of packages")
 
     handled_base = None
-    for i, package_path in enumerate(packages_to_sync):
+    for package_path in packages_to_sync:
         current_base = None
         current_purls = []
         purls_and_package_data = []
-
-        if i > 10:
-            break
 
         if not package_path:
             continue
@@ -500,8 +496,6 @@ def mine_and_publish_apache_packageurls(
         # fetch packageURLs for package
         if logger:
             logger(f"getting packageURLs for package: {package_path}")
-
-        packages_mined.append(package_path)
 
         package_path = package_path.lstrip("./")
         namespace, name, _version, _qualifiers = determine_purl_elements(package_path)
@@ -575,33 +569,3 @@ def mine_and_publish_apache_packageurls(
 
         if current_base is not None:
             yield current_base, current_purls, purls_and_package_data
-
-
-def update_mined_checkpoints(config_repo, logger=None):
-    # Refresh mined packages checkpoint
-    update_checkpoints_in_github(
-        checkpoint={"packages_mined": []},
-        cloned_repo=config_repo,
-        path=APACHE_PACKAGES_CHECKPOINT_PATH,
-        logger=logger,
-    )
-
-    if logger:
-        logger(f"Deleting local clone at: {config_repo.working_dir}")
-    delete_local_clone(config_repo)
-
-
-def save_mined_packages_in_checkpoint(packages_mined, synced_packages, config_repo, logger=None):
-    # Update mined packages checkpoint for every batch
-    # so we can continue mining the other packages after restarting
-    if logger:
-        logger(f"Checkpointing processed packages to: {APACHE_PACKAGES_CHECKPOINT_PATH}")
-
-    packages_checkpoint = packages_mined + synced_packages
-    update_mined_packages_in_checkpoint(
-        packages=packages_checkpoint,
-        config_repo=MINECODE_PIPELINES_CONFIG_REPO,
-        cloned_repo=config_repo,
-        checkpoint_path=APACHE_PACKAGES_CHECKPOINT_PATH,
-        logger=logger,
-    )

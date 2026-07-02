@@ -40,48 +40,36 @@ class MineApache(MineCodeBasePipeline):
             cls.get_apache_packages_to_sync,
             cls.fetch_federation_config,
             cls.mine_and_publish_packageurls,
-            cls.update_mined_checkpoints,
             cls.delete_working_dir,
         )
 
     def mine_apache_packages(self):
-        """Mine apache package archive path from the find_ls file or checkpoint."""
-        (self.apache_packages, self.apache_packages_metadata, self.config_repo) = (
-            apache.mine_apache_packages(logger=self.log)
+        """Mine apache package archive path from the find_ls file."""
+        (self.apache_packages_metadata, self.last_mined_date) = apache.mine_apache_packages(
+            logger=self.log
         )
 
     def get_apache_packages_to_sync(self):
         """Get apache packages which needs to be synced using checkpoint."""
-        self.packages, self.synced_packages = apache.get_apache_packages_to_sync(
-            packages_file=self.apache_packages,
+        self.packages = apache.get_apache_packages_to_sync(
+            packages_metadata=self.apache_packages_metadata,
+            last_mined_date=self.last_mined_date,
             logger=self.log,
         )
 
     def packages_count(self):
-        return len(self.packages)
+        return len(list(self.mine_packageurls()))
 
     def mine_packageurls(self):
         """Yield npm packageURLs for all mined npm package names."""
-        self.packages_mined = []
         yield from apache.mine_and_publish_apache_packageurls(
             packages_to_sync=self.packages,
-            packages_mined=self.packages_mined,
             packages_metadata=self.apache_packages_metadata,
             logger=self.log,
         )
 
-    def save_check_point(self):
-        apache.save_mined_packages_in_checkpoint(
-            packages_mined=self.packages_mined,
-            synced_packages=self.synced_packages,
-            config_repo=self.config_repo,
-            logger=self.log,
-        )
-        self.packages_mined = []
-
     def mine_and_publish_packageurls(self):
         """Mine and publish PackageURLs."""
-
         _mine_and_publish_packageurls(
             packageurls=self.mine_packageurls(),
             total_package_count=self.packages_count(),
@@ -91,13 +79,6 @@ class MineApache(MineCodeBasePipeline):
             append_purls=self.append_purls,
             commit_msg_func=self.commit_message,
             logger=self.log,
-            checkpoint_func=self.save_check_point,
             checkpoint_on_commit=True,
             batch_size=self.package_batch_size,
-        )
-
-    def update_mined_checkpoints(self):
-        apache.update_mined_checkpoints(
-            config_repo=self.config_repo,
-            logger=self.log,
         )
