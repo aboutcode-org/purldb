@@ -208,9 +208,6 @@ def mine_and_publish_nix_packageurls(packages_dict, packages_to_sync, packages_m
         logger("Starting package mining for a batch of packages")
 
     for package_name in packages_to_sync:
-        if not package_name:
-            continue
-
         # fetch packageURLs for package
         if logger:
             logger(f"getting packageURLs for package: {package_name}")
@@ -269,14 +266,6 @@ def update_state_and_checkpoints(state, config_repo, logger=None):
             state=PERIODIC_SYNC_STATE,
             logger=logger,
         )
-
-    # Refresh mined packages checkpoint
-    update_checkpoints_in_github(
-        checkpoint={"packages_mined": []},
-        cloned_repo=config_repo,
-        path=NIX_PACKAGES_CHECKPOINT_PATH,
-        logger=logger,
-    )
 
     if logger:
         logger(f"Deleting local clone at: {config_repo.working_dir}")
