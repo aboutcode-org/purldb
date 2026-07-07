@@ -73,12 +73,14 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "django.contrib.admin",
     "django.contrib.humanize",
+    "django.contrib.postgres",
     # Third-party apps
     "django_filters",
     "rest_framework",
     "drf_spectacular",
     "rest_framework.authtoken",
     "django_rq",
+    "scanpipe",
 )
 
 MIDDLEWARE = (

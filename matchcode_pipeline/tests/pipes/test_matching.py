@@ -22,7 +22,6 @@ from packagedb.models import Resource
 
 class MatchingPipesTest(TestCase):
     data_location = Path(__file__).parent.parent / "data"
-    databases = {"packagedb", "default"}
 
     def setUp(self):
         self.project1 = Project.objects.create(name="Analysis")

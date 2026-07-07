@@ -135,7 +135,7 @@ test_clearcode:
 	${ACTIVATE} ${DJSM_PDB} ${PYTHON_EXE} -m pytest -vvs clearcode clearindex
 
 test_matchcode:
-	${ACTIVATE} ${DJSM_MAT} ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline matchcode
+	${ACTIVATE} ${DJSM_PDB} ${PYTHON_EXE} -m pytest -vvs matchcode_pipeline matchcode
 
 test: test_purldb test_matchcode test_toolkit test_clearcode
 

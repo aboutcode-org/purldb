@@ -32,6 +32,9 @@ from packagedb.api import PurlValidateViewSet
 from packagedb.api import ResourceViewSet
 from packagedb.from_purl import api_from_purl_router
 from packagedb.to_purl import api_to_purl_router
+from matchcode_pipeline.api import D2DViewSet
+from matchcode_pipeline.api import MatchingViewSet
+from matchcode_pipeline.api import RunViewSet
 
 api_router = routers.DefaultRouter()
 api_router.register("packages", PackageViewSet)
@@ -47,7 +50,9 @@ api_router.register(
     "approximate_directory_structure_index", ApproximateDirectoryStructureIndexViewSet
 )
 api_router.register("package_activity", PackageActivityViewSet)
-
+api_router.register("matching", MatchingViewSet, basename="matching")
+api_router.register("d2d", D2DViewSet, basename="d2d")
+api_router.register("runs", RunViewSet)
 
 urlpatterns = [
     path(
