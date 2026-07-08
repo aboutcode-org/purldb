@@ -57,7 +57,7 @@ urlpatterns = [
     path("api/", include((api_router.urls, "api"))),
     path("api/to_purl/", include((api_to_purl_router.urls, "api_to"))),
     path("api/from_purl/", include((api_from_purl_router.urls, "api_from"))),
-    path("", RedirectView.as_view(url="api/")),
+    path("", include("packagedb.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/",
