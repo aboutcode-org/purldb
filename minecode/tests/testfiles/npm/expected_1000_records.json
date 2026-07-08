@@ -7474,7 +7474,7 @@
   {
     "uri":"https://registry.npmjs.org/diveSync",
     "source_uri":"https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=77777",
-    "package_url":"pkg:npm/diveSync",
+    "package_url":"pkg:npm/divesync",
     "file_name":null,
     "size":null,
     "date":null,
