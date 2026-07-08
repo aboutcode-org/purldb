@@ -26,7 +26,7 @@ from scanpipe.tests import package_data1
 
 
 class MatchCodePipelineAPITest(TransactionTestCase):
-    data_location = Path(__file__).parent / "data"
+    data_location = Path(__file__).parent / "testfiles" / "pipeline"
 
     def setUp(self):
         self.project1 = Project.objects.create(name="Analysis")

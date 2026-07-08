@@ -19,6 +19,9 @@ from rest_framework import routers
 
 from matchcode.api import ApproximateDirectoryContentIndexViewSet
 from matchcode.api import ApproximateDirectoryStructureIndexViewSet
+from matchcode.api import D2DViewSet
+from matchcode.api import MatchingViewSet
+from matchcode.api import RunViewSet
 from minecode.api import ScannableURIViewSet
 from minecode.api import index_package_scan
 from packagedb.api import CollectViewSet
@@ -32,9 +35,6 @@ from packagedb.api import PurlValidateViewSet
 from packagedb.api import ResourceViewSet
 from packagedb.from_purl import api_from_purl_router
 from packagedb.to_purl import api_to_purl_router
-from matchcode_pipeline.api import D2DViewSet
-from matchcode_pipeline.api import MatchingViewSet
-from matchcode_pipeline.api import RunViewSet
 
 api_router = routers.DefaultRouter()
 api_router.register("packages", PackageViewSet)

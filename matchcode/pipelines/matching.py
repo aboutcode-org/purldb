@@ -24,7 +24,7 @@ from scanpipe.pipelines.load_inventory import LoadInventory
 from scanpipe.pipelines.scan_codebase import ScanCodebase
 from scanpipe.pipes import matchcode
 
-from matchcode_pipeline.pipes import matching
+from matchcode.pipes import matching
 
 
 class Matching(ScanCodebase, LoadInventory):
