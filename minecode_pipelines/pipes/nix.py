@@ -219,8 +219,9 @@ def mine_and_publish_nix_packageurls(packages_dict, packages_to_sync, packages_m
             continue
 
         purls_and_package_data = yield_nix_package_data(package_name, packageurls)
-
-        base_purl = PackageURL(type=NIX_TYPE, name=package_name).to_string()
+        # We currently only work with the official nixpkgs repository, so
+        # we can set the namespace to "nixpkgs"
+        base_purl = PackageURL(type=NIX_TYPE, namespace="nixpkgs", name=package_name).to_string()
         packages_mined.append(package_name)
         if purls_and_package_data:
             yield base_purl, packageurls, purls_and_package_data
