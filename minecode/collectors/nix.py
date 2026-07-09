@@ -79,21 +79,16 @@ def get_nix_package_data(purl):
     return fetch_json_response(api_url)
 
 
-def parse_license(license):
+def parse_license(license_data):
     """
     Parse a license object and return a string representation of the license.
     """
-    if isinstance(license, dict):
-        return (
-            license.get("spdxId")
-            or license.get("fullName")
-            or license.get("shortName")
-            or str(license)
-        )
-    elif isinstance(license, list):
-        return [parse_license(item) for item in license]
-    else:
-        return str(license)
+    return (
+        license_data.get("spdxId")
+        or license_data.get("fullName")
+        or license_data.get("shortName")
+        or str(license_data)
+    )
 
 
 def get_nix_package_data_via_cli(package_url):
