@@ -54,13 +54,13 @@
     }
   ],
   "dependencies":[
-    {},
-    {},
     {
       "dependsOn":[
         "pkg:generic/dep1",
         "pkg:generic/dep2"
       ]
-    }
+    },
+    {},
+    {}
   ]
 }
