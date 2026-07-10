@@ -69,7 +69,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     def test_map_maven_package_custom_repo_url(self):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(0, package_count)
-        custom_repo_purl = "pkg:maven/org.eclipse.core/runtime@20070801?repository_url=https://packages.atlassian.com/mvn/maven-atlassian-external/"
+        custom_repo_purl = "pkg:maven/org.eclipse.core/runtime@20070801?repository_url=https://packages.atlassian.com/mvn/maven-atlassian-external"
         package_url = PackageURL.from_string(custom_repo_purl)
         maven.map_maven_package(
             package_url, packagedb.models.PackageContentType.BINARY, ("test_pipeline")
@@ -77,7 +77,7 @@ class MavenPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(1, package_count)
         package = packagedb.models.Package.objects.all().first()
-        expected_repo_url = "https://packages.atlassian.com/mvn/maven-atlassian-external//org/eclipse/core/runtime/20070801/runtime-20070801.jar"
+        expected_repo_url = "https://packages.atlassian.com/mvn/maven-atlassian-external/org/eclipse/core/runtime/20070801/runtime-20070801.jar"
         self.assertEqual(expected_repo_url, package.download_url)
 
     def test_process_request(self):
