@@ -23,6 +23,7 @@ from minecode.utils import get_webhook_url
 from minecode.utils_test import JsonBasedTesting
 from packagedb.models import Package
 from packagedb.models import Resource
+from scanpipe.models import APIToken
 
 
 class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
@@ -36,7 +37,9 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
         )
         scan_queue_workers_group, _ = Group.objects.get_or_create(name="scan_queue_workers")
         scan_queue_workers_group.user_set.add(self.scan_queue_worker_user)
-        self.scan_queue_worker_auth = f"Token {self.scan_queue_worker_user.auth_token.key}"
+        self.scan_queue_worker_auth = (
+            f"Token {APIToken.create_token(user=self.scan_queue_worker_user)}"
+        )
         self.scan_queue_worker_client = APIClient(enforce_csrf_checks=True)
         self.scan_queue_worker_client.credentials(HTTP_AUTHORIZATION=self.scan_queue_worker_auth)
         self.scan_queue_worker_user_id_str = str(self.scan_queue_worker_user.id)
@@ -48,7 +51,7 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
             password="secret",  # NOQA
             is_staff=True,
         )
-        self.staff_auth = f"Token {self.staff_user.auth_token.key}"
+        self.staff_auth = f"Token {APIToken.create_token(user=self.staff_user)}"
         self.staff_client = APIClient(enforce_csrf_checks=True)
         self.staff_client.credentials(HTTP_AUTHORIZATION=self.staff_auth)
 
@@ -58,7 +61,7 @@ class ScannableURIAPITestCase(JsonBasedTesting, TestCase):
             email="regular_e@mail.com",
             password="secret",  # NOQA
         )
-        self.regular_auth = f"Token {self.regular_user.auth_token.key}"
+        self.regular_auth = f"Token {APIToken.create_token(user=self.regular_user)}"
         self.regular_client = APIClient(enforce_csrf_checks=True)
         self.regular_client.credentials(HTTP_AUTHORIZATION=self.regular_auth)
 

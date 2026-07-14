@@ -78,7 +78,6 @@ INSTALLED_APPS = (
     "django_filters",
     "rest_framework",
     "drf_spectacular",
-    "rest_framework.authtoken",
     "django_rq",
     "scanpipe",
 )
@@ -239,10 +238,12 @@ STATICFILES_DIRS = [
 
 # Django restframework
 
+API_TOKEN_MODEL = "scanpipe.APIToken"  # noqa: S105
+
 REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {"anon": "3600/hour", "user": "10800/hour"}
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework.authentication.TokenAuthentication",),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("aboutcode.api_auth.APITokenAuthentication",),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",

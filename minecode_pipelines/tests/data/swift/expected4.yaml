@@ -1,1 +1,3 @@
-- pkg:swift/github.com/0xacdc/XCFSodium@2ceb8e381b9ca5e2d3004d3206411191f38907b4
+base_purl: pkg:swift/github.com/0xacdc/XCFSodium
+purls:
+  - pkg:swift/github.com/0xacdc/XCFSodium@2ceb8e381b9ca5e2d3004d3206411191f38907b4

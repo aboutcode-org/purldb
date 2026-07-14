@@ -15,7 +15,7 @@ from django.core import exceptions
 from django.core.management.base import BaseCommand
 from django.core.management.base import CommandError
 
-from rest_framework.authtoken.models import Token
+from scanpipe.models import APIToken
 
 
 class CreateUserCommand(BaseCommand):
@@ -35,14 +35,25 @@ class CreateUserCommand(BaseCommand):
             dest="interactive",
             help="Do not prompt the user for input of any kind.",
         )
+        parser.add_argument(
+            "--generate-api-key",
+            action="store_true",
+            help="Generate an API key for this user and print it to the console.",
+        )
 
     def handle(self, *args, **options):
         username = options["username"]
         interactive = options["interactive"]
         verbosity = options["verbosity"]
-        self.create_user(username=username, interactive=interactive, verbosity=verbosity)
+        generate_api_key = options["generate_api_key"]
+        self.create_user(
+            username=username,
+            interactive=interactive,
+            verbosity=verbosity,
+            generate_api_key=generate_api_key,
+        )
 
-    def create_user(self, username, interactive, verbosity):
+    def create_user(self, username, interactive, verbosity, generate_api_key):
         error_msg = self._validate_username(username)
         if error_msg:
             raise CommandError(error_msg)
@@ -52,11 +63,20 @@ class CreateUserCommand(BaseCommand):
             password = self.get_password_from_stdin(username)
 
         user = self.UserModel._default_manager.create_user(username, password=password)
-        token, _ = Token._default_manager.get_or_create(user=user)
 
-        if verbosity >= 1:
-            msg = f"User {username} created with API key: {token.key}"
+        if verbosity > 0:
+            msg = f"User {username} created"
             self.stdout.write(msg, self.style.SUCCESS)
+
+        if generate_api_key:
+            plain_api_key = APIToken.create_token(user=user)
+            self.stdout.write(f"API key: {plain_api_key}", self.style.SUCCESS)
+            warning_msg = (
+                "Treat your API key like a password and keep it secure. "
+                "For security reasons, the key is only shown once at generation time. "
+                "If you lose it, you will need to regenerate a new one."
+            )
+            self.stdout.write(warning_msg, self.style.WARNING)
 
         return user
 

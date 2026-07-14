@@ -48,6 +48,7 @@ from scanpipe.pipes.fetch import check_urls_availability
 from scanpipe.pipes.fetch import fetch_urls
 from scanpipe.views import project_results_json_response
 
+
 class BaseFileIndexSerializer(ModelSerializer):
     sha1 = CharField(source="fingerprint")
     package = HyperlinkedRelatedField(
@@ -304,7 +305,7 @@ class ApproximateDirectoryStructureIndexViewSet(BaseDirectoryIndexViewSet):
 
 
 class RunSerializer(SerializerExcludeFieldsMixin, serializers.ModelSerializer):
-    project = serializers.HyperlinkedRelatedField(view_name="run-detail", read_only=True)
+    project = serializers.HyperlinkedRelatedField(view_name="api:run-detail", read_only=True)
 
     class Meta:
         model = Run
@@ -325,6 +326,12 @@ class RunSerializer(SerializerExcludeFieldsMixin, serializers.ModelSerializer):
             "log",
             "execution_time",
         ]
+        extra_kwargs = {
+            "url": {
+                "view_name": "api:run-detail",
+                "lookup_field": "pk",
+            },
+        }
 
 
 class RunViewSet(RunViewSet):
@@ -382,7 +389,7 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         ]
         extra_kwargs = {
             "url": {
-                "view_name": "matching-detail",
+                "view_name": "api:matching-detail",
                 "lookup_field": "pk",
             },
         }
@@ -489,7 +496,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         ]
         extra_kwargs = {
             "url": {
-                "view_name": "d2d-detail",
+                "view_name": "api:d2d-detail",
                 "lookup_field": "pk",
             },
         }

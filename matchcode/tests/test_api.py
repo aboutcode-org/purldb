@@ -16,6 +16,7 @@ from django.urls import reverse
 
 from rest_framework import status
 from rest_framework.test import APIClient
+from scanpipe.models import APIToken
 from scanpipe.models import CodebaseRelation
 from scanpipe.models import CodebaseResource
 from scanpipe.models import DiscoveredDependency
@@ -44,12 +45,13 @@ class MatchCodePipelineAPITest(TransactionTestCase):
             to_resource=self.resource1,
             map_type="java_to_class",
         )
+        self.project1.update_counts()
 
         self.matching_list_url = reverse("api:matching-list")
         self.project1_detail_url = reverse("api:matching-detail", args=[self.project1.uuid])
 
         self.user = User.objects.create_user("username", "e@mail.com", "secret")
-        self.auth = f"Token {self.user.auth_token.key}"
+        self.auth = f"Token {APIToken.create_token(user=self.user)}"
 
         self.csrf_client = APIClient(enforce_csrf_checks=True)
         self.csrf_client.credentials(HTTP_AUTHORIZATION=self.auth)
@@ -196,7 +198,7 @@ class D2DPipelineAPITest(TransactionTestCase):
         self.project1_detail_url = reverse("api:d2d-detail", args=[self.project1.uuid])
 
         self.user = User.objects.create_user("username", "a@mail.com", "secret")
-        self.auth = f"Token {self.user.auth_token.key}"
+        self.auth = f"Token {APIToken.create_token(user=self.user)}"
         self.csrf_client = APIClient(enforce_csrf_checks=True)
         self.csrf_client.credentials(HTTP_AUTHORIZATION=self.auth)
 

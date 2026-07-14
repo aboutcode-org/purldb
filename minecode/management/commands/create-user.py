@@ -17,4 +17,10 @@ class Command(CreateUserCommand):
         username = options["username"]
         interactive = options["interactive"]
         verbosity = options["verbosity"]
-        self.create_user(username=username, interactive=interactive, verbosity=verbosity)
+        generate_api_key = options["generate_api_key"]
+        self.create_user(
+            username=username,
+            interactive=interactive,
+            verbosity=verbosity,
+            generate_api_key=generate_api_key,
+        )

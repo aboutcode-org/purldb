@@ -1,3 +1,5 @@
-- pkg:swift/github.com/zrluety/SwiftFinancial@0.1.0
-- pkg:swift/github.com/zrluety/SwiftFinancial@0.1.1
-- pkg:swift/github.com/zrluety/SwiftFinancial@0.2.0-beta
+base_purl: pkg:swift/github.com/zrluety/SwiftFinancial
+purls:
+  - pkg:swift/github.com/zrluety/SwiftFinancial@0.1.0
+  - pkg:swift/github.com/zrluety/SwiftFinancial@0.1.1
+  - pkg:swift/github.com/zrluety/SwiftFinancial@0.2.0-beta
