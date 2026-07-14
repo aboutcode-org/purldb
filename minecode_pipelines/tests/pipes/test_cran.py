@@ -13,7 +13,7 @@ from unittest import TestCase
 
 from minecode_pipelines.pipes.cran import mine_cran_packageurls
 
-DATA_DIR = Path(__file__).parent.parent / "test_data" / "cran"
+DATA_DIR = Path(__file__).parent.parent / "data" / "cran"
 
 
 class CranPipelineTests(TestCase):

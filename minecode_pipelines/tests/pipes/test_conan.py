@@ -15,7 +15,7 @@ from django.test import TestCase
 
 from minecode_pipelines.pipes.conan import get_conan_packages
 
-DATA_DIR = Path(__file__).parent.parent / "test_data" / "conan"
+DATA_DIR = Path(__file__).parent.parent / "data" / "conan"
 
 
 class ConanPipelineTests(TestCase):
