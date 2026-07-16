@@ -1,0 +1,92 @@
+{
+  "name": "SDL_mixer",
+  "summary": "SDL multi-channel audio mixer library",
+  "homepage_url": "http://www.libsdl.org/projects/SDL_mixer/",
+  "license": "Zlib",
+  "releases": [
+    {
+      "version": "1.2.12",
+      "last_updated": "2026-06-27T07:37:20Z",
+      "platforms": [
+        {
+          "arch": "arm64",
+          "os": "Linux",
+          "system": "aarch64-linux",
+          "attribute_path": "SDL_mixer",
+          "commit_hash": "3d46470bb3030020f7e1361f33514854f5bfa86d",
+          "date": "2026-06-27T07:37:20Z",
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/bgg1d95f9px23i9db6aal7cjbkdw025n-SDL_mixer-1.2.12",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/756a2pb6ynq0dr54wxbc25lsbm685v80-SDL_mixer-1.2.12-dev"
+            }
+          ]
+        },
+        {
+          "arch": "arm64",
+          "os": "macOS",
+          "system": "aarch64-darwin",
+          "attribute_path": "SDL_mixer",
+          "commit_hash": "3d46470bb3030020f7e1361f33514854f5bfa86d",
+          "date": "2026-06-27T07:37:20Z",
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/08l3d3zr073c2qxjy36642nd06jvykc0-SDL_mixer-1.2.12",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/5pndmp41940jv4w6y0y9m6hpa3c7b61y-SDL_mixer-1.2.12-dev"
+            }
+          ]
+        },
+        {
+          "arch": "x86-64",
+          "os": "macOS",
+          "system": "x86_64-darwin",
+          "attribute_path": "SDL_mixer",
+          "commit_hash": "3d46470bb3030020f7e1361f33514854f5bfa86d",
+          "date": "2026-06-27T07:37:20Z",
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/wb44wp28lx6jjdxdj1x384v02jkff5nm-SDL_mixer-1.2.12",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/kfz0d0r4mk70h8lvpyhr1zcxyiyld28i-SDL_mixer-1.2.12-dev"
+            }
+          ]
+        },
+        {
+          "arch": "x86-64",
+          "os": "Linux",
+          "system": "x86_64-linux",
+          "attribute_path": "SDL_mixer",
+          "commit_hash": "3d46470bb3030020f7e1361f33514854f5bfa86d",
+          "date": "2026-06-27T07:37:20Z",
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4vpgs9snpddn62nqy1lyd3cr5wfa89di-SDL_mixer-1.2.12",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/kgzknkqwjywvf243dsrkl08d85ff06f8-SDL_mixer-1.2.12-dev"
+            }
+          ]
+        }
+      ],
+      "platforms_summary": "Linux and macOS",
+      "outputs_summary": "out, dev"
+    }
+  ]
+}
