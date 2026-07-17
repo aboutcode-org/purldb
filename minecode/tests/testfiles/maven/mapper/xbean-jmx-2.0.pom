@@ -1,0 +1,69 @@
+<project>
+  <parent>
+    <artifactId>xbean</artifactId>
+    <groupId>org.xbean</groupId>
+    <version>2.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>xbean-jmx</artifactId>
+  <name>XBean :: JMX</name>
+  <version>2.0</version>
+  <build>
+    <resources>
+      <resource>
+        <directory>target/generated</directory>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <taskdef classname="org.xbean.spring.generator.MappingGeneratorTask" name="mapping">
+                  <classpath>
+                    <pathelement path="${basedir}/target/classes"></pathelement>
+                    <path refid="maven.dependency.classpath"></path>
+                  </classpath>
+                </taskdef>
+                <mapping namespace="http://xbean.org/schemas/jmx" srcdir="src/main/java" destFile="target/jmx.xsd" metaInfDir="${basedir}/target/generated/"></mapping>
+                <copy todir="${basedir}/target/classes">
+                  <fileset dir="${basedir}/target/generated"></fileset>
+                </copy>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>mx4j</groupId>
+      <artifactId>mx4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.xbean</groupId>
+      <artifactId>xbean-kernel</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.xbean</groupId>
+      <artifactId>xbean-spring</artifactId>
+    </dependency>
+  </dependencies>
+  <distributionManagement>
+    <status>deployed</status>
+  </distributionManagement>
+</project>

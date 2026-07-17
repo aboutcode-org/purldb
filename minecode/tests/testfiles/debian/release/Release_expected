@@ -1,0 +1,1 @@
+[{'archive': 'jessie-backports', 'origin': 'Debian Backports', 'label': 'Debian Backports', 'notautomatic': 'yes', 'butautomaticupgrades': 'yes', 'component': 'main', 'architecture': 'ppc64el'}]

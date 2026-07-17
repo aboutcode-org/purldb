@@ -1,0 +1,42 @@
+
+################################################################################
+# We use Azure to run the full tests suites on multiple Python 3.x
+# on multiple Windows, macOS and Linux versions all on 64 bits
+# These jobs are using VMs with Azure-provided Python builds
+################################################################################
+
+resources:
+  containers:
+    - container: postgres
+      image: postgres:13
+      env:
+        POSTGRES_DB: packagedb
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+      ports:
+        - 5432:5432
+
+jobs:
+    - template: etc/ci/azure-posix.yml
+      parameters:
+          job_name: ci_code_style
+          image_name: ubuntu-24.04
+          python_versions: ['3.13']
+          test_suites:
+              all: make check
+
+    - template: etc/ci/azure-posix.yml
+      parameters:
+          job_name: ubuntu24_cpython
+          image_name: ubuntu-24.04
+          python_versions: ['3.10', '3.11', '3.12', '3.13']
+          test_suites:
+              all: make test
+
+    - template: etc/ci/azure-posix.yml
+      parameters:
+          job_name: ci_documentation
+          image_name: ubuntu-24.04
+          python_versions: ['3.13']
+          test_suites:
+              all: make docs-check

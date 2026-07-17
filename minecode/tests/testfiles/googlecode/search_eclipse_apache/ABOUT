@@ -1,0 +1,5 @@
+wget -O apache.html http://code.google.com/a/apache-extras.org/hosting/search?q=
+wget -O apache_notice.html http://code.google.com/a/apache-extras.org/hosting/search?q=
+wget -O eclipse2.html http://code.google.com/a/eclipselabs.org/hosting/search?q=wtp
+wget -O project_page_eclipse.html http://code.google.com/a/eclipselabs.org/p/smebs/
+wget -O nores_apeext.html http://code.google.com/a/apache-extras.org/hosting/search?q=label%3ADirectorya&projectsearch=Search+projects

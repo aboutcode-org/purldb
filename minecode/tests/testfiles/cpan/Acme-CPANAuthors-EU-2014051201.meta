@@ -1,0 +1,59 @@
+{
+   "abstract" : "EU CPAN authors",
+   "author" : [
+      "Abigail <cpan@abigail.be>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "ExtUtils::MakeMaker version 6.62, CPAN::Meta::Converter version 2.112150",
+   "keywords" : [],
+   "license" : [
+      "mit"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Acme-CPANAuthors-EU",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Acme::CPANAuthors" : 0,
+            "ExtUtils::MakeMaker" : 0,
+            "Test::More" : 0,
+            "strict" : 0,
+            "warnings" : 0
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : 0
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Acme::CPANAuthors::Austrian" : 0,
+            "Acme::CPANAuthors::British" : 0,
+            "Acme::CPANAuthors::French" : 0,
+            "Acme::CPANAuthors::German" : 0,
+            "Acme::CPANAuthors::Portuguese" : 0,
+            "Acme::CPANAuthors::Register" : 0,
+            "perl" : "5.006",
+            "strict" : 0,
+            "warnings" : 0
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "repository" : {
+         "url" : "git://github.com/Abigail/Acme--CPANAuthors--EU.git"
+      }
+   },
+   "version" : "2014051201"
+}

@@ -1,0 +1,90 @@
+{
+  "scm": "hg",
+  "website": "",
+  "has_wiki": true,
+  "name": "tweakmsg",
+  "links": {
+    "watchers": {
+      "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/watchers"
+    },
+    "branches": {
+      "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/refs/branches"
+    },
+    "tags": {
+      "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/refs/tags"
+    },
+    "commits": {
+      "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/commits"
+    },
+    "clone": [
+      {
+        "href": "https://bitbucket.org/phlogistonjohn/tweakmsg",
+        "name": "https"
+      },
+      {
+        "href": "ssh://hg@bitbucket.org/phlogistonjohn/tweakmsg",
+        "name": "ssh"
+      }
+    ],
+    "self": {
+      "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg"
+    },
+    "source": {
+      "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/src"
+    },
+    "html": {
+      "href": "https://bitbucket.org/phlogistonjohn/tweakmsg"
+    },
+    "avatar": {
+      "href": "https://bitbucket.org/phlogistonjohn/tweakmsg/avatar/32/"
+    },
+    "hooks": {
+      "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/hooks"
+    },
+    "forks": {
+      "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/forks"
+    },
+    "downloads": {
+      "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/downloads"
+    },
+    "issues": {
+      "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/issues"
+    },
+    "pullrequests": {
+      "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/pullrequests"
+    }
+  },
+  "fork_policy": "allow_forks",
+  "uuid": "{59299fb9-3695-4e0c-b8ca-836888b83315}",
+  "language": "",
+  "created_on": "2008-06-25T00:53:00.273366+00:00",
+  "mainbranch": {
+    "type": "named_branch",
+    "name": "default"
+  },
+  "full_name": "phlogistonjohn/tweakmsg",
+  "has_issues": true,
+  "owner": {
+    "username": "phlogistonjohn",
+    "display_name": "John Mulligan",
+    "type": "user",
+    "uuid": "{c8614bfa-831a-49eb-866b-4bdd87c8c2c2}",
+    "links": {
+      "self": {
+        "href": "https://bitbucket.org/!api/2.0/users/phlogistonjohn"
+      },
+      "html": {
+        "href": "https://bitbucket.org/phlogistonjohn/"
+      },
+      "avatar": {
+        "href": "https://bitbucket.org/account/phlogistonjohn/avatar/32/"
+      }
+    }
+  },
+  "updated_on": "2012-06-24T17:32:27.458855+00:00",
+  "size": 7085,
+  "type": "repository",
+  "slug": "tweakmsg",
+  "is_private": false,
+  "description": "Mercurial (hg) extension to allow commenting on commit messages.  Mainly written for practice reading & working with mercurial internals.\r\n"
+}

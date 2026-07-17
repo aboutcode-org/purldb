@@ -1,0 +1,127 @@
+[
+  [
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=10", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=100", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=20", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=30", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=40", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=50", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=70", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=80", 
+    "http://code.google.com/hosting/search?q=label%3awebservice&filter=0&mode=&start=90", 
+    "http://code.google.com/hosting/search?q=label:academic", 
+    "http://code.google.com/hosting/search?q=label:ajax", 
+    "http://code.google.com/hosting/search?q=label:algorithm", 
+    "http://code.google.com/hosting/search?q=label:analysis", 
+    "http://code.google.com/hosting/search?q=label:applet", 
+    "http://code.google.com/hosting/search?q=label:atualiza\u00e7\u00e3o", 
+    "http://code.google.com/hosting/search?q=label:automation", 
+    "http://code.google.com/hosting/search?q=label:bash", 
+    "http://code.google.com/hosting/search?q=label:bing", 
+    "http://code.google.com/hosting/search?q=label:bioinformatics", 
+    "http://code.google.com/hosting/search?q=label:biology", 
+    "http://code.google.com/hosting/search?q=label:brasil", 
+    "http://code.google.com/hosting/search?q=label:corre\u00e7\u00e3o", 
+    "http://code.google.com/hosting/search?q=label:database", 
+    "http://code.google.com/hosting/search?q=label:education", 
+    "http://code.google.com/hosting/search?q=label:email", 
+    "http://code.google.com/hosting/search?q=label:financeiro", 
+    "http://code.google.com/hosting/search?q=label:framework", 
+    "http://code.google.com/hosting/search?q=label:game", 
+    "http://code.google.com/hosting/search?q=label:gsm", 
+    "http://code.google.com/hosting/search?q=label:im", 
+    "http://code.google.com/hosting/search?q=label:imap", 
+    "http://code.google.com/hosting/search?q=label:j2ee", 
+    "http://code.google.com/hosting/search?q=label:java", 
+    "http://code.google.com/hosting/search?q=label:jdbc", 
+    "http://code.google.com/hosting/search?q=label:juros", 
+    "http://code.google.com/hosting/search?q=label:library", 
+    "http://code.google.com/hosting/search?q=label:linux", 
+    "http://code.google.com/hosting/search?q=label:manage", 
+    "http://code.google.com/hosting/search?q=label:maps", 
+    "http://code.google.com/hosting/search?q=label:mobile", 
+    "http://code.google.com/hosting/search?q=label:mod", 
+    "http://code.google.com/hosting/search?q=label:module", 
+    "http://code.google.com/hosting/search?q=label:monet\u00e1ria", 
+    "http://code.google.com/hosting/search?q=label:mvc", 
+    "http://code.google.com/hosting/search?q=label:mysql", 
+    "http://code.google.com/hosting/search?q=label:mysqlloadbalancing", 
+    "http://code.google.com/hosting/search?q=label:navigation", 
+    "http://code.google.com/hosting/search?q=label:openlaszlo", 
+    "http://code.google.com/hosting/search?q=label:perl", 
+    "http://code.google.com/hosting/search?q=label:php", 
+    "http://code.google.com/hosting/search?q=label:plugin", 
+    "http://code.google.com/hosting/search?q=label:probability", 
+    "http://code.google.com/hosting/search?q=label:query", 
+    "http://code.google.com/hosting/search?q=label:rapidapplicationdevelopment", 
+    "http://code.google.com/hosting/search?q=label:research", 
+    "http://code.google.com/hosting/search?q=label:rest", 
+    "http://code.google.com/hosting/search?q=label:rss-feed", 
+    "http://code.google.com/hosting/search?q=label:sepa", 
+    "http://code.google.com/hosting/search?q=label:simulator", 
+    "http://code.google.com/hosting/search?q=label:sitemap", 
+    "http://code.google.com/hosting/search?q=label:smpp", 
+    "http://code.google.com/hosting/search?q=label:sms", 
+    "http://code.google.com/hosting/search?q=label:soap", 
+    "http://code.google.com/hosting/search?q=label:sql", 
+    "http://code.google.com/hosting/search?q=label:sqlite", 
+    "http://code.google.com/hosting/search?q=label:statistics", 
+    "http://code.google.com/hosting/search?q=label:systemsbiology", 
+    "http://code.google.com/hosting/search?q=label:tool", 
+    "http://code.google.com/hosting/search?q=label:toolkit", 
+    "http://code.google.com/hosting/search?q=label:university", 
+    "http://code.google.com/hosting/search?q=label:webservice"
+  ], 
+  [
+    {
+      "url": "http://code.google.com/p/epept/", 
+      "last_updated": "2012-03-09T00:00:00+00:00", 
+      "stars": 5
+    }, 
+    {
+      "url": "http://code.google.com/p/crvcl/", 
+      "last_updated": "2013-12-22T00:00:00+00:00", 
+      "stars": 2
+    }, 
+    {
+      "url": "http://code.google.com/p/distributome/", 
+      "last_updated": "2014-01-26T00:00:00+00:00", 
+      "stars": 0
+    }, 
+    {
+      "url": "http://code.google.com/p/bing-maps-java-sdk/", 
+      "last_updated": "2012-09-09T00:00:00+00:00", 
+      "stars": 7
+    }, 
+    {
+      "url": "http://code.google.com/p/mobiledatanow/", 
+      "last_updated": "2013-11-05T00:00:00+00:00", 
+      "stars": 18
+    }, 
+    {
+      "url": "http://code.google.com/p/jcm-br/", 
+      "last_updated": "2012-02-16T00:00:00+00:00", 
+      "stars": 6
+    }, 
+    {
+      "url": "http://code.google.com/p/sourcemod-simple-vip-manager/", 
+      "last_updated": "2013-02-19T00:00:00+00:00", 
+      "stars": 0
+    }, 
+    {
+      "url": "http://code.google.com/p/rag2agal/", 
+      "last_updated": "2014-01-01T00:00:00+00:00", 
+      "stars": 0
+    }, 
+    {
+      "url": "http://code.google.com/p/wshotelbanque/", 
+      "last_updated": "2013-07-20T00:00:00+00:00", 
+      "stars": 0
+    }, 
+    {
+      "url": "http://code.google.com/p/webserver-malware-scanner/", 
+      "last_updated": "2013-05-12T00:00:00+00:00", 
+      "stars": 1
+    }
+  ]
+]

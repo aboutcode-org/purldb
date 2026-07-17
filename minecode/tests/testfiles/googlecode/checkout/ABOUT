@@ -1,0 +1,17 @@
+#svn
+wget -O svn.html http://code.google.com/p/register/source/checkout
+wget -O checkout1.html "http://code.google.com/a/apache-extras.org/p/pylucene-extra/source/checkout"
+wget -O checkout2.html  "http://code.google.com/p/ossbuild/source/checkout"
+wget -O checkout3.html "http://code.google.com/p/gdata-python-client/source/checkout"
+wget -O checkout4.html "http://code.google.com/p/redis/source/checkout"
+
+#moved
+wget -O redis.html "http://code.google.com/p/redis/wiki/UnstableSource?tm=4"
+
+#git
+wget -O git_multi.html http://code.google.com/p/swarming/source/checkout
+wget -O git.html "http://code.google.com/p/dolphin-emu/source/checkout"
+
+#hg
+wget -O hg_multi.html http://code.google.com/p/gdata-python-client/source/checkout
+wget -O hg.html "http://code.google.com/p/dex2jar/source/checkout"

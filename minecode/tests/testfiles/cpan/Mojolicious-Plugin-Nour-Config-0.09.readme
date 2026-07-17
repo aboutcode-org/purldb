@@ -1,0 +1,108 @@
+NAME
+
+    Mojolicious::Plugin::Nour::Config - Robustly imports config from a
+    ./config sub-directory loaded with nested YAML files
+
+VERSION
+
+    version 0.09
+
+USAGE
+
+    Place your YAML configuration files under a ./config sub-directory from
+    your mojo app's home directory. There's an example in the package
+    tarball you can look at, but roughly something like this:
+
+         $ find ./config/
+        ./config/
+        ./config/application
+        ./config/application/nested
+        ./config/application/nested/example.yml
+        ./config/application.yml
+        ./config/database
+        ./config/database/private
+        ./config/database/private/production.yml
+        ./config/database/private/README.md
+        ./config/database/config.yml
+
+    Somewhere in your startup routine, include something like this:
+
+        $self->plugin( 'Mojolicious::Plugin::Nour::Config', {
+            -base => 'config'
+            , -helpers => 1 # adds some unrelated helper methods i wrote
+            , -silence => 1 # turning this on disables the config dump on startup in the debug log
+        } );
+
+    On application startup, if you haven't turned the silence option on you
+    can see your configuration from the debug log:
+
+        [Tue Apr  8 12:10:21 2014] [debug] config
+        {
+          'application' => {
+            'nested' => {
+              'example' => {
+                'wow' => 'amazing'
+              }
+            },
+            'secret' => 'don\'t tell anyone'
+          },
+          'database' => {
+            'default' => {
+              'database' => 'production',
+              'option' => {
+                'AutoCommit' => '1',
+                'PrintError' => '1',
+                'RaiseError' => '1',
+                'pg_bool_tf' => '0',
+                'pg_enable_utf8' => '1'
+              },
+              'password' => 'nour',
+              'username' => 'nour'
+            },
+            'development' => {
+              'dsn' => 'dbi:Pg:dbname=nourdb_dev',
+              'password' => 'sharabash',
+              'username' => 'nour'
+            },
+            'production' => {
+              'dsn' => 'dbi:Pg:dbname=nourdb_prod;host=secret.com',
+              'password' => 'secret',
+              'username' => 'override'
+            }
+          }
+        }
+
+    Neat, right? Yeah.
+
+SUPPORT
+
+ Bugs / Feature Requests
+
+    Please report any bugs or feature requests through the issue tracker at
+    https://github.com/sharabash/mojolicious-plugin-nour-config/issues. You
+    will be notified automatically of any progress on your issue.
+
+ Source Code
+
+    This is open source software. The code repository is available for
+    public review and contribution under the terms of the license.
+
+    https://github.com/sharabash/mojolicious-plugin-nour-config
+
+      git clone git://github.com/sharabash/mojolicious-plugin-nour-config.git
+
+AUTHOR
+
+    Nour Sharabash <amirite@cpan.org>
+
+CONTRIBUTOR
+
+    Nour Sharabash <nour.sharabash@gmail.com>
+
+COPYRIGHT AND LICENSE
+
+    This software is copyright (c) 2014 by Nour Sharabash.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+

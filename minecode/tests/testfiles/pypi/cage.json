@@ -1,0 +1,50 @@
+{
+    "info": {
+        "maintainer": "", 
+        "docs_url": null, 
+        "requires_python": null, 
+        "maintainer_email": "", 
+        "cheesecake_code_kwalitee_id": null, 
+        "keywords": "cellular automata, Turing machines, Langton vants, self-organizing systems, finite state machines, finite state automata", 
+        "package_url": "http://pypi.python.org/pypi/CAGE", 
+        "author": "Erik Max Francis", 
+        "author_email": "software@alcyone.com", 
+        "download_url": "http://www.alcyone.com/software/cage/cage-latest.tar.gz", 
+        "platform": "any; Unix for curses frontend", 
+        "version": "1.1.4", 
+        "cheesecake_documentation_id": null, 
+        "_pypi_hidden": false, 
+        "description": "CAGE is a fairy generic and complete cellular automaton simulation\r\n    engine in Python.  It supports both 1D and 2D automata, a variety\r\n    of prepackaged rules, and the concept of \"agents\" which can move\r\n    about independently on the map for implementing agent behavior.\r\n\r\n    CAGE comes with numerous examples of fully-functional CA systems,\r\n    including Conway's Game of Life, Langton's self-reproducing\r\n    automaton, Langton's \"vants,\" and 1D automata rule explorers.  It\r\n    also comes with simple displayers (including a curses interface\r\n    for 2D automata).  Also included is a unique implementation of a\r\n    finite state machine (ant.py).", 
+        "release_url": "http://pypi.python.org/pypi/CAGE/1.1.4", 
+        "downloads": {
+            "last_month": 2, 
+            "last_week": 0, 
+            "last_day": 0
+        }, 
+        "_pypi_ordering": 2, 
+        "classifiers": [
+            "Development Status :: 6 - Mature", 
+            "Intended Audience :: Developers", 
+            "Intended Audience :: End Users/Desktop", 
+            "Intended Audience :: Science/Research", 
+            "License :: OSI Approved :: GNU General Public License (GPL)", 
+            "Operating System :: OS Independent", 
+            "Programming Language :: Python", 
+            "Topic :: Games/Entertainment", 
+            "Topic :: Scientific/Engineering :: Artificial Intelligence", 
+            "Topic :: Scientific/Engineering :: Mathematics"
+        ], 
+        "bugtrack_url": "", 
+        "name": "CAGE", 
+        "license": "GPL", 
+        "summary": "A generic and fairly complete cellular automata simulation engine.", 
+        "home_page": "http://www.alcyone.com/software/cage/", 
+        "cheesecake_installability_id": null
+    }, 
+    "releases": {
+        "1.1.3": [], 
+        "1.1.2": [], 
+        "1.1.4": []
+    }, 
+    "urls": []
+}

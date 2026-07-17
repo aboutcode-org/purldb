@@ -1,0 +1,59 @@
+Package: 3dldf-doc
+Binary: 3dldf-doc
+Version: 2.0.3+ndfsg-2
+Maintainer: Debian TeX Maintainers <debian-tex-maint@lists.debian.org>
+Uploaders: Jerome Benoit <calculus@rezozer.net>, Norbert Preining <preining@debian.org>
+Build-Depends: debhelper (>= 9), dh-autoreconf
+Build-Depends-Indep: texinfo, texlive-base, texlive-latex-base, texlive-generic-recommended, texlive-latex-recommended, texlive-plain-extra, texlive-latex-extra
+Architecture: all
+Standards-Version: 3.9.5
+Format: 3.0 (quilt)
+Files:
+ 9db01fd79d4231d858acb7e46757b0c9 2166 3dldf-doc_2.0.3+ndfsg-2.dsc
+ 95aaffbdff56076b39da185c15bc7fba 448676 3dldf-doc_2.0.3+ndfsg.orig.tar.xz
+ b324b518ee61db0341eb7881135ddcb8 9428 3dldf-doc_2.0.3+ndfsg-2.debian.tar.xz
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=debian-tex/3dldf-doc.git
+Vcs-Git: git://anonscm.debian.org/debian-tex/3dldf-doc.git
+Checksums-Sha1:
+ f1a6f6c4320ea5745d773bc1c18a0e5210f5d3f1 2166 3dldf-doc_2.0.3+ndfsg-2.dsc
+ 6ce15a821cdb9ab41cb0970840cfa4e2935adc68 448676 3dldf-doc_2.0.3+ndfsg.orig.tar.xz
+ 4a6652df2bb6bac966ec20e5016b7fca44e0d605 9428 3dldf-doc_2.0.3+ndfsg-2.debian.tar.xz
+Checksums-Sha256:
+ 3aecdc80435d1664811b28a12742792f38c1f0c88a81cf56a94b1a9bc53f4619 2166 3dldf-doc_2.0.3+ndfsg-2.dsc
+ f4fab48690cf363efccac9023764a29672bcc5e2ba3ee4135b2543ed79b6985f 448676 3dldf-doc_2.0.3+ndfsg.orig.tar.xz
+ b860e08fa700545ebf8f3e5c04ea0d3eb3ba234d0bf132b0de919747fb3a8916 9428 3dldf-doc_2.0.3+ndfsg-2.debian.tar.xz
+Homepage: https://www.gnu.org/software/3dldf/
+Package-List: 
+ 3dldf-doc deb non-free/doc optional arch=all
+Directory: pool/non-free/3/3dldf-doc
+Priority: source
+Section: non-free/misc
+
+Package: abs-guide
+Binary: abs-guide
+Version: 6.6-1
+Maintainer: Sandro Tosi <morph@debian.org>
+Build-Depends: debhelper (>= 7.0.50)
+Architecture: all
+Standards-Version: 3.9.5
+Format: 1.0
+Files:
+ d563497c8dae92a776bb0fa3b9012ccf 1180 abs-guide_6.6-1.dsc
+ dca8b753da8ce6ed2af7228b2ef18f97 1516236 abs-guide_6.6.orig.tar.gz
+ 76fb1b0aae3436bb50f1032586845e4b 7017 abs-guide_6.6-1.diff.gz
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=users/morph/abs-guide.git
+Vcs-Git: git://anonscm.debian.org/users/morph/abs-guide.git
+Checksums-Sha1:
+ 83e5be8378d2c725afcbc36c843f708411c1d265 1180 abs-guide_6.6-1.dsc
+ 76200f296a88fa02dfb33875151791ce3f4f2ccc 1516236 abs-guide_6.6.orig.tar.gz
+ f2d0f58c548a8b18b5fa26ddfa0db4d5289a23c2 7017 abs-guide_6.6-1.diff.gz
+Checksums-Sha256:
+ cd8022c84937ea27820c5b1d265ee3e32c6f29df6d580fd3656f9381e7765eae 1180 abs-guide_6.6-1.dsc
+ c67c905c735185db74fc6fe69314cc1902554b6f96a610c45bd01e35be53e146 1516236 abs-guide_6.6.orig.tar.gz
+ a0539bc87cfb58cbeddf685f2df25cb2fd2e85a2d8c68599594b953489861e07 7017 abs-guide_6.6-1.diff.gz
+Homepage: http://www.tldp.org/LDP/abs/html/
+Package-List: 
+ abs-guide deb non-free/doc optional
+Directory: pool/non-free/a/abs-guide
+Priority: source
+Section: non-free/doc

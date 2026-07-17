@@ -1,0 +1,81 @@
+[
+  {
+    "api_data_url": null,
+    "bug_tracking_url": null,
+    "code_view_url": null,
+    "copyright": null,
+    "datasource_id": "alpine_metadata",
+    "declared_license_expression": "postgresql",
+    "declared_license_expression_spdx": "PostgreSQL",
+    "dependencies": [],
+    "description": "Extension modules distributed with PostgreSQL",
+    "download_url": "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/postgresql16-contrib-16.10-r0.apk",
+    "extra_data": {},
+    "extracted_license_statement": "PostgreSQL",
+    "file_references": [],
+    "holder": null,
+    "homepage_url": null,
+    "is_private": false,
+    "is_virtual": false,
+    "keywords": [],
+    "license_detections": [
+      {
+        "identifier": "postgresql-40e19392-0bce-42e4-2492-84ce68b83da4",
+        "license_expression": "postgresql",
+        "license_expression_spdx": "PostgreSQL",
+        "matches": [
+          {
+            "end_line": 1,
+            "from_file": null,
+            "license_expression": "postgresql",
+            "license_expression_spdx": "PostgreSQL",
+            "match_coverage": 100.0,
+            "matched_length": 1,
+            "matched_text": "PostgreSQL",
+            "matcher": "1-spdx-id",
+            "rule_identifier": "spdx-license-identifier-postgresql-ef5c3acce5784d8d3d72f352799cb60a8eb0098d",
+            "rule_relevance": 100,
+            "rule_url": null,
+            "score": 100.0,
+            "start_line": 1
+          }
+        ]
+      }
+    ],
+    "md5": null,
+    "name": "postgresql16-contrib",
+    "namespace": null,
+    "notice_text": null,
+    "other_license_detections": [],
+    "other_license_expression": null,
+    "other_license_expression_spdx": null,
+    "parties": [
+      {
+        "email": "jakub@jirutka.cz",
+        "name": "Jakub Jirutka",
+        "role": "maintainer",
+        "type": null,
+        "url": null
+      }
+    ],
+    "primary_language": null,
+    "purl": "pkg:apk/postgresql16-contrib@16.10-r0?alpine_version=latest-stable&arch=x86_64&repo=main",
+    "qualifiers": {
+      "alpine_version": "latest-stable",
+      "arch": "x86_64",
+      "repo": "main"
+    },
+    "release_date": null,
+    "repository_download_url": null,
+    "repository_homepage_url": "https://www.postgresql.org/",
+    "sha1": "c54b9040683200abc13b4b372cb0a50c3cd55793",
+    "sha256": null,
+    "sha512": null,
+    "size": 652574,
+    "source_packages": [],
+    "subpath": null,
+    "type": "apk",
+    "vcs_url": null,
+    "version": "16.10-r0"
+  }
+]

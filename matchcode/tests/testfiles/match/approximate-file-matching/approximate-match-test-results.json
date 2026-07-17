@@ -1,0 +1,35 @@
+{
+  "files": [
+    {
+      "path": "inflate-mod.c",
+      "type": "file",
+      "name": "inflate-mod.c",
+      "base_name": "inflate-mod",
+      "extension": ".c",
+      "size": 55466,
+      "date": "2024-04-16",
+      "sha1": "12d8cd7cb0db81b8578f608ef3619304ac87f0e0",
+      "md5": "b86e60b3ad49c08b6cfa0ab3b989b8d5",
+      "sha256": "82f60fddd2fe80234b63f9c4757740fc17fc87ba0a2c9cb74799a02a82b43c7e",
+      "mime_type": "text/x-c",
+      "file_type": "C source, ASCII text",
+      "programming_language": "C",
+      "is_binary": false,
+      "is_text": true,
+      "is_archive": false,
+      "is_media": false,
+      "is_source": true,
+      "is_script": false,
+      "directory_content_fingerprint": null,
+      "directory_structure_fingerprint": null,
+      "halo1": "000018f4aa3a49e4cd40718d1297be519e6564a4",
+      "matched_to": [
+        "pkg:generic/inflate@1.0.0"
+      ],
+      "files_count": 0,
+      "dirs_count": 0,
+      "size_count": 0,
+      "scan_errors": []
+    }
+  ]
+}

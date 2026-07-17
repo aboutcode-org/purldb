@@ -1,0 +1,81 @@
+[
+  {
+    "api_data_url": null,
+    "bug_tracking_url": null,
+    "code_view_url": null,
+    "copyright": null,
+    "datasource_id": "alpine_metadata",
+    "declared_license_expression": "gpl-2.0",
+    "declared_license_expression_spdx": "GPL-2.0-only",
+    "dependencies": [],
+    "description": "Bash autocompletion for linux-tools",
+    "download_url": "https://dl-cdn.alpinelinux.org/v3.14/community/armhf/perf-bash-completion-5.10.42-r0.apk",
+    "extra_data": {},
+    "extracted_license_statement": "GPL-2.0-only",
+    "file_references": [],
+    "holder": null,
+    "homepage_url": null,
+    "is_private": false,
+    "is_virtual": false,
+    "keywords": [],
+    "license_detections": [
+      {
+        "identifier": "gpl_2_0-7541c21a-b2c9-c697-2794-bf0cfcdf32f9",
+        "license_expression": "gpl-2.0",
+        "license_expression_spdx": "GPL-2.0-only",
+        "matches": [
+          {
+            "end_line": 1,
+            "from_file": null,
+            "license_expression": "gpl-2.0",
+            "license_expression_spdx": "GPL-2.0-only",
+            "match_coverage": 100.0,
+            "matched_length": 4,
+            "matched_text": "GPL-2.0-only",
+            "matcher": "1-hash",
+            "rule_identifier": "spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
+            "rule_relevance": 100,
+            "rule_url": "https://github.com/nexB/scancode-toolkit/tree/develop/src/licensedcode/data/rules/spdx_license_id_gpl-2.0-only_for_gpl-2.0.RULE",
+            "score": 100.0,
+            "start_line": 1
+          }
+        ]
+      }
+    ],
+    "md5": null,
+    "name": "perf-bash-completion",
+    "namespace": null,
+    "notice_text": null,
+    "other_license_detections": [],
+    "other_license_expression": null,
+    "other_license_expression_spdx": null,
+    "parties": [
+      {
+        "email": "mps@arvanta.net",
+        "name": "Milan P. Stanić",
+        "role": "maintainer",
+        "type": null,
+        "url": null
+      }
+    ],
+    "primary_language": null,
+    "purl": "pkg:apk/perf-bash-completion@5.10.42-r0?alpine_version=v3.14&arch=armhf&repo=community",
+    "qualifiers": {
+      "alpine_version": "v3.14",
+      "arch": "armhf",
+      "repo": "community"
+    },
+    "release_date": null,
+    "repository_download_url": null,
+    "repository_homepage_url": "https://www.kernel.org/",
+    "sha1": "99ee26ab8ca7ba7fc741edb6a1c01c0ab7ce7c60",
+    "sha256": null,
+    "sha512": null,
+    "size": 4593,
+    "source_packages": [],
+    "subpath": null,
+    "type": "apk",
+    "vcs_url": null,
+    "version": "5.10.42-r0"
+  }
+]

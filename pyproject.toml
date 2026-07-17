@@ -1,0 +1,154 @@
+[build-system]
+requires = ["setuptools >= 50", "wheel", "setuptools_scm[toml] >= 6"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+# this is used populated when creating a git archive
+# and when there is .git dir and/or there is no git installed
+fallback_version = "9999.$Format:%h-%cs$"
+
+[tool.pytest.ini_options]
+norecursedirs = [
+   ".git",
+   "bin",
+   "dist",
+   "build",
+   "_build",
+   "etc",
+   "local",
+   "ci",
+   "docs",
+   "man",
+   "share",
+   "samples",
+   ".cache",
+   ".settings",
+   "Include",
+   "include",
+   "Lib",
+   "lib",
+   "lib64",
+   "Lib64",
+   "Scripts",
+   "thirdparty",
+   "tmp",
+   "venv",
+   ".venv",
+   "tests/data",
+   "*/tests/test_data",
+   ".eggs",
+   "src/*/data",
+   "tests/*/data"
+]
+
+python_files = "*.py"
+
+python_classes = "Test"
+python_functions = "test"
+
+addopts = [
+    "-rfExXw",
+    "--strict-markers",
+    "--doctest-modules"
+]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["migrations", "var"]
+target-version = "py310"
+include = [
+  "pyproject.toml",
+  "src/**/*.py",
+  "etc/**/*.py",
+  "test/**/*.py",
+  "tests/**/*.py",
+  "doc/**/*.py",
+  "docs/**/*.py",
+  "*.py",
+  "."
+
+]
+# ignore test data and testfiles: they should never be linted nor formatted
+exclude = [
+# main style
+  "**/tests/data/**/*",
+# scancode-toolkit
+  "**/tests/*/data/**/*",
+# dejacode, purldb
+  "**/tests/testfiles/**/*",
+# vulnerablecode, fetchcode
+  "**/tests/*/test_data/**/*",
+  "**/tests/test_data/**/*",
+# django migrations
+  "**/migrations/**/*"
+]
+
+[tool.ruff.lint]
+# Rules: https://docs.astral.sh/ruff/rules/
+select = [
+    "E",  # pycodestyle
+    "W",  # pycodestyle warnings
+    "D",  # pydocstyle
+    "F",  # Pyflakes
+    "UP", # pyupgrade
+    "S",  # flake8-bandit
+    "I",  # isort
+    "C9", # McCabe complexity
+]
+ignore = [
+    "D1",
+    "D200", # unnecessary-multiline-docstring
+    "D202", # blank-line-after-function
+    "D203", # one-blank-line-before-class
+    "D205", # blank-line-after-summary
+    "D212", # multi-line-summary-first-line
+    "D400", # ends-in-period
+    "D415", # ends-in-punctuation
+	  "E203", # whitespace-before-punctuation
+    "I001", # unsorted-imports
+    # TODO: we want to address these issues in the codebase, then get rid of
+    # the following ignores
+    "C901", # complex-structure
+    "E501", # line-too-long
+    "S101", # assert
+    "S103", # bad-file-permissions
+    "S113", # request-without-timeout
+    "S202", # tarfile-unsafe-members
+    "S314", # suspicious-xml-element-tree-usage
+    "S324", # hashlib-insecure-hash-function
+    "S506", # unsafe-yaml-load
+    "S602", # subprocess-popen-with-shell-equals-true
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+lines-after-imports = 1
+default-section = "first-party"
+known-first-party = ["src", "tests", "etc/scripts/**/*.py"]
+known-third-party = ["click", "pytest"]
+
+sections = { django = ["django"] }
+section-order = [
+    "future",
+    "standard-library",
+    "django",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"] # Use of assert detected
+"test_*.py" = ["S101"] # Use of assert detected
+"**/testfiles/**.py" = ["F821"] # Ignore undefined names from test files
+"matchcode_project/settings.py" = ["F403", "F405"] # Ignore undefined names from star imports and star imports
+"purldb_public_project/settings.py" = ["F403", "F405"]  # Ignore undefined names from star imports and star imports
+"etc/scripts/update_skeleton.py" = ["S108", "S603", "S605", "S607"]
+"purl2vcs/src/purl2vcs/find_source_repo.py" = ["S605"]
+
+[tool.doc8]
+ignore-path = ["docs/build", "doc/build", "docs/_build", "doc/_build"]
+max-line-length=100

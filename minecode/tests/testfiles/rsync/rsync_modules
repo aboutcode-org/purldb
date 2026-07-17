@@ -1,0 +1,34 @@
+
+  Welcome to the mirrors.ibiblio.org public rsync server.
+
+  You may download any of our software projects by using the appropriate
+  module name.  For example:
+
+  rsync -av mirrors.ibiblio.org::apache/ /local/path/
+
+  If you are mirroring part or all of our distributions, please
+  consider subscribing to our mirror announcement list:
+  http://lists.ibiblio.org/mailman/listinfo/ibiblio-mirrors
+
+  If you have problems or questions, please visit
+  http://www.ibiblio.org/help/
+
+  Note about maven: Rsync access to the maven and maven2 repositories has 
+  been discontinued.  For information about maintaining a maven mirror, see
+  http://maven.apache.org/repository-management.html
+
+  Thanks!
+
+apache         	Apache
+CPAN           	CPAN
+CTAN           	CTAN
+eclipse        	Eclipse
+flightgear     	Flightgear
+gnualpha       	GNU alpha software
+gnuftp         	GNU ftp software
+mozdev         	Mozdev
+mozilla        	Mozilla
+opencsw        	OpenCSW.org
+simgear        	Simgear
+sugar          	Sugar
+xemacs         	xemacs

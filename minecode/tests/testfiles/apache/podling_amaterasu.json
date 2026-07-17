@@ -1,0 +1,8 @@
+ {
+    "description": "Apache Amaterasu is a framework providing continuous deployment for Big Data pipelines.",
+    "homepage": "http://amaterasu.incubator.apache.org/",
+    "name": "Apache Amaterasu (Incubating)",
+    "pmc": "incubator",
+    "podling": true,
+    "started": "2017-09"
+  }

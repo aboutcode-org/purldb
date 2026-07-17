@@ -1,0 +1,220 @@
+{
+  "status": "active",
+  "preferred_support_tool": "_url",
+  "preferred_support_url": "http://sourceforge.net/projects/monoql/forums/forum/937297",
+  "labels": [],
+  "private": false,
+  "creation_date": "2009-04-02",
+  "socialnetworks": [],
+  "tools": [
+    {
+      "sourceforge_group_id": 258330,
+      "mount_point": "summary",
+      "name": "summary",
+      "icons": {
+        "24": "images/sftheme/24x24/blog_24.png",
+        "32": "images/sftheme/32x32/blog_32.png",
+        "48": "images/sftheme/48x48/blog_48.png"
+      },
+      "url": "/p/monoql/summary/",
+      "tool_label": "Summary",
+      "installable": false,
+      "mount_label": "Summary"
+    },
+    {
+      "mount_point": "support",
+      "name": "support",
+      "icons": {
+        "24": "images/sftheme/24x24/blog_24.png",
+        "32": "images/sftheme/32x32/blog_32.png",
+        "48": "images/sftheme/48x48/blog_48.png"
+      },
+      "url": "/p/monoql/support/",
+      "tool_label": "Support",
+      "installable": false,
+      "mount_label": "Support"
+    },
+    {
+      "mount_point": "reviews",
+      "name": "reviews",
+      "icons": {
+        "24": "images/sftheme/24x24/blog_24.png",
+        "32": "images/sftheme/32x32/blog_32.png",
+        "48": "images/sftheme/48x48/blog_48.png"
+      },
+      "url": "/p/monoql/reviews/",
+      "tool_label": "Reviews",
+      "installable": false,
+      "mount_label": "Reviews"
+    },
+    {
+      "mount_point": "wiki",
+      "name": "wiki",
+      "icons": {
+        "24": "images/wiki_24.png",
+        "32": "images/wiki_32.png",
+        "48": "images/wiki_48.png"
+      },
+      "url": "/p/monoql/wiki/",
+      "tool_label": "Wiki",
+      "installable": true,
+      "mount_label": "Wiki"
+    },
+    {
+      "mount_point": "files",
+      "name": "files",
+      "icons": {
+        "24": "images/downloads_24.png",
+        "32": "images/downloads_32.png",
+        "48": "images/downloads_48.png"
+      },
+      "url": "/p/monoql/files/",
+      "tool_label": "Files",
+      "installable": false,
+      "mount_label": "Files"
+    },
+    {
+      "mount_point": "discussion",
+      "name": "discussion",
+      "icons": {
+        "24": "images/forums_24.png",
+        "32": "images/forums_32.png",
+        "48": "images/forums_48.png"
+      },
+      "url": "/p/monoql/discussion/",
+      "tool_label": "Discussion",
+      "installable": true,
+      "mount_label": "Discussion"
+    },
+    {
+      "mount_point": "code",
+      "name": "svn",
+      "icons": {
+        "24": "images/code_24.png",
+        "32": "images/code_32.png",
+        "48": "images/code_48.png"
+      },
+      "url": "/p/monoql/code/",
+      "tool_label": "SVN",
+      "installable": true,
+      "mount_label": "Code"
+    },
+    {
+      "mount_point": "activity",
+      "name": "activity",
+      "icons": {
+        "24": "images/admin_24.png",
+        "32": "images/admin_32.png",
+        "48": "images/admin_48.png"
+      },
+      "url": "/p/monoql/activity/",
+      "tool_label": "Tool",
+      "installable": false,
+      "mount_label": "Activity"
+    },
+    {
+      "mount_point": "mailman",
+      "name": "mailman",
+      "icons": {
+        "24": "images/forums_24.png",
+        "32": "images/forums_32.png",
+        "48": "images/forums_48.png"
+      },
+      "url": "/p/monoql/mailman/",
+      "tool_label": "Mailing Lists",
+      "installable": false,
+      "mount_label": "Mailing Lists"
+    }
+  ],
+  "categories": {
+    "developmentstatus": [
+      {
+        "fullpath": "Development Status :: 4 - Beta",
+        "fullname": "4 - Beta",
+        "shortname": "beta",
+        "id": 10
+      }
+    ],
+    "environment": [],
+    "language": [
+      {
+        "fullpath": "Programming Language :: PHP",
+        "fullname": "PHP",
+        "shortname": "php",
+        "id": 183
+      },
+      {
+        "fullpath": "Programming Language :: JavaScript",
+        "fullname": "JavaScript",
+        "shortname": "JavaScript",
+        "id": 280
+      }
+    ],
+    "license": [
+      {
+        "fullpath": "License :: OSI-Approved Open Source :: GNU General Public License version 2.0 (GPLv2)",
+        "fullname": "GNU General Public License version 2.0 (GPLv2)",
+        "shortname": "gpl",
+        "id": 15
+      }
+    ],
+    "database": [
+      {
+        "fullpath": "Database Environment :: Grouping and Descriptive Categories (DB) :: Project is a database management tool",
+        "fullname": "Project is a database management tool",
+        "shortname": "db_group_mgmt",
+        "id": 511
+      }
+    ],
+    "topic": [
+      {
+        "fullpath": "Topic :: Database :: Front-Ends",
+        "fullname": "Front-Ends",
+        "shortname": "frontends",
+        "id": 68
+      }
+    ],
+    "audience": [],
+    "translation": [],
+    "os": []
+  },
+  "_id": "517ae5665fcbc9798b8fa85e",
+  "name": "MonoQL - MySQL Admin & MySQL Query Tool",
+  "url": "https://sourceforge.net/p/monoql/",
+  "icon_url": null,
+  "video_url": "",
+  "screenshots": [
+    {
+      "url": "https://sourceforge.net/p/monoql/screenshot/235123.jpg",
+      "caption": "MonoQL - Query Tab",
+      "thumbnail_url": "https://sourceforge.net/p/monoql/screenshot/235123.jpg/thumb"
+    },
+    {
+      "url": "https://sourceforge.net/p/monoql/screenshot/235039.jpg",
+      "caption": "MonoQL Web Application",
+      "thumbnail_url": "https://sourceforge.net/p/monoql/screenshot/235039.jpg/thumb"
+    }
+  ],
+  "summary": "",
+  "short_description": "MonoQL is an AJAX web application to manage MySQL databases. MonoQL will provide all major features of phpMyAdmin for MySQL, including database & table design, data browsing & editing, advanced querying & more. MySQL 4+, MySQL 5+ and MySQL 6+ support",
+  "moved_to_url": "",
+  "shortname": "monoql",
+  "developers": [
+    {
+      "url": "https://sourceforge.net/u/damianobrien/",
+      "username": "damianobrien",
+      "name": "Damian O'Brien"
+    },
+    {
+      "url": "https://sourceforge.net/u/johnathanhebert/",
+      "username": "johnathanhebert",
+      "name": "Johnathan Hebert"
+    },
+    {
+      "url": "https://sourceforge.net/u/jdcommerce/",
+      "username": "jdcommerce",
+      "name": "JDCommerce Inc"
+    }
+  ],
+  "external_homepage": "http://www.monoql.com"
+}

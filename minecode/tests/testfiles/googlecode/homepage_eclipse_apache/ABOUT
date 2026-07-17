@@ -1,0 +1,2 @@
+wget -O apache.html http://code.google.com/a/apache-extras.org/p/pylucene-extra/
+wget -O epl.html http://code.google.com/a/eclipselabs.org/p/smebs/

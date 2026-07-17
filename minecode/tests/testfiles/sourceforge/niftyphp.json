@@ -1,0 +1,344 @@
+{
+  "status": "active",
+  "preferred_support_tool": "_url",
+  "preferred_support_url": "http://sourceforge.net/tracker/?func=add&group_id=197717&atid=962587",
+  "labels": [],
+  "private": false,
+  "creation_date": "2007-06-05",
+  "socialnetworks": [],
+  "tools": [
+    {
+      "sourceforge_group_id": 197717,
+      "mount_point": "summary",
+      "name": "summary",
+      "icons": {
+        "24": "images/sftheme/24x24/blog_24.png",
+        "32": "images/sftheme/32x32/blog_32.png",
+        "48": "images/sftheme/48x48/blog_48.png"
+      },
+      "url": "/p/niftyphp/summary/",
+      "tool_label": "Summary",
+      "installable": false,
+      "mount_label": "Summary"
+    },
+    {
+      "mount_point": "support",
+      "name": "support",
+      "icons": {
+        "24": "images/sftheme/24x24/blog_24.png",
+        "32": "images/sftheme/32x32/blog_32.png",
+        "48": "images/sftheme/48x48/blog_48.png"
+      },
+      "url": "/p/niftyphp/support/",
+      "tool_label": "Support",
+      "installable": false,
+      "mount_label": "Support"
+    },
+    {
+      "mount_point": "reviews",
+      "name": "reviews",
+      "icons": {
+        "24": "images/sftheme/24x24/blog_24.png",
+        "32": "images/sftheme/32x32/blog_32.png",
+        "48": "images/sftheme/48x48/blog_48.png"
+      },
+      "url": "/p/niftyphp/reviews/",
+      "tool_label": "Reviews",
+      "installable": false,
+      "mount_label": "Reviews"
+    },
+    {
+      "mount_point": "wiki",
+      "name": "wiki",
+      "icons": {
+        "24": "images/wiki_24.png",
+        "32": "images/wiki_32.png",
+        "48": "images/wiki_48.png"
+      },
+      "url": "/p/niftyphp/wiki/",
+      "tool_label": "Wiki",
+      "installable": true,
+      "mount_label": "Wiki"
+    },
+    {
+      "mount_point": "files",
+      "name": "files",
+      "icons": {
+        "24": "images/downloads_24.png",
+        "32": "images/downloads_32.png",
+        "48": "images/downloads_48.png"
+      },
+      "url": "/p/niftyphp/files/",
+      "tool_label": "Files",
+      "installable": false,
+      "mount_label": "Files"
+    },
+    {
+      "mount_point": "bugs",
+      "name": "tickets",
+      "icons": {
+        "24": "images/tickets_24.png",
+        "32": "images/tickets_32.png",
+        "48": "images/tickets_48.png"
+      },
+      "url": "/p/niftyphp/bugs/",
+      "tool_label": "Tickets",
+      "installable": true,
+      "mount_label": "Bugs"
+    },
+    {
+      "mount_point": "feature-requests",
+      "name": "tickets",
+      "icons": {
+        "24": "images/tickets_24.png",
+        "32": "images/tickets_32.png",
+        "48": "images/tickets_48.png"
+      },
+      "url": "/p/niftyphp/feature-requests/",
+      "tool_label": "Tickets",
+      "installable": true,
+      "mount_label": "Feature Requests"
+    },
+    {
+      "mount_point": "news",
+      "name": "blog",
+      "icons": {
+        "24": "images/blog_24.png",
+        "32": "images/blog_32.png",
+        "48": "images/blog_48.png"
+      },
+      "url": "/p/niftyphp/news/",
+      "tool_label": "Blog",
+      "installable": true,
+      "mount_label": "News"
+    },
+    {
+      "mount_point": "discussion",
+      "name": "discussion",
+      "icons": {
+        "24": "images/forums_24.png",
+        "32": "images/forums_32.png",
+        "48": "images/forums_48.png"
+      },
+      "url": "/p/niftyphp/discussion/",
+      "tool_label": "Discussion",
+      "installable": true,
+      "mount_label": "Discussion"
+    },
+    {
+      "mount_point": "git",
+      "name": "git",
+      "icons": {
+        "24": "images/code_24.png",
+        "32": "images/code_32.png",
+        "48": "images/code_48.png"
+      },
+      "url": "/p/niftyphp/git/",
+      "tool_label": "Git",
+      "installable": true,
+      "mount_label": "Git"
+    },
+    {
+      "mount_point": "svn",
+      "name": "svn",
+      "icons": {
+        "24": "images/code_24.png",
+        "32": "images/code_32.png",
+        "48": "images/code_48.png"
+      },
+      "url": "/p/niftyphp/svn/",
+      "tool_label": "SVN",
+      "installable": true,
+      "mount_label": "SVN"
+    },
+    {
+      "mount_point": "activity",
+      "name": "activity",
+      "icons": {
+        "24": "images/admin_24.png",
+        "32": "images/admin_32.png",
+        "48": "images/admin_48.png"
+      },
+      "url": "/p/niftyphp/activity/",
+      "tool_label": "Tool",
+      "installable": false,
+      "mount_label": "Activity"
+    },
+    {
+      "mount_point": "mailman",
+      "name": "mailman",
+      "icons": {
+        "24": "images/forums_24.png",
+        "32": "images/forums_32.png",
+        "48": "images/forums_48.png"
+      },
+      "url": "/p/niftyphp/mailman/",
+      "tool_label": "Mailing Lists",
+      "installable": false,
+      "mount_label": "Mailing Lists"
+    }
+  ],
+  "categories": {
+    "developmentstatus": [
+      {
+        "fullpath": "Development Status :: 5 - Production/Stable",
+        "fullname": "5 - Production/Stable",
+        "shortname": "production",
+        "id": 11
+      },
+      {
+        "fullpath": "Development Status :: 4 - Beta",
+        "fullname": "4 - Beta",
+        "shortname": "beta",
+        "id": 10
+      }
+    ],
+    "environment": [
+      {
+        "fullpath": "User Interface :: Web-based",
+        "fullname": "Web-based",
+        "shortname": "web",
+        "id": 237
+      }
+    ],
+    "language": [
+      {
+        "fullpath": "Programming Language :: PHP",
+        "fullname": "PHP",
+        "shortname": "php",
+        "id": 183
+      },
+      {
+        "fullpath": "Programming Language :: JavaScript",
+        "fullname": "JavaScript",
+        "shortname": "JavaScript",
+        "id": 280
+      }
+    ],
+    "license": [
+      {
+        "fullpath": "License :: OSI-Approved Open Source :: BSD License",
+        "fullname": "BSD License",
+        "shortname": "bsd",
+        "id": 187
+      }
+    ],
+    "database": [
+      {
+        "fullpath": "Database Environment :: Network-based DBMS :: MySQL",
+        "fullname": "MySQL",
+        "shortname": "db_net_mysql",
+        "id": 524
+      }
+    ],
+    "topic": [
+      {
+        "fullpath": "Topic :: Communications :: File Sharing",
+        "fullname": "File Sharing",
+        "shortname": "filesharing",
+        "id": 251
+      },
+      {
+        "fullpath": "Topic :: Office/Business :: Scheduling",
+        "fullname": "Scheduling",
+        "shortname": "scheduling",
+        "id": 130
+      },
+      {
+        "fullpath": "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        "fullname": "Dynamic Content",
+        "shortname": "dynamic",
+        "id": 92
+      }
+    ],
+    "audience": [
+      {
+        "fullpath": "Intended Audience :: by Industry or Sector :: Non-Profit Organizations",
+        "fullname": "Non-Profit Organizations",
+        "shortname": "nonprofit",
+        "id": 618
+      },
+      {
+        "fullpath": "Intended Audience :: by Industry or Sector :: Manufacturing",
+        "fullname": "Manufacturing",
+        "shortname": "manufacturing",
+        "id": 365
+      },
+      {
+        "fullpath": "Intended Audience :: by End-User Class :: Advanced End Users",
+        "fullname": "Advanced End Users",
+        "shortname": "enduser_advanced",
+        "id": 536
+      },
+      {
+        "fullpath": "Intended Audience :: by End-User Class :: Developers",
+        "fullname": "Developers",
+        "shortname": "developers",
+        "id": 3
+      },
+      {
+        "fullpath": "Intended Audience :: by End-User Class :: End Users/Desktop",
+        "fullname": "End Users/Desktop",
+        "shortname": "endusers",
+        "id": 2
+      },
+      {
+        "fullpath": "Intended Audience :: Other Audience",
+        "fullname": "Other Audience",
+        "shortname": "other",
+        "id": 5
+      }
+    ],
+    "translation": [],
+    "os": []
+  },
+  "_id": "5195079fe88f3d77debd6a02",
+  "name": "Cognifty Framework",
+  "url": "https://sourceforge.net/p/niftyphp/",
+  "icon_url": null,
+  "video_url": "",
+  "screenshots": [
+    {
+      "url": "https://sourceforge.net/p/niftyphp/screenshot/179687.jpg",
+      "caption": "New, default template from styleshout",
+      "thumbnail_url": "https://sourceforge.net/p/niftyphp/screenshot/179687.jpg/thumb"
+    },
+    {
+      "url": "https://sourceforge.net/p/niftyphp/screenshot/127787.jpg",
+      "caption": "Old template and tutorial module",
+      "thumbnail_url": "https://sourceforge.net/p/niftyphp/screenshot/127787.jpg/thumb"
+    },
+    {
+      "url": "https://sourceforge.net/p/niftyphp/screenshot/215585.jpg",
+      "caption": "Linking content items while editing using Wiki syntax",
+      "thumbnail_url": "https://sourceforge.net/p/niftyphp/screenshot/215585.jpg/thumb"
+    },
+    {
+      "url": "https://sourceforge.net/p/niftyphp/screenshot/215555.jpg",
+      "caption": "Magento integration with Magnifty",
+      "thumbnail_url": "https://sourceforge.net/p/niftyphp/screenshot/215555.jpg/thumb"
+    }
+  ],
+  "summary": "",
+  "short_description": "Cognifty Framework offers the simplest way to build complex, vertical Web applications for your industry. Flexible enough to run other frameworks inside itself, Cognifty is the perfect choice for new integration or legacy development. ",
+  "moved_to_url": "",
+  "shortname": "niftyphp",
+  "developers": [
+    {
+      "url": "https://sourceforge.net/u/hardcorelamer/",
+      "username": "hardcorelamer",
+      "name": "Mark K"
+    },
+    {
+      "url": "https://sourceforge.net/u/scottgilvin/",
+      "username": "scottgilvin",
+      "name": "scottgilvin"
+    },
+    {
+      "url": "https://sourceforge.net/u/markkimsal/",
+      "username": "markkimsal",
+      "name": "Mark Kimsal"
+    }
+  ],
+  "external_homepage": "http://cognifty.com/"
+}

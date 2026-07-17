@@ -1,0 +1,19 @@
+[
+  {
+    "requirements":[],
+    "description":"Write a longer description or delete this line.",
+    "platform":"ruby",
+    "built_at":"2016-07-09T00:00:00.000Z",
+    "created_at":"2016-07-09T09:10:01.662Z",
+    "downloads_count":771,
+    "number":"0.2.0",
+    "summary":"Write a short summary, because Rubygems requires one.",
+    "ruby_version":">= 0",
+    "sha":"eda5675fe73adcc84c53a545217e754cc717109c258b229dfce4384ed40fb655",
+    "prerelease":false,
+    "authors":"Write your name",
+    "licenses":[],
+    "rubygems_version":">= 0",
+    "metadata":{}
+  }
+]

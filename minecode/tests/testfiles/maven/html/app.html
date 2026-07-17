@@ -1,0 +1,14 @@
+<html>
+<head>
+<script>
+//1522643335415
+function navi(e){
+	location.href = e.target.href.replace('/:','/'); e.preventDefault();
+}
+</script>
+</head>
+<body>
+<pre><a onclick="navi(event)" href=":0.0.1/" rel="nofollow">0.0.1/</a></pre>
+<pre><a onclick="navi(event)" href=":maven-metadata.xml" rel="nofollow">maven-metadata.xml</a></pre>
+</body>
+</html>

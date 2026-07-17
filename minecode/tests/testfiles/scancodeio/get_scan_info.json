@@ -1,0 +1,69 @@
+{
+    "name": "2a72b8e6a282ae3073eca9123468a37865dcd3b0",
+    "url": "http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/",
+    "uuid": "c3b8d1ab-4811-4ced-84af-080997ef1a1a",
+    "created_date": "2023-05-19T00:45:29.449151Z",
+    "is_archived": false,
+    "input_sources": [
+        {
+            "filename": "wagon-api-20040705.181715.jar",
+            "download_url": "https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar"
+        }
+    ],
+    "input_root": [
+        "wagon-api-20040705.181715.jar"
+    ],
+    "output_root": [
+        "summary-2023-05-19-00-45-39.json",
+        "scancode-2023-05-19-00-45-29.json"
+    ],
+    "next_run": null,
+    "runs": [
+        {
+            "url": "http://127.0.0.1:8001/api/runs/336e18e3-fd68-4375-9bf2-87090dc5c726/",
+            "pipeline_name": "scan_and_fingerprint_package",
+            "status": "success",
+            "description": "",
+            "project": "http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/",
+            "uuid": "336e18e3-fd68-4375-9bf2-87090dc5c726",
+            "created_date": "2023-05-19T00:45:29.451929Z",
+            "scancodeio_version": "33.0.0-dev",
+            "task_id": "336e18e3-fd68-4375-9bf2-87090dc5c726",
+            "task_start_date": "2023-05-19T00:45:29.461599Z",
+            "task_end_date": "2023-05-19T00:45:39.251824Z",
+            "task_exitcode": 0,
+            "task_output": "",
+            "log": "2023-05-19 00:45:29.46 Pipeline [scan_and_fingerprint_package] starting\n2023-05-19 00:45:29.46 Step [get_package_archive_input] starting\n2023-05-19 00:45:29.46 Step [get_package_archive_input] completed in 0 seconds\n2023-05-19 00:45:29.46 Step [collect_archive_information] starting\n2023-05-19 00:45:29.47 Step [collect_archive_information] completed in 0 seconds\n2023-05-19 00:45:29.47 Step [extract_archive_to_codebase_directory] starting\n2023-05-19 00:45:29.53 Step [extract_archive_to_codebase_directory] completed in 0 seconds\n2023-05-19 00:45:29.53 Step [run_scancode] starting\n2023-05-19 00:45:37.63 Step [run_scancode] completed in 8 seconds\n2023-05-19 00:45:37.63 Step [load_inventory_from_toolkit_scan] starting\n2023-05-19 00:45:37.94 Step [load_inventory_from_toolkit_scan] completed in 0 seconds\n2023-05-19 00:45:37.94 Step [fingerprint_codebase] starting\n2023-05-19 00:45:39.23 Step [fingerprint_codebase] completed in 1 seconds\n2023-05-19 00:45:39.23 Step [make_summary_from_scan_results] starting\n2023-05-19 00:45:39.24 Step [make_summary_from_scan_results] completed in 0 seconds\n2023-05-19 00:45:39.24 Pipeline completed\n",
+            "execution_time": 9
+        }
+    ],
+    "extra_data": {
+        "md5": "57431f2f6d5841eebdb964b04091b8ed",
+        "sha1": "feff0d7bacd11d37a9c96daed87dc1db163065b1",
+        "size": 47069,
+        "sha256": "05155c2c588ac5922d930eeb1e8a1da896956f4696ae758d110708e9f095baba",
+        "sha512": "4431f237bcdfee5d2b86b1b3f01c8abaa160d5b7007c63e6281845a3f920d89fdb2e4044f97694ddef91e174d9dd30e5016bbad46eec2d68af200a47e9cedd85",
+        "filename": "wagon-api-20040705.181715.jar",
+        "sha1_git": "ad18d88bdae8449e7c170f8e7db1bfe336dbb4e0"
+    },
+    "error_count": 0,
+    "resource_count": 64,
+    "package_count": 0,
+    "dependency_count": 0,
+    "relation_count": 0,
+    "codebase_resources_summary": {
+        "": 64
+    },
+    "discovered_packages_summary": {
+        "total": 0,
+        "with_missing_resources": 0,
+        "with_modified_resources": 0
+    },
+    "discovered_dependencies_summary": {
+        "total": 0,
+        "is_runtime": 0,
+        "is_optional": 0,
+        "is_pinned": 0
+    },
+    "codebase_relations_summary": {}
+}

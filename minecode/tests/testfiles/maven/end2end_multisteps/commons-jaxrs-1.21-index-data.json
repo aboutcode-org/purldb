@@ -1,0 +1,15 @@
+{
+    "sha1": "4fb952256ccf687f1e86862a411320f269d1a0b7",
+    "visit_error": null,
+    "mining_level": 0,
+    "file_name": "commons-jaxrs-1.21.jar",
+    "source_uri": "http://repo1.maven.org/maven2/.index/nexus-maven-repository-index.gz",
+    "uri": "maven-index://repo1.maven.org/maven2/edu/psu/swe/commons/commons-jaxrs/1.21/commons-jaxrs-1.21.jar",
+    "is_mappable": true,
+    "is_visitable": true,
+    "priority": 0,
+    "sha256": null,
+    "size": 5584571,
+    "data": "{\"group_id\":\"edu.psu.swe.commons\",\"artifact_id\":\"commons-jaxrs\",\"version\":\"1.21\",\"packaging\":\"jar\",\"classifier\":null,\"extension\":\"jar\",\"last_modified\":\"2009-05-21T18:28:59+00:00\",\"size\":85612,\"sha1\":\"4fb952256ccf687f1e86862a411320f269d1a0b7\",\"name\":null,\"description\":\"Common classes to make creating REST services more consistent.\",\"src_exist\":true,\"jdoc_exist\":true,\"sig_exist\":false,\"download_url\":\"http://repo1.maven.org/maven2/edu/psu/swe/commons/commons-jaxrs/1.21/commons-jaxrs-1.21.jar\"}",
+    "md5": null
+}

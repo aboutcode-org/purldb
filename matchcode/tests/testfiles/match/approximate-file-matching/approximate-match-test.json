@@ -1,0 +1,65 @@
+{
+  "headers": [
+    {
+      "tool_name": "scancode-toolkit",
+      "tool_version": "32.1.0",
+      "options": {
+        "input": [
+          "inflate-mod.c"
+        ],
+        "--fingerprint": true,
+        "--info": true,
+        "--json-pp": "approximate-match-test.json"
+      },
+      "notice": "Generated with ScanCode and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied. No content created from\nScanCode should be considered or used as legal advice. Consult an Attorney\nfor any legal advice.\nScanCode is a free software code scanning tool from nexB Inc. and others.\nVisit https://github.com/nexB/scancode-toolkit/ for support and download.",
+      "start_timestamp": "2024-05-11T014449.669618",
+      "end_timestamp": "2024-05-11T014449.971868",
+      "output_format_version": "3.1.0",
+      "duration": 0.302262544631958,
+      "message": null,
+      "errors": [],
+      "warnings": [],
+      "extra_data": {
+        "system_environment": {
+          "operating_system": "linux",
+          "cpu_architecture": "64",
+          "platform": "Linux-6.5.13-1-pve-x86_64-with-glibc2.35",
+          "platform_version": "#1 SMP PREEMPT_DYNAMIC PMX 6.5.13-1 (2024-02-05T13:50Z)",
+          "python_version": "3.11.8 (main, Mar 11 2024, 14:33:31) [GCC 11.4.0]"
+        },
+        "spdx_license_list_version": "3.23",
+        "files_count": 1
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "inflate-mod.c",
+      "type": "file",
+      "name": "inflate-mod.c",
+      "base_name": "inflate-mod",
+      "extension": ".c",
+      "size": 55466,
+      "date": "2024-04-16",
+      "sha1": "12d8cd7cb0db81b8578f608ef3619304ac87f0e0",
+      "md5": "b86e60b3ad49c08b6cfa0ab3b989b8d5",
+      "sha256": "82f60fddd2fe80234b63f9c4757740fc17fc87ba0a2c9cb74799a02a82b43c7e",
+      "mime_type": "text/x-c",
+      "file_type": "C source, ASCII text",
+      "programming_language": "C",
+      "is_binary": false,
+      "is_text": true,
+      "is_archive": false,
+      "is_media": false,
+      "is_source": true,
+      "is_script": false,
+      "directory_content_fingerprint": null,
+      "directory_structure_fingerprint": null,
+      "halo1": "000018f4aa3a49e4cd40718d1297be519e6564a4",
+      "files_count": 0,
+      "dirs_count": 0,
+      "size_count": 0,
+      "scan_errors": []
+    }
+  ]
+}

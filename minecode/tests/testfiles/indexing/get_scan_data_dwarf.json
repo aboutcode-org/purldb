@@ -1,0 +1,159 @@
+{
+  "headers": [
+  {
+    "tool_name": "scanpipe",
+    "tool_version": "v34.0.0-5-g4391b4875",
+    "other_tools": [
+      "pkg:pypi/scancode-toolkit@32.0.8"
+    ],
+    "notice": "Generated with ScanCode.io and provided on an \"AS IS\" BASIS, WITHOUT WARRANTIES\nOR CONDITIONS OF ANY KIND, either express or implied.\nNo content created from ScanCode.io should be considered or used as legal advice.\nConsult an Attorney for any legal advice.\nScanCode.io is a free software code scanning tool from nexB Inc. and others\nlicensed under the Apache License version 2.0.\nScanCode is a trademark of nexB Inc.\nVisit https://github.com/nexB/scancode.io for support and download.\n",
+    "uuid": "8386c243-4a46-488a-bc07-5616c9a0cfd7",
+    "created_date": "2024-03-21T18:24:32.726Z",
+    "notes": "",
+    "settings": {},
+    "input_sources": [
+      {
+        "uuid": "400f03db-295c-4303-b549-807145b806a1",
+        "filename": "analyze.so.debug",
+        "download_url": "https://github.com/nexB/elf-inspector/raw/4333e1601229da87fa88961389d7397af6e027c4/tests/data/dwarf_and_elf/analyze.so.debug",
+        "is_uploaded": false,
+        "tag": "",
+        "size": 38412,
+        "is_file": true,
+        "exists": true
+      }
+    ],
+    "runs": [
+      {
+        "pipeline_name": "scan_single_package",
+        "status": "success",
+        "description": "Scan a single package archive (or package manifest file).",
+        "uuid": "645a281f-01da-45ed-8679-7033c3922823",
+        "created_date": "2024-03-21T18:24:32.728657Z",
+        "scancodeio_version": "v34.0.0-5-g4391b4875",
+        "task_id": "645a281f-01da-45ed-8679-7033c3922823",
+        "task_start_date": "2024-03-21T18:24:32.752793Z",
+        "task_end_date": "2024-03-21T18:24:36.884901Z",
+        "task_exitcode": 0,
+        "task_output": "",
+        "log": "2024-03-21 18:24:32.75 Pipeline [scan_single_package] starting\n2024-03-21 18:24:32.75 Step [download_missing_inputs] starting\n2024-03-21 18:24:32.76 Fetching input from https://github.com/nexB/elf-inspector/raw/4333e1601229da87fa88961389d7397af6e027c4/tests/data/dwarf_and_elf/analyze.so.debug\n2024-03-21 18:24:33.16 Step [download_missing_inputs] completed in 0 seconds\n2024-03-21 18:24:33.17 Step [get_package_input] starting\n2024-03-21 18:24:33.17 Step [get_package_input] completed in 0 seconds\n2024-03-21 18:24:33.17 Step [collect_input_information] starting\n2024-03-21 18:24:33.18 Step [collect_input_information] completed in 0 seconds\n2024-03-21 18:24:33.18 Step [extract_input_to_codebase_directory] starting\n2024-03-21 18:24:33.19 Step [extract_input_to_codebase_directory] completed in 0 seconds\n2024-03-21 18:24:33.19 Step [extract_archives] starting\n2024-03-21 18:24:33.20 Step [extract_archives] completed in 0 seconds\n2024-03-21 18:24:33.20 Step [run_scan] starting\n2024-03-21 18:24:36.84 Step [run_scan] completed in 4 seconds\n2024-03-21 18:24:36.85 Step [load_inventory_from_toolkit_scan] starting\n2024-03-21 18:24:36.86 Step [load_inventory_from_toolkit_scan] completed in 0 seconds\n2024-03-21 18:24:36.86 Step [make_summary_from_scan_results] starting\n2024-03-21 18:24:36.88 Step [make_summary_from_scan_results] completed in 0 seconds\n2024-03-21 18:24:36.88 Pipeline completed in 4 seconds\n",
+        "execution_time": 4
+      },
+      {
+        "pipeline_name": "inspect_elf_binaries",
+        "status": "success",
+        "description": "Inspect ELF binaries and collect DWARF paths.",
+        "uuid": "9ebedfb1-e38c-4066-90c6-960e517b0dc7",
+        "created_date": "2024-03-21T18:24:38.836887Z",
+        "scancodeio_version": "v34.0.0-5-g4391b4875",
+        "task_id": "9ebedfb1-e38c-4066-90c6-960e517b0dc7",
+        "task_start_date": "2024-03-21T18:24:38.870473Z",
+        "task_end_date": "2024-03-21T18:24:38.917895Z",
+        "task_exitcode": 0,
+        "task_output": "",
+        "log": "2024-03-21 18:24:38.87 Pipeline [inspect_elf_binaries] starting\n2024-03-21 18:24:38.87 Step [collect_dwarf_source_path_references] starting\n2024-03-21 18:24:38.91 Step [collect_dwarf_source_path_references] completed in 0 seconds\n2024-03-21 18:24:38.91 Pipeline completed in 0 seconds\n",
+        "execution_time": 0
+      },
+      {
+        "pipeline_name": "fingerprint_codebase",
+        "status": "success",
+        "description": "Calculate the directory fingerprints of a Project codebase",
+        "uuid": "a38c0c55-f232-4acd-9143-be4d6680e17b",
+        "created_date": "2024-03-21T18:28:33.744363Z",
+        "scancodeio_version": "v34.0.0-5-g4391b4875",
+        "task_id": "a38c0c55-f232-4acd-9143-be4d6680e17b",
+        "task_start_date": "2024-03-21T18:28:33.777809Z",
+        "task_end_date": "2024-03-21T18:28:33.797765Z",
+        "task_exitcode": 0,
+        "task_output": "",
+        "log": "2024-03-21 18:28:33.77 Pipeline [fingerprint_codebase] starting\n2024-03-21 18:28:33.78 Step [fingerprint_codebase] starting\n2024-03-21 18:28:33.79 Step [fingerprint_codebase] completed in 0 seconds\n2024-03-21 18:28:33.79 Pipeline completed in 0 seconds\n",
+        "execution_time": 0
+      }
+    ],
+    "extra_data": {
+      "md5": "9fd9dafa0306323270636753c842cc19",
+      "sha1": "0c2ec13722082672f1bb2949e8236564ac6ee36c",
+      "size": 38412,
+      "sha256": "f39785d98457d5191fd61218baf9ffa1e0238e799e6ac468157069c3b502252e",
+      "sha512": "2177630bbb33e0ddaf82db46c7b888d18a524bc742c542258c95545383e601fb1523a59c79887a3f3dabda0fc4bdb37d2642a59357950bf462fae45ef5ab586e",
+      "filename": "analyze.so.debug",
+      "sha1_git": "603a7fdf47e38478784dd2b6b99fd710ca514ca0"
+    }
+  }],
+  "packages": [
+  ],
+  "dependencies": [
+  ],
+  "files": [
+  {
+    "path": "analyze.so.debug",
+    "type": "file",
+    "name": "analyze.so.debug",
+    "status": "",
+    "tag": "",
+    "extension": ".debug",
+    "size": 38412,
+    "md5": "9fd9dafa0306323270636753c842cc19",
+    "sha1": "0c2ec13722082672f1bb2949e8236564ac6ee36c",
+    "sha256": "f39785d98457d5191fd61218baf9ffa1e0238e799e6ac468157069c3b502252e",
+    "sha512": "",
+    "mime_type": "application/x-sharedlib",
+    "file_type": "ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, BuildID[sha1]=aa1f96375250e783f253f60a90f6a7ea72c3dfe2, with debug_info, not stripped",
+    "programming_language": "",
+    "is_binary": true,
+    "is_text": false,
+    "is_archive": false,
+    "is_media": false,
+    "is_key_file": false,
+    "detected_license_expression": "",
+    "detected_license_expression_spdx": "",
+    "license_detections": [],
+    "license_clues": [],
+    "percentage_of_license_text": 0.0,
+    "compliance_alert": "",
+    "copyrights": [],
+    "holders": [],
+    "authors": [],
+    "package_data": [],
+    "for_packages": [],
+    "emails": [],
+    "urls": [],
+    "extra_data": {
+      "compiled_paths": [
+        "usr/src/debug/ImageMagick-6.7.5-6/filters/analyze.c"
+      ],
+      "included_paths": [
+        "filters/analyze.c",
+        "magick/cache-view.h",
+        "magick/color.h",
+        "magick/colorspace.h",
+        "magick/composite.h",
+        "magick/compress.h",
+        "magick/exception.h",
+        "magick/gem.h",
+        "magick/geometry.h",
+        "magick/image.h",
+        "magick/layer.h",
+        "magick/list.h",
+        "magick/locale_.h",
+        "magick/magick-type.h",
+        "magick/monitor.h",
+        "magick/pixel.h",
+        "magick/profile.h",
+        "magick/property.h",
+        "magick/quantum.h",
+        "magick/resample.h",
+        "magick/semaphore.h",
+        "magick/timer.h",
+        "usr/include/assert.h",
+        "usr/include/bits/mathcalls.h",
+        "usr/include/bits/types.h",
+        "usr/include/libio.h",
+        "usr/include/stdio.h",
+        "usr/lib/gcc/armv5tel-redhat-linux-gnueabi/4.7.0/include/stddef.h"
+      ]
+    }
+  }],
+  "relations": [
+  ]
+  }

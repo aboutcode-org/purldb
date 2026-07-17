@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+ <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
+ 
+ <meta name="ROBOTS" content="NOARCHIVE">
+ 
+ <link rel="icon" type="image/vnd.microsoft.icon" href="http://www.gstatic.com/codesite/ph/images/phosting.ico">
+ 
+ 
+ <script type="text/javascript">
+ 
+ 
+ 
+ 
+ var codesite_token = null;
+ 
+ 
+ var CS_env = {"assetHostPath": "http://www.gstatic.com/codesite/ph", "profileUrl": null, "projectName": "gdata-java-client", "relativeBaseUrl": "", "loggedInUserEmail": null, "projectHomeUrl": "/p/gdata-java-client", "domainName": null, "token": null, "assetVersionPath": "http://www.gstatic.com/codesite/ph/11512667522589661435"};
+ var _gaq = _gaq || [];
+ _gaq.push(
+ ['siteTracker._setAccount', 'UA-18071-1'],
+ ['siteTracker._trackPageview']);
+ 
+ _gaq.push(
+ ['projectTracker._setAccount', 'UA-7789645-1'],
+ ['projectTracker._trackPageview']);
+ 
+ (function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+ })();
+ 
+ </script>
+ 
+ 
+ <title>
+ gdata-java-client -
+ 
+ 
+ Google Data Java Client Library - Google Project Hosting
+ </title>
+ <link type="text/css" rel="stylesheet" href="http://www.gstatic.com/codesite/ph/11512667522589661435/css/core.css">
+ 
+ <link type="text/css" rel="stylesheet" href="http://www.gstatic.com/codesite/ph/11512667522589661435/css/ph_detail.css" >
+ 
+ 
+ 
+ 
+<!--[if IE]>
+ <link type="text/css" rel="stylesheet" href="http://www.gstatic.com/codesite/ph/11512667522589661435/css/d_ie.css" >
+<![endif]-->
+ <style type="text/css">
+ .menuIcon.off { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 -42px }
+ .menuIcon.on { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 -28px }
+ .menuIcon.down { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 0; }
+ 
+ 
+ .psicon-container {
+ min-width:24px;
+ }
+
+ 
+ </style>
+</head>
+<body class="t1">
+<script type="text/javascript">
+ window.___gcfg = {lang: 'en'};
+ (function() 
+ {var po = document.createElement("script");
+ po.type = "text/javascript"; po.async = true;po.src = "https://apis.google.com/js/plusone.js";
+ var s = document.getElementsByTagName("script")[0];
+ s.parentNode.insertBefore(po, s);
+ })();
+</script>
+<div class="headbg">
+
+ <div id="gaia">
+ 
+
+ <span>
+ 
+ 
+ <a href="#" id="projects-dropdown" onclick="return false;"><u>My favorites</u> <small>&#9660;</small></a>
+ | <a href="https://www.google.com/accounts/ServiceLogin?service=code&amp;ltmpl=phosting&amp;continue=http%3A%2F%2Fcode.google.com%2Fp%2Fgdata-java-client%2F&amp;followup=http%3A%2F%2Fcode.google.com%2Fp%2Fgdata-java-client%2F" onclick="_CS_click('/gb/ph/signin');"><u>Sign in</u></a>
+ 
+ </span>
+
+ </div>
+
+ <div class="gbh" style="left: 0pt;"></div>
+ <div class="gbh" style="right: 0pt;"></div>
+ 
+ 
+ <div style="height: 1px"></div>
+<!--[if lte IE 7]>
+<div style="text-align:center;">
+Your version of Internet Explorer is not supported. Try a browser that
+contributes to open source, such as <a href="http://www.firefox.com">Firefox</a>,
+<a href="http://www.google.com/chrome">Google Chrome</a>, or
+<a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a>.
+</div>
+<![endif]-->
+
+
+
+ <table style="padding:0px; margin: 0px 0px 10px 0px; width:100%" cellpadding="0" cellspacing="0"
+ itemscope itemtype="http://schema.org/CreativeWork">
+ <tr style="height: 58px;">
+ 
+ 
+ 
+ <td id="plogo">
+ <link itemprop="url" href="/p/gdata-java-client">
+ <a href="/p/gdata-java-client/">
+ 
+ <img src="http://www.gstatic.com/codesite/ph/images/search-48.gif" alt="Logo" itemprop="image">
+ 
+ </a>
+ </td>
+ 
+ <td style="padding-left: 0.5em">
+ 
+ <div id="pname">
+ <a href="/p/gdata-java-client/"><span itemprop="name">gdata-java-client</span></a>
+ </div>
+ 
+ <div id="psum">
+ <a id="project_summary_link"
+ href="/p/gdata-java-client/"><span itemprop="description">Google Data Java Client Library</span></a>
+ 
+ </div>
+ 
+ 
+ </td>
+ <td style="white-space:nowrap;text-align:right; vertical-align:bottom;">
+ 
+ <form action="/hosting/search">
+ <input size="30" name="q" value="" type="text">
+ 
+ <input type="submit" name="projectsearch" value="Search projects" >
+ </form>
+ 
+ </tr>
+ </table>
+
+</div>
+
+ 
+<div id="mt" class="gtb"> 
+ <a href="/p/gdata-java-client/" class="tab active">Project&nbsp;Home</a>
+ 
+ 
+ 
+ 
+ <a href="/p/gdata-java-client/downloads/list" class="tab ">Downloads</a>
+ 
+ 
+ 
+ 
+ 
+ <a href="/p/gdata-java-client/w/list" class="tab ">Wiki</a>
+ 
+ 
+ 
+ 
+ 
+ <a href="/p/gdata-java-client/issues/list"
+ class="tab ">Issues</a>
+ 
+ 
+ 
+ 
+ 
+ <a href="/p/gdata-java-client/source/checkout"
+ class="tab ">Source</a>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <div class=gtbc></div>
+</div>
+<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0" class="st">
+ <tr>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <td class="subt">
+ <div class="st1">
+ <div class="isf">
+ <span class="inst1">
+ <a href="/p/gdata-java-client/">Summary</a>
+ </span>
+ 
+ 
+ &nbsp;
+ <span class="inst3">
+ <a href="/p/gdata-java-client/people/list">People</a>
+ </span>
+ 
+ 
+ </div>
+</div>
+
+ </td>
+ 
+ 
+ <td align="right" valign="top" class="bevel-right"></td>
+ </tr>
+</table>
+
+
+<script type="text/javascript">
+ var cancelBubble = false;
+ function _go(url) { document.location = url; }
+</script>
+<div id="maincol"
+ 
+>
+
+ 
+
+
+
+
+
+<table width="100%">
+ <tr class="pscontent">
+ <td class="pscolumnl">
+ 
+ <div class="phead">Project Information</div>
+ 
+ 
+ 
+ <ul class="pslist">
+ 
+ <li class="psmeta">
+ <a href="/p/gdata-java-client/feeds">Project feeds</a>
+ </li>
+ <li class="psgap"/>
+ 
+ 
+ 
+ <li class="psmeta"><b>Code license</b></li>
+ <li class="psmeta">
+ <a href="http://www.apache.org/licenses/LICENSE-2.0" rel="nofollow">Apache License 2.0</a>
+ 
+ </li>
+ <li class="psgap"/>
+ 
+ 
+ 
+ 
+ 
+ 
+ <li class="psmeta">
+ <span id="project_labels">
+ <b>Labels</b><br/>
+ 
+ <a class="label"
+ href="/hosting/search?q=label:GData">GData</a>, 
+ 
+ <a class="label"
+ href="/hosting/search?q=label:REST">REST</a>, 
+ 
+ <a class="label"
+ href="/hosting/search?q=label:XML">XML</a>, 
+ 
+ <a class="label"
+ href="/hosting/search?q=label:WebService">WebService</a>, 
+ 
+ <a class="label"
+ href="/hosting/search?q=label:ATOM">ATOM</a>, 
+ 
+ <a class="label"
+ href="/hosting/search?q=label:RSS">RSS</a>, 
+ 
+ <a class="label"
+ href="/hosting/search?q=label:APP">APP</a>, 
+ 
+ <a class="label"
+ href="/hosting/search?q=label:Google">Google</a>
+ 
+ </span>
+ </li>
+ <li class="psgap"/>
+ 
+ 
+ </ul>
+ <div class="psicon">
+ <div class="psicon-container goog-inline-block">
+ <div style="float:right" class="SPRITE_people-y16 goog-inline-block vt"></div>
+ </div>
+ <span><b>Members</b></span>
+ </div>
+ <ul class="pslist">
+ 
+ 
+ 
+ 
+
+ <a class="userlink"
+ href="/u/111815493751521097215/">yan...@google.com</a
+>, 
+ 
+ 
+
+ <a class="userlink"
+ href="/u/115186671970087006570/">yanivin...@gmail.com</a
+>, 
+ 
+ 
+
+ <a class="userlink"
+ href="/u/112010112119000246366/">fman...@gmail.com</a
+>, 
+ 
+ 
+
+ <a class="userlink"
+ href="/u/105104800241781304240/">markst...@gmail.com</a
+>, 
+ 
+ 
+
+ <a class="userlink"
+ href="/u/102146578277363655992/">vbarat...@gmail.com</a
+>, 
+ 
+ 
+
+ <a class="userlink"
+ href="/u/113897230587820705070/">mon...@gmail.com</a
+>, 
+ 
+ 
+
+ <a class="userlink"
+ href="/u/107154934019333061124/">api.jscu...@gmail.com</a
+>, 
+ 
+ 
+
+ <a class="userlink"
+ href="/u/109535897343885654441/">jscud.w...@gmail.com</a
+>, 
+ 
+ 
+
+ <a class="userlink"
+ href="/u/103194976596083439703/">ccherub...@google.com</a
+>, 
+ 
+ 
+
+ <a class="userlink"
+ href="/u/manoochehri@google.com/">manoochehri@google.com</a
+>, 
+ 
+ 
+
+ <a class="userlink"
+ href="/u/103406415577482623199/">g...@google.com</a
+>
+ 
+ 
+ 
+ <li class="psmeta">
+ <a href="people/list">14 committers</a>
+ </li>
+ 
+ 
+ <li class="psgap"/>
+ 
+ 
+ </ul>
+ 
+ 
+ <div class="phead pfeatured">Featured</div>
+ 
+ <div class="psicon">
+ <div class="psicon-container goog-inline-block">
+ <div style="float:right" class="SPRITE_filedownload-g16 goog-inline-block vt"></div>
+ </div>
+ <span><b>Downloads</b></span>
+ </div>
+ <ul class="pslist">
+ 
+ <li class="psmeta nowrap">
+ <a title="Download" href="//gdata-java-client.googlecode.com/files/gdata-samples.java-1.47.1.zip" onclick="_gaq.push(['siteTracker._trackEvent', 'Download - Downloaded', '//gdata-java-client.googlecode.com/files/gdata-samples.java-1.47.1.zip', 'OpSys-All, Type-Package, Featured']);_gaq.push(['projectTracker._trackEvent', 'Download - Downloaded', '//gdata-java-client.googlecode.com/files/gdata-samples.java-1.47.1.zip', 'OpSys-All, Type-Package, Featured']);">
+ </a>
+ <a href="downloads/detail?name=gdata-samples.java-1.47.1.zip"
+ title="1.47.1 Samples package">gdata-samples.java-1.47.1.zip</a>
+ </li>
+ 
+ <li class="psmeta nowrap">
+ <a title="Download" href="//gdata-java-client.googlecode.com/files/gdata-src.java-1.47.1.zip" onclick="_gaq.push(['siteTracker._trackEvent', 'Download - Downloaded', '//gdata-java-client.googlecode.com/files/gdata-src.java-1.47.1.zip', 'OpSys-All, Type-Archive, Featured']);_gaq.push(['projectTracker._trackEvent', 'Download - Downloaded', '//gdata-java-client.googlecode.com/files/gdata-src.java-1.47.1.zip', 'OpSys-All, Type-Archive, Featured']);">
+ </a>
+ <a href="downloads/detail?name=gdata-src.java-1.47.1.zip"
+ title="1.47.1 Source package">gdata-src.java-1.47.1.zip</a>
+ </li>
+ 
+ <li class="psmeta"><a href="downloads/list">Show all &raquo</a></li>
+ <li class="psgap"/>
+ </ul>
+ 
+ 
+ <div class="psicon">
+ <div class="psicon-container goog-inline-block">
+ <div style="float:right" class="SPRITE_paper_pencil-y16 goog-inline-block vt"></div>
+ </div>
+ <span><b>Wiki pages</b></span>
+ </div>
+ <ul class="pslist nowrap">
+ 
+ <li class="psmeta">
+ <a href="wiki/Dependencies" title="List of dependency packages for GData Java Client API library."
+ >Dependencies</a>
+ </li>
+ 
+ <li class="psmeta">
+ <a href="wiki/EclipsePlugin" title="Introduction to new Google Data Java Client Eclipse Plug-in"
+ >EclipsePlugin</a>
+ </li>
+ 
+ <li class="psmeta">
+ <a href="wiki/FeatureRequests" title="Feature Requests"
+ >FeatureRequests</a>
+ </li>
+ 
+ <li class="psmeta">
+ <a href="wiki/ReleaseNotes" title="The current release notes"
+ >ReleaseNotes</a>
+ </li>
+ 
+ <li class="psmeta"><a href="w/list">Show all &raquo</a></li>
+ <li class="psgap"/>
+ </ul>
+ 
+ 
+ 
+ 
+ <div class="phead">Links</div>
+ <ul class="pslist" style="white-space:nowrap">
+ 
+ <li class="psmeta"><b>Blogs</b></li>
+ 
+ <li class="psmeta">
+ <a href="http://googlecode.blogspot.com/" rel="nofollow">Google Code Blog</a>
+ </li>
+ 
+ <li class="psgap"/>
+ 
+ 
+ <li class="psmeta"><b>External links</b></li>
+ 
+ <li class="psmeta">
+ <a href="http://code.google.com/p/gdata-java-client-eclipse-plugin" rel="nofollow">GData Java Client Eclipse Plugin</a>
+ </li>
+ 
+ <li class="psmeta">
+ <a href="http://groups.google.com/group/google-help-dataapi" rel="nofollow">GData Developer Forum</a>
+ </li>
+ 
+ <li class="psmeta">
+ <a href="http://groups.google.com/group/google-code-hosting" rel="nofollow">Project Hosting Forum</a>
+ </li>
+ 
+ <li class="psmeta">
+ <a href="http://code.google.com/p/google-gdata/" rel="nofollow">GData .NET Client Library</a>
+ </li>
+ 
+ <li class="psmeta">
+ <a href="http://code.google.com/p/gdata-python-client/" rel="nofollow">GData Python Client Library</a>
+ </li>
+ 
+ <li class="psmeta">
+ <a href="http://framework.zend.com/download/gdata" rel="nofollow">GData PHP Client Library</a>
+ </li>
+ 
+ <li class="psgap"/>
+ 
+ 
+ <li class="psmeta"><b>Groups</b></li>
+ 
+ <li class="psmeta">
+ <a href="http://groups.google.com/group/gdata-java-client" rel="nofollow">GData Java Client</a>
+ </li>
+ 
+ <li class="psgap"/>
+ 
+ </ul>
+ 
+ </td>
+ <td id="wikicontent" class="psdescription">
+ <p><strong>Questions or Comments?</strong> Report a problem? Request a feature? Go to  <a href="http://groups.google.com/group/gdata-java-client" rel="nofollow">gdata-java-client</a>. </p><p><strong>Need to submit a bug report?</strong> <a href="http://code.google.com/p/gdata-java-client/issues/entry" rel="nofollow">submit an issue</a>. </p><p><strong>Looking for a library that supports Android or JSON Google API&#x27;s?</strong> Please instead use <a href="http://code.google.com/p/google-api-java-client/" rel="nofollow">Google API Client Library for Java</a>. </p><p>The Google Data Java client library (see <a href="http://code.google.com/apis/gdata/client-java.html" rel="nofollow">Developer&#x27;s Guide</a> and <a href="http://code.google.com/apis/gdata/javadoc" rel="nofollow">JavaDoc</a> and <a href="http://code.google.com/p/gdata-java-client/source/browse/trunk/java/src/#src/com/google/gdata/client" rel="nofollow">open source</a>) is written by Google.  It supports the latest major version of the following <a href="http://code.google.com/apis/gdata" rel="nofollow">Google Data API&#x27;s</a>: </p><p><table class="wikitable"><tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/analytics/docs/gdata/2.0/gdataJava.html" rel="nofollow">Google Analytics Data Export API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://groups.google.com/group/google-analytics-api" rel="nofollow">API Help Forum</a></td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/googleapps/domain/gdata_provisioning_api_v2.0_reference_java.html" rel="nofollow">Google Apps Provisioning API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://www.google.com/support/forum/p/apps-apis/label?lid=504de467935b3c0c" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/base/docs/2.0/developers_guide_java.html" rel="nofollow">Google Base Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://groups.google.com/group/Google-Base-data-API" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/blogger/docs/2.0/developers_guide_java.html" rel="nofollow">Blogger Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://groups.google.com/group/bloggerDev" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/books/docs/gdata/developers_guide_java.html" rel="nofollow">Google Book Search API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://www.google.com/support/forum/p/booksearch-apis/label?lid=2b7bff1f1cd4a476" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/calendar/data/2.0/developers_guide_java.html" rel="nofollow">Google Calendar API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://www.google.com/support/forum/p/apps-apis/label?lid=5b1004a84758c3f8" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/codesearch/docs/2.0/developers_guide.html" rel="nofollow">Google Code Search Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://groups.google.com/group/Google-Code-Search" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/contacts/docs/2.0/developers_guide_java.html" rel="nofollow">Google Contacts API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://www.google.com/support/forum/p/apps-apis/label?lid=074a8d2b04c0b2a9" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/documents/docs/3.0/developers_guide_java.html" rel="nofollow">Google Documents List Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://www.google.com/support/forum/p/apps-apis/label?lid=5c316c702e844c99" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/finance/docs/2.0/developers_guide_java.html" rel="nofollow">Google Finance Portfolio Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://groups.google.com/group/google-finance-apis" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/health/docs/2.0/developers_guide_java.html" rel="nofollow">Google Health Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://groups.google.com/group/googlehealthdevelopers" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/maps/documentation/mapsdata/developers_guide_java.html" rel="nofollow">Google Maps Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://groups.google.com/group/google-maps-data-api" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/picasaweb/docs/2.0/developers_guide_java.html" rel="nofollow">Picasa Web Albums Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://groups.google.com/group/Google-Picasa-Data-API" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/p/support/wiki/IssueTrackerAPIJava" rel="nofollow">Google Project Hosting Issue Tracker API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://groups.google.com/group/google-code-hosting" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/sidewiki/docs/2.0/developers_guide_java.html" rel="nofollow">Google Sidewiki Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://groups.google.com/group/google-sidewiki-api" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/sites/docs/1.0/developers_guide_java.html" rel="nofollow">Google Sites Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://www.google.com/support/forum/p/apps-apis/label?lid=37f05bf84de81f5b" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/spreadsheets/data/3.0/developers_guide_java.html" rel="nofollow">Google Spreadsheets Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://www.google.com/support/forum/p/apps-apis/label?lid=18118739cdcf1a08" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/gtt/docs/1.0/developers_guide_java.html" rel="nofollow">Google Translator Toolkit Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://www.google.com/support/forum/p/translator-toolkit-api" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/webmastertools/docs/2.0/developers_guide_java.html" rel="nofollow">Google Webmaster Tools Data API</a> </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://www.google.com/support/forum/p/Webmasters" rel="nofollow">API Help Forum</a> </td></tr> <tr><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://code.google.com/apis/youtube/2.0/developers_guide_java.html" rel="nofollow">YouTube Data API</a>  </td><td style="border: 1px solid #ccc; padding: 5px;"> <a href="http://groups.google.com/group/youtube-api-gdata" rel="nofollow">API Help Forum</a> </td></tr> </table></p><p><strong>Features</strong> </p><ul><li>Java 5 installed and web applications, including Google App Engine. </li><li>Atom XML protocol. </li><li>OAuth 1.0a, as well as legacy authentication methods AuthSub and ClientLogin. </li><li>Uses java.net.HttpURLConnection as its low-level HTTP library </li></ul><p><strong>Warning:</strong> We have stopped actively developing this client library, except critical bug fixes and support for some Google API&#x27;s.  However, this client library is  not deprecated, and is considered the &quot;stable&quot; choice, unless you have a specific requirement that is only supported by the new client library below. </p><h2><a name="Android_support"></a>Android support<a href="#Android_support" class="section_anchor"></a></h2><p>Since GData Java Client Library does not support Android, Android developers should instead use the new library <a href="http://code.google.com/p/google-api-java-client/" rel="nofollow">Google API Client Library for Java</a>.  This new library provides other important features, such as OAuth 2.0 and Maven.  Unfortunately, there is no provided service-specific libraries for Google Data APIs, and instead you need to write your own <a href="http://javadoc.google-api-java-client.googlecode.com/hg/1.5.0-beta/com/google/api/client/googleapis/xml/atom/package-summary.html" rel="nofollow">XML data model</a> classes. </p>
+ </td>
+ </tr>
+</table>
+<script src="http://www.gstatic.com/codesite/ph/11512667522589661435/js/prettify/prettify_core_compiled.js"></script>
+<script type="text/javascript">
+ prettyPrint();
+</script>
+
+ 
+ 
+ 
+ <script type="text/javascript" src="http://www.gstatic.com/codesite/ph/11512667522589661435/js/ph_core.js"></script>
+ 
+ 
+ 
+ 
+</div> 
+
+<div id="footer" dir="ltr">
+ <div class="text">
+ <a href="/projecthosting/terms.html">Terms</a> -
+ <a href="http://www.google.com/privacy.html">Privacy</a> -
+ <a href="/p/support/">Project Hosting Help</a>
+ </div>
+</div>
+ <div class="hostedBy" style="margin-top: -20px;">
+ <span style="vertical-align: top;">Powered by <a href="http://code.google.com/projecthosting/">Google Project Hosting</a></span>
+ </div>
+
+ 
+ 
+
+
+ 
+ </body>
+</html>
+

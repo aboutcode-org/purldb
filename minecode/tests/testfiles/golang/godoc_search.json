@@ -1,0 +1,782 @@
+{
+  "results": [
+    {
+      "name": "glog",
+      "path": "github.com/golang/glog",
+      "import_count": 26518,
+      "synopsis": "Package glog implements logging analogous to the Google-internal C++ INFO/ERROR/V setup.",
+      "stars": 1657,
+      "score": 1
+    },
+    {
+      "name": "proto",
+      "path": "github.com/golang/protobuf/proto",
+      "import_count": 7395,
+      "synopsis": "Package proto converts data structures to and from the wire format of protocol buffers.",
+      "stars": 2461,
+      "score": 0.99
+    },
+    {
+      "name": "gomock",
+      "path": "github.com/golang/mock/gomock",
+      "import_count": 878,
+      "synopsis": "GoMock - a mock framework for Go.",
+      "stars": 1043,
+      "score": 0.99
+    },
+    {
+      "name": "lru",
+      "path": "github.com/golang/groupcache/lru",
+      "import_count": 459,
+      "synopsis": "Package lru implements an LRU cache.",
+      "stars": 6032,
+      "score": 0.99
+    },
+    {
+      "name": "snappy",
+      "path": "github.com/golang/snappy",
+      "import_count": 417,
+      "synopsis": "Package snappy implements the snappy block-based compression format.",
+      "stars": 459,
+      "score": 1
+    },
+    {
+      "name": "ptypes",
+      "path": "github.com/golang/protobuf/ptypes",
+      "import_count": 359,
+      "synopsis": "Package ptypes contains code for interacting with well-known types.",
+      "stars": 2104,
+      "score": 0.99
+    },
+    {
+      "name": "timestamp",
+      "path": "github.com/golang/protobuf/ptypes/timestamp",
+      "import_count": 380,
+      "synopsis": "Package timestamp is a generated protocol buffer package.",
+      "stars": 2391,
+      "score": 0.9801
+    },
+    {
+      "name": "gosrc",
+      "path": "github.com/golang/gddo/gosrc",
+      "import_count": 222,
+      "synopsis": "Package gosrc fetches Go package source code from version control services.",
+      "stars": 717,
+      "score": 0.99
+    },
+    {
+      "name": "empty",
+      "path": "github.com/golang/protobuf/ptypes/empty",
+      "import_count": 216,
+      "synopsis": "Package empty is a generated protocol buffer package.",
+      "stars": 2084,
+      "score": 0.9801
+    },
+    {
+      "name": "descriptor",
+      "path": "github.com/golang/protobuf/protoc-gen-go/descriptor",
+      "import_count": 207,
+      "synopsis": "Package descriptor is a generated protocol buffer package.",
+      "stars": 2103,
+      "score": 0.9801
+    },
+    {
+      "name": "jsonpb",
+      "path": "github.com/golang/protobuf/jsonpb",
+      "import_count": 164,
+      "synopsis": "Package jsonpb provides marshaling and unmarshaling between protocol buffers and JSON.",
+      "stars": 2476,
+      "score": 0.99
+    },
+    {
+      "name": "truetype",
+      "path": "github.com/golang/freetype/truetype",
+      "import_count": 133,
+      "synopsis": "Package truetype provides a parser for the TTF and TTC file formats.",
+      "stars": 223,
+      "score": 0.99
+    },
+    {
+      "name": "any",
+      "path": "github.com/golang/protobuf/ptypes/any",
+      "import_count": 136,
+      "synopsis": "Package any is a generated protocol buffer package.",
+      "stars": 2104,
+      "score": 0.9801
+    },
+    {
+      "name": "duration",
+      "path": "github.com/golang/protobuf/ptypes/duration",
+      "import_count": 136,
+      "synopsis": "Package duration is a generated protocol buffer package.",
+      "stars": 2029,
+      "score": 0.9801
+    },
+    {
+      "name": "doc",
+      "path": "github.com/golang/gddo/doc",
+      "import_count": 114,
+      "synopsis": "Package doc fetches Go package documentation from version control services.",
+      "stars": 704,
+      "score": 0.99
+    },
+    {
+      "name": "freetype",
+      "path": "github.com/golang/freetype",
+      "import_count": 95,
+      "synopsis": "The freetype package provides a convenient API to draw text onto an image.",
+      "stars": 264,
+      "score": 1
+    },
+    {
+      "name": "singleflight",
+      "path": "github.com/golang/groupcache/singleflight",
+      "import_count": 88,
+      "synopsis": "Package singleflight provides a duplicate function call suppression mechanism.",
+      "stars": 5874,
+      "score": 0.99
+    },
+    {
+      "name": "httputil",
+      "path": "github.com/golang/gddo/httputil",
+      "import_count": 82,
+      "synopsis": "Package httputil is a toolkit for the Go net/http package.",
+      "stars": 715,
+      "score": 0.99
+    },
+    {
+      "name": "database",
+      "path": "github.com/golang/gddo/database",
+      "import_count": 81,
+      "synopsis": "Package database manages storage for GoPkgDoc.",
+      "stars": 719,
+      "score": 0.99
+    },
+    {
+      "name": "plugin_go",
+      "path": "github.com/golang/protobuf/protoc-gen-go/plugin",
+      "import_count": 141,
+      "synopsis": "Package plugin_go is a generated protocol buffer package.",
+      "stars": 2103,
+      "score": 0.88209
+    },
+    {
+      "name": "groupcache",
+      "path": "github.com/golang/groupcache",
+      "import_count": 54,
+      "synopsis": "Package groupcache provides a data loading mechanism with caching and de-duplication that works across a set of peer processes.",
+      "stars": 6013,
+      "score": 1
+    },
+    {
+      "name": "header",
+      "path": "github.com/golang/gddo/httputil/header",
+      "import_count": 56,
+      "synopsis": "Package header provides functions for parsing HTTP headers.",
+      "stars": 715,
+      "score": 0.9801
+    },
+    {
+      "name": "wrappers",
+      "path": "github.com/golang/protobuf/ptypes/wrappers",
+      "import_count": 50,
+      "synopsis": "Package wrappers is a generated protocol buffer package.",
+      "stars": 2029,
+      "score": 0.9801
+    },
+    {
+      "name": "generator",
+      "path": "github.com/golang/protobuf/protoc-gen-go/generator",
+      "import_count": 49,
+      "synopsis": "The code generator for the plugin for the Google protocol buffer compiler.",
+      "stars": 2094,
+      "score": 0.9801
+    },
+    {
+      "name": "lint",
+      "path": "github.com/golang/lint",
+      "import_count": 43,
+      "synopsis": "Package lint contains a linter for Go source code.",
+      "stars": 2218,
+      "score": 1
+    },
+    {
+      "name": "consistenthash",
+      "path": "github.com/golang/groupcache/consistenthash",
+      "import_count": 35,
+      "synopsis": "Package consistenthash provides an implementation of a ring hash.",
+      "stars": 5556,
+      "score": 0.99
+    },
+    {
+      "name": "markdown",
+      "path": "github.com/golang-commonmark/markdown",
+      "import_count": 33,
+      "synopsis": "Package markdown provides CommonMark-compliant markdown parser and renderer.",
+      "stars": 142,
+      "score": 1
+    },
+    {
+      "name": "groupcachepb",
+      "path": "github.com/golang/groupcache/groupcachepb",
+      "import_count": 40,
+      "stars": 5000,
+      "score": 0.9405
+    },
+    {
+      "name": "structpb",
+      "path": "github.com/golang/protobuf/ptypes/struct",
+      "import_count": 48,
+      "synopsis": "Package structpb is a generated protocol buffer package.",
+      "stars": 2396,
+      "score": 0.88209
+    },
+    {
+      "name": "s2",
+      "path": "github.com/golang/geo/s2",
+      "import_count": 26,
+      "synopsis": "Package s2 implements types and functions for working with geometry in S² (spherical geometry).",
+      "stars": 527,
+      "score": 0.99
+    },
+    {
+      "name": "raster",
+      "path": "github.com/golang/freetype/raster",
+      "import_count": 22,
+      "synopsis": "Package raster provides an anti-aliasing 2-D rasterizer.",
+      "stars": 237,
+      "score": 0.99
+    },
+    {
+      "name": "dep",
+      "path": "github.com/golang/dep",
+      "import_count": 18,
+      "synopsis": "Package dep is a prototype dependency management library.",
+      "stars": 7093,
+      "score": 1
+    },
+    {
+      "name": "s1",
+      "path": "github.com/golang/geo/s1",
+      "import_count": 17,
+      "synopsis": "Package s1 implements types and functions for working with geometry in S¹ (circular geometry).",
+      "stars": 528,
+      "score": 0.99
+    },
+    {
+      "name": "r3",
+      "path": "github.com/golang/geo/r3",
+      "import_count": 16,
+      "synopsis": "Package r3 implements types and functions for working with geometry in ℝ³.",
+      "stars": 527,
+      "score": 0.99
+    },
+    {
+      "name": "database",
+      "path": "github.com/golang-migrate/migrate/database",
+      "import_count": 12,
+      "synopsis": "Package database provides the Database interface.",
+      "fork": true,
+      "stars": 1,
+      "score": 0.99
+    },
+    {
+      "name": "ios",
+      "path": "github.com/golang-interfaces/ios",
+      "import_count": 11,
+      "synopsis": "Code generated by counterfeiter.",
+      "stars": 1,
+      "score": 1
+    },
+    {
+      "name": "errors",
+      "path": "github.com/golang-plus/errors",
+      "import_count": 10,
+      "synopsis": "Package errors providers utilities for manipulate errors and provide stack trace information.",
+      "stars": 1,
+      "score": 1
+    },
+    {
+      "name": "gps",
+      "path": "github.com/golang/dep/gps",
+      "import_count": 12,
+      "stars": 7075,
+      "score": 0.9405
+    },
+    {
+      "name": "migrate",
+      "path": "github.com/golang-migrate/migrate",
+      "import_count": 8,
+      "synopsis": "Package migrate reads migrations from sources and runs them against databases.",
+      "fork": true,
+      "stars": 1,
+      "score": 1
+    },
+    {
+      "name": "source",
+      "path": "github.com/golang-migrate/migrate/source",
+      "import_count": 8,
+      "synopsis": "Package source provides the Source interface.",
+      "fork": true,
+      "stars": 1,
+      "score": 0.99
+    },
+    {
+      "name": "r1",
+      "path": "github.com/golang/geo/r1",
+      "import_count": 8,
+      "synopsis": "Package r1 implements types and functions for working with geometry in ℝ¹.",
+      "stars": 527,
+      "score": 0.99
+    },
+    {
+      "name": "db",
+      "path": "github.com/golang/leveldb/db",
+      "import_count": 6,
+      "synopsis": "Package db defines the interfaces for a key/value store.",
+      "stars": 446,
+      "score": 0.99
+    },
+    {
+      "name": "models",
+      "path": "github.com/golang-vietnam/forum/models",
+      "import_count": 7,
+      "stars": 19,
+      "score": 0.9405
+    },
+    {
+      "name": "config",
+      "path": "github.com/golang-vietnam/forum/helpers/config",
+      "import_count": 7,
+      "stars": 19,
+      "score": 0.931095
+    },
+    {
+      "name": "caching",
+      "path": "github.com/wayn3h0/go-caching",
+      "import_count": 9,
+      "synopsis": "Moved to https://github.com/golang-plus/caching",
+      "stars": 2,
+      "score": 0.855
+    },
+    {
+      "name": "gopher2",
+      "path": "github.com/llgcode/draw2d/samples/gopher2",
+      "import_count": 5,
+      "synopsis": "Package gopher2 draws a gopher avatar based on a svg of: https://github.com/golang-samples/gopher-vector/",
+      "stars": 221,
+      "score": 0.9801
+    },
+    {
+      "name": "model",
+      "path": "github.com/golang/mock/mockgen/model",
+      "import_count": 5,
+      "synopsis": "Package model contains the data model necessary for generating mock implementations.",
+      "stars": 1010,
+      "score": 0.9801
+    },
+    {
+      "name": "iioutil",
+      "path": "github.com/golang-interfaces/iioutil",
+      "import_count": 4,
+      "synopsis": "Code generated by counterfeiter.",
+      "stars": 1,
+      "score": 1
+    },
+    {
+      "name": "r2",
+      "path": "github.com/golang/geo/r2",
+      "import_count": 4,
+      "synopsis": "Package r2 implements types and functions for working with geometry in ℝ².",
+      "stars": 527,
+      "score": 0.99
+    },
+    {
+      "name": "byteutil",
+      "path": "github.com/golang-commonmark/markdown/byteutil",
+      "import_count": 4,
+      "synopsis": "Package byteutil provides various operations on bytes and byte strings.",
+      "stars": 101,
+      "score": 0.99
+    },
+    {
+      "name": "leveldb",
+      "path": "github.com/golang/leveldb",
+      "import_count": 3,
+      "synopsis": "Package leveldb provides an ordered key/value store.",
+      "stars": 577,
+      "score": 1
+    },
+    {
+      "name": "glog",
+      "path": "gopkg.in/airbrake/glog.v2",
+      "import_count": 4,
+      "synopsis": "github.com/golang/glog fork with Airbrake integration.",
+      "score": 0.9
+    },
+    {
+      "name": "conformance",
+      "path": "github.com/golang/protobuf/_conformance/conformance_proto",
+      "import_count": 4,
+      "synopsis": "Package conformance is a generated protocol buffer package.",
+      "stars": 1725,
+      "score": 0.88209
+    },
+    {
+      "name": "exec_logger_dtos",
+      "path": "github.com/golang-devops/exec-logger/exec_logger_dtos",
+      "import_count": 3,
+      "score": 0.9405
+    },
+    {
+      "name": "uuid",
+      "path": "github.com/wayn3h0/go-uuid",
+      "import_count": 4,
+      "synopsis": "Moved to https://github.com/golang-plus/uuid",
+      "stars": 11,
+      "score": 0.855
+    },
+    {
+      "name": "apiErrors",
+      "path": "github.com/golang-vietnam/forum/helpers/apiErrors",
+      "import_count": 3,
+      "stars": 19,
+      "score": 0.931095
+    },
+    {
+      "name": "database",
+      "path": "github.com/golang-vietnam/forum/helpers/database",
+      "import_count": 3,
+      "stars": 19,
+      "score": 0.931095
+    },
+    {
+      "name": "checksums",
+      "path": "github.com/golang-devops/go-psexec/services/encoding/checksums",
+      "import_count": 3,
+      "stars": 1,
+      "score": 0.92178405
+    },
+    {
+      "name": "filecopier",
+      "path": "github.com/golang-utils/filecopier",
+      "import_count": 2,
+      "synopsis": "Code generated by counterfeiter.",
+      "stars": 1,
+      "score": 1
+    },
+    {
+      "name": "table",
+      "path": "github.com/golang/leveldb/table",
+      "import_count": 2,
+      "synopsis": "Package table implements readers and writers of leveldb tables.",
+      "stars": 456,
+      "score": 0.99
+    },
+    {
+      "name": "blake2b",
+      "path": "github.com/golang/crypto/blake2b",
+      "import_count": 2,
+      "synopsis": "Package blake2b implements the BLAKE2b hash algorithm defined by RFC 7693 and the extendable output function (XOF) BLAKE2Xb.",
+      "stars": 764,
+      "score": 0.99
+    },
+    {
+      "name": "local",
+      "path": "github.com/golang-china/golangdoc/local",
+      "import_count": 2,
+      "synopsis": "Package local support translate for godoc.",
+      "stars": 69,
+      "score": 0.99
+    },
+    {
+      "name": "logging",
+      "path": "github.com/ianlewis/controllerutil/logging",
+      "import_count": 2,
+      "synopsis": "Package logging provides standard log.Logger wrappers around the github.com/golang/glog package.",
+      "stars": 27,
+      "score": 0.99
+    },
+    {
+      "name": "crc",
+      "path": "github.com/golang/leveldb/crc",
+      "import_count": 2,
+      "synopsis": "Package crc implements the checksum algorithm used throughout leveldb.",
+      "stars": 442,
+      "score": 0.99
+    },
+    {
+      "name": "common",
+      "path": "github.com/ghj1976/HuaRongDao/common",
+      "import_count": 2,
+      "synopsis": "改变自go官方下面源码 https://github.com/golang/go/blob/master/src/image/geom.go 修改的目的是之前点是 int 类型的，现在要改成 float32 类型的 type Point struct { X, Y int } 郭红俊 2016-04-19",
+      "score": 0.99
+    },
+    {
+      "name": "cmd",
+      "path": "github.com/golang-vietnam/forum/cmd",
+      "import_count": 2,
+      "stars": 19,
+      "score": 0.9405
+    },
+    {
+      "name": "resources",
+      "path": "github.com/golang-vietnam/forum/resources",
+      "import_count": 2,
+      "stars": 19,
+      "score": 0.9405
+    },
+    {
+      "name": "process_tree",
+      "path": "github.com/golang-devops/exec-logger/process_tree",
+      "import_count": 2,
+      "score": 0.9405
+    },
+    {
+      "name": "imp1",
+      "path": "github.com/golang/mock/sample/imp1",
+      "import_count": 2,
+      "stars": 315,
+      "score": 0.931095
+    },
+    {
+      "name": "imp3",
+      "path": "github.com/golang/mock/sample/imp3",
+      "import_count": 2,
+      "stars": 328,
+      "score": 0.931095
+    },
+    {
+      "name": "utils",
+      "path": "github.com/golang-vietnam/forum/helpers/utils",
+      "import_count": 2,
+      "stars": 19,
+      "score": 0.931095
+    },
+    {
+      "name": "imp2",
+      "path": "github.com/golang/mock/sample/imp2",
+      "import_count": 2,
+      "stars": 320,
+      "score": 0.931095
+    },
+    {
+      "name": "filepath_summary",
+      "path": "github.com/golang-devops/go-psexec/services/filepath_summary",
+      "import_count": 2,
+      "stars": 1,
+      "score": 0.931095
+    },
+    {
+      "name": "iuuid",
+      "path": "github.com/golang-interfaces/satori-go.uuid",
+      "import_count": 2,
+      "synopsis": "Code generated by counterfeiter.",
+      "score": 0.9
+    },
+    {
+      "name": "ijson",
+      "path": "github.com/golang-interfaces/encoding-ijson",
+      "import_count": 2,
+      "synopsis": "Code generated by counterfeiter.",
+      "score": 0.9
+    },
+    {
+      "name": "iwebsocket",
+      "path": "github.com/golang-interfaces/github.com-gorilla-websocket",
+      "import_count": 2,
+      "synopsis": "Code generated by counterfeiter.",
+      "stars": 1,
+      "score": 0.9
+    },
+    {
+      "name": "dircopier",
+      "path": "github.com/golang-utils/dircopier",
+      "import_count": 1,
+      "synopsis": "Code generated by counterfeiter.",
+      "stars": 1,
+      "score": 1
+    },
+    {
+      "name": "pscanary",
+      "path": "github.com/golang-utils/pscanary",
+      "import_count": 1,
+      "synopsis": "This file was generated by counterfeiter",
+      "stars": 1,
+      "score": 1
+    },
+    {
+      "name": "ihttp",
+      "path": "github.com/golang-interfaces/ihttp",
+      "import_count": 1,
+      "synopsis": "Code generated by counterfeiter.",
+      "stars": 1,
+      "score": 1
+    },
+    {
+      "name": "iio",
+      "path": "github.com/golang-interfaces/iio",
+      "import_count": 1,
+      "synopsis": "Code generated by counterfeiter.",
+      "stars": 1,
+      "score": 1
+    },
+    {
+      "name": "agecache",
+      "path": "github.com/segmentio/agecache",
+      "import_count": 1,
+      "synopsis": "LRU largely inspired by https://github.com/golang/groupcache",
+      "stars": 15,
+      "score": 1
+    },
+    {
+      "name": "sqlexp",
+      "path": "github.com/golang-sql/sqlexp",
+      "import_count": 1,
+      "synopsis": "Package sqlexp provides interfaces and functions that may be adopted into the database/sql package in the future.",
+      "score": 1
+    },
+    {
+      "name": "blog",
+      "path": "github.com/golang-china/golangdoc/blog",
+      "import_count": 1,
+      "synopsis": "Package blog implements a web server for articles written in present format.",
+      "stars": 68,
+      "score": 0.99
+    },
+    {
+      "name": "argon2",
+      "path": "github.com/golang/crypto/argon2",
+      "import_count": 1,
+      "synopsis": "Package argon2 implements the key derivation function Argon2.",
+      "stars": 735,
+      "score": 0.99
+    },
+    {
+      "name": "record",
+      "path": "github.com/golang/leveldb/record",
+      "import_count": 1,
+      "synopsis": "Package record reads and writes sequences of records.",
+      "stars": 422,
+      "score": 0.99
+    },
+    {
+      "name": "linkify",
+      "path": "github.com/golang-commonmark/markdown/linkify",
+      "import_count": 1,
+      "synopsis": "Package linkify provides a way to find links in plain text.",
+      "stars": 101,
+      "score": 0.99
+    },
+    {
+      "name": "rate",
+      "path": "github.com/golang/time/rate",
+      "import_count": 1,
+      "synopsis": "Package rate provides a rate limiter.",
+      "stars": 55,
+      "score": 0.99
+    },
+    {
+      "name": "errgroup",
+      "path": "github.com/golang/sync/errgroup",
+      "import_count": 1,
+      "synopsis": "Package errgroup provides synchronization, error propagation, and Context cancelation for groups of goroutines working on subtasks of a common task.",
+      "stars": 38,
+      "score": 0.99
+    },
+    {
+      "name": "nk",
+      "path": "github.com/golang-ui/nuklear/nk",
+      "import_count": 1,
+      "synopsis": "Package nk provides Go bindings for nuklear.h — a small ANSI C gui library.",
+      "stars": 604,
+      "score": 0.99
+    },
+    {
+      "name": "syncmap",
+      "path": "github.com/golang/sync/syncmap",
+      "import_count": 1,
+      "synopsis": "Package syncmap provides a concurrent map implementation.",
+      "stars": 68,
+      "score": 0.99
+    },
+    {
+      "name": "big",
+      "path": "github.com/golang-plus/math/big",
+      "import_count": 1,
+      "synopsis": "Package big providers utilities for big numbers.",
+      "stars": 1,
+      "score": 0.99
+    },
+    {
+      "name": "textures",
+      "path": "github.com/ghj1976/HuaRongDao/textures",
+      "import_count": 1,
+      "synopsis": "这里的技术实现参考： https://github.com/golang/freetype/blob/master/example/drawer/main.go",
+      "score": 0.99
+    },
+    {
+      "name": "httputil",
+      "path": "github.com/suzuken/wiki/httputil",
+      "import_count": 1,
+      "synopsis": "originally from github.com/golang/gddo/httputil.(ResponseBuffer)",
+      "stars": 8,
+      "score": 0.99
+    },
+    {
+      "name": "memdb",
+      "path": "github.com/golang/leveldb/memdb",
+      "import_count": 1,
+      "synopsis": "Package memdb provides a memory-backed implementation of the db.DB interface.",
+      "stars": 395,
+      "score": 0.99
+    },
+    {
+      "name": "imp_four",
+      "path": "github.com/golang/mock/sample/imp4",
+      "import_count": 2,
+      "stars": 315,
+      "score": 0.8379854999999999
+    },
+    {
+      "name": "stringutil",
+      "path": "github.com/golang/example/stringutil",
+      "import_count": 1,
+      "synopsis": "Package stringutil contains utility functions for working with strings.",
+      "stars": 1223,
+      "score": 0.99
+    },
+    {
+      "name": "gopher2",
+      "path": "gopkg.in/llgcode/draw2d.v1/samples/gopher2",
+      "import_count": 1,
+      "synopsis": "Package gopher2 draws a gopher avatar based on a svg of: https://github.com/golang-samples/gopher-vector/",
+      "score": 0.9801
+    },
+    {
+      "name": "gopher2",
+      "path": "github.com/ninjasphere/draw2d/samples/gopher2",
+      "import_count": 1,
+      "synopsis": "Package gopher2 draws a gopher avatar based on a svg of: https://github.com/golang-samples/gopher-vector/",
+      "fork": true,
+      "stars": 1,
+      "score": 0.9801
+    },
+    {
+      "name": "sort",
+      "path": "github.com/golang/go/src/sort",
+      "import_count": 1,
+      "synopsis": "Package sort provides primitives for sorting slices and user-defined collections.",
+      "stars": 34119,
+      "score": 0.9801
+    },
+    {
+      "name": "autocert",
+      "path": "github.com/golang/crypto/acme/autocert",
+      "import_count": 1,
+      "synopsis": "Package autocert provides automatic access to certificates from Let's Encrypt and any other ACME-based CA.",
+      "stars": 762,
+      "score": 0.9801
+    }
+  ]
+}

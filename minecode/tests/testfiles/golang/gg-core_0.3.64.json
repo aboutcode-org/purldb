@@ -1,0 +1,130 @@
+{
+    "type": "repository",
+    "full_name": "digi-sense/gg-core",
+    "links": {
+      "self": {
+        "href": "https://api.bitbucket.org/2.0/repositories/digi-sense/gg-core"
+      },
+      "html": {
+        "href": "https://bitbucket.org/digi-sense/gg-core"
+      },
+      "avatar": {
+        "href": "https://bytebucket.org/ravatar/%7B1bc29c37-3104-464d-ba27-bffa8847bcd6%7D?ts=3152224"
+      },
+      "pullrequests": {
+        "href": "https://api.bitbucket.org/2.0/repositories/digi-sense/gg-core/pullrequests"
+      },
+      "commits": {
+        "href": "https://api.bitbucket.org/2.0/repositories/digi-sense/gg-core/commits"
+      },
+      "forks": {
+        "href": "https://api.bitbucket.org/2.0/repositories/digi-sense/gg-core/forks"
+      },
+      "watchers": {
+        "href": "https://api.bitbucket.org/2.0/repositories/digi-sense/gg-core/watchers"
+      },
+      "branches": {
+        "href": "https://api.bitbucket.org/2.0/repositories/digi-sense/gg-core/refs/branches"
+      },
+      "tags": {
+        "href": "https://api.bitbucket.org/2.0/repositories/digi-sense/gg-core/refs/tags"
+      },
+      "downloads": {
+        "href": "https://api.bitbucket.org/2.0/repositories/digi-sense/gg-core/downloads"
+      },
+      "source": {
+        "href": "https://api.bitbucket.org/2.0/repositories/digi-sense/gg-core/src"
+      },
+      "clone": [
+        {
+          "name": "https",
+          "href": "https://bitbucket.org/digi-sense/gg-core.git"
+        },
+        {
+          "name": "ssh",
+          "href": "git@bitbucket.org:digi-sense/gg-core.git"
+        }
+      ],
+      "hooks": {
+        "href": "https://api.bitbucket.org/2.0/repositories/digi-sense/gg-core/hooks"
+      }
+    },
+    "name": "gg-core",
+    "slug": "gg-core",
+    "description": "",
+    "scm": "git",
+    "website": null,
+    "owner": {
+      "display_name": "Digi Sense",
+      "links": {
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/workspaces/%7B2b6cccfa-727a-4d9a-82e0-bd8a163847a0%7D"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/account/digi-sense/avatar/"
+        },
+        "html": {
+          "href": "https://bitbucket.org/%7B2b6cccfa-727a-4d9a-82e0-bd8a163847a0%7D/"
+        }
+      },
+      "type": "team",
+      "uuid": "{2b6cccfa-727a-4d9a-82e0-bd8a163847a0}",
+      "username": "digi-sense"
+    },
+    "workspace": {
+      "type": "workspace",
+      "uuid": "{2b6cccfa-727a-4d9a-82e0-bd8a163847a0}",
+      "name": "Digi Sense",
+      "slug": "digi-sense",
+      "links": {
+        "avatar": {
+          "href": "https://bitbucket.org/workspaces/digi-sense/avatar/?ts=1732269844"
+        },
+        "html": {
+          "href": "https://bitbucket.org/digi-sense/"
+        },
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/workspaces/digi-sense"
+        }
+      }
+    },
+    "is_private": false,
+    "project": {
+      "type": "project",
+      "key": "BASE",
+      "uuid": "{32414877-738a-4002-96a4-893a906d88c8}",
+      "name": "base",
+      "links": {
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/workspaces/digi-sense/projects/BASE"
+        },
+        "html": {
+          "href": "https://bitbucket.org/digi-sense/workspace/projects/BASE"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/digi-sense/workspace/projects/BASE/avatar/32?ts=1632311978"
+        }
+      }
+    },
+    "fork_policy": "allow_forks",
+    "created_on": "2022-07-08T14:40:46.166913+00:00",
+    "updated_on": "2025-04-14T16:01:39.490611+00:00",
+    "size": 47007088,
+    "language": "go",
+    "uuid": "{1bc29c37-3104-464d-ba27-bffa8847bcd6}",
+    "mainbranch": {
+      "name": "master",
+      "type": "branch"
+    },
+    "override_settings": {
+      "default_merge_strategy": true,
+      "branching_model": true
+    },
+    "parent": null,
+    "enforced_signed_commits": null,
+    "has_issues": false,
+    "has_wiki": false,
+    "repo_workspace_name": "digi-sense/gg-core",
+    "download_url": "https://bitbucket.org/digi-sense/gg-core/get/v0.3.64.zip",
+    "author": ""
+  }

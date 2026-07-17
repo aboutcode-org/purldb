@@ -1,0 +1,214 @@
+{
+  "_id": "0flux",
+  "_rev": "4-a55c2688639aed12d043df63b58a00e7",
+  "name": "0flux",
+  "description": "Typed state management",
+  "dist-tags": {
+    "latest": "0.0.4"
+  },
+  "versions": {
+    "0.0.1": {
+      "name": "0flux",
+      "version": "0.0.1",
+      "description": "Typed state management",
+      "main": "build/index.js",
+      "repository": [
+        {
+          "type": "git",
+          "url": "https://github.com/reissbaker/0flux.git"
+        }
+      ],
+      "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "author": {
+        "name": "Matt Baker"
+      },
+      "license": "ISC",
+      "typescript": {
+        "definition": "build/lib/gamekernel.d.ts"
+      },
+      "gitHead": "1c3b277743eb01c401582c754bda7bb1298df00d",
+      "_id": "0flux@0.0.1",
+      "_shasum": "b7537784b444fdee22a631f12f2745b58cb758c2",
+      "_from": ".",
+      "_npmVersion": "3.4.1",
+      "_nodeVersion": "4.2.2",
+      "_npmUser": {
+        "name": "reissbaker",
+        "email": "matthew.reiss.baker@gmail.com"
+      },
+      "dist": {
+        "shasum": "b7537784b444fdee22a631f12f2745b58cb758c2",
+        "tarball": "http://registry.npmjs.org/0flux/-/0flux-0.0.1.tgz"
+      },
+      "maintainers": [
+        {
+          "name": "reissbaker",
+          "email": "matthew.reiss.baker@gmail.com"
+        }
+      ],
+      "directories": {
+        
+      }
+    },
+    "0.0.2": {
+      "name": "0flux",
+      "version": "0.0.2",
+      "description": "Typed state management",
+      "main": "build/index.js",
+      "repository": [
+        {
+          "type": "git",
+          "url": "https://github.com/reissbaker/0flux.git"
+        }
+      ],
+      "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "author": {
+        "name": "Matt Baker"
+      },
+      "license": "ISC",
+      "typings": "build/lib/index.d.ts",
+      "gitHead": "bcea414e2128cb37d704858814e3ec7f0d151b0d",
+      "_id": "0flux@0.0.2",
+      "_shasum": "488ea61763f0cfc219336918e23df2ad6559ae51",
+      "_from": ".",
+      "_npmVersion": "3.4.1",
+      "_nodeVersion": "4.2.2",
+      "_npmUser": {
+        "name": "reissbaker",
+        "email": "matthew.reiss.baker@gmail.com"
+      },
+      "dist": {
+        "shasum": "488ea61763f0cfc219336918e23df2ad6559ae51",
+        "tarball": "http://registry.npmjs.org/0flux/-/0flux-0.0.2.tgz"
+      },
+      "maintainers": [
+        {
+          "name": "reissbaker",
+          "email": "matthew.reiss.baker@gmail.com"
+        }
+      ],
+      "directories": {
+        
+      }
+    },
+    "0.0.3": {
+      "name": "0flux",
+      "version": "0.0.3",
+      "description": "Typed state management",
+      "main": "build/index.js",
+      "repository": [
+        {
+          "type": "git",
+          "url": "https://github.com/reissbaker/0flux.git"
+        }
+      ],
+      "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "author": {
+        "name": "Matt Baker"
+      },
+      "license": "ISC",
+      "typings": "build/index.d.ts",
+      "gitHead": "b4f31f6e62f1827c8cefba12389211b5866206aa",
+      "_id": "0flux@0.0.3",
+      "_shasum": "68cf8ae68c2c6280af69d8a152bdce88ccaaac29",
+      "_from": ".",
+      "_npmVersion": "3.4.1",
+      "_nodeVersion": "4.2.2",
+      "_npmUser": {
+        "name": "reissbaker",
+        "email": "matthew.reiss.baker@gmail.com"
+      },
+      "dist": {
+        "shasum": "68cf8ae68c2c6280af69d8a152bdce88ccaaac29",
+        "tarball": "http://registry.npmjs.org/0flux/-/0flux-0.0.3.tgz"
+      },
+      "maintainers": [
+        {
+          "name": "reissbaker",
+          "email": "matthew.reiss.baker@gmail.com"
+        }
+      ],
+      "directories": {
+        
+      }
+    },
+    "0.0.4": {
+      "name": "0flux",
+      "version": "0.0.4",
+      "description": "Typed state management",
+      "main": "build/index.js",
+      "repository": [
+        {
+          "type": "git",
+          "url": "https://github.com/reissbaker/0flux.git"
+        }
+      ],
+      "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "author": {
+        "name": "Matt Baker"
+      },
+      "license": "ISC",
+      "typings": "build/index.d.ts",
+      "gitHead": "82663ce575af51bfee9b6a46d34c76b528759d3a",
+      "_id": "0flux@0.0.4",
+      "_shasum": "fd6307538e680617a520b3d28521bbc6979eaa01",
+      "_from": ".",
+      "_npmVersion": "3.4.1",
+      "_nodeVersion": "4.2.2",
+      "_npmUser": {
+        "name": "reissbaker",
+        "email": "matthew.reiss.baker@gmail.com"
+      },
+      "dist": {
+        "shasum": "fd6307538e680617a520b3d28521bbc6979eaa01",
+        "tarball": "http://registry.npmjs.org/0flux/-/0flux-0.0.4.tgz"
+      },
+      "maintainers": [
+        {
+          "name": "reissbaker",
+          "email": "matthew.reiss.baker@gmail.com"
+        }
+      ],
+      "directories": {
+        
+      }
+    }
+  },
+  "readme": "Ø Flux\n================================================================================\n\nA small, typed state management library.\n\nExample:\n\n```typescript\n'use strict';\n\nimport * as Flux from '0flux';\n\ninterface TodoAction {\n  name: string;\n  id: number;\n}\n\nconst container = new Flux();\n\nconst dispatcher = {\n  addTodo: container.action<TodoAction>(),\n  removeTodo: container.action<TodoAction>(),\n};\n\ninterface State {\n  todos: TodoAction[];\n}\n\nconst todoState = container.state<State>((getState, setState) => {\n  dispatcher.addTodo.bind((todoAction) => {\n    setState({\n      todos: getState().todos.concat([ todoAction ])\n    });\n  });\n\n  dispatcher.removeTodo.bind((todoAction) => {\n    setState({\n      todos: getState().todos.filter((item) => {\n        return item.id !== todoAction.id;\n      })\n    });\n  });\n\n  return {\n    todos: []\n  };\n});\n\nconst julia = dispatcher.addTodo.dispatch({\n  id: 0,\n  name: 'julia'\n});\n\nconst clone = dispatcher.addTodo.dispatch({\n  id: 1,\n  name: 'evil julia clone'\n});\n\nconsole.log('evil clone detected:');\nconsole.log(todoState.current);\n\ndispatcher.removeTodo.dispatch(clone);\n\nconsole.log('evil clone eliminated:');\nconsole.log(todoState.current);\n```\n",
+  "maintainers": [
+    {
+      "name": "reissbaker",
+      "email": "matthew.reiss.baker@gmail.com"
+    }
+  ],
+  "time": {
+    "modified": "2015-12-07T01:50:13.902Z",
+    "created": "2015-12-05T08:49:15.485Z",
+    "0.0.1": "2015-12-05T08:49:15.485Z",
+    "0.0.2": "2015-12-05T10:02:26.097Z",
+    "0.0.3": "2015-12-05T10:05:34.745Z",
+    "0.0.4": "2015-12-07T01:50:13.902Z"
+  },
+  "repository": [
+    {
+      "type": "git",
+      "url": "https://github.com/reissbaker/0flux.git"
+    }
+  ],
+  "author": {
+    "name": "Matt Baker"
+  },
+  "license": "ISC",
+  "readmeFilename": "README.md",
+  "_attachments": {
+    
+  }
+}

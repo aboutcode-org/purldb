@@ -1,0 +1,8 @@
+ {
+      "name": "glog", 
+      "import_count": 26518, 
+      "synopsis": "Package glog implements logging analogous to the Google-internal C++ INFO/ERROR/V setup.", 
+      "score": 1, 
+      "stars": 1657, 
+      "path": "github.com/golang/glog"
+ }

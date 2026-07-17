@@ -1,0 +1,30 @@
+{
+  "size": 188, 
+  "repo_id": 367, 
+  "description": null, 
+  "language": "Ruby", 
+  "watchers_count": 42, 
+  "homepage": "", 
+  "updated_at": "2018-02-26T02:52:11", 
+  "source_url": "https://github.com/collectiveidea/calendar_builder", 
+  "html_url": "https://github.com/collectiveidea/calendar_builder", 
+  "pushed_at": "2018-01-21T12:17:00", 
+  "etag": "\"e10b78ff74a199fcf802be4afc333275\"", 
+  "clone_url": "https://github.com/collectiveidea/calendar_builder.git", 
+  "git_url": "git://github.com/collectiveidea/calendar_builder.git", 
+  "full_name": "collectiveidea/calendar_builder", 
+  "ssh_url": "git@github.com:collectiveidea/calendar_builder.git", 
+  "owner": "Collective Idea", 
+  "blobs_url": "https://api.github.com/repos/collectiveidea/calendar_builder/git/blobs{/sha}", 
+  "master_branch": null, 
+  "name": "calendar_builder", 
+  "issue_url": "https://api.github.com/repos/collectiveidea/calendar_builder/issues{/number}", 
+  "has_download": true, 
+  "downloads": [], 
+  "tags": [], 
+  "branches_download_urls": [
+    "https://github.com/collectiveidea/calendar_builder/archive/master.zip", 
+    "https://github.com/collectiveidea/calendar_builder/archive/refactoring.zip"
+  ], 
+  "labels": []
+}

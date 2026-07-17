@@ -1,0 +1,18 @@
+[
+  {
+    "uri":"http://www.alcyone.com/software/cage/cage-latest.tar.gz",
+    "source_uri":"https://pypi.python.org/pypi/CAGE/1.1.2/json",
+    "package_url":"pkg:pypi/cage@1.1.2",
+    "file_name":null,
+    "size":null,
+    "date":null,
+    "md5":null,
+    "sha1":null,
+    "sha256":null,
+    "priority":0,
+    "data":null,
+    "visited":false,
+    "mining_level":0,
+    "visit_error":null
+  }
+]

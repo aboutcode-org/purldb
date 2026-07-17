@@ -1,0 +1,33 @@
+{
+    "name": "2a72b8e6a282ae3073eca9123468a37865dcd3b0",
+    "url": "http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/",
+    "uuid": "c3b8d1ab-4811-4ced-84af-080997ef1a1a",
+    "created_date": "2023-05-19T00:45:29.449151Z",
+    "is_archived": false,
+    "input_sources": [
+        {
+            "filename": "wagon-api-20040705.181715.jar",
+            "download_url": "https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar"
+        }
+    ],
+    "next_run": "scan_and_fingerprint_package",
+    "runs": [
+        {
+            "url": "http://127.0.0.1:8001/api/runs/336e18e3-fd68-4375-9bf2-87090dc5c726/",
+            "pipeline_name": "scan_and_fingerprint_package",
+            "status": "not_started",
+            "description": "",
+            "project": "http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/",
+            "uuid": "336e18e3-fd68-4375-9bf2-87090dc5c726",
+            "created_date": "2023-05-19T00:45:29.451929Z",
+            "scancodeio_version": "",
+            "task_id": null,
+            "task_start_date": null,
+            "task_end_date": null,
+            "task_exitcode": null,
+            "task_output": "",
+            "log": "",
+            "execution_time": null
+        }
+    ]
+}

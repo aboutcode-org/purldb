@@ -1,0 +1,7 @@
+Archive: jessie-backports
+Origin: Debian Backports
+Label: Debian Backports
+NotAutomatic: yes
+ButAutomaticUpgrades: yes
+Component: main
+Architecture: ppc64el

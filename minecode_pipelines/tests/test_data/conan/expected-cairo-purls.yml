@@ -1,0 +1,4 @@
+- pkg:conan/cairo@1.18.0
+- pkg:conan/cairo@1.17.8
+- pkg:conan/cairo@1.17.6
+- pkg:conan/cairo@1.17.4

@@ -1,0 +1,40 @@
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "name": "2a72b8e6a282ae3073eca9123468a37865dcd3b0",
+            "url": "http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/",
+            "uuid": "c3b8d1ab-4811-4ced-84af-080997ef1a1a",
+            "created_date": "2023-05-19T00:45:29.449151Z",
+            "is_archived": false,
+            "input_sources": [
+                {
+                    "filename": "wagon-api-20040705.181715.jar",
+                    "download_url": "https://repo1.maven.org/maven2/maven/wagon-api/20040705.181715/wagon-api-20040705.181715.jar"
+                }
+            ],
+            "next_run": null,
+            "runs": [
+                {
+                    "url": "http://127.0.0.1:8001/api/runs/336e18e3-fd68-4375-9bf2-87090dc5c726/",
+                    "pipeline_name": "scan_and_fingerprint_package",
+                    "status": "success",
+                    "description": "",
+                    "project": "http://127.0.0.1:8001/api/projects/c3b8d1ab-4811-4ced-84af-080997ef1a1a/",
+                    "uuid": "336e18e3-fd68-4375-9bf2-87090dc5c726",
+                    "created_date": "2023-05-19T00:45:29.451929Z",
+                    "scancodeio_version": "33.0.0-dev",
+                    "task_id": "336e18e3-fd68-4375-9bf2-87090dc5c726",
+                    "task_start_date": "2023-05-19T00:45:29.461599Z",
+                    "task_end_date": "2023-05-19T00:45:39.251824Z",
+                    "task_exitcode": 0,
+                    "task_output": "",
+                    "log": "2023-05-19 00:45:29.46 Pipeline [scan_and_fingerprint_package] starting\n2023-05-19 00:45:29.46 Step [get_package_archive_input] starting\n2023-05-19 00:45:29.46 Step [get_package_archive_input] completed in 0 seconds\n2023-05-19 00:45:29.46 Step [collect_archive_information] starting\n2023-05-19 00:45:29.47 Step [collect_archive_information] completed in 0 seconds\n2023-05-19 00:45:29.47 Step [extract_archive_to_codebase_directory] starting\n2023-05-19 00:45:29.53 Step [extract_archive_to_codebase_directory] completed in 0 seconds\n2023-05-19 00:45:29.53 Step [run_scancode] starting\n2023-05-19 00:45:37.63 Step [run_scancode] completed in 8 seconds\n2023-05-19 00:45:37.63 Step [load_inventory_from_toolkit_scan] starting\n2023-05-19 00:45:37.94 Step [load_inventory_from_toolkit_scan] completed in 0 seconds\n2023-05-19 00:45:37.94 Step [fingerprint_codebase] starting\n2023-05-19 00:45:39.23 Step [fingerprint_codebase] completed in 1 seconds\n2023-05-19 00:45:39.23 Step [make_summary_from_scan_results] starting\n2023-05-19 00:45:39.24 Step [make_summary_from_scan_results] completed in 0 seconds\n2023-05-19 00:45:39.24 Pipeline completed\n",
+                    "execution_time": 9
+                }
+            ]
+        }
+    ]
+}

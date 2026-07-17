@@ -1,0 +1,692 @@
+{
+    "results": [
+        {
+            "name": "groupcache", 
+            "path": "github.com/golang/groupcache", 
+            "import_count": 74, 
+            "synopsis": "Package groupcache provides a data loading mechanism with caching and de-duplication that works across a set of peer processes.", 
+            "stars": 6731, 
+            "score": 1
+        }, 
+        {
+            "name": "parser", 
+            "path": "github.com/getgauge/gauge/parser", 
+            "import_count": 32, 
+            "synopsis": "Package parser parses all the specs in the list of directories given and also de-duplicates all specs passed through `specDirs` before parsing specs.", 
+            "stars": 1307, 
+            "score": 0.99
+        }, 
+        {
+            "name": "federation", 
+            "path": "git.feneas.org/ganggo/federation", 
+            "import_count": 18, 
+            "synopsis": "GangGo Federation Library Copyright (C) 2017-2018 Lukas Matt <lukas@zauberstuhl.de>", 
+            "score": 1
+        }, 
+        {
+            "name": "demodel", 
+            "path": "github.com/driusan/de/demodel", 
+            "import_count": 17, 
+            "stars": 233, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "querydsl", 
+            "path": "github.com/cyverse-de/querydsl", 
+            "import_count": 11, 
+            "synopsis": "Package querydsl provides programmatic mapping from the CyVerse search DSL to Elasticsearch queries", 
+            "score": 1
+        }, 
+        {
+            "name": "hookshot", 
+            "path": "github.com/ejholmes/hookshot", 
+            "import_count": 11, 
+            "synopsis": "Package hookshot is a router that de-multiplexes and authorizes github webhooks.", 
+            "stars": 9, 
+            "score": 1
+        }, 
+        {
+            "name": "sdl", 
+            "path": "winterdrache.de/bindings/sdl", 
+            "import_count": 11, 
+            "synopsis": "Bindings for Simple DirectMedia Layer (www.libsdl.org)", 
+            "score": 0.99
+        }, 
+        {
+            "name": "renderer", 
+            "path": "github.com/driusan/de/renderer", 
+            "import_count": 12, 
+            "stars": 201, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "types", 
+            "path": "metalgearsonic.de/sinni800/booruwerks/types", 
+            "import_count": 11, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "clause", 
+            "path": "github.com/cyverse-de/querydsl/clause", 
+            "import_count": 9, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "clauseutils", 
+            "path": "github.com/cyverse-de/querydsl/clauseutils", 
+            "import_count": 7, 
+            "synopsis": "Package clauseutils provides various useful functions for clauses to use in their processing", 
+            "score": 0.99
+        }, 
+        {
+            "name": "config", 
+            "path": "metalgearsonic.de/sinni800/booruwerks/config", 
+            "import_count": 8, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "backup", 
+            "path": "github.com/xxorde/pgglaskugel/backup", 
+            "import_count": 6, 
+            "synopsis": "Package backup - basebackup module Copyright \u00a9 2017 Alexander Sosna <alexander@xxor.de>", 
+            "stars": 1, 
+            "score": 0.99
+        }, 
+        {
+            "name": "cil", 
+            "path": "zikichombo.org/sound/cil", 
+            "import_count": 6, 
+            "synopsis": "Package cil provides channel (de-)interleaving support.", 
+            "stars": 31, 
+            "score": 0.99
+        }, 
+        {
+            "name": "util", 
+            "path": "github.com/xxorde/pgglaskugel/util", 
+            "import_count": 5, 
+            "synopsis": "Package util - general module Copyright \u00a9 2017 Alexander Sosna <alexander@xxor.de>", 
+            "stars": 1, 
+            "score": 0.99
+        }, 
+        {
+            "name": "log", 
+            "path": "github.com/lambdasoup/go-netlink/log", 
+            "import_count": 5, 
+            "synopsis": "Package log is a simple wrapper around the standard log package which enables logging to be [de]activated", 
+            "score": 0.99
+        }, 
+        {
+            "name": "ticketee_srv_events", 
+            "path": "git.cbrgm.de/bachelor/event-service/proto/event", 
+            "import_count": 7, 
+            "synopsis": "Package ticketee_srv_events is a generated protocol buffer package.", 
+            "score": 0.88209
+        }, 
+        {
+            "name": "actions", 
+            "path": "github.com/driusan/de/actions", 
+            "import_count": 5, 
+            "stars": 250, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "file", 
+            "path": "simonwaldherr.de/go/golibs/file", 
+            "import_count": 4, 
+            "synopsis": "file wraps around the standard functions to simplify reading and writing on disk", 
+            "stars": 97, 
+            "score": 0.99
+        }, 
+        {
+            "name": "position", 
+            "path": "github.com/driusan/de/position", 
+            "import_count": 4, 
+            "stars": 167, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "configurate", 
+            "path": "github.com/cyverse-de/configurate", 
+            "import_count": 3, 
+            "synopsis": "Package configurate provides common configuration functionality.", 
+            "score": 1
+        }, 
+        {
+            "name": "as", 
+            "path": "simonwaldherr.de/go/golibs/as", 
+            "import_count": 3, 
+            "synopsis": "Package as helps by converting various data types to various other types", 
+            "stars": 97, 
+            "score": 0.99
+        }, 
+        {
+            "name": "nnz", 
+            "path": "github.com/sourcegraph/go-nnz/nnz", 
+            "import_count": 3, 
+            "synopsis": "Package nnz defines variants of primitive types where the zero value represents null when (de)serializing with encoding/json and database/sql.", 
+            "stars": 5, 
+            "score": 0.99
+        }, 
+        {
+            "name": "polyutil", 
+            "path": "github.com/akavel/polyclip-go/polyutil", 
+            "import_count": 3, 
+            "synopsis": "Package polyutil contains very simple utility functions for drawing and (de)serialization of polygons.", 
+            "stars": 39, 
+            "score": 0.99
+        }, 
+        {
+            "name": "ticketee_srv_entrees", 
+            "path": "gitlab.informatik.haw-hamburg.de/ticketee/entry-srv/proto/entry", 
+            "import_count": 4, 
+            "synopsis": "Package ticketee_srv_entrees is a generated protocol buffer package.", 
+            "score": 0.88209
+        }, 
+        {
+            "name": "util", 
+            "path": "metalgearsonic.de/sinni800/booruwerks/util", 
+            "import_count": 3, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "booru", 
+            "path": "metalgearsonic.de/sinni800/booruwerks/booru", 
+            "import_count": 3, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "sql", 
+            "path": "git.cbrgm.de/bachelor/persistence/sql", 
+            "import_count": 3, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "viewer", 
+            "path": "github.com/driusan/de/viewer", 
+            "import_count": 3, 
+            "stars": 233, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "booruimage", 
+            "path": "metalgearsonic.de/sinni800/booruwerks/booruimage", 
+            "import_count": 3, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "ddl", 
+            "path": "git.cbrgm.de/bachelor/persistence/ddl", 
+            "import_count": 3, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "ddl", 
+            "path": "gitlab.informatik.haw-hamburg.de/ticketee/persistence/ddl", 
+            "import_count": 3, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "sql", 
+            "path": "gitlab.informatik.haw-hamburg.de/ticketee/persistence/sql", 
+            "import_count": 3, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "model", 
+            "path": "gopkg.in/cyverse-de/model.v1", 
+            "import_count": 4, 
+            "score": 0.855
+        }, 
+        {
+            "name": "radolan", 
+            "path": "gitlab.cs.fau.de/since/radolan", 
+            "import_count": 2, 
+            "synopsis": "Package radolan parses the DWD RADOLAN / RADVOR radar composite format.", 
+            "score": 1
+        }, 
+        {
+            "name": "cafs", 
+            "path": "github.com/indyjo/cafs", 
+            "import_count": 2, 
+            "synopsis": "Package cafs specifies a content-addressable file storage with support for de-duplication and remote syncing.", 
+            "stars": 1, 
+            "score": 1
+        }, 
+        {
+            "name": "cliset", 
+            "path": "github.com/Qs-F/cliset", 
+            "import_count": 2, 
+            "synopsis": "copyright 2016 CreatorQsF, de-liKeR MIT License `cliset` package provides some useful tools for developing cli tool in Golang.", 
+            "score": 1
+        }, 
+        {
+            "name": "elasticsearch", 
+            "path": "github.com/cyverse-de/search/elasticsearch", 
+            "import_count": 2, 
+            "synopsis": "Package elasticsearch contains simple wrappers for the elastic library for use in this service", 
+            "score": 0.99
+        }, 
+        {
+            "name": "gopath", 
+            "path": "simonwaldherr.de/go/golibs/gopath", 
+            "import_count": 2, 
+            "synopsis": "gopath provides an easy way to get system information", 
+            "stars": 97, 
+            "score": 0.99
+        }, 
+        {
+            "name": "src", 
+            "path": "github.com/ironsmile/httpms/src", 
+            "import_count": 2, 
+            "synopsis": "Package src contains the de-facto main function of the application.", 
+            "stars": 4, 
+            "score": 0.99
+        }, 
+        {
+            "name": "ssl", 
+            "path": "simonwaldherr.de/go/golibs/ssl", 
+            "import_count": 2, 
+            "synopsis": "Generate SSL Certs via this simple to use ssl package.", 
+            "stars": 100, 
+            "score": 0.99
+        }, 
+        {
+            "name": "cache", 
+            "path": "simonwaldherr.de/go/golibs/cache", 
+            "import_count": 2, 
+            "synopsis": "Package cache simplifies caching with GC", 
+            "stars": 100, 
+            "score": 0.99
+        }, 
+        {
+            "name": "vpbruijn", 
+            "path": "github.com/ufoot/vapor/go/vpbruijn", 
+            "import_count": 2, 
+            "synopsis": "Package vpbruijn implements De Bruijn graphs.", 
+            "stars": 2, 
+            "score": 0.9801
+        }, 
+        {
+            "name": "model", 
+            "path": "gopkg.in/cyverse-de/model.v3", 
+            "import_count": 3, 
+            "score": 0.855
+        }, 
+        {
+            "name": "services", 
+            "path": "kohlbau.de/x/jaye/services", 
+            "import_count": 2, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "store", 
+            "path": "git.cbrgm.de/bachelor/event-service/store", 
+            "import_count": 2, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "xtime", 
+            "path": "simonwaldherr.de/go/golibs/xtime", 
+            "import_count": 2, 
+            "stars": 100, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "store", 
+            "path": "gitlab.informatik.haw-hamburg.de/ticketee/entry-srv/store", 
+            "import_count": 2, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "store", 
+            "path": "git.cbrgm.de/bachelor/entry-service/store", 
+            "import_count": 2, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "store", 
+            "path": "gitlab.informatik.haw-hamburg.de/ticketee/ticket-srv/store", 
+            "import_count": 2, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "kbmap", 
+            "path": "github.com/driusan/de/kbmap", 
+            "import_count": 2, 
+            "stars": 177, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "postgres", 
+            "path": "kohlbau.de/x/mqtesting/store/postgres", 
+            "import_count": 2, 
+            "score": 0.931095
+        }, 
+        {
+            "name": "types", 
+            "path": "github.com/rebuy-de/aws-nuke/pkg/types", 
+            "import_count": 2, 
+            "stars": 252, 
+            "score": 0.931095
+        }, 
+        {
+            "name": "memory", 
+            "path": "kohlbau.de/x/mqtesting/store/memory", 
+            "import_count": 2, 
+            "score": 0.931095
+        }, 
+        {
+            "name": "qpack", 
+            "path": "github.com/transceptor-technology/go-qpack", 
+            "import_count": 2, 
+            "synopsis": "Package qpack provides fast data (de)serializing.", 
+            "stars": 4, 
+            "score": 0.9
+        }, 
+        {
+            "name": "bdsql", 
+            "path": "github.com/fabianpallares/bdsql", 
+            "import_count": 1, 
+            "synopsis": "Package bdsql gestiona de manera simple, r\u00e1pida y eficiente; todas las acciones que se realizan con un motor de base de datos (gestor de datos).", 
+            "score": 1
+        }, 
+        {
+            "name": "gbacomp", 
+            "path": "github.com/salviati/gbacomp", 
+            "import_count": 1, 
+            "synopsis": "GBA (de)compression functions supported by GBA BIOS.", 
+            "stars": 1, 
+            "score": 1
+        }, 
+        {
+            "name": "de", 
+            "path": "github.com/ziutek/de", 
+            "import_count": 1, 
+            "synopsis": "Package de implements Differential Evolution method of optimization.", 
+            "stars": 6, 
+            "score": 1
+        }, 
+        {
+            "name": "groupcache", 
+            "path": "github.com/ijibu/groupcache", 
+            "import_count": 1, 
+            "synopsis": "Package groupcache provides a data loading mechanism with caching and de-duplication that works across a set of peer processes.", 
+            "fork": true, 
+            "score": 1
+        }, 
+        {
+            "name": "utilcadenas", 
+            "path": "github.com/gitnacho/ejemplo/utilcadenas", 
+            "import_count": 1, 
+            "synopsis": "El paquete utilcadenas contiene \u00fatiles funciones para trabajar con cadenas de caracteres.", 
+            "score": 0.99
+        }, 
+        {
+            "name": "data", 
+            "path": "github.com/cyverse-de/search/data", 
+            "import_count": 1, 
+            "synopsis": "Package data contains handlers and logic for data searches for the CyVerse data store", 
+            "score": 0.99
+        }, 
+        {
+            "name": "gem", 
+            "path": "git.fractalqb.de/fractalqb/xsx/gem", 
+            "import_count": 1, 
+            "synopsis": "Package gem provides a GEneral Model for XSX data", 
+            "score": 0.99
+        }, 
+        {
+            "name": "depart", 
+            "path": "github.com/ObjectIsAdvantag/maretraite/depart", 
+            "import_count": 1, 
+            "synopsis": "Ensemble de fonctions utilitaires pour manipuler des dates et \u00e2ges", 
+            "stars": 1, 
+            "score": 0.99
+        }, 
+        {
+            "name": "arg", 
+            "path": "simonwaldherr.de/go/golibs/arg", 
+            "import_count": 1, 
+            "synopsis": "the arg package simplifies cli flags (arguments)", 
+            "stars": 97, 
+            "score": 0.99
+        }, 
+        {
+            "name": "bytes", 
+            "path": "winterdrache.de/golib/bytes", 
+            "import_count": 1, 
+            "synopsis": "Alternative to the Go standard lib's bytes package that avoids the GC problems.", 
+            "score": 0.99
+        }, 
+        {
+            "name": "bd", 
+            "path": "github.com/rafaeljusto/atiradorfrequente/n\u00facleo/bd", 
+            "import_count": 1, 
+            "synopsis": "Package bd cont\u00e9m todas as estrutura \u00fateis para a persist\u00eancia dos dados no banco de dados.", 
+            "score": 0.9801
+        }, 
+        {
+            "name": "erros", 
+            "path": "github.com/rafaeljusto/atiradorfrequente/n\u00facleo/erros", 
+            "import_count": 1, 
+            "synopsis": "Package erros adiciona uma camada extra a estrutura de erros do gostk tratando alguns casos excepcionais.", 
+            "score": 0.9801
+        }, 
+        {
+            "name": "log", 
+            "path": "github.com/rafaeljusto/atiradorfrequente/n\u00facleo/log", 
+            "import_count": 1, 
+            "synopsis": "log armazena estruturas de log espec\u00edficas para o projeto.", 
+            "score": 0.9801
+        }, 
+        {
+            "name": "tag", 
+            "path": "github.com/cyverse-de/search/clause/tag", 
+            "import_count": 1, 
+            "synopsis": "Package tag provides a wrapper around the normal tag clause that filters to just those owned by the user", 
+            "score": 0.9801
+        }, 
+        {
+            "name": "rand\u00f4mico", 
+            "path": "github.com/rafaeljusto/atiradorfrequente/n\u00facleo/rand\u00f4mico", 
+            "import_count": 1, 
+            "synopsis": "Package rand\u00f4mico disponibiliza uma fonte rand\u00f4mica global seguindo a estrat\u00e9gia de Nishanth Shanmugham em https://nishanths.svbtle.com/do-not-seed-the-global-random", 
+            "score": 0.9801
+        }, 
+        {
+            "name": "hostingde", 
+            "path": "github.com/xenolf/lego/providers/dns/hostingde", 
+            "import_count": 1, 
+            "synopsis": "Package hostingde implements a DNS provider for solving the DNS-01 challenge using hosting.de.", 
+            "stars": 2845, 
+            "score": 0.9702989999999999
+        }, 
+        {
+            "name": "websocket", 
+            "path": "github.com/ipartner/websocket", 
+            "import_count": 1, 
+            "synopsis": "websocket wraper de gorilla", 
+            "score": 0.95
+        }, 
+        {
+            "name": "vaulter", 
+            "path": "github.com/cyverse-de/vaulter", 
+            "import_count": 1, 
+            "score": 0.95
+        }, 
+        {
+            "name": "saprfc", 
+            "path": "simonwaldherr.de/go/saprfc", 
+            "import_count": 1, 
+            "synopsis": "call SAP ABAP Code from Golang (Remote Function Call)", 
+            "stars": 7, 
+            "score": 0.95
+        }, 
+        {
+            "name": "model", 
+            "path": "github.com/cyverse-de/model", 
+            "import_count": 1, 
+            "score": 0.95
+        }, 
+        {
+            "name": "dwarfdb", 
+            "path": "github.com/zokis/dwarfdb", 
+            "import_count": 1, 
+            "synopsis": "\"Banco de Dados\" chave valor feito para aprender GO", 
+            "score": 0.95
+        }, 
+        {
+            "name": "securetemp", 
+            "path": "golang.leonklingele.de/securetemp", 
+            "import_count": 1, 
+            "synopsis": "Secure temporary directories and files in Go", 
+            "stars": 3, 
+            "score": 0.95
+        }, 
+        {
+            "name": "version", 
+            "path": "github.com/cyverse-de/version", 
+            "import_count": 1, 
+            "score": 0.95
+        }, 
+        {
+            "name": "duden", 
+            "path": "github.com/alexdreptu/duden", 
+            "import_count": 1, 
+            "synopsis": "Command line interface to http://www.duden.de dictionary", 
+            "score": 0.95
+        }, 
+        {
+            "name": "louvois", 
+            "path": "github.com/ritoon/louvois", 
+            "import_count": 1, 
+            "synopsis": "Outil de gestion de la paie des militaires", 
+            "score": 0.95
+        }, 
+        {
+            "name": "cmd", 
+            "path": "github.com/rebuy-de/aws-nuke/cmd", 
+            "import_count": 1, 
+            "stars": 283, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "resources", 
+            "path": "github.com/rebuy-de/aws-nuke/resources", 
+            "import_count": 1, 
+            "stars": 171, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "multimedia", 
+            "path": "kohlbau.de/x/jaye/multimedia", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "config", 
+            "path": "kohlbau.de/x/jaye/config", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "mysql", 
+            "path": "metalgearsonic.de/sinni800/booruwerks/mysql", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "memorycache", 
+            "path": "metalgearsonic.de/sinni800/booruwerks/memorycache", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "filestore", 
+            "path": "metalgearsonic.de/sinni800/booruwerks/filestore", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "handler", 
+            "path": "git.cbrgm.de/bachelor/event-service/handler", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "handler", 
+            "path": "git.cbrgm.de/bachelor/api-gateway/handler", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "node", 
+            "path": "simonwaldherr.de/go/golibs/node", 
+            "import_count": 1, 
+            "stars": 97, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "messaging", 
+            "path": "gitlab.informatik.haw-hamburg.de/cloud-wp/example1/util/messaging", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "handler", 
+            "path": "gitlab.informatik.haw-hamburg.de/ticketee/entry-srv/handler", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "life", 
+            "path": "simonwaldherr.de/go/cgolGo/life", 
+            "import_count": 1, 
+            "stars": 24, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "handler", 
+            "path": "git.cbrgm.de/bachelor/ticket-service/handler", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "store", 
+            "path": "gitlab.informatik.haw-hamburg.de/ticketee/event-srv/store", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "handler", 
+            "path": "gitlab.informatik.haw-hamburg.de/ticketee/ticket-srv/handler", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "structures", 
+            "path": "github.com/danackerson/ackerson.de-go/structures", 
+            "import_count": 1, 
+            "stars": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "submitfile", 
+            "path": "github.com/cyverse-de/model/submitfile", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "cmd", 
+            "path": "kohlbau.de/x/mqtesting/cmd", 
+            "import_count": 1, 
+            "score": 0.9405
+        }, 
+        {
+            "name": "handler", 
+            "path": "kohlbau.de/x/jaye/handler", 
+            "import_count": 1, 
+            "score": 0.9405
+        }
+    ]
+}

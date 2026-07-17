@@ -1,0 +1,29 @@
+MOTD:
+MOTD:   Welcome to the Linux Kernel Archive.
+MOTD:
+MOTD:   Due to U.S. Exports Regulations, all cryptographic software on this
+MOTD:   site is subject to the following legal notice:
+MOTD:
+MOTD:   This site includes publicly available encryption source code
+MOTD:   which, together with object code resulting from the compiling of
+MOTD:   publicly available source code, may be exported from the United
+MOTD:   States under License Exception "TSU" pursuant to 15 C.F.R. Section
+MOTD:   740.13(e).
+MOTD:
+MOTD:   This legal notice applies to cryptographic software only.
+MOTD:   Please see the Bureau of Industry and Security,
+MOTD:   http://www.bis.doc.gov/ for more information about current
+MOTD:   U.S. regulations.
+MOTD:
+
+drwxrwxr-x          4,096 2016/02/09 08:32:20 .
+-rw-rw-r--      3,223,318 2016/02/09 08:04:29 09b591782d59c36fb4ce28dc6570e7405f5b56b916d860e6542d861640c1ee17-filelists.xml.gz
+-rw-rw-r--      3,592,787 2016/02/09 08:07:26 4bb29ce081b266594504eb39894e973dde637ddbc209a882cfd5ffd4376ced85-primary.sqlite.bz2
+-rw-rw-r--     41,680,703 2016/02/09 08:07:10 5c8de984a5e01d89b3dc5cd8ed911d09c3455998772d5819db698d35a837f409-other.sqlite.bz2
+-rw-rw-r--      1,847,679 2016/02/09 08:04:29 a0540b2f48f2ad877a6d7ef1a8ee9e145cd7ec7d78e79280dae9260cfd7d5d75-primary.xml.gz
+-rw-rw-r--     58,872,260 2016/02/09 08:04:29 d8b5fcf557df2b18e337e7a2f75a4a0dbaf12d8028a8ea5152448ca2ae9f57a3-other.xml.gz
+-rw-rw-r--        384,406 2016/02/09 08:06:05 da4e40fce451c03b80bd5d9864899e29b748064195fd11927439532917d0c129-prestodelta.xml.gz
+-rw-rw-r--      2,940,802 2016/02/09 08:07:21 e4ba7f1b301ffdc780b17c66fd7d18ba41098d4c41c5a08a61e5d07db82d276e-filelists.sqlite.bz2
+-rw-rw-r--          3,468 2016/02/09 08:07:27 repomd.xml
+-rw-rw-r--            836 2016/02/09 08:07:41 repomd.xml.asc
+

@@ -1,0 +1,894 @@
+{
+  "pagelen": 10,
+  "values": [
+    {
+      "scm": "hg",
+      "website": "",
+      "has_wiki": true,
+      "name": "tweakmsg",
+      "links": {
+        "watchers": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/watchers"
+        },
+        "branches": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/refs/branches"
+        },
+        "tags": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/refs/tags"
+        },
+        "commits": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/commits"
+        },
+        "clone": [
+          {
+            "href": "https://bitbucket.org/phlogistonjohn/tweakmsg",
+            "name": "https"
+          },
+          {
+            "href": "ssh://hg@bitbucket.org/phlogistonjohn/tweakmsg",
+            "name": "ssh"
+          }
+        ],
+        "self": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg"
+        },
+        "source": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/src"
+        },
+        "html": {
+          "href": "https://bitbucket.org/phlogistonjohn/tweakmsg"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/phlogistonjohn/tweakmsg/avatar/32/"
+        },
+        "hooks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/hooks"
+        },
+        "forks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/forks"
+        },
+        "downloads": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/downloads"
+        },
+        "issues": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/issues"
+        },
+        "pullrequests": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/phlogistonjohn/tweakmsg/pullrequests"
+        }
+      },
+      "fork_policy": "allow_forks",
+      "uuid": "{59299fb9-3695-4e0c-b8ca-836888b83315}",
+      "language": "",
+      "created_on": "2008-06-25T00:53:00.273366+00:00",
+      "mainbranch": {
+        "type": "named_branch",
+        "name": "default"
+      },
+      "full_name": "phlogistonjohn/tweakmsg",
+      "has_issues": true,
+      "owner": {
+        "username": "phlogistonjohn",
+        "display_name": "John Mulligan",
+        "type": "user",
+        "uuid": "{c8614bfa-831a-49eb-866b-4bdd87c8c2c2}",
+        "links": {
+          "self": {
+            "href": "https://bitbucket.org/!api/2.0/users/phlogistonjohn"
+          },
+          "html": {
+            "href": "https://bitbucket.org/phlogistonjohn/"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/account/phlogistonjohn/avatar/32/"
+          }
+        }
+      },
+      "updated_on": "2012-06-24T17:32:27.458855+00:00",
+      "size": 7085,
+      "type": "repository",
+      "slug": "tweakmsg",
+      "is_private": false,
+      "description": "Mercurial (hg) extension to allow commenting on commit messages.  Mainly written for practice reading & working with mercurial internals.\r\n"
+    },
+    {
+      "scm": "hg",
+      "website": "",
+      "has_wiki": true,
+      "name": "new",
+      "links": {
+        "watchers": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/ape_hand/new/watchers"
+        },
+        "branches": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/ape_hand/new/refs/branches"
+        },
+        "tags": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/ape_hand/new/refs/tags"
+        },
+        "commits": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/ape_hand/new/commits"
+        },
+        "clone": [
+          {
+            "href": "https://bitbucket.org/ape_hand/new",
+            "name": "https"
+          },
+          {
+            "href": "ssh://hg@bitbucket.org/ape_hand/new",
+            "name": "ssh"
+          }
+        ],
+        "self": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/ape_hand/new"
+        },
+        "source": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/ape_hand/new/src"
+        },
+        "html": {
+          "href": "https://bitbucket.org/ape_hand/new"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/ape_hand/new/avatar/32/"
+        },
+        "hooks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/ape_hand/new/hooks"
+        },
+        "forks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/ape_hand/new/forks"
+        },
+        "downloads": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/ape_hand/new/downloads"
+        },
+        "issues": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/ape_hand/new/issues"
+        },
+        "pullrequests": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/ape_hand/new/pullrequests"
+        }
+      },
+      "fork_policy": "allow_forks",
+      "uuid": "{f9e67cd7-438e-43af-b232-d3ac875e7a66}",
+      "language": "",
+      "created_on": "2008-06-25T11:56:52.174489+00:00",
+      "mainbranch": null,
+      "full_name": "ape_hand/new",
+      "has_issues": true,
+      "owner": {
+        "username": "ape_hand",
+        "display_name": "dru mestre",
+        "type": "user",
+        "uuid": "{44c44df8-fc76-4ad2-850a-514067c11ee1}",
+        "links": {
+          "self": {
+            "href": "https://bitbucket.org/!api/2.0/users/ape_hand"
+          },
+          "html": {
+            "href": "https://bitbucket.org/ape_hand/"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/account/ape_hand/avatar/32/"
+          }
+        }
+      },
+      "updated_on": "2012-06-24T17:34:03.538784+00:00",
+      "size": 3091,
+      "type": "repository",
+      "slug": "new",
+      "is_private": false,
+      "description": "new stuff"
+    },
+    {
+      "scm": "hg",
+      "website": "http://stellaris.zib.de/",
+      "has_wiki": true,
+      "name": "stellaris",
+      "links": {
+        "watchers": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mikael/stellaris/watchers"
+        },
+        "branches": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mikael/stellaris/refs/branches"
+        },
+        "tags": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mikael/stellaris/refs/tags"
+        },
+        "commits": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mikael/stellaris/commits"
+        },
+        "clone": [
+          {
+            "href": "https://bitbucket.org/mikael/stellaris",
+            "name": "https"
+          },
+          {
+            "href": "ssh://hg@bitbucket.org/mikael/stellaris",
+            "name": "ssh"
+          }
+        ],
+        "self": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mikael/stellaris"
+        },
+        "source": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mikael/stellaris/src"
+        },
+        "html": {
+          "href": "https://bitbucket.org/mikael/stellaris"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/mikael/stellaris/avatar/32/"
+        },
+        "hooks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mikael/stellaris/hooks"
+        },
+        "forks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mikael/stellaris/forks"
+        },
+        "downloads": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mikael/stellaris/downloads"
+        },
+        "issues": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mikael/stellaris/issues"
+        },
+        "pullrequests": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mikael/stellaris/pullrequests"
+        }
+      },
+      "fork_policy": "allow_forks",
+      "uuid": "{e8daff2a-ceaf-465d-bb87-113a85daaea5}",
+      "language": "",
+      "created_on": "2008-07-02T20:31:45.240046+00:00",
+      "mainbranch": null,
+      "full_name": "mikael/stellaris",
+      "has_issues": true,
+      "owner": {
+        "username": "mikael",
+        "display_name": "Mikael Högqvist",
+        "type": "user",
+        "uuid": "{d7d79101-e359-4d1f-ae9a-28c94ee4e5d3}",
+        "links": {
+          "self": {
+            "href": "https://bitbucket.org/!api/2.0/users/mikael"
+          },
+          "html": {
+            "href": "https://bitbucket.org/mikael/"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/account/mikael/avatar/32/"
+          }
+        }
+      },
+      "updated_on": "2012-06-24T17:36:12.810769+00:00",
+      "size": 3109,
+      "type": "repository",
+      "slug": "stellaris",
+      "is_private": false,
+      "description": "REST-frontend for RDF-databases"
+    },
+    {
+      "scm": "hg",
+      "website": "http://libdodo.org/",
+      "has_wiki": false,
+      "name": "libdodo",
+      "links": {
+        "watchers": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/Niam/libdodo/watchers"
+        },
+        "branches": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/Niam/libdodo/refs/branches"
+        },
+        "tags": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/Niam/libdodo/refs/tags"
+        },
+        "commits": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/Niam/libdodo/commits"
+        },
+        "clone": [
+          {
+            "href": "https://bitbucket.org/Niam/libdodo",
+            "name": "https"
+          },
+          {
+            "href": "ssh://hg@bitbucket.org/Niam/libdodo",
+            "name": "ssh"
+          }
+        ],
+        "self": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/Niam/libdodo"
+        },
+        "source": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/Niam/libdodo/src"
+        },
+        "html": {
+          "href": "https://bitbucket.org/Niam/libdodo"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/Niam/libdodo/avatar/32/"
+        },
+        "hooks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/Niam/libdodo/hooks"
+        },
+        "forks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/Niam/libdodo/forks"
+        },
+        "downloads": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/Niam/libdodo/downloads"
+        },
+        "pullrequests": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/Niam/libdodo/pullrequests"
+        }
+      },
+      "fork_policy": "allow_forks",
+      "uuid": "{730c8c86-9dcd-4c45-be63-0bef6d4910c4}",
+      "language": "",
+      "created_on": "2008-07-04T09:51:46.813635+00:00",
+      "mainbranch": {
+        "type": "named_branch",
+        "name": "default"
+      },
+      "full_name": "Niam/libdodo",
+      "has_issues": false,
+      "owner": {
+        "username": "Niam",
+        "display_name": "Niam",
+        "type": "user",
+        "uuid": "{75a87e40-667d-411c-a52b-93d97dc20d9b}",
+        "links": {
+          "self": {
+            "href": "https://bitbucket.org/!api/2.0/users/Niam"
+          },
+          "html": {
+            "href": "https://bitbucket.org/Niam/"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/account/Niam/avatar/32/"
+          }
+        }
+      },
+      "updated_on": "2012-06-24T17:36:45.602876+00:00",
+      "size": 60253399,
+      "type": "repository",
+      "slug": "libdodo",
+      "is_private": false,
+      "description": "libdodo is not a web framework but a toolkit(middle-level library) for building fast and scalable web applications easy.\r\n\r\nBuilding web sites is not a main goal of libdodo. One of its purposes is to develop big and complex systems under high load that require good stability on one hand and small and fast applications for embedded world on another hand.\r\n\r\nlibdodo provides database abstraction, easy use of parallel computation, content parsing and generation, much more and of course interaction with users via webserver.\r\n\r\nReview documentation section to understand what libdodo is and how it could be used.\r\n\r\nlibdodo is written in c++ to provide high performance and small footprint.\r\n\r\nIt is licensed under LGPL 2.1. "
+    },
+    {
+      "scm": "hg",
+      "website": "http://noehr.org/",
+      "has_wiki": true,
+      "name": "cx",
+      "links": {
+        "watchers": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/jespern/cx/watchers"
+        },
+        "branches": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/jespern/cx/refs/branches"
+        },
+        "tags": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/jespern/cx/refs/tags"
+        },
+        "commits": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/jespern/cx/commits"
+        },
+        "clone": [
+          {
+            "href": "https://bitbucket.org/jespern/cx",
+            "name": "https"
+          },
+          {
+            "href": "ssh://hg@bitbucket.org/jespern/cx",
+            "name": "ssh"
+          }
+        ],
+        "self": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/jespern/cx"
+        },
+        "source": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/jespern/cx/src"
+        },
+        "html": {
+          "href": "https://bitbucket.org/jespern/cx"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/jespern/cx/avatar/32/"
+        },
+        "hooks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/jespern/cx/hooks"
+        },
+        "forks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/jespern/cx/forks"
+        },
+        "downloads": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/jespern/cx/downloads"
+        },
+        "issues": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/jespern/cx/issues"
+        },
+        "pullrequests": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/jespern/cx/pullrequests"
+        }
+      },
+      "fork_policy": "allow_forks",
+      "uuid": "{f6e56460-f4c1-4c54-9377-c7932b3d48cf}",
+      "language": "",
+      "created_on": "2008-07-07T13:59:28.914048+00:00",
+      "mainbranch": {
+        "type": "named_branch",
+        "name": "default"
+      },
+      "full_name": "jespern/cx",
+      "has_issues": true,
+      "owner": {
+        "username": "jespern",
+        "display_name": "Jesper Noehr",
+        "type": "user",
+        "uuid": "{9feecef2-b002-491c-a820-f1b33b737c76}",
+        "links": {
+          "self": {
+            "href": "https://bitbucket.org/!api/2.0/users/jespern"
+          },
+          "html": {
+            "href": "https://bitbucket.org/jespern/"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/account/jespern/avatar/32/"
+          }
+        }
+      },
+      "updated_on": "2011-09-17T03:14:11.884090+00:00",
+      "size": 1129999,
+      "type": "repository",
+      "slug": "cx",
+      "is_private": false,
+      "description": "Simple blog in Django, used on http://noehr.org/ and http://cx.dirtyhack.org/. Licensed under GPLv2."
+    },
+    {
+      "scm": "hg",
+      "website": "http://search.cpan.org/~vetler/Formatter-HTML-MPS-0.4/",
+      "has_wiki": true,
+      "name": "fhtmlmps",
+      "links": {
+        "watchers": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/vetler/fhtmlmps/watchers"
+        },
+        "branches": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/vetler/fhtmlmps/refs/branches"
+        },
+        "tags": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/vetler/fhtmlmps/refs/tags"
+        },
+        "commits": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/vetler/fhtmlmps/commits"
+        },
+        "clone": [
+          {
+            "href": "https://bitbucket.org/vetler/fhtmlmps",
+            "name": "https"
+          },
+          {
+            "href": "ssh://hg@bitbucket.org/vetler/fhtmlmps",
+            "name": "ssh"
+          }
+        ],
+        "self": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/vetler/fhtmlmps"
+        },
+        "source": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/vetler/fhtmlmps/src"
+        },
+        "html": {
+          "href": "https://bitbucket.org/vetler/fhtmlmps"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/vetler/fhtmlmps/avatar/32/"
+        },
+        "hooks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/vetler/fhtmlmps/hooks"
+        },
+        "forks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/vetler/fhtmlmps/forks"
+        },
+        "downloads": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/vetler/fhtmlmps/downloads"
+        },
+        "issues": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/vetler/fhtmlmps/issues"
+        },
+        "pullrequests": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/vetler/fhtmlmps/pullrequests"
+        }
+      },
+      "fork_policy": "allow_forks",
+      "uuid": "{e155cbd3-600c-4768-8415-c7f2b1239053}",
+      "language": "",
+      "created_on": "2008-07-07T19:22:21.403996+00:00",
+      "mainbranch": {
+        "type": "named_branch",
+        "name": "trunk"
+      },
+      "full_name": "vetler/fhtmlmps",
+      "has_issues": true,
+      "owner": {
+        "username": "vetler",
+        "display_name": "Vetle Leinonen-Roeim",
+        "type": "user",
+        "uuid": "{e16d46bb-3e1b-4628-892d-af02af2e5f23}",
+        "links": {
+          "self": {
+            "href": "https://bitbucket.org/!api/2.0/users/vetler"
+          },
+          "html": {
+            "href": "https://bitbucket.org/vetler/"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/account/vetler/avatar/32/"
+          }
+        }
+      },
+      "updated_on": "2012-06-24T17:36:50.976220+00:00",
+      "size": 17122,
+      "type": "repository",
+      "slug": "fhtmlmps",
+      "is_private": false,
+      "description": "Formatter::HTML::MPS is a tool for writing presentations. You can write your slides in a single file using the lightweight markup language Markdown, adding some simple markup to identify slides and do misc configuration."
+    },
+    {
+      "scm": "hg",
+      "website": "",
+      "has_wiki": true,
+      "name": "FreeBSD",
+      "links": {
+        "watchers": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/z19/freebsd/watchers"
+        },
+        "branches": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/z19/freebsd/refs/branches"
+        },
+        "tags": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/z19/freebsd/refs/tags"
+        },
+        "commits": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/z19/freebsd/commits"
+        },
+        "clone": [
+          {
+            "href": "https://bitbucket.org/z19/freebsd",
+            "name": "https"
+          },
+          {
+            "href": "ssh://hg@bitbucket.org/z19/freebsd",
+            "name": "ssh"
+          }
+        ],
+        "self": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/z19/freebsd"
+        },
+        "source": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/z19/freebsd/src"
+        },
+        "html": {
+          "href": "https://bitbucket.org/z19/freebsd"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/z19/freebsd/avatar/32/"
+        },
+        "hooks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/z19/freebsd/hooks"
+        },
+        "forks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/z19/freebsd/forks"
+        },
+        "downloads": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/z19/freebsd/downloads"
+        },
+        "issues": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/z19/freebsd/issues"
+        },
+        "pullrequests": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/z19/freebsd/pullrequests"
+        }
+      },
+      "fork_policy": "allow_forks",
+      "uuid": "{b1f436f5-0311-4058-9aa2-67e1ed894d85}",
+      "language": "",
+      "created_on": "2008-07-10T12:31:38.599304+00:00",
+      "mainbranch": null,
+      "full_name": "z19/freebsd",
+      "has_issues": true,
+      "owner": {
+        "username": "z19",
+        "display_name": "z19",
+        "type": "user",
+        "uuid": "{00742cb1-d365-4e60-9764-d2feacdba5ca}",
+        "links": {
+          "self": {
+            "href": "https://bitbucket.org/!api/2.0/users/z19"
+          },
+          "html": {
+            "href": "https://bitbucket.org/z19/"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/account/z19/avatar/32/"
+          }
+        }
+      },
+      "updated_on": "2012-06-22T21:55:15.276435+00:00",
+      "size": 3097,
+      "type": "repository",
+      "slug": "freebsd",
+      "is_private": false,
+      "description": ""
+    },
+    {
+      "scm": "hg",
+      "website": "http://www.selenic.com/mercurial/",
+      "has_wiki": true,
+      "name": "mercurial-crew",
+      "links": {
+        "watchers": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mirror/mercurial-crew/watchers"
+        },
+        "branches": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mirror/mercurial-crew/refs/branches"
+        },
+        "tags": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mirror/mercurial-crew/refs/tags"
+        },
+        "commits": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mirror/mercurial-crew/commits"
+        },
+        "clone": [
+          {
+            "href": "https://bitbucket.org/mirror/mercurial-crew",
+            "name": "https"
+          },
+          {
+            "href": "ssh://hg@bitbucket.org/mirror/mercurial-crew",
+            "name": "ssh"
+          }
+        ],
+        "self": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mirror/mercurial-crew"
+        },
+        "source": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mirror/mercurial-crew/src"
+        },
+        "html": {
+          "href": "https://bitbucket.org/mirror/mercurial-crew"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/mirror/mercurial-crew/avatar/32/"
+        },
+        "hooks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mirror/mercurial-crew/hooks"
+        },
+        "forks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mirror/mercurial-crew/forks"
+        },
+        "downloads": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mirror/mercurial-crew/downloads"
+        },
+        "issues": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mirror/mercurial-crew/issues"
+        },
+        "pullrequests": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/mirror/mercurial-crew/pullrequests"
+        }
+      },
+      "fork_policy": "allow_forks",
+      "uuid": "{5c2fdb68-1f54-4995-bacf-299d83227fb9}",
+      "language": "",
+      "created_on": "2008-07-11T12:26:41.808728+00:00",
+      "mainbranch": {
+        "type": "named_branch",
+        "name": "default"
+      },
+      "full_name": "mirror/mercurial-crew",
+      "has_issues": true,
+      "owner": {
+        "username": "mirror",
+        "display_name": "mirror",
+        "type": "user",
+        "uuid": "{71b06a8f-295c-43f4-a1c0-f3a0dc6a9ff0}",
+        "links": {
+          "self": {
+            "href": "https://bitbucket.org/!api/2.0/users/mirror"
+          },
+          "html": {
+            "href": "https://bitbucket.org/mirror/"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/account/mirror/avatar/32/"
+          }
+        }
+      },
+      "updated_on": "2016-03-02T06:02:01.872161+00:00",
+      "size": 80545090,
+      "type": "repository",
+      "slug": "mercurial-crew",
+      "is_private": false,
+      "description": "Mirror of the mercurial-crew repository."
+    },
+    {
+      "scm": "hg",
+      "website": "http://squash.deadwisdom.com/",
+      "has_wiki": true,
+      "name": "Squash",
+      "links": {
+        "watchers": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/DeadWisdom/squash/watchers"
+        },
+        "branches": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/DeadWisdom/squash/refs/branches"
+        },
+        "tags": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/DeadWisdom/squash/refs/tags"
+        },
+        "commits": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/DeadWisdom/squash/commits"
+        },
+        "clone": [
+          {
+            "href": "https://bitbucket.org/DeadWisdom/squash",
+            "name": "https"
+          },
+          {
+            "href": "ssh://hg@bitbucket.org/DeadWisdom/squash",
+            "name": "ssh"
+          }
+        ],
+        "self": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/DeadWisdom/squash"
+        },
+        "source": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/DeadWisdom/squash/src"
+        },
+        "html": {
+          "href": "https://bitbucket.org/DeadWisdom/squash"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/DeadWisdom/squash/avatar/32/"
+        },
+        "hooks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/DeadWisdom/squash/hooks"
+        },
+        "forks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/DeadWisdom/squash/forks"
+        },
+        "downloads": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/DeadWisdom/squash/downloads"
+        },
+        "issues": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/DeadWisdom/squash/issues"
+        },
+        "pullrequests": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/DeadWisdom/squash/pullrequests"
+        }
+      },
+      "fork_policy": "allow_forks",
+      "uuid": "{baebc901-9ac6-41f9-a1ce-7a575d294776}",
+      "language": "",
+      "created_on": "2008-07-11T21:21:47.851223+00:00",
+      "mainbranch": {
+        "type": "named_branch",
+        "name": "default"
+      },
+      "full_name": "DeadWisdom/squash",
+      "has_issues": true,
+      "owner": {
+        "username": "DeadWisdom",
+        "display_name": "Brantley Brantley",
+        "type": "user",
+        "uuid": "{9ae421db-2771-48bc-bdba-418798c309f1}",
+        "links": {
+          "self": {
+            "href": "https://bitbucket.org/!api/2.0/users/DeadWisdom"
+          },
+          "html": {
+            "href": "https://bitbucket.org/DeadWisdom/"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/account/DeadWisdom/avatar/32/"
+          }
+        }
+      },
+      "updated_on": "2012-06-23T00:10:30.800770+00:00",
+      "size": 817799,
+      "type": "repository",
+      "slug": "squash",
+      "is_private": false,
+      "description": "Squash is aimed to be an agile-or-not Ticket/Project Management system with a focus on highly developed UI, ample configuration possibilities, and easy interaction mechanisms (REST, Json, Plugins, Python, etc)."
+    },
+    {
+      "scm": "hg",
+      "website": "",
+      "has_wiki": true,
+      "name": "app-template",
+      "links": {
+        "watchers": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/bebac/app-template/watchers"
+        },
+        "branches": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/bebac/app-template/refs/branches"
+        },
+        "tags": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/bebac/app-template/refs/tags"
+        },
+        "commits": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/bebac/app-template/commits"
+        },
+        "clone": [
+          {
+            "href": "https://bitbucket.org/bebac/app-template",
+            "name": "https"
+          },
+          {
+            "href": "ssh://hg@bitbucket.org/bebac/app-template",
+            "name": "ssh"
+          }
+        ],
+        "self": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/bebac/app-template"
+        },
+        "source": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/bebac/app-template/src"
+        },
+        "html": {
+          "href": "https://bitbucket.org/bebac/app-template"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/bebac/app-template/avatar/32/"
+        },
+        "hooks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/bebac/app-template/hooks"
+        },
+        "forks": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/bebac/app-template/forks"
+        },
+        "downloads": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/bebac/app-template/downloads"
+        },
+        "issues": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/bebac/app-template/issues"
+        },
+        "pullrequests": {
+          "href": "https://bitbucket.org/!api/2.0/repositories/bebac/app-template/pullrequests"
+        }
+      },
+      "fork_policy": "allow_forks",
+      "uuid": "{0cf80a6e-e91f-4a4c-a61b-8c8ff51ca3ec}",
+      "language": "c++",
+      "created_on": "2008-07-12T07:44:01.476818+00:00",
+      "mainbranch": {
+        "type": "named_branch",
+        "name": "default"
+      },
+      "full_name": "bebac/app-template",
+      "has_issues": true,
+      "owner": {
+        "username": "bebac",
+        "display_name": "Benny Bach",
+        "type": "user",
+        "uuid": "{d1a83a2a-be1b-4034-8c1d-386a6690cddb}",
+        "links": {
+          "self": {
+            "href": "https://bitbucket.org/!api/2.0/users/bebac"
+          },
+          "html": {
+            "href": "https://bitbucket.org/bebac/"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/account/bebac/avatar/32/"
+          }
+        }
+      },
+      "updated_on": "2011-10-05T15:36:19.409008+00:00",
+      "size": 71548,
+      "type": "repository",
+      "slug": "app-template",
+      "is_private": false,
+      "description": "Basic files and directory structure for a C++ project. Intended as a starting point for a new project. Includes a basic cross platform core library."
+    }
+  ],
+  "next": "https://bitbucket.org/api/2.0/repositories/?after=2008-07-12T09%3A37%3A06.254721%2B00%3A00"
+}

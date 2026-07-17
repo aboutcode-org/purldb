@@ -1,0 +1,17 @@
+{
+  "Uploaders": "Bertrand Marc <beberking@gmail.com>, Miriam Ruiz <little_miry@yahoo.es>", 
+  "Binary": "7kaa, 7kaa-dbg", 
+  "Maintainer": "Debian Games Team <pkg-games-devel@lists.alioth.debian.org>", 
+  "Vcs-Svn": "svn://svn.debian.org/svn/pkg-games/packages/trunk/7kaa/", 
+  "Format": "3.0 (quilt)", 
+  "Build-Depends": "debhelper (>= 7.0.50~), dh-buildinfo, quilt, autotools-dev, libsdl1.2-dev, libsdl-net1.2-dev, libopenal-dev", 
+  "Source": "7kaa", 
+  "Version": "2.14.3-1", 
+  "Standards-Version": "3.9.1", 
+  "Architecture": "i386 amd64", 
+  "Files": "\n 145090c391a4c843500bde399b19ba9b 1181479 7kaa_2.14.3.orig.tar.bz2\n d715325e617736f540c4fb55bf067936 10281 7kaa_2.14.3-1.debian.tar.bz2", 
+  "Checksums-Sha1": "\n 0926383fc32ad0b0af780edf575fb170a00c8d30 1181479 7kaa_2.14.3.orig.tar.bz2\n 1155bc0deb690f449b9854a46c3d6d1c1cbacc13 10281 7kaa_2.14.3-1.debian.tar.bz2", 
+  "Vcs-Browser": "http://svn.debian.org/wsvn/pkg-games/packages/trunk/7kaa/", 
+  "Homepage": "http://www.7kfans.com/", 
+  "Checksums-Sha256": "\n 9d3ba6e4d72495cf83eec922714f818c68974e9ad62e934608676d93a4b48aef 1181479 7kaa_2.14.3.orig.tar.bz2\n 2b84f348870bd71ff1400aafa71377345dfa329e709c0b78c77a7930d823b596 10281 7kaa_2.14.3-1.debian.tar.bz2"
+}

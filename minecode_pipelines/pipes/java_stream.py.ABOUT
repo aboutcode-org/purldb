@@ -1,0 +1,14 @@
+about_resource: java_stream.py
+name: java_stream.py
+version: 7d118ceef9746981e6bc198861125ca2bb6f920f
+homepage_url: https://github.com/arngarden/python_java_datastream
+owner: Gustav Arngården
+copyright: Copyright (c) 2014 Gustav Arngården
+download_url: https://raw.githubusercontent.com/arngarden/python_java_datastream/7d118ceef9746981e6bc198861125ca2bb6f920f/data_input_stream.py
+license_text_file: license_expfession: mit
+licenses:
+  - key: mit
+    file: java_stream.py.LICENSE
+
+vcs_tool: git
+vcs_repo: https://github.com/arngarden/python_java_datastream

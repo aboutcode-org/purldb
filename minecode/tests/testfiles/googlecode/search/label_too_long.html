@@ -1,0 +1,798 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+ <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
+
+ <meta name="ROBOTS" content="NOINDEX,NOARCHIVE">
+
+ <link rel="icon" type="image/vnd.microsoft.icon" href="https://ssl.gstatic.com/codesite/ph/images/phosting.ico">
+
+
+ <script type="text/javascript">
+
+
+
+
+ var codesite_token = "ABZ6GAfq68K0cZv0eXlIYAlhqOm3FbFjXg:1402954961208";
+
+
+ var CS_env = {"assetVersionPath": "https://ssl.gstatic.com/codesite/ph/3374407039186159233", "relativeBaseUrl": "", "assetHostPath": "https://ssl.gstatic.com/codesite/ph", "projectHomeUrl": null, "token": "ABZ6GAfq68K0cZv0eXlIYAlhqOm3FbFjXg:1402954961208", "loggedInUserEmail": "tdruez@nexb.com", "domainName": null, "profileUrl": "/u/102129653793910296719/", "projectName": null};
+ var _gaq = _gaq || [];
+ _gaq.push(
+ ['siteTracker._setAccount', 'UA-18071-1'],
+ ['siteTracker._trackPageview']);
+
+ (function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+ })();
+
+ </script>
+
+
+ <title>
+
+
+
+
+ Google Project Hosting
+ </title>
+ <link type="text/css" rel="stylesheet" href="https://ssl.gstatic.com/codesite/ph/3374407039186159233/css/core.css">
+
+ <link type="text/css" rel="stylesheet" href="https://ssl.gstatic.com/codesite/ph/3374407039186159233/css/ph_list.css" >
+
+
+
+
+<!--[if IE]>
+ <link type="text/css" rel="stylesheet" href="https://ssl.gstatic.com/codesite/ph/3374407039186159233/css/d_ie.css" >
+<![endif]-->
+ <style type="text/css">
+ .menuIcon.off { background: no-repeat url(https://ssl.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 -42px }
+ .menuIcon.on { background: no-repeat url(https://ssl.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 -28px }
+ .menuIcon.down { background: no-repeat url(https://ssl.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 0; }
+
+
+ .labels a:link { color: #080 }
+ .labels a:visited { color: #080 }
+ .labels a:active { color: #f00 }
+ .name { margin-top: 2ex; font-size: 120% }
+
+
+ </style>
+</head>
+<body class="">
+<script type="text/javascript">
+ window.___gcfg = {lang: 'en'};
+ (function()
+ {var po = document.createElement("script");
+ po.type = "text/javascript"; po.async = true;po.src = "https://apis.google.com/js/plusone.js";
+ var s = document.getElementsByTagName("script")[0];
+ s.parentNode.insertBefore(po, s);
+ })();
+</script>
+<div class="headbg">
+
+ <div id="gaia">
+
+
+ <span>
+
+
+
+ <a href="#" id="multilogin-dropdown" onclick="return false;"
+ ><u><b>tdruez@nexb.com</b></u> <small>&#9660;</small></a>
+
+
+ | <a href="/u/102129653793910296719/" id="projects-dropdown" onclick="return false;"
+ ><u>My favorites</u> <small>&#9660;</small></a>
+ | <a href="/u/102129653793910296719/" onclick="_CS_click('/gb/ph/profile');"
+ title="Profile, Updates, and Settings"
+ ><u>Profile</u></a>
+ | <a href="https://www.google.com/accounts/Logout?continue=https%3A%2F%2Fcode.google.com%2Fhosting%2Fsearch%3Fq%3Dlabel%3Afilename"
+ onclick="_CS_click('/gb/ph/signout');"
+ ><u>Sign out</u></a>
+
+ </span>
+
+ </div>
+
+ <div class="gbh" style="left: 0pt;"></div>
+ <div class="gbh" style="right: 0pt;"></div>
+
+
+ <div style="height: 1px"></div>
+<!--[if lte IE 7]>
+<div style="text-align:center;">
+Your version of Internet Explorer is not supported. Try a browser that
+contributes to open source, such as <a href="http://www.firefox.com">Firefox</a>,
+<a href="http://www.google.com/chrome">Google Chrome</a>, or
+<a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a>.
+</div>
+<![endif]-->
+
+
+
+ <table style="padding:0px; margin: 0px 0px 10px 0px; width:100%" cellpadding="0" cellspacing="0"
+ >
+ <tr style="height: 58px;">
+
+
+
+ <td id="plogo">
+ <link itemprop="url" href="">
+ <a href="/">
+
+ <img src="https://ssl.gstatic.com/codesite/ph/images/code_small.png" alt="Logo" itemprop="image">
+
+ </a>
+ </td>
+
+ <td style="padding-left: 0.5em">
+
+ </td>
+ <td style="white-space:nowrap;">
+
+ <form action="/hosting/search">
+ <input size="40" name="q" value="label:filename" type="text">
+
+ <input type="submit" name="projectsearch" value="Search projects" >
+ </form>
+
+ </tr>
+ </table>
+
+</div>
+
+
+
+<script type="text/javascript">
+ var cancelBubble = false;
+ function _go(url) { document.location = url; }
+</script>
+<div id="maincol"
+
+>
+
+
+
+
+
+
+<script type="text/javascript">
+ function starClick(el, project_name) {
+ _CS_toggleStar(
+ el,
+ {'scope': 'projects',
+ 'user': '_CURRENT_USER',
+ 'item': project_name
+ },
+ true,
+ '',
+ '',
+ '',
+ 'star_count-' + project_name,
+ 'plural-' + project_name);
+ }
+</script>
+<table class="mainhdr" width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr><td width="100%"></td>
+
+ <td style="padding:3px 1em; font-weight:normal; white-space:nowrap;">
+ Results 1 - 10 of 14
+ </td>
+
+</tr>
+</table>
+<br/>
+<div id="serp">
+
+
+
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/repairer/">
+ <img style="max-width:50px;max-height:55px"
+
+ src="https://ssl.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 1)"
+ href="/p/repairer/" style="font-size:medium">repairer &nbsp;- &nbsp;Nautilus Filename Repairer</a>
+
+ <img width="15" height="15" id="star_img"
+ src="https://ssl.gstatic.com/codesite/ph/images/star_off.gif"
+ style="cursor:pointer"
+
+ onclick="starClick(this, 'repairer');"/>
+
+ <br/>
+
+ <span style="color:#676767">
+ Updated: Apr 29, 2013
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-repairer">5</span>
+ </span><br/>
+
+
+
+Nautilus Filename Repairer is a nautilus extension which provides context menu to change the selected filename to correct encoding if the file has invalid encoding. You can easily rename a file by s...<br/>
+
+ <span class="labels">
+
+
+ <a href="/hosting/search?q=label:nautilus">nautilus</a>,
+
+ <a href="/hosting/search?q=label:filename">filename</a>,
+
+ <a href="/hosting/search?q=label:encoding">encoding</a>,
+
+ <a href="/hosting/search?q=label:extension">extension</a>,
+
+ <a href="/hosting/search?q=label:plugin">plugin</a>
+
+
+ </span>
+ </td>
+ </tr>
+</table>
+
+
+
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/jay-ou/">
+ <img style="max-width:50px;max-height:55px"
+
+ src="https://ssl.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 2)"
+ href="/p/jay-ou/" style="font-size:medium">jay-ou &nbsp;- &nbsp;Operating Utilities</a>
+
+ <img width="15" height="15" id="star_img"
+ src="https://ssl.gstatic.com/codesite/ph/images/star_off.gif"
+ style="cursor:pointer"
+
+ onclick="starClick(this, 'jay-ou');"/>
+
+ <br/>
+
+ <span style="color:#676767">
+ Updated: Oct 12, 2012
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-jay-ou">1</span>
+ </span><br/>
+
+
+ Here, I Myself Present You A Few Perfect Download For Your Windows 7...<br/>
+
+ <span class="labels">
+
+
+ <a href="/hosting/search?q=label:FileName">FileName</a>,
+
+ <a href="/hosting/search?q=label:ReleaseDate">ReleaseDate</a>,
+
+ <a href="/hosting/search?q=label:SupportingOSs">SupportingOSs</a>
+
+
+ </span>
+ </td>
+ </tr>
+</table>
+
+
+
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/download-data-uri/">
+ <img style="max-width:50px;max-height:55px"
+
+ src="https://ssl.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 3)"
+ href="/p/download-data-uri/" style="font-size:medium">download-data-uri &nbsp;- &nbsp;Download your data uri with filename</a>
+
+ <img width="15" height="15" id="star_img"
+ src="https://ssl.gstatic.com/codesite/ph/images/star_off.gif"
+ style="cursor:pointer"
+
+ onclick="starClick(this, 'download-data-uri');"/>
+
+ <br/>
+
+ <span style="color:#676767">
+ Updated: Dec 05, 2013
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-download-data-uri">3</span>
+ </span><br/>
+
+
+
+
+Google Chrome doesn&#39;t support download data uri with correct file extension. So I made this.
+
+Usage:
+
+
+
+downloadDataURI({
+	filename: &quot;check.png&quot;,
+	data: &quot;data:image/png;base64,iVBORw0KGgo...<br/>
+
+ <span class="labels">
+
+
+ <a href="/hosting/search?q=label:dataurischeme">dataurischeme</a>,
+
+ <a href="/hosting/search?q=label:filename">filename</a>,
+
+ <a href="/hosting/search?q=label:download">download</a>
+
+
+ </span>
+ </td>
+ </tr>
+</table>
+
+
+
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/scrapper/">
+ <img style="max-width:50px;max-height:55px"
+
+ src="https://ssl.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 4)"
+ href="/p/scrapper/" style="font-size:medium">scrapper &nbsp;- &nbsp;To Scoop the web</a>
+
+ <img width="15" height="15" id="star_img"
+ src="https://ssl.gstatic.com/codesite/ph/images/star_off.gif"
+ style="cursor:pointer"
+
+ onclick="starClick(this, 'scrapper');"/>
+
+ <br/>
+
+ <span style="color:#676767">
+ Updated: Dec 09, 2008
+ </span><br/>
+
+
+ To scoop the web for the latest and be on top of it
+
+Author: Miztiik Trident
+Copyright (c): 2007 Miztiik Corp, All rights reserved
+Version: 1.0.0
+
+You may contact the author of Snoopy by e-mail ...<br/>
+
+ <span class="labels">
+
+
+ <a href="/hosting/search?q=label:WebsiteGroup">WebsiteGroup</a>,
+
+ <a href="/hosting/search?q=label:FileName">FileName</a>
+
+
+ </span>
+ </td>
+ </tr>
+</table>
+
+
+
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/pathlen/">
+ <img style="max-width:50px;max-height:55px"
+
+ src="https://ssl.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 5)"
+ href="/p/pathlen/" style="font-size:medium">pathlen &nbsp;- &nbsp;Simple filesystem utilite</a>
+
+ <img width="15" height="15" id="star_img"
+ src="https://ssl.gstatic.com/codesite/ph/images/star_off.gif"
+ style="cursor:pointer"
+
+ onclick="starClick(this, 'pathlen');"/>
+
+ <br/>
+
+ <span style="color:#676767">
+ Updated: Nov 03, 2010
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-pathlen">1</span>
+ </span><br/>
+
+
+ Very simple filesystem utilite<br/>
+
+ <span class="labels">
+
+
+ <a href="/hosting/search?q=label:filesystem">filesystem</a>,
+
+ <a href="/hosting/search?q=label:filename">filename</a>,
+
+ <a href="/hosting/search?q=label:simple">simple</a>,
+
+ <a href="/hosting/search?q=label:python">python</a>,
+
+ <a href="/hosting/search?q=label:crossplatform">crossplatform</a>
+
+
+ </span>
+ </td>
+ </tr>
+</table>
+
+
+
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/fnamecopy/">
+ <img style="max-width:50px;max-height:55px"
+
+ src="https://ssl.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 6)"
+ href="/p/fnamecopy/" style="font-size:medium">fnamecopy &nbsp;- &nbsp;Copy full file names and paths in Windows</a>
+
+ <img width="15" height="15" id="star_img"
+ src="https://ssl.gstatic.com/codesite/ph/images/star_off.gif"
+ style="cursor:pointer"
+
+ onclick="starClick(this, 'fnamecopy');"/>
+
+ <br/>
+
+ <span style="color:#676767">
+ Updated: Jun 03, 2009
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-fnamecopy">1</span>
+ </span><br/>
+
+
+ A very simple tool written in C
+You can download the program  here.
+
+See the  SystemRequirements and [<br/>
+
+ <span class="labels">
+
+
+ <a href="/hosting/search?q=label:CSharp">CSharp</a>,
+
+ <a href="/hosting/search?q=label:dotnet">dotnet</a>,
+
+ <a href="/hosting/search?q=label:Windows">Windows</a>,
+
+ <a href="/hosting/search?q=label:files">files</a>,
+
+ <a href="/hosting/search?q=label:filename">filename</a>,
+
+ <a href="/hosting/search?q=label:copy">copy</a>,
+
+ <a href="/hosting/search?q=label:utility">utility</a>,
+
+ <a href="/hosting/search?q=label:path">path</a>,
+
+ <a href="/hosting/search?q=label:clipboard">clipboard</a>
+
+
+ </span>
+ </td>
+ </tr>
+</table>
+
+
+
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/batchfilerenametool/">
+ <img style="max-width:50px;max-height:55px"
+
+ src="/p/batchfilerenametool/logo?cct=1402952400.0"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 7)"
+ href="/p/batchfilerenametool/" style="font-size:medium">batchfilerenametool &nbsp;- &nbsp;Java Batch Rename Tool</a>
+
+ <img width="15" height="15" id="star_img"
+ src="https://ssl.gstatic.com/codesite/ph/images/star_off.gif"
+ style="cursor:pointer"
+
+ onclick="starClick(this, 'batchfilerenametool');"/>
+
+ <br/>
+
+ <span style="color:#676767">
+ Updated: Jul 12, 2010
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-batchfilerenametool">2</span>
+ </span><br/>
+
+
+
+
+This is a Java-Based Software that can be used to perform batch renaming of all files in a directory.
+
+
+
+
+-
+- Rename all the files in the selected directory.
+- User can choose the option t...<br/>
+
+ <span class="labels">
+
+
+ <a href="/hosting/search?q=label:Java">Java</a>,
+
+ <a href="/hosting/search?q=label:batch">batch</a>,
+
+ <a href="/hosting/search?q=label:tool">tool</a>,
+
+ <a href="/hosting/search?q=label:utilities">utilities</a>,
+
+ <a href="/hosting/search?q=label:rename">rename</a>,
+
+ <a href="/hosting/search?q=label:filename">filename</a>,
+
+ <a href="/hosting/search?q=label:sequential">sequential</a>,
+
+ <a href="/hosting/search?q=label:standardize">standardize</a>
+
+
+ </span>
+ </td>
+ </tr>
+</table>
+
+
+
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/nfd2nfc/">
+ <img style="max-width:50px;max-height:55px"
+
+ src="https://ssl.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 8)"
+ href="/p/nfd2nfc/" style="font-size:medium">nfd2nfc &nbsp;- &nbsp;LD_PRELOAD module for MacOSX to translate file names from decomposed u…</a>
+
+ <img width="15" height="15" id="star_img"
+ src="https://ssl.gstatic.com/codesite/ph/images/star_off.gif"
+ style="cursor:pointer"
+
+ onclick="starClick(this, 'nfd2nfc');"/>
+
+ <br/>
+
+
+ If you hate decomposed unicode in MacOSX as much as I do, this piece of code is for you.
+
+This LDPRELOAD module can transparently translate file names from decomposed unicode
+to precomposed unicode...<br/>
+
+ <span class="labels">
+
+
+ <a href="/hosting/search?q=label:macosx">macosx</a>,
+
+ <a href="/hosting/search?q=label:LD_PRELOAD">LD_PRELOAD</a>,
+
+ <a href="/hosting/search?q=label:convert">convert</a>,
+
+ <a href="/hosting/search?q=label:decomposed">decomposed</a>,
+
+ <a href="/hosting/search?q=label:precomposed">precomposed</a>,
+
+ <a href="/hosting/search?q=label:unicode">unicode</a>,
+
+ <a href="/hosting/search?q=label:nfd">nfd</a>,
+
+ <a href="/hosting/search?q=label:nfc">nfc</a>,
+
+ <a href="/hosting/search?q=label:translate">translate</a>,
+
+ <a href="/hosting/search?q=label:filesystem">filesystem</a>,
+
+ <a href="/hosting/search?q=label:filename">filename</a>,
+
+ <a href="/hosting/search?q=label:transparently">transparently</a>
+
+
+ </span>
+ </td>
+ </tr>
+</table>
+
+
+
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/crop/">
+ <img style="max-width:50px;max-height:55px"
+
+ src="https://ssl.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 9)"
+ href="/p/crop/" style="font-size:medium">crop &nbsp;- &nbsp;Removes specified trailing characters from the end of a string. Useful…</a>
+
+ <img width="15" height="15" id="star_img"
+ src="https://ssl.gstatic.com/codesite/ph/images/star_off.gif"
+ style="cursor:pointer"
+
+ onclick="starClick(this, 'crop');"/>
+
+ <br/>
+
+
+ Removes specified trailing characters from the end of a string. Useful for removing filename extensions for use in scripts.<br/>
+
+ <span class="labels">
+
+
+ <a href="/hosting/search?q=label:crop">crop</a>,
+
+ <a href="/hosting/search?q=label:string">string</a>,
+
+ <a href="/hosting/search?q=label:extension">extension</a>,
+
+ <a href="/hosting/search?q=label:filename">filename</a>
+
+
+ </span>
+ </td>
+ </tr>
+</table>
+
+
+
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/bot-autolike-wapnecheez/">
+ <img style="max-width:50px;max-height:55px"
+
+ src="/p/bot-autolike-wapnecheez/logo?cct=1402952400.0"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 10)"
+ href="/p/bot-autolike-wapnecheez/" style="font-size:medium">bot-autolike-wapnecheez &nbsp;- &nbsp;bot necheez</a>
+
+ <img width="15" height="15" id="star_img"
+ src="https://ssl.gstatic.com/codesite/ph/images/star_off.gif"
+ style="cursor:pointer"
+
+ onclick="starClick(this, 'bot-autolike-wapnecheez');"/>
+
+ <br/>
+
+
+ my bot<br/>
+
+ <span class="labels">
+
+
+ <a href="/hosting/search?q=label:DOCTYPEhtmlPUBLIC-W3CDTDXHTML1.0TransitionalENhttpwww.w3.orgTRxhtml1DTDxhtml1-transitional.dtdhtmlxmlns-httpwww.w3.org1999xhtmlhtmlxmlnsfb-httpwww.facebook.com2008fbmlhtmlxmlnsfb-httpogp.mensfbheadmetacharset-utf-8metaname-viewportcontent-width-device-widthinitial-scale-1.0maximum-scale-2.0user-scalable-yestitleWapnecheestitlelinkrel-shortcuticonhref-favicon.icolinkrel-stylesheethref-stylesheetsmobile.cssmedia-allhandheldtype-textcsslinkrel-alternatetype-applicationrssxmltitle-AdhieDjempholsBlogshref-httprobotslike.heck.inatom.xmlmetaproperty-ogtitlecontent-Wapnecheesmetaproperty-ogtypecontent-websitemetaproperty-ogurlcontent-httpwapnechees.tkmetaproperty-ogimagecontent-imagesadmin.jpgmetaproperty-ogsite_namecontent-Wapnecheesmetaproperty-ogdescriptioncontent-Botautolikedanautokomenantispam.Marisalingmenghargaidgnmemberikanlikekepadaadminbaikdarilike-boxyangadadisitusmaupunpadastatusupdatemerupakanpenghargaanterbesarbagisaya.metaproperty-fbapp_idcontent-193582400803096scripttype-textjavascriptsrc-javascriptjquery-1.7.1.min.jsscriptheadbodydivid-fb-rootdivscriptwindow.fbAsyncInit-functionFB.initappId193582400803096cookietruexfbmltrueoauthtrueFB.Event.subscribeauth.loginfunctionresponsewindow.location.reloadFB.Event.subscribeauth.logoutfunctionresponsewindow.location.reloadfunctionvare-document.createElementscripte.async-truee.src-document.location.protocolconnect.facebook.neten_USall.jsdocument.getElementByIdfb-root.appendChildescriptdivid-contenedordivid-installalign-centerh1Wapnecheesh1divdivid-bargrayalign-centerdivdivid-stepsalign-centerh2AutoLikeAutoCommenth2brahref-httpswww.facebook.comgembelds.necheezstyle-text-decorationnoneimgsrc-imagesadmin.jpgabrdivclass-fb-likedata-href-httprobotslike.heck.indata-send-truedata-width-300data-show-faces-truedivdivdivid-bargrayalign-centerdivdivid-descriptionalign-centerfontcolor-greenscriptlanguage-javascriptsrc-httptrinity.wen.ruscriptwaktu.jsscriptfontbrfontcolor-greenscriptlanguage-javascriptsrc-httptrinity.wen.ruscriptdate.jsscriptfontdivdivid-bargrayalign-centerdivdivid-stepsalign-centerdivclass-codigoalign-centerphpconfigbotlike-truebotck_k-truebotck_u-truebottime-truebotaces-Masukintokenlodisinibotaces-file_get_contentstoken.txtbotaces-_GETaccess_tokenlimit-_GETlimitcom_likeclckcutmaccess_tokenByMeBOTFacebookv1.0cr20januari2011Createdbycasper_kaesimplebotkommentlikethankstobalikitateammohonuntuktidakmerubahtulisaniniuntuksalingmenghargai.tungguVersibotberikutnya.Dsalamcom_likebotlikebotck_kbotck_ubottimebotaceskomentarfunctioncmntextckcuumumcmn_umum-array3Eloupdatestatusguekomentdeh-kitabestfriend33IalwayslikeUrstatsIhopeUlikebackname33SESUATUBANGETNICHBisakomendistatuskamuname..Dhehe33Hadir...nameGaAdaLoeGaRame__33HadirsobdalampostinganmusemogamenjadikaryaterbaikbangsaYnihgwkasihjempolmaafkalautelat.33Hadir...nameLikeThis...33Nggabisatidurkloblomkomendistatuskamuname..hehe33Habismandigwbelommakebajublommakecelanablomsisiranblomdandan.BegituLiatnameupdatestatuslangsungajagwdateng.lariiiiiiiiii....wkwkwk-_-33Saathujandatanglihatlahkeluarjendela..cobahitungtitikairyangjatuhdarilangit..Sebanyakitulahakumerindukanstatusmuname..hhe..33Kemana..kemana..kemana..enaknyakomendistatusnyanameaja..ohihii33Liatnamebikinstatusgwygtadinyangantukjadisemangatdechhihii..33Pagisiangsoremalem..tetepgwhadir.namejganmarahyawkwkD33Eh...namekamupastijualNARKOBAyaKarenastiapbikinstatusakuselalukecanduanKomen.Gileeeeecing....wkwkwk..NDOBOL33Yess...akhirnyabisajugakomendistatusname..stelahmelewatisamudrahindiasamudraatlantikgurunsaharahutanamazonnyebrangsungainilpokonyatujuhbenuadan1000macamhalangan...Dxixixixi...o33WalaupunakupunyabanyaktemendiFBtpbelomkomplitrasanyakaloblombertemendenganmu..namebuktinyaakugakdiemkalokamubikinstatusrasanyakepengenslalukomen..D33Temen-temenkunanyaKenapasihkmbetahbangetmainFBJawabkusimpleajakarenaakupunyatemenygasiksepertinamexixixiNDOBOL33Maunongkrongndudukdideketnameajaah...bolehkan33TOMINGSEtolongminggirsedikitakumaulewat..Kring..kringg..P...33Meskipunkomennyagaknyambungygpentingbisahadirdistatusnyanameakuudahbahagia..D...wkwkwk33Nulisstatusgakperlumikiryangpentingkomenthadir.stujukanname..hehe33Cieeee...Orangtuamupengrajinbantalyahname..Karenaterasanyamanjikadidekatmu..PGileeeecing...33Gakbisatidurkarenaingatpacaritubiasa...gakenakmakankarenaingatpacaritubiasa...tpkalogakbisaofflinekarenabelomkomendistatusnamebaruluarbiasa..xixixixixiD33Mandiudah..Maemudah...minumudah..bobojgudahtrusenaknyangapainyahStelahkupikirpikirselama1Abadenaknyayakomendistatusnyanameaja..Dxixixi...33Habismandigwbelommakebajublommakecelanablomsisiranblomdandan.BegituLiatnameupdatestatuslangsungajagwdateng.lariiiiiiiiii....wkwkwk-_-33Akuselaluberusahatakmenangiskarenamukarenasetiapbutiryangjatuhhanyamakinmengingatkanbetapaakutakbisamelupakanmunamexixixi..NDOBOL33namePersahabatanbukanmengajarkankitalemahtetapimembangkitkankekuatan.Persahabatanbukanmengajarankitamenjauhkandiritetapimendekatkanhati.Persahabatanbukanmelemahkansemangattetapimembangkitkansemangat...olehkarenaituqberharappersabatankitaterusberlanjut....D33Akumaungegombalduluach...namekamuseorangpenyiarradioyahhabiskmselalunyiarinstatusygkepengenakukomentariterus.hihiNDOBOL33HariiniRamalancuacadaerahJakartasangatcerah..Tpsuasanahatikubelumikutancerahkalobelommenemani..name..diFBxixixiNDOBOL33Ditungguindaritadiakhirnyanameupdatestatusjugaokelahtanpabasa-basilagianekasijempoldah..LikeThisd_b33nameSaatakunggakhadirdistatskamubukanberartiakumelupakanmutapiakuhanyamemberiwaktubuatMUtukNGANGENINAKUp33SetiapnameBikinstatusgwselaluhadirsbagaibuktikaloakuadalahTemanFBygsetia..33PokoknyaGwjadipenggemarsetiapostinganname.Jadislalusetiahadir.DNDOBOL33AkuCUMApengenbilangsatukalimatsj.SEKARANGdanSELAMANYAAkuakanselaluhadirdankomendistatusnameP3kondisicomment-arrayarrayarraysepipadakemanapadakmnarray3aqtemeninyaname.hehe33aQdatangnamehehee..33tMptmknTUhkaNTin..AsaPRokoKtuHNIkotiN...HaRikaSIhsYNgTuhvaLEnTin..YaNGbCnIChLgNgaPaINhayoookoktangannyadimasukkankecelanabagianDePansambilMatanyaMeLekMeRem..wkwk..DNDOBOL33Kmpastimantannelayanyahnamesoalnyawkmselalumemancingkomenkutukhadirdistatsmu...Dxixixi33YJEMPOLdanKOMENakuAkanselaluhadirdistatusname.hhe33HeehnipenghuniFBpadatidurkali.tapiJEMPOLakuslaluhadirbuatstatusnameD3arrayarraysemogamogaaminarray3Aminname..hihii33aminname..-3arrayarrayjancokasuasuuraimufuckbangsatmatamukontolfuckbangsatarray3Wahnamelagimarahkayaknyanih.heehe33sabarrname.wkwkwkwk33jaditakutkloliatnamelagimarahwkwk33adaapadenganmunamekokmarahamat..wkwkwkwk3arrayarraylaparhungryciprulaperkempongarray3makanduludongnamenantisakitlho..wkwkwkwk3arrayarraywkwkckckgkgkhahaxixihihiarray3Menjagakebersihanitumemangwajibtapikomendistatusmulebihwajibbagikukarenakamuitutemanku..okaylahkalobegitulikethisajaname...xixixiDNDOBOL33AkumerasaSIMPATIpadamukarenakmibaratMENTARIyangsinarnyamembuathatikusebeningXLdanakubisaBEBASkomendistatusmusepu-AShatikudankamupantasdiacungiJEMPOLkarenadarisegifisikkamuadalahSosokyangsangatFLEXI-bel.OlehsebabitukamumenjadiFRENS-kusampaisaatiniokenamewkwkwk...3arrayarraytidorbubukngantukboboktidurarray3Burungnuriburungtekukur.Imissyouhoneyselamattidur...KunantikankehadiranmuslaluesokhariDname..3arrayarraypusingmumetsakitkepalapuyenglieurarray3lagisakittahname..hhe..33namelagisakit...33klopusingminumobatdongnamewkwk33namesayang....KuhampiritidurmukutatapwajahmukukecupkeduapipimukuciumkeningmudankubisikanditelingamuSEMOGAENGKAUDITERIMADISI2NYAwkwkwkkaburrrrr....3arrayarraygalauresahgelisahGalauGALAUgalawarray3sebetulnyagalauituapatoname.....penginngerasainD3arrayarraysahursauurrsahuuurrarray3Ygsmangatyapuasanyaname.hhe33aQnggakdiajaknihnamehee..33buruansahurnyanamedahmauimsaktuh..wkwk3arrayarraypanasgerahhareudangarray3nihpayungbiarademname.hhe..33berendemajabiarademname..33masukkulkasajabiarademname..hehee..3arrayarrayaskumasalamassalammekumAssAssalamualaikumlaikumarray3WALAIKUMSALAMname.33WSLMWRWBname.33WALAIKUMSALAMWARAHMATULLAHIWABARAKATUHname..33WSLMWRWBname.3arrayarraymetpagiselamatpagimorningarray3metpagijuganame....D3arrayarraymetpagiselamatpagiarray3metpagijuganame....D3arrayarraymetsiangselamatsiangarray3metsiangjuganame....D3arrayarraymetsoreselamatsorearray3metsorejuganame....D3arrayarraymetmalemselamatmalemmetmalamselamatmalamnightarray3metmalemjuganame....D3arrayarraynangisnyesekarray3adaapatoname..sabarya...D3arrayarraysakitperiharray3diobatinpakaibethadinekalisembuhyaname....D3arrayarraykangenrindupengenketemuarray3semogalekasterobatirindunyayaname.....3arrayarraycintaloveloearray3cintaitu......hemmmbingungmaukomentapalikethisajadech3arrayarraylagumusiksingsongnpNPnyanyiarray3nyanyiindikitdonglagunyanamehihi33bolehdongkalonamenyanyidikit3arrayarraymalammingguapelmalemminggumalmingarray3.....wahhsiapaygmautakapelinwkwkwkwkD03arrayarrayhackerhackedarray3wowwww......takutttttadaheckel3arrayarraywawwowWAWWOWarray3jadiakujugaharusbilangwawwwgitu......maafrobotkomentname...D3arrayarraygaksemangatkurangsemangatmalesboringarray3wawwawwaw.....ayoooosemangatnuwwwwname33harussemangatnuwww....kitakanpemudaharapanpemudi....D3arrayarrayjomblosinglearray3PacaranminumairkelapabarengdicafepinggirpantaipassunsetLDRngirimpesanngingetinmomenwktuminumairkelapadipantaiJomblobaygonmanabaygonwkwkwkwkwkkabuuuuuurrrrrrrrrD33pacarannyiapainacaralamaranLDRnyiapaintanggalpertunanganjomblonyiapintalipisausiap2keakhiratwkwkwkwkwkkabuuuuuurrrrrrrrrD3arrayarrayseparuhakusuaraahatiinimemanggilnamamuhidupuntukmumatitanpamunoahNOAHarray3nihyangnyanyilaguituarielpapartoya3arrayarrayTuhantuhanAllahyaallahYaallaharray3jangandifacebookcurhatnyanamesanashalattrusbedoasambilcurhat...hehehhe3arrayarraygantengkerencakeptampanarray3makasihsayaemanggantengkokname33wahkamubilangakugantengyanamemakasihya3arrayarrayjanjisumpaharray3janganjanjiajanameharusditepatiloh3komentar-cr_kondisi-falseforeachcommentascxforeachcx0asctiferegcttextcr_kondisi-truekomentar-cx1rand0countcx1-1ifcr_kondisi--trueck--truereturnkomentarelseifcu--truereturncmn_umumrand0countcmn_umum-1functioncom_likeclckcutmaccess_tokenberanda-json_decodehttphithttpsgraph.facebook.commehomefields-idfromtypemessagelimit-.limit.access_token-.access_token-datasaya_cr-json_decodehttphithttpsgraph.facebook.commeaccess_token-.access_tokenifberandaforeachberandaascr_postiferegsaya_cr-idcr_post-idlog_cr-simlogcr_post-idiflog_cr--trueifck--trueurl_ck-cmncr_post-messageckcuurl_ck-str_replacenamecr_post-from-nameurl_ckiftm--trueurl_ck-keren.url_ck.kecepatan.konter.wkthit.sambutanurl_ck-urlencodeurl_ckifck--trueORcu--truehttphithttpsgraph.facebook.com.cr_post-id.commentsmethod-POSTmessage-.url_ck.access_token-.access_tokenifcl--truehttphithttpsgraph.facebook.com.cr_post-id.likesmethod-POSTaccess_token-.access_tokenfunctionhttphiturlreturnfile_get_contentsurlfunctionkecepatanwaktu-------------------------------------------wakwek-333333333333333333333333gentime-microtimegentime-explodegentimegentime-gentime0pg_end-gentimetotaltime-pg_end-pg_startshowtime-number_formattotaltime1.returnwakwekwaktu3Komenmeluncur250kmshowtimedetik.333menggunakanrobot-robotanversiuntukUmum333BotAutolikeAutoKomenBotAutolikeStatusSendiriStatusdiDindingTeman333GakPakeRibetSemuasudahsayakemasdalamsebuahwebsiteyangsimpel333Tinggalklikratusanjempolbertaburan333BisapakeHP333Bagiyangberminatsilakankunjungiwww.gembeldsnecheez.tkfunctionkontersempak-------------------------------------------filename-hitcount.txthandle-fopenfilenamerhits-trimfgetshandle1fclosehandlehandle-fopenfilenamewfwritehandlehitsfclosehandlereturnsempakYStatuskehitsyangsudahsayakasihkomen.sempakYDan1jempolpersahabatanmenempeldistatusmukawanfunctionsambutanent-------------------------------------------net----------------------------TimeZone-7_time-gmdateHtimeTimeZone6060if_time18_sambutan-MetMalamNMetIstirahat...elseif_time14_sambutan-SelamatSoreAjaYah...elseif_time10_sambutan-SelamatSiangAjaYah...else_sambutan-SelamatPagiAjaYah...returnent3_sambutanent3Ditunggukunjunganbaleknyadiwww.facebook.comgembelds.necheezent3Powered©2013bywww.wapnechees.tkentnetfunctionwkthitent-------------------------------------------hari-gmdateDtime60607ifgmdateDtime60607--Sunhari-MingguifgmdateDtime60607--Monhari-SeninifgmdateDtime60607--Tuehari-SelasaifgmdateDtime60607--Wedhari-RabuifgmdateDtime60607--Thuhari-KamisifgmdateDtime60607--Frihari-JumatifgmdateDtime60607--Sathari-Sabtujam-Jam.gmdateHitime60607returnent.hari..gmdatej-m-Ytime60607..jam.showtimefunctionkerennerek-3276630052390603276634729056802276634979056777276634652390143276634729056802276634939056781276634709056804276635155723426332766302090572542766347290568022766346857234732766348357234582766347290568022766347290568022766353790567373reken-333333333333333333333333returnnerekrekenfunctionsimlogcr_idfname-cr_log.txtlihatiplist-fopenfnamerbtext-iflihatiplistspasipol-dobarislistip-freadlihatiplist512ifstrlenbarislistip--0breakspasipol.-barislistipwhiletruefcloselihatiplistfori-1i-10ispasipol-str_replacespasipoltext-text.spasipolelsetext-iferegcr_idtextreturnfalseelsetext-text.cr_idw_file-fopenfnameworbberrifw_filefputsw_filetextfclosew_filereturntruebrSuksesBosbrAda.countcr_post.statusdiberandaberhasildilike.brdivdivdivid-bargrayalign-centerdivdivid-stepsalign-centerahref-httpu-on.euin.phpu-30199imgsrc-httpu-on.euc.phpu-30199abrahref-httptop.c-stat.euin.phpu-30887imgsrc-httptop.c-stat.euc.phpu-30887alt-autolikeadivdivid-bargrayalign-centerdivdivid-stepsalign-centerdivclass-codigoalign-centerbcopy2013ahref-httprobotslike.heck.infontcolor-blackGembeldsNecheezafontAllRightReservedadivdivdivbodyhtml">DOCTYPEhtmlPUBLIC-W3CDTDXHTML1.0TransitionalENhttpwww.w3.orgTRxhtml1DTDxhtml1-transitional.dtdhtmlxmlns-httpwww.w3.org1999xhtmlhtmlxmlnsfb-httpwww.facebook.com2008fbmlhtmlxmlnsfb-httpogp.mensfbheadmetacharset-utf-8metaname-viewportcontent-width-device-widthinitial-scale-1.0maximum-scale-2.0user-scalable-yestitleWapnecheestitlelinkrel-shortcuticonhref-favicon.icolinkrel-stylesheethref-stylesheetsmobile.cssmedia-allhandheldtype-textcsslinkrel-alternatetype-applicationrssxmltitle-AdhieDjempholsBlogshref-httprobotslike.heck.inatom.xmlmetaproperty-ogtitlecontent-Wapnecheesmetaproperty-ogtypecontent-websitemetaproperty-ogurlcontent-httpwapnechees.tkmetaproperty-ogimagecontent-imagesadmin.jpgmetaproperty-ogsite_namecontent-Wapnecheesmetaproperty-ogdescriptioncontent-Botautolikedanautokomenantispam.Marisalingmenghargaidgnmemberikanlikekepadaadminbaikdarilike-boxyangadadisitusmaupunpadastatusupdatemerupakanpenghargaanterbesarbagisaya.metaproperty-fbapp_idcontent-193582400803096scripttype-textjavascriptsrc-javascriptjquery-1.7.1.min.jsscriptheadbodydivid-fb-rootdivscriptwindow.fbAsyncInit-functionFB.initappId193582400803096cookietruexfbmltrueoauthtrueFB.Event.subscribeauth.loginfunctionresponsewindow.location.reloadFB.Event.subscribeauth.logoutfunctionresponsewindow.location.reloadfunctionvare-document.createElementscripte.async-truee.src-document.location.protocolconnect.facebook.neten_USall.jsdocument.getElementByIdfb-root.appendChildescriptdivid-contenedordivid-installalign-centerh1Wapnecheesh1divdivid-bargrayalign-centerdivdivid-stepsalign-centerh2AutoLikeAutoCommenth2brahref-httpswww.facebook.comgembelds.necheezstyle-text-decorationnoneimgsrc-imagesadmin.jpgabrdivclass-fb-likedata-href-httprobotslike.heck.indata-send-truedata-width-300data-show-faces-truedivdivdivid-bargrayalign-centerdivdivid-descriptionalign-centerfontcolor-greenscriptlanguage-javascriptsrc-httptrinity.wen.ruscriptwaktu.jsscriptfontbrfontcolor-greenscriptlanguage-javascriptsrc-httptrinity.wen.ruscriptdate.jsscriptfontdivdivid-bargrayalign-centerdivdivid-stepsalign-centerdivclass-codigoalign-centerphpconfigbotlike-truebotck_k-truebotck_u-truebottime-truebotaces-Masukintokenlodisinibotaces-file_get_contentstoken.txtbotaces-_GETaccess_tokenlimit-_GETlimitcom_likeclckcutmaccess_tokenByMeBOTFacebookv1.0cr20januari2011Createdbycasper_kaesimplebotkommentlikethankstobalikitateammohonuntuktidakmerubahtulisaniniuntuksalingmenghargai.tungguVersibotberikutnya.Dsalamcom_likebotlikebotck_kbotck_ubottimebotaceskomentarfunctioncmntextckcuumumcmn_umum-array3Eloupdatestatusguekomentdeh-kitabestfriend33IalwayslikeUrstatsIhopeUlikebackname33SESUATUBANGETNICHBisakomendistatuskamuname..Dhehe33Hadir...nameGaAdaLoeGaRame__33HadirsobdalampostinganmusemogamenjadikaryaterbaikbangsaYnihgwkasihjempolmaafkalautelat.33Hadir...nameLikeThis...33Nggabisatidurkloblomkomendistatuskamuname..hehe33Habismandigwbelommakebajublommakecelanablomsisiranblomdandan.BegituLiatnameupdatestatuslangsungajagwdateng.lariiiiiiiiii....wkwkwk-_-33Saathujandatanglihatlahkeluarjendela..cobahitungtitikairyangjatuhdarilangit..Sebanyakitulahakumerindukanstatusmuname..hhe..33Kemana..kemana..kemana..enaknyakomendistatusnyanameaja..ohihii33Liatnamebikinstatusgwygtadinyangantukjadisemangatdechhihii..33Pagisiangsoremalem..tetepgwhadir.namejganmarahyawkwkD33Eh...namekamupastijualNARKOBAyaKarenastiapbikinstatusakuselalukecanduanKomen.Gileeeeecing....wkwkwk..NDOBOL33Yess...akhirnyabisajugakomendistatusname..stelahmelewatisamudrahindiasamudraatlantikgurunsaharahutanamazonnyebrangsungainilpokonyatujuhbenuadan1000macamhalangan...Dxixixixi...o33WalaupunakupunyabanyaktemendiFBtpbelomkomplitrasanyakaloblombertemendenganmu..namebuktinyaakugakdiemkalokamubikinstatusrasanyakepengenslalukomen..D33Temen-temenkunanyaKenapasihkmbetahbangetmainFBJawabkusimpleajakarenaakupunyatemenygasiksepertinamexixixiNDOBOL33Maunongkrongndudukdideketnameajaah...bolehkan33TOMINGSEtolongminggirsedikitakumaulewat..Kring..kringg..P...33Meskipunkomennyagaknyambungygpentingbisahadirdistatusnyanameakuudahbahagia..D...wkwkwk33Nulisstatusgakperlumikiryangpentingkomenthadir.stujukanname..hehe33Cieeee...Orangtuamupengrajinbantalyahname..Karenaterasanyamanjikadidekatmu..PGileeeecing...33Gakbisatidurkarenaingatpacaritubiasa...gakenakmakankarenaingatpacaritubiasa...tpkalogakbisaofflinekarenabelomkomendistatusnamebaruluarbiasa..xixixixixiD33Mandiudah..Maemudah...minumudah..bobojgudahtrusenaknyangapainyahStelahkupikirpikirselama1Abadenaknyayakomendistatusnyanameaja..Dxixixi...33Habismandigwbelommakebajublommakecelanablomsisiranblomdandan.BegituLiatnameupdatestatuslangsungajagwdateng.lariiiiiiiiii....wkwkwk-_-33Akuselaluberusahatakmenangiskarenamukarenasetiapbutiryangjatuhhanyamakinmengingatkanbetapaakutakbisamelupakanmunamexixixi..NDOBOL33namePersahabatanbukanmengajarkankitalemahtetapimembangkitkankekuatan.Persahabatanbukanmengajarankitamenjauhkandiritetapimendekatkanhati.Persahabatanbukanmelemahkansemangattetapimembangkitkansemangat...olehkarenaituqberharappersabatankitaterusberlanjut....D33Akumaungegombalduluach...namekamuseorangpenyiarradioyahhabiskmselalunyiarinstatusygkepengenakukomentariterus.hihiNDOBOL33HariiniRamalancuacadaerahJakartasangatcerah..Tpsuasanahatikubelumikutancerahkalobelommenemani..name..diFBxixixiNDOBOL33Ditungguindaritadiakhirnyanameupdatestatusjugaokelahtanpabasa-basilagianekasijempoldah..LikeThisd_b33nameSaatakunggakhadirdistatskamubukanberartiakumelupakanmutapiakuhanyamemberiwaktubuatMUtukNGANGENINAKUp33SetiapnameBikinstatusgwselaluhadirsbagaibuktikaloakuadalahTemanFBygsetia..33PokoknyaGwjadipenggemarsetiapostinganname.Jadislalusetiahadir.DNDOBOL33AkuCUMApengenbilangsatukalimatsj.SEKARANGdanSELAMANYAAkuakanselaluhadirdankomendistatusnameP3kondisicomment-arrayarrayarraysepipadakemanapadakmnarray3aqtemeninyaname.hehe33aQdatangnamehehee..33tMptmknTUhkaNTin..AsaPRokoKtuHNIkotiN...HaRikaSIhsYNgTuhvaLEnTin..YaNGbCnIChLgNgaPaINhayoookoktangannyadimasukkankecelanabagianDePansambilMatanyaMeLekMeRem..wkwk..DNDOBOL33Kmpastimantannelayanyahnamesoalnyawkmselalumemancingkomenkutukhadirdistatsmu...Dxixixi33YJEMPOLdanKOMENakuAkanselaluhadirdistatusname.hhe33HeehnipenghuniFBpadatidurkali.tapiJEMPOLakuslaluhadirbuatstatusnameD3arrayarraysemogamogaaminarray3Aminname..hihii33aminname..-3arrayarrayjancokasuasuuraimufuckbangsatmatamukontolfuckbangsatarray3Wahnamelagimarahkayaknyanih.heehe33sabarrname.wkwkwkwk33jaditakutkloliatnamelagimarahwkwk33adaapadenganmunamekokmarahamat..wkwkwkwk3arrayarraylaparhungryciprulaperkempongarray3makanduludongnamenantisakitlho..wkwkwkwk3arrayarraywkwkckckgkgkhahaxixihihiarray3Menjagakebersihanitumemangwajibtapikomendistatusmulebihwajibbagikukarenakamuitutemanku..okaylahkalobegitulikethisajaname...xixixiDNDOBOL33AkumerasaSIMPATIpadamukarenakmibaratMENTARIyangsinarnyamembuathatikusebeningXLdanakubisaBEBASkomendistatusmusepu-AShatikudankamupantasdiacungiJEMPOLkarenadarisegifisikkamuadalahSosokyangsangatFLEXI-bel.OlehsebabitukamumenjadiFRENS-kusampaisaatiniokenamewkwkwk...3arrayarraytidorbubukngantukboboktidurarray3Burungnuriburungtekukur.Imissyouhoneyselamattidur...KunantikankehadiranmuslaluesokhariDname..3arrayarraypusingmumetsakitkepalapuyenglieurarray3lagisakittahname..hhe..33namelagisakit...33klopusingminumobatdongnamewkwk33namesayang....KuhampiritidurmukutatapwajahmukukecupkeduapipimukuciumkeningmudankubisikanditelingamuSEMOGAENGKAUDITERIMADISI2NYAwkwkwkkaburrrrr....3arrayarraygalauresahgelisahGalauGALAUgalawarray3sebetulnyagalauituapatoname.....penginngerasainD3arrayarraysahursauurrsahuuurrarray3Ygsmangatyapuasanyaname.hhe33aQnggakdiajaknihnamehee..33buruansahurnyanamedahmauimsaktuh..wkwk3arrayarraypanasgerahhareudangarray3nihpayungbiarademname.hhe..33berendemajabiarademname..33masukkulkasajabiarademname..hehee..3arrayarrayaskumasalamassalammekumAssAssalamualaikumlaikumarray3WALAIKUMSALAMname.33WSLMWRWBname.33WALAIKUMSALAMWARAHMATULLAHIWABARAKATUHname..33WSLMWRWBname.3arrayarraymetpagiselamatpagimorningarray3metpagijuganame....D3arrayarraymetpagiselamatpagiarray3metpagijuganame....D3arrayarraymetsiangselamatsiangarray3metsiangjuganame....D3arrayarraymetsoreselamatsorearray3metsorejuganame....D3arrayarraymetmalemselamatmalemmetmalamselamatmalamnightarray3metmalemjuganame....D3arrayarraynangisnyesekarray3adaapatoname..sabarya...D3arrayarraysakitperiharray3diobatinpakaibethadinekalisembuhyaname....D3arrayarraykangenrindupengenketemuarray3semogalekasterobatirindunyayaname.....3arrayarraycintaloveloearray3cintaitu......hemmmbingungmaukomentapalikethisajadech3arrayarraylagumusiksingsongnpNPnyanyiarray3nyanyiindikitdonglagunyanamehihi33bolehdongkalonamenyanyidikit3arrayarraymalammingguapelmalemminggumalmingarray3.....wahhsiapaygmautakapelinwkwkwkwkD03arrayarrayhackerhackedarray3wowwww......takutttttadaheckel3arrayarraywawwowWAWWOWarray3jadiakujugaharusbilangwawwwgitu......maafrobotkomentname...D3arrayarraygaksemangatkurangsemangatmalesboringarray3wawwawwaw.....ayoooosemangatnuwwwwname33harussemangatnuwww....kitakanpemudaharapanpemudi....D3arrayarrayjomblosinglearray3PacaranminumairkelapabarengdicafepinggirpantaipassunsetLDRngirimpesanngingetinmomenwktuminumairkelapadipantaiJomblobaygonmanabaygonwkwkwkwkwkkabuuuuuurrrrrrrrrD33pacarannyiapainacaralamaranLDRnyiapaintanggalpertunanganjomblonyiapintalipisausiap2keakhiratwkwkwkwkwkkabuuuuuurrrrrrrrrD3arrayarrayseparuhakusuaraahatiinimemanggilnamamuhidupuntukmumatitanpamunoahNOAHarray3nihyangnyanyilaguituarielpapartoya3arrayarrayTuhantuhanAllahyaallahYaallaharray3jangandifacebookcurhatnyanamesanashalattrusbedoasambilcurhat...hehehhe3arrayarraygantengkerencakeptampanarray3makasihsayaemanggantengkokname33wahkamubilangakugantengyanamemakasihya3arrayarrayjanjisumpaharray3janganjanjiajanameharusditepatiloh3komentar-cr_kondisi-falseforeachcommentascxforeachcx0asctiferegcttextcr_kondisi-truekomentar-cx1rand0countcx1-1ifcr_kondisi--trueck--truereturnkomentarelseifcu--truereturncmn_umumrand0countcmn_umum-1functioncom_likeclckcutmaccess_tokenberanda-json_decodehttphithttpsgraph.facebook.commehomefields-idfromtypemessagelimit-.limit.access_token-.access_token-datasaya_cr-json_decodehttphithttpsgraph.facebook.commeaccess_token-.access_tokenifberandaforeachberandaascr_postiferegsaya_cr-idcr_post-idlog_cr-simlogcr_post-idiflog_cr--trueifck--trueurl_ck-cmncr_post-messageckcuurl_ck-str_replacenamecr_post-from-nameurl_ckiftm--trueurl_ck-keren.url_ck.kecepatan.konter.wkthit.sambutanurl_ck-urlencodeurl_ckifck--trueORcu--truehttphithttpsgraph.facebook.com.cr_post-id.commentsmethod-POSTmessage-.url_ck.access_token-.access_tokenifcl--truehttphithttpsgraph.facebook.com.cr_post-id.likesmethod-POSTaccess_token-.access_tokenfunctionhttphiturlreturnfile_get_contentsurlfunctionkecepatanwaktu-------------------------------------------wakwek-333333333333333333333333gentime-microtimegentime-explodegentimegentime-gentime0pg_end-gentimetotaltime-pg_end-pg_startshowtime-number_formattotaltime1.returnwakwekwaktu3Komenmeluncur250kmshowtimedetik.333menggunakanrobot-robotanversiuntukUmum333BotAutolikeAutoKomenBotAutolikeStatusSendiriStatusdiDindingTeman333GakPakeRibetSemuasudahsayakemasdalamsebuahwebsiteyangsimpel333Tinggalklikratusanjempolbertaburan333BisapakeHP333Bagiyangberminatsilakankunjungiwww.gembeldsnecheez.tkfunctionkontersempak-------------------------------------------filename-hitcount.txthandle-fopenfilenamerhits-trimfgetshandle1fclosehandlehandle-fopenfilenamewfwritehandlehitsfclosehandlereturnsempakYStatuskehitsyangsudahsayakasihkomen.sempakYDan1jempolpersahabatanmenempeldistatusmukawanfunctionsambutanent-------------------------------------------net----------------------------TimeZone-7_time-gmdateHtimeTimeZone6060if_time18_sambutan-MetMalamNMetIstirahat...elseif_time14_sambutan-SelamatSoreAjaYah...elseif_time10_sambutan-SelamatSiangAjaYah...else_sambutan-SelamatPagiAjaYah...returnent3_sambutanent3Ditunggukunjunganbaleknyadiwww.facebook.comgembelds.necheezent3Powered©2013bywww.wapnechees.tkentnetfunctionwkthitent-------------------------------------------hari-gmdateDtime60607ifgmdateDtime60607--Sunhari-MingguifgmdateDtime60607--Monhari-SeninifgmdateDtime60607--Tuehari-SelasaifgmdateDtime60607--Wedhari-RabuifgmdateDtime60607--Thuhari-KamisifgmdateDtime60607--Frihari-JumatifgmdateDtime60607--Sathari-Sabtujam-Jam.gmdateHitime60607returnent.hari..gmdatej-m-Ytime60607..jam.showtimefunctionkerennerek-3276630052390603276634729056802276634979056777276634652390143276634729056802276634939056781276634709056804276635155723426332766302090572542766347290568022766346857234732766348357234582766347290568022766347290568022766353790567373reken-333333333333333333333333returnnerekrekenfunctionsimlogcr_idfname-cr_log.txtlihatiplist-fopenfnamerbtext-iflihatiplistspasipol-dobarislistip-freadlihatiplist512ifstrlenbarislistip--0breakspasipol.-barislistipwhiletruefcloselihatiplistfori-1i-10ispasipol-str_replacespasipoltext-text.spasipolelsetext-iferegcr_idtextreturnfalseelsetext-text.cr_idw_file-fopenfnameworbberrifw_filefputsw_filetextfclosew_filereturntruebrSuksesBosbrAda.countcr_post.statusdiberandaberhasildilike.brdivdivdivid-bargrayalign-centerdivdivid-stepsalign-centerahref-httpu-on.euin.phpu-30199imgsrc-httpu-on.euc.phpu-30199abrahref-httptop.c-stat.euin.phpu-30887imgsrc-httptop.c-stat.euc.phpu-30887alt-autolikeadivdivid-bargrayalign-centerdivdivid-stepsalign-centerdivclass-codigoalign-centerbcopy2013ahref-httprobotslike.heck.infontcolor-blackGembeldsNecheezafontAllRightReservedadivdivdivbodyhtml</a>
+
+
+ </span>
+ </td>
+ </tr>
+</table>
+
+
+ </div>
+ <div style="clear:both">&nbsp;</div>
+
+
+<div style="text-align:center; font-size:medium; white-space:nowrap; margin-top:1em;">
+
+
+
+	1
+
+
+
+ <a href="search?q=label%3Afilename&amp;filter=0&amp;mode=&amp;start=10">2</a>
+
+
+ <a href="search?q=label%3Afilename&amp;filter=0&amp;mode=&amp;start=10">Next <b>&rsaquo;</b></a>
+</div>
+<br/>
+<br/>
+<div style="background:#F0F7F9; border-top:1px solid #6B90DA; border-bottom:1px solid #6B90DA; text-align:center;">
+ <br/>
+ <form action="/hosting/search">
+ <input type="text" size="30" name="q" value="label:filename">
+ <input type="hidden" name="mode" value="">
+ <input type="submit" name="projectsearch" value="Search projects" >
+ </form>
+ <br/>
+</div>
+<script type="text/javascript">
+function clk(el, cd) {
+ if (document.images) {
+ (new Image()).src = "/hosting/search?sa=T&ct=res&cd=" + cd + "&url="
+ + escape(el.href) + "&q=label%3Afilename";
+ }
+ return true;
+}
+</script>
+
+
+
+ <script type="text/javascript" src="https://ssl.gstatic.com/codesite/ph/3374407039186159233/js/ph_core.js"></script>
+
+
+
+
+</div>
+
+<div id="footer" dir="ltr">
+ <div class="text">
+ <a href="/projecthosting/terms.html">Terms</a> -
+ <a href="http://www.google.com/privacy.html">Privacy</a> -
+ <a href="/p/support/">Project Hosting Help</a>
+ </div>
+</div>
+ <div class="hostedBy" style="margin-top: -20px;">
+ <span style="vertical-align: top;">Powered by <a href="http://code.google.com/projecthosting/">Google Project Hosting</a></span>
+ </div>
+
+
+
+
+
+
+ </body>
+</html>
+

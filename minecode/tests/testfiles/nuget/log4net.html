@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+        <meta property="fb:app_id" content="235682883225736" />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@nuget">
+
+    <meta property="og:title" content="log4net 2.0.8" />
+    <meta property="og:type" content="nugetgallery:package" />
+    <meta property="og:url" content="https://www.nuget.org/packages/log4net/" />
+    <meta property="og:description" content="log4net is a tool to help the programmer output log statements to a variety of output targets. In case of problems with an application, it is helpful to enable logging so that the problem can be located. With log4net it is possible to enable logging at runtime without modifying the application binary. The log4net package is designed so that log statements can remain in shipped code without incurring a high performance cost. It follows that the speed of logging (or rather not logging) is crucial. 
+
+At the same time, log output can be so voluminous that it quickly becomes overwhelming. One of the distinctive features of log4net is the notion of hierarchical loggers. Using these loggers it is possible to selectively control which log statements are output at arbitrary granularity. 
+
+log4net is designed with two distinct goals in mind: speed and flexibility" />
+    <meta property="og:determiner" content="a" />
+    <meta property="og:image" content="https://www.apache.org/images/feather.png" />
+
+        <link rel="alternate" type="application/atom+xml" title="Subscribe to log4net updates" href="/packages/log4net/atom.xml" />
+
+    
+
+    <title>
+        NuGet Gallery
+        | log4net 2.0.8
+    </title>
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <link title="NuGet.org" type="application/opensearchdescription+xml" href="/opensearch.xml" rel="search">
+
+    <link href="/Content/gallery/css/site.min.css?v=K2fcXI5bWOIIFGvogPwvPlV_OEuPyFAEl9Ci-now6941" rel="stylesheet"/>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    
+
+                    <script>
+                    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+                    ga('create', 'UA-62780441-33', 'auto');
+                    ga('set', 'anonymizeIp', true);
+                    ga('set', 'page', '');
+                    ga('set', 'title', '');
+                    ga('send', 'pageview');
+                </script>
+
+    
+    
+                <!-- Telemetry -->
+            <script type="text/javascript">
+                var appInsights = window.appInsights || function (config) {
+                    function s(config) {
+                        t[config] = function () {
+                            var i = arguments;
+                            t.queue.push(function () { t[config].apply(t, i) })
+                        }
+                    }
+
+                    var t = { config: config }, r = document, f = window, e = "script", o = r.createElement(e), i, u;
+                    for (o.src = config.url || "//az416426.vo.msecnd.net/scripts/a/ai.0.js", r.getElementsByTagName(e)[0].parentNode.appendChild(o), t.cookie = r.cookie, t.queue = [], i = ["Event", "Exception", "Metric", "PageView", "Trace"]; i.length;) s("track" + i.pop());
+                    return config.disableExceptionTracking || (i = "onerror", s("_" + i), u = f[i], f[i] = function (config, r, f, e, o) {
+                        var s = u && u(config, r, f, e, o);
+                        return s !== !0 && t["_" + i](config, r, f, e, o), s
+                    }), t
+                }({
+                    instrumentationKey: 'df3a36b9-dfba-401c-82ab-35690083be3e',
+                    samplingPercentage: 100
+                });
+
+                window.appInsights = appInsights;
+                appInsights.trackPageView();
+            </script>
+
+</head>
+<body>
+    
+
+
+
+
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <a href="#" id="skipToContent" class="showOnFocus" title="Skip To Content">Skip To Content</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="/">
+                        <img class="navbar-logo" width="94" height="29" alt="NuGet home"
+                             src="/Content/gallery/img/logo-header.svg"
+                                 onerror="this.src='https://www.nuget.org/Content/gallery/img/logo-header-94x29.png'; this.onerror = null;"
+ />
+                    </a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav" role="tablist">
+                            <li class="active" role="presentation">
+        <a role="tab" aria-selected="true" href="/packages">
+            <span>Packages</span>
+        </a>
+    </li>
+
+                            <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="/packages/manage/upload">
+            <span>Upload</span>
+        </a>
+    </li>
+
+    <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="/stats">
+            <span>Statistics</span>
+        </a>
+    </li>
+                                                    <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="https://docs.microsoft.com/en-us/nuget/what-is-nuget">
+            <span>Documentation</span>
+        </a>
+    </li>
+
+                            <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="/downloads">
+            <span>Downloads</span>
+        </a>
+    </li>
+
+                            <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="https://blog.nuget.org/">
+            <span>Blog</span>
+        </a>
+    </li>
+
+                    </ul>
+                        <ul class="nav navbar-nav navbar-right" role="tablist">
+    <li class="" role="presentation">
+        <a role="tab" aria-selected="false" href="/users/account/LogOn?returnUrl=%2Fpackages%2Flog4net" title="Sign in to an existing NuGet.org account">
+            <span>Sign in</span>
+        </a>
+    </li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="container search-container">
+            <div class="row">
+                <form aria-label="Package search bar" class="col-sm-12" action="/packages" method="get">
+                    <div class="input-group">
+    <input name="q" type="text" class="form-control" id="search" aria-label="Enter packages to search"
+           placeholder="Search for packages..." autocomplete="off"
+           value=""
+            />
+    <span class="input-group-btn">
+        <button class="btn btn-default btn-warning btn-search" type="submit"
+                title="Search for packages" aria-label="Search">
+            <span class="ms-Icon ms-Icon--Search" aria-hidden="true"></span>
+        </button>
+    </span>
+</div>
+                    <div id="autocomplete-results-container" class="text-left" tabindex="0"></div>
+
+<script type="text/html" id="autocomplete-results-row">
+    <!-- ko if: $data -->
+    <!-- ko if: $data.PackageRegistration -->
+    <div class="col-sm-4 autocomplete-row-id autocomplete-row-data">
+        <span data-bind="attr: { id: 'autocomplete-result-id-' + $data.PackageRegistration.Id, title: $data.PackageRegistration.Id }, text: $data.PackageRegistration.Id"></span>
+    </div>
+    <div class="col-sm-4 autocomplete-row-downloadcount text-right autocomplete-row-data">
+        <span data-bind="text: $data.DownloadCount + ' downloads'"></span>
+    </div>
+    <div class="col-sm-4 autocomplete-row-owners text-left autocomplete-row-data">
+        <span data-bind="text: $data.OwnersString + ' '"></span>
+    </div>
+    <!-- /ko -->
+    <!-- ko ifnot: $data.PackageRegistration -->
+    <div class="col-sm-12 autocomplete-row-id autocomplete-row-data">
+        <span data-bind="attr: { id: 'autocomplete-result-id-' + $data, title: $data  }, text: $data"></span>
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->
+</script>
+
+<script type="text/html" id="autocomplete-results-template">
+    <!-- ko if: $data.data.length > 0 -->
+    <div data-bind="foreach: $data.data" id="autocomplete-results-list">
+        <a data-bind="attr: { id: 'autocomplete-result-row-' + $data, href: '/packages/' + $data, title: $data }" tabindex="-1">
+            <div data-bind="attr:{ id: 'autocomplete-container-' + $data }" class="autocomplete-results-row">
+            </div>
+        </a>
+    </div>
+    <!-- /ko -->
+</script>
+
+                </form>
+            </div>
+        </div>
+</nav>
+
+
+
+
+
+
+    <div id="skippedToContent">
+    
+
+
+
+
+
+
+
+
+
+<section role="main" class="container main-container page-package-details">
+    <div class="row">
+        <aside aria-label="Package icon" class="col-sm-1">
+            <h3>
+                <img class="package-icon img-responsive" aria-hidden="true" alt=""
+                     src="https://www.apache.org/images/feather.png"
+                         onerror="this.src='https://www.nuget.org/Content/gallery/img/default-package-icon-256x256.png'; this.onerror = null;"
+ />
+            </h3>
+        </aside>
+        <article class="col-sm-8 package-details-main">
+            <div class="package-title">
+                <h1>
+                    log4net
+                    <small class="text-nowrap">2.0.8</small>
+
+                </h1>
+
+                    <div class="ms-fontSize-xl">
+                        Apache log4net
+                    </div>
+            </div>
+
+                <p>log4net is a tool to help the programmer output log statements to a variety of output targets. In case of problems with an application, it is helpful to enable logging so that the problem can be located. With log4net it is possible to enable logging at runtime without modifying the application binary. The log4net package is designed so that log statements can remain in shipped code without incurring a high performance cost. It follows that the speed of logging (or rather not logging) is crucial. <br /><br />At the same time, log output can be so voluminous that it quickly becomes overwhelming. One of the distinctive features of log4net is the notion of hierarchical loggers. Using these loggers it is possible to selectively control which log statements are output at arbitrary granularity. <br /><br />log4net is designed with two distinct goals in mind: speed and flexibility</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="install-tabs">
+                    <ul class="nav nav-tabs" role="tablist">
+
+    <li role="presentation" class="active">
+        <a href="#package-manager" aria-expanded="true"
+           id="package-manager-tab" class="package-manager-tab"
+           aria-selected="true"
+           aria-controls="package-manager" role="tab" data-toggle="tab"
+           title="Switch to tab panel which contains package installation command for Package Manager">
+            Package Manager
+        </a>
+    </li>
+    <li role="presentation" class="">
+        <a href="#dotnet-cli" aria-expanded="false"
+           id="dotnet-cli-tab" class="package-manager-tab"
+           aria-selected="false"
+           aria-controls="dotnet-cli" role="tab" data-toggle="tab"
+           title="Switch to tab panel which contains package installation command for .NET CLI">
+            .NET CLI
+        </a>
+    </li>
+    <li role="presentation" class="">
+        <a href="#package-reference" aria-expanded="false"
+           id="package-reference-tab" class="package-manager-tab"
+           aria-selected="false"
+           aria-controls="package-reference" role="tab" data-toggle="tab"
+           title="Switch to tab panel which contains package installation command for PackageReference">
+            PackageReference
+        </a>
+    </li>
+    <li role="presentation" class="">
+        <a href="#paket-cli" aria-expanded="false"
+           id="paket-cli-tab" class="package-manager-tab"
+           aria-selected="false"
+           aria-controls="paket-cli" role="tab" data-toggle="tab"
+           title="Switch to tab panel which contains package installation command for Paket CLI">
+            Paket CLI
+        </a>
+    </li>
+                    </ul>
+                    <div class="tab-content">
+
+    <div role="tabpanel" class="tab-pane active" id="package-manager">
+        <div>
+            <div class="install-script" id="package-manager-text">
+                <span>
+                    Install-Package log4net -Version 2.0.8
+                </span>
+            </div>
+            <div class="copy-button">
+                <button id="package-manager-button" class="btn btn-default btn-warning" type="button"
+                        data-toggle="popover" data-placement="bottom" data-content="Copied."
+                        aria-label="Copy the Package Manager command">
+                    <span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <div role="tabpanel" class="tab-pane " id="dotnet-cli">
+        <div>
+            <div class="install-script" id="dotnet-cli-text">
+                <span>
+                    dotnet add package log4net --version 2.0.8
+                </span>
+            </div>
+            <div class="copy-button">
+                <button id="dotnet-cli-button" class="btn btn-default btn-warning" type="button"
+                        data-toggle="popover" data-placement="bottom" data-content="Copied."
+                        aria-label="Copy the .NET CLI command">
+                    <span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <div role="tabpanel" class="tab-pane " id="package-reference">
+        <div>
+            <div class="install-script" id="package-reference-text">
+                <span>
+                    &lt;PackageReference Include=&quot;log4net&quot; Version=&quot;2.0.8&quot; /&gt;
+                </span>
+            </div>
+            <div class="copy-button">
+                <button id="package-reference-button" class="btn btn-default btn-warning" type="button"
+                        data-toggle="popover" data-placement="bottom" data-content="Copied."
+                        aria-label="Copy the PackageReference XML node">
+                    <span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+
+    <div class="icon-text alert alert-info" >
+        <i class="ms-Icon ms-Icon--Info" aria-hidden="true"></i>
+        
+For projects that support <a href="https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files">PackageReference</a>, copy this XML node into the project file to reference the package.
+                    
+    </div>
+    </div>
+    <div role="tabpanel" class="tab-pane " id="paket-cli">
+        <div>
+            <div class="install-script" id="paket-cli-text">
+                <span>
+                    paket add log4net --version 2.0.8
+                </span>
+            </div>
+            <div class="copy-button">
+                <button id="paket-cli-button" class="btn btn-default btn-warning" type="button"
+                        data-toggle="popover" data-placement="bottom" data-content="Copied."
+                        aria-label="Copy the Paket CLI command">
+                    <span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+
+    <div class="icon-text alert alert-warning" >
+        <i class="ms-Icon ms-Icon--Warning" aria-hidden="true"></i>
+        
+The NuGet Team does not provide support for this client. Please contact its <a href="https://fsprojects.github.io/Paket/contact.html">maintainers</a> for support.
+                    
+    </div>
+    </div>
+                    </div>
+                </div>
+
+                    <h2>
+                        <a href="#" role="button" data-toggle="collapse" data-target="#dependency-groups"
+                           aria-expanded="false" aria-controls="dependency-groups"
+                           id="show-dependency-groups">
+                            <i class="ms-Icon ms-Icon--ChevronRight"
+                               aria-hidden="true"></i>
+                            <span>Dependencies</span>
+                        </a>
+                    </h2>
+                        <ul class="list-unstyled panel-collapse collapse dependency-groups" id="dependency-groups">
+                                <li>
+                                        <h4><span>.NETFramework 2.0</span></h4>
+                                    <ul class="list-unstyled dependency-group">
+                                            <li>
+                                                    No dependencies.
+                                            </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                        <h4><span>.NETFramework 3.5</span></h4>
+                                    <ul class="list-unstyled dependency-group">
+                                            <li>
+                                                    No dependencies.
+                                            </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                        <h4><span>.NETFramework 3.5 Client</span></h4>
+                                    <ul class="list-unstyled dependency-group">
+                                            <li>
+                                                    No dependencies.
+                                            </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                        <h4><span>.NETFramework 4.0</span></h4>
+                                    <ul class="list-unstyled dependency-group">
+                                            <li>
+                                                    No dependencies.
+                                            </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                        <h4><span>.NETFramework 4.0 Client</span></h4>
+                                    <ul class="list-unstyled dependency-group">
+                                            <li>
+                                                    No dependencies.
+                                            </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                        <h4><span>.NETFramework 4.5</span></h4>
+                                    <ul class="list-unstyled dependency-group">
+                                            <li>
+                                                    No dependencies.
+                                            </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                        <h4><span>.NETStandard 1.3</span></h4>
+                                    <ul class="list-unstyled dependency-group">
+                                            <li>
+                                                    <a href="/packages/System.AppContext/">System.AppContext</a>
+                                                    <span>(&gt;= 4.1.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Collections.NonGeneric/">System.Collections.NonGeneric</a>
+                                                    <span>(&gt;= 4.0.1)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Console/">System.Console</a>
+                                                    <span>(&gt;= 4.0.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Diagnostics.Debug/">System.Diagnostics.Debug</a>
+                                                    <span>(&gt;= 4.0.11)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Diagnostics.Process/">System.Diagnostics.Process</a>
+                                                    <span>(&gt;= 4.1.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Diagnostics.StackTrace/">System.Diagnostics.StackTrace</a>
+                                                    <span>(&gt;= 4.0.1)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Diagnostics.TraceSource/">System.Diagnostics.TraceSource</a>
+                                                    <span>(&gt;= 4.0.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.IO.FileSystem/">System.IO.FileSystem</a>
+                                                    <span>(&gt;= 4.0.1)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.IO.FileSystem.Watcher/">System.IO.FileSystem.Watcher</a>
+                                                    <span>(&gt;= 4.0.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Linq/">System.Linq</a>
+                                                    <span>(&gt;= 4.1.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Net.NameResolution/">System.Net.NameResolution</a>
+                                                    <span>(&gt;= 4.0.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Net.Requests/">System.Net.Requests</a>
+                                                    <span>(&gt;= 4.0.11)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Net.Sockets/">System.Net.Sockets</a>
+                                                    <span>(&gt;= 4.1.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Reflection/">System.Reflection</a>
+                                                    <span>(&gt;= 4.3.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Reflection.Extensions/">System.Reflection.Extensions</a>
+                                                    <span>(&gt;= 4.0.1)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Reflection.TypeExtensions/">System.Reflection.TypeExtensions</a>
+                                                    <span>(&gt;= 4.1.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Runtime.Extensions/">System.Runtime.Extensions</a>
+                                                    <span>(&gt;= 4.1.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Runtime.InteropServices/">System.Runtime.InteropServices</a>
+                                                    <span>(&gt;= 4.1.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Runtime.InteropServices.RuntimeInformation/">System.Runtime.InteropServices.RuntimeInformation</a>
+                                                    <span>(&gt;= 4.0.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Runtime.Serialization.Formatters/">System.Runtime.Serialization.Formatters</a>
+                                                    <span>(&gt;= 4.3.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Text.RegularExpressions/">System.Text.RegularExpressions</a>
+                                                    <span>(&gt;= 4.1.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Threading/">System.Threading</a>
+                                                    <span>(&gt;= 4.0.11)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Threading.Thread/">System.Threading.Thread</a>
+                                                    <span>(&gt;= 4.0.0)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Threading.Timer/">System.Threading.Timer</a>
+                                                    <span>(&gt;= 4.0.1)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Xml.ReaderWriter/">System.Xml.ReaderWriter</a>
+                                                    <span>(&gt;= 4.0.11)</span>
+                                            </li>
+                                            <li>
+                                                    <a href="/packages/System.Xml.XmlDocument/">System.Xml.XmlDocument</a>
+                                                    <span>(&gt;= 4.0.1)</span>
+                                            </li>
+                                    </ul>
+                                </li>
+                        </ul>
+
+            <h2>
+                <a href="#" role="button" data-toggle="collapse" data-target="#version-history"
+                   aria-expanded="true" aria-controls="version-history" id="show-version-history">
+                    <i class="ms-Icon ms-Icon--ChevronDown" aria-hidden="true"></i>
+                    <span>Version History</span>
+                </a>
+            </h2>
+            <div class="version-history panel-collapse collapse in" aria-expanded="true" id="version-history">
+                <table class="table borderless">
+                    <thead>
+                        <tr>
+                            <th>Version</th>
+                            <th>Downloads</th>
+                            <th>Last updated</th>
+                            <th colspan="2"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="no-border">
+
+                                <tr class="bg-info">
+                                    <td>
+                                        <a href="/packages/log4net/2.0.8" title="2.0.8">
+                                            2.0.8
+                                        </a>
+                                    </td>
+                                    <td>
+                                        11,585,587
+                                    </td>
+                                    <td>
+                                        <span data-datetime="2017-03-11T19:44:47.5630000">3/11/2017</span>
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="/packages/log4net/2.0.7" title="2.0.7">
+                                            2.0.7
+                                        </a>
+                                    </td>
+                                    <td>
+                                        1,200,393
+                                    </td>
+                                    <td>
+                                        <span data-datetime="2017-01-05T12:05:13.2270000">1/5/2017</span>
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="/packages/log4net/2.0.6" title="2.0.6">
+                                            2.0.6
+                                        </a>
+                                    </td>
+                                    <td>
+                                        261,537
+                                    </td>
+                                    <td>
+                                        <span data-datetime="2016-12-25T13:49:32.2830000">12/25/2016</span>
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="/packages/log4net/2.0.5" title="2.0.5">
+                                            2.0.5
+                                        </a>
+                                    </td>
+                                    <td>
+                                        5,561,502
+                                    </td>
+                                    <td>
+                                        <span data-datetime="2015-12-10T15:55:18.6730000">12/10/2015</span>
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="/packages/log4net/2.0.4" title="2.0.4">
+                                            2.0.4
+                                        </a>
+                                    </td>
+                                    <td>
+                                        363,528
+                                    </td>
+                                    <td>
+                                        <span data-datetime="2015-11-12T06:26:27.8970000">11/12/2015</span>
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+                                </tr>
+        </tbody><tbody class="no-border collapse " id="hidden-versions">
+                                <tr>
+                                    <td>
+                                        <a href="/packages/log4net/2.0.3" title="2.0.3">
+                                            2.0.3
+                                        </a>
+                                    </td>
+                                    <td>
+                                        5,539,776
+                                    </td>
+                                    <td>
+                                        <span data-datetime="2013-11-23T09:04:46.3730000">11/23/2013</span>
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="/packages/log4net/2.0.2" title="2.0.2">
+                                            2.0.2
+                                        </a>
+                                    </td>
+                                    <td>
+                                        247,149
+                                    </td>
+                                    <td>
+                                        <span data-datetime="2013-10-05T08:02:03.0470000">10/5/2013</span>
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="/packages/log4net/2.0.1" title="2.0.1">
+                                            2.0.1
+                                        </a>
+                                    </td>
+                                    <td>
+                                        108,095
+                                    </td>
+                                    <td>
+                                        <span data-datetime="2013-09-19T06:16:02.4330000">9/19/2013</span>
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="/packages/log4net/2.0.0" title="2.0.0">
+                                            2.0.0
+                                        </a>
+                                    </td>
+                                    <td>
+                                        1,611,257
+                                    </td>
+                                    <td>
+                                        <span data-datetime="2012-02-16T15:12:12.8170000">2/16/2012</span>
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="/packages/log4net/1.2.10" title="1.2.10">
+                                            1.2.10
+                                        </a>
+                                    </td>
+                                    <td>
+                                        2,245,111
+                                    </td>
+                                    <td>
+                                        <span data-datetime="2011-01-07T07:55:09.1200000">1/7/2011</span>
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+
+                                    <td class="package-icon-cell">
+                                    </td>
+                                </tr>
+                    </tbody>
+                </table>
+                    <a href="#" role="button" data-toggle="collapse" class="icon-link" data-target="#hidden-versions"
+                       aria-expanded="false" aria-controls="hidden-versions" id="show-hidden-versions">
+                        <i class="ms-Icon ms-Icon--CalculatorAddition" aria-hidden="true"></i>
+                        <span>Show more</span>
+                    </a>
+            </div>
+        </article>
+        <aside aria-label="Package details info" class="col-sm-3 package-details-info">
+            <h2>Info</h2>
+            <ul class="list-unstyled ms-Icon-ul">
+                <li>
+                    <i class="ms-Icon ms-Icon--History" aria-hidden="true"></i>
+                    last updated <span data-datetime="2017-03-11T19:44:47.5630000">3/11/2017</span>
+                </li>
+                    <li>
+                        <i class="ms-Icon ms-Icon--Globe" aria-hidden="true"></i>
+                        <a href="http://logging.apache.org/log4net/" data-track="outbound-project-url" title="Visit the project site to learn more about this package" rel="nofollow">
+                                Project Site
+                        </a>
+                    </li>
+                                                    <li>
+                        <i class="ms-Icon ms-Icon--Certificate" aria-hidden="true"></i>
+                            <a href="http://logging.apache.org/log4net/license.html"
+                               data-track="outbound-license-url" title="Make sure you agree with the license" rel="nofollow">
+Apache-2.0 License                            </a>
+                    </li>
+                <li>
+                    <i class="ms-Icon ms-Icon--Mail" aria-hidden="true"></i>
+                    <a href="/packages/log4net/2.0.8/ContactOwners" title="Ask the package owners a question">Contact owners</a>
+                </li>
+                    <li>
+                        <i class="ms-Icon ms-Icon--Flag" aria-hidden="true"></i>
+                        <a href="/packages/log4net/2.0.8/ReportAbuse" title="Report the package as abusive">
+                            Report
+                        </a>
+                    </li>
+
+                    <li>
+                        <i class="ms-Icon ms-Icon--CloudDownload" aria-hidden="true"></i>
+                        <a href="https://www.nuget.org/api/v2/package/log4net/2.0.8" data-track="outbound-manual-download" title="Download the raw nupkg file." rel="nofollow">Download package</a>
+                        &nbsp;(1.68 MB)
+                    </li>
+                    <li class="no-clickonce">
+                        <i class="ms-Icon ms-Icon--OpenInNewWindow" aria-hidden="true"></i>
+                        <a href="https://npe.codeplex.com/releases/clickonce/NuGetPackageExplorer.application?url=https://www.nuget.org/api/v2/package/log4net/&amp;id=log4net&amp;version=2.0.8" title="Explore the nupkg with the NuGet Package Explorer (IE only)" rel="nofollow">Open in Package Explorer</a>
+                    </li>
+
+                
+
+
+            </ul>
+                <p>License info provided by <a href="http://sonatype.com/">Sonatype</a>.</p>
+
+            <h2>Statistics</h2>
+            <ul class="list-unstyled ms-Icon-ul">
+                <li>
+                    <i class="ms-Icon ms-Icon--Download" aria-hidden="true"></i>
+                    28,998,348 total downloads
+                </li>
+                <li>
+                    <i class="ms-Icon ms-Icon--Giftbox" aria-hidden="true"></i>
+                    11,585,587 downloads
+                    of current version
+                </li>
+                <li>
+                    <i class="ms-Icon ms-Icon--Financial" aria-hidden="true"></i>
+                    9,513 downloads
+                    per day (avg)
+                </li>
+            </ul>
+                <a href="/stats/packages/log4net?groupby=Version" title="Package Statistics">View full stats</a>
+
+            <h2>Owners</h2>
+            <ul class="list-unstyled owner-list">
+            <li>
+            <a href="/profiles/cincura.net" title="cincura.net"><img src="https://secure.gravatar.com/avatar/480f3b66314f20d31520a61e05a4fbc1?s=64&amp;r=g&amp;d=retro" class="owner-image" height="32" title="cincura.net" width="32" alt="gravatar" /></a>
+                <a href="/profiles/cincura.net" title="cincura.net">
+                    cincura.net
+                </a>
+            </li>
+            <li>
+            <a href="/profiles/Apache.Logging" title="Apache.Logging"><img src="https://secure.gravatar.com/avatar/9c51fdd21c5c5672a4966d3174ec5b96?s=64&amp;r=g&amp;d=retro" class="owner-image" height="32" title="Apache.Logging" width="32" alt="gravatar" /></a>
+                <a href="/profiles/Apache.Logging" title="Apache.Logging">
+                    Apache.Logging
+                </a>
+            </li>
+            </ul>
+
+                    <h2>Authors</h2>
+                    <p>The Apache Software Foundation</p>
+                    <h2>Copyright</h2>
+                    <p>Copyright 2004-2017 The Apache Software Foundation</p>
+                    <h2>Tags</h2>
+                    <p>
+                            <a href="/packages?q=Tags%3A%22logging%22" title="Search for logging" class="tag">logging</a>
+                            <a href="/packages?q=Tags%3A%22log%22" title="Search for log" class="tag">log</a>
+                            <a href="/packages?q=Tags%3A%22tracing%22" title="Search for tracing" class="tag">tracing</a>
+                            <a href="/packages?q=Tags%3A%22logfiles%22" title="Search for logfiles" class="tag">logfiles</a>
+                    </p>
+
+                <h2>Share</h2>
+                <p class="share-buttons">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.nuget.org/packages/log4net/&t=Check+out+log4net+on+%23NuGet." target="_blank">
+                        <img width="24" height="24" alt="Share this package on Facebook"
+                             src="https://www.nuget.org/Content/gallery/img/facebook.svg"
+                                 onerror="this.src='https://www.nuget.org/Content/gallery/img/facebook-24x24.png'; this.onerror = null;"
+ />
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?url=https://www.nuget.org/packages/log4net/&text=Check+out+log4net+on+%23NuGet." target="_blank">
+                        <img width="24" height="24" alt="Tweet this package"
+                             src="https://www.nuget.org/Content/gallery/img/twitter.svg"
+                                 onerror="this.src='https://www.nuget.org/Content/gallery/img/twitter-24x24.png'; this.onerror = null;"
+ />
+                    </a>
+                        <a href="/packages/log4net/atom.xml" data-track="atom-feed">
+                            <img width="24" height="24" alt="Use the Atom feed to subscribe to new versions of log4net"
+                                 src="https://www.nuget.org/Content/gallery/img/rss.svg"
+                                     onerror="this.src='https://www.nuget.org/Content/gallery/img/rss-24x24.png'; this.onerror = null;"
+ />
+                        </a>
+                </p>
+        </aside>
+    </div>
+</section>
+
+
+
+
+    </div>
+    <footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <span class="footer-heading"><a href="/policies/Contact">Contact</a></span>
+                <p>
+                    Got questions about NuGet or the NuGet Gallery?
+                </p>
+            </div>
+            <div class="col-sm-4">
+                <span class="footer-heading"><a href="https://status.nuget.org/">Status</a></span>
+                <p>
+                    Find out the service status of NuGet.org and its related services.
+                </p>
+            </div>
+            <div class="col-sm-4">
+                <span class="footer-heading">
+                    <a href="https://docs.microsoft.com/en-us/nuget/policies/nuget-faq">
+                        <abbr title="Frequently Asked Questions">FAQ</abbr>
+                    </a>
+                </span>
+                <p>
+                    Read the Frequently Asked Questions about NuGet and see if your question made the list.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 row-gap">
+                <img alt="" aria-hidden="true" width="184" height="57"
+                     src="/Content/gallery/img/logo-footer.svg"
+                         onerror="this.src='https://www.nuget.org/Content/gallery/img/logo-footer-184x57.png'; this.onerror = null;"
+ />
+            </div>
+            <div class="col-md-9 row-gap">
+                <div class="row">
+                        <div class="col-md-12 footer-release-info">
+                            <p>
+                                        &#169; Microsoft 2019 -
+                                <a href="/policies/About">About</a> -
+                                <a href="/policies/Terms">Terms of Use</a> -
+                                <a href="https://go.microsoft.com/fwlink/?LinkId=521839">Privacy Policy</a>
+                                    - <a href="https://www.microsoft.com/trademarks">Trademarks</a>
+                                <br />
+                            </p>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--
+    This is the NuGet Gallery version 4.4.5-master.
+        Deployed from 9501b35 Link: https://www.github.com/NuGet/NuGetGallery/commit/9501b35
+        Built on master Link: https://www.github.com/NuGet/NuGetGallery/tree/master
+        Built on 2019-05-06T23:46:50.0000000+00:00
+    You are on NuGetGallery_IN_2.
+-->
+
+</footer>
+
+    <script src="/Scripts/gallery/site.min.js?v=5VKch2kGTX2dC5I03E8yI60dmyuWfbXjJ1fRfKC5uKk1"></script>
+
+    
+
+
+    <style type="text/css">
+        #package-manager .install-script span::before {    content: "PM> "}#dotnet-cli .install-script span::before {    content: "> "}#paket-cli .install-script span::before {    content: "> "}
+    </style>
+
+    <script type="text/javascript">
+        var packageManagers = ["package-manager","dotnet-cli","package-reference","paket-cli"];
+    </script>
+
+    <script src="/Scripts/gallery/page-display-package.min.js?v=mnkDbLmWNfgqH3DkgaSyjCT_RVU-cGP6RALJcon-A0E1"></script>
+
+
+</body>
+</html>

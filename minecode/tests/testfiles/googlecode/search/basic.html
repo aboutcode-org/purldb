@@ -1,0 +1,862 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+ <link rel="icon" type="image/vnd.microsoft.icon" href="http://www.gstatic.com/codesite/ph/images/phosting.ico">
+ 
+ 
+ <script type="text/javascript">
+ 
+ 
+ 
+ 
+ var codesite_token = null;
+ 
+ 
+ var CS_env = {"token":null,"assetHostPath":"http://www.gstatic.com/codesite/ph","domainName":null,"assetVersionPath":"http://www.gstatic.com/codesite/ph/1215397193597998757","projectName":null,"projectHomeUrl":null,"absoluteBaseUrl":"http://code.google.com","relativeBaseUrl":"","urlPrefix":null,"loggedInUserEmail":null};
+ </script>
+ 
+ 
+ <title>
+ 
+ 
+ Google Project Hosting
+ </title>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+ <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
+ 
+ <meta name="ROBOTS" content="NOINDEX,NOARCHIVE">
+ 
+ <link type="text/css" rel="stylesheet" href="http://www.gstatic.com/codesite/ph/1215397193597998757/css/ph_core.css">
+ 
+ <link type="text/css" rel="stylesheet" href="http://www.gstatic.com/codesite/ph/1215397193597998757/css/ph_list.css" >
+ 
+ 
+ 
+ 
+<!--[if IE]>
+ <link type="text/css" rel="stylesheet" href="http://www.gstatic.com/codesite/ph/1215397193597998757/css/d_ie.css" >
+<![endif]-->
+ <style type="text/css">
+ .menuIcon.off { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 -42px }
+ .menuIcon.on { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 -28px }
+ .menuIcon.down { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 0; }
+ 
+ 
+ 
+ .activity-level-High {
+ background:no-repeat url(http://www.gstatic.com/codesite/ph/images/activity-level.png) 0 0;
+ width: 16px;
+ height: 16px;
+ }
+ .activity-level-Low {
+ background:no-repeat url(http://www.gstatic.com/codesite/ph/images/activity-level.png) 0 -16px;
+ width: 16px;
+ height: 16px;
+ }
+ .activity-level-Medium {
+ background: no-repeat url(http://www.gstatic.com/codesite/ph/images/activity-level.png) -16px 0;
+ width: 16px;
+ height: 16px;
+ }
+ .activity-level-None {
+ background:no-repeat url(http://www.gstatic.com/codesite/ph/images/activity-level.png) -16px -16px;
+ width: 16px;
+ height: 16px;
+ }
+
+ .labels a:link { color: #080 }
+ .labels a:visited { color: #080 }
+ .labels a:active { color: #f00 }
+ .name { margin-top: 2ex; font-size: 120% }
+
+ </style>
+</head>
+<body class="">
+ <script type="text/javascript">
+ var _gaq = _gaq || [];
+ _gaq.push(
+ ['siteTracker._setAccount', 'UA-18071-1'],
+ ['siteTracker._trackPageview']);
+ 
+ (function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+ })();
+ </script>
+<div class="headbg">
+ <div id="gaia">
+ 
+
+ <span>
+ 
+ <a href="#" id="projects-dropdown" onclick="return false;"><u>My favorites</u> <small>&#9660;</small></a>
+ | <a href="https://www.google.com/accounts/ServiceLogin?service=code&amp;ltmpl=phosting&amp;continue=http%3A%2F%2Fcode.google.com%2Fhosting%2Fsearch%3Fq%3Dlabel%3AWebService&amp;followup=http%3A%2F%2Fcode.google.com%2Fhosting%2Fsearch%3Fq%3Dlabel%3AWebService" onclick="_CS_click('/gb/ph/signin');"><u>Sign in</u></a>
+ 
+ </span>
+
+ </div>
+ <div class="gbh" style="left: 0pt;"></div>
+ <div class="gbh" style="right: 0pt;"></div>
+ 
+ 
+ <div style="height: 1px"></div>
+<!--[if lte IE 7]>
+<div style="text-align:center;">
+Your version of Internet Explorer is not supported. Try a browser that
+contributes to open source, such as <a href="http://www.firefox.com">Firefox</a>,
+<a href="http://www.google.com/chrome">Google Chrome</a>, or
+<a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a>.
+</div>
+<![endif]-->
+
+
+
+
+ <table style="padding:0px; margin: 0px 0px 10px 0px; width:100%" cellpadding="0" cellspacing="0">
+ <tr style="height: 58px;">
+ 
+ <td id="plogo">
+ <a href="/">
+ 
+ <img src="http://www.gstatic.com/codesite/ph/images/code_small.png" alt="Logo">
+ 
+ </a>
+ </td>
+ 
+ <td style="padding-left: 0.5em">
+ 
+ </td>
+ <td style="white-space:nowrap;">
+ 
+ <form action="/hosting/search">
+ <input size="40" name="q" value="label:WebService" type="text">
+ <input type="submit" name="projectsearch" value="Search projects" >
+ </form>
+ 
+ </tr>
+ </table>
+
+</div>
+
+ 
+
+<script type="text/javascript">
+ var cancelBubble = false;
+ function _go(url) { document.location = url; }
+</script>
+<div id="maincol"
+ 
+>
+
+ 
+<!-- IE -->
+
+
+
+
+<script type="text/javascript">
+ function starClick(el, project_name) {
+ _CS_toggleStar(
+ el, '',
+ {'scope': 'projects',
+ 'user': '_CURRENT_USER',
+ 'item': project_name,
+ 'token': codesite_token
+ },
+ true,
+ '',
+ '',
+ '',
+ 'star_count-' + project_name,
+ 'plural-' + project_name);
+ }
+</script>
+<table class="mainhdr" width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr><td width="100%"></td>
+
+ <td style="padding:3px 1em; font-weight:normal; white-space:nowrap;">
+ Results 1 - 10 of 965
+ <span style="font-size: 80%; margin: 1em">
+ <a class="buttonify capsule_left mode_button_active"
+ href="search?q=label%3AWebService&amp;start=0">List</a><a
+ class="buttonify capsule_right "
+ href="search?q=label%3AWebService&amp;start=0&amp;mode=grid">Grid</a>
+ </span>
+ </td>
+
+</tr>
+</table>
+<br/>
+<div id="serp">
+
+ 
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/gdata-python-client/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 1)"
+ href="/p/gdata-python-client/" style="font-size:medium">gdata-python-client &nbsp;- &nbsp;Google Data APIs Python Client Library</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-gdata-python-client">982</span>
+ </span><br/>
+ 
+ 
+ The Google Data APIs ( Google Data) provide a simple protocol for reading and writing data on the web. Though it is possible to use these services with a simple HTTP client, this library provides help...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:GData">GData</a>, 
+ 
+ <a href="/hosting/search?q=label:Python">Python</a>, 
+ 
+ <a href="/hosting/search?q=label:REST">REST</a>, 
+ 
+ <a href="/hosting/search?q=label:XML">XML</a>, 
+ 
+ <a href="/hosting/search?q=label:WebService">WebService</a>, 
+ 
+ <a href="/hosting/search?q=label:ATOM">ATOM</a>, 
+ 
+ <a href="/hosting/search?q=label:RSS">RSS</a>, 
+ 
+ <a href="/hosting/search?q=label:APP">APP</a>, 
+ 
+ <a href="/hosting/search?q=label:Google">Google</a>, 
+ 
+ <a href="/hosting/search?q=label:AtomPub">AtomPub</a>, 
+ 
+ <a href="/hosting/search?q=label:AppEngine">AppEngine</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/gdata-java-client/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 2)"
+ href="/p/gdata-java-client/" style="font-size:medium">gdata-java-client &nbsp;- &nbsp;Google Data Java Client Library</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-gdata-java-client">610</span>
+ </span><br/>
+ 
+ 
+ Questions or Comments? Report a problem? Request a feature? Go to   gdata-java-client.
+
+Need to submit a bug report?  submit an issue.
+
+Looking for a library that supports Android or JSON Google A...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:GData">GData</a>, 
+ 
+ <a href="/hosting/search?q=label:REST">REST</a>, 
+ 
+ <a href="/hosting/search?q=label:XML">XML</a>, 
+ 
+ <a href="/hosting/search?q=label:WebService">WebService</a>, 
+ 
+ <a href="/hosting/search?q=label:ATOM">ATOM</a>, 
+ 
+ <a href="/hosting/search?q=label:RSS">RSS</a>, 
+ 
+ <a href="/hosting/search?q=label:APP">APP</a>, 
+ 
+ <a href="/hosting/search?q=label:Google">Google</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/gdata-objectivec-client/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 3)"
+ href="/p/gdata-objectivec-client/" style="font-size:medium">gdata-objectivec-client &nbsp;- &nbsp;Google Data APIs Objective-C Client Library</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Today
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-gdata-objectivec-client">521</span>
+ </span><br/>
+ 
+ 
+ The  Google data APIs provide a simple protocol for reading and writing data on the web.  Many Google services provide a Google data API.
+
+Each of the following Google services provides a Google Dat...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:GData">GData</a>, 
+ 
+ <a href="/hosting/search?q=label:Objective-C">Objective-C</a>, 
+ 
+ <a href="/hosting/search?q=label:Cocoa">Cocoa</a>, 
+ 
+ <a href="/hosting/search?q=label:REST">REST</a>, 
+ 
+ <a href="/hosting/search?q=label:XML">XML</a>, 
+ 
+ <a href="/hosting/search?q=label:WebService">WebService</a>, 
+ 
+ <a href="/hosting/search?q=label:ATOM">ATOM</a>, 
+ 
+ <a href="/hosting/search?q=label:RSS">RSS</a>, 
+ 
+ <a href="/hosting/search?q=label:APP">APP</a>, 
+ 
+ <a href="/hosting/search?q=label:MacOSX">MacOSX</a>, 
+ 
+ <a href="/hosting/search?q=label:Google">Google</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/websmash/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 4)"
+ href="/p/websmash/" style="font-size:medium">websmash &nbsp;- &nbsp;Web Service &amp; Mashup</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-Low">
+ Low&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Earlier this year
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-websmash">3</span>
+ </span><br/>
+ 
+ 
+ 
+应用软件即服务(SaaS)的模式,提供Web Service供网页设计人员利用AJAX等前端技术Mashup出专业的交互式网站.
+
+
+
+
+
+    HowTOJoinUs 如何加入我们的Team?
+     Goo...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:WebService">WebService</a>, 
+ 
+ <a href="/hosting/search?q=label:SaaS">SaaS</a>, 
+ 
+ <a href="/hosting/search?q=label:Mashup">Mashup</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/tclws/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 5)"
+ href="/p/tclws/" style="font-size:medium">tclws &nbsp;- &nbsp;Use and provide Web Services from Tcl</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-Medium">
+ Medium&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Last 30 days
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-tclws">7</span>
+ </span><br/>
+ 
+ 
+ 
+
+The project has moved to  and is now a Fossil repository.
+
+This site will be maintained as a historic archive.
+
+
+
+
+
+The distribution provides both client side access to Web Services and se...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:tcl">tcl</a>, 
+ 
+ <a href="/hosting/search?q=label:webservice">webservice</a>, 
+ 
+ <a href="/hosting/search?q=label:web">web</a>, 
+ 
+ <a href="/hosting/search?q=label:service">service</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/sfdc-wsc/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 6)"
+ href="/p/sfdc-wsc/" style="font-size:medium">sfdc-wsc &nbsp;- &nbsp;Force.com Web Service Connector (WSC)</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-Medium">
+ Medium&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Last 7 days
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-sfdc-wsc">63</span>
+ </span><br/>
+ 
+ 
+ 
+
+The Force.com Web Service Connector (WSC) is a high performing web service client stack 
+implemented using a streaming parser. WSC also makes it much easier to use the Force.com 
+API (Web Servic...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:salesforce">salesforce</a>, 
+ 
+ <a href="/hosting/search?q=label:webservice">webservice</a>, 
+ 
+ <a href="/hosting/search?q=label:api">api</a>, 
+ 
+ <a href="/hosting/search?q=label:client">client</a>, 
+ 
+ <a href="/hosting/search?q=label:force.com">force.com</a>, 
+ 
+ <a href="/hosting/search?q=label:SOAP">SOAP</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/psicquic/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="/p/psicquic/logo?cct=1308643200.0"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 7)"
+ href="/p/psicquic/" style="font-size:medium">psicquic &nbsp;- &nbsp;Protemics Standard Initiative Common QUery InterfaCe</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Last 7 days
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-psicquic">12</span>
+ </span><br/>
+ 
+ 
+ This project hosts the PSICQUIC Reference Implementation, an implementation of the PsicquicSpecification PSICQUIC Specification.
+
+If you find a bug,  report it. If you need help or have questions,  ...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:bioinformatics">bioinformatics</a>, 
+ 
+ <a href="/hosting/search?q=label:interactions">interactions</a>, 
+ 
+ <a href="/hosting/search?q=label:webservice">webservice</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/webserviceservlet/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="/p/webserviceservlet/logo?cct=1308643200.0"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 8)"
+ href="/p/webserviceservlet/" style="font-size:medium">webserviceservlet &nbsp;- &nbsp;WebServiceServlet (WSS) enable you to create web services on Google Ap...</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-Low">
+ Low&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Last 30 days
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-webserviceservlet">7</span>
+ </span><br/>
+ 
+ 
+ 
+
+WebServiceServlet enable developers to turn they standard java classes into WebServices that can be run on Google App Engine and other servlet engines like Tomcat, Glassfish etc.
+
+Developing Web...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:Webservices">Webservices</a>, 
+ 
+ <a href="/hosting/search?q=label:AppEngine">AppEngine</a>, 
+ 
+ <a href="/hosting/search?q=label:Webservice">Webservice</a>, 
+ 
+ <a href="/hosting/search?q=label:Java">Java</a>, 
+ 
+ <a href="/hosting/search?q=label:wsdl">wsdl</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/nimbits-server/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 9)"
+ href="/p/nimbits-server/" style="font-size:medium">nimbits-server &nbsp;- &nbsp;Nimbits Data Logger Server</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-High">
+ High&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Last 7 days
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-nimbits-server">5</span>
+ </span><br/>
+ 
+ 
+ Nimbits is a collection of software designed for recording and working with time series data - such as readings from a temperature probe, a stock price, or anything else that changes over time - even ...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:Database">Database</a>, 
+ 
+ <a href="/hosting/search?q=label:Time">Time</a>, 
+ 
+ <a href="/hosting/search?q=label:Realtime">Realtime</a>, 
+ 
+ <a href="/hosting/search?q=label:Historian">Historian</a>, 
+ 
+ <a href="/hosting/search?q=label:Webservice">Webservice</a>, 
+ 
+ <a href="/hosting/search?q=label:Web">Web</a>, 
+ 
+ <a href="/hosting/search?q=label:Logger">Logger</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+<table>
+ <tr>
+ <td style="padding-right: 5px;width:50px;">
+ <a href="/p/gdata-javascript-client/">
+ <img style="max-width:50px;max-height:55px"
+ 
+ src="http://www.gstatic.com/codesite/ph/images/defaultlogo.png"
+ >
+ </a>
+ </td>
+ <td style="width:650px; padding-bottom:10px">
+ <a onmousedown="return clk(this, 10)"
+ href="/p/gdata-javascript-client/" style="font-size:medium">gdata-javascript-client &nbsp;- &nbsp;Google Data APIs - JavaScript Client Library</a>
+ 
+ <br/>
+ 
+ <span style="color:#676767">
+ 
+ Activity: <img src="http://www.gstatic.com/codesite/ph/images/cleardot.gif" class="activity-level-Medium">
+ Medium&nbsp;&nbsp;-&nbsp;
+ 
+ Updated: Last 7 days
+ &nbsp;-&nbsp;
+ Stars: <span id="star_count-gdata-javascript-client">100</span>
+ </span><br/>
+ 
+ 
+ The Google Data JavaScript Client allows developers to make fully authenticated read, insert, update and delete operations on Google Data APIs.  The current version is 2.2, and it supports the followi...<br/>
+ 
+ <span class="labels">
+ 
+ 
+ <a href="/hosting/search?q=label:GData">GData</a>, 
+ 
+ <a href="/hosting/search?q=label:REST">REST</a>, 
+ 
+ <a href="/hosting/search?q=label:XML">XML</a>, 
+ 
+ <a href="/hosting/search?q=label:atompub">atompub</a>, 
+ 
+ <a href="/hosting/search?q=label:APP">APP</a>, 
+ 
+ <a href="/hosting/search?q=label:WebService">WebService</a>, 
+ 
+ <a href="/hosting/search?q=label:ATOM">ATOM</a>, 
+ 
+ <a href="/hosting/search?q=label:Google">Google</a>
+ 
+ 
+ </span>
+ </td>
+ </tr>
+</table>
+
+ 
+ 
+ </div>
+ <div style="clear:both">&nbsp;</div>
+
+
+<div style="text-align:center; font-size:medium; white-space:nowrap; margin-top:1em;">
+ 
+ 
+ 
+	1
+ 
+ 
+ 
+ <a href="search?q=label%3AWebService&amp;filter=0&amp;mode=&amp;start=10">2</a>
+ 
+ 
+ 
+ <a href="search?q=label%3AWebService&amp;filter=0&amp;mode=&amp;start=20">3</a>
+ 
+ 
+ 
+ <a href="search?q=label%3AWebService&amp;filter=0&amp;mode=&amp;start=30">4</a>
+ 
+ 
+ 
+ <a href="search?q=label%3AWebService&amp;filter=0&amp;mode=&amp;start=40">5</a>
+ 
+ 
+ 
+ <a href="search?q=label%3AWebService&amp;filter=0&amp;mode=&amp;start=50">6</a>
+ 
+ 
+ 
+ <a href="search?q=label%3AWebService&amp;filter=0&amp;mode=&amp;start=60">7</a>
+ 
+ 
+ 
+ <a href="search?q=label%3AWebService&amp;filter=0&amp;mode=&amp;start=70">8</a>
+ 
+ 
+ 
+ <a href="search?q=label%3AWebService&amp;filter=0&amp;mode=&amp;start=80">9</a>
+ 
+ 
+ 
+ <a href="search?q=label%3AWebService&amp;filter=0&amp;mode=&amp;start=90">10</a>
+ 
+ 
+ <a href="search?q=label%3AWebService&amp;filter=0&amp;mode=&amp;start=10">Next <b>&rsaquo;</b></a>
+</div>
+<br/>
+<br/>
+<div style="background:#F0F7F9; border-top:1px solid #6B90DA; border-bottom:1px solid #6B90DA; text-align:center;">
+ <br/>
+ <form action="/hosting/search">
+ <input type="text" size="30" name="q" value="label:WebService">
+ <input type="hidden" name="mode" value="list">
+ <input type="submit" name="projectsearch" value="Search projects" >
+ </form>
+ <br/>
+</div>
+<script type="text/javascript">
+function clk(el, cd) {
+ if (document.images) {
+ (new Image()).src = "/hosting/search?sa=T&ct=res&cd=" + cd + "&url="
+ + escape(el.href) + "&q=label%3AWebService";
+ }
+ return true;
+}
+</script>
+ 
+ 
+ 
+ <script type="text/javascript" src="http://www.gstatic.com/codesite/ph/1215397193597998757/js/ph_core.js"></script>
+ 
+ 
+ 
+ 
+ <script type="text/javascript" src="/js/codesite_product_dictionary_ph.pack.04102009.js"></script>
+</div> 
+<div id="footer" dir="ltr">
+ <div class="text">
+ &copy;2011 Google -
+ <a href="/projecthosting/terms.html">Terms</a> -
+ <a href="http://www.google.com/privacy.html">Privacy</a> -
+ <a href="/p/support/">Project Hosting Help</a>
+ </div>
+</div>
+ <div class="hostedBy" style="margin-top: -20px;">
+ <span style="vertical-align: top;">Powered by <a href="http://code.google.com/projecthosting/">Google Project Hosting</a></span>
+ </div>
+ 
+ 
+
+
+ 
+ </body>
+</html>
+

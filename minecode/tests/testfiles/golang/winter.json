@@ -1,0 +1,7 @@
+{
+  "name": "sdl",
+  "path": "winterdrache.de/bindings/sdl",
+  "import_count": 18,
+  "synopsis": "Bindings for Simple DirectMedia Layer (www.libsdl.org)",
+  "score": 0.99
+}

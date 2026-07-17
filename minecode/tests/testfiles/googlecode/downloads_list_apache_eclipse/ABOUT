@@ -1,0 +1,6 @@
+wget -O apache_with_notice.html http://code.google.com/a/apache-extras.org/p/pylucene-extra/downloads/list?can=1
+wget -O failing_non_google.html http://nexb.com
+wget -O list_with_notice.html http://code.google.com/p/dolphin-emu/downloads/list?can=1
+wget -O list1.html http://code.google.com/a/apache-extras.org/p/pylucene-extra/downloads/list?can=1
+wget -O list2.html http://code.google.com/a/apache-extras.org/p/pylucene-extra/downloads/list?can=1&num=1000&start=0
+wget -O list3.html http://code.google.com/a/apache-extras.org/p/pylucene-extra/downloads/list?can=1&num=10&start=0

@@ -1,0 +1,27 @@
+[
+  {
+    "field":"type",
+    "new_value":"generic",
+    "old_value":"generic"
+  },
+  {
+    "field":"name",
+    "new_value":"pack2",
+    "old_value":"pack"
+  },
+  {
+    "field":"version",
+    "new_value":"0.2",
+    "old_value":"0.1"
+  },
+  {
+    "field":"description",
+    "new_value":"Description Updated",
+    "old_value":""
+  },
+  {
+    "field":"download_url",
+    "new_value":"http://testdomap4.com",
+    "old_value":"http://testdomap4.com"
+  }
+]

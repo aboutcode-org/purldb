@@ -1,0 +1,254 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>hal</title>
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+<link rel="stylesheet" href="../../xorg.css" type="text/css" />
+
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="https://secure.freedesktop.org/write/www/ikiwiki.cgi?page=Software%2Fhal&amp;do=edit" />
+
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+<div class="pageheader">
+<div class="header">
+<span class="logo"><img src="../../logo.png" /></span>
+
+
+<form method="get" action="https://www.google.com/search" id="searchform">
+ <div>
+  <input name="sitesearch" value="https://www.freedesktop.org/wiki/" type="hidden" />
+  <input name="q" value="" id="searchbox" size="16" maxlength="255" type="text"
+   />
+ </div>
+</form>
+
+
+<span class="headerpath">
+<span class="parentlinks">
+
+<a href="../../">www</a>/ 
+
+<a href="../">Software</a>/ 
+
+</span>
+<span class="title">
+hal
+
+</span>
+</span>
+</div>
+
+
+<span class="actions">
+<ul>
+
+<li><a href="https://secure.freedesktop.org/write/www/ikiwiki.cgi?page=Software%2Fhal&amp;do=edit" rel="nofollow">Edit</a></li>
+
+
+
+<li><a href="https://secure.freedesktop.org/cgit/www/log/Software/hal.mdwn">Page History</a></li>
+
+
+<li><a href="https://secure.freedesktop.org/cgit/www/">Repo Info</a></li>
+
+
+
+
+</ul>
+</span>
+
+
+
+
+
+
+</div>
+
+
+
+<div id="pagebody">
+
+<div id="content">
+<h1 id="hal-hardwareabstractionlayer">HAL - Hardware Abstraction Layer</h1>
+
+<table class="mointable">
+        <tr>
+            <td>HAL <a href="http://lists.freedesktop.org/archives/hal/2008-May/011560.html">is in maintenance mode</a> - no new features are added. All future development focuses on <a href="../udisks/">udisks</a>, <a href="http://upower.freedesktop.org/">upower</a> and other parts of the stack.  See <a href="../DeviceKit/">Software/DeviceKit</a> for more information. </td>
+        </tr>
+</table>
+
+<p>These pages attempt to provide a specification and an implementation of a hardware abstraction layer. <br />
+ For a good background on what a HAL does, see the <a href="http://www.ometer.com/hardware.html">"Making Hardware Just Work"</a>  article that motivated this work. </p>
+
+<p><a href="../HalFAQ/">Frequently Asked Questions</a> </p>
+
+<h2 id="sourcecode">Source Code</h2>
+
+<ul>
+<li>View latest code on-line: <a href="http://cgit.freedesktop.org/hal/tree/">http://cgit.freedesktop.org/hal/tree/</a> </li>
+<li>View latest changelog/commitlog online: <a href="http://cgit.freedesktop.org/hal/log/">http://cgit.freedesktop.org/hal/log/</a> </li>
+<li>Building development tree: <a href="../HalBuildInstructions/">HAL Build Instructions</a> </li>
+<li>Tarballs are available at <a href="http://hal.freedesktop.org/releases/">http://hal.freedesktop.org/releases/</a> </li>
+</ul>
+
+<h3 id="git">GIT</h3>
+
+<p>Git is now being used for HAL.  There is a <a href="http://freedesktop.org/wiki/UsingGit">nice tutorial for using git with freedesktop.org projects</a>. There is also another tutorial at <a href="http://www-128.ibm.com/developerworks/linux/library/l-git/">IBM Developerworks site</a>. You can also take a look at <a href="http://cgit.freedesktop.org/hal/tree/HACKING">http://cgit.freedesktop.org/hal/tree/HACKING</a>. </p>
+
+<h3 id="hal-info">hal-info</h3>
+
+<p>hal-info is a small hal sub-package that provides the hardware data and quirks. These quirks are currently things like what mice support reporting battery status, what music players are supported and what cameras are detected. </p>
+
+<p>hal-info and hal should not be packaged together. When packaging hal, it should depend on hal-info, of any version. hal-info should also be checked out in the same level directory as hal if you intend to use ./run-hald.sh </p>
+
+<p>There are no official tarball releases yet, but you can get the latest code from <a href="http://cgit.freedesktop.org/hal-info/">git</a> and release tar.gz from <a href="http://hal.freedesktop.org/releases/">http://hal.freedesktop.org/releases/</a>. See <a href="http://hughsient.livejournal.com/6702.html">here</a> for more information. </p>
+
+<h3 id="dependencies">Dependencies</h3>
+
+<pre><code>        * Linux kernel 2.6.19 (or later) 
+        * util-linux 2.15 (or later) 
+        * udev 125 (or later) 
+        * dbus 0.61 (or later) 
+        * glib 2.6.0 (or later) 
+        * expat 1.95.8 (or later) 
+        * bash 2.0 (or later) 
+        * hal-info 20070402 (or later) 
+</code></pre>
+
+<h4 id="optionaldependencies">Optional Dependencies</h4>
+
+<pre><code>        * libusb &gt;= 0.1.10a 
+        * pciutils &gt;= 2.2.3 
+        * dmidecode &gt;= 2.7 
+        * parted == 1.7.1, 1.8.0, 1.8.1, 1.8.2 or 1.86 
+        * cryptsetup-luks &gt;= 1.0.1 
+        * libsmbios &gt;= 0.13.4 
+</code></pre>
+
+<h2 id="bugs">Bugs?</h2>
+
+<ul>
+<li><a href="../HalTraces/">Guide to reporting HAL bugs</a> </li>
+</ul>
+
+<h2 id="communicate">Communicate</h2>
+
+<ul>
+<li><p>Mailing lists: </p>
+
+<ul>
+<li><table class="mointable">
+<tr>
+    <td>HAL Discussion              </td>
+    <td><a href="http://lists.freedesktop.org/mailman/listinfo/hal">hal@lists.freedesktop.org</a>              </td>
+</tr>
+<tr>
+    <td>HAL commit notification </td>
+    <td><a href="http://lists.freedesktop.org/mailman/listinfo/hal-commit">hal-commit@lists.freedesktop.org</a></td>
+</tr>
+</table></li>
+</ul></li>
+<li><p>IRC: 
+     * <a href="http://freenode.net">#hal</a> on freenode.net </p></li>
+</ul>
+
+<h2 id="howtos">HOWTOs</h2>
+
+<ul>
+<li><a href="http://people.freedesktop.org/~hughsient/quirk/quirk-suspend-index.html">Guide to using powermanagement quirks to fix resume</a> </li>
+<li><a href="http://people.freedesktop.org/~hughsient/quirk/quirk-keymap-index.html">Guide to using keymap quirks to fix unknown scancodes</a> </li>
+</ul>
+
+<h2 id="documentation">Documentation</h2>
+
+<ul>
+<li><a href="http://people.freedesktop.org/~david/hal-spec/hal-spec.html">Latest HAL specification</a> </li>
+<li><a href="http://people.freedesktop.org/~david/talks/system-integration-and-gnome-guadec2006-davidz.odp">"System Integration and GNOME</a> by David Zeuthen (GUADEC June 2006) - ODF </li>
+<li><a href="http://people.freedesktop.org/~david/talks/system-integration-and-gnome-guadec2006-davidz.pdf">"System Integration and GNOME</a> by David Zeuthen (GUADEC June 2006) - PDF </li>
+<li><a href="http://opensolaris.org/os/project/tamarack/hal_re.html">"HAL reverse engineered" (for OpenSolaris)</a> by Artem Kachitchkine (April 2006) </li>
+<li><a href="http://www.redhat.com/magazine/012oct05/features/hal/">"Adding encryption support to HAL: A user's experience with Fedora development" (Red Hat Magazine)</a> by W. Michael Petullo (October 2005) </li>
+<li><a href="http://www.redhat.com/magazine/003jan05/features/hal/">"Desktop and Hardware Configuration" (Red Hat Magazine)</a> by David Zeuthen (January 2005) </li>
+<li><a href="http://www.ometer.com/hardware.html">"Making Hardware Just Work"</a> by Havoc Pennington (July 2003) </li>
+</ul>
+
+<h2 id="externalresources">External Resources</h2>
+
+<ul>
+<li><a href="http://projects.backtrace.info/index.php/Main/HAL">libhal++</a>: C++ wrapper for libhal and libhal-storage. As of now not supported by the HAL project/developers: bug reports/requests please to internalerror AT gmail.com (M.Derezynski) </li>
+<li>libhal++ has now been superceded by HAL/C++, a reimplementation of libhal and libhal-storage in C++. The project can be found at the same server, <a href="http://projects.backtrace.info/index.php/Main/Halmm">HAL/C++</a> </li>
+<li><a href="http://www.linuxfromscratch.org/blfs/view/svn/gnome/gnome-mount.html">gnome-mount</a> </li>
+</ul>
+
+<hr />
+
+<p><a href="../../CategoryHardware/">CategoryHardware</a> </p>
+
+</div>
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter">
+
+<div id="pageinfo">
+
+
+
+
+
+
+<div id="backlinks">
+Links:
+
+<a href="../../CategoryHalReplacement/">CategoryHalReplacement</a>
+
+<a href="../DeviceKit/">DeviceKit</a>
+
+<a href="../">Software</a>
+
+<a href="../liblazy/">liblazy</a>
+
+<a href="../media-player-info/">media-player-info</a>
+
+<a href="../urfkill/">urfkill</a>
+
+
+</div>
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sat May 18 07:33:32 2013</span>
+<!-- Created <span class="date">Sat May 18 07:33:32 2013</span> -->
+</div>
+
+</div>
+
+
+<!-- from www -->
+</div>
+
+</div>
+
+</body>
+</html>

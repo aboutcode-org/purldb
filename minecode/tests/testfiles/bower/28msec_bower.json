@@ -1,0 +1,60 @@
+{
+  "author": "William Candillon",
+  "name": "28.io-angularjs",
+  "description": "AngularJS bindings for the 28.io API ",
+  "version": "0.1.1",
+  "homepage": "http://28msec.github.io/28.io-angularjs/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/28msec/28.io-angularjs"
+  },
+  "main": "./dist/28.io-angularjs.min.js",
+  "ignore": [
+    ".bowerrc",
+    "coverage/",
+    ".jshintrc",
+    ".jslintrc",
+    "Gruntfile.js",
+    "CONTRIBUTING.md",
+    "node_modules/",
+    "test/",
+    "karma.conf.js",
+    "libpeerconnection.log",
+    ".gitignore",
+    ".travis.yml"
+  ],
+  "devDependencies": {
+    "angular-1.0.4": "angular#1.0.4",
+    "angular-1.0.5": "angular#1.0.5",
+    "angular-1.0.6": "angular#1.0.6",
+    "angular-1.0.7": "angular#1.0.7",
+    "angular-1.0.8": "angular#1.0.8",
+    "angular-1.1.4": "angular-unstable#1.1.4",
+    "angular-1.1.5": "angular-unstable#1.1.5",
+    "angular-1.2.0": "angular#1.2.0",
+    "angular-1.2.1": "angular#1.2.1",
+    "angular-1.2.2": "angular#1.2.2",
+    "angular-1.2.3": "angular#1.2.3",
+    "angular-1.2.4": "angular#1.2.4",
+    "angular-1.2.5": "angular#1.2.5",
+    "angular-1.2.6": "angular#1.2.6",
+    "angular-1.2.7": "angular#1.2.7",
+    "angular-mocks-1.0.4": "angular-mocks#1.0.4",
+    "angular-mocks-1.0.5": "angular-mocks#1.0.5",
+    "angular-mocks-1.0.6": "angular-mocks#1.0.6",
+    "angular-mocks-1.0.7": "angular-mocks#1.0.7",
+    "angular-mocks-1.0.8": "angular-mocks#1.0.8",
+    "angular-mocks-1.1.5": "angular-mocks-unstable#1.1.5",
+    "angular-mocks-1.2.0": "angular-mocks#1.2.0",
+    "angular-mocks-1.2.1": "angular-mocks#1.2.1",
+    "angular-mocks-1.2.2": "angular-mocks#1.2.2",
+    "angular-mocks-1.2.3": "angular-mocks#1.2.3",
+    "angular-mocks-1.2.4": "angular-mocks#1.2.4",
+    "angular-mocks-1.2.5": "angular-mocks#1.2.5",
+    "angular-mocks-1.2.6": "angular-mocks#1.2.6",
+    "angular-mocks-1.2.7": "angular-mocks#1.2.7"
+  },
+  "resolutions": {
+    "angular": "1.2.0"
+  }
+}

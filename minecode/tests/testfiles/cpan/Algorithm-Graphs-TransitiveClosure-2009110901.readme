@@ -1,0 +1,146 @@
+NAME
+    Algorithms::Graphs::TransitiveClosure - Calculate the transitive
+    closure.
+
+SYNOPSIS
+        use Algorithms::Graphs::TransitiveClosure qw /floyd_warshall/;
+
+        my $graph = [[1, 0, 0, 0], [0, 1, 1, 1], [0, 1, 1, 0], [1, 0, 1, 1]];
+        floyd_warshall $graph;
+        print "There is a path from 2 to 0.\n" if $graph -> [2] -> [0];
+
+        my $graph2 = {one   => {one => 1},
+                      two   => {two => 1, three => 1, four => 1},
+                      three => {two => 1, three => 1},
+                      four  => {one => 1, four  => 1}};
+        floyd_warshall $graph2;
+        print "There is a path from three to one.\n" if
+            $graph2 -> {three} -> {one};
+
+DESCRIPTION
+    This is an implementation of the well known *Floyd-Warshall* algorithm.
+    [1,2]
+
+    The subroutine "floyd_warshall" takes a directed graph, and calculates
+    its transitive closure, which will be returned. The given graph is
+    actually modified, so be sure to pass a copy of the graph to the routine
+    if you need to keep the original graph.
+
+    The subroutine takes graphs in one of the two following formats:
+
+    floyd_warshall ARRAYREF
+        The graph *G = (V, E)* is described with a list of lists, $graph,
+        representing *V x V*. If there is an edge between vertices $i and $j
+        (or if "$i == $j"), then "$graph -> [$i] -> [$j] == 1". For all
+        other pairs "($k, $l)" from *V x V*, "$graph -> [$k] -> [$l] == 0".
+
+        The resulting $graph will have "$graph -> [$i] -> [$j] == 1" iff "$i
+        == $j" or there is a path in *G* from $i to $j, and "$graph -> [$i]
+        -> [$j] == 0" otherwise.
+
+    floyd_warshall HASHREF
+        The graph *G = (V, E)*, with labeled vertices, is described with a
+        hash of hashes, $graph, representing *V x V*. If there is an edge
+        between vertices $label1 and $label2 (or if "$label1 eq $label2"),
+        then "$graph -> {$label1} -> {$label2} == 1". For all other pairs
+        "($label3, $label4)" from *V x V*, "$graph -> {$label3} ->
+        {$label4}" does not exist.
+
+        The resulting $graph will have "$graph -> {$label1} -> {$label2} ==
+        1" iff "$label1 eq $label2" or there is a path in *G* from $label1
+        to $label2, and "$graph -> {$label1} -> {$label2}" does not exist
+        otherwise.
+
+EXAMPLES
+        my $graph = [[1, 0, 0, 0],
+                     [0, 1, 1, 1],
+                     [0, 1, 1, 0],
+                     [1, 0, 1, 1]];
+        floyd_warshall $graph;
+        foreach my $row (@$graph) {print "@$row\n"}
+
+        1 0 0 0
+        1 1 1 1
+        1 1 1 1
+        1 1 1 1
+
+        my $graph = {one   => {one => 1},
+                     two   => {two => 1, three => 1, four => 1},
+                     three => {two => 1, three => 1},
+                     four  => {one => 1, three => 1, four => 1}};
+        floyd_warshall $graph;
+        foreach my $l1 (qw /one two three four/) {
+            print "$l1: ";
+            foreach my $l2 (qw /one two three four/) {
+                next if $l1 eq $l2;
+                print "$l2 " if $graph -> {$l1} -> {$l2};
+            }
+            print "\n";
+        }
+
+        one: 
+        two: one three four 
+        three: one two four 
+        four: one two three
+
+COMPLEXITY
+    The running time of the algorithm is cubed in the number of vertices of
+    the graph. The author of this package is not aware of any faster
+    algorithms, nor of a proof if this is optimal. Note than in specific
+    cases, when the graph can be embedded on surfaces of bounded genus, or
+    in the case of sparse connection matrices, faster algorithms than cubed
+    in the number of vertices exist.
+
+    The space used by this algorithm is at most quadratic in the number of
+    vertices, which is optimal as the resulting transitive closure can have
+    a quadratic number of edges. In case when the graph is represented as a
+    list of lists, the quadratic bound will always be achieved, as the list
+    of lists already has that size. The hash of hashes however will use
+    space linear to the size of the resulting transitive closure.
+
+LITERATURE
+    The Floyd-Warshall algorithm is due to Floyd [2], and based on a theorem
+    of Warshall [3]. The implemation of this package is based on an
+    implementation of Floyd-Warshall found in Cormen, Leiserson and Rivest
+    [1].
+
+REFERENCES
+    [1] Thomas H. Cormen, Charles E. Leiserson and Ronald L. Rivest:
+        *Introduction to Algorithms*. Cambridge: MIT Press, 1990. ISBN
+        0-262-03141-8.
+
+    [2] Robert W. Floyd: "Algorithm 97 (SHORTEST PATH)". *Communications of
+        the ACM*, 5(6):345, 1962.
+
+    [3] Stephan Warshall: "A theorem on boolean matrices." *Journal of the
+        ACM*, 9(1):11-12, 1962.
+
+DEVELOPMENT
+    The current sources of this module are found on github,
+    <git://github.com/Abigail/test--regexp.git>.
+
+AUTHOR
+    Abigail <mailto:algorithm-graphs-transitiveclosure@abigail.be>.
+
+COPYRIGHT and LICENSE
+    Copyright (C) 1998, 2009 by Abigail
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+

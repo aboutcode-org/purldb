@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html class="google ng-scope" ng-app="codesiteArchive.application" lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta content="initial-scale=1, minimum-scale=1, width=device-width" name="viewport">
+
+    <!-- https://developers.google.com/webmasters/ajax-crawling/docs/specification -->
+    <meta name="fragment" content="!">
+    <title>Google Code Archive - Long-term storage for Google Code Project Hosting.</title>
+
+    <link rel="icon" type="image/vnd.microsoft.icon" href="https://code.google.com/archive/img/project-hosting.ico">
+    <script src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/google.js"></script>
+    <link href="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/maia.css" rel="stylesheet">
+    <link href="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/css.css" rel="stylesheet">
+    <link rel="stylesheet" href="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/archive_css.css">
+    <script>
+      CLOSURE_NO_DEPS = true;
+    </script>
+    <script src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/angular.js"></script><style type="text/css">@charset "UTF-8";
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak],
+.ng-cloak, .x-ng-cloak,
+.ng-hide:not(.ng-hide-animate) {
+  display: none !important;
+}
+
+ng\:form {
+  display: block;
+}
+
+.ng-animate-shim {
+  visibility:hidden;
+}
+
+.ng-anchor {
+  position:absolute;
+}
+</style>
+    <script src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/pagedown.js"></script>
+    <script src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/archive.js"></script>
+    <!-- base href="https://code.google.com/archive/" -->
+  </head>
+
+  <body>
+    <div class="maia-header" id="maia-header" role="banner">
+      <div class="maia-aux">
+        <a href="https://code.google.com/archive/">
+          </a><h1><a href="https://code.google.com/archive/">
+            <img alt="Google" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/googlelogo_color_116x41dp.png"> Code</a>
+          </h1>
+        
+        <a href="https://code.google.com/archive/">
+          <h2>
+            Archive
+          </h2>
+        </a>
+        <a class="maia-teleport" href="#content">Skip to content</a>
+        <div class="maia-util">
+          <form action="/archive/search" class="maia-search ng-pristine ng-valid">
+            <input name="q" placeholder="Search this site" type="text">
+            <button class="maia-button">
+              <span class="maia-search-icon">Search</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ngView:  --><div ng-view="" class="ng-scope"><div ng-controller="SearchPageCtrl as searchCtrl" class="ng-scope">
+  <nav-bar-widget nav-level-1="searchCtrl.navLevel1" nav-level-2="searchCtrl.navLevel2" class="ng-isolate-scope"><div class="maia-nav maia-complex" id="maia-nav-x" role="navigation">
+  <div class="maia-aux">
+    <ul>
+      <li ng-class="{active: navLevel1 == 'projects'}">
+        <a href="https://code.google.com/archive/">Projects</a>
+        <!-- ngIf: navLevel2 -->
+      </li>
+      <li ng-class="{active: navLevel1 == 'search'}" class="active">
+        <a href="https://code.google.com/archive/search">Search</a>
+      </li>
+      <li ng-class="{active: navLevel1 == 'about'}">
+        <a href="https://code.google.com/archive/about">About</a>
+      </li>
+    </ul>
+  </div>
+</div>
+</nav-bar-widget>
+  <div id="maia-main" role="main">
+    <div class="maia-article" role="article">
+      <div class="maia-teleport" id="content"></div>
+      <div class="maia-cols">
+        <div class="maia-col-8">
+
+          <div class="maia-util">
+            <form action="/archive/search" class="maia-search ng-pristine ng-valid">
+              <input id="gca-search-box" name="q" placeholder="Search this site" value="domain:code.google.com" type="text">
+              <button class="maia-button">
+                <span class="maia-search-icon">Search</span>
+              </button>
+              
+            </form>
+          </div>
+
+          <!-- Error -->
+          <!-- ngIf: searchCtrl.error -->
+
+          <!-- Waiting -->
+          <!-- ngIf: searchCtrl.results == null -->
+
+          <!-- No results -->
+          <!-- ngIf: searchCtrl.results.length == 0 -->
+
+          <!-- Results -->
+          <!-- ngIf: searchCtrl.results.length > 0 --><div ng-if="searchCtrl.results.length &gt; 0" class="ng-scope">
+
+            <div class="gca-search-page-info">
+              <p class="ng-binding">Page 1 of
+              3,338.
+              66,756 total results.</p>
+            </div>
+
+            <!-- ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="tj-tools"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/tj-tools" class="ng-scope">
+          <span class="ng-binding">tj-tools - Simple utility structures for C, such as expandable buffers and tokens.</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars --><span class="gca-stars ng-binding ng-scope" ng-if="project.stars">Stars: 2</span><!-- end ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+         tj-tools is now being maintained on GitHub.  Wiki notes are still here for now. 
+
+tj-tools provides several utility structures for C.  They're intended to be lightweight drop-ins for use in other pro...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:C">C</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Utility">Utility</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Library">Library</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="titan-1"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/titan-1" class="ng-scope">
+          <span class="ng-binding">titan-1 - Тиран 1 сезон 6, 7, 8, 9, 10 серия смотреть онлайн</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+         Тиран 1 сезон 6, 7, 8, 9, 10 серия смотреть онлайн 
+
+![](http://img.freerutor.com/img/2014-07/28/k4m5elxnxfjobeu01mg5erdrz.png)
+## Тиран 1 сезон 6, 7, 8, 9, 10 серия смотреть онлайн ##
+              ...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="uxuk9829"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/uxuk9829" class="ng-scope">
+          <span class="ng-binding">uxuk9829 - 成人漫画 图-成人-漫画图最新视频想要看的</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        衣光脱迫强被我
+？喊叫在音声的惨凄么什
+？了么什成你，尔奈利波阿
+。犯人杀，当蒙尔尼梅;622成人漫画 图-成人-漫画图8#&amp;德;6228#&amp;amp;迪迪：份身的人个那的床霉倒张这过住前之来他在现发他，上腿床条一在。白空片一里子成人漫画 图-成人-漫画图脑，涂糊里糊他
+。着等，着等他
+！啊慢多得过间时
+！葬埋被经已像好我
+。趟一走署察警黎巴到他成人漫画 图-成人-漫画图跟索加毕;6228#&amp;amp...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="ubicanegocios"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/ubicanegocios" class="ng-scope">
+          <span class="ng-binding">ubicanegocios - webpage who shows bussines in a map</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars --><span class="gca-stars ng-binding ng-scope" ng-if="project.stars">Stars: 5</span><!-- end ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        This webpage uses Django, Jquery, App Engine API's and the 
+google Earth API to show marks (bussines) in a map when executes 
+searches in the defined tags
+
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:django">django</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:jquery">jquery</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:python">python</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Maps">Maps</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:AppEngine">AppEngine</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="ourphpcms"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/ourphpcms" class="ng-scope">
+          <span class="ng-binding">ourphpcms - PHP CMS</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        The site that will be a CMS using PHP and MYSQL,  may be built 
+arount the phpBB infrastructure if phpBB3 is released soon enough.  Will
+ be turned into a website eventually.
+
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:PHP">PHP</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:ContentManagement">ContentManagement</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Website">Website</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl --><img ng-if="project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/logo.png" alt="tipsgoogleadsense"><!-- end ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/tipsgoogleadsense" class="ng-scope">
+          <span class="ng-binding">tipsgoogleadsense - Tips Google Adsense - Make Money Adsense - Google Adsense</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        Google AdSense is an easy way to earn money from your online 
+content. Simply display relevant and engaging ads on your website, 
+mobile sites, videos, site search results, or even web-based games to 
+ea...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Blogging">Blogging</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Template">Template</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:adsense">adsense</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:theme">theme</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:SEO">SEO</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:blogger">blogger</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:adsensecontent">adsensecontent</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:adsensefeeds">adsensefeeds</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:adsenseadwords">adsenseadwords</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="u2az3ncbjjbs"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/u2az3ncbjjbs" class="ng-scope">
+          <span class="ng-binding">u2az3ncbjjbs - 136期3D谜语汇总</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        136期3D谜语汇总
+3d136期3d试机号3D推荐分析专家推荐3d第136预测晚秋和值谜 3d136期预测正版藏机图(保真)合作才能共赢 红五3D136期图库3D136图谜3D136字谜 太湖字谜汇总开奖号码3D136期如来福主和值字谜3D136期太湖钓叟字谜汇总
+
+特大喜讯：中国福彩网为:实践“扶老.助残.救孤.济困”的慈善宗旨
+
+编辑短信【999+姓名】发送到180011-31239（向老师...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="tipfyrecipes"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/tipfyrecipes" class="ng-scope">
+          <span class="ng-binding">tipfyrecipes - Buildout recipes for Tipfy web framework</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        This package is a collection of recipes put
+together to help starting a tipfy project using
+buildout.
+
+To see how it works take a look at Tipy Project.
+...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Python">Python</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Tipfy">Tipfy</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Buildout">Buildout</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:AppEngine">AppEngine</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="tyrt4de"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/tyrt4de" class="ng-scope">
+          <span class="ng-binding">tyrt4de - WＷW`08XXX^ＣoM★点,击^看,Ｘ。电影</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        █官方发布T站███  -  进入
+
+█官方发布T站███  -  进入
+
+█官方发布T站███  -  进入
+
+
+       █官方发布T站███  -  进入
+
+█官方发布T站███  -  进入
+
+█官方发布T站███  -  进入
+
+
+       `08XXX^CoMote&gt;陈缉跑了两步,突然横里闪进一条巷道中。
+
+Unknown end tag for 
+
+幸亏躲避得快,他刚刚闪身,...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="tinyspacefoos"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/tinyspacefoos" class="ng-scope">
+          <span class="ng-binding">tinyspacefoos - For LD23</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        For LD23
+
+Screens:
+
+http://twitpic.com/9c92zr
+
+This project is developed using python-ogre and python 2.6
+
+Dependencies:
+-python-ogre 1.7.1
+--python-ogre bullet physics
+--python-ogre caelum
+--python-o...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:game">game</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:ludumdare">ludumdare</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="oslinx"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/oslinx" class="ng-scope">
+          <span class="ng-binding">oslinx - Open Source NetLinx Code</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars --><span class="gca-stars ng-binding ng-scope" ng-if="project.stars">Stars: 2</span><!-- end ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        This project and associated repository are dedicated to helpful,
+ open source NetLinx code.  Anything from code samples to complete 
+modules are encouraged to be submitted.
+
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Netlinx">Netlinx</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:AMX">AMX</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:NI-700">NI-700</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:NI-710">NI-710</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:NI-900">NI-900</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:NI-910">NI-910</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:NI-2000">NI-2000</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:NI-3000">NI-3000</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:NI-4000">NI-4000</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Modero">Modero</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Viewpoint">Viewpoint</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="tafe-web-project"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/tafe-web-project" class="ng-scope">
+          <span class="ng-binding">tafe-web-project - Web-Based Technologies (Administration)</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        QualificationCertificate IV (NRT)
+Course number 10314
+National CodeICA40311
+Training PackageICA11 - Information and Communications Technology
+Program area Information Technology and Government
+Duratio...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="twittfeed"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/twittfeed" class="ng-scope">
+          <span class="ng-binding">twittfeed - Twitter feed</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        
+
+
+
+
+
+&gt; 
+
+&amp;lt;ModulePrefs title="Follow me on Twitter"&amp;gt;
+
+
+&gt; &gt; title\_url="https://www.twitter.com"
+&gt; &gt; width="150"
+&gt; &gt; height="400"&gt;
+&gt; &gt; 
+
+&amp;lt;Require feature="setprefs"/&amp;gt;
+
+
+&gt; &gt; 
+
+&amp;lt;Require fe...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Gadget">Gadget</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl --><img ng-if="project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/logo_003.png" alt="twitdex"><!-- end ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/twitdex" class="ng-scope">
+          <span class="ng-binding">twitdex - A Flex web app to help users build twitter lists via drag and drop.</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars --><span class="gca-stars ng-binding ng-scope" ng-if="project.stars">Stars: 1</span><!-- end ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        We are building Twitdex into a web application that will allow 
+people to create lists for their twitter accounts using drag and drop.  
+To see a proof of concept go to http://www.twitdex.us/ and watch ...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Flash">Flash</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Flex">Flex</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:AIR">AIR</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:as3">as3</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Twitter">Twitter</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:lists">lists</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:list">list</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:drap">drap</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:drop">drop</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="unity3d-wavein"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/unity3d-wavein" class="ng-scope">
+          <span class="ng-binding">unity3d-wavein - Cross platform wave input (microphone etc) plugin for Unity3D</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars --><span class="gca-stars ng-binding ng-scope" ng-if="project.stars">Stars: 1</span><!-- end ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        If you just want to get the Unity3D project with ready-made 
+binaries, go here. You might need Unity3D 3.4.1, and you'll certainly 
+need Unity3D Pro (on account of the native code plugin).
+
+If you want ...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Unity3D">Unity3D</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Wave">Wave</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:CSharp">CSharp</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="ti-proy-final"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/ti-proy-final" class="ng-scope">
+          <span class="ng-binding">ti-proy-final - Compresión de archivos WAV utilizando aproximación polinomial (Chebyshev)</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        Proyecto final de Teoría de la Información - Instituto Tecnológico Autonomo de México
+
+Impartida por el Dr. Ángel Kuri Morales
+
+El proyecto consiste en implementar la compresión de archivos WAV utiliz...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Academic">Academic</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Java">Java</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Compression">Compression</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Chebyshev">Chebyshev</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Polinomial">Polinomial</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Lossy">Lossy</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Aproximation">Aproximation</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Algorithm">Algorithm</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl --><img ng-if="project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/logo_002.png" alt="understand"><!-- end ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/understand" class="ng-scope">
+          <span class="ng-binding">understand - The Open Software, Protocol and Format Documentation Project</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars --><span class="gca-stars ng-binding ng-scope" ng-if="project.stars">Stars: 18</span><!-- end ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+         Understand, in a Nutshell 
+
+The Understand project aims to document a number of file formats/file 
+systems, protocols and methods of integrating software, to provide and 
+coordinate otherwise missing d...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Protocols">Protocols</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Documentation">Documentation</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:SampleCode">SampleCode</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:ReferenceImplementations">ReferenceImplementations</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Assistance">Assistance</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Joining">Joining</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="tabwidgetsample"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/tabwidgetsample" class="ng-scope">
+          <span class="ng-binding">tabwidgetsample - Android TabWidget sample project</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars --><span class="gca-stars ng-binding ng-scope" ng-if="project.stars">Stars: 1</span><!-- end ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        Its a sample project I created after much research on the internet for using Android tab widgets via xml.
+
+My aim was to have a tabbed interface integrated within a layout with its content defined via...
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Android">Android</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:TabWidget">TabWidget</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Tutorial">Tutorial</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Sample">Sample</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="tag-scheduler-hpc-utp"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/tag-scheduler-hpc-utp" class="ng-scope">
+          <span class="ng-binding">tag-scheduler-hpc-utp - A simple green scheduler</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        This is a simple green-scheduling script that evaluates hosts' 
+reliability based on their temperature profile, to determine if they are
+ viable for work assignment.
+
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:Academic">Academic</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:green">green</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:scheduling">scheduling</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:python">python</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index --><div ng-repeat="result in searchCtrl.results track by $index" class="ng-scope">
+              <project-search-result-widget project="result" class="ng-isolate-scope"><div class="gca-search-result">
+  <div class="maia-cols">
+    <div class="maia-col-2">
+      <!-- ngIf: project.imageUrl -->
+      <!-- ngIf: !project.imageUrl --><img ng-if="!project.imageUrl" class="gca-project-logo ng-scope" src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/default-googlecode-logo.png" alt="tuurfalicious"><!-- end ngIf: !project.imageUrl -->
+    </div>
+    <div class="maia-col-8">
+      <p>
+        <!-- ngIf: project.domain == 'code.google.com' --><a ng-if="project.domain == 'code.google.com'" href="https://code.google.com/archive/p/tuurfalicious" class="ng-scope">
+          <span class="ng-binding">tuurfalicious - A Jabber library for Java ME</span>
+        </a><!-- end ngIf: project.domain == 'code.google.com' -->
+        <!-- ngIf: project.domain != 'code.google.com' -->
+        <br>
+        <!-- ngIf: project.stars -->
+      </p>
+      <p class="ng-binding">
+        Tuurfalicious is an XMPP/Jabber library for Java Mobile Edition.
+Licensed under GPLv2 with the classpath exception .
+
+      </p>
+      <p>
+        <!-- ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:xmpp">xmpp</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:jabber">jabber</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:javame">javame</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:j2me">j2me</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:classpathexception">classpathexception</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index --><span ng-repeat="label in project.labels track by $index" class="ng-scope">
+          <a class="gca-label ng-binding" href="https://code.google.com/archive/search?q=label:gplce">gplce</a>
+        </span><!-- end ngRepeat: label in project.labels track by $index -->
+      </p>
+    </div>
+  </div>
+</div>
+</project-search-result-widget>
+            </div><!-- end ngRepeat: result in searchCtrl.results track by $index -->
+
+            <!-- ngIf: searchCtrl.totalPages > 1 --><div class="gca-search-page-info ng-scope" ng-if="searchCtrl.totalPages &gt; 1">
+              <pager-widget current-page="searchCtrl.pageNumber" total-pages="searchCtrl.totalPages" get-url-for-page="searchCtrl.getUrlForQueryPage" class="ng-isolate-scope"><!-- ngIf: totalPages != 1 --><div ng-if="totalPages != 1" class="ng-scope">
+  <!-- ngIf: currentPage != 1 -->
+
+  <!-- ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range --><span ng-repeat="pageIdx in [currentPage - 5, currentPage + 5] | range" class="ng-scope">
+    <!-- ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage -->
+    <!-- ngIf: pageIdx == currentPage -->
+  </span><!-- end ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range --><span ng-repeat="pageIdx in [currentPage - 5, currentPage + 5] | range" class="ng-scope">
+    <!-- ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage -->
+    <!-- ngIf: pageIdx == currentPage -->
+  </span><!-- end ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range --><span ng-repeat="pageIdx in [currentPage - 5, currentPage + 5] | range" class="ng-scope">
+    <!-- ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage -->
+    <!-- ngIf: pageIdx == currentPage -->
+  </span><!-- end ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range --><span ng-repeat="pageIdx in [currentPage - 5, currentPage + 5] | range" class="ng-scope">
+    <!-- ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage -->
+    <!-- ngIf: pageIdx == currentPage -->
+  </span><!-- end ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range --><span ng-repeat="pageIdx in [currentPage - 5, currentPage + 5] | range" class="ng-scope">
+    <!-- ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage -->
+    <!-- ngIf: pageIdx == currentPage -->
+  </span><!-- end ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range --><span ng-repeat="pageIdx in [currentPage - 5, currentPage + 5] | range" class="ng-scope">
+    <!-- ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage -->
+    <!-- ngIf: pageIdx == currentPage --><span ng-if="pageIdx == currentPage" class="ng-binding ng-scope">1</span><!-- end ngIf: pageIdx == currentPage -->
+  </span><!-- end ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range --><span ng-repeat="pageIdx in [currentPage - 5, currentPage + 5] | range" class="ng-scope">
+    <!-- ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage --><a ng-if="pageIdx &gt;= 1 &amp;&amp; pageIdx &lt;= totalPages &amp;&amp; pageIdx != currentPage" href="https://code.google.com/archive/search?q=domain%3Acode.google.com&amp;page=2" class="ng-binding ng-scope">
+      2
+    </a><!-- end ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage -->
+    <!-- ngIf: pageIdx == currentPage -->
+  </span><!-- end ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range --><span ng-repeat="pageIdx in [currentPage - 5, currentPage + 5] | range" class="ng-scope">
+    <!-- ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage --><a ng-if="pageIdx &gt;= 1 &amp;&amp; pageIdx &lt;= totalPages &amp;&amp; pageIdx != currentPage" href="https://code.google.com/archive/search?q=domain%3Acode.google.com&amp;page=3" class="ng-binding ng-scope">
+      3
+    </a><!-- end ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage -->
+    <!-- ngIf: pageIdx == currentPage -->
+  </span><!-- end ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range --><span ng-repeat="pageIdx in [currentPage - 5, currentPage + 5] | range" class="ng-scope">
+    <!-- ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage --><a ng-if="pageIdx &gt;= 1 &amp;&amp; pageIdx &lt;= totalPages &amp;&amp; pageIdx != currentPage" href="https://code.google.com/archive/search?q=domain%3Acode.google.com&amp;page=4" class="ng-binding ng-scope">
+      4
+    </a><!-- end ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage -->
+    <!-- ngIf: pageIdx == currentPage -->
+  </span><!-- end ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range --><span ng-repeat="pageIdx in [currentPage - 5, currentPage + 5] | range" class="ng-scope">
+    <!-- ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage --><a ng-if="pageIdx &gt;= 1 &amp;&amp; pageIdx &lt;= totalPages &amp;&amp; pageIdx != currentPage" href="https://code.google.com/archive/search?q=domain%3Acode.google.com&amp;page=5" class="ng-binding ng-scope">
+      5
+    </a><!-- end ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage -->
+    <!-- ngIf: pageIdx == currentPage -->
+  </span><!-- end ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range --><span ng-repeat="pageIdx in [currentPage - 5, currentPage + 5] | range" class="ng-scope">
+    <!-- ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage --><a ng-if="pageIdx &gt;= 1 &amp;&amp; pageIdx &lt;= totalPages &amp;&amp; pageIdx != currentPage" href="https://code.google.com/archive/search?q=domain%3Acode.google.com&amp;page=6" class="ng-binding ng-scope">
+      6
+    </a><!-- end ngIf: pageIdx >= 1 && pageIdx <= totalPages && pageIdx != currentPage -->
+    <!-- ngIf: pageIdx == currentPage -->
+  </span><!-- end ngRepeat: pageIdx in [currentPage - 5, currentPage + 5] | range -->
+
+  <!-- ngIf: currentPage != totalPages --><a ng-if="currentPage != totalPages" href="https://code.google.com/archive/search?q=domain%3Acode.google.com&amp;page=2" class="ng-scope">Next &gt;</a><!-- end ngIf: currentPage != totalPages -->
+</div><!-- end ngIf: totalPages != 1 -->
+</pager-widget>
+            </div><!-- end ngIf: searchCtrl.totalPages > 1 -->
+          </div><!-- end ngIf: searchCtrl.results.length > 0 -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+    <div id="maia-signature"></div>
+    <div class="maia-footer" id="maia-footer">
+      <div id="maia-footer-local">
+      </div>
+      <div id="maia-footer-global">
+        <div class="maia-aux">
+          <ul>
+            <li>
+              <a href="https://www.google.com/">Google</a>
+            </li>
+            <li>
+              <a href="https://www.google.com/intl/en/about/">About Google</a>
+            </li>
+            <li>
+              <a href="https://www.google.com/intl/en/policies/privacy/">Privacy</a>
+            </li>
+            <li>
+              <a href="https://www.google.com/intl/en/policies/terms/">Terms</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script src="Google%20Code%20Archive%20-%20Long-term%20storage%20for%20Google%20Code%20Project%20Hosting_files/maia.js"></script>
+  
+
+</body></html>

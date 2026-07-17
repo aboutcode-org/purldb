@@ -1,0 +1,10 @@
+ 12058625      4 drwxr-xr-x 194 svnwc    svnwc        4096 Sep 26 23:54 .
+ 12190083      4 drwxrwxr-x   4 svnwc    svnwc        4096 May  4 15:57 ./perl
+ 12083890     44 -rw-rw-r--   1 svnwc    svnwc       42740 Apr  3  2015 ./perl/KEYS
+ 12190085      4 drwxrwxr-x   2 svnwc    svnwc        4096 May  4 15:57 ./perl/contrib
+ 12083866      8 -rw-rw-r--   1 svnwc    svnwc        4291 Nov 22  2013 ./perl/contrib/AcceptLanguage.pm
+ 12083880      4 -rw-rw-r--   1 svnwc    svnwc         450 Nov 22  2013 ./perl/contrib/README
+ 12084052      4 -rw-rw-r--   1 svnwc    svnwc         905 Nov 22  2013 ./perl/contrib/DumpHeaders.pm
+ 12083895      4 -rw-rw-r--   1 svnwc    svnwc         915 Nov 22  2013 ./perl/contrib/DayLimit.pm
+ 12084050      4 -rw-rw-r--   1 svnwc    svnwc        1596 Nov 22  2013 ./perl/contrib/HttpEquiv.pm
+ 12083894      4 -rw-rw-r--   1 svnwc    svnwc        1601 Nov 22  2013 ./perl/contrib/AuthzAge.pm

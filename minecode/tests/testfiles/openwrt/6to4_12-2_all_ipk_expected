@@ -1,0 +1,12 @@
+{
+  "Maintainer":"Jo-Philipp Wich <xm@subsignal.org>",
+  "Description":"Provides support for 6to4 tunnels in /etc/config/network.\n Refer to http://wiki.openwrt.org/doc/uci/network for\n configuration details.",
+  "License":"GPL-2.0",
+  "Package":"6to4",
+  "Section":"net",
+  "Installed-Size":"1042",
+  "Source":"package/network/ipv6/6to4",
+  "Depends":"libc, kmod-ipv6, kmod-sit",
+  "Version":"12-2",
+  "Architecture":"all"
+}

@@ -1,0 +1,86 @@
+services:
+  matchcodeio_db:
+    image: postgres:13
+    env_file:
+      - docker_matchcodeio.env
+    volumes:
+      - matchcodeio_db_data:/var/lib/postgresql/data/
+
+  matchcodeio_redis:
+    image: redis
+    # Enable redis data persistence using the "Append Only File" with the
+    # default policy of fsync every second. See https://redis.io/topics/persistence
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: always
+
+  matchcodeio_web:
+    build: .
+    command: wait-for-it --strict --timeout=60 db:5432 -- sh -c "
+        python manage_matchcode.py migrate --database default &&
+        python manage_matchcode.py collectstatic --no-input --verbosity 0 --clear &&
+        gunicorn matchcode_project.wsgi:application --bind :8001 --timeout 600 --workers 8"
+    environment:
+      - DJANGO_SETTINGS_MODULE=matchcode_project.settings
+    env_file:
+      - docker_matchcodeio.env
+    expose:
+      - 8001
+    volumes:
+      - .env:/opt/scancodeio/.env
+      - /etc/scancodeio/:/etc/scancodeio/
+      - workspace:/var/scancodeio/workspace/
+      - static:/var/scancodeio/static/
+
+  matchcodeio_worker:
+    build: .
+    # Ensure that potential db migrations run first by waiting until "web" is up
+    command: wait-for-it --strict --timeout=120 matchcodeio_web:8001 -- sh -c "
+        python manage_matchcode.py rqworker --worker-class scancodeio.worker.ScanCodeIOWorker
+                             --queue-class scancodeio.worker.ScanCodeIOQueue
+                             --verbosity 1"
+    environment:
+      - DJANGO_SETTINGS_MODULE=matchcode_project.settings
+    env_file:
+      - docker_matchcodeio.env
+    volumes:
+      - .env:/opt/scancodeio/.env
+      - /etc/scancodeio/:/etc/scancodeio/
+      - workspace:/var/scancodeio/workspace/
+    depends_on:
+      - matchcodeio_redis
+      - matchcodeio_web
+
+  matchcodeio_nginx:
+    image: nginx:alpine
+    volumes:
+      - ./etc/nginx/matchcodeio-conf.d/:/etc/nginx/conf.d/
+      - /var/www/html:/var/www/html
+      - static:/var/scancodeio/static/
+    depends_on:
+      - matchcodeio_web
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.matchcodeio.rule=
+        Host(`127.0.0.1`) && PathPrefix(`/api/matching`)
+        || Host(`127.0.0.1`) && PathPrefix(`/api/runs`)
+        || Host(`127.0.0.1`) && PathPrefix(`/project`)
+        || Host(`127.0.0.1`) && PathPrefix(`/runs`)
+        || Host(`localhost`) && PathPrefix(`/api/matching`)
+        || Host(`localhost`) && PathPrefix(`/api/runs`)
+        || Host(`localhost`) && PathPrefix(`/project`)
+        || Host(`localhost`) && PathPrefix(`/runs`)"
+      - "traefik.http.routers.matchcodeio.entrypoints=web"
+
+networks:
+  default:
+    name: purldb
+    external: true
+
+volumes:
+  redis_data:
+  static:
+  workspace:
+  matchcodeio_db_data:

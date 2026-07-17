@@ -1,0 +1,292 @@
+{
+    "_shards": {
+        "successful": 3,
+        "total": 3,
+        "failed": 0
+    },
+    "hits": {
+        "max_score": 17.576084,
+        "total": 1,
+        "hits": [
+            {
+                "_type": "release",
+                "_index": "release_01",
+                "_score": 17.576084,
+                "_source": {
+                    "checksum_sha256": "6b76e024d3d6c077ad984ea3b3d229f093373d5e06438aca248235150d029043",
+                    "main_module": "Mojolicious",
+                    "id": "76zrXBrk5H5TJqLseRx17hKP8_k",
+                    "status": "cpan",
+                    "resources": {
+                        "license": [
+                            "http://www.opensource.org/licenses/artistic-license-2.0"
+                        ],
+                        "repository": {
+                            "type": "git",
+                            "web": "https://github.com/mojolicious/mojo",
+                            "url": "https://github.com/mojolicious/mojo.git"
+                        },
+                        "homepage": "https://mojolicious.org",
+                        "bugtracker": {
+                            "web": "https://github.com/mojolicious/mojo/issues"
+                        }
+                    },
+                    "date": "2021-10-21T11:53:53",
+                    "provides": [
+                        "Mojo",
+                        "Mojo::Asset",
+                        "Mojo::Asset::File",
+                        "Mojo::Asset::Memory",
+                        "Mojo::Base",
+                        "Mojo::ByteStream",
+                        "Mojo::Cache",
+                        "Mojo::Collection",
+                        "Mojo::Content",
+                        "Mojo::Content::MultiPart",
+                        "Mojo::Content::Single",
+                        "Mojo::Cookie",
+                        "Mojo::Cookie::Request",
+                        "Mojo::Cookie::Response",
+                        "Mojo::DOM",
+                        "Mojo::DOM::CSS",
+                        "Mojo::DOM::HTML",
+                        "Mojo::Date",
+                        "Mojo::DynamicMethods",
+                        "Mojo::EventEmitter",
+                        "Mojo::Exception",
+                        "Mojo::File",
+                        "Mojo::Headers",
+                        "Mojo::HelloWorld",
+                        "Mojo::Home",
+                        "Mojo::IOLoop",
+                        "Mojo::IOLoop::Client",
+                        "Mojo::IOLoop::Server",
+                        "Mojo::IOLoop::Stream",
+                        "Mojo::IOLoop::Subprocess",
+                        "Mojo::IOLoop::TLS",
+                        "Mojo::JSON",
+                        "Mojo::JSON::Pointer",
+                        "Mojo::Loader",
+                        "Mojo::Log",
+                        "Mojo::Message",
+                        "Mojo::Message::Request",
+                        "Mojo::Message::Response",
+                        "Mojo::Parameters",
+                        "Mojo::Path",
+                        "Mojo::Promise",
+                        "Mojo::Reactor",
+                        "Mojo::Reactor::EV",
+                        "Mojo::Reactor::Poll",
+                        "Mojo::Server",
+                        "Mojo::Server::CGI",
+                        "Mojo::Server::Daemon",
+                        "Mojo::Server::Hypnotoad",
+                        "Mojo::Server::Morbo",
+                        "Mojo::Server::Morbo::Backend",
+                        "Mojo::Server::Morbo::Backend::Poll",
+                        "Mojo::Server::PSGI",
+                        "Mojo::Server::Prefork",
+                        "Mojo::Template",
+                        "Mojo::Transaction",
+                        "Mojo::Transaction::HTTP",
+                        "Mojo::Transaction::WebSocket",
+                        "Mojo::URL",
+                        "Mojo::Upload",
+                        "Mojo::UserAgent",
+                        "Mojo::UserAgent::CookieJar",
+                        "Mojo::UserAgent::Proxy",
+                        "Mojo::UserAgent::Server",
+                        "Mojo::UserAgent::Transactor",
+                        "Mojo::Util",
+                        "Mojo::WebSocket",
+                        "Mojolicious",
+                        "Mojolicious::Command",
+                        "Mojolicious::Command::Author::cpanify",
+                        "Mojolicious::Command::Author::generate",
+                        "Mojolicious::Command::Author::generate::app",
+                        "Mojolicious::Command::Author::generate::dockerfile",
+                        "Mojolicious::Command::Author::generate::lite_app",
+                        "Mojolicious::Command::Author::generate::makefile",
+                        "Mojolicious::Command::Author::generate::plugin",
+                        "Mojolicious::Command::Author::inflate",
+                        "Mojolicious::Command::cgi",
+                        "Mojolicious::Command::daemon",
+                        "Mojolicious::Command::eval",
+                        "Mojolicious::Command::get",
+                        "Mojolicious::Command::prefork",
+                        "Mojolicious::Command::psgi",
+                        "Mojolicious::Command::routes",
+                        "Mojolicious::Command::version",
+                        "Mojolicious::Commands",
+                        "Mojolicious::Controller",
+                        "Mojolicious::Lite",
+                        "Mojolicious::Plugin",
+                        "Mojolicious::Plugin::Config",
+                        "Mojolicious::Plugin::DefaultHelpers",
+                        "Mojolicious::Plugin::EPLRenderer",
+                        "Mojolicious::Plugin::EPRenderer",
+                        "Mojolicious::Plugin::HeaderCondition",
+                        "Mojolicious::Plugin::JSONConfig",
+                        "Mojolicious::Plugin::Mount",
+                        "Mojolicious::Plugin::NotYAMLConfig",
+                        "Mojolicious::Plugin::TagHelpers",
+                        "Mojolicious::Plugins",
+                        "Mojolicious::Renderer",
+                        "Mojolicious::Routes",
+                        "Mojolicious::Routes::Match",
+                        "Mojolicious::Routes::Pattern",
+                        "Mojolicious::Routes::Route",
+                        "Mojolicious::Sessions",
+                        "Mojolicious::Static",
+                        "Mojolicious::Types",
+                        "Mojolicious::Validator",
+                        "Mojolicious::Validator::Validation",
+                        "Test::Mojo",
+                        "ojo"
+                    ],
+                    "stat": {
+                        "mtime": 1634817233,
+                        "mode": 33188,
+                        "size": 841358
+                    },
+                    "deprecated": false,
+                    "first": false,
+                    "tests": {
+                        "na": 38,
+                        "fail": 52,
+                        "unknown": 0,
+                        "pass": 1961
+                    },
+                    "dependency": [
+                        {
+                            "module": "ExtUtils::MakeMaker",
+                            "relationship": "requires",
+                            "phase": "configure",
+                            "version": "0"
+                        },
+                        {
+                            "relationship": "requires",
+                            "phase": "build",
+                            "module": "ExtUtils::MakeMaker",
+                            "version": "0"
+                        },
+                        {
+                            "relationship": "requires",
+                            "phase": "runtime",
+                            "module": "IO::Socket::IP",
+                            "version": "0.37"
+                        },
+                        {
+                            "relationship": "requires",
+                            "module": "Sub::Util",
+                            "phase": "runtime",
+                            "version": "1.41"
+                        },
+                        {
+                            "relationship": "requires",
+                            "phase": "runtime",
+                            "module": "perl",
+                            "version": "5.016"
+                        }
+                    ],
+                    "abstract": "Real-time web framework",
+                    "version_numified": 9.22,
+                    "metadata": {
+                        "resources": {
+                            "repository": {
+                                "url": "https://github.com/mojolicious/mojo.git",
+                                "web": "https://github.com/mojolicious/mojo",
+                                "type": "git"
+                            },
+                            "license": [
+                                "http://www.opensource.org/licenses/artistic-license-2.0"
+                            ],
+                            "x_IRC": {
+                                "web": "https://web.libera.chat/#mojo",
+                                "url": "irc://irc.libera.chat/#mojo"
+                            },
+                            "homepage": "https://mojolicious.org",
+                            "bugtracker": {
+                                "web": "https://github.com/mojolicious/mojo/issues"
+                            }
+                        },
+                        "prereqs": {
+                            "runtime": {
+                                "requires": {
+                                    "perl": "5.016",
+                                    "Sub::Util": "1.41",
+                                    "IO::Socket::IP": "0.37"
+                                }
+                            },
+                            "build": {
+                                "requires": {
+                                    "ExtUtils::MakeMaker": "0"
+                                }
+                            },
+                            "configure": {
+                                "requires": {
+                                    "ExtUtils::MakeMaker": "0"
+                                }
+                            }
+                        },
+                        "abstract": "Real-time web framework",
+                        "generated_by": "ExtUtils::MakeMaker version 7.62, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150005",
+                        "author": [
+                            "Sebastian Riedel <sri@cpan.org>"
+                        ],
+                        "license": [
+                            "artistic_2"
+                        ],
+                        "meta-spec": {
+                            "version": 2,
+                            "url": "http://search.cpan.org/perldoc?CPAN::Meta::Spec"
+                        },
+                        "version": "9.22",
+                        "name": "Mojolicious",
+                        "dynamic_config": 0,
+                        "no_index": {
+                            "package": [
+                                "Mojo::Server::PSGI::_IO",
+                                "Mojo::Util::_Guard"
+                            ],
+                            "directory": [
+                                "t",
+                                "inc",
+                                "examples",
+                                "t",
+                                "t",
+                                "xt",
+                                "inc",
+                                "local",
+                                "perl5",
+                                "fatlib",
+                                "example",
+                                "blib",
+                                "examples",
+                                "eg"
+                            ]
+                        },
+                        "release_status": "stable",
+                        "x_serialization_backend": "JSON::PP version 4.06"
+                    },
+                    "download_url": "https://cpan.metacpan.org/authors/id/S/SR/SRI/Mojolicious-9.22.tar.gz",
+                    "checksum_md5": "c7a00b4bd8fa2db991c9b918d34041d3",
+                    "changes_file": "Changes",
+                    "maturity": "released",
+                    "name": "Mojolicious-9.22",
+                    "archive": "Mojolicious-9.22.tar.gz",
+                    "license": [
+                        "artistic_2"
+                    ],
+                    "authorized": true,
+                    "author": "SRI",
+                    "distribution": "Mojolicious",
+                    "version": "9.22"
+                },
+                "_id": "76zrXBrk5H5TJqLseRx17hKP8_k"
+            }
+        ]
+    },
+    "timed_out": false,
+    "took": 2
+}
