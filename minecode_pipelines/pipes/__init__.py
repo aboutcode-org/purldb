@@ -92,7 +92,7 @@ def update_checkpoints_file_in_github(checkpoints_file, cloned_repo, path):
     from scanpipe.pipes.federatedcode import commit_and_push_changes
 
     checkpoint_path = os.path.join(cloned_repo.working_dir, path)
-    # Create the directory if does not exist
+    # Make sure the directory exists
     os.makedirs(os.path.dirname(checkpoint_path), exist_ok=True)
     shutil.move(checkpoints_file, checkpoint_path)
     commit_message = """Update federatedcode purl mining checkpoint"""

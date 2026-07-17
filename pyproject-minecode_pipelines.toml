@@ -44,7 +44,8 @@ dependencies = [
     "ftputil >= 5.1.0",
     "jawa >= 2.2.0",
     "arrow >= 1.3.0",
-    "beautifulsoup4 >= 4.13.4"
+    "beautifulsoup4 >= 4.13.4",
+    "brotli>=1.2.0"
 ]
 
 urls = { Homepage = "https://github.com/aboutcode-org/purldb" }
@@ -62,6 +63,7 @@ mine_cpan = "minecode_pipelines.pipelines.mine_cpan:MineCpan"
 mine_cran = "minecode_pipelines.pipelines.mine_cran:MineCran"
 mine_swift = "minecode_pipelines.pipelines.mine_swift:MineSwift"
 mine_composer = "minecode_pipelines.pipelines.mine_composer:MineComposer"
+mine_nix = "minecode_pipelines.pipelines.mine_nix:MineNix"
 mine_crates = "minecode_pipelines.pipelines.mine_crates:MineCrates"
 mine_apache = "minecode_pipelines.pipelines.mine_apache:MineApache"
 
