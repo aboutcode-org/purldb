@@ -62,7 +62,7 @@ class MineApache(MineCodeBasePipeline):
 
     def mine_packageurls(self):
         """Yield npm packageURLs for all mined npm package names."""
-        yield from apache.mine_and_publish_apache_packageurls(
+        yield from apache.mine_apache_packageurls(
             packages_to_sync=self.packages,
             packages_metadata=self.apache_packages_metadata,
             logger=self.log,

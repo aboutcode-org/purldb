@@ -480,7 +480,7 @@ def get_apache_packages_to_sync(packages_metadata, last_mined_date, logger=None)
     return packages_to_sync
 
 
-def mine_and_publish_apache_packageurls(packages_to_sync, packages_metadata, logger=None):
+def mine_apache_packageurls(packages_to_sync, packages_metadata, logger=None):
     if logger:
         logger("Starting package mining for a batch of packages")
 
