@@ -39,7 +39,7 @@ cryptography==46.0.3
 cyclonedx-python-lib==11.2.0
 debian_inspector==31.1.1
 defusedxml==0.7.1
-Django==5.1.13
+Django==5.1.15
 django-crispy-forms==2.4
 django-environ==0.12.0
 django-filter==25.1
