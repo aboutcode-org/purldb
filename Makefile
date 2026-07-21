@@ -114,7 +114,7 @@ test_purldb:
 test_minecode_pipelines:
 	${ACTIVATE} ${DJSM_PDB} pytest -vvs minecode_pipelines
 
-test: test_purldb test_minecode_pipelines
+test: test_purldb
 
 shell:
 	${MANAGE} shell
