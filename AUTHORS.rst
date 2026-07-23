@@ -6,3 +6,4 @@ The following organizations or individuals have contributed to this repo:
 - Li Ha
 - Steven Esser
 - Armin Tänzer
+- Chin Yeung Li

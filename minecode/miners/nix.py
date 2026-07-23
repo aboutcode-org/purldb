@@ -18,9 +18,16 @@ def get_nix_download_url(path):
     Construct a download url from cache.nixos.org based on the /nix/store/
     path
     """
-    narinfo_hash = path.replace("/nix/store/", "").split("-")[0]
+    base_name = path.rstrip("/").split("/")[-1]
+    narinfo_hash = base_name.split("-")[0]
+
     narinfo_url = f"https://cache.nixos.org/{narinfo_hash}.narinfo"
     url_path = get_narinfo_url(narinfo_url)
+
+    if not url_path:
+        print(f"{narinfo_url} is not accessible.")
+        return None
+
     return f"https://cache.nixos.org/{url_path}"
 
 
@@ -29,8 +36,11 @@ def get_narinfo_url(narinfo_url):
     Visit the narinfo url, parsed and return the URL value
     """
     # Fetch the narinfo file
-    response = requests.get(narinfo_url)
-    response.raise_for_status()
+    try:
+        response = requests.get(narinfo_url, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.RequestException:
+        return None
 
     # Parse line by line
     for line in response.text.splitlines():

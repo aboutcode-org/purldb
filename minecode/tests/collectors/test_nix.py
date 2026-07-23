@@ -13,6 +13,7 @@ import os
 from django.test import TestCase as DjangoTestCase
 
 from packageurl import PackageURL
+from unittest import mock
 
 import packagedb
 from minecode.collectors import nix
@@ -22,6 +23,8 @@ from minecode.utils_test import JsonBasedTesting
 
 class NixPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
+
+    databases = "__all__"
 
     def setUp(self):
         super().setUp()
@@ -34,7 +37,11 @@ class NixPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         )
         """
 
-    def test_get_nix_package_data(self, regen=FIXTURES_REGEN):
+    @mock.patch("minecode.collectors.nix.fetch_json_response")
+    @mock.patch("minecode.collectors.nix.verify_url_existence")
+    def test_get_nix_package_data(self, mock_verify, mock_fetch, regen=FIXTURES_REGEN):
+        mock_verify.return_value = True
+        mock_fetch.return_value = self.expected_json_contents
         purl = PackageURL.from_string("pkg:nix/nixpkgs/SDL_mixer@1.2.12")
         json_contents = nix.get_nix_package_data(purl)
         if regen:
@@ -56,41 +63,57 @@ class NixPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
         result = nix.parse_license(license_data)
         self.assertEqual("BSD-3-Clause", result)
 
-    def test_get_nix_package_data_via_cli(self):
-        import shutil
+    @mock.patch("minecode.collectors.nix.subprocess.run")
+    def test_get_nix_package_data_via_cli(self, mock_run):
+        mock_cli_output = {
+            "description": "Scientific tools for Python",
+            "homepage": "https://numpy.org/",
+            "license": {"spdxId": "BSD-3-Clause"},
+            "version": "2.4.4",
+            "system": "x86_64-linux",
+            "outputs": {
+                "dist": "/nix/store/3wmy167jrryy19h6i6hnfbzy4j0ndkma-python3.13-numpy-2.4.4-dist",
+                "out": "/nix/store/l59n6vzkswz23y6s4pr6cmv2p4dpd5f0-python3.13-numpy-2.4.4",
+            },
+        }
+        mock_run.return_value.stdout = json.dumps(mock_cli_output)
 
-        if shutil.which("nix") is not None:
-            metadata = {
-                "summary": "Scientific tools for Python",
-                "homepage_url": "https://numpy.org/",
-                "license": "BSD-3-Clause",
-                "releases": [
-                    {
-                        "version": "2.4.4",
-                        "platforms": [
-                            {
-                                "system": "x86_64-linux",
-                                "outputs": [
-                                    {
-                                        "name": "dist",
-                                        "path": "/nix/store/3wmy167jrryy19h6i6hnfbzy4j0ndkma-python3.13-numpy-2.4.4-dist",
-                                    },
-                                    {
-                                        "name": "out",
-                                        "path": "/nix/store/l59n6vzkswz23y6s4pr6cmv2p4dpd5f0-python3.13-numpy-2.4.4",
-                                    },
-                                ],
-                            }
-                        ],
-                    }
-                ],
-            }
-            result = nix.get_nix_package_data_via_cli(
-                PackageURL.from_string("pkg:nix/nixpkgs/python3Packages.numpy@2.4.4")
-            )
-            self.assertEqual(metadata, result)
+        metadata = {
+            "summary": "Scientific tools for Python",
+            "homepage_url": "https://numpy.org/",
+            "license": "BSD-3-Clause",
+            "releases": [
+                {
+                    "version": "2.4.4",
+                    "platforms": [
+                        {
+                            "system": "x86_64-linux",
+                            "outputs": [
+                                {
+                                    "name": "dist",
+                                    "path": "/nix/store/3wmy167jrryy19h6i6hnfbzy4j0ndkma-python3.13-numpy-2.4.4-dist",
+                                },
+                                {
+                                    "name": "out",
+                                    "path": "/nix/store/l59n6vzkswz23y6s4pr6cmv2p4dpd5f0-python3.13-numpy-2.4.4",
+                                },
+                            ],
+                        }
+                    ],
+                }
+            ],
+        }
+        result = nix.get_nix_package_data_via_cli(
+            PackageURL.from_string("pkg:nix/nixpkgs/python3Packages.numpy@2.4.4")
+        )
+        self.assertEqual(metadata, result)
 
-    def test_map_nix_package(self):
+    @mock.patch("minecode.collectors.nix.fetch_json_response")
+    @mock.patch("minecode.collectors.nix.verify_url_existence")
+    def test_map_nix_package(self, mock_verify, mock_fetch):
+        mock_verify.return_value = True
+        mock_fetch.return_value = self.expected_json_contents
+
         package_count = packagedb.models.Package.objects.all().count()
         self.assertEqual(0, package_count)
         package_url = PackageURL.from_string("pkg:nix/nixpkgs/SDL_mixer@1.2.12")
