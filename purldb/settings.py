@@ -55,6 +55,8 @@ PURLDB_LOG_LEVEL = env.str("PURLDB_LOG_LEVEL", "INFO")
 
 SITE_URL = env.str("SITE_URL", default="")
 
+PURLDB_PUBLIC_SETUP = env.bool("PURLDB_PUBLIC_SETUP", default=False)
+
 # Application definition
 
 INSTALLED_APPS = (
