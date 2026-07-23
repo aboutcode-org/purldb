@@ -73,8 +73,8 @@ class NixPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             "system": "x86_64-linux",
             "outputs": {
                 "dist": "/nix/store/3wmy167jrryy19h6i6hnfbzy4j0ndkma-python3.13-numpy-2.4.4-dist",
-                "out": "/nix/store/l59n6vzkswz23y6s4pr6cmv2p4dpd5f0-python3.13-numpy-2.4.4"
-            }
+                "out": "/nix/store/l59n6vzkswz23y6s4pr6cmv2p4dpd5f0-python3.13-numpy-2.4.4",
+            },
         }
         mock_run.return_value.stdout = json.dumps(mock_cli_output)
 
@@ -107,7 +107,6 @@ class NixPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             PackageURL.from_string("pkg:nix/nixpkgs/python3Packages.numpy@2.4.4")
         )
         self.assertEqual(metadata, result)
-
 
     @mock.patch("minecode.collectors.nix.fetch_json_response")
     @mock.patch("minecode.collectors.nix.verify_url_existence")
