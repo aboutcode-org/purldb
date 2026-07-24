@@ -109,7 +109,7 @@ services:
       - "${NGINX_PUBLISHED_HTTPS_PORT:-443}:443"
     volumes:
       - ./etc/nginx/conf.d/:/etc/nginx/conf.d/
-      - /var/www/html:/var/www/html
+      - webroot:/var/www/html/
       - static:/var/purldb/static/
     depends_on:
       web:
@@ -122,3 +122,4 @@ volumes:
   static:
   temp_data:
   workspace:
+  webroot:
