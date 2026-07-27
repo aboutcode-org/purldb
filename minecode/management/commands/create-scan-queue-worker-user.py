@@ -9,23 +9,19 @@
 
 from django.contrib.auth.models import Group
 
-from minecode.management.user_creation import CreateUserCommand
+import importlib
+
+create_user = importlib.import_module("scanpipe.management.commands.create-user")
 
 
-class Command(CreateUserCommand):
+class Command(create_user.Command):
     help = "Create a user and generate an API key for a scan queue worker"
 
     def handle(self, *args, **options):
+        super().handle(**options)
         username = options["username"]
-        interactive = options["interactive"]
-        verbosity = options["verbosity"]
-        generate_api_key = options["generate_api_key"]
-        user = self.create_user(
-            username=username,
-            interactive=interactive,
-            verbosity=verbosity,
-            generate_api_key=generate_api_key,
-        )
+        user = self.UserModel._default_manager.get(username=username)
+
         # Add user to `scan_queue_workers` group
         scan_queue_workers_group, _ = Group.objects.get_or_create(name="scan_queue_workers")
         scan_queue_workers_group.user_set.add(user)
