@@ -7,8 +7,8 @@ Requirements
 -------------
 
 * Debian-based Linux distribution
-* Python 3.11 or later
-* Postgres 13
+* Python 3.12 or later
+* Postgres 17
 * git
 * scancode-toolkit runtime dependencies (https://scancode-toolkit.readthedocs.io/en/stable/getting-started/installation/index.html#installation-prerequisites)
 * ``libpq-dev``
