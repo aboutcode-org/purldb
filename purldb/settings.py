@@ -12,7 +12,7 @@ from pathlib import Path
 
 import environ
 
-from purldb_project import __version__
+from purldb import __version__
 
 PURLDB_VERSION = __version__
 
@@ -55,6 +55,8 @@ PURLDB_LOG_LEVEL = env.str("PURLDB_LOG_LEVEL", "INFO")
 
 SITE_URL = env.str("SITE_URL", default="")
 
+PURLDB_PUBLIC_SETUP = env.bool("PURLDB_PUBLIC_SETUP", default=False)
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -73,12 +75,13 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "django.contrib.admin",
     "django.contrib.humanize",
+    "django.contrib.postgres",
     # Third-party apps
     "django_filters",
     "rest_framework",
     "drf_spectacular",
-    "rest_framework.authtoken",
     "django_rq",
+    "scanpipe",
 )
 
 MIDDLEWARE = (
@@ -91,9 +94,9 @@ MIDDLEWARE = (
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 )
 
-ROOT_URLCONF = "purldb_project.urls"
+ROOT_URLCONF = "purldb.urls"
 
-WSGI_APPLICATION = "purldb_project.wsgi.application"
+WSGI_APPLICATION = "purldb.wsgi.application"
 
 SECURE_PROXY_SSL_HEADER = env.tuple(
     "SECURE_PROXY_SSL_HEADER", default=("HTTP_X_FORWARDED_PROTO", "https")
@@ -237,10 +240,12 @@ STATICFILES_DIRS = [
 
 # Django restframework
 
+API_TOKEN_MODEL = "scanpipe.APIToken"  # noqa: S105
+
 REST_FRAMEWORK_DEFAULT_THROTTLE_RATES = {"anon": "3600/hour", "user": "10800/hour"}
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework.authentication.TokenAuthentication",),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("aboutcode.api_auth.APITokenAuthentication",),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",

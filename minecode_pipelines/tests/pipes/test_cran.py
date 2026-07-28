@@ -13,7 +13,7 @@ from unittest import TestCase
 
 from minecode_pipelines.pipes.cran import mine_cran_packageurls
 
-DATA_DIR = Path(__file__).parent.parent / "test_data" / "cran"
+DATA_DIR = Path(__file__).parent.parent / "data" / "cran"
 
 
 class CranPipelineTests(TestCase):
@@ -40,6 +40,6 @@ class CranPipelineTests(TestCase):
             with open(expected_file, encoding="utf-8") as f:
                 expected_purls = saneyaml.load(f)
 
-            base_purl, purls = result
+            base_purl, purls, _ = result
             assert str(base_purl) == expected_base_purl
             assert purls == expected_purls

@@ -29,7 +29,7 @@ from cyclonedx.output import make_outputter
 from cyclonedx.schema import SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator
 
-from purldb_project import __version__ as purldb_version
+from purldb import __version__ as purldb_version
 
 
 def get_cyclonedx_bom(package):

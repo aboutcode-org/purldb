@@ -19,6 +19,9 @@ from rest_framework import routers
 
 from matchcode.api import ApproximateDirectoryContentIndexViewSet
 from matchcode.api import ApproximateDirectoryStructureIndexViewSet
+from matchcode.api import D2DViewSet
+from matchcode.api import MatchingViewSet
+from matchcode.api import RunViewSet
 from minecode.api import ScannableURIViewSet
 from minecode.api import index_package_scan
 from packagedb.api import CollectViewSet
@@ -35,19 +38,25 @@ from packagedb.to_purl import api_to_purl_router
 
 api_router = routers.DefaultRouter()
 api_router.register("packages", PackageViewSet)
-api_router.register("update_packages", PackageUpdateSet, "update_packages")
-api_router.register("package_sets", PackageSetViewSet)
 api_router.register("resources", ResourceViewSet)
 api_router.register("validate", PurlValidateViewSet, "validate")
-api_router.register("collect", CollectViewSet, "collect")
-api_router.register("watch", PackageWatchViewSet)
-api_router.register("scan_queue", ScannableURIViewSet)
-api_router.register("approximate_directory_content_index", ApproximateDirectoryContentIndexViewSet)
-api_router.register(
-    "approximate_directory_structure_index", ApproximateDirectoryStructureIndexViewSet
-)
-api_router.register("package_activity", PackageActivityViewSet)
 
+if not settings.PURLDB_PUBLIC_SETUP:
+    api_router.register("update_packages", PackageUpdateSet, "update_packages")
+    api_router.register("package_sets", PackageSetViewSet)
+    api_router.register("collect", CollectViewSet, "collect")
+    api_router.register("watch", PackageWatchViewSet)
+    api_router.register("scan_queue", ScannableURIViewSet)
+    api_router.register(
+        "approximate_directory_content_index", ApproximateDirectoryContentIndexViewSet
+    )
+    api_router.register(
+        "approximate_directory_structure_index", ApproximateDirectoryStructureIndexViewSet
+    )
+    api_router.register("package_activity", PackageActivityViewSet)
+    api_router.register("matching", MatchingViewSet, basename="matching")
+    api_router.register("d2d", D2DViewSet, basename="d2d")
+    api_router.register("runs", RunViewSet)
 
 urlpatterns = [
     path(

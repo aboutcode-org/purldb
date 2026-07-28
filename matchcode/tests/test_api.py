@@ -16,6 +16,7 @@ from django.urls import reverse
 
 from rest_framework import status
 from rest_framework.test import APIClient
+from scanpipe.models import APIToken
 from scanpipe.models import CodebaseRelation
 from scanpipe.models import CodebaseResource
 from scanpipe.models import DiscoveredDependency
@@ -26,8 +27,7 @@ from scanpipe.tests import package_data1
 
 
 class MatchCodePipelineAPITest(TransactionTestCase):
-    databases = {"default", "packagedb"}
-    data_location = Path(__file__).parent / "data"
+    data_location = Path(__file__).parent / "testfiles" / "pipeline"
 
     def setUp(self):
         self.project1 = Project.objects.create(name="Analysis")
@@ -45,12 +45,13 @@ class MatchCodePipelineAPITest(TransactionTestCase):
             to_resource=self.resource1,
             map_type="java_to_class",
         )
+        self.project1.update_counts()
 
-        self.matching_list_url = reverse("matching-list")
-        self.project1_detail_url = reverse("matching-detail", args=[self.project1.uuid])
+        self.matching_list_url = reverse("api:matching-list")
+        self.project1_detail_url = reverse("api:matching-detail", args=[self.project1.uuid])
 
         self.user = User.objects.create_user("username", "e@mail.com", "secret")
-        self.auth = f"Token {self.user.auth_token.key}"
+        self.auth = f"Token {APIToken.create_token(user=self.user)}"
 
         self.csrf_client = APIClient(enforce_csrf_checks=True)
         self.csrf_client.credentials(HTTP_AUTHORIZATION=self.auth)
@@ -172,8 +173,8 @@ class MatchCodePipelineAPITest(TransactionTestCase):
 
     def test_matchcode_pipeline_api_run_detail(self):
         run1 = self.project1.add_pipeline("matching")
-        url = reverse("run-detail", args=[run1.uuid])
-        project1_detail_url = reverse("run-detail", args=[self.project1.uuid])
+        url = reverse("api:run-detail", args=[run1.uuid])
+        project1_detail_url = reverse("api:run-detail", args=[self.project1.uuid])
         response = self.csrf_client.get(url)
         self.assertEqual(str(run1.uuid), response.data["uuid"])
         self.assertIn(project1_detail_url, response.data["project"])
@@ -189,16 +190,15 @@ class MatchCodePipelineAPITest(TransactionTestCase):
 
 
 class D2DPipelineAPITest(TransactionTestCase):
-    databases = {"default", "packagedb"}
     data_location = Path(__file__).parent / "data"
 
     def setUp(self):
         self.project1 = Project.objects.create(name="Analysis")
-        self.d2d_list_url = reverse("d2d-list")
-        self.project1_detail_url = reverse("d2d-detail", args=[self.project1.uuid])
+        self.d2d_list_url = reverse("api:d2d-list")
+        self.project1_detail_url = reverse("api:d2d-detail", args=[self.project1.uuid])
 
         self.user = User.objects.create_user("username", "a@mail.com", "secret")
-        self.auth = f"Token {self.user.auth_token.key}"
+        self.auth = f"Token {APIToken.create_token(user=self.user)}"
         self.csrf_client = APIClient(enforce_csrf_checks=True)
         self.csrf_client.credentials(HTTP_AUTHORIZATION=self.auth)
 
@@ -234,8 +234,8 @@ class D2DPipelineAPITest(TransactionTestCase):
 
     def test_d2d_pipeline_api_run_detail(self):
         run1 = self.project1.add_pipeline("d2d")
-        url = reverse("run-detail", args=[run1.uuid])
-        project1_detail_url = reverse("run-detail", args=[self.project1.uuid])
+        url = reverse("api:run-detail", args=[run1.uuid])
+        project1_detail_url = reverse("api:run-detail", args=[self.project1.uuid])
         response = self.csrf_client.get(url)
         self.assertEqual(str(run1.uuid), response.data["uuid"])
         self.assertIn(project1_detail_url, response.data["project"])

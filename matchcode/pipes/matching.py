@@ -112,7 +112,7 @@ def match_purldb_package(project, resources_by_sha1, enhance_package_data=True, 
     """
     match_count = 0
     sha1_list = list(resources_by_sha1.keys())
-    results = Package.objects.using("packagedb").filter(sha1__in=sha1_list).order_by()
+    results = Package.objects.filter(sha1__in=sha1_list).order_by()
     # Process matched Package data
     for package in results:
         package_data = package.to_dict()
@@ -145,8 +145,7 @@ def match_purldb_resource(project, resources_by_sha1, package_data_by_purldb_url
     match_count = 0
     sha1_list = list(resources_by_sha1.keys())
     results = (
-        Resource.objects.using("packagedb")
-        .filter(sha1__in=sha1_list)
+        Resource.objects.filter(sha1__in=sha1_list)
         .select_related("package")
         .only("package__uuid")
         .order_by()

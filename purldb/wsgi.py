@@ -12,12 +12,12 @@ import os
 from django.core.wsgi import get_wsgi_application
 
 """
-WSGI config for purldb-public.
+WSGI config for purldb.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 """
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "purldb_public_project.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "purldb.settings")
 
 application = get_wsgi_application()

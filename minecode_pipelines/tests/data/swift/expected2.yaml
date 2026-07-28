@@ -1,4 +1,6 @@
-- pkg:swift/github.com/zonble/HumanString@0.0.1
-- pkg:swift/github.com/zonble/HumanString@0.0.2
-- pkg:swift/github.com/zonble/HumanString@0.1.0
-- pkg:swift/github.com/zonble/HumanString@0.1.1
+base_purl: pkg:swift/github.com/zonble/HumanString
+purls:
+  - pkg:swift/github.com/zonble/HumanString@0.0.1
+  - pkg:swift/github.com/zonble/HumanString@0.0.2
+  - pkg:swift/github.com/zonble/HumanString@0.1.0
+  - pkg:swift/github.com/zonble/HumanString@0.1.1

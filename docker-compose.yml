@@ -1,35 +1,125 @@
-include:
-  - docker-compose.common.yml
+name: purldb
 
 services:
+  db:
+    image: docker.io/library/postgres:17.10
+    env_file:
+      - docker.env
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    shm_size: "1gb"
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: docker.io/library/redis:8.8.0-alpine
+    # Enable redis data persistence using the "Append Only File" with the
+    # default policy of fsync every second. See https://redis.io/topics/persistence
+    command: redis-server --appendonly yes --loglevel warning
+    volumes:
+      - redis_data:/data
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    command: sh -c "
+        python manage.py migrate &&
+        python manage.py collectstatic --no-input --verbosity 0 --clear &&
+        gunicorn purldb.wsgi:application --bind :8000 --timeout 600 \
+         --workers ${GUNICORN_WORKERS:-8} --worker-tmp-dir /dev/shm"
+    env_file:
+      - docker.env
+    expose:
+      - 8000
+    volumes:
+      - .env:/opt/purldb/.env
+      - /etc/purldb/:/etc/purldb/
+      - temp_data:/tmp/minecode/
+      - static:/var/purldb/static/
+      - workspace:/var/purldb/workspace/
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  priority_queue:
+    build: .
+    command: python manage.py priority_queue
+    env_file:
+      - docker.env
+    volumes:
+      - .env:/opt/purldb/.env
+      - /etc/purldb/:/etc/purldb/
+    profiles:
+      - priority_queue
+    depends_on:
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started
+
+  scheduler:
+    build: .
+    command: python manage.py run_scheduler
+    env_file:
+      - docker.env
+    volumes:
+      - .env:/opt/purldb/.env
+      - /etc/purldb/:/etc/purldb/
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      web:
+        condition: service_started
+
+  rq_worker:
+    build: .
+    command: python manage.py rqworker default
+    env_file:
+      - docker.env
+    volumes:
+      - .env:/opt/purldb/.env
+      - /etc/purldb/:/etc/purldb/
+      - temp_data:/tmp/minecode/
+      - workspace:/var/purldb/workspace/
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      web:
+        condition: service_started
+
   nginx:
-    image: nginx
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.web.rule=
-        Host(`127.0.0.1`)
-        || Host(`localhost`)"
-      - "traefik.http.routers.web.entrypoints=web"
+    image: docker.io/library/nginx:1.31.2-alpine
+    ports:
+      - "${NGINX_PUBLISHED_HTTP_PORT:-80}:80"
+      - "${NGINX_PUBLISHED_HTTPS_PORT:-443}:443"
     volumes:
       - ./etc/nginx/conf.d/:/etc/nginx/conf.d/
-      - /var/www/html:/var/www/html
+      - webroot:/var/www/html/
       - static:/var/purldb/static/
     depends_on:
-      - web
+      web:
+        condition: service_started
     restart: always
 
-  traefik:
-    image: "traefik:v2.11"
-    container_name: "traefik"
-    hostname: "traefik"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./traefik.yml:/traefik.yml:ro"
-
-networks:
-  default:
-    name: purldb
-    external: true
+volumes:
+  db_data:
+  redis_data:
+  static:
+  temp_data:
+  workspace:
+  webroot:

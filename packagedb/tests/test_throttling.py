@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 
 from rest_framework.test import APIClient
 from rest_framework.test import APITestCase
+from scanpipe.models import APIToken
 
 
 @patch("rest_framework.throttling.UserRateThrottle.get_rate", lambda x: "20/day")
@@ -25,7 +26,7 @@ class ThrottleApiTests(APITestCase):
             email="e@mail.com",
             password="secret",  # NOQA
         )
-        self.auth = f"Token {self.user.auth_token.key}"
+        self.auth = f"Token {APIToken.create_token(user=self.user)}"
         self.csrf_client = APIClient(enforce_csrf_checks=True)
         self.csrf_client.credentials(HTTP_AUTHORIZATION=self.auth)
 
@@ -36,7 +37,7 @@ class ThrottleApiTests(APITestCase):
             password="secret",  # NOQA
             is_staff=True,
         )
-        self.staff_auth = f"Token {self.staff_user.auth_token.key}"
+        self.staff_auth = f"Token {APIToken.create_token(user=self.staff_user)}"
         self.staff_csrf_client = APIClient(enforce_csrf_checks=True)
         self.staff_csrf_client.credentials(HTTP_AUTHORIZATION=self.staff_auth)
 

@@ -16,7 +16,7 @@ from unittest import TestCase
 
 from minecode_pipelines.pipes.cargo import get_cargo_packages
 
-DATA_DIR = Path(__file__).parent.parent / "test_data" / "cargo"
+DATA_DIR = Path(__file__).parent.parent / "data" / "cargo"
 
 
 class CargoPipelineTests(TestCase):

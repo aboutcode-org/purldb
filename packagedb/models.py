@@ -13,7 +13,6 @@ import sys
 import uuid
 from collections import OrderedDict
 
-from django.conf import settings
 from django.contrib.auth.models import UserManager
 from django.contrib.postgres.fields import ArrayField
 from django.core import exceptions
@@ -22,7 +21,6 @@ from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db import transaction
-from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -40,8 +38,7 @@ from packagedcode.models import normalize_qualifiers
 from packageurl import PackageURL
 from packageurl.contrib.django.models import PackageURLMixin
 from packageurl.contrib.django.models import PackageURLQuerySetMixin
-from rest_framework.authtoken.models import Token
-
+from scanpipe.models import APIToken
 from packagedb import schedules
 
 TRACE = False
@@ -1500,7 +1497,7 @@ class ApiUserManager(UserManager):
         user.set_unusable_password()
         user.save()
 
-        Token._default_manager.get_or_create(user=user)
+        APIToken.create_token(user=user)
 
         return user
 
@@ -1512,13 +1509,6 @@ class ApiUserManager(UserManager):
             pass
         else:
             raise exceptions.ValidationError(f"Error: This email already exists: {email}")
-
-
-@receiver(models.signals.post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    """Create an API key token on user creation, using the signal system."""
-    if created:
-        Token.objects.get_or_create(user_id=instance.pk)
 
 
 class PackageActivity(FederatedCodePackageActivityMixin):

@@ -1,55 +1,63 @@
 include:
-  - docker-compose.common.yml
+  - docker-compose.yml
 
 services:
   visitor:
     build: .
     command: sh -c "
-        wait-for-it web:8000 -- python manage_purldb.py seed &&
-        python manage_purldb.py run_visit --ignore-robots --ignore-throttle"
+        python manage.py seed &&
+        python manage.py run_visit --ignore-robots --ignore-throttle"
     env_file:
-      - docker_purldb.env
+      - docker.env
     volumes:
       - /etc/purldb/:/etc/purldb/
     profiles:
       - visit_and_map
     depends_on:
-      - db
-      - web # Ensure that potential db migrations run first
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started
 
   mapper:
     build: .
-    command: wait-for-it web:8000 -- python manage_purldb.py run_map
+    command: python manage.py run_map
     env_file:
-      - docker_purldb.env
+      - docker.env
     volumes:
       - /etc/purldb/:/etc/purldb/
     profiles:
       - visit_and_map
     depends_on:
-      - db
-      - web # Ensure that potential db migrations run first
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started
 
   clearsync:
     build: .
-    command: wait-for-it web:8000 -- clearsync --save-to-db  --verbose -n 3
+    command: python manage.py clearsync --save-to-db  --verbose -n 3
     env_file:
-      - docker_purldb.env
+      - docker.env
     volumes:
       - /etc/purldb/:/etc/purldb/
     profiles:
       - clearsync
     depends_on:
-      - db
-      - web # Ensure that potential db migrations run first
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started
 
   clearindex:
     build: .
-    command: wait-for-it web:8000 -- python manage_purldb.py run_clearindex
+    command: python manage.py run_clearindex
     env_file:
-      - docker_purldb.env
+      - docker.env
     profiles:
       - clearsync
     depends_on:
-      - db
-      - web # Ensure that potential db migrations run first
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started

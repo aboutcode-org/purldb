@@ -16,7 +16,7 @@ from minecode_pipelines.pipes.composer import get_composer_packages
 from minecode_pipelines.pipes.composer import load_composer_packages
 from minecode_pipelines.pipes.composer import get_composer_purl
 
-DATA_DIR = Path(__file__).parent.parent / "test_data" / "composer"
+DATA_DIR = Path(__file__).parent.parent / "data" / "composer"
 
 
 class ComposerPipelineTests(SimpleTestCase):

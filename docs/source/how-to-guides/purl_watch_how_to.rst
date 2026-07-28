@@ -15,7 +15,7 @@ following management command on a periodic basis:
 
    .. code-block:: bash
 
-        python manage_purldb.py watch_packages
+        python manage.py watch_packages
 
    This command checks all PURLs in your PurlDB for new versions and indexes them accordingly.
 

@@ -18,7 +18,7 @@
   {
     "uri":"https://registry.npmjs.org/Reston",
     "source_uri":"https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=2300000",
-    "package_url":"pkg:npm/Reston",
+    "package_url":"pkg:npm/reston",
     "file_name":null,
     "size":null,
     "date":null,
@@ -50,7 +50,7 @@
   {
     "uri":"https://registry.npmjs.org/ClearSilver",
     "source_uri":"https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=2300000",
-    "package_url":"pkg:npm/ClearSilver",
+    "package_url":"pkg:npm/clearsilver",
     "file_name":null,
     "size":null,
     "date":null,
@@ -66,7 +66,7 @@
   {
     "uri":"https://registry.npmjs.org/FreshDocs",
     "source_uri":"https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=2300000",
-    "package_url":"pkg:npm/FreshDocs",
+    "package_url":"pkg:npm/freshdocs",
     "file_name":null,
     "size":null,
     "date":null,
@@ -82,7 +82,7 @@
   {
     "uri":"https://registry.npmjs.org/Journaling-Hash",
     "source_uri":"https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=2300000",
-    "package_url":"pkg:npm/Journaling-Hash",
+    "package_url":"pkg:npm/journaling-hash",
     "file_name":null,
     "size":null,
     "date":null,
@@ -738,7 +738,7 @@
   {
     "uri":"https://registry.npmjs.org/NormAndVal",
     "source_uri":"https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=2300000",
-    "package_url":"pkg:npm/NormAndVal",
+    "package_url":"pkg:npm/normandval",
     "file_name":null,
     "size":null,
     "date":null,
@@ -754,7 +754,7 @@
   {
     "uri":"https://registry.npmjs.org/OnCollect",
     "source_uri":"https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=2300000",
-    "package_url":"pkg:npm/OnCollect",
+    "package_url":"pkg:npm/oncollect",
     "file_name":null,
     "size":null,
     "date":null,
@@ -994,7 +994,7 @@
   {
     "uri":"https://registry.npmjs.org/Birbal",
     "source_uri":"https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=2300000",
-    "package_url":"pkg:npm/Birbal",
+    "package_url":"pkg:npm/birbal",
     "file_name":null,
     "size":null,
     "date":null,
@@ -1282,7 +1282,7 @@
   {
     "uri":"https://registry.npmjs.org/Cashew",
     "source_uri":"https://replicate.npmjs.com/registry/_changes?include_docs=true&limit=1000&since=2300000",
-    "package_url":"pkg:npm/Cashew",
+    "package_url":"pkg:npm/cashew",
     "file_name":null,
     "size":null,
     "date":null,

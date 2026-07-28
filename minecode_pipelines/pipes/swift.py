@@ -120,7 +120,7 @@ def fetch_git_tags_raw(repo_url: str, timeout: int = 60, logger=None) -> str | N
 
 
 # FIXME duplicated with miners github
-def split_org_repo(url_like, logger):
+def split_org_repo(url_like, logger=None):
     """
     Given a URL-like string to a GitHub repo or a repo name as in org/name,
     split and return the org and name.
@@ -137,7 +137,8 @@ def split_org_repo(url_like, logger):
     """
     segments = [s.strip() for s in url_like.split("/") if s.strip()]
     if not len(segments) >= 2:
-        logger(f"Could not parse org and name from URL-like: {url_like}")
+        if logger:
+            logger(f"Could not parse org and name from URL-like: {url_like}")
         return None, None
     org = segments[-2]
     name = segments[-1]
