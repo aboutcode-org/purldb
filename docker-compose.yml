@@ -54,7 +54,7 @@ services:
 
   priority_queue:
     build: .
-    command: wait-for-it web:8000 -- python manage.py priority_queue
+    command: python manage.py priority_queue
     env_file:
       - docker.env
     volumes:
@@ -70,7 +70,7 @@ services:
 
   scheduler:
     build: .
-    command: wait-for-it web:8000 -- python manage.py run_scheduler
+    command: python manage.py run_scheduler
     env_file:
       - docker.env
     volumes:
@@ -86,7 +86,7 @@ services:
 
   rq_worker:
     build: .
-    command: wait-for-it web:8000 -- python manage.py rqworker default
+    command: python manage.py rqworker default
     env_file:
       - docker.env
     volumes:

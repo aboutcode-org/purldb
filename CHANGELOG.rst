@@ -6,11 +6,12 @@ v8.0.0
 
 - The contents of `matchcode_pipeline`` and the `matchcodeio`` Django project
   have been merged into PurlDB. This is done by making ScanCode.io the main
-  dependency of PurlDB via . Users will no longer have to create and run both
-  `purldb` and `matchcodeio` for matching functionality. Likewise,
-  `purldb_public_project` has been removed and merged back into PurlDB. The
-  functionality of it is now controlled by an environment variable
-  `PURLDB_PUBLIC_SETUP` that limits the available API endpoints to only
+  dependency of PurlDB via
+  https://github.com/aboutcode-org/scancode.io/pull/2187. Users will no longer
+  have to create and run both `purldb` and `matchcodeio` for matching
+  functionality. Likewise, `purldb_public_project` has been removed and merged
+  back into PurlDB. The functionality of it is now controlled by an environment
+  variable `PURLDB_PUBLIC_SETUP` that limits the available API endpoints to only
   `packages`, `resources`, and `validate`. The required versions of Python and
   Postgres have been bumped to 3.12 and 17, respectively. Existing PurlDB Docker
   deployments using Postgres 13 can be migrated to Postgres 17 using the
