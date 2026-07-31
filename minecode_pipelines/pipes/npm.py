@@ -20,7 +20,13 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
+import json
 from datetime import datetime
+
+import requests
+from packageurl import PackageURL
+from scanpipe.pipes.federatedcode import clone_repository
+from scanpipe.pipes.federatedcode import delete_local_clone
 
 from minecode_pipelines.pipes import fetch_checkpoint_from_github
 from minecode_pipelines.pipes import update_checkpoints_in_github
@@ -35,24 +41,7 @@ from minecode_pipelines.pipes import write_packages_json
 from minecode_pipelines.pipes import compress_packages_file
 from minecode_pipelines.pipes import decompress_packages_file
 from minecode_pipelines.pipes import fetch_checkpoint_by_git
-
-
-from minecode_pipelines.miners.npm import get_npm_packages
-from minecode_pipelines.miners.npm import get_updated_npm_packages
-from minecode_pipelines.miners.npm import get_current_last_seq
-from minecode_pipelines.miners.npm import load_npm_packages
-from minecode_pipelines.miners.npm import get_npm_packageurls
-from minecode_pipelines.miners.npm import yield_npm_package_data
-from minecode_pipelines.miners.npm import NPM_REPLICATE_REPO
-from minecode_pipelines.miners.npm import NPM_TYPE
-
 from minecode_pipelines.utils import get_temp_dir
-
-from packageurl import PackageURL
-
-from scanpipe.pipes.federatedcode import clone_repository
-from scanpipe.pipes.federatedcode import delete_local_clone
-
 
 PACKAGE_FILE_NAME = "NPMPackages.json"
 COMPRESSED_PACKAGE_FILE_NAME = "NPMPackages.json.gz"
@@ -61,6 +50,157 @@ COMPRESSED_NPM_REPLICATE_CHECKPOINT_PATH = "npm/" + COMPRESSED_PACKAGE_FILE_NAME
 NPM_CHECKPOINT_PATH = "npm/checkpoints.json"
 NPM_PACKAGES_CHECKPOINT_PATH = "npm/packages_checkpoint.json"
 PACKAGE_BATCH_SIZE = 700
+
+"""
+Visitors for Npmjs and npmjs-like javascript package repositories.
+
+We have this hierarchy in npm replicate and registry index:
+    npm projects replicate.npmjs.com (paginated JSON) -> versions at registry.npmjs.org (JSON) -> download urls
+
+See https://github.com/orgs/community/discussions/152515 for information on
+the latest replicate.npmjs.com API.
+
+https://replicate.npmjs.com/_all_docs
+This NPMJS replicate API serves as an index to get all npm packages and their revision IDs
+in paginated queries.
+
+https://replicate.npmjs.com/_changes
+This NPMJS replicate API serves as a CHANGELOG of npm packages with update sequences which
+can be fetched in paginated queries.
+
+https://registry.npmjs.org/{namespace/name}
+For each npm package, a JSON containing details including the list of all releases
+and archives, their URLs, and some metadata for each release.
+
+https://registry.npmjs.org/{namespace/name}/{version}
+For each release, a JSON contains details for the released version and all the
+downloads available for this release.
+"""
+
+NPM_REPLICATE_REPO = "https://replicate.npmjs.com/"
+NPM_REGISTRY_REPO = "https://registry.npmjs.org/"
+NPM_TYPE = "npm"
+NPM_REPLICATE_BATCH_SIZE = 10000
+
+
+def get_package_names_last_key(package_data):
+    names = [package.get("id") for package in package_data.get("rows")]
+    last_key = package_data.get("rows")[-1].get("key")
+    return names, last_key
+
+
+def get_package_names_last_seq(package_data):
+    names = [package.get("id") for package in package_data.get("results")]
+    last_seq = package_data.get("last_seq")
+    return names, last_seq
+
+
+def get_current_last_seq(replicate_url=NPM_REPLICATE_REPO):
+    npm_replicate_latest_changes = replicate_url + "_changes?descending=True"
+    response = requests.get(npm_replicate_latest_changes)
+    if not response.ok:
+        return
+
+    package_data = response.json()
+    _package_names, last_seq = get_package_names_last_seq(package_data)
+    return last_seq
+
+
+def get_updated_npm_packages(last_seq, replicate_url=NPM_REPLICATE_REPO, logger=None):
+    all_package_names = []
+    i = 0
+
+    while True:
+        if logger:
+            logger(f"Processing iteration: {i}: changes after seq: {last_seq}")
+
+        npm_replicate_changes = (
+            replicate_url + "_changes?" + f"limit={NPM_REPLICATE_BATCH_SIZE}" + f"&since={last_seq}"
+        )
+        response = requests.get(npm_replicate_changes)
+        if not response.ok:
+            return all_package_names
+
+        package_data = response.json()
+        package_names, last_seq = get_package_names_last_seq(package_data)
+        all_package_names.extend(package_names)
+
+        # We have fetched the last set of changes if True
+        if len(package_names) < NPM_REPLICATE_BATCH_SIZE:
+            break
+
+        i += 1
+
+    return {"packages": all_package_names}, last_seq
+
+
+def get_npm_packages(replicate_url=NPM_REPLICATE_REPO, logger=None):
+    all_package_names = []
+
+    npm_replicate_all = replicate_url + "_all_docs?" + f"limit={NPM_REPLICATE_BATCH_SIZE}"
+    response = requests.get(npm_replicate_all)
+    if not response.ok:
+        return all_package_names
+
+    package_data = response.json()
+    package_names, last_key = get_package_names_last_key(package_data)
+    all_package_names.extend(package_names)
+
+    total_rows = package_data.get("total_rows")
+    iterations = int(total_rows / NPM_REPLICATE_BATCH_SIZE) + 1
+
+    for i in range(iterations):
+        npm_replicate_from_id = npm_replicate_all + f'&start_key="{last_key}"'
+        if logger:
+            logger(f"Processing iteration: {i}: {npm_replicate_from_id}")
+
+        response = requests.get(npm_replicate_from_id)
+        if not response.ok:
+            raise Exception(npm_replicate_from_id, response.text)
+
+        package_data = response.json()
+        package_names, last_key = get_package_names_last_key(package_data)
+        all_package_names.extend(package_names)
+
+    return {"packages": all_package_names}
+
+
+def get_npm_packageurls(name, npm_repo=NPM_REGISTRY_REPO):
+    packageurls = []
+
+    project_index_api_url = npm_repo + name
+    response = requests.get(project_index_api_url)
+    if not response.ok:
+        return packageurls
+
+    project_data = response.json()
+    versions = project_data.get("versions") or []
+    for version in versions:
+        purl = PackageURL(
+            type=NPM_TYPE,
+            name=name,
+            version=version,
+        )
+        packageurls.append(purl.to_string())
+
+    return packageurls
+
+
+def yield_npm_package_data(name, packageurls=[]):
+    for purl in packageurls or get_npm_packageurls(name):
+        package_url = PackageURL.from_string(purl)
+        package_data_url = NPM_REGISTRY_REPO + name + "/" + package_url.version
+        response = requests.get(package_data_url)
+        if not response.ok:
+            continue
+        yield purl, response.json()
+
+
+def load_npm_packages(packages_file):
+    with open(packages_file) as f:
+        packages_data = json.load(f)
+
+    return packages_data.get("packages", [])
 
 
 def mine_npm_packages(logger=None):

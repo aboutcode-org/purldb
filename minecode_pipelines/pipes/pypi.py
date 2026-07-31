@@ -20,43 +20,127 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
+import json
 from datetime import datetime
 
-from minecode_pipelines.pipes import fetch_checkpoint_from_github
-from minecode_pipelines.pipes import update_checkpoints_in_github
-from minecode_pipelines.pipes import update_checkpoint_state
-from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
-from minecode_pipelines.pipes import update_mined_packages_in_checkpoint
-from minecode_pipelines.pipes import get_packages_file_from_checkpoint
-from minecode_pipelines.pipes import write_packages_json
-from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
-from minecode_pipelines.pipes import INITIAL_SYNC_STATE
-from minecode_pipelines.pipes import PERIODIC_SYNC_STATE
-
-
-from minecode_pipelines.miners.pypi import get_pypi_packages
-from minecode_pipelines.miners.pypi import get_pypi_packageurls
-from minecode_pipelines.miners.pypi import load_pypi_packages
-from minecode_pipelines.miners.pypi import yield_pypi_package_data
-from minecode_pipelines.miners.pypi import PYPI_SIMPLE_REPO
-
-
-from minecode_pipelines.miners.pypi import PYPI_TYPE
-from minecode_pipelines.utils import get_temp_dir
-
-from scanpipe.pipes.federatedcode import delete_local_clone
+import requests
 from packageurl import PackageURL
 from scanpipe.pipes.federatedcode import clone_repository
+from scanpipe.pipes.federatedcode import delete_local_clone
+
+from minecode_pipelines.pipes import INITIAL_SYNC_STATE
+from minecode_pipelines.pipes import MINECODE_PIPELINES_CONFIG_REPO
+from minecode_pipelines.pipes import PERIODIC_SYNC_STATE
+from minecode_pipelines.pipes import fetch_checkpoint_from_github
+from minecode_pipelines.pipes import get_mined_packages_from_checkpoint
+from minecode_pipelines.pipes import get_packages_file_from_checkpoint
+from minecode_pipelines.pipes import update_checkpoints_in_github
+from minecode_pipelines.pipes import update_checkpoint_state
+from minecode_pipelines.pipes import update_mined_packages_in_checkpoint
+from minecode_pipelines.pipes import write_packages_json
+from minecode_pipelines.utils import get_temp_dir
 
 # If True, show full details on fetching packageURL for
 # a package name present in the index
 LOG_PACKAGEURL_DETAILS = False
 
-
 PACKAGE_FILE_NAME = "PypiPackages.json"
 PYPI_SIMPLE_CHECKPOINT_PATH = "pypi/simple_index/" + PACKAGE_FILE_NAME
 PYPI_CHECKPOINT_PATH = "pypi/checkpoints.json"
 PYPI_PACKAGES_CHECKPOINT_PATH = "pypi/packages_checkpoint.json"
+
+"""
+Visitors for Pypi and Pypi-like Python package repositories.
+
+We have this hierarchy in Pypi simple/ index:
+    pypi projects (JSON/HTML) -> project versions (JSON/HTML) -> download urls
+
+https://pypi.org/simple/
+Pypi serves a main index via JSON/HTML API that contains a list of package names
+and some info on when a package was updated by releasing a new version.
+See https://docs.pypi.org/api/index-api/ for more details.
+This index also has a list of versions and download URLs of all
+uploaded/available package archives and some basic metadata.
+
+https://pypi.org/pypi/{name}/json
+For each package, a JSON contains details including the list of all releases
+and archives, their URLs, and some metadata for each release.
+For each release, a JSON contains details for the released version and all the
+downloads available for this release.
+"""
+
+
+pypi_json_headers = {"Accept": "application/vnd.pypi.simple.v1+json"}
+
+
+PYPI_SIMPLE_REPO = "https://pypi.org/simple"
+PYPI_METADATA_REPO = "https://pypi.org/pypi"
+PYPI_TYPE = "pypi"
+
+
+def get_pypi_packages(pypi_repo, logger=None):
+    response = requests.get(pypi_repo, headers=pypi_json_headers)
+    if not response.ok:
+        return
+
+    return response.json()
+
+
+def get_pypi_package_versions(name):
+    versions = []
+
+    project_index_api_url = PYPI_SIMPLE_REPO + "/" + name
+    response = requests.get(project_index_api_url, headers=pypi_json_headers)
+    if not response.ok:
+        return versions
+
+    project_data = response.json()
+    versions = project_data.get("versions", [])
+    return versions
+
+
+def get_pypi_packageurls(name):
+    packageurls = []
+
+    for version in get_pypi_package_versions(name=name):
+        purl = PackageURL(
+            type=PYPI_TYPE,
+            name=name,
+            version=version,
+        )
+        packageurls.append(purl.to_string())
+
+    return packageurls
+
+
+def yield_pypi_package_data(name, packageurls=[]):
+    for purl in packageurls or get_pypi_packageurls(name):
+        package_url = PackageURL.from_string(purl)
+        package_data_url = (
+            PYPI_METADATA_REPO + "/" + name + "/" + package_url.version + "/" + "json"
+        )
+        response = requests.get(package_data_url, headers=pypi_json_headers)
+        if not response.ok:
+            continue
+        yield purl, response.json()
+
+
+def load_pypi_packages(packages_file):
+    with open(packages_file) as f:
+        packages_data = json.load(f)
+
+    last_serial = packages_data.get("meta").get("_last-serial")
+    packages = packages_data.get("projects")
+
+    return last_serial, packages
+
+
+def get_last_serial_from_packages(packages_file):
+    with open(packages_file) as f:
+        packages_data = json.load(f)
+
+    last_serial = packages_data.get("meta").get("_last-serial")
+    return last_serial
 
 
 def mine_pypi_packages(logger=None):
