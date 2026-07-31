@@ -15,7 +15,7 @@ from aboutcode.federated import DataFederation
 from commoncode import fileutils
 from minecode.management import federatedcode
 from minecode.management.commands import VerboseCommand
-from minecode_pipelines import pipes
+from minecode import pipes
 from packagedb import models as packagedb_models
 from packagedb import sbom
 

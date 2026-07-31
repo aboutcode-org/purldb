@@ -6,7 +6,7 @@ build-backend = "flot.buildapi"
 name = "minecode_pipelines"
 version = "1.0.1"
 description = "A library for mining packageURLs and package metadata from ecosystem repositories."
-readme = "minecode_pipelines/README.rst"
+readme = "README-minecode_pipelines.rst"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.10"
 
@@ -25,7 +25,6 @@ keywords = [
     "federated",
     "data",
 ]
-
 
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -51,21 +50,21 @@ dependencies = [
 urls = { Homepage = "https://github.com/aboutcode-org/purldb" }
 
 [project.entry-points."scancodeio_pipelines"]
-mine_pypi = "minecode_pipelines.pipelines.mine_pypi:MinePypi"
-mine_npm = "minecode_pipelines.pipelines.mine_npm:MineNPM"
-mine_maven = "minecode_pipelines.pipelines.mine_maven:MineMaven"
-mine_cargo = "minecode_pipelines.pipelines.mine_cargo:MineCargo"
-mine_debian = "minecode_pipelines.pipelines.mine_debian:MineDebian"
-mine_nuget = "minecode_pipelines.pipelines.mine_nuget:MineNuGet"
-mine_alpine = "minecode_pipelines.pipelines.mine_alpine:MineAlpine"
-mine_conan = "minecode_pipelines.pipelines.mine_conan:MineConan"
-mine_cpan = "minecode_pipelines.pipelines.mine_cpan:MineCpan"
-mine_cran = "minecode_pipelines.pipelines.mine_cran:MineCran"
-mine_swift = "minecode_pipelines.pipelines.mine_swift:MineSwift"
-mine_composer = "minecode_pipelines.pipelines.mine_composer:MineComposer"
-mine_nix = "minecode_pipelines.pipelines.mine_nix:MineNix"
-mine_crates = "minecode_pipelines.pipelines.mine_crates:MineCrates"
-mine_apache = "minecode_pipelines.pipelines.mine_apache:MineApache"
+mine_pypi = "minecode.pipelines.mine_pypi:MinePypi"
+mine_npm = "minecode.pipelines.mine_npm:MineNPM"
+mine_maven = "minecode.pipelines.mine_maven:MineMaven"
+mine_cargo = "minecode.pipelines.mine_cargo:MineCargo"
+mine_debian = "minecode.pipelines.mine_debian:MineDebian"
+mine_nuget = "minecode.pipelines.mine_nuget:MineNuGet"
+mine_alpine = "minecode.pipelines.mine_alpine:MineAlpine"
+mine_conan = "minecode.pipelines.mine_conan:MineConan"
+mine_cpan = "minecode.pipelines.mine_cpan:MineCpan"
+mine_cran = "minecode.pipelines.mine_cran:MineCran"
+mine_swift = "minecode.pipelines.mine_swift:MineSwift"
+mine_composer = "minecode.pipelines.mine_composer:MineComposer"
+mine_nix = "minecode.pipelines.mine_nix:MineNix"
+mine_crates = "minecode.pipelines.mine_crates:MineCrates"
+mine_apache = "minecode.pipelines.mine_apache:MineApache"
 
 [tool.bumpversion]
 current_version = "1.0.1"
@@ -77,7 +76,9 @@ files = [
 
 [tool.flot]
 includes = [
-    "minecode_pipelines/**/*",
+    "minecode/pipelines/*",
+    "minecode/pipes/*",
+    "minecode/utils.py",
 ]
 
 excludes = [
@@ -91,8 +92,8 @@ excludes = [
     "**/.ve",
     "**/*.bak",
     "**/.ipynb_checkpoints/*",
-    "minecode_pipelines/tests/**/*",
-    "minecode_pipelines/notebooks/*",
+    "minecode/tests/**/*",
+    "minecode/notebooks/*",
 ]
 
 metadata_files = ["apache-2.0.LICENSE", "NOTICE"]
