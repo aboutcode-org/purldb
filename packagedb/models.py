@@ -1474,6 +1474,35 @@ class PackageSet(models.Model):
         )
 
 
+class PackageHealthMetrics(models.Model):
+    """Health metrics recorded for a Package at a point in time."""
+
+    package = models.ForeignKey(
+        Package,
+        related_name="health_metrics",
+        on_delete=models.CASCADE,
+        help_text=_("The Package that these health metrics are related to"),
+    )
+
+    metrics = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text=_("Health metrics data for this Package"),
+    )
+
+    creation_date = models.DateTimeField(
+        auto_now_add=True,
+        help_text=_("Timestamp indicating when these health metrics were recorded."),
+    )
+
+    class Meta:
+        ordering = ["-creation_date"]
+        verbose_name_plural = "package health metrics"
+
+    def __str__(self):
+        return f"Health metrics for {self.package.purl}"
+
+
 class ApiUserManager(UserManager):
     def create_api_user(self, username, first_name="", last_name="", **extra_fields):
         """Create and return an API-only user. Raise ValidationError."""

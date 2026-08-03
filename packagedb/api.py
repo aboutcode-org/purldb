@@ -55,6 +55,8 @@ from packagedb.models import PackageContentType
 from packagedb.models import PackageSet
 from packagedb.models import PackageWatch
 from packagedb.models import Resource
+from packagedb.package_health import fetch_and_store_health_metrics
+from packagedb.package_health import get_fresh_health_metrics
 from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
 from packagedb.package_managers import get_api_package_name
 from packagedb.package_managers import get_version_fetcher
@@ -65,6 +67,8 @@ from packagedb.serializers import IndexPackagesResponseSerializer
 from packagedb.serializers import IndexPackagesSerializer
 from packagedb.serializers import PackageActivitySerializer
 from packagedb.serializers import PackageAPISerializer
+from packagedb.serializers import PackageHealthMetricsRequestSerializer
+from packagedb.serializers import PackageHealthMetricsSerializer
 from packagedb.serializers import PackageSetAPISerializer
 from packagedb.serializers import PackageWatchAPISerializer
 from packagedb.serializers import PackageWatchCreateSerializer
@@ -515,6 +519,53 @@ class PackageViewSet(PackagePublicViewSet):
         package.reindex()
         data = {"status": f"{package.package_url} has been queued for reindexing"}
         return Response(data)
+
+    @extend_schema(
+        request=PackageHealthMetricsRequestSerializer,
+        responses={200: PackageHealthMetricsSerializer()},
+    )
+    @action(
+        detail=False,
+        methods=["post"],
+        serializer_class=PackageHealthMetricsRequestSerializer,
+    )
+    def health_metrics(self, request, *args, **kwargs):
+        """
+        Return health metrics for an npm PackageURL.
+
+        If metrics exist in the database and are no older than one week, return
+        the cached metrics. Otherwise, resolve the package repository URL with
+        fetchcode, run the SCIO health pipeline, store the result, and return it.
+
+        **Request example:**
+            ```
+            {"purl": "pkg:npm/lodash@4.17.21"}
+            ```
+        """
+        serializer = PackageHealthMetricsRequestSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        purl = serializer.validated_data["purl"]
+        lookups = purl_to_lookups(purl)
+        package = Package.objects.filter(**lookups).first()
+        if not package:
+            return Response(
+                {"error": f"Package not found for purl: {purl}"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        fresh_metrics = get_fresh_health_metrics(package)
+        if fresh_metrics:
+            response_data = PackageHealthMetricsSerializer(fresh_metrics).data
+            return Response(response_data)
+
+        health_metrics, error = fetch_and_store_health_metrics(package, purl)
+        if error:
+            return Response({"error": error}, status=status.HTTP_400_BAD_REQUEST)
+
+        response_data = PackageHealthMetricsSerializer(health_metrics).data
+        return Response(response_data)
 
 
 class PackageUpdateSet(viewsets.ViewSet):
