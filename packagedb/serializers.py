@@ -26,6 +26,7 @@ from rest_framework.serializers import SerializerMethodField
 from packagedb.models import DependentPackage
 from packagedb.models import Package
 from packagedb.models import PackageActivity
+from packagedb.models import PackageHealthMetrics
 from packagedb.models import PackageSet
 from packagedb.models import PackageWatch
 from packagedb.models import Party
@@ -557,4 +558,32 @@ class PackageActivitySerializer(ModelSerializer):
             "activity_update_date",
             "creation_date",
             "is_processed",
+        ]
+
+
+class PackageHealthMetricsRequestSerializer(Serializer):
+    purl = CharField(
+        required=True,
+        help_text="npm PackageURL to fetch health metrics for.",
+    )
+
+    def validate_purl(self, value):
+        try:
+            package_url = PackageURL.from_string(value)
+        except ValueError as e:
+            raise ValidationError(f"purl validation error: {e}")
+        if package_url.type != "npm":
+            raise ValidationError("Only npm PackageURLs are supported.")
+        return value
+
+
+class PackageHealthMetricsSerializer(ModelSerializer):
+    purl = CharField(source="package.package_url", read_only=True)
+
+    class Meta:
+        model = PackageHealthMetrics
+        fields = [
+            "purl",
+            "metrics",
+            "creation_date",
         ]

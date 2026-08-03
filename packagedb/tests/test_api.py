@@ -9,6 +9,7 @@
 
 import json
 import os
+from datetime import timedelta
 from unittest import mock
 from uuid import uuid4
 
@@ -28,6 +29,7 @@ from packagedb.models import Package
 from packagedb.models import DependentPackage
 from packagedb.models import PackageActivity
 from packagedb.models import PackageContentType
+from packagedb.models import PackageHealthMetrics
 from packagedb.models import PackageSet
 from packagedb.models import PackageWatch
 from packagedb.models import Resource
@@ -1671,3 +1673,136 @@ class PackageActivityAPITestCase(JsonBasedTesting, TestCase):
 
         package_activity = self.client.get("/api/package_activity/")
         self.assertEqual(1, package_activity.data.get("count"))
+
+
+class PackageHealthMetricsAPITestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.npm_package = Package.objects.create(
+            download_url="https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz",
+            type="npm",
+            name="lodash",
+            version="4.17.21",
+        )
+        self.purl = "pkg:npm/lodash@4.17.21"
+        self.endpoint = "/api/packages/health_metrics/"
+
+    def test_health_metrics_rejects_non_npm_purl(self):
+        response = self.client.post(
+            self.endpoint,
+            data={"purl": "pkg:pypi/django@4.2"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("purl", response.data["errors"])
+
+    def test_health_metrics_rejects_invalid_purl(self):
+        response = self.client.post(
+            self.endpoint,
+            data={"purl": "not-a-purl"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_health_metrics_package_not_found(self):
+        response = self.client.post(
+            self.endpoint,
+            data={"purl": "pkg:npm/does-not-exist@1.0.0"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_health_metrics_returns_cached_when_fresh(self):
+        cached = PackageHealthMetrics.objects.create(
+            package=self.npm_package,
+            metrics={"score": 0.9, "status": "cached"},
+        )
+
+        response = self.client.post(
+            self.endpoint,
+            data={"purl": self.purl},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["metrics"], cached.metrics)
+        self.assertEqual(response.data["purl"], self.purl)
+        self.assertEqual(PackageHealthMetrics.objects.count(), 1)
+
+    def test_health_metrics_ignores_stale_and_fetches_new(self):
+        stale = PackageHealthMetrics.objects.create(
+            package=self.npm_package,
+            metrics={"score": 0.1, "status": "stale"},
+        )
+        PackageHealthMetrics.objects.filter(pk=stale.pk).update(
+            creation_date=timezone.now() - timedelta(days=8)
+        )
+
+        mock_metrics = {
+            "repo_url": "https://github.com/lodash/lodash.git",
+            "score": None,
+            "status": "pending_scio_pipeline",
+            "note": "SCIO health pipeline is not implemented; placeholder metrics.",
+        }
+
+        with (
+            mock.patch(
+                "packagedb.package_health.get_repo_url_from_fetchcode",
+                return_value="https://github.com/lodash/lodash.git",
+            ),
+            mock.patch(
+                "packagedb.package_health.run_scio_health_pipeline",
+                return_value=mock_metrics,
+            ) as mock_scio,
+        ):
+            response = self.client.post(
+                self.endpoint,
+                data={"purl": self.purl},
+                format="json",
+            )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["metrics"], mock_metrics)
+        mock_scio.assert_called_once_with("https://github.com/lodash/lodash.git")
+        self.assertEqual(PackageHealthMetrics.objects.count(), 2)
+
+    def test_health_metrics_fetches_when_missing(self):
+        mock_metrics = {
+            "repo_url": "https://github.com/lodash/lodash.git",
+            "score": None,
+            "status": "pending_scio_pipeline",
+        }
+
+        with (
+            mock.patch(
+                "packagedb.package_health.get_repo_url_from_fetchcode",
+                return_value="https://github.com/lodash/lodash.git",
+            ),
+            mock.patch(
+                "packagedb.package_health.run_scio_health_pipeline",
+                return_value=mock_metrics,
+            ),
+        ):
+            response = self.client.post(
+                self.endpoint,
+                data={"purl": self.purl},
+                format="json",
+            )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["metrics"], mock_metrics)
+        self.assertEqual(PackageHealthMetrics.objects.count(), 1)
+
+    def test_health_metrics_error_when_no_repo_url(self):
+        with mock.patch(
+            "packagedb.package_health.get_repo_url_from_fetchcode",
+            return_value=None,
+        ):
+            response = self.client.post(
+                self.endpoint,
+                data={"purl": self.purl},
+                format="json",
+            )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("Could not determine repository URL", response.data["error"])
+        self.assertEqual(PackageHealthMetrics.objects.count(), 0)
