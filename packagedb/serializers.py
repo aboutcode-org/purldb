@@ -564,7 +564,7 @@ class PackageActivitySerializer(ModelSerializer):
 class PackageHealthMetricsRequestSerializer(Serializer):
     purl = CharField(
         required=True,
-        help_text="npm PackageURL to fetch health metrics for.",
+        help_text="Versionless npm PackageURL to fetch health metrics for.",
     )
 
     def validate_purl(self, value):
@@ -574,6 +574,10 @@ class PackageHealthMetricsRequestSerializer(Serializer):
             raise ValidationError(f"purl validation error: {e}")
         if package_url.type != "npm":
             raise ValidationError("Only npm PackageURLs are supported.")
+        if package_url.version:
+            raise ValidationError(
+                "Versioned PackageURLs are not supported. Provide a versionless PURL."
+            )
         return value
 
 
@@ -584,6 +588,7 @@ class PackageHealthMetricsSerializer(ModelSerializer):
         model = PackageHealthMetrics
         fields = [
             "purl",
+            "version",
             "metrics",
-            "creation_date",
+            "date_collected",
         ]
