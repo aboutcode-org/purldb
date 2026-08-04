@@ -1679,18 +1679,39 @@ class PackageHealthMetricsAPITestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.npm_package = Package.objects.create(
-            download_url="https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz",
             type="npm",
             name="lodash",
-            version="4.17.21",
+            version="",
+            download_url="https://registry.npmjs.org/lodash",
         )
-        self.purl = "pkg:npm/lodash@4.17.21"
+        self.purl = "pkg:npm/lodash"
+        self.latest_version = "4.17.21"
         self.endpoint = "/api/packages/health_metrics/"
+        self.fetchcode_data = {
+            "version": self.latest_version,
+            "download_url": "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz",
+            "vcs_url": "https://github.com/lodash/lodash.git",
+        }
+        self.mock_metrics = {
+            "repo_url": "https://github.com/lodash/lodash.git",
+            "score": None,
+            "status": "pending_scio_pipeline",
+            "note": "SCIO health pipeline is not implemented; placeholder metrics.",
+        }
 
     def test_health_metrics_rejects_non_npm_purl(self):
         response = self.client.post(
             self.endpoint,
-            data={"purl": "pkg:pypi/django@4.2"},
+            data={"purl": "pkg:pypi/django"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("purl", response.data["errors"])
+
+    def test_health_metrics_rejects_versioned_purl(self):
+        response = self.client.post(
+            self.endpoint,
+            data={"purl": "pkg:npm/lodash@4.17.21"},
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -1704,54 +1725,75 @@ class PackageHealthMetricsAPITestCase(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_health_metrics_package_not_found(self):
-        response = self.client.post(
-            self.endpoint,
-            data={"purl": "pkg:npm/does-not-exist@1.0.0"},
-            format="json",
-        )
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    def test_health_metrics_creates_package_when_missing(self):
+        Package.objects.all().delete()
+
+        with (
+            mock.patch(
+                "packagedb.package_health.get_npm_data_from_fetchcode",
+                return_value=self.fetchcode_data,
+            ),
+            mock.patch(
+                "packagedb.package_health.run_scio_health_pipeline",
+                return_value=self.mock_metrics,
+            ),
+        ):
+            response = self.client.post(
+                self.endpoint,
+                data={"purl": self.purl},
+                format="json",
+            )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["version"], self.latest_version)
+        self.assertEqual(response.data["metrics"], self.mock_metrics)
+        created = Package.objects.get(type="npm", name="lodash", version="")
+        self.assertEqual(created.version, "")
+        self.assertEqual(created.download_url, "https://registry.npmjs.org/lodash")
+        self.assertEqual(PackageHealthMetrics.objects.count(), 1)
 
     def test_health_metrics_returns_cached_when_fresh(self):
         cached = PackageHealthMetrics.objects.create(
             package=self.npm_package,
+            version=self.latest_version,
             metrics={"score": 0.9, "status": "cached"},
+            date_collected=timezone.now(),
         )
 
-        response = self.client.post(
-            self.endpoint,
-            data={"purl": self.purl},
-            format="json",
-        )
+        with mock.patch(
+            "packagedb.package_health.get_npm_data_from_fetchcode",
+            return_value=self.fetchcode_data,
+        ):
+            response = self.client.post(
+                self.endpoint,
+                data={"purl": self.purl},
+                format="json",
+            )
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["metrics"], cached.metrics)
-        self.assertEqual(response.data["purl"], self.purl)
+        self.assertEqual(response.data["version"], self.latest_version)
         self.assertEqual(PackageHealthMetrics.objects.count(), 1)
 
     def test_health_metrics_ignores_stale_and_fetches_new(self):
         stale = PackageHealthMetrics.objects.create(
             package=self.npm_package,
+            version=self.latest_version,
             metrics={"score": 0.1, "status": "stale"},
+            date_collected=timezone.now(),
         )
         PackageHealthMetrics.objects.filter(pk=stale.pk).update(
-            creation_date=timezone.now() - timedelta(days=8)
+            date_collected=timezone.now() - timedelta(days=8)
         )
-
-        mock_metrics = {
-            "repo_url": "https://github.com/lodash/lodash.git",
-            "score": None,
-            "status": "pending_scio_pipeline",
-            "note": "SCIO health pipeline is not implemented; placeholder metrics.",
-        }
 
         with (
             mock.patch(
-                "packagedb.package_health.get_repo_url_from_fetchcode",
-                return_value="https://github.com/lodash/lodash.git",
+                "packagedb.package_health.get_npm_data_from_fetchcode",
+                return_value=self.fetchcode_data,
             ),
             mock.patch(
                 "packagedb.package_health.run_scio_health_pipeline",
-                return_value=mock_metrics,
+                return_value=self.mock_metrics,
             ) as mock_scio,
         ):
             response = self.client.post(
@@ -1761,25 +1803,19 @@ class PackageHealthMetricsAPITestCase(TestCase):
             )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["metrics"], mock_metrics)
+        self.assertEqual(response.data["metrics"], self.mock_metrics)
         mock_scio.assert_called_once_with("https://github.com/lodash/lodash.git")
         self.assertEqual(PackageHealthMetrics.objects.count(), 2)
 
     def test_health_metrics_fetches_when_missing(self):
-        mock_metrics = {
-            "repo_url": "https://github.com/lodash/lodash.git",
-            "score": None,
-            "status": "pending_scio_pipeline",
-        }
-
         with (
             mock.patch(
-                "packagedb.package_health.get_repo_url_from_fetchcode",
-                return_value="https://github.com/lodash/lodash.git",
+                "packagedb.package_health.get_npm_data_from_fetchcode",
+                return_value=self.fetchcode_data,
             ),
             mock.patch(
                 "packagedb.package_health.run_scio_health_pipeline",
-                return_value=mock_metrics,
+                return_value=self.mock_metrics,
             ),
         ):
             response = self.client.post(
@@ -1789,13 +1825,18 @@ class PackageHealthMetricsAPITestCase(TestCase):
             )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["metrics"], mock_metrics)
+        self.assertEqual(response.data["metrics"], self.mock_metrics)
+        self.assertEqual(response.data["version"], self.latest_version)
         self.assertEqual(PackageHealthMetrics.objects.count(), 1)
 
     def test_health_metrics_error_when_no_repo_url(self):
         with mock.patch(
-            "packagedb.package_health.get_repo_url_from_fetchcode",
-            return_value=None,
+            "packagedb.package_health.get_npm_data_from_fetchcode",
+            return_value={
+                "version": self.latest_version,
+                "download_url": self.fetchcode_data["download_url"],
+                "vcs_url": "",
+            },
         ):
             response = self.client.post(
                 self.endpoint,
@@ -1806,3 +1847,158 @@ class PackageHealthMetricsAPITestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("Could not determine repository URL", response.data["error"])
         self.assertEqual(PackageHealthMetrics.objects.count(), 0)
+
+    def test_health_metrics_with_versioned_and_versionless_packages(self):
+        """Versioned Package rows coexist; metrics attach to the versionless one."""
+        versioned_older = Package.objects.create(
+            type="npm",
+            name="lodash",
+            version="4.16.0",
+            download_url="https://registry.npmjs.org/lodash/-/lodash-4.16.0.tgz",
+        )
+        versioned_newer = Package.objects.create(
+            type="npm",
+            name="lodash",
+            version="4.17.21",
+            download_url="https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz",
+        )
+        unrelated = Package.objects.create(
+            type="npm",
+            name="underscore",
+            version="1.13.0",
+            download_url="https://registry.npmjs.org/underscore/-/underscore-1.13.0.tgz",
+        )
+
+        with (
+            mock.patch(
+                "packagedb.package_health.get_npm_data_from_fetchcode",
+                return_value=self.fetchcode_data,
+            ),
+            mock.patch(
+                "packagedb.package_health.run_scio_health_pipeline",
+                return_value=self.mock_metrics,
+            ),
+        ):
+            response = self.client.post(
+                self.endpoint,
+                data={"purl": self.purl},
+                format="json",
+            )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["purl"], "pkg:npm/lodash")
+        self.assertEqual(response.data["version"], self.latest_version)
+        self.assertEqual(response.data["metrics"], self.mock_metrics)
+
+        health = PackageHealthMetrics.objects.get()
+        self.assertEqual(health.package, self.npm_package)
+        self.assertEqual(health.package.version, "")
+        self.assertNotEqual(health.package, versioned_older)
+        self.assertNotEqual(health.package, versioned_newer)
+        self.assertTrue(Package.objects.filter(pk=unrelated.pk).exists())
+        self.assertEqual(Package.objects.filter(type="npm", name="lodash").count(), 3)
+
+    def test_health_metrics_creates_versionless_when_only_versioned_exist(self):
+        """Only versioned rows exist — create a versionless Package and use it."""
+        Package.objects.all().delete()
+        Package.objects.create(
+            type="npm",
+            name="lodash",
+            version="4.0.0",
+            download_url="https://registry.npmjs.org/lodash/-/lodash-4.0.0.tgz",
+        )
+        Package.objects.create(
+            type="npm",
+            name="lodash",
+            version="4.17.0",
+            download_url="https://registry.npmjs.org/lodash/-/lodash-4.17.0.tgz",
+        )
+
+        with (
+            mock.patch(
+                "packagedb.package_health.get_npm_data_from_fetchcode",
+                return_value=self.fetchcode_data,
+            ),
+            mock.patch(
+                "packagedb.package_health.run_scio_health_pipeline",
+                return_value=self.mock_metrics,
+            ),
+        ):
+            response = self.client.post(
+                self.endpoint,
+                data={"purl": self.purl},
+                format="json",
+            )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["version"], self.latest_version)
+
+        versionless = Package.objects.get(
+            type="npm",
+            name="lodash",
+            download_url="https://registry.npmjs.org/lodash",
+        )
+        self.assertEqual(versionless.version, "")
+        health = PackageHealthMetrics.objects.get()
+        self.assertEqual(health.package, versionless)
+        self.assertEqual(Package.objects.filter(type="npm", name="lodash").count(), 3)
+
+    def test_health_metrics_scoped_package_variations(self):
+        """Scoped versionless + versioned packages; PURL uses namespace."""
+        Package.objects.all().delete()
+        versionless = Package.objects.create(
+            type="npm",
+            namespace="@angular",
+            name="core",
+            version="",
+            download_url="https://registry.npmjs.org/@angular/core",
+        )
+        Package.objects.create(
+            type="npm",
+            namespace="@angular",
+            name="core",
+            version="17.0.0",
+            download_url="https://registry.npmjs.org/@angular/core/-/core-17.0.0.tgz",
+        )
+        Package.objects.create(
+            type="npm",
+            namespace="@angular",
+            name="core",
+            version="18.2.0",
+            download_url="https://registry.npmjs.org/@angular/core/-/core-18.2.0.tgz",
+        )
+
+        fetchcode_data = {
+            "version": "18.2.0",
+            "download_url": "https://registry.npmjs.org/@angular/core/-/core-18.2.0.tgz",
+            "vcs_url": "https://github.com/angular/angular.git",
+        }
+        mock_metrics = {
+            "repo_url": fetchcode_data["vcs_url"],
+            "score": None,
+            "status": "pending_scio_pipeline",
+        }
+
+        with (
+            mock.patch(
+                "packagedb.package_health.get_npm_data_from_fetchcode",
+                return_value=fetchcode_data,
+            ),
+            mock.patch(
+                "packagedb.package_health.run_scio_health_pipeline",
+                return_value=mock_metrics,
+            ),
+        ):
+            response = self.client.post(
+                self.endpoint,
+                data={"purl": "pkg:npm/%40angular/core"},
+                format="json",
+            )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["purl"], "pkg:npm/%40angular/core")
+        self.assertEqual(response.data["version"], "18.2.0")
+        health = PackageHealthMetrics.objects.get()
+        self.assertEqual(health.package, versionless)
+        self.assertEqual(health.package.namespace, "@angular")
+        self.assertEqual(Package.objects.filter(type="npm", namespace="@angular", name="core").count(), 3)
