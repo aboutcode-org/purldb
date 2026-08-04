@@ -57,6 +57,7 @@ from packagedb.models import PackageWatch
 from packagedb.models import Resource
 from packagedb.package_health import fetch_and_store_health_metrics
 from packagedb.package_health import get_fresh_health_metrics
+from packagedb.package_health import get_or_create_versionless_npm_package
 from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
 from packagedb.package_managers import get_api_package_name
 from packagedb.package_managers import get_version_fetcher
@@ -531,15 +532,19 @@ class PackageViewSet(PackagePublicViewSet):
     )
     def health_metrics(self, request, *args, **kwargs):
         """
-        Return health metrics for an npm PackageURL.
+        Return health metrics for a versionless npm PackageURL.
 
-        If metrics exist in the database and are no older than one week, return
-        the cached metrics. Otherwise, resolve the package repository URL with
-        fetchcode, run the SCIO health pipeline, store the result, and return it.
+        If metrics exist for the latest package version and are no older than
+        one week, return the cached metrics. Otherwise, resolve the repository
+        URL with fetchcode, run the SCIO health pipeline, store the result, and
+        return it.
+
+        If the Package does not exist in PurlDB, a minimal Package is created
+        from fetchcode data (type, namespace, name, latest version, download_url).
 
         **Request example:**
             ```
-            {"purl": "pkg:npm/lodash@4.17.21"}
+            {"purl": "pkg:npm/lodash"}
             ```
         """
         serializer = PackageHealthMetricsRequestSerializer(data=request.data)
@@ -547,25 +552,21 @@ class PackageViewSet(PackagePublicViewSet):
             return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         purl = serializer.validated_data["purl"]
-        lookups = purl_to_lookups(purl)
-        package = Package.objects.filter(**lookups).first()
-        if not package:
-            return Response(
-                {"error": f"Package not found for purl: {purl}"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        fresh_metrics = get_fresh_health_metrics(package)
-        if fresh_metrics:
-            response_data = PackageHealthMetricsSerializer(fresh_metrics).data
-            return Response(response_data)
-
-        health_metrics, error = fetch_and_store_health_metrics(package, purl)
+        package, latest_version, repo_url, error = get_or_create_versionless_npm_package(purl)
         if error:
             return Response({"error": error}, status=status.HTTP_400_BAD_REQUEST)
 
-        response_data = PackageHealthMetricsSerializer(health_metrics).data
-        return Response(response_data)
+        fresh_metrics = get_fresh_health_metrics(package, latest_version)
+        if fresh_metrics:
+            return Response(PackageHealthMetricsSerializer(fresh_metrics).data)
+
+        health_metrics, error = fetch_and_store_health_metrics(
+            package, latest_version, repo_url
+        )
+        if error:
+            return Response({"error": error}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(PackageHealthMetricsSerializer(health_metrics).data)
 
 
 class PackageUpdateSet(viewsets.ViewSet):

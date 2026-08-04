@@ -1484,23 +1484,31 @@ class PackageHealthMetrics(models.Model):
         help_text=_("The Package that these health metrics are related to"),
     )
 
+    version = models.CharField(
+        max_length=100,
+        help_text=_(
+            "Package version these health metrics were collected for. "
+            "For V1 (versionless npm PURLs), this is the latest version at collection time."
+        ),
+    )
+
     metrics = models.JSONField(
         default=dict,
         blank=True,
         help_text=_("Health metrics data for this Package"),
     )
 
-    creation_date = models.DateTimeField(
-        auto_now_add=True,
-        help_text=_("Timestamp indicating when these health metrics were recorded."),
+    date_collected = models.DateTimeField(
+        help_text=_("Timestamp indicating when these health metrics were collected."),
     )
 
     class Meta:
-        ordering = ["-creation_date"]
+        ordering = ["-date_collected"]
         verbose_name_plural = "package health metrics"
+        unique_together = [["package", "version", "date_collected"]]
 
     def __str__(self):
-        return f"Health metrics for {self.package.purl}"
+        return f"Health metrics for {self.package.purl}@{self.version}"
 
 
 class ApiUserManager(UserManager):
