@@ -1,7 +1,7 @@
-minecode-pipeline
-===================
+minecode-pipelines
+==================
 
-minecode-pipeline is an add-on library working with scancode.io to define pipelines to mine
+minecode-pipelines is an add-on library working with scancode.io to define pipelines to mine
 packageURLs and package metadata from ecosystem repositories and APIs.
 
 Installation
@@ -10,8 +10,8 @@ Installation
 Requirements
 ############
 
-* install minecode-pipeline dependencies
-* `pip install minecode-pipeline`
+* install minecode-pipelines dependencies
+* `pip install minecode-pipelines`
 
 
 Funding

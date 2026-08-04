@@ -4,7 +4,7 @@ build-backend = "flot.buildapi"
 
 [project]
 name = "minecode_pipelines"
-version = "1.0.1"
+version = "2.0.0"
 description = "A library for mining packageURLs and package metadata from ecosystem repositories."
 readme = "README-minecode_pipelines.rst"
 license = { text = "Apache-2.0" }
@@ -67,7 +67,7 @@ mine_crates = "minecode.pipelines.mine_crates:MineCrates"
 mine_apache = "minecode.pipelines.mine_apache:MineApache"
 
 [tool.bumpversion]
-current_version = "1.0.1"
+current_version = "2.0.0"
 allow_dirty = true
 
 files = [
