@@ -50,9 +50,7 @@ class CratesCollector:
 
             for crate_name in filenames:
                 url = f"{CRATES_API_URL}/{crate_name}"
-                headers = {
-                    "User-Agent": "purldb (https://github.com/aboutcode-org/purldb)"
-                }
+                headers = {"User-Agent": "purldb (https://github.com/aboutcode-org/purldb)"}
                 response = requests.get(url, headers=headers)
                 if not response.status_code == 200:
                     logger(f"Error fetching {crate_name}: {response.status_code}")
