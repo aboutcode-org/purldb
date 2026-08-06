@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v8.1.0
+---------
+
+- The contents of `minecode-pipelines` have been merged into `minecode`. These
+  pipelines can now be run directly from purldb.
+
+
 v8.0.0
 ---------
 
