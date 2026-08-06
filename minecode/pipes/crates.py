@@ -41,16 +41,21 @@ class CratesCollector:
         for root, dirs, filenames in os.walk(base_dir):
             # Skip .github and .git directories at the top level
             if root == base_dir:
-                dirs.remove(".github")
-                dirs.remove(".git")
+                if ".github" in dirs:
+                    dirs.remove(".github")
+                if ".git" in dirs:
+                    dirs.remove(".git")
                 # Skip README.md and config.json at the top level
                 filenames = [f for f in filenames if f not in ("README.md", "config.json")]
 
             for crate_name in filenames:
                 url = f"{CRATES_API_URL}/{crate_name}"
-                response = requests.get(url)
+                headers = {
+                    "User-Agent": "purldb (https://github.com/aboutcode-org/purldb)"
+                }
+                response = requests.get(url, headers=headers)
                 if not response.status_code == 200:
-                    self.logger(f"Error fetching {crate_name}: {response.status_code}")
+                    logger(f"Error fetching {crate_name}: {response.status_code}")
                 else:
                     data = response.json()
                     crate_versions_info = data.get("versions", {})
@@ -93,5 +98,7 @@ class CratesCollector:
                             repository_homepage_url=homepage_url,
                             repository_download_url=download_url,
                         )
+                        purls_and_package_data = []
 
-                        yield versionless_purl, [packaged_data.purl], []
+                        purls_and_package_data.append((package_url, crate_version_info))
+                        yield versionless_purl, [packaged_data.purl], purls_and_package_data
