@@ -108,13 +108,13 @@ run_map:
 	${MANAGE} run_map
 
 test_purldb:
-	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf minecode matchcode packagedb purl2vcs purldb clearcode clearindex --ignore packagedb/tests/test_throttling.py
+	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf minecode matchcode packagedb purl2vcs purldb clearcode clearindex --ignore minecode/tests/pipes --ignore packagedb/tests/test_throttling.py
 	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf packagedb/tests/test_throttling.py
 
 test_minecode_pipelines:
-	${ACTIVATE} ${DJSM_PDB} pytest -vvs minecode_pipelines
+	${ACTIVATE} ${DJSM_PDB} pytest -vvs --lf minecode/tests/pipes
 
-test: test_purldb
+test: test_purldb test_minecode_pipelines
 
 shell:
 	${MANAGE} shell

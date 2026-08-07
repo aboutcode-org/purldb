@@ -13,6 +13,7 @@ import logging
 import os
 import tempfile
 import uuid
+from itertools import zip_longest
 
 from django.conf import settings
 from django.core import signing
@@ -404,3 +405,19 @@ def get_webhook_url(view_name, user_uuid):
     site_url = settings.SITE_URL.rstrip("/")
     webhook_url = site_url + target_url
     return webhook_url
+
+
+def grouper(n, iterable, padvalue=None):
+    """
+    Produce batches of length `n` for an `iterable`.
+    https://docs.python.org/3.10/library/itertools.html#itertools-recipes
+
+    #TODO: replace with `itertools.batched` added in python3.12
+    """
+    return zip_longest(*[iter(iterable)] * n, fillvalue=padvalue)
+
+
+def cycle_from_index(lst, x):
+    """Return list rotated so it starts from index x."""
+    x = x % len(lst)  # handle cases where x is out of bounds
+    return lst[x:] + lst[:x]

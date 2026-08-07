@@ -120,6 +120,7 @@ linkcheck_ignore = [
     r"http://localhost*",
     r"http://127.0.0.1*",
     "https://www.softwaretestinghelp.com/how-to-write-good-bug-report/",
+    "https://stackoverflow.com/a/60396581/8254946",
 ]
 
 linkcheck_anchors_ignore_for_url = [

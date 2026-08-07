@@ -1,0 +1,314 @@
+#
+# Copyright (c) nexB Inc. and others. All rights reserved.
+# purldb is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/aboutcode-org/purldb for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
+#
+
+import gzip
+import json
+import os
+import shutil
+from pathlib import Path
+from git import Repo
+import requests
+import saneyaml
+
+from minecode.utils import get_temp_file
+
+# states:
+# note: a state is null when mining starts
+INITIAL_SYNC_STATE = "initial-sync"
+PERIODIC_SYNC_STATE = "periodic-sync"
+
+
+MINECODE_PIPELINES_CONFIG_REPO = "https://github.com/aboutcode-data/minecode-pipelines-config/"
+
+
+def compress_packages_file(packages_file, compressed_packages_file):
+    with open(packages_file, "rb") as f_in:
+        with gzip.open(compressed_packages_file, "wb") as f_out:
+            f_out.writelines(f_in)
+
+
+def decompress_packages_file(compressed_packages_file, name):
+    packages_file = get_temp_file(name)
+    with gzip.open(compressed_packages_file, "rb") as f_in:
+        with open(packages_file, "wb") as f_out:
+            f_out.writelines(f_in)
+
+    return packages_file
+
+
+def write_packages_json(packages, name):
+    temp_file = get_temp_file(name)
+    write_data_to_json_file(path=temp_file, data=packages)
+    return temp_file
+
+
+def fetch_checkpoint_from_github(config_repo, checkpoint_path):
+    repo_name = config_repo.split("github.com")[-1]
+    checkpoints_file = (
+        "https://raw.githubusercontent.com/" + repo_name + "refs/heads/main/" + checkpoint_path
+    )
+
+    response = requests.get(checkpoints_file)
+    if not response.ok:
+        return {}
+
+    checkpoint_data = json.loads(response.text)
+    return checkpoint_data
+
+
+def get_checkpoint_from_file(cloned_repo, path):
+    checkpoint_path = os.path.join(cloned_repo.working_dir, path)
+    try:
+        with open(checkpoint_path) as f:
+            checkpoint_data = json.load(f)
+    except FileNotFoundError:
+        return {}
+    except json.JSONDecodeError:
+        return {}
+    return checkpoint_data
+
+
+def update_checkpoints_in_github(checkpoint, cloned_repo, path, logger=None):
+    from scanpipe.pipes.federatedcode import commit_and_push_changes
+
+    checkpoint_path = os.path.join(cloned_repo.working_dir, path)
+    write_data_to_json_file(path=checkpoint_path, data=checkpoint)
+    commit_message = """Update federatedcode purl mining checkpoint"""
+    commit_and_push_changes(
+        repo=cloned_repo,
+        files_to_commit=[checkpoint_path],
+        commit_message=commit_message,
+        logger=logger,
+    )
+
+
+def update_checkpoints_file_in_github(checkpoints_file, cloned_repo, path):
+    from scanpipe.pipes.federatedcode import commit_and_push_changes
+
+    checkpoint_path = os.path.join(cloned_repo.working_dir, path)
+    # Make sure the directory exists
+    os.makedirs(os.path.dirname(checkpoint_path), exist_ok=True)
+    shutil.move(checkpoints_file, checkpoint_path)
+    commit_message = """Update federatedcode purl mining checkpoint"""
+    commit_and_push_changes(
+        repo=cloned_repo,
+        files_to_commit=[checkpoint_path],
+        commit_message=commit_message,
+    )
+
+
+def get_mined_packages_from_checkpoint(config_repo, checkpoint_path):
+    checkpoint = fetch_checkpoint_from_github(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    return checkpoint.get("packages_mined", [])
+
+
+def update_mined_packages_in_checkpoint(
+    packages, config_repo, cloned_repo, checkpoint_path, logger=None
+):
+    mined_packages = get_mined_packages_from_checkpoint(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    packages_to_update = {"packages_mined": packages + mined_packages}
+    update_checkpoints_in_github(
+        checkpoint=packages_to_update,
+        cloned_repo=cloned_repo,
+        path=checkpoint_path,
+        logger=logger,
+    )
+
+
+def update_checkpoint_state(
+    cloned_repo,
+    state,
+    checkpoint_path,
+    config_repo=MINECODE_PIPELINES_CONFIG_REPO,
+):
+    checkpoint = fetch_checkpoint_from_github(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    checkpoint["state"] = state
+    update_checkpoints_in_github(
+        checkpoint=checkpoint,
+        cloned_repo=cloned_repo,
+        path=checkpoint_path,
+    )
+
+
+def get_packages_file_from_checkpoint(config_repo, checkpoint_path, name):
+    packages = fetch_checkpoint_from_github(
+        config_repo=config_repo,
+        checkpoint_path=checkpoint_path,
+    )
+    return write_packages_json(packages, name=name)
+
+
+def fetch_checkpoint_by_git(cloned_repo, checkpoint_path):
+    cloned_repo.remotes.origin.pull()
+    return os.path.join(cloned_repo.working_dir, checkpoint_path)
+
+
+def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=False):
+    if not isinstance(packageurls, list):
+        raise Exception("`packageurls` needs to be a list")
+
+    purl_file_full_path = Path(repo.working_dir) / relative_datafile_path
+    if append and purl_file_full_path.exists():
+        existing_purls = load_data_from_yaml_file(purl_file_full_path) or []
+        existing_purls.extend(packageurls)
+        packageurls = list(set(existing_purls))
+    write_data_to_yaml_file(path=purl_file_full_path, data=sorted(packageurls))
+    return relative_datafile_path
+
+
+def write_package_data_to_file(repo, relative_api_package_metadata_datafile_path, package_data):
+    api_package_metadata_datafile_full_path = (
+        Path(repo.working_dir) / relative_api_package_metadata_datafile_path
+    )
+    if str(api_package_metadata_datafile_full_path).endswith(".json"):
+        write_data_to_json_file(api_package_metadata_datafile_full_path, package_data)
+    else:
+        api_package_metadata_datafile_full_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(api_package_metadata_datafile_full_path, "wb") as f:
+            f.write(package_data)
+    return api_package_metadata_datafile_full_path
+
+
+def load_data_from_yaml_file(path):
+    if isinstance(path, str):
+        path = Path(path)
+
+    with open(path, encoding="utf-8") as f:
+        return saneyaml.load(f.read())
+
+
+def write_data_to_yaml_file(path, data):
+    if isinstance(path, str):
+        path = Path(path)
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, encoding="utf-8", mode="w") as f:
+        f.write(saneyaml.dump(data))
+
+
+def write_data_to_json_file(path, data):
+    if isinstance(path, str):
+        path = Path(path)
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
+
+
+def delete_cloned_repos(repos, logger=None):
+    from scanpipe.pipes.federatedcode import delete_local_clone
+
+    if not repos:
+        return
+
+    for repo in repos:
+        if logger:
+            logger(f"Deleting local clone at: {repo.working_dir}")
+        delete_local_clone(repo)
+
+
+def get_changed_files(repo: Repo, commit_x: str = None, commit_y: str = None):
+    """
+    Return a list of files changed between two commits using GitPython.
+    Includes added, modified, deleted, and renamed files.
+    - commit_x: base commit (or the empty tree hash for the first commit)
+    - commit_y: target commit (defaults to HEAD if not provided)
+    """
+    EMPTY_TREE_HASH = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+
+    if commit_y is None:
+        commit_y = repo.head.commit.hexsha
+    commit_y_obj = repo.commit(commit_y)
+
+    if commit_x is None or commit_x == EMPTY_TREE_HASH:
+        # First commit case: diff against empty tree
+        diff_index = commit_y_obj.diff(EMPTY_TREE_HASH, R=True)
+    else:
+        commit_x_obj = repo.commit(commit_x)
+        diff_index = commit_x_obj.diff(commit_y_obj, R=True)
+
+    changed_files = {item.a_path or item.b_path for item in diff_index}
+    return list(changed_files)
+
+
+def get_last_commit(repo, ecosystem):
+    """
+    Retrieve the last mined commit for a given ecosystem.
+    This function reads a JSON checkpoint file from the repository, which stores
+    mining progress. Each checkpoint contains the "last_commit" from the package
+    index (e.g., PyPI) that was previously mined.
+    https://github.com/AyanSinhaMahapatra/minecode-test/blob/main/minecode_checkpoints/pypi.json
+    https://github.com/ziadhany/cargo-test/blob/main/minecode_checkpoints/cargo.json
+    """
+
+    last_commit_file_path = (
+        Path(repo.working_tree_dir) / "minecode_checkpoints" / f"{ecosystem}.json"
+    )
+    try:
+        with open(last_commit_file_path) as f:
+            settings_data = json.load(f)
+    except FileNotFoundError:
+        return
+    return settings_data.get("last_commit")
+
+
+def get_commit_at_distance_ahead(
+    repo: Repo,
+    current_commit: str,
+    num_commits_ahead: int = 10,
+    branch_name: str = "master",
+) -> str:
+    """
+    Return the commit hash that is `num_commits_ahead` commits ahead of `current_commit`
+    on the given branch.
+    """
+    if not current_commit:
+        current_commit = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+    revs = repo.git.rev_list(f"^{current_commit}", branch_name).splitlines()
+    if len(revs) < num_commits_ahead:
+        raise ValueError(f"Not enough commits ahead; only {len(revs)} available.")
+    return revs[-num_commits_ahead]
+
+
+def init_local_checkout(repo_name, working_path, logger):
+    from scanpipe.pipes.federatedcode import get_or_create_repository
+
+    repo_obj = get_or_create_repository(
+        repo_name,
+        working_path,
+        logger,
+    )
+    return {
+        "repo": repo_obj[-1],
+        "file_to_commit": set(),
+        "file_processed_count": 0,
+        "commit_count": 0,
+    }
+
+
+def commit_and_push_checkout(local_checkout, commit_message, logger):
+    from scanpipe.pipes.federatedcode import commit_and_push_changes
+
+    if commit_and_push_changes(
+        commit_message=commit_message,
+        repo=local_checkout["repo"],
+        files_to_commit=local_checkout["file_to_commit"],
+        logger=logger,
+    ):
+        local_checkout["commit_count"] += 1
+    local_checkout["file_to_commit"].clear()
