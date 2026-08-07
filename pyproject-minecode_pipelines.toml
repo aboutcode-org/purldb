@@ -97,5 +97,5 @@ excludes = [
 ]
 
 metadata_files = ["apache-2.0.LICENSE", "NOTICE"]
-editable_paths = ["minecode_pipelines"]
+editable_paths = ["minecode"]
 
