@@ -340,6 +340,10 @@ class PackageFilterSet(FilterSet):
     purl = MultiplePackageURLFilter(
         label="Package URL",
     )
+    vcs_url = django_filters.CharFilter(
+        lookup_expr="iexact",
+        help_text="Exact VCS URL. (case-insensitive)",
+    )
     package_content = MultipleCharField(help_text="")
     search = PackageSearchFilter(
         label="Search",
@@ -367,6 +371,7 @@ class PackageFilterSet(FilterSet):
             "md5",
             "size",
             "release_date",
+            "vcs_url",
         )
 
 
