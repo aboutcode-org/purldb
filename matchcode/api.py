@@ -382,6 +382,9 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         help_text="Exclude PURLs (space or comma separated).",
     )
 
+    ecosystems_filter = serializers.SerializerMethodField(read_only=True)
+    exclude_purls_filter = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Project
         fields = (
@@ -403,6 +406,8 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "codebase_relations_summary",
             "ecosystems",
             "exclude_purls",
+            "ecosystems_filter",
+            "exclude_purls_filter",
         )
         exclude_from_list_view = [
             "resource_count",
@@ -445,6 +450,12 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
     def get_codebase_relations_summary(self, project):
         queryset = project.codebaserelations.all()
         return count_group_by(queryset, "map_type")
+
+    def get_ecosystems_filter(self, project):
+        return (project.extra_data or {}).get("ecosystems", [])
+
+    def get_exclude_purls_filter(self, project):
+        return (project.extra_data or {}).get("exclude_purls", [])
 
     def validate_input_urls(self, value):
         """Add support for providing multiple URLs in a single string."""
