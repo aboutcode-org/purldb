@@ -265,11 +265,15 @@ class BaseDirectoryIndexViewSet(ReadOnlyModelViewSet):
         if not fingerprints:
             return Response()
 
+        ecosystems = request.query_params.getlist("ecosystems")
+        exclude_purls = request.query_params.getlist("exclude_purls")
         model_class = self.get_serializer().Meta.model
         results = []
         unique_fingerprints = set(fingerprints)
         for fingerprint in unique_fingerprints:
-            matches = model_class.match(fingerprint)
+            matches = model_class.match(
+                fingerprint, ecosystems=ecosystems, exclude_purls=exclude_purls
+            )
             for match in matches:
                 _, bah128 = split_fingerprint(fingerprint)
                 # Get fingerprint from the match
@@ -357,6 +361,27 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
     discovered_dependencies_summary = serializers.SerializerMethodField()
     codebase_relations_summary = serializers.SerializerMethodField()
 
+    ecosystems = serializers.ChoiceField(
+        choices=(
+            ("", "---------"),
+            ("maven", "maven"),
+        ),
+        required=False,
+        allow_blank=True,
+        default="",
+        write_only=True,
+        help_text="Ecosystem to restrict the match index.",
+    )
+
+    exclude_purls = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        default="",
+        write_only=True,
+        style={"base_template": "textarea.html"},
+        help_text="Exclude PURLs (space or comma separated).",
+    )
+
     class Meta:
         model = Project
         fields = (
@@ -376,6 +401,8 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "discovered_packages_summary",
             "discovered_dependencies_summary",
             "codebase_relations_summary",
+            "ecosystems",
+            "exclude_purls",
         )
         exclude_from_list_view = [
             "resource_count",
@@ -430,12 +457,34 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
         upload_file = validated_data.pop("upload_file", None)
         input_urls = validated_data.pop("input_urls", [])
         webhook_url = validated_data.pop("webhook_url", None)
+        ecosystems = validated_data.pop("ecosystems", "")
+        exclude_purls = validated_data.pop("exclude_purls", "")
+
+        # Convert ecosystems to a list
+        if isinstance(ecosystems, str):
+            ecosystems = [ecosystems] if ecosystems else []
+
+        # Convert exclude_purls to a list; support spaces, commas, and newlines
+        if isinstance(exclude_purls, str):
+            exclude_purls = [
+                purl.strip() for purl in exclude_purls.replace(",", " ").split() if purl.strip()
+            ]
 
         downloads, errors = fetch_urls(input_urls)
         if errors:
             raise serializers.ValidationError("Could not fetch: " + "\n".join(errors))
 
         project = super().create(validated_data)
+
+        project.extra_data = project.extra_data or {}
+        if ecosystems:
+            project.extra_data["ecosystems"] = ecosystems
+
+        if exclude_purls:
+            project.extra_data["exclude_purls"] = exclude_purls
+
+        if ecosystems or exclude_purls:
+            project.save()
 
         if upload_file:
             project.add_uploads([upload_file])
@@ -580,7 +629,7 @@ class MatchingViewSet(
     """
     Take a ScanCode.io JSON of a codebase `upload_file` or from a list of
     `input_urls` and run the ``matching`` pipeline
-    (https://github.com/aboutcode-org/purldb/blob/main/matchcode_pipeline/pipelines/matching.py)
+    (https://github.com/aboutcode-org/purldb/blob/main/matchcode/pipelines/matching.py)
     on it.
 
     The ``matching`` pipeline matches directory and resources of the codebase in
