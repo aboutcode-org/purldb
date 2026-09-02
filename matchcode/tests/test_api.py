@@ -188,6 +188,26 @@ class MatchCodePipelineAPITest(TransactionTestCase):
         self.assertIsNone(response.data["execution_time"])
         self.assertEqual(Run.Status.NOT_STARTED, response.data["status"])
 
+    @mock.patch("scanpipe.models.Run.execute_task_async")
+    def test_matching_pipeline_api_matching_create_with_filters(self, mock_execute_pipeline_task):
+        data = {
+            "ecosystems": "maven",
+            "exclude_purls": "pkg:maven/commons-io/commons-io@2.11.0, pkg:maven/other/other@1.0",
+        }
+
+        response = self.csrf_client.post(self.matching_list_url, data)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+
+        project = Project.objects.get(uuid=response.data["uuid"])
+        self.assertEqual(["maven"], project.extra_data["ecosystems"])
+        self.assertEqual(
+            [
+                "pkg:maven/commons-io/commons-io@2.11.0",
+                "pkg:maven/other/other@1.0",
+            ],
+            project.extra_data["exclude_purls"],
+        )
+
 
 class D2DPipelineAPITest(TransactionTestCase):
     data_location = Path(__file__).parent / "data"
