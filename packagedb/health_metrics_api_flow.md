@@ -14,7 +14,7 @@ Call:
 GET /api/health/?purl=pkg:npm/lodash
 ```
 
-If you have no metrics yet, you get HTTP 202. Call the **same URL** again later. When metrics are ready you get HTTP 200. We do not return `poll_url`. Please do not use another status URL.
+If you have no metrics yet, you get HTTP 202. Call the **same URL** again later. When metrics are ready you get HTTP 200.
 
 Example:
 
@@ -59,8 +59,6 @@ This happens if we have a `PackageHealthMetrics` row on the versionless source r
 - `metrics` is the JSON from ScanCode.io / GrimoireLab.
 - `score` is `npm_health_score` from ScanCode.io.
 - `date_collected` is when we saved the row.
-
-The serializer only returns those fields. We have a `ScoringModel` table in the DB, but the API does not show ecosystem / scoring model / model version yet.
 
 ---
 
@@ -215,6 +213,15 @@ Status on 202 is the ScannableURI status (`new`, `submitted`, `scanned`, …), n
 
 ---
 
+## Next steps
+
+- When we queue `scan_repo_health`, PurlDB should also send `ecosystem` and `project` to ScanCode.io (for example on the scan-queue payload or on project extra_data). Today we only send the git URL, pipelines, and `scannable_uri_uuid`.
+- ScanCode.io `scan_repo_health` should pass those through to healthycode CLI as `ecosystem` and `project`.
+- Keep them in extra_data on the way back, so when we write `PackageHealthMetrics` we can attach the matching `ScoringModel` (ecosystem + scoring_model=`project` + model version) instead of always hardcoding npm / health / 1.0 in PurlDB only.
+- For `pkg:npm/lodash` that means CLI and DB both use ecosystem `npm` and project/scoring_model `health`.
+- "npm_health_score" should only be "score" now
+---
+
 ## Where we are now
 
 Done:
@@ -223,9 +230,7 @@ Done:
 - Create base package, latest npm package, and source repo packages with existing tools.
 - Queue `scan_repo_health` on the versionless source repo.
 - Same URL for polling, no `poll_url`, 202 purl is the source package.
-- Models and migration 0095.
 - Webhook can write metrics from extra_data when indexing succeeds.
-- We stopped writing fake placeholder metrics.
 - 200 body: purl, version, metrics, score, date_collected.
 
 This only works on a machine if the ScanCode.io worker is pulling the queue, the pipeline finishes and sets extra_data, and PurlDB actually runs `process_scan_results` (async false, or an RQ worker).
