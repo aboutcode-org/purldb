@@ -25,6 +25,7 @@ from matchcode.api import RunViewSet
 from minecode.api import ScannableURIViewSet
 from minecode.api import index_package_scan
 from packagedb.api import CollectViewSet
+from packagedb.api import HealthViewSet
 from packagedb.api import PackageActivityListenerView
 from packagedb.api import PackageActivityViewSet
 from packagedb.api import PackageSetViewSet
@@ -56,6 +57,7 @@ if not settings.PURLDB_PUBLIC_SETUP:
     api_router.register("package_activity", PackageActivityViewSet)
     api_router.register("matching", MatchingViewSet, basename="matching")
     api_router.register("d2d", D2DViewSet, basename="d2d")
+    api_router.register("health", HealthViewSet, basename="health")
     api_router.register("runs", RunViewSet)
 
 urlpatterns = [

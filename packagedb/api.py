@@ -15,6 +15,8 @@ from django.db.models import Q
 from django.db.models import Subquery
 from django.forms import widgets
 from django.forms.fields import MultipleChoiceField
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 import django_filters
 from aboutcode.federatedcode.contrib.django import utils
@@ -30,6 +32,7 @@ from drf_spectacular.utils import extend_schema
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
 from rest_framework import mixins
+from rest_framework import serializers
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -47,17 +50,18 @@ from minecode import collectors  # NOQA
 # But importing the collectors module triggers routes registration
 from minecode import priority_router
 from minecode.models import PriorityResourceURI
+from minecode.models import ScannableURI
 from minecode.route import NoRouteAvailable
 from packagedb.filters import PackageSearchFilter
 from packagedb.models import Package
 from packagedb.models import PackageActivity
 from packagedb.models import PackageContentType
+from packagedb.models import PackageHealthMetrics
 from packagedb.models import PackageSet
 from packagedb.models import PackageWatch
 from packagedb.models import Resource
-from packagedb.package_health import fetch_and_store_health_metrics
-from packagedb.package_health import get_fresh_health_metrics
-from packagedb.package_health import get_or_create_versionless_npm_package
+from packagedb.package_health import HEALTH_METRICS_MAX_AGE
+from packagedb.package_health import resolve_health_request
 from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
 from packagedb.package_managers import get_api_package_name
 from packagedb.package_managers import get_version_fetcher
@@ -68,7 +72,6 @@ from packagedb.serializers import IndexPackagesResponseSerializer
 from packagedb.serializers import IndexPackagesSerializer
 from packagedb.serializers import PackageActivitySerializer
 from packagedb.serializers import PackageAPISerializer
-from packagedb.serializers import PackageHealthMetricsRequestSerializer
 from packagedb.serializers import PackageHealthMetricsSerializer
 from packagedb.serializers import PackageSetAPISerializer
 from packagedb.serializers import PackageWatchAPISerializer
@@ -81,6 +84,7 @@ from packagedb.serializers import PurlValidateSerializer
 from packagedb.serializers import ResourceAPISerializer
 from packagedb.serializers import UpdatePackagesSerializer
 from packagedb.serializers import is_supported_addon_pipeline
+from packagedb.serializers import validate_versionless_npm_purl
 from packagedb.throttling import StaffUserRateThrottle
 from purl2vcs.find_source_repo import get_source_package_and_add_to_package_set
 
@@ -521,52 +525,67 @@ class PackageViewSet(PackagePublicViewSet):
         data = {"status": f"{package.package_url} has been queued for reindexing"}
         return Response(data)
 
-    @extend_schema(
-        request=PackageHealthMetricsRequestSerializer,
-        responses={200: PackageHealthMetricsSerializer()},
+class HealthRequestSerializer(serializers.Serializer):
+    purl = serializers.CharField(
+        required=True,
+        help_text="Versionless npm PackageURL to fetch health metrics for.",
     )
-    @action(
-        detail=False,
-        methods=["post"],
-        serializer_class=PackageHealthMetricsRequestSerializer,
-    )
-    def health_metrics(self, request, *args, **kwargs):
-        """
-        Return health metrics for a versionless npm PackageURL.
 
-        If metrics exist for the latest package version and are no older than
-        one week, return the cached metrics. Otherwise, resolve the repository
-        URL with fetchcode, run the SCIO health pipeline, store the result, and
-        return it.
+    def validate_purl(self, value):
+        return validate_versionless_npm_purl(value)
 
-        If the Package does not exist in PurlDB, a minimal Package is created
-        from fetchcode data (type, namespace, name, latest version, download_url).
 
-        **Request example:**
-            ```
-            {"purl": "pkg:npm/lodash"}
-            ```
-        """
-        serializer = PackageHealthMetricsRequestSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+class HealthViewSet(viewsets.ViewSet):
+    """
+    Take a versionless npm ``purl`` query parameter and either return fresh
+    cached health metrics for the linked SOURCE_REPO Package, or queue a
+    ``scan_repo_health`` job via ScannableURI.
 
+    **Request example:**
+
+            GET /api/health/?purl=pkg:npm/lodash
+
+    When metrics for the SOURCE_REPO are no older than one week for the
+    latest npm version, the response is the cached PackageHealthMetrics
+    mapping (HTTP 200).
+
+    Otherwise a scan job is queued and the response is (HTTP 202):
+
+            {
+                "purl": "pkg:github/lodash/lodash",
+                "status": "new"
+            }
+
+    ``purl`` is the SOURCE_REPO package URL while the scan is in progress.
+    Poll the same ``GET /api/health/?purl=...`` endpoint until metrics are ready.
+    """
+
+    def list(self, request, *args, **kwargs):
+        serializer = HealthRequestSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
         purl = serializer.validated_data["purl"]
-        package, latest_version, repo_url, error = get_or_create_versionless_npm_package(purl)
-        if error:
-            return Response({"error": error}, status=status.HTTP_400_BAD_REQUEST)
 
-        fresh_metrics = get_fresh_health_metrics(package, latest_version)
-        if fresh_metrics:
-            return Response(PackageHealthMetricsSerializer(fresh_metrics).data)
+        result = resolve_health_request(purl)
+        if result["error"]:
+            return Response({"error": result["error"]}, status=status.HTTP_400_BAD_REQUEST)
 
-        health_metrics, error = fetch_and_store_health_metrics(
-            package, latest_version, repo_url
+        if result["fresh_metrics"]:
+            return Response(PackageHealthMetricsSerializer(result["fresh_metrics"]).data)
+
+        scannable_uri = result["scannable_uri"]
+        if scannable_uri is None:
+            return Response(
+                {"error": "Failed to queue health metrics scan."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        return Response(
+            {
+                "purl": result["source_package"].package_url,
+                "status": ScannableURI.SCAN_STATUSES_BY_CODE[scannable_uri.scan_status],
+            },
+            status=status.HTTP_202_ACCEPTED,
         )
-        if error:
-            return Response({"error": error}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(PackageHealthMetricsSerializer(health_metrics).data)
 
 
 class PackageUpdateSet(viewsets.ViewSet):

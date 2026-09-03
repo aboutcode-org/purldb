@@ -1,0 +1,82 @@
+Package Health Metrics — Assumptions & Open Questions
+======================================================
+
+This note records decisions taken while implementing the health-metrics
+API (POST /api/packages/health_metrics/) so they can be reviewed and
+corrected.
+
+
+Assumptions / decisions we made
+-------------------------------
+
+1. Input PURLs
+   - Only npm is supported.
+   - Only versionless PURLs are accepted (e.g. pkg:npm/lodash).
+   - Versioned PURLs are rejected with 400.
+   - Qualifiers / subpath were not specially validated (beyond PackageURL
+     parsing); behavior for those is undefined.
+
+2. Package row shape
+   - Health metrics attach to a *versionless* Package (version="").
+   - If no such row exists, we create one with: type, namespace, name,
+     version="", and a unique download_url (registry metadata URL).
+   - Package.version cannot be SQL NULL in this codebase (null=False,
+     blank=True); versionless means empty string "".
+   - Lookup/create uses get_or_create(type, namespace, name, download_url)
+     with defaults version="".
+
+3. download_url for new versionless Packages
+   - Required because Package.download_url is unique=True.
+   - Empty string "" only works for a single row; concurrent versionless
+     Packages would collide.
+   - We store the npm registry metadata URL:
+     https://registry.npmjs.org/<name>
+     or https://registry.npmjs.org/<namespace>/<name> for scoped packages.
+   - We do *not* store the versioned tarball URL from fetchcode on the
+     Package row.
+
+4. "version" on PackageHealthMetrics
+   - Means the npm package version these metrics apply to.
+   - For V1 we always resolve "latest" via fetchcode at request time
+     (sorted with univers SemverVersion).
+   - That latest version is stored on PackageHealthMetrics.version only,
+     not on Package.version.
+
+5. Freshness / cache
+   - Metrics are reused if date_collected is within the last 7 days
+     for the same Package row and the same resolved latest version.
+   - Fetchcode still runs on every request so "latest" stays current
+     even when returning cached metrics (network vs freshness tradeoff).
+   - Otherwise we re-run SCIO and insert a new PackageHealthMetrics row.
+   - Response does not include a from_cache flag.
+
+6. date_collected
+   - DateTimeField (not a date-only field).
+   - Set explicitly at insert time (timezone.now()).
+   - unique_together: (package, version, date_collected).
+
+7. API surface
+   - POST action on PackageViewSet: /api/packages/health_metrics/
+   - Body: {"purl": "pkg:npm/lodash"}
+   - Response fields: purl, version, metrics, date_collected.
+
+
+Questions to ask (to validate or replace assumptions)
+-----------------------------------------------------
+
+1. Is the registry metadata URL the right unique download_url for
+   versionless Packages, or should we use the versioned tarball / purl /
+   something else?
+
+2. When "latest" version on npm moves, should we treat prior cached metrics for the
+   old latest as stale immediately, or keep serving them until they age out?
+
+3. Should qualifiers/subpath on the input PURL be rejected or ignored?
+
+
+4. Is unique_together (package, version, date_collected) the intended
+    uniqueness, or should it be (package, version) with overwrite/update
+    of metrics in place?
+
+5. For V1, if fetchcode cannot resolve latest version or repo URL, is
+    HTTP 400 the right response, or should we queue and return 202?

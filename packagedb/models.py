@@ -447,6 +447,7 @@ class PackageContentType(models.IntegerChoices):
     BINARY = 5, "binary"
     TEST = 6, "test"
     DOC = 7, "doc"
+    BASE_PACKAGE = 8, "base_package"
 
 
 def get_class_name(obj):
@@ -1474,6 +1475,35 @@ class PackageSet(models.Model):
         )
 
 
+class ScoringModel(models.Model):
+    """
+    Catalog entry identifying how a PackageHealthMetrics score was produced.
+
+    Example: ecosystem=npm, scoring_model=health, model_version=1.0
+    """
+
+    ecosystem = models.CharField(
+        max_length=32,
+        help_text=_("Package ecosystem this scoring model applies to, for example npm, pypi, maven."),
+    )
+    model_version = models.CharField(
+        max_length=32,
+        help_text=_("Version of this scoring model definition, for example 1.0."),
+    )
+    scoring_model = models.CharField(
+        max_length=32,
+        help_text=_("Scoring approach, for example health or scorecard."),
+    )
+
+    class Meta:
+        ordering = ["ecosystem", "scoring_model", "model_version"]
+        unique_together = [["ecosystem", "scoring_model", "model_version"]]
+        verbose_name_plural = "scoring models"
+
+    def __str__(self):
+        return f"{self.ecosystem}/{self.scoring_model}@{self.model_version}"
+
+
 class PackageHealthMetrics(models.Model):
     """Health metrics recorded for a Package at a point in time."""
 
@@ -1481,7 +1511,16 @@ class PackageHealthMetrics(models.Model):
         Package,
         related_name="health_metrics",
         on_delete=models.CASCADE,
-        help_text=_("The Package that these health metrics are related to"),
+        help_text=_("The Package that these health metrics are related to, for example pkg:github/leftpad/leftpad"),
+    )
+
+    scoring_model = models.ForeignKey(
+        ScoringModel,
+        related_name="health_metrics",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        help_text=_("Scoring model used to produce these metrics."),
     )
 
     version = models.CharField(
@@ -1496,6 +1535,11 @@ class PackageHealthMetrics(models.Model):
         default=dict,
         blank=True,
         help_text=_("Health metrics data for this Package"),
+    )
+
+    score = models.FloatField(
+        default=0.0,
+        help_text=_("Overall health score for this Package at collection time."),
     )
 
     date_collected = models.DateTimeField(

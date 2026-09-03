@@ -11,8 +11,10 @@ import logging
 import subprocess
 from collections.abc import Generator
 from urllib.parse import urlparse
+from urllib.parse import urlunparse
 
 import requests
+from fetchcode.package import info
 from packageurl import PackageURL
 from packageurl.contrib.django.utils import purl_to_lookups
 from packageurl.contrib.purl2url import get_download_url, purl2url
@@ -134,33 +136,136 @@ def add_source_package_to_package_set(
         )
 
 
-def get_source_package_and_add_to_package_set(package):
+def _normalize_vcs_url(vcs_url):
+    """Strip ``git+`` and rewrite ``git://`` to ``https://`` for url conversion."""
+    url = (vcs_url or "").strip()
+    if url.startswith("git+"):
+        url = url[4:]
+    if url.startswith("git://"):
+        url = "https://" + url[len("git://") :]
+    return url
+
+
+def strip_version_from_repo_url(vcs_url):
     """
-    Process a package and add the source repository to the package set
+    Return a repository-root URL with no version, tag, or commit.
+
+    Strips ``#`` fragments and GitHub-style ``/tree/``, ``/blob/``, ``/commit/``
+    path segments.
+    """
+    url = _normalize_vcs_url(vcs_url)
+    if not url:
+        return url
+
+    if "#" in url:
+        url = url.split("#", 1)[0]
+
+    parsed = urlparse(url)
+    path = parsed.path or ""
+    for segment in ("/tree/", "/blob/", "/commit/", "/releases/tag/", "/archive/"):
+        if segment in path:
+            path = path.split(segment, 1)[0]
+    path = path.rstrip("/")
+    return urlunparse((parsed.scheme, parsed.netloc, path, "", "", ""))
+
+
+def get_vcs_url_from_fetchcode(package_or_purl):
+    """
+    Return a repository URL from ``fetchcode.package.info``, or None.
+
+    For a versionless PURL, fetchcode may yield every version. Keep the last
+    ``vcs_url`` so newer versions win over historical repo moves.
+    """
+    if hasattr(package_or_purl, "purl"):
+        purl = package_or_purl.purl
+    else:
+        purl = str(package_or_purl or "")
+    if not purl:
+        return None
+
+    try:
+        packages = [p for p in info(str(purl)) or []]
+    except Exception:
+        return None
+
+    found = None
+    for package in packages:
+        for attr in ("vcs_url", "code_view_url", "repository_homepage_url"):
+            url = getattr(package, attr, None)
+            if url:
+                found = url
+                break
+    return found
+
+
+def _versionless_source_purl_from_repo_url(vcs_url):
+    """Return a versionless source repository PackageURL from a VCS URL."""
+    repo_url = strip_version_from_repo_url(vcs_url)
+    if not repo_url:
+        return None
+    source_purls = list(convert_repo_url_to_purls(repo_url))
+    if not source_purls:
+        return None
+    source_purl = source_purls[0]
+    return PackageURL(
+        type=source_purl.type,
+        namespace=source_purl.namespace,
+        name=source_purl.name,
+    )
+
+
+def _source_repo_download_and_vcs_urls(source_purl):
+    """
+    Return ``(download_url, vcs_url)`` for a source repository PackageURL.
+
+    Versionless SOURCE_REPO rows use a repository-root git clone URL. Versioned
+    rows use ``get_download_url`` (archive / tag).
+    """
+    if not source_purl.version:
+        vcs_url = purl2url(str(source_purl))
+        if not vcs_url:
+            return None, None
+        if source_purl.type in ("github", "gitlab", "bitbucket") and not vcs_url.endswith(".git"):
+            vcs_url = vcs_url.rstrip("/") + ".git"
+        return vcs_url, vcs_url
+
+    try:
+        download_url = get_download_url(str(source_purl))
+    except Exception:
+        logger.error(f"Error getting download_url for {source_purl}")
+        return None, None
+    return download_url, None
+
+
+def get_source_package_and_add_to_package_set(package, queue_scan=True):
+    """
+    Process a package and add the source repository to the package set.
+
+    Versionless packages resolve a repo-root SOURCE_REPO (no tag/commit) via
+    fetchcode. Versioned packages keep tag/commit matching.
     """
     source_purl = get_source_repo(package=package)
 
     if not source_purl:
         return
 
-    try:
-        download_url = get_download_url(str(source_purl))
-        if not download_url:
-            return
-    except Exception:
-        logger.error(f"Error getting download_url for {source_purl}")
+    download_url, vcs_url = _source_repo_download_and_vcs_urls(source_purl)
+    if not download_url:
         return
 
     source_package = Package.objects.for_package_url(purl_str=str(source_purl)).get_or_none()
 
     if not source_package:
+        defaults = {"package_content": PackageContentType.SOURCE_REPO}
+        if vcs_url:
+            defaults["vcs_url"] = vcs_url
         source_package, _created = Package.objects.get_or_create(
             type=source_purl.type,
-            namespace=source_purl.namespace,
+            namespace=source_purl.namespace or "",
             name=source_purl.name,
-            version=source_purl.version,
+            version=source_purl.version or "",
             download_url=download_url,
-            package_content=PackageContentType.SOURCE_REPO,
+            defaults=defaults,
         )
         add_package_to_scan_queue(source_package)
         logger.info(f"Created source repo package {source_purl} for {package.purl}")
@@ -192,7 +297,17 @@ def get_source_repo(package: Package) -> PackageURL:
     Return the PackageURL of the source repository of a Package
     or None if not found. Package is either a PackageCode Package object or
     Package instance object.
+
+    For a versionless package, return a versionless source repository PackageURL
+    (no tag or commit) from fetchcode's repository URL. For a versioned package,
+    return a PackageURL with the matching git tag and commit when available.
     """
+    if not getattr(package, "version", None):
+        vcs_url = get_vcs_url_from_fetchcode(package)
+        if not vcs_url:
+            vcs_url = getattr(package, "vcs_url", None)
+        return _versionless_source_purl_from_repo_url(vcs_url)
+
     repo_urls = list(get_repo_urls(package))
     if not repo_urls:
         return

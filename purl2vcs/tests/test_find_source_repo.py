@@ -281,6 +281,24 @@ class TestFindSourceRepo(TestCase):
                         tags_and_commits=tags_and_commits,
                     ) == ("9.35", "fdc8117af75b192e3f8afcc0119c904b02686af8")
 
+    def test_get_source_repo_versionless(self):
+        package = Package.objects.create(
+            type="npm",
+            name="lodash",
+            version="",
+            package_content=PackageContentType.BASE_PACKAGE,
+            download_url="https://registry.npmjs.org/lodash",
+        )
+        with patch(
+            "purl2vcs.find_source_repo.get_vcs_url_from_fetchcode",
+            return_value="git+https://github.com/lodash/lodash.git#v4.17.21",
+        ):
+            assert get_source_repo(package=package) == PackageURL(
+                type="github",
+                namespace="lodash",
+                name="lodash",
+            )
+
     def test_get_source_repo(self):
         with patch("purl2vcs.find_source_repo.fetch_response"):
             with patch("subprocess.getoutput") as mock_popen:
