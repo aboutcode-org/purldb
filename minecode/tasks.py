@@ -26,9 +26,15 @@ def process_scan_results(
     `scan_summary_location`, and `project_extra_data` for the Package related to
     ScannableURI with UUID `scannable_uri_uuid`.
 
+    When the ScannableURI pipelines include ``scan_repo_health``, also write
+    PackageHealthMetrics for the related Package.
+
     `scan_results_location` and `scan_summary_location` are deleted after the
     indexing process has finished.
     """
+    from packagedb.package_health import HEALTH_METRICS_PIPELINE
+    from packagedb.package_health import write_package_health_metrics
+
     with open(scan_results_location) as f:
         scan_data = json.load(f)
     with open(scan_summary_location) as f:
@@ -48,11 +54,21 @@ def process_scan_results(
         reindex=scannable_uri.reindex_uri,
     )
 
-    if indexing_errors:
+    scannable_uri.refresh_from_db()
+
+    if indexing_errors or scannable_uri.scan_status == ScannableURI.SCAN_INDEX_FAILED:
         scannable_uri.scan_status = ScannableURI.SCAN_INDEX_FAILED
-        scannable_uri.index_error = indexing_errors
+        if indexing_errors:
+            scannable_uri.index_error = indexing_errors
     else:
         scannable_uri.scan_status = ScannableURI.SCAN_INDEXED
+        pipelines = scannable_uri.pipelines or []
+        if HEALTH_METRICS_PIPELINE in pipelines:
+            write_package_health_metrics(
+                package=scannable_uri.package,
+                project_extra_data=project_extra_data,
+                summary_data=summary_data,
+            )
 
     scannable_uri.wip_date = None
     scannable_uri.save()
