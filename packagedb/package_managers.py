@@ -218,13 +218,12 @@ class PypiVersionAPI(VersionAPI):
         latest_date = None
         for download in downloads:
             upload_time = download.get("upload_time_iso_8601")
-            if upload_time:
-                current_date = dateparser.parse(upload_time)
-            if not latest_date:
+            if not upload_time:
+                continue
+
+            current_date = dateparser.parse(upload_time)
+            if not latest_date or current_date > latest_date:
                 latest_date = current_date
-            else:
-                if current_date > latest_date:
-                    latest_date = current_date
         return latest_date
 
 
