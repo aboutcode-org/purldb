@@ -10,6 +10,7 @@
 import logging
 import sys
 from pathlib import Path
+from collections import defaultdict
 
 from aboutcode.federated import DataFederation
 from commoncode import fileutils
@@ -76,18 +77,20 @@ class Command(VerboseCommand):
         data_cluster = data_federation.get_cluster("package_data")
 
         # TODO: do something more efficient
-        files_to_commit = []
+        files_to_commit_by_package_repo = defaultdict(list)
         commit_batch = 1
         for i, package in enumerate(
-            packagedb_models.Package.objects.all().iterator(chunk_size=PACKAGE_BATCH_SIZE), start=1
+            packagedb_models.Package.objects.filter(type='maven').iterator(chunk_size=PACKAGE_BATCH_SIZE), start=1
         ):
             package_repo_name, datafile_path = data_cluster.get_datafile_repo_and_path(
                 purl=package.purl
             )
+            files_to_commit = files_to_commit_by_package_repo[package_repo_name]
+
             _, package_repo = federatedcode.get_or_create_repository(
                 repo_name=package_repo_name,
                 working_path=working_path,
-                logger=logger.log,
+                logger=logger.info,
             )
             package_data_file = pipes.write_package_data_to_file(
                 repo=package_repo,
@@ -102,9 +105,9 @@ class Command(VerboseCommand):
                     commit_message=commit_message(commit_batch),
                     repo=package_repo,
                     files_to_commit=files_to_commit,
-                    logger=logger.log,
+                    logger=logger.info,
                 )
-                logger.log(f"Committed {i} package_data to {package_repo_name}")
+                logger.info(f"Committed {i} package_data to {package_repo_name}")
                 files_to_commit.clear()
                 commit_batch += 1
 
@@ -113,8 +116,8 @@ class Command(VerboseCommand):
                 commit_message=commit_message(commit_batch),
                 repo=package_repo,
                 files_to_commit=files_to_commit,
-                logger=logger.log,
+                logger=logger.info,
             )
-            logger.log(f"Committed {i} package_data to {package_repo_name}")
+            logger.info(f"Committed {i} package_data to {package_repo_name}")
             files_to_commit.clear()
             commit_batch += 1
