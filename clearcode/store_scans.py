@@ -185,10 +185,21 @@ def get_or_init_repo(
     and store it in the work dir. Clone if it does not
     exist optionally take the latest pull if it does exist.
     """
-    # TODO: Manage org repo name
+    # The `repo_namespace` often serves as an organization name or user namespace.
+    # The `user_name` might be the authenticated user or another target.
+    namespace = repo_namespace or user_name
+    repo_url = f"https://github.com/{namespace}/{repo_name}.git"
+
     # MAYBE: CREATE ALL THE REPOS AT A TIME AND CLONE THEM LOCALLY
     if repo_name not in get_github_repos(user_name=user_name):
-        repo_url = create_github_repo(repo_name=repo_name)
+        # Determine if we should create under an org or the authenticated user
+        # Note: If namespace is an organization and differs from the authenticated user, it needs to be created under /orgs/
+        organization = repo_namespace if repo_namespace and repo_namespace != user_name else None
+        
+        new_repo_url = create_github_repo(repo_name=repo_name, organization=organization)
+        if new_repo_url:
+            repo_url = new_repo_url
+
     repo_path = work_dir / repo_name
     if repo_path.exists():
         repo = Repo(repo_path)
@@ -207,7 +218,7 @@ def get_scan_download_url(
     return f"https://raw.githubusercontent.com/{namespace}/{purl_hash}/main/{purl_path}/{scan_file_name}"
 
 
-def create_github_repo(repo_name, token=os.getenv("GH_TOKEN")):
+def create_github_repo(repo_name, organization=None, token=os.getenv("GH_TOKEN")):
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json",
@@ -217,21 +228,25 @@ def create_github_repo(repo_name, token=os.getenv("GH_TOKEN")):
         "name": repo_name,
     }
 
-    url = "https://api.github.com/user/repos"
+    if organization:
+        url = f"https://api.github.com/orgs/{organization}/repos"
+    else:
+        url = "https://api.github.com/user/repos"
 
     response = requests.post(url, headers=headers, json=data)
 
     if response.status_code == 201:
         print(f"Repository '{repo_name}' created successfully!")
+        return response.json().get("clone_url")
     else:
         print(f"Failed to create repository. Status code: {response.status_code}")
         print(response.text)
+        return None
 
 
 def get_github_repos(user_name, token=os.getenv("GH_TOKEN")):
     """
-    Yield full repo names for a user or org name, use the optional ``token`` if provided.
-    Full repo name is in the form user or org name / repo name
+    Yield repo names for a user or org name, use the optional ``token`` if provided.
     """
     headers = {"Accept": "application/vnd.github.v3+json"}
     if token:
@@ -246,6 +261,6 @@ def get_github_repos(user_name, token=os.getenv("GH_TOKEN")):
 
     data = response.json()
     for repo_data in data:
-        full_repo_name = repo_data.get("full_name")
-        if full_repo_name:
-            yield full_repo_name
+        repo_name = repo_data.get("name")
+        if repo_name:
+            yield repo_name
