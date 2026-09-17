@@ -22,12 +22,48 @@ class GitlabPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     @mock.patch("minecode.collectors.gitlab.requests.get")
     def test_gitlab_get_all_package_version_author(self, mock_get):
         mock_json_data = [
-            {"name": "v0.0.5", "commit": {"author_name": "Richard T. Carback III", "author_email": "rick.carback@gmail.com"}},
-            {"name": "v0.0.4", "commit": {"author_name": "Richard T. Carback III", "author_email": "rick.carback@gmail.com"}},
-            {"name": "v0.0.3", "commit": {"author_name": "Richard T. Carback III", "author_email": "rick.carback@gmail.com"}},
-            {"name": "v0.0.2", "commit": {"author_name": "Richard T. Carback III", "author_email": "rick.carback@gmail.com"}},
-            {"name": "v0.0.1", "commit": {"author_name": "Richard T. Carback III", "author_email": "rick.carback@gmail.com"}},
-            {"name": "v0.0.0", "commit": {"author_name": "Sydney Anne Erickson", "author_email": "sydney@elixxir.io"}},
+            {
+                "name": "v0.0.5",
+                "commit": {
+                    "author_name": "Richard T. Carback III",
+                    "author_email": "rick.carback@gmail.com",
+                },
+            },
+            {
+                "name": "v0.0.4",
+                "commit": {
+                    "author_name": "Richard T. Carback III",
+                    "author_email": "rick.carback@gmail.com",
+                },
+            },
+            {
+                "name": "v0.0.3",
+                "commit": {
+                    "author_name": "Richard T. Carback III",
+                    "author_email": "rick.carback@gmail.com",
+                },
+            },
+            {
+                "name": "v0.0.2",
+                "commit": {
+                    "author_name": "Richard T. Carback III",
+                    "author_email": "rick.carback@gmail.com",
+                },
+            },
+            {
+                "name": "v0.0.1",
+                "commit": {
+                    "author_name": "Richard T. Carback III",
+                    "author_email": "rick.carback@gmail.com",
+                },
+            },
+            {
+                "name": "v0.0.0",
+                "commit": {
+                    "author_name": "Sydney Anne Erickson",
+                    "author_email": "sydney@elixxir.io",
+                },
+            },
         ]
 
         mock_response = mock.Mock()
