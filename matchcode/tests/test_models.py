@@ -126,6 +126,32 @@ class ExactPackageArchiveIndexModelTestCase(BaseModelTest):
         expected = [self.test_package1_metadata]
         self.assertEqual(expected, result)
 
+    def test_ExactPackageArchiveIndex_match_with_filters(self):
+        sha1 = self.test_package1.sha1
+
+        npm_package, _ = Package.objects.get_or_create(
+            filename="npm-package.tgz",
+            sha1=sha1,
+            type="npm",
+            name="npm-package",
+            version="1.0.0",
+            download_url="https://npm.example.com/npm-package.tgz",
+        )
+        ExactPackageArchiveIndex.index(sha1, npm_package)
+
+        # ecosystem filter – only maven packages should remain
+        results = ExactPackageArchiveIndex.match(sha1, ecosystems=["maven"])
+        packages = [r.package for r in results]
+        self.assertIn(self.test_package1, packages)
+        self.assertNotIn(npm_package, packages)
+
+        # exclude_purls filter – exclude self.test_package1
+        exclude_purls = [self.test_package1.purl]
+        results = ExactPackageArchiveIndex.match(sha1, exclude_purls=exclude_purls)
+        packages = [r.package for r in results]
+        self.assertNotIn(self.test_package1, packages)
+        self.assertIn(npm_package, packages)
+
 
 class ExactFileIndexModelTestCase(BaseModelTest):
     def test_ExactFileIndex_index(self):
@@ -306,6 +332,36 @@ class ApproximateDirectoryMatchingIndexModelTestCase(MatchcodeTestCase):
             "models/directory-matching/async-0.2.9-i-expected-content.json"
         )
         self.check_codebase(codebase, expected, regen=FIXTURES_REGEN)
+
+    def test_ApproximateDirectoryContentIndex_match_with_filters(self):
+        index = ApproximateDirectoryContentIndex.objects.filter(package=self.test_package1).first()
+        fingerprint = index.fingerprint()
+
+        # ecosystem filter – no maven packages indexed, so result should be empty
+        results = ApproximateDirectoryContentIndex.match(
+            fingerprint=fingerprint,
+            exact_match=True,
+            ecosystems=["maven"],
+        )
+        self.assertEqual(results.count(), 0)
+
+        # ecosystem filter – npm should return matches and all should be npm
+        results = ApproximateDirectoryContentIndex.match(
+            fingerprint=fingerprint,
+            exact_match=True,
+            ecosystems=["npm"],
+        )
+        self.assertTrue(all(match.package.type == "npm" for match in results))
+
+        # exclude_purls – exclude test_package1 (the package we took the fingerprint from)
+        exclude_purls = [self.test_package1.purl]
+        results = ApproximateDirectoryContentIndex.match(
+            fingerprint=fingerprint,
+            exact_match=True,
+            exclude_purls=exclude_purls,
+        )
+        packages = [match.package for match in results]
+        self.assertNotIn(self.test_package1, packages)
 
 
 class ApproximateResourceMatchingIndexModelTestCase(MatchcodeTestCase):
@@ -690,3 +746,41 @@ class SnippetIndexTestCase(MatchcodeTestCase):
         expected_match_detections = [Span(0, 153), Span(167, 398)]
         assert match.match_detections == expected_match_detections
         assert match.similarity == 0.9206349206349206
+
+    def test_SnippetIndex_match_with_filters(self):
+        mixed_fingerprints = self.test_resource1_snippets + self.test_resource3_snippets
+
+        # ecosystem filter – npm only
+        results = SnippetIndex.match(fingerprints=mixed_fingerprints, ecosystems=["npm"])
+        packages = {r.package for r in results}
+        self.assertEqual(packages, {self.test_package1})
+
+        # ecosystem filter – github only
+        results = SnippetIndex.match(fingerprints=mixed_fingerprints, ecosystems=["github"])
+        packages = {r.package for r in results}
+        self.assertEqual(packages, {self.test_package2})
+
+        # exclude_purls – exclude test_package1 (npm)
+        exclude_purls = [self.test_package1.purl]
+        results = SnippetIndex.match(fingerprints=mixed_fingerprints, exclude_purls=exclude_purls)
+        packages = {r.package for r in results}
+        self.assertNotIn(self.test_package1, packages)
+        self.assertIn(self.test_package2, packages)
+
+    def test_SnippetIndex_match_resources_with_filters(self):
+        test_file_loc = self.get_test_loc("match/approximate-file-matching/index-modified.js")
+        fingerprints = get_file_fingerprint_hashes(test_file_loc)
+        snippets = fingerprints["snippets"]
+
+        # ecosystem filter – npm only
+        matches = SnippetIndex.match_resources(fingerprints=snippets, ecosystems=["npm"])
+        self.assertTrue(all(m.package.type == "npm" for m in matches))
+
+        # ecosystem filter – github only
+        matches = SnippetIndex.match_resources(fingerprints=snippets, ecosystems=["github"])
+        self.assertTrue(all(m.package.type == "github" for m in matches))
+
+        # exclude_purls – exclude test_package1 (npm)
+        exclude_purls = [self.test_package1.purl]
+        matches = SnippetIndex.match_resources(fingerprints=snippets, exclude_purls=exclude_purls)
+        self.assertFalse(any(m.package == self.test_package1 for m in matches))
