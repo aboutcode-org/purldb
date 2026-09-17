@@ -8,6 +8,7 @@
 #
 
 import os
+from unittest import mock
 
 from django.test import TestCase as DjangoTestCase
 
@@ -18,7 +19,22 @@ from minecode.utils_test import JsonBasedTesting
 class GitlabPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
     test_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "testfiles")
 
-    def test_gitlab_get_all_package_version_author(self):
+    @mock.patch("minecode.collectors.gitlab.requests.get")
+    def test_gitlab_get_all_package_version_author(self, mock_get):
+        mock_json_data = [
+            {"name": "v0.0.5", "commit": {"author_name": "Richard T. Carback III", "author_email": "rick.carback@gmail.com"}},
+            {"name": "v0.0.4", "commit": {"author_name": "Richard T. Carback III", "author_email": "rick.carback@gmail.com"}},
+            {"name": "v0.0.3", "commit": {"author_name": "Richard T. Carback III", "author_email": "rick.carback@gmail.com"}},
+            {"name": "v0.0.2", "commit": {"author_name": "Richard T. Carback III", "author_email": "rick.carback@gmail.com"}},
+            {"name": "v0.0.1", "commit": {"author_name": "Richard T. Carback III", "author_email": "rick.carback@gmail.com"}},
+            {"name": "v0.0.0", "commit": {"author_name": "Sydney Anne Erickson", "author_email": "sydney@elixxir.io"}},
+        ]
+
+        mock_response = mock.Mock()
+        mock_response.json.return_value = mock_json_data
+        mock_response.raise_for_status.return_value = None
+        mock_get.return_value = mock_response
+
         repo_path = "xx_network%2Fprimitives"
         version_author_list = gitlab.gitlab_get_all_package_version_author(repo_path)
         expected = [
@@ -29,5 +45,5 @@ class GitlabPriorityQueueTests(JsonBasedTesting, DjangoTestCase):
             ("v0.0.1", "Richard T. Carback III", "rick.carback@gmail.com"),
             ("v0.0.0", "Sydney Anne Erickson", "sydney@elixxir.io"),
         ]
-        for item in version_author_list:
-            self.assertIn(item, expected)
+
+        self.assertEqual(expected, version_author_list)
