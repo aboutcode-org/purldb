@@ -32,6 +32,34 @@ if TRACE:
 PACKAGE_BATCH_SIZE = 1000
 
 
+def create_package_type_query(package_types):
+    """
+    Return a Q object that filters for the types in `package_types`
+    """
+    package_types_query = Q()
+    available_package_types = list(
+        packagedb_models.Package.objects.order_by().values_list("type", flat=True).distinct()
+    )
+    for pt in package_types or []:
+        if pt not in available_package_types:
+            available_package_types_str = ", ".join(available_package_types)
+            raise CommandError(
+                f"{pt} is not a valid package type. avaliable package types are: {available_package_types_str}"
+            )
+        package_types_query |= Q(type=pt)
+    return package_types_query
+
+
+def validate_datakind_options(datakind_options):
+    available_datakinds = ["package_data", "purls"]
+    for datakind in datakind_options:
+        if datakind not in available_datakinds:
+            available_datakinds_str = ", ".join(available_datakinds)
+            raise CommandError(
+                f"{datakind} is not a supported datakind. avaliable datakinds types are: {available_datakinds_str}"
+            )
+
+
 def commit_message(commit_batch, total_commit_batch="many"):
     from django.conf import settings
 
@@ -47,6 +75,29 @@ def commit_message(commit_batch, total_commit_batch="many"):
 
         Signed-off-by: {author_name} <{author_email}>
         """
+
+
+def commit_files(
+    package_repo,
+    package_repo_name,
+    files_to_commit,
+    number_of_files_to_commit,
+    number_of_files_commited_by_package_repo,
+    commit_batch,
+):
+    number_of_files_to_commit = len(files_to_commit)
+    number_of_files_commited = number_of_files_commited_by_package_repo.get(package_repo_name, 0)
+    total_number_of_files_commited = number_of_files_commited + number_of_files_to_commit
+    number_of_files_commited_by_package_repo[package_repo] = total_number_of_files_commited
+    federatedcode.commit_and_push_changes(
+        commit_message=commit_message(commit_batch),
+        repo=package_repo,
+        files_to_commit=files_to_commit,
+        logger=logger.info,
+    )
+    logger.info(f"Committed {total_number_of_files_commited} files to {package_repo_name}")
+    files_to_commit.clear()
+    commit_batch += 1
 
 
 class Command(VerboseCommand):
@@ -84,26 +135,10 @@ class Command(VerboseCommand):
             working_path = Path(fileutils.get_temp_dir())
 
         package_types = options.get("package_type")
-        package_types_query = Q()
-        available_package_types = list(
-            packagedb_models.Package.objects.order_by().values_list("type", flat=True).distinct()
-        )
-        for pt in package_types or []:
-            if pt not in available_package_types:
-                available_package_types_str = ", ".join(available_package_types)
-                raise CommandError(
-                    f"{pt} is not a valid package type. avaliable package types are: {available_package_types_str}"
-                )
-            package_types_query |= Q(type=pt)
+        package_types_query = create_package_type_query(package_types)
 
         datakinds = options.get("datakind") or []
-        available_datakinds = ["package_data", "purls"]
-        for datakind in datakinds:
-            if datakind not in available_datakinds:
-                available_datakinds_str = ", ".join(available_datakinds)
-                raise CommandError(
-                    f"{datakind} is not a supported datakind. avaliable datakinds types are: {available_datakinds_str}"
-                )
+        validate_datakind_options(datakinds)
 
         # Clone data and config repo
         data_federation = DataFederation.from_url(
@@ -116,12 +151,10 @@ class Command(VerboseCommand):
         files_to_commit_by_package_repo = defaultdict(list)
         number_of_files_commited_by_package_repo = {}
         commit_batch = 1
-        for i, package in enumerate(
-            packagedb_models.Package.objects.filter(package_types_query).iterator(
-                chunk_size=PACKAGE_BATCH_SIZE
-            ),
-            start=1,
-        ):
+        package_iterator = packagedb_models.Package.objects.filter(package_types_query).iterator(
+            chunk_size=PACKAGE_BATCH_SIZE
+        )
+        for package in package_iterator:
             for data_cluster in data_clusters:
                 package_repo_name, datafile_path = data_cluster.get_datafile_repo_and_path(
                     purl=package.purl
@@ -151,42 +184,23 @@ class Command(VerboseCommand):
 
                 number_of_files_to_commit = len(files_to_commit)
                 if number_of_files_to_commit == PACKAGE_BATCH_SIZE:
-                    number_of_files_commited = number_of_files_commited_by_package_repo.get(
-                        package_repo_name, 0
+                    commit_files(
+                        package_repo,
+                        package_repo_name,
+                        files_to_commit,
+                        number_of_files_to_commit,
+                        number_of_files_commited_by_package_repo,
+                        commit_batch,
                     )
-                    total_number_of_files_commited = (
-                        number_of_files_commited + number_of_files_to_commit
-                    )
-                    number_of_files_commited_by_package_repo[package_repo] = (
-                        total_number_of_files_commited
-                    )
-                    federatedcode.commit_and_push_changes(
-                        commit_message=commit_message(commit_batch),
-                        repo=package_repo,
-                        files_to_commit=files_to_commit,
-                        logger=logger.info,
-                    )
-                    logger.info(
-                        f"Committed {total_number_of_files_commited} files to {package_repo_name}"
-                    )
-                    files_to_commit.clear()
-                    commit_batch += 1
 
         for package_repo, files_to_commit in files_to_commit_by_package_repo.items():
             if not files_to_commit:
                 continue
-
-            number_of_files_commited = number_of_files_commited_by_package_repo.get(
-                package_repo_name, 0
+            commit_files(
+                package_repo,
+                package_repo_name,
+                files_to_commit,
+                number_of_files_to_commit,
+                number_of_files_commited_by_package_repo,
+                commit_batch,
             )
-            total_number_of_files_commited = number_of_files_commited + number_of_files_to_commit
-            number_of_files_commited_by_package_repo[package_repo] = total_number_of_files_commited
-            federatedcode.commit_and_push_changes(
-                commit_message=commit_message(commit_batch),
-                repo=package_repo,
-                files_to_commit=files_to_commit,
-                logger=logger.info,
-            )
-            logger.info(f"Committed {total_number_of_files_commited} files to {package_repo_name}")
-            files_to_commit.clear()
-            commit_batch += 1
