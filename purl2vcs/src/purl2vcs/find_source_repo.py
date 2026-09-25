@@ -218,8 +218,8 @@ def _source_repo_download_and_vcs_urls(source_purl):
     """
     Return ``(download_url, vcs_url)`` for a source repository PackageURL.
 
-    Versionless SOURCE_REPO rows use a repository-root git clone URL. Versioned
-    rows use ``get_download_url`` (archive / tag).
+    Versionless SOURCE_BASE_PACKAGE rows use a repository-root git clone URL.
+    Versioned SOURCE_REPO rows use ``get_download_url`` (archive / tag).
     """
     if not source_purl.version:
         vcs_url = purl2url(str(source_purl))
@@ -241,8 +241,8 @@ def get_source_package_and_add_to_package_set(package, queue_scan=True):
     """
     Process a package and add the source repository to the package set.
 
-    Versionless packages resolve a repo-root SOURCE_REPO (no tag/commit) via
-    fetchcode. Versioned packages keep tag/commit matching.
+    Versionless packages resolve a repo-root SOURCE_BASE_PACKAGE (no tag/commit)
+    via fetchcode. Versioned packages keep tag/commit matching as SOURCE_REPO.
     """
     source_purl = get_source_repo(package=package)
 
@@ -253,10 +253,20 @@ def get_source_package_and_add_to_package_set(package, queue_scan=True):
     if not download_url:
         return
 
-    source_package = Package.objects.for_package_url(purl_str=str(source_purl)).get_or_none()
+    source_package = (
+        Package.objects.for_package_url(purl_str=str(source_purl), exact_match=True)
+        .get_or_none()
+    )
 
     if not source_package:
-        defaults = {"package_content": PackageContentType.SOURCE_REPO}
+        is_versionless = not source_purl.version
+        defaults = {
+            "package_content": (
+                PackageContentType.SOURCE_BASE_PACKAGE
+                if is_versionless
+                else PackageContentType.SOURCE_REPO
+            )
+        }
         if vcs_url:
             defaults["vcs_url"] = vcs_url
         source_package, _created = Package.objects.get_or_create(
@@ -267,7 +277,8 @@ def get_source_package_and_add_to_package_set(package, queue_scan=True):
             download_url=download_url,
             defaults=defaults,
         )
-        add_package_to_scan_queue(source_package)
+        if queue_scan:
+            add_package_to_scan_queue(source_package)
         logger.info(f"Created source repo package {source_purl} for {package.purl}")
     package_set_uuids = [item["uuid"] for item in package.package_sets.all().values("uuid")]
     package_set_ids = set(package_set_uuids)
