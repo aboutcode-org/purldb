@@ -15,8 +15,6 @@ from django.db.models import Q
 from django.db.models import Subquery
 from django.forms import widgets
 from django.forms.fields import MultipleChoiceField
-from django.shortcuts import get_object_or_404
-from django.utils import timezone
 
 import django_filters
 from aboutcode.federatedcode.contrib.django import utils
@@ -56,11 +54,9 @@ from packagedb.filters import PackageSearchFilter
 from packagedb.models import Package
 from packagedb.models import PackageActivity
 from packagedb.models import PackageContentType
-from packagedb.models import PackageHealthMetrics
 from packagedb.models import PackageSet
 from packagedb.models import PackageWatch
 from packagedb.models import Resource
-from packagedb.package_health import HEALTH_METRICS_MAX_AGE
 from packagedb.package_health import resolve_health_request
 from packagedb.package_managers import VERSION_API_CLASSES_BY_PACKAGE_TYPE
 from packagedb.package_managers import get_api_package_name
@@ -525,6 +521,7 @@ class PackageViewSet(PackagePublicViewSet):
         data = {"status": f"{package.package_url} has been queued for reindexing"}
         return Response(data)
 
+
 class HealthRequestSerializer(serializers.Serializer):
     purl = serializers.CharField(
         required=True,
@@ -538,25 +535,29 @@ class HealthRequestSerializer(serializers.Serializer):
 class HealthViewSet(viewsets.ViewSet):
     """
     Take a versionless npm ``purl`` query parameter and either return fresh
-    cached health metrics for the linked SOURCE_REPO Package, or queue a
-    ``scan_repo_health`` job via ScannableURI.
+    cached health metrics for the linked npm BASE_PACKAGE, or queue a
+    ``scan_repo_health`` job via ScannableURI on the SOURCE_BASE_PACKAGE.
+
+    Only npm PackageURLs are accepted; any other type is rejected.
 
     **Request example:**
 
             GET /api/health/?purl=pkg:npm/lodash
 
-    When metrics for the SOURCE_REPO are no older than one week for the
-    latest npm version, the response is the cached PackageHealthMetrics
-    mapping (HTTP 200).
+    When metrics for the npm package are no older than
+    ``HEALTH_METRICS_MAX_AGE_DAYS`` (default 7) for the latest npm version,
+    the response is the cached PackageHealthMetrics mapping (HTTP 200).
+    ``purl`` is the npm PackageURL; ``source_purl`` is the scanned
+    SOURCE_BASE_PACKAGE.
 
     Otherwise a scan job is queued and the response is (HTTP 202):
 
             {
-                "purl": "pkg:github/lodash/lodash",
+                "purl": "pkg:npm/lodash",
+                "source_purl": "pkg:github/lodash/lodash",
                 "status": "new"
             }
 
-    ``purl`` is the SOURCE_REPO package URL while the scan is in progress.
     Poll the same ``GET /api/health/?purl=...`` endpoint until metrics are ready.
     """
 
@@ -581,7 +582,8 @@ class HealthViewSet(viewsets.ViewSet):
 
         return Response(
             {
-                "purl": result["source_package"].package_url,
+                "purl": result["base_package"].package_url,
+                "source_purl": result["source_package"].package_url,
                 "status": ScannableURI.SCAN_STATUSES_BY_CODE[scannable_uri.scan_status],
             },
             status=status.HTTP_202_ACCEPTED,

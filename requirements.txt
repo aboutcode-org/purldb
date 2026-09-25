@@ -60,7 +60,7 @@ extractcode-7z==16.5.210531
 extractcode-libarchive==3.5.1.210531
 fasteners==0.20
 fastjsonschema==2.21.2
-fetchcode==0.8.2
+fetchcode==0.8.5
 fetchcode-container==1.2.3.210512
 fingerprints==1.2.3
 flot==0.7.3

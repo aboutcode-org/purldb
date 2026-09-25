@@ -448,6 +448,7 @@ class PackageContentType(models.IntegerChoices):
     TEST = 6, "test"
     DOC = 7, "doc"
     BASE_PACKAGE = 8, "base_package"
+    SOURCE_BASE_PACKAGE = 9, "base_source_repo"
 
 
 def get_class_name(obj):
@@ -1484,7 +1485,9 @@ class ScoringModel(models.Model):
 
     ecosystem = models.CharField(
         max_length=32,
-        help_text=_("Package ecosystem this scoring model applies to, for example npm, pypi, maven."),
+        help_text=_(
+            "Package ecosystem this scoring model applies to, for example npm, pypi, maven."
+        ),
     )
     model_version = models.CharField(
         max_length=32,
@@ -1511,24 +1514,73 @@ class PackageHealthMetrics(models.Model):
         Package,
         related_name="health_metrics",
         on_delete=models.CASCADE,
-        help_text=_("The Package that these health metrics are related to, for example pkg:github/leftpad/leftpad"),
+        help_text=_(
+            "The versionless npm Package these health metrics are for, for example pkg:npm/lodash."
+        ),
     )
 
-    scoring_model = models.ForeignKey(
+    source_package = models.ForeignKey(
+        Package,
+        related_name="source_health_metrics",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        help_text=_(
+            "The versionless source repository Package that was scanned, "
+            "for example pkg:github/lodash/lodash."
+        ),
+    )
+
+    catalog_scoring_model = models.ForeignKey(
         ScoringModel,
         related_name="health_metrics",
         on_delete=models.PROTECT,
         null=True,
         blank=True,
-        help_text=_("Scoring model used to produce these metrics."),
+        help_text=_(
+            "Catalog ScoringModel used for these metrics "
+            "(defaults to npmlargerecosystem / NPMMostUsed)."
+        ),
     )
 
-    version = models.CharField(
-        max_length=100,
+    vcs_url = models.CharField(
+        max_length=2048,
+        blank=True,
+        default="",
         help_text=_(
-            "Package version these health metrics were collected for. "
-            "For V1 (versionless npm PURLs), this is the latest version at collection time."
+            "VCS repository URL reported by the health scan, "
+            "for example https://github.com/lodash/lodash.git."
         ),
+    )
+
+    scoring_model = models.CharField(
+        max_length=128,
+        blank=True,
+        default="",
+        help_text=_("Scoring model name reported by the health scan."),
+    )
+
+    score = models.FloatField(
+        default=0.0,
+        help_text=_("Overall health score for this Package at collection time."),
+    )
+
+    commit_range = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text=_("Commit range analyzed by the health scan."),
+    )
+
+    run_start_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=_("When the health scan analysis window started."),
+    )
+
+    run_end_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=_("When the health scan analysis window ended."),
     )
 
     metrics = models.JSONField(
@@ -1537,9 +1589,12 @@ class PackageHealthMetrics(models.Model):
         help_text=_("Health metrics data for this Package"),
     )
 
-    score = models.FloatField(
-        default=0.0,
-        help_text=_("Overall health score for this Package at collection time."),
+    version = models.CharField(
+        max_length=100,
+        help_text=_(
+            "Package version these health metrics were collected for. "
+            "For V1 (versionless npm PURLs), this is the latest version at collection time."
+        ),
     )
 
     date_collected = models.DateTimeField(
@@ -1552,7 +1607,7 @@ class PackageHealthMetrics(models.Model):
         unique_together = [["package", "version", "date_collected"]]
 
     def __str__(self):
-        return f"Health metrics for {self.package.purl}@{self.version}"
+        return f"Health metrics for {self.package.package_url}@{self.version}"
 
 
 class ApiUserManager(UserManager):
