@@ -463,10 +463,12 @@ def queue_health_metrics_scan(source_package, npm_purl=None, priority=100):
     When ``npm_purl`` is given, stash it on ``source_package.extra_data`` so the
     webhook can resolve the npm BASE_PACKAGE to store on PackageHealthMetrics.
 
-    If a ScannableURI for this source already finished (indexed / failed / …)
-    and we are here because metrics are missing or stale past
-    ``HEALTH_METRICS_MAX_AGE_DAYS``, reset that URI to ``SCAN_NEW`` so the worker
-    can pick it up again. In-flight URIs are left unchanged.
+    If a ScannableURI for this source is already in flight (``new`` /
+    ``submitted`` / ``in progress``), reuse it. If the latest URI finished
+    successfully or in a terminal failure (``failed`` / ``timeout`` /
+    ``index failed``) and we need a new scan (missing or stale metrics),
+    create a **new** ScannableURI. Resetting a finished URI reuses its UUID and
+    ScanCode.io rejects the project as a duplicate name.
     Return the ScannableURI.
     """
     from minecode.models import ScannableURI
@@ -514,26 +516,15 @@ def queue_health_metrics_scan(source_package, npm_purl=None, priority=100):
             scannable_uri.save(update_fields=["priority"])
         return scannable_uri
 
-    # Finished (or failed) earlier — re-queue for a fresh health scan.
-    scannable_uri.scan_status = ScannableURI.SCAN_NEW
-    scannable_uri.scan_error = None
-    scannable_uri.index_error = None
-    scannable_uri.wip_date = None
-    scannable_uri.scan_date = None
-    scannable_uri.priority = priority
-    scannable_uri.reindex_uri = True
-    scannable_uri.save(
-        update_fields=[
-            "scan_status",
-            "scan_error",
-            "index_error",
-            "wip_date",
-            "scan_date",
-            "priority",
-            "reindex_uri",
-        ]
+    # Finished earlier (indexed, scanned, or terminal failure). Always create a
+    # new ScannableURI so ScanCode.io gets a fresh project UUID/name.
+    return ScannableURI.objects.create(
+        uri=source_package.download_url,
+        package=source_package,
+        pipelines=pipelines,
+        priority=priority,
+        reindex_uri=True,
     )
-    return scannable_uri
 
 
 def write_package_health_metrics(package, project_extra_data=None):
