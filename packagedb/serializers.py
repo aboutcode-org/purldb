@@ -563,14 +563,20 @@ class PackageActivitySerializer(ModelSerializer):
 
 class PackageHealthMetricsSerializer(ModelSerializer):
     purl = CharField(source="package.package_url", read_only=True)
+    source_purl = CharField(source="source_package.package_url", read_only=True)
 
     class Meta:
         model = PackageHealthMetrics
         fields = [
             "purl",
-            "version",
-            "metrics",
+            "source_purl",
+            "vcs_url",
+            "scoring_model",
             "score",
+            "commit_range",
+            "run_start_date",
+            "run_end_date",
+            "metrics",
             "date_collected",
         ]
 

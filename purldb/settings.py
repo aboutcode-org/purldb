@@ -105,6 +105,11 @@ SECURE_PROXY_SSL_HEADER = env.tuple(
 # API
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = env.int("DATA_UPLOAD_MAX_NUMBER_FIELDS", default=2048)
+# ScanCode.io webhooks may include full scan results JSON.
+DATA_UPLOAD_MAX_MEMORY_SIZE = env.int(
+    "DATA_UPLOAD_MAX_MEMORY_SIZE",
+    default=262144000,  # 250 MB
+)
 
 # Database
 DATABASES = {
@@ -323,6 +328,9 @@ PURLDB_ASYNC = env.bool("PURLDB_ASYNC", default=False)
 if not PURLDB_ASYNC:
     for queue_config in RQ_QUEUES.values():
         queue_config["ASYNC"] = False
+
+# How long PackageHealthMetrics stay "fresh" before a new scan_repo_health is queued.
+HEALTH_METRICS_MAX_AGE_DAYS = env.int("HEALTH_METRICS_MAX_AGE_DAYS", default=7)
 
 # FederatedCode integration
 

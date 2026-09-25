@@ -45,9 +45,7 @@ SUPPORTED_ADDON_PIPELINES = (
 )
 
 
-def add_package_to_scan_queue(
-    package, pipelines=DEFAULT_PIPELINES, priority=0, reindex_uri=False
-):
+def add_package_to_scan_queue(package, pipelines=DEFAULT_PIPELINES, priority=0, reindex_uri=False):
     """
     Add a Package `package` to the scan queue to run the list of provided
     `pipelines` with a given `priority`. A ScannableURI with a `priority` of 100
