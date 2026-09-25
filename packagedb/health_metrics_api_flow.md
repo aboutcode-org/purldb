@@ -1,236 +1,283 @@
-# Package health metrics
+# `/api/health` — usage, flow, and scenarios
 
-This note is about how health metrics work in PurlDB today, how to call the API, and why we did things this way.
-
-For now we only support npm, and the PURL you send must have no version (example: `pkg:npm/lodash`). PurlDB does not compute the score itself. ScanCode.io runs the `scan_repo_health` pipeline (GrimoireLab) and we store what comes back.
+How to call the health metrics API, what happens end to end, which
+scenarios are covered in this version, and what is still missing.
 
 ---
 
-## How to use it
-
-Call:
-
-```
-GET /api/health/?purl=pkg:npm/lodash
-```
-
-If you have no metrics yet, you get HTTP 202. Call the **same URL** again later. When metrics are ready you get HTTP 200.
-
-Example:
+## Quick usage
 
 ```bash
-curl -s 'http://127.0.0.1:8006/api/health/?purl=pkg:npm/lodash'
+# Request metrics for a versionless npm package
+curl -s 'http://localhost:8006/api/health/?purl=pkg:npm/lodash'
+
+# Scoped packages: URL-encode the @
+curl -s 'http://localhost:8006/api/health/?purl=pkg:npm/%40angular/core'
 ```
 
-What you can get:
+| HTTP | Meaning | Client action |
+| --- | --- | --- |
+| **200** | Fresh metrics ready | Use the payload |
+| **202** | Scan queued / in progress | Poll the same URL |
+| **400** | Bad PURL, no source, or cannot resolve latest version | Fix input or stop |
+| **500** | Failed to create/queue ScannableURI (should be rare) | Retry / check logs |
 
-- **400** — bad PURL, not npm, or PURL has a version. Also 400 if we cannot find latest version, the package is not on npm, or we cannot find a source repo.
-- **200** — we already have fresh metrics (not older than 7 days for the current latest npm version).
-- **202** — we queued a scan, or the scan is still running.
-
-PURL rules:
-
-- OK: `pkg:npm/lodash`, scoped like `pkg:npm/%40angular/core`
-- Not OK: `pkg:pypi/django`, `pkg:npm/lodash@4.17.21`, `not-a-purl`
-
-We do not do extra checks on qualifiers or subpath in this version.
-
----
-
-## When metrics are ready (HTTP 200)
-
-This happens if we have a `PackageHealthMetrics` row on the versionless source repo package, for the current latest npm version, and `date_collected` is within 7 days.
+**200 body (ready):**
 
 ```json
 {
-  "purl": "pkg:github/lodash/lodash",
-  "version": "4.17.21",
-  "metrics": {
-    "total_commits": 260,
-    "total_contributors": 33
-  },
-  "score": 8.5,
-  "date_collected": "2026-09-03T17:40:00.123456Z"
+  "purl": "pkg:npm/lodash",
+  "source_purl": "pkg:github/lodash/lodash",
+  "vcs_url": "https://github.com/lodash/lodash.git",
+  "scoring_model": "npm-health-0.2",
+  "score": 1.0,
+  "commit_range": { "...": "..." },
+  "run_start_date": "...",
+  "run_end_date": "...",
+  "metrics": { "...": "..." },
+  "date_collected": "..."
 }
 ```
 
-- `purl` is the **source repo** (GitHub etc.), not the npm PURL you asked for.
-- `version` is the npm version we collected for (latest at that time).
-- `metrics` is the JSON from ScanCode.io / GrimoireLab.
-- `score` is `npm_health_score` from ScanCode.io.
-- `date_collected` is when we saved the row.
-
----
-
-## When scan is not finished (HTTP 202)
+**202 body (pending):**
 
 ```json
 {
-  "purl": "pkg:github/lodash/lodash",
+  "purl": "pkg:npm/lodash",
+  "source_purl": "pkg:github/lodash/lodash",
   "status": "new"
 }
 ```
 
-Here `purl` is also the source repo package, because that is what we scan. `status` comes from `ScannableURI`:
+`status` is the ScannableURI scan status (`new`, `submitted`, `in progress`,
+`scanned`, `indexed`, …). Keep polling `GET /api/health/?purl=...` until 200
+or a hard 400.
 
-- `new` — in the queue, worker did not take it yet
-- `submitted` — worker took it
-- `in progress` — pipeline is running
-- `scanned` — ScanCode.io sent the webhook, but we did not finish saving yet
-- `indexed` — save/index finished (next poll should be 200 if metrics were written)
-- `failed` / `timeout` / `scan index failed` — something went wrong
+### Environment
 
-If you call the same PURL again, we reuse the same `ScannableURI` (same uri, pipelines, package). The status just moves forward.
+| Variable | Default | Role |
+| --- | --- | --- |
+| `HEALTH_METRICS_MAX_AGE_DAYS` | `7` | Freshness window before re-queue |
+| `SITE_URL` | — | Webhook base URL ScanCode.io calls back to (e.g. `http://host.docker.internal:8006` when SCIO is in Docker) |
 
-Error examples:
+Scan queue worker must authenticate as a user in the `scan_queue_workers`
+group. PurlDB does **not** run `scan_repo_health` itself; ScanCode.io must.
+
+---
+
+## Assumptions (this version)
+
+1. **Only versionless npm.** Rejects non-npm and versioned PURLs.
+2. **Metrics hang on npm.** `PackageHealthMetrics.package` = versionless npm
+   `BASE_PACKAGE`; `source_package` = versionless github `SOURCE_BASE_PACKAGE`.
+   No `input_purl` column. API `purl` / `source_purl` map to those FKs.
+3. **We scan the versionless source base package** (`scan_repo_health` only).
+4. **Freshness + adopt.** Fresh row for this npm + latest version → 200.
+   Else fresh row for the **same** `SOURCE_BASE_PACKAGE` (monorepo / shared
+   source) → copy scan fields onto a new row for the requested npm (preserve
+   original `date_collected`) → 200. Else queue / re-queue scan → 202.
+5. **Latest npm version** is resolved at request time via fetchcode
+   `package_versions.versions` and stored on the metrics row as `version`.
+6. **Webhook `extra_data` shape is fixed** (no legacy key merge):
 
 ```json
-{"error": "Could not resolve latest version for pkg:npm/lodash."}
-{"error": "No source package found"}
+{
+  "vcs_url": "...",
+  "scoring_model": "...",
+  "score": 0.0,
+  "commit_range": {},
+  "run_start_date": "...",
+  "run_end_date": "...",
+  "metrics": {}
+}
 ```
 
-For invalid `purl` you get a field error, like `{"purl": ["Only npm PackageURLs are supported."]}`.
+7. **Catalog ScoringModel** is always default
+   `npmlargerecosystem` / `NPMMostUsed` / `0.1` (`catalog_scoring_model`).
+   Scan-reported name stays on the CharField `scoring_model`.
 
 ---
 
-## What happens from start to end
+## End-to-end flow (short)
 
-You send GET with the npm PURL. PurlDB first checks the PURL. Then it asks fetchcode for all versions and picks the latest (same idea as PackageWatch).
+1. Validate versionless npm `purl`.
+2. Resolve/create npm `BASE_PACKAGE` + latest `SOURCE_ARCHIVE`; link in a
+   `PackageSet`.
+3. Resolve/create github `SOURCE_BASE_PACKAGE` (+ versioned `SOURCE_REPO`) via
+   purl2vcs `get_source_package_and_add_to_package_set`.
+4. `resolve_fresh_health_metrics` → own fresh row, or adopt from shared source.
+5. Else stash `extra_data.health_npm_purl`, queue `scan_repo_health` on the
+   source (reuse in-flight ScannableURI; reset finished/failed to `new`).
+6. Worker runs ScanCode.io; webhook → `process_scan_results` →
+   `write_package_health_metrics` (health-only: skip fingerprint index).
+7. Client polls until 200.
 
-If we do not have packages yet, we create them:
-
-1. A versionless npm **base package** (`version=""`, download URL like `https://registry.npmjs.org/lodash`).
-2. The latest versioned npm package from the registry (source archive). We use the normal collect helpers. We do **not** queue `scan_single_package` / `fingerprint_codebase` for the tarball.
-3. Source repo packages with purl2vcs, in the same package set: one **without version** (this is the one we scan and attach metrics to), and one **with the latest version** (tag/commit).
-
-If we already have a base package, we just make sure source repo and latest version exist.
-
-Then we look for health metrics on the versionless source repo for that latest npm version. If they are newer than 7 days, we return 200.
-
-If not, we put the source repo on the scan queue with pipeline `scan_repo_health` and return 202.
-
-The GET request **waits** for collect and finding the repo (npm, fetchcode, git tags). Only the ScanCode.io scan is in the background.
-
-PurlDB does not run `scan_repo_health`. A scan worker calls `GET /api/scan_queue/get_next_download_url/`, gets the git URL, the pipeline name, and a webhook URL. It creates a ScanCode.io project, puts `scannable_uri_uuid` in `project.extra_data`, and runs `scan_repo_health`.
-
-That pipeline needs one git URL. It runs grimoirelab-metrics, then puts `health_metrics`, `npm_health_score`, and `repository` on `project.extra_data`. The metrics file on disk is not sent to PurlDB. If extra_data is empty, we cannot store real metrics.
-
-ScanCode.io then POSTs to `/api/scan_queue/index_package_scan/<key>/` with project, results, and summary. We set the ScannableURI to `scanned` and run `process_scan_results`.
-
-If `PURLDB_ASYNC` is false, that runs in the same process. If it is true, the job goes to Redis and you need `python manage.py rqworker default`. If there is no worker, status stays `scanned` and metrics never get saved. Also: the process environment can override `.env`. We saw `PURLDB_ASYNC=True` on runserver even when `.env` said False.
-
-`process_scan_results` always runs `index_package` first (files, fingerprints). For health scans the file list is often empty. Only if indexing does **not** fail, and the pipeline list has `scan_repo_health`, we call `write_package_health_metrics`.
-
-We look for metrics in project extra_data (and also in results headers if they are there): `health_metrics` or `metrics`, and `health_score` or `npm_health_score`. Version comes from `package_health_version`, or from the latest npm package in the set. If there is no real metrics dict, we **do not** create a fake row. If we do create a row, we attach ScoringModel npm / health / 1.0.
-
-After that, the same GET should return 200.
+Main code: `HealthViewSet` (`packagedb/api.py`),
+`resolve_health_request` / write / queue (`packagedb/package_health.py`),
+`process_scan_results` (`minecode/tasks.py`).
 
 ---
 
-## What we store in the database
+## Scenario matrix (tested this version)
 
-For one request we usually have:
+Automated: `PackageHealthMetricsAPITestCase` in `packagedb/tests/test_api.py`
+(14 tests). Also exercised live against local `/api/health` and unit checks for
+write / queue / webhook.
 
-- Base package: `pkg:npm/lodash`, content `base_package`, registry URL.
-- Latest npm release: `pkg:npm/lodash@4.17.21`, content `source_archive`, tarball URL.
-- Source repo without version: `pkg:github/lodash/lodash`, this is what we scan.
-- Source repo with version/tag, also in the same PackageSet.
+### Request validation → 400
 
-Health metrics point to the versionless source repo. The `version` field on the metrics row is the **npm** version, not the git tag.
+| Scenario | Expected | Covered by |
+| --- | --- | --- |
+| Missing `purl` | 400 field required | live |
+| Empty `purl` | 400 may not be blank | live |
+| Invalid PURL string | 400 validation error | unit + live |
+| Non-npm (`pypi`, `github`, …) | 400 only npm | unit + live |
+| Versioned npm (`pkg:npm/lodash@4.17.21`) | 400 versionless only | unit + live |
 
-`ScoringModel` is a small catalog: ecosystem, scoring_model, model_version. Unique together. These are normal text fields, not Django choices, so we can add new values later without a migration. For V1 we always use npm, health, 1.0. The FK on metrics can be null, and delete is PROTECT.
+### Collect / resolve
 
-`PackageHealthMetrics` has package, scoring_model, version, metrics (JSON), score, date_collected. Unique on package + version + date_collected, so each collection is a **new** row. We take the newest one that is still within 7 days.
+| Scenario | Expected | Covered by |
+| --- | --- | --- |
+| No BASE_PACKAGE yet | Create base + sources, queue scan → 202 | unit |
+| Only versioned npm exists | Create BASE_PACKAGE, queue → 202 | unit |
+| Scoped package (`@angular/core`) | Registry URL + sources correct → 202/200 | unit + live |
+| Cannot resolve latest version (registry 404) | 400 “Could not resolve latest version” | unit + live (fixed: was uncaught HTTPError → 500) |
+| No VCS / source found | 400 “No source package found” | unit |
+| Package already known, metrics missing | Queue → 202, poll same status | unit + live |
 
-Migration file: `packagedb/migrations/0095_alter_package_package_content_scoringmodel_and_more.py`.
+### Cache / freshness / adopt
 
----
+| Scenario | Expected | Covered by |
+| --- | --- | --- |
+| Fresh metrics for npm + latest version | 200, no new ScannableURI | unit + live (`lodash`) |
+| Metrics older than `HEALTH_METRICS_MAX_AGE_DAYS` | Re-queue → 202 | unit |
+| Stale + ScannableURI already `indexed` | Reset URI to `new`, `reindex_uri=True` | unit |
+| Another npm shares same `SOURCE_BASE_PACKAGE` with fresh metrics | Adopt row → 200 (not bare indexed status) | unit + live (`lodash.debounce`) |
+| Latest version changed (row exists for old version only) | Treat as miss → queue | unit (helpers) |
+| Adopt preserves `date_collected` | Sibling stays inside freshness window | unit (helpers) |
 
-## Where the code is
+### Queue / ScannableURI
 
-- API: `packagedb/api.py` (`HealthViewSet`), URL in `purldb/urls.py` → `/api/health/`
-- PURL check: `packagedb/serializers.py`
-- Main logic: `packagedb/package_health.py`
-- Models: `packagedb/models.py`
-- Scan queue and webhook: `minecode/api.py`, `minecode/models.py`
-- After webhook: `minecode/tasks.py` (`process_scan_results`)
-- Queue insert: `minecode/model_utils.py`
-- Finding git repo: `purl2vcs`
-- Pipeline itself: ScanCode.io `scan_repo_health.py` (not in this repo)
+| Scenario | Expected | Covered by |
+| --- | --- | --- |
+| First queue | Create ScannableURI `new`, pipelines=`[scan_repo_health]` | unit |
+| Poll while `new` / in flight | Reuse same URI, do not reset | unit |
+| Re-queue after `indexed` or `index_failed` | Reset to `new` | unit (helpers) |
+| Stash `health_npm_purl` on source | Webhook can resolve npm FK | code path + write tests |
 
-There is still `GET /api/health/{uuid}/status/` in the code. Clients should ignore it and poll with the purl.
+### Webhook write (`write_package_health_metrics` / `process_scan_results`)
 
----
+| Scenario | Expected | Covered by |
+| --- | --- | --- |
+| Full `extra_data` with non-empty `metrics` | Create row; health-only → `SCAN_INDEXED` | unit (helpers) |
+| Missing or empty `metrics` | No row; health-only → `SCAN_INDEX_FAILED` + warning log | unit (helpers) |
+| Invalid `score` | Store `0.0` | unit (helpers) |
+| Resolve npm via `health_npm_purl` | Row.package = stashed npm | unit (helpers) |
+| Resolve npm via package set fallback | Row.package = npm in set | unit (helpers) |
 
-## What must be running
+### Package / content types in a typical request
 
-A 202 only means PurlDB queued the job. You still need:
-
-- PurlDB server
-- Postgres
-- Redis, if `PURLDB_ASYNC=True`
-- RQ worker in that case
-- ScanCode.io and the purldb scan worker
-- GrimoireLab (and OpenSearch) for the health pipeline
-
-And ScanCode.io must copy metrics into `project.extra_data`, not only into a file.
-
----
-
-## Decisions we already took
-
-API:
-
-- GET, not POST.
-- One URL to start and to poll. No `poll_url`.
-- 202 while waiting, 200 only when we have metrics.
-- In 202, `purl` is the source repo. In 200, `purl` is also the source repo.
-- No `from_cache` flag.
-- We do not put `scannable_uri_uuid` in the main response.
-
-Scope:
-
-- npm only, no version on the request PURL.
-- Always latest npm version from fetchcode, not a version from the client.
-- Metrics hang on the versionless source repo. npm version is stored on the metrics row.
-- Cache is 7 days for that package + that latest version. If latest on npm changes, we do not reuse the old version.
-- We still ask fetchcode for latest on every GET, even when we return cache, so “latest” stays up to date.
-
-Collect vs scan:
-
-- Reuse existing collect and purl2vcs. Do not invent a second collect path.
-- Do not queue the normal tarball scan for health. Only `scan_repo_health` on the git URL.
-- That pipeline lives in ScanCode.io.
-
-Saving:
-
-- New row every time we collect, we do not overwrite the old one.
-- No stub metrics if the webhook has no real data.
-- ScoringModel ecosystem and scoring_model are free text.
-- Base package uses registry metadata URL as `download_url` because that field is unique and version cannot be SQL NULL (we use empty string).
-
-Status on 202 is the ScannableURI status (`new`, `submitted`, `scanned`, …), not a special health status like `pending` / `ready`.
+| Role | Example | `package_content` |
+| --- | --- | --- |
+| npm identity (metrics FK) | `pkg:npm/lodash` | `BASE_PACKAGE` |
+| npm latest tarball | `pkg:npm/lodash@4.18.1` | `SOURCE_ARCHIVE` |
+| github repo scanned | `pkg:github/lodash/lodash` | `SOURCE_BASE_PACKAGE` |
+| github tag snapshot | `pkg:github/lodash/lodash@4.18.1` | `SOURCE_REPO` |
 
 ---
 
-## Next steps
+## Gaps and scenarios not fully covered yet
 
-- When we queue `scan_repo_health`, PurlDB should also send `ecosystem` and `project` to ScanCode.io (for example on the scan-queue payload or on project extra_data). Today we only send the git URL, pipelines, and `scannable_uri_uuid`.
-- ScanCode.io `scan_repo_health` should pass those through to healthycode CLI as `ecosystem` and `project`.
-- Keep them in extra_data on the way back, so when we write `PackageHealthMetrics` we can attach the matching `ScoringModel` (ecosystem + scoring_model=`project` + model version) instead of always hardcoding npm / health / 1.0 in PurlDB only.
-- For `pkg:npm/lodash` that means CLI and DB both use ecosystem `npm` and project/scoring_model `health`.
-- "npm_health_score" should only be "score" now
+Use this list for follow-up work / next PR. Behavior below is either
+untested, intentional limitation, or known soft spot.
+
+### API / product gaps
+
+1. **Non-npm ecosystems** — not accepted; no pypi/maven/cargo path.
+2. **Versioned request PURLs** — always server-side “latest”; cannot ask for
+   health of a specific historical npm version.
+3. **No separate status URL** — clients must poll `/api/health/`; 202 does not
+   include estimated wait or ScannableURI UUID.
+4. **No auth / rate limit** on `/api/health` beyond whatever the site uses
+   globally.
+5. **No bulk endpoint** — one PURL per request (large SBOM loops are
+   client-side).
+6. **Response omits `version` and catalog ScoringModel** — clients cannot see
+   which npm version the score was tied to without inspecting DB.
+7. **Org renames / fork drift** — find_source may return a different org than
+   SPDX `downloadLocation` (e.g. `facebook/react` vs `react/react`,
+   `bitinn/node-fetch` vs `node-fetch/node-fetch`). Health follows find_source /
+   fetchcode, not SPDX.
+8. **Monorepo path vs root** — SPDX may store `/tree/.../packages/foo`; we
+   scan the repo root `SOURCE_BASE_PACKAGE`. Same repo, different URL string.
+
+### Pipeline / infrastructure gaps
+
+9. **ScanCode.io `format_metrics_output` failures** — if SCIO finishes without
+   writing `metrics` into `project.extra_data`, we mark `SCAN_INDEX_FAILED`.
+   Client keeps getting 202 until something re-queues; no distinct “failed”
+   HTTP status on `/api/health` (status string may show `failed` /
+   `index failed` only while that ScannableURI is current).
+10. **In-flight stuck scans** — `submitted` / `in progress` are never reset by
+    a health request. A hung worker leaves clients polling 202 indefinitely
+    until operator intervention or a new code path for timeout.
+11. **Mixed pipelines** — if a ScannableURI ever had
+    `scan_repo_health` plus other pipelines, indexing is not health-only.
+    Health always creates pipelines=`[scan_repo_health]` only, so this is
+    mainly a risk for manually created URIs.
+12. **Webhook cannot resolve npm** — if `health_npm_purl` is missing and the
+    package set has no npm package, write returns None → index failed.
+13. **Docker networking** — wrong `SITE_URL` means webhook never reaches
+    PurlDB; metrics never appear (looks like eternal 202).
+
+### Data / concurrency soft spots
+
+14. **Latest-version string sort** — we sort with univers npm version class;
+    exotic pre-releases / non-semver tags could pick a surprising “latest”.
+15. **Version on write** — webhook picks “first versioned npm in package set
+    ordered by `-version`” (string order), which may disagree with the
+    request-time fetchcode latest if the set is messy.
+16. **Adopt ignores sibling’s `version` match** — any fresh metrics for the
+    shared source are reused; we overwrite `version` with the requester’s
+    latest. Intentional for monorepos, but scores are repo-level, not
+    package-version-level.
+17. **Concurrent first requests** for the same new PURL could race on
+    package / ScannableURI creation (DB uniqueness usually collapses this;
+    not load-tested).
+18. **Multiple ScannableURIs** for same source + pipelines — queue logic uses
+    `.order_by("-id").first()`; older duplicates are ignored.
+19. **`HEALTH_METRICS_MAX_AGE_DAYS=0`** — every request re-queues (edge
+    config); not explicitly tested.
+20. **Private / missing npm packages** that 403 or time out — now mapped to
+    “Could not resolve latest version” via broad `except`; message does not
+    distinguish 404 vs network error.
+
+### Tests still thin
+
+21. No Django test that drives **full** `process_scan_results` health-only path
+    through the API client (helpers cover write + status transitions).
+22. No test for **in-progress** poll returning status `submitted` /
+    `in progress` via HTTP.
+23. No test that **failed** scan surfaces a clear client-visible error
+    (today: keep polling; may see `status` reflecting failure until reset).
+24. No test for collect failure `"Package does not exist on npmjs: ..."` when
+    latest version resolves but registry tarball fetch fails.
+25. find_source `MultipleObjectsReturned` on loose PURL match was fixed with
+    exact `download_url` match; no dedicated health API regression test for
+    monorepo multi-download_url packages beyond adopt.
+
 ---
 
-## Where we are now
+## Main code locations
 
-Done:
-
-- GET `/api/health/` for versionless npm.
-- Create base package, latest npm package, and source repo packages with existing tools.
-- Queue `scan_repo_health` on the versionless source repo.
-- Same URL for polling, no `poll_url`, 202 purl is the source package.
-- Webhook can write metrics from extra_data when indexing succeeds.
-- 200 body: purl, version, metrics, score, date_collected.
-
-This only works on a machine if the ScanCode.io worker is pulling the queue, the pipeline finishes and sets extra_data, and PurlDB actually runs `process_scan_results` (async false, or an RQ worker).
+| Piece | Where |
+| --- | --- |
+| HTTP endpoint | `packagedb/api.py` — `HealthViewSet` |
+| Validation | `packagedb/serializers.py` — `validate_versionless_npm_purl` |
+| Response fields | `packagedb/serializers.py` — `PackageHealthMetricsSerializer` |
+| Collect / resolve / queue / write | `packagedb/package_health.py` |
+| Source packages | `purl2vcs/.../find_source_repo.py` |
+| Models | `packagedb/models.py` — `PackageHealthMetrics`, `ScoringModel` |
+| Webhook | `minecode/tasks.py` — `process_scan_results` |
+| Settings | `purldb/settings.py` — `HEALTH_METRICS_MAX_AGE_DAYS` |
+| Tests | `packagedb/tests/test_api.py` — `PackageHealthMetricsAPITestCase` |
