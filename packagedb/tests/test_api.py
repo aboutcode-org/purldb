@@ -1962,8 +1962,8 @@ class PackageHealthMetricsAPITestCase(TransactionTestCase):
         scannable = ScannableURI.objects.get(pipelines=["scan_repo_health"])
         self.assertEqual(ScannableURI.SCAN_NEW, scannable.scan_status)
 
-    def test_health_request_resets_indexed_scannable_when_metrics_stale(self):
-        """After MAX_AGE, an indexed ScannableURI must be reset to new for rescan."""
+    def test_health_request_creates_new_scannable_when_metrics_stale(self):
+        """After MAX_AGE, create a new ScannableURI instead of resetting indexed."""
         from minecode.models import ScannableURI
 
         stale = PackageHealthMetrics.objects.create(
@@ -1977,7 +1977,7 @@ class PackageHealthMetricsAPITestCase(TransactionTestCase):
         PackageHealthMetrics.objects.filter(pk=stale.pk).update(
             date_collected=timezone.now() - timedelta(days=8)
         )
-        ScannableURI.objects.create(
+        old_uri = ScannableURI.objects.create(
             uri=self.source_package.download_url,
             package=self.source_package,
             pipelines=["scan_repo_health"],
@@ -1993,12 +1993,62 @@ class PackageHealthMetricsAPITestCase(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         self.assertEqual(response.data["status"], "new")
-        scannable = ScannableURI.objects.get(
-            package=self.source_package,
-            pipelines=["scan_repo_health"],
+        old_uri.refresh_from_db()
+        self.assertEqual(ScannableURI.SCAN_INDEXED, old_uri.scan_status)
+        new_uri = (
+            ScannableURI.objects.filter(
+                package=self.source_package,
+                pipelines=["scan_repo_health"],
+            )
+            .order_by("-id")
+            .first()
         )
-        self.assertEqual(ScannableURI.SCAN_NEW, scannable.scan_status)
-        self.assertTrue(scannable.reindex_uri)
+        self.assertNotEqual(old_uri.pk, new_uri.pk)
+        self.assertEqual(ScannableURI.SCAN_NEW, new_uri.scan_status)
+        self.assertTrue(new_uri.reindex_uri)
+
+    def test_health_request_creates_new_scannable_on_terminal_failure(self):
+        """Terminal-failure URIs must not be reset (SCIO duplicate project name)."""
+        from minecode.models import ScannableURI
+
+        for terminal_status in (
+            ScannableURI.SCAN_FAILED,
+            ScannableURI.SCAN_TIMEOUT,
+            ScannableURI.SCAN_INDEX_FAILED,
+        ):
+            with self.subTest(scan_status=terminal_status):
+                ScannableURI.objects.filter(package=self.source_package).delete()
+                PackageHealthMetrics.objects.filter(package=self.npm_package).delete()
+                failed = ScannableURI.objects.create(
+                    uri=self.source_package.download_url,
+                    package=self.source_package,
+                    pipelines=["scan_repo_health"],
+                    scan_status=terminal_status,
+                    priority=100,
+                    scan_error="previous failure",
+                )
+
+                with self._mock_latest_version():
+                    response = self.client.get(
+                        self.endpoint,
+                        data={"purl": self.purl},
+                    )
+
+                self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+                self.assertEqual(response.data["status"], "new")
+                failed.refresh_from_db()
+                self.assertEqual(terminal_status, failed.scan_status)
+                new_uri = (
+                    ScannableURI.objects.filter(
+                        package=self.source_package,
+                        pipelines=["scan_repo_health"],
+                    )
+                    .order_by("-id")
+                    .first()
+                )
+                self.assertNotEqual(failed.pk, new_uri.pk)
+                self.assertEqual(ScannableURI.SCAN_NEW, new_uri.scan_status)
+                self.assertTrue(new_uri.reindex_uri)
 
     def test_health_queues_when_metrics_missing(self):
         with self._mock_latest_version(), self._sync_health_processing():
