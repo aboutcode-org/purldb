@@ -107,7 +107,9 @@ group. PurlDB does **not** run `scan_repo_health` itself; ScanCode.io must.
    purl2vcs `get_source_package_and_add_to_package_set`.
 4. `resolve_fresh_health_metrics` → own fresh row, or adopt from shared source.
 5. Else stash `extra_data.health_npm_purl`, queue `scan_repo_health` on the
-   source (reuse in-flight ScannableURI; reset finished/failed to `new`).
+   source (reuse in-flight ScannableURI; create a **new** ScannableURI when the
+   previous one finished or failed — do not reset, or ScanCode.io rejects
+   duplicate project names).
 6. Worker runs ScanCode.io; webhook → `process_scan_results` →
    `write_package_health_metrics` (health-only: skip fingerprint index).
 7. Client polls until 200.
@@ -151,7 +153,8 @@ write / queue / webhook.
 | --- | --- | --- |
 | Fresh metrics for npm + latest version | 200, no new ScannableURI | unit + live (`lodash`) |
 | Metrics older than `HEALTH_METRICS_MAX_AGE_DAYS` | Re-queue → 202 | unit |
-| Stale + ScannableURI already `indexed` | Reset URI to `new`, `reindex_uri=True` | unit |
+| Stale + ScannableURI already `indexed` | Create **new** URI (`reindex_uri=True`), leave old indexed | unit |
+| Previous URI in terminal failure (`failed` / `timeout` / `index failed`) | Create **new** URI (do not reset — avoids SCIO duplicate project name) | unit |
 | Another npm shares same `SOURCE_BASE_PACKAGE` with fresh metrics | Adopt row → 200 (not bare indexed status) | unit + live (`lodash.debounce`) |
 | Latest version changed (row exists for old version only) | Treat as miss → queue | unit (helpers) |
 | Adopt preserves `date_collected` | Sibling stays inside freshness window | unit (helpers) |
@@ -162,7 +165,7 @@ write / queue / webhook.
 | --- | --- | --- |
 | First queue | Create ScannableURI `new`, pipelines=`[scan_repo_health]` | unit |
 | Poll while `new` / in flight | Reuse same URI, do not reset | unit |
-| Re-queue after `indexed` or `index_failed` | Reset to `new` | unit (helpers) |
+| Re-queue after `indexed` or terminal failure | Create new ScannableURI with new UUID | unit |
 | Stash `health_npm_purl` on source | Webhook can resolve npm FK | code path + write tests |
 
 ### Webhook write (`write_package_health_metrics` / `process_scan_results`)
