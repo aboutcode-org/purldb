@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("packagedb", "0094_package_packagedb_p_package_d39839_idx"),
+        ("packagedb", "0095_package_packagedb_p_vcs_url_fa3a4f_idx"),
     ]
 
     operations = [
