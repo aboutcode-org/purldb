@@ -303,7 +303,11 @@ class TestFindSourceRepo(TestCase):
         assert fetch_response("https://github.com/assets") is None
         assert fetch_response("https://github.com/abc.js") is None
 
-    def test_from_purl_to_git(self):
+    @mock.patch("purl2vcs.find_source_repo.fetch_response")
+    @mock.patch("subprocess.getoutput")
+    def test_from_purl_to_git(self, mock_popen, mock_fetch):
+        mock_popen.return_value = open(TEST_DATA).read()
+
         response = self.client.get(
             "/api/from_purl/purl2git",
             data={"package_url": str(self.package_without_resources_and_package_data)},
