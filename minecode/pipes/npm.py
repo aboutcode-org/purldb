@@ -165,6 +165,14 @@ def get_npm_packages(replicate_url=NPM_REPLICATE_REPO, logger=None):
     return {"packages": all_package_names}
 
 
+def get_npm_base_purl(name):
+    """
+    Return the base PackageURL string (without version) for an npm package ``name``.
+    This is the format stored in the packages_mined checkpoint.
+    """
+    return PackageURL(type=NPM_TYPE, name=name).to_string()
+
+
 def get_npm_packageurls(name, npm_repo=NPM_REGISTRY_REPO):
     packageurls = []
 
@@ -371,7 +379,12 @@ def get_npm_packages_to_sync(packages_file, state, logger=None):
             config_repo=MINECODE_PIPELINES_CONFIG_REPO,
             checkpoint_path=NPM_PACKAGES_CHECKPOINT_PATH,
         )
-        packages_to_sync = list(set(packages).difference(set(synced_packages)))
+        # The checkpoint stores base PURLs, while ``packages`` holds package names,
+        # so convert the names before comparing.
+        synced_purls = set(synced_packages)
+        packages_to_sync = [
+            name for name in packages if get_npm_base_purl(name) not in synced_purls
+        ]
         if logger:
             logger(
                 f"Starting initial package mining for {len(packages_to_sync)} packages from checkpoint"
@@ -401,7 +414,7 @@ def mine_and_publish_npm_packageurls(packages_to_sync, packages_mined, logger=No
         # this yields a tuple containing purl str, dict containing api info
         purls_and_package_data = yield_npm_package_data(package_name, packageurls)
 
-        base_purl = PackageURL(type=NPM_TYPE, name=package_name).to_string()
+        base_purl = get_npm_base_purl(package_name)
         packages_mined.append(base_purl)
 
         yield base_purl, packageurls, purls_and_package_data
