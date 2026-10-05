@@ -1873,7 +1873,6 @@ class PackageHealthMetricsAPITestCase(TransactionTestCase):
         one npm package, a different npm PURL with the same source should get
         metrics (HTTP 200), not an already-indexed ScannableURI status.
         """
-        from packagedb.models import PackageSet
         from minecode.models import ScannableURI
 
         sibling_npm = Package.objects.create(

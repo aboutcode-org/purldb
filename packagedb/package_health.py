@@ -664,9 +664,7 @@ def resolve_health_request(purl):
                 "error": error,
             }
 
-    fresh_metrics = resolve_fresh_health_metrics(
-        base_package, source_package, latest_version
-    )
+    fresh_metrics = resolve_fresh_health_metrics(base_package, source_package, latest_version)
     if fresh_metrics:
         return {
             "fresh_metrics": fresh_metrics,

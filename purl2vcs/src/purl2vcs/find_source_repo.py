@@ -253,10 +253,9 @@ def get_source_package_and_add_to_package_set(package, queue_scan=True):
     if not download_url:
         return
 
-    source_package = (
-        Package.objects.for_package_url(purl_str=str(source_purl), exact_match=True)
-        .get_or_none()
-    )
+    source_package = Package.objects.for_package_url(
+        purl_str=str(source_purl), exact_match=True
+    ).get_or_none()
 
     if not source_package:
         is_versionless = not source_purl.version
