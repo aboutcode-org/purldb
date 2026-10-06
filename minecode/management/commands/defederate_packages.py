@@ -74,6 +74,13 @@ class Command(VerboseCommand):
             help="Directory where FederatedCode repos will be cloned",
         )
         parser.add_argument(
+            "--package-type",
+            type=str,
+            required=True,
+            action="append",
+            help="Type of package to be defederated",
+        )
+        parser.add_argument(
             "--datakind",
             type=str,
             required=True,
@@ -91,6 +98,7 @@ class Command(VerboseCommand):
 
         account_url = f"{settings.FEDERATEDCODE_GIT_ACCOUNT_URL}/"
 
+        package_types = options.get("package_type") or []
         datakinds = options.get("datakind") or []
         federate_packages.validate_datakind_options(datakinds)
 
@@ -103,10 +111,14 @@ class Command(VerboseCommand):
 
         checked_out_repos = {}
         for data_cluster in data_clusters:
-            for (
-                package_type,
-                data_repositories,
-            ) in data_cluster._data_repositories_by_purl_type.items():
+            for package_type in package_types:
+                data_repositories = (
+                    data_cluster._data_repositories_by_purl_type.get(package_type) or []
+                )
+                if not data_repositories:
+                    logger.info(f"no data repositories for package type {package_type}")
+                    continue
+
                 for data_repository in data_repositories:
                     repo_name = data_repository.name
                     repo_url = urljoin(account_url, repo_name)
