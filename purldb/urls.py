@@ -37,7 +37,31 @@ from packagedb.api import ResourceViewSet
 from packagedb.from_purl import api_from_purl_router
 from packagedb.to_purl import api_to_purl_router
 
-api_router = routers.DefaultRouter()
+
+#
+# A class to "document" the main "API root" web page.
+# Inspired by https://stackoverflow.com/questions/17496249/in-django-restframework-how-to-change-the-api-root-documentation
+#
+class PurldbAPI(routers.APIRootView):
+    """
+    AboutCode's PurlDB provide easy access to live, precomputed and cached data
+    about open source software packages origin, license, health, security, and
+    other attributes, by passing a Package-URL (PURL). PURL is the standard
+    package identifier used in SBOMs, vulnerability databases and across
+    software supply chains.
+
+    You can select a PurlDB JSON API endpoint below to navigate the live API, or
+    use the links above to access to the Swagger/OpenAPI actionable API
+    documentation, or the main PurlDB guids and documentation.
+    """
+    pass
+
+
+class PurlDbRouter(routers.DefaultRouter):
+    APIRootView = PurldbAPI
+
+
+api_router = PurlDbRouter()
 api_router.register("packages", PackageViewSet)
 api_router.register("resources", ResourceViewSet)
 api_router.register("validate", PurlValidateViewSet, "validate")
@@ -81,7 +105,6 @@ urlpatterns = [
         name="index_package_scan",
     ),
 ]
-
 
 # Endpoint to receive updates related to subscribed packages
 urlpatterns.append(
