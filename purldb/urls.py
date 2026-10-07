@@ -41,6 +41,7 @@ api_router = routers.DefaultRouter()
 api_router.register("packages", PackageViewSet)
 api_router.register("resources", ResourceViewSet)
 api_router.register("validate", PurlValidateViewSet, "validate")
+api_router.register("health", HealthViewSet, basename="health")
 
 if not settings.PURLDB_PUBLIC_SETUP:
     api_router.register("update_packages", PackageUpdateSet, "update_packages")
@@ -57,7 +58,6 @@ if not settings.PURLDB_PUBLIC_SETUP:
     api_router.register("package_activity", PackageActivityViewSet)
     api_router.register("matching", MatchingViewSet, basename="matching")
     api_router.register("d2d", D2DViewSet, basename="d2d")
-    api_router.register("health", HealthViewSet, basename="health")
     api_router.register("runs", RunViewSet)
 
 urlpatterns = [
