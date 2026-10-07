@@ -75,3 +75,4 @@ tcl
 /.ruff_cache/
 .env
 var/
+/.venv
