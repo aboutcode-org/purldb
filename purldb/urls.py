@@ -25,6 +25,7 @@ from matchcode.api import RunViewSet
 from minecode.api import ScannableURIViewSet
 from minecode.api import index_package_scan
 from packagedb.api import CollectViewSet
+from packagedb.api import HealthViewSet
 from packagedb.api import PackageActivityListenerView
 from packagedb.api import PackageActivityViewSet
 from packagedb.api import PackageSetViewSet
@@ -36,17 +37,43 @@ from packagedb.api import ResourceViewSet
 from packagedb.from_purl import api_from_purl_router
 from packagedb.to_purl import api_to_purl_router
 
-api_router = routers.DefaultRouter()
+
+#
+# A class to "document" the main "API root" web page.
+# Inspired by https://stackoverflow.com/questions/17496249/in-django-restframework-how-to-change-the-api-root-documentation
+#
+class PurldbAPI(routers.APIRootView):
+    """
+    AboutCode's PurlDB provide easy access to live, precomputed and cached data
+    about open source software packages origin, license, health, security, and
+    other attributes, by passing a Package-URL (PURL). PURL is the standard
+    package identifier used in SBOMs, vulnerability databases and across
+    software supply chains.
+
+    You can select a PurlDB JSON API endpoint below to navigate the live API, or
+    use the links above to access to the Swagger/OpenAPI actionable API
+    documentation, or the main PurlDB guids and documentation.
+    """
+
+    pass
+
+
+class PurlDbRouter(routers.DefaultRouter):
+    APIRootView = PurldbAPI
+
+
+api_router = PurlDbRouter()
 api_router.register("packages", PackageViewSet)
 api_router.register("resources", ResourceViewSet)
 api_router.register("validate", PurlValidateViewSet, "validate")
+api_router.register("health", HealthViewSet, basename="health")
+api_router.register("scan_queue", ScannableURIViewSet)
 
 if not settings.PURLDB_PUBLIC_SETUP:
     api_router.register("update_packages", PackageUpdateSet, "update_packages")
     api_router.register("package_sets", PackageSetViewSet)
     api_router.register("collect", CollectViewSet, "collect")
     api_router.register("watch", PackageWatchViewSet)
-    api_router.register("scan_queue", ScannableURIViewSet)
     api_router.register(
         "approximate_directory_content_index", ApproximateDirectoryContentIndexViewSet
     )
@@ -79,7 +106,6 @@ urlpatterns = [
         name="index_package_scan",
     ),
 ]
-
 
 # Endpoint to receive updates related to subscribed packages
 urlpatterns.append(
