@@ -582,16 +582,21 @@ class PackageHealthMetricsSerializer(ModelSerializer):
 
 
 def validate_versionless_npm_purl(value):
-    """Validate that ``value`` is a versionless npm PackageURL string."""
+    """
+    Validate that ``value`` is a supported, valid Package-URL string
+    e.g, for now an "npm" PURL without a version.
+    """
     try:
         package_url = PackageURL.from_string(value)
     except ValueError as e:
         raise ValidationError(f"purl validation error: {e}")
     if package_url.type != "npm":
-        raise ValidationError("Only npm PackageURLs are supported.")
+        raise ValidationError(
+            f"The 'purl' {package_url!s} must use an 'npm' Package-URL type, not: {package_url.type!r}."
+        )
     if package_url.version:
         raise ValidationError(
-            "Versioned PackageURLs are not supported. Provide a versionless PURL."
+            f"The 'purl' {package_url!s} must not have a version: {package_url.version!r}."
         )
     return value
 
@@ -599,7 +604,7 @@ def validate_versionless_npm_purl(value):
 class PackageHealthMetricsRequestSerializer(Serializer):
     purl = CharField(
         required=True,
-        help_text="Versionless npm PackageURL to fetch health metrics for.",
+        help_text="PURL without a version.",
     )
 
     def validate_purl(self, value):
