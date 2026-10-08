@@ -343,7 +343,7 @@ class PackageFilterSet(FilterSet):
         help_text="Exact SHA1. Multi-value supported.",
     )
     purl = MultiplePackageURLFilter(
-        label="Package URL",
+        label="Package-URL",
     )
     vcs_url = django_filters.CharFilter(
         lookup_expr="iexact",
@@ -530,7 +530,7 @@ class PackageViewSet(PackagePublicViewSet):
 class HealthRequestSerializer(serializers.Serializer):
     purl = serializers.CharField(
         required=True,
-        help_text="Versionless npm PackageURL to fetch health metrics for.",
+        help_text="Package-URL to compute health for.",
     )
 
     def validate_purl(self, value):
@@ -539,32 +539,22 @@ class HealthRequestSerializer(serializers.Serializer):
 
 class HealthViewSet(viewsets.ViewSet):
     """
-    Take a versionless npm ``purl`` query parameter and either return fresh
-    cached health metrics for the linked npm BASE_PACKAGE, or queue a
-    ``scan_repo_health`` job via ScannableURI on the SOURCE_BASE_PACKAGE.
+    The /health PurlDB API endpoint collects health metrics and computes a health score for a Package-URL or PURL.
+    Note: only npm PURLs are supported for now, like with "pkg:npm/lodash". The PURL must not have a version.
 
-    Only npm PackageURLs are accepted; any other type is rejected.
+    - To use this API, use a "purl" query parameter with a PURL, for instance: GET /api/health/?purl=pkg:npm/lodash
+    - To get plain JSON, use a format=json query, for instance: GET /api/health/?purl=pkg:npm/lodash&format=json
 
-    **Request example:**
-
-            GET /api/health/?purl=pkg:npm/lodash
-
-    When metrics for the npm package are no older than
-    ``HEALTH_METRICS_MAX_AGE_DAYS`` (default 7) for the latest npm version,
-    the response is the cached PackageHealthMetrics mapping (HTTP 200).
-    ``purl`` is the npm PackageURL; ``source_purl`` is the scanned
-    SOURCE_BASE_PACKAGE.
-
-    Otherwise a scan job is queued and the response is (HTTP 202):
-
-            {
-                "purl": "pkg:npm/lodash",
-                "source_purl": "pkg:github/lodash/lodash",
-                "status": "new"
-            }
-
-    Poll the same ``GET /api/health/?purl=...`` endpoint until metrics are ready.
+    If the metrics and score for the PURL were collected in the last 7 days, the results are returned directly. Otherwise, the metrics are collected and this may takes a few seconds to a few minutes for larger projects. Refresh to poll or call the API again for results.
+    For details on the scoring procedure, visit https://github.com/aboutcode-org/healthycode/blob/main/README.md
+    For the definition of each metric, visit https://github.com/aboutcode-org/healthycode/blob/main/METRICS.md
     """
+
+    def get_view_name(self):
+        return "Get project health by Package-URL"
+
+    def get_view_description(self, html=True):
+        return super().get_view_description(html=html)
 
     def list(self, request, *args, **kwargs):
         serializer = HealthRequestSerializer(data=request.query_params)
@@ -870,8 +860,8 @@ class CollectViewSet(viewsets.ViewSet):
 
     @extend_schema(
         parameters=[
-            OpenApiParameter("purl", str, "query", description="PackageURL", required=True),
-            OpenApiParameter("source_purl", str, "query", description="Source PackageURL"),
+            OpenApiParameter("purl", str, "query", description="Package-URL", required=True),
+            OpenApiParameter("source_purl", str, "query", description="Source Package-URL"),
             # There is no OpenApiTypes.LIST https://github.com/tfranzel/drf-spectacular/issues/341
             OpenApiParameter(
                 "addon_pipelines",
@@ -1136,7 +1126,7 @@ class CollectViewSet(viewsets.ViewSet):
 
     @extend_schema(
         parameters=[
-            OpenApiParameter("purl", str, "query", description="PackageURL", required=True),
+            OpenApiParameter("purl", str, "query", description="Package-URL", required=True),
         ],
         responses={200: PackageAPISerializer()},
     )
@@ -1201,7 +1191,7 @@ class CollectViewSet(viewsets.ViewSet):
 
 class PurlValidateViewSet(viewsets.ViewSet):
     """
-    Take a `purl` and check whether it's valid PackageURL or not.
+    Take a `purl` and check whether it's valid Package-URL or not.
     Optionally set `check_existence` to true to check whether the package exists in real world.
 
     **Note:** As of now `check_existence` only supports `cargo`, `composer`, `deb`,
@@ -1215,7 +1205,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
     Response contains:
 
     - valid
-        - True, if input PURL is a valid PackageURL.
+        - True, if input PURL is a valid Package-URL.
     - exists
         - True, if input PURL exists in real world and `check_existence` flag is enabled.
     """
@@ -1227,7 +1217,7 @@ class PurlValidateViewSet(viewsets.ViewSet):
 
     @extend_schema(
         parameters=[
-            OpenApiParameter("purl", str, "query", description="PackageURL"),
+            OpenApiParameter("purl", str, "query", description="Package-URL"),
             OpenApiParameter(
                 "check_existence",
                 bool,
@@ -1248,15 +1238,15 @@ class PurlValidateViewSet(viewsets.ViewSet):
         purl = validated_data.get("purl")
         check_existence = validated_data.get("check_existence", False)
 
-        message_valid = "The provided PackageURL is valid."
-        message_not_valid = "The provided PackageURL is not valid."
+        message_valid = "The provided Package-URL is valid."
+        message_not_valid = "The provided Package-URL is not valid."
         message_valid_and_exists = (
             "The provided Package URL is valid, and the package exists in the upstream repo."
         )
         message_valid_but_does_not_exist = (
-            "The provided PackageURL is valid, but does not exist in the upstream repo."
+            "The provided Package-URL is valid, but does not exist in the upstream repo."
         )
-        message_valid_but_package_type_not_supported = "The provided PackageURL is valid, but `check_existence` is not supported for this package type."
+        message_valid_but_package_type_not_supported = "The provided Package-URL is valid, but `check_existence` is not supported for this package type."
 
         response = {}
         response["exists"] = None

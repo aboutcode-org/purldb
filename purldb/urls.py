@@ -54,6 +54,7 @@ class PurldbAPI(routers.APIRootView):
     use the links above to access to the Swagger/OpenAPI actionable API
     documentation, or the main PurlDB guids and documentation.
     """
+
     pass
 
 
