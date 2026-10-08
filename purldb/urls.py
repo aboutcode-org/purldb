@@ -67,13 +67,13 @@ api_router.register("packages", PackageViewSet)
 api_router.register("resources", ResourceViewSet)
 api_router.register("validate", PurlValidateViewSet, "validate")
 api_router.register("health", HealthViewSet, basename="health")
+api_router.register("scan_queue", ScannableURIViewSet)
 
 if not settings.PURLDB_PUBLIC_SETUP:
     api_router.register("update_packages", PackageUpdateSet, "update_packages")
     api_router.register("package_sets", PackageSetViewSet)
     api_router.register("collect", CollectViewSet, "collect")
     api_router.register("watch", PackageWatchViewSet)
-    api_router.register("scan_queue", ScannableURIViewSet)
     api_router.register(
         "approximate_directory_content_index", ApproximateDirectoryContentIndexViewSet
     )
