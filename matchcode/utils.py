@@ -13,6 +13,7 @@ import os
 import posixpath
 from unittest import TestCase
 
+from django.db.models import Q
 from django.test import TestCase as DjangoTestCase
 
 from commoncode.resource import VirtualCodebase
@@ -22,6 +23,8 @@ from scancode.cli_test_utils import purl_with_fake_uuid
 
 from matchcode.tests import FIXTURES_REGEN
 from minecode.utils_test import JsonBasedTestingMixin
+
+from packageurl import PackageURL
 
 ############## TEST UTILITIES ##############
 """
@@ -263,3 +266,32 @@ def index_package_directories(package):
 
     vc = compute_codebase_directory_fingerprints(vc)
     return index_resource_fingerprints(vc, package)
+
+
+def build_purl_filter(exclude_purls, relation_prefix=""):
+    """
+    Return a Q object for filtering packages by their component fields,
+    given a list of purl strings.
+
+    `relation_prefix` is prepended to each field name to allow filtering
+    through a foreign key relation (e.g., "package__").
+    """
+    q = Q()
+    for purl_str in exclude_purls:
+        purl = PackageURL.from_string(purl_str)
+
+        qualifiers = purl.qualifiers or {}
+        if isinstance(qualifiers, dict):
+            qualifiers = "&".join(f"{key}={value}" for key, value in qualifiers.items())
+
+        q |= Q(
+            **{
+                f"{relation_prefix}type": purl.type,
+                f"{relation_prefix}namespace": purl.namespace or "",
+                f"{relation_prefix}name": purl.name,
+                f"{relation_prefix}version": purl.version or "",
+                f"{relation_prefix}qualifiers": qualifiers,
+                f"{relation_prefix}subpath": purl.subpath or "",
+            }
+        )
+    return q
