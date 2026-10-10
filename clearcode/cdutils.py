@@ -524,8 +524,14 @@ def str2coord(s):
         URL: "cd:/gem/rubygems/-/mocha/1.7.0"
         URN: "urn:gem:rubygems:-:mocha:revision:1.7.0:tool:scancode:3.1.0"
         plain: /gem/rubygems/foo/mocha/1.7.0"
+
+    >>> str2coord("cd:/gem/rubygems/-/mocha/1.7.0")
+    {'type': 'gem', 'provider': 'rubygems', 'namespace': '-', 'name': 'mocha', 'revision': '1.7.0'}
+    >>> str2coord("urn:gem:rubygems:-:mocha:revision:1.7.0:tool:scancode:3.1.0")
+    {'type': 'gem', 'provider': 'rubygems', 'namespace': '-', 'name': 'mocha', 'revision': '1.7.0'}
+    >>> str2coord("/gem/rubygems/foo/mocha/1.7.0")
+    {'type': 'gem', 'provider': 'rubygems', 'namespace': 'foo', 'name': 'mocha', 'revision': '1.7.0'}
     """
-    # TODO: Add doctest
     is_urn = s.startswith("urn")
     is_url = s.startswith("cd:")
     splitter = ":" if is_urn else "/"
