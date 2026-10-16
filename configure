@@ -148,7 +148,7 @@ install_packages_with_local() {
     # is tested and not the released commoncode
     install_packages "$CFG_REQUIREMENTS"
     "$CFG_BIN_DIR/flot" --pyproject pyproject-minecode_pipelines.toml
-    "$CFG_BIN_DIR/pip" install --force-reinstall ./dist/minecode_pipelines*.whl
+    "$CFG_BIN_DIR/pip" install --force-reinstall --constraint requirements.txt ./dist/minecode_pipelines*.whl
 }
 
 
