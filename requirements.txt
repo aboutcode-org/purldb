@@ -98,7 +98,6 @@ matchcode-toolkit==7.2.2
 mdit-py-plugins==0.6.1
 mdurl==0.1.2
 milksnake==0.1.6
-minecode_pipelines==1.0.1
 mock==5.2.0
 more-itertools==11.1.0
 multidict==6.7.1
