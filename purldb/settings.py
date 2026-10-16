@@ -57,6 +57,14 @@ SITE_URL = env.str("SITE_URL", default="")
 
 PURLDB_PUBLIC_SETUP = env.bool("PURLDB_PUBLIC_SETUP", default=False)
 
+# Comma-separated API router prefixes to expose (e.g. "scan_queue,health").
+# Empty / unset → register all endpoints (subject to PURLDB_PUBLIC_SETUP).
+REST_API_ENDPOINTS = [
+    endpoint.strip()
+    for endpoint in env.list("REST_API_ENDPOINTS", default=[])
+    if endpoint and endpoint.strip()
+]
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -174,6 +182,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # True if running tests through `./manage test or pytest`
 IS_TESTS = any(clue in arg for arg in sys.argv for clue in ("test", "pytest"))
+
+# Do not honor a restrictive REST_API_ENDPOINTS from .env during tests so the
+# full API surface remains available.
+if IS_TESTS:
+    REST_API_ENDPOINTS = []
 
 # Cache
 
