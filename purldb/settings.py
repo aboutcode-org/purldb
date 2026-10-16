@@ -57,6 +57,14 @@ SITE_URL = env.str("SITE_URL", default="")
 
 PURLDB_PUBLIC_SETUP = env.bool("PURLDB_PUBLIC_SETUP", default=False)
 
+# Comma-separated API router prefixes to expose (e.g. "scan_queue,health").
+# Empty / unset → register all endpoints (subject to PURLDB_PUBLIC_SETUP).
+REST_API_ENDPOINTS = [
+    endpoint.strip()
+    for endpoint in env.list("REST_API_ENDPOINTS", default=[])
+    if endpoint and endpoint.strip()
+]
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -105,6 +113,11 @@ SECURE_PROXY_SSL_HEADER = env.tuple(
 # API
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = env.int("DATA_UPLOAD_MAX_NUMBER_FIELDS", default=2048)
+# ScanCode.io webhooks may include full scan results JSON.
+DATA_UPLOAD_MAX_MEMORY_SIZE = env.int(
+    "DATA_UPLOAD_MAX_MEMORY_SIZE",
+    default=262144000,  # 250 MB
+)
 
 # Database
 DATABASES = {
@@ -169,6 +182,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # True if running tests through `./manage test or pytest`
 IS_TESTS = any(clue in arg for arg in sys.argv for clue in ("test", "pytest"))
+
+# Do not honor a restrictive REST_API_ENDPOINTS from .env during tests so the
+# full API surface remains available.
+if IS_TESTS:
+    REST_API_ENDPOINTS = []
 
 # Cache
 
@@ -323,6 +341,9 @@ PURLDB_ASYNC = env.bool("PURLDB_ASYNC", default=False)
 if not PURLDB_ASYNC:
     for queue_config in RQ_QUEUES.values():
         queue_config["ASYNC"] = False
+
+# How long PackageHealthMetrics stay "fresh" before a new scan_repo_health is queued.
+HEALTH_METRICS_MAX_AGE_DAYS = env.int("HEALTH_METRICS_MAX_AGE_DAYS", default=7)
 
 # FederatedCode integration
 

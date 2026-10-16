@@ -26,6 +26,7 @@ from rest_framework.serializers import SerializerMethodField
 from packagedb.models import DependentPackage
 from packagedb.models import Package
 from packagedb.models import PackageActivity
+from packagedb.models import PackageHealthMetrics
 from packagedb.models import PackageSet
 from packagedb.models import PackageWatch
 from packagedb.models import Party
@@ -558,3 +559,53 @@ class PackageActivitySerializer(ModelSerializer):
             "creation_date",
             "is_processed",
         ]
+
+
+class PackageHealthMetricsSerializer(ModelSerializer):
+    purl = CharField(source="package.package_url", read_only=True)
+    source_purl = CharField(source="source_package.package_url", read_only=True)
+
+    class Meta:
+        model = PackageHealthMetrics
+        fields = [
+            "purl",
+            "source_purl",
+            "vcs_url",
+            "scoring_model",
+            "score",
+            "commit_range",
+            "run_start_date",
+            "run_end_date",
+            "metrics",
+            "date_collected",
+        ]
+
+
+def validate_versionless_npm_purl(value):
+    """
+    Validate that ``value`` is a supported, valid Package-URL string
+    e.g, for now an "npm" PURL without a version.
+    """
+    try:
+        package_url = PackageURL.from_string(value)
+    except ValueError as e:
+        raise ValidationError(f"purl validation error: {e}")
+    if package_url.type != "npm":
+        raise ValidationError(
+            f"The 'purl' {package_url!s} must use an 'npm' Package-URL type, not: {package_url.type!r}."
+        )
+    if package_url.version:
+        raise ValidationError(
+            f"The 'purl' {package_url!s} must not have a version: {package_url.version!r}."
+        )
+    return value
+
+
+class PackageHealthMetricsRequestSerializer(Serializer):
+    purl = CharField(
+        required=True,
+        help_text="PURL without a version.",
+    )
+
+    def validate_purl(self, value):
+        return validate_versionless_npm_purl(value)

@@ -58,7 +58,7 @@ def add_package_to_scan_queue(package, pipelines=DEFAULT_PIPELINES, priority=0, 
     uri = package.download_url
     _, scannable_uri_created = ScannableURI.objects.get_or_create(
         uri=uri,
-        pipelines=pipelines,
+        pipelines=list(pipelines),
         package=package,
         reindex_uri=reindex_uri,
         priority=priority,
