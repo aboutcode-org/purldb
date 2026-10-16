@@ -63,27 +63,36 @@ class PurlDbRouter(routers.DefaultRouter):
 
 
 api_router = PurlDbRouter()
-api_router.register("packages", PackageViewSet)
-api_router.register("resources", ResourceViewSet)
-api_router.register("validate", PurlValidateViewSet, "validate")
-api_router.register("health", HealthViewSet, basename="health")
-api_router.register("scan_queue", ScannableURIViewSet)
+# Empty REST_API_ENDPOINTS → register everything; otherwise only listed prefixes.
+_allowed = settings.REST_API_ENDPOINTS
+
+
+def register(prefix, viewset, basename=None):
+    if _allowed and prefix not in _allowed:
+        return
+    if basename:
+        api_router.register(prefix, viewset, basename)
+    else:
+        api_router.register(prefix, viewset)
+
+
+register("packages", PackageViewSet)
+register("resources", ResourceViewSet)
+register("validate", PurlValidateViewSet, "validate")
+register("health", HealthViewSet, "health")
+register("scan_queue", ScannableURIViewSet)
 
 if not settings.PURLDB_PUBLIC_SETUP:
-    api_router.register("update_packages", PackageUpdateSet, "update_packages")
-    api_router.register("package_sets", PackageSetViewSet)
-    api_router.register("collect", CollectViewSet, "collect")
-    api_router.register("watch", PackageWatchViewSet)
-    api_router.register(
-        "approximate_directory_content_index", ApproximateDirectoryContentIndexViewSet
-    )
-    api_router.register(
-        "approximate_directory_structure_index", ApproximateDirectoryStructureIndexViewSet
-    )
-    api_router.register("package_activity", PackageActivityViewSet)
-    api_router.register("matching", MatchingViewSet, basename="matching")
-    api_router.register("d2d", D2DViewSet, basename="d2d")
-    api_router.register("runs", RunViewSet)
+    register("update_packages", PackageUpdateSet, "update_packages")
+    register("package_sets", PackageSetViewSet)
+    register("collect", CollectViewSet, "collect")
+    register("watch", PackageWatchViewSet)
+    register("approximate_directory_content_index", ApproximateDirectoryContentIndexViewSet)
+    register("approximate_directory_structure_index", ApproximateDirectoryStructureIndexViewSet)
+    register("package_activity", PackageActivityViewSet)
+    register("matching", MatchingViewSet, "matching")
+    register("d2d", D2DViewSet, "d2d")
+    register("runs", RunViewSet)
 
 urlpatterns = [
     path(
