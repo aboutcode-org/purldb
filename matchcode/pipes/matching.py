@@ -38,6 +38,23 @@ from matchcode.models import StemmedSnippetIndex
 from packagedb.models import Package
 from packagedb.models import Resource
 
+from matchcode.utils import build_purl_filter
+
+
+def get_filtering_kwargs(project):
+    """
+    Extract ecosystems and exclude_purls from the project's extra_data.
+    """
+    kwargs = {}
+    if project and project.extra_data:
+        ecosystems = project.extra_data.get("ecosystems")
+        if ecosystems:
+            kwargs["ecosystems"] = ecosystems
+        exclude_purls = project.extra_data.get("exclude_purls")
+        if exclude_purls:
+            kwargs["exclude_purls"] = exclude_purls
+    return kwargs
+
 
 def get_project_resources_qs(project, resources):
     """
@@ -112,7 +129,15 @@ def match_purldb_package(project, resources_by_sha1, enhance_package_data=True, 
     """
     match_count = 0
     sha1_list = list(resources_by_sha1.keys())
-    results = Package.objects.filter(sha1__in=sha1_list).order_by()
+    results = Package.objects.filter(sha1__in=sha1_list)
+
+    filters = get_filtering_kwargs(project)
+    if "ecosystems" in filters:
+        results = results.filter(type__in=filters["ecosystems"])
+    if "exclude_purls" in filters:
+        results = results.exclude(build_purl_filter(filters["exclude_purls"]))
+
+    results = results.order_by()
     # Process matched Package data
     for package in results:
         package_data = package.to_dict()
@@ -145,11 +170,19 @@ def match_purldb_resource(project, resources_by_sha1, package_data_by_purldb_url
     match_count = 0
     sha1_list = list(resources_by_sha1.keys())
     results = (
-        Resource.objects.filter(sha1__in=sha1_list)
-        .select_related("package")
-        .only("package__uuid")
-        .order_by()
+        Resource.objects.filter(sha1__in=sha1_list).select_related("package").only("package__uuid")
     )
+
+    filters = get_filtering_kwargs(project)
+    if "ecosystems" in filters:
+        results = results.filter(package__type__in=filters["ecosystems"])
+    if "exclude_purls" in filters:
+        results = results.exclude(
+            build_purl_filter(filters["exclude_purls"], relation_prefix="package__")
+        )
+
+    results = results.order_by()
+
     # Process match results
     for resource in results:
         # Get package data
@@ -171,7 +204,13 @@ def match_purldb_resource(project, resources_by_sha1, package_data_by_purldb_url
 def match_purldb_resource_approximately(project, resource):
     """Match by approximation a single resource in the PurlDB."""
     fingerprint = resource.extra_data.get("halo1", "")
-    results = ApproximateResourceContentIndex.match(fingerprint=fingerprint, resource=resource)
+    filters = get_filtering_kwargs(project)
+    results = ApproximateResourceContentIndex.match(
+        fingerprint=fingerprint,
+        resource=resource,
+        ecosystems=filters.get("ecosystems"),
+        exclude_purls=filters.get("exclude_purls"),
+    )
     for result in results:
         package_data = result.package.to_dict()
         return create_package_from_purldb_data(
@@ -185,9 +224,12 @@ def match_purldb_resource_approximately(project, resource):
 def match_purldb_resource_snippets(project, resource):
     """Match by approximation a single resource in the PurlDB."""
     fingerprints = resource.extra_data.get("snippets", "")
+    filters = get_filtering_kwargs(project)
     results = SnippetIndex.match_resources(
         fingerprints=fingerprints,
         resource=resource,
+        ecosystems=filters.get("ecosystems"),
+        exclude_purls=filters.get("exclude_purls"),
     )
     if results:
         matched_snippets = []
@@ -207,9 +249,12 @@ def match_purldb_resource_snippets(project, resource):
 def match_purldb_resource_stemmed_snippets(project, resource):
     """Match by approximation a single resource in the PurlDB."""
     fingerprints = resource.extra_data.get("snippets", "")
+    filters = get_filtering_kwargs(project)
     results = StemmedSnippetIndex.match_resources(
         fingerprints=fingerprints,
         resource=resource,
+        ecosystems=filters.get("ecosystems"),
+        exclude_purls=filters.get("exclude_purls"),
     )
     if results:
         matched_stemmed_snippets = []
@@ -229,8 +274,13 @@ def match_purldb_resource_stemmed_snippets(project, resource):
 def match_purldb_directory(project, resource, exact_match=False):
     """Match a single directory resource in the PurlDB."""
     fingerprint = resource.extra_data.get("directory_content", "")
+    filters = get_filtering_kwargs(project)
     results = ApproximateDirectoryContentIndex.match(
-        fingerprint=fingerprint, resource=resource, exact_match=exact_match
+        fingerprint=fingerprint,
+        resource=resource,
+        exact_match=exact_match,
+        ecosystems=filters.get("ecosystems"),
+        exclude_purls=filters.get("exclude_purls"),
     )
     for result in results:
         package_data = result.package.to_dict()

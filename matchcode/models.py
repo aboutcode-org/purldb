@@ -33,6 +33,8 @@ from minecode.management.commands import get_error_message
 from packagedb.models import Package
 from packagedb.models import Resource
 
+from matchcode.utils import build_purl_filter
+
 TRACE = False
 
 if TRACE:
@@ -94,7 +96,7 @@ class BaseFileIndex(PackageRelatedMixin, models.Model):
             logger.error(msg)
 
     @classmethod
-    def match(cls, sha1):
+    def match(cls, sha1, ecosystems=None, exclude_purls=None):
         """Return a list of matched Packages that contains a file with a SHA1 value of `sha1`"""
         if TRACE:
             logger_debug(cls.__name__, "match:", "sha1:", sha1)
@@ -104,6 +106,10 @@ class BaseFileIndex(PackageRelatedMixin, models.Model):
 
         sha1_in_bin = hexstring_to_binarray(sha1)
         matches = cls.objects.filter(sha1=sha1_in_bin)
+        if ecosystems:
+            matches = matches.filter(package__type__in=ecosystems)
+        if exclude_purls:
+            matches = matches.exclude(build_purl_filter(exclude_purls, relation_prefix="package__"))
         if TRACE:
             for match in matches:
                 package = match.package
@@ -226,7 +232,9 @@ class ApproximateMatchingHashMixin(PackageRelatedMixin, models.Model):
             logger.error(msg)
 
     @classmethod
-    def match(cls, fingerprint, resource=None, exact_match=False):
+    def match(
+        cls, fingerprint, resource=None, exact_match=False, ecosystems=None, exclude_purls=None
+    ):
         """Return a list of matched Packages"""
         if TRACE:
             logger_debug(
@@ -253,6 +261,12 @@ class ApproximateMatchingHashMixin(PackageRelatedMixin, models.Model):
                 chunk3=chunk3,
                 chunk4=chunk4,
             )
+            if ecosystems:
+                matches = matches.filter(package__type__in=ecosystems)
+            if exclude_purls:
+                matches = matches.exclude(
+                    build_purl_filter(exclude_purls, relation_prefix="package__")
+                )
             return matches
 
         # Step 1: find fingerprints with matching chunks
@@ -263,6 +277,11 @@ class ApproximateMatchingHashMixin(PackageRelatedMixin, models.Model):
             | models.Q(indexed_elements_count__range=frange, chunk3=chunk3)
             | models.Q(indexed_elements_count__range=frange, chunk4=chunk4)
         )
+
+        if ecosystems:
+            matches = matches.filter(package__type__in=ecosystems)
+        if exclude_purls:
+            matches = matches.exclude(build_purl_filter(exclude_purls, relation_prefix="package__"))
 
         if TRACE:
             for match in matches:
@@ -478,7 +497,7 @@ class BaseSnippetIndexMixin(PackageRelatedMixin, models.Model):
             logger.error(msg)
 
     @classmethod
-    def match(cls, fingerprints):
+    def match(cls, fingerprints, ecosystems=None, exclude_purls=None):
         """
         Return a list of PackageSnippetMatch for matched Package.
         """
@@ -499,6 +518,13 @@ class BaseSnippetIndexMixin(PackageRelatedMixin, models.Model):
         # Step 0: get all fingerprint records that match with the input
         matched_fps = cls.objects.filter(fingerprint__in=only_fings)
 
+        if ecosystems:
+            matched_fps = matched_fps.filter(package__type__in=ecosystems)
+        if exclude_purls:
+            matched_fps = matched_fps.exclude(
+                build_purl_filter(exclude_purls, relation_prefix="package__")
+            )
+
         # Step 1: count Packages whose fingerprints appear
         # Step 1.1: get Packages that show up in the query
         packages = set(f.package for f in matched_fps.iterator())
@@ -518,7 +544,7 @@ class BaseSnippetIndexMixin(PackageRelatedMixin, models.Model):
         return matches
 
     @classmethod
-    def match_resources(cls, fingerprints, top=None, **kwargs):
+    def match_resources(cls, fingerprints, top=None, ecosystems=None, exclude_purls=None, **kwargs):
         """
         Return a list of ResourceSnippetMatch for matched Resources.
         Only return the ``top`` matches, or all matches if ``top`` is zero.
@@ -561,6 +587,13 @@ class BaseSnippetIndexMixin(PackageRelatedMixin, models.Model):
 
         # Step 0: get all fingerprint records that match with the input
         matched_fps = cls.objects.filter(fingerprint__in=only_fings)
+
+        if ecosystems:
+            matched_fps = matched_fps.filter(package__type__in=ecosystems)
+        if exclude_purls:
+            matched_fps = matched_fps.exclude(
+                build_purl_filter(exclude_purls, relation_prefix="package__")
+            )
 
         # Step 1: get Resources that show up in the query
         resources = set(f.resource for f in matched_fps.iterator())

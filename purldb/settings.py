@@ -105,6 +105,11 @@ SECURE_PROXY_SSL_HEADER = env.tuple(
 # API
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = env.int("DATA_UPLOAD_MAX_NUMBER_FIELDS", default=2048)
+# Allow large webhook payloads from scancode.io
+DATA_UPLOAD_MAX_MEMORY_SIZE = env.int(
+    "DATA_UPLOAD_MAX_MEMORY_SIZE",
+    default=200 * 1024 * 1024,  # 200 MB
+)
 
 # Database
 DATABASES = {
