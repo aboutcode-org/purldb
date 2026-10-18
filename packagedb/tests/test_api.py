@@ -1476,7 +1476,7 @@ class PurlValidateApiTestCase(TestCase):
         self.assertEqual(status.HTTP_200_OK, response1.status_code)
 
         self.assertEqual(False, response2.data["valid"])
-        self.assertEqual("The provided PackageURL is not valid.", response2.data["message"])
+        self.assertEqual("The provided Package-URL is not valid.", response2.data["message"])
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response2.status_code)
 
     def test_api_purl_validation_unsupported_package_type(self):
@@ -1488,7 +1488,7 @@ class PurlValidateApiTestCase(TestCase):
 
         self.assertEqual(True, response1.data["valid"])
         self.assertEqual(
-            "The provided PackageURL is valid, but `check_existence` is not supported for this package type.",
+            "The provided Package-URL is valid, but `check_existence` is not supported for this package type.",
             response1.data["message"],
         )
         self.assertEqual(None, response1.data["exists"])
