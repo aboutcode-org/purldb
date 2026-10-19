@@ -447,6 +447,8 @@ class PackageContentType(models.IntegerChoices):
     BINARY = 5, "binary"
     TEST = 6, "test"
     DOC = 7, "doc"
+    BASE_PACKAGE = 8, "base_package"
+    SOURCE_BASE_PACKAGE = 9, "base_source_repo"
 
 
 def get_class_name(obj):
@@ -1473,6 +1475,140 @@ class PackageSet(models.Model):
         return self.packages.order_by(
             "package_content",
         )
+
+
+class ScoringModel(models.Model):
+    """
+    Catalog entry identifying how a PackageHealthMetrics score was produced.
+
+    Example: ecosystem=npm, scoring_model=health, model_version=1.0
+    """
+
+    ecosystem = models.CharField(
+        max_length=32,
+        help_text=_(
+            "Package ecosystem this scoring model applies to, for example npm, pypi, maven."
+        ),
+    )
+    model_version = models.CharField(
+        max_length=32,
+        help_text=_("Version of this scoring model definition, for example 1.0."),
+    )
+    scoring_model = models.CharField(
+        max_length=32,
+        help_text=_("Scoring approach, for example health or scorecard."),
+    )
+
+    class Meta:
+        ordering = ["ecosystem", "scoring_model", "model_version"]
+        unique_together = [["ecosystem", "scoring_model", "model_version"]]
+        verbose_name_plural = "scoring models"
+
+    def __str__(self):
+        return f"{self.ecosystem}/{self.scoring_model}@{self.model_version}"
+
+
+class PackageHealthMetrics(models.Model):
+    """Health metrics recorded for a Package at a point in time."""
+
+    package = models.ForeignKey(
+        Package,
+        related_name="health_metrics",
+        on_delete=models.CASCADE,
+        help_text=_(
+            "The versionless npm Package these health metrics are for, for example pkg:npm/lodash."
+        ),
+    )
+
+    source_package = models.ForeignKey(
+        Package,
+        related_name="source_health_metrics",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        help_text=_(
+            "The versionless source repository Package that was scanned, "
+            "for example pkg:github/lodash/lodash."
+        ),
+    )
+
+    catalog_scoring_model = models.ForeignKey(
+        ScoringModel,
+        related_name="health_metrics",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        help_text=_(
+            "Catalog ScoringModel used for these metrics "
+            "(defaults to npmlargerecosystem / NPMMostUsed)."
+        ),
+    )
+
+    vcs_url = models.CharField(
+        max_length=2048,
+        blank=True,
+        default="",
+        help_text=_(
+            "VCS repository URL reported by the health scan, "
+            "for example https://github.com/lodash/lodash.git."
+        ),
+    )
+
+    scoring_model = models.CharField(
+        max_length=128,
+        blank=True,
+        default="",
+        help_text=_("Scoring model name reported by the health scan."),
+    )
+
+    score = models.FloatField(
+        default=0.0,
+        help_text=_("Overall health score for this Package at collection time."),
+    )
+
+    commit_range = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text=_("Commit range analyzed by the health scan."),
+    )
+
+    run_start_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=_("When the health scan analysis window started."),
+    )
+
+    run_end_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=_("When the health scan analysis window ended."),
+    )
+
+    metrics = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text=_("Health metrics data for this Package"),
+    )
+
+    version = models.CharField(
+        max_length=100,
+        help_text=_(
+            "Package version these health metrics were collected for. "
+            "For V1 (versionless npm PURLs), this is the latest version at collection time."
+        ),
+    )
+
+    date_collected = models.DateTimeField(
+        help_text=_("Timestamp indicating when these health metrics were collected."),
+    )
+
+    class Meta:
+        ordering = ["-date_collected"]
+        verbose_name_plural = "package health metrics"
+        unique_together = [["package", "version", "date_collected"]]
+
+    def __str__(self):
+        return f"Health metrics for {self.package.package_url}@{self.version}"
 
 
 class ApiUserManager(UserManager):
