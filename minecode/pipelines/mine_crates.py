@@ -35,7 +35,8 @@ class MineCrates(MineCodeBasePipeline):
     checkpoint_path = "crates/checkpoints.json"
     append_purls = True
 
-    crates_index_repo_url = "https://github.com/rust-lang/crates.io-index"
+    MINECODE_CARGO_INDEX_REPO = "https://github.com/rust-lang/crates.io-index"
+    crates_index_repo_url = MINECODE_CARGO_INDEX_REPO
 
     last_checkpoint = ""
     current_utc = ""

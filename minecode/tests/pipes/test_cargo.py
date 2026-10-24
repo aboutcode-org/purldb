@@ -14,6 +14,8 @@ from pathlib import Path
 import saneyaml
 from unittest import TestCase
 
+from minecode.pipelines.mine_cargo import MineCargo
+from minecode.pipelines.mine_crates import MineCrates
 from minecode.pipes.cargo import get_cargo_packages
 
 DATA_DIR = Path(__file__).parent.parent / "data" / "cargo"
@@ -37,3 +39,9 @@ class CargoPipelineTests(TestCase):
 
         self.assertEqual(str(base), "pkg:cargo/c5store")
         self.assertEqual(purls, expected)
+
+    def test_mine_cargo_aliases_mine_crates(self):
+        self.assertTrue(issubclass(MineCargo, MineCrates))
+        self.assertEqual(MineCargo.steps(), MineCrates.steps())
+        self.assertEqual(MineCargo.crates_index_repo_url, "https://github.com/rust-lang/crates.io-index")
+        self.assertEqual(MineCargo.MINECODE_CARGO_INDEX_REPO, "https://github.com/rust-lang/crates.io-index")
