@@ -20,45 +20,15 @@
 # ScanCode.io is a free software code scanning tool from nexB Inc. and others.
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-from pathlib import Path
-
-from minecode.pipes import cargo
-from minecode.pipelines import MineCodeBasePipeline
-from scanpipe.pipes import federatedcode
+from minecode.pipelines.mine_crates import MineCrates
 
 
-class MineCargo(MineCodeBasePipeline):
-    """Pipeline to mine Cargo (crates.io) packages and publish them to FederatedCode."""
+class MineCargo(MineCrates):
+    """
+    Pipeline to mine Cargo (crates.io) packages and publish them to FederatedCode.
 
-    MINECODE_CARGO_INDEX_REPO = "https://github.com/rust-lang/crates.io-index"
+    Note: This pipeline aliases MineCrates to maintain compatibility with the 'cargo'
+    PackageURL type while sharing the checkpointed crates.io-index mining logic (#901).
+    """
 
-    @classmethod
-    def steps(cls):
-        return (
-            cls.check_federatedcode_eligibility,
-            cls.create_federatedcode_working_dir,
-            cls.clone_cargo_index,
-            cls.fetch_federation_config,
-            cls.mine_and_publish_packageurls,
-            cls.delete_working_dir,
-        )
-
-    def clone_cargo_index(self):
-        """Clone the Cargo index Repo."""
-        self.cargo_index_repo = federatedcode.clone_repository(
-            repo_url=self.MINECODE_CARGO_INDEX_REPO,
-            clone_path=self.working_path / "crates.io-index",
-            logger=self.log,
-        )
-
-    def packages_count(self):
-        base_path = Path(self.cargo_index_repo.working_tree_dir)
-        package_dir = [p for p in base_path.iterdir() if p.is_dir() and not p.name.startswith(".")]
-        return sum(1 for dir in package_dir for f in dir.rglob("*") if f.is_file())
-
-    def mine_packageurls(self):
-        """Yield PackageURLs from Cargo index."""
-        return cargo.mine_cargo_packageurls(
-            cargo_index_repo=self.cargo_index_repo,
-            logger=self.log,
-        )
+    pass
