@@ -20,6 +20,9 @@ What can you do with PurlDB?
 - Access multiple services keyed by PURL, such as metadata, package versions, packages URLs, or
   dependencies.
 
+- Collect health metrics and a score for versionless npm PURLs with
+  :ref:`healthycode` (``GET /api/health/``).
+
 
 What tools are available in PurlDB?
 -------------------------------------

@@ -9,10 +9,13 @@
 
 from django.urls import reverse_lazy
 
+from drf_spectacular.utils import extend_schema_field
 from packageurl import PackageURL
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
+from rest_framework.serializers import DateTimeField
+from rest_framework.serializers import FloatField
 from rest_framework.serializers import HyperlinkedIdentityField
 from rest_framework.serializers import HyperlinkedModelSerializer
 from rest_framework.serializers import HyperlinkedRelatedField
@@ -561,9 +564,273 @@ class PackageActivitySerializer(ModelSerializer):
         ]
 
 
+class HealthCommitRangeSerializer(Serializer):
+    """Commit range analyzed by Healthycode (``commitMetadata``)."""
+
+    first_commit = CharField(
+        allow_null=True,
+        required=False,
+        help_text="First commit hash within the analyzed period.",
+    )
+    last_commit = CharField(
+        allow_null=True,
+        required=False,
+        help_text="Last commit hash within the analyzed period.",
+    )
+    first_commit_date = CharField(
+        allow_null=True,
+        required=False,
+        help_text="ISO datetime of the first commit in the analyzed period.",
+    )
+    last_commit_date = CharField(
+        allow_null=True,
+        required=False,
+        help_text="ISO datetime of the last commit in the analyzed period.",
+    )
+
+
+class HealthMetricsSerializer(Serializer):
+    """Healthycode project-health metrics object returned on ``metrics``."""
+
+    total_commits = IntegerField(
+        min_value=0,
+        help_text=(
+            "Number of commits per repository: activity for the Git repository "
+            "analyzed, within the analyzed period."
+        ),
+    )
+    total_contributors = IntegerField(
+        min_value=0,
+        help_text=(
+            "Number of developers per repository: unique participants producing "
+            "commits in the repository."
+        ),
+    )
+    total_organizations = IntegerField(
+        min_value=0,
+        help_text=(
+            "Number of contributing organizations whose members made contributions "
+            "over the analyzed period. Organization is determined from the commit "
+            "author email address."
+        ),
+    )
+    pony_factor = IntegerField(
+        min_value=0,
+        help_text=(
+            "Number of individuals who produce up to the first 50% of commits "
+            "(descending). A low value means high dependency on those people "
+            "(lottery / bus / contributor absence factor)."
+        ),
+    )
+    elephant_factor = IntegerField(
+        min_value=0,
+        help_text=(
+            "Number of unique organizations producing up to the first 50% of "
+            "commits. Applies the pony factor to organizations (Bitergia)."
+        ),
+    )
+    recent_organizations = IntegerField(
+        min_value=0,
+        help_text="Unique organizations with contributions in the last 90 days.",
+    )
+    recent_contributors = IntegerField(
+        min_value=0,
+        help_text="Unique individuals who contributed in the last 90 days.",
+    )
+    recent_commits = IntegerField(
+        min_value=0,
+        help_text="Commits made to the project in the last 90 days.",
+    )
+    contributor_growth = IntegerField(
+        help_text=(
+            "Growth of active contributors between the two halves of the analyzed "
+            "period (second-half count minus first-half count). Can be negative."
+        ),
+    )
+    contributor_growth_rate = FloatField(
+        help_text=(
+            "Growth rate of active contributors between the two halves of the "
+            "analyzed period. Can be negative."
+        ),
+    )
+    active_branches = IntegerField(
+        min_value=0,
+        help_text="Git branches with recent development activity (new commits).",
+    )
+    days_since_last_commit = IntegerField(
+        min_value=0,
+        help_text=("Days since the last commit. 99999 is used when there is no last-commit date."),
+    )
+    casual_regular_contributors_rate = FloatField(
+        min_value=0,
+        help_text=(
+            "Ratio of casual contributors to core-plus-regular contributors "
+            "(occasional vs regular contributors)."
+        ),
+    )
+    returning_contributors = IntegerField(
+        min_value=0,
+        help_text=(
+            "Unique individuals active in the last 90 days who also contributed "
+            "in a previous period (retention)."
+        ),
+    )
+    commits_over_periods_rate = FloatField(
+        min_value=0,
+        help_text="Rate of commits between the last 90 days and the last year.",
+    )
+    coefficient_of_variation = FloatField(
+        min_value=0,
+        help_text="Coefficient of variation of commits per month (std / mean).",
+    )
+    file_types_code = IntegerField(
+        min_value=0,
+        help_text="Touched files classified as code.",
+    )
+    file_types_binary = IntegerField(
+        min_value=0,
+        help_text="Touched files classified as binary.",
+    )
+    file_types_other = IntegerField(
+        min_value=0,
+        help_text="Touched files that are neither code nor binary.",
+    )
+    commit_size_added_lines = IntegerField(
+        min_value=0,
+        help_text="Total lines added across analyzed commits.",
+    )
+    commit_size_removed_lines = IntegerField(
+        min_value=0,
+        help_text="Total lines removed across analyzed commits.",
+    )
+    message_size_total = IntegerField(
+        min_value=0,
+        help_text="Sum of character lengths of analyzed commit messages.",
+    )
+    message_size_mean = FloatField(
+        min_value=0,
+        help_text="Mean character length of analyzed commit messages.",
+    )
+    message_size_median = IntegerField(
+        min_value=0,
+        help_text="Median character length of analyzed commit messages.",
+    )
+    developer_categories_core = IntegerField(
+        min_value=0,
+        help_text="Number of core contributors.",
+    )
+    developer_categories_regular = IntegerField(
+        min_value=0,
+        help_text="Number of regular contributors.",
+    )
+    developer_categories_casual = IntegerField(
+        min_value=0,
+        help_text="Number of casual contributors.",
+    )
+    commits_per_week = FloatField(
+        allow_null=True,
+        min_value=0,
+        help_text="Mean commits per week. Null when the period is shorter than 7 days.",
+    )
+    commits_per_month = FloatField(
+        allow_null=True,
+        min_value=0,
+        help_text="Mean commits per month. Null when the period is shorter than 30 days.",
+    )
+    commits_per_year = FloatField(
+        allow_null=True,
+        min_value=0,
+        help_text="Mean commits per year. Null when the period is shorter than 365 days.",
+    )
+    found_file_license = IntegerField(
+        min_value=0,
+        max_value=1,
+        help_text=(
+            "1 if LICENSE, LICENSE.md, LICENSE.txt, or COPYING exists at the "
+            "repository root, else 0."
+        ),
+    )
+    found_file_adopters = IntegerField(
+        min_value=0,
+        max_value=1,
+        help_text=(
+            "1 if ADOPTERS, ADOPTERS.md, or ADOPTERS.txt exists at the repository root, else 0."
+        ),
+    )
+
+
+class HealthPendingSerializer(Serializer):
+    """HTTP 202 body while ``scan_repo_health`` is queued or in progress."""
+
+    purl = CharField(help_text="Requested versionless npm Package-URL.")
+    source_purl = CharField(help_text="Scanned versionless source Package-URL.")
+    status = CharField(
+        help_text="ScannableURI scan status, for example new, submitted, or in progress.",
+    )
+
+
+class HealthErrorSerializer(Serializer):
+    """HTTP 400/500 error body from ``GET /api/health/``."""
+
+    error = CharField(help_text="Error message.")
+
+
+@extend_schema_field(HealthCommitRangeSerializer)
+class HealthCommitRangeField(JSONField):
+    pass
+
+
+@extend_schema_field(HealthMetricsSerializer)
+class HealthMetricsField(JSONField):
+    pass
+
+
 class PackageHealthMetricsSerializer(ModelSerializer):
-    purl = CharField(source="package.package_url", read_only=True)
-    source_purl = CharField(source="source_package.package_url", read_only=True)
+    purl = CharField(
+        source="package.package_url",
+        read_only=True,
+        help_text="Versionless npm Package-URL these metrics belong to.",
+    )
+    source_purl = CharField(
+        source="source_package.package_url",
+        read_only=True,
+        help_text="Versionless source repository Package-URL that was scanned.",
+    )
+    vcs_url = CharField(
+        read_only=True,
+        help_text="VCS clone URL reported by the health scan.",
+    )
+    scoring_model = CharField(
+        read_only=True,
+        help_text='Scoring model identifier, for example "npm-health-0.2".',
+    )
+    score = FloatField(
+        read_only=True,
+        help_text=(
+            "Overall health score from 0.0 (healthy) to 1.0 (unhealthy), as "
+            "reported by Healthycode."
+        ),
+    )
+    commit_range = HealthCommitRangeField(
+        read_only=True,
+        help_text="Commit range analyzed by the health scan.",
+    )
+    run_start_date = DateTimeField(
+        read_only=True,
+        help_text="When the health scan analysis window started.",
+    )
+    run_end_date = DateTimeField(
+        read_only=True,
+        help_text="When the health scan analysis window ended.",
+    )
+    metrics = HealthMetricsField(
+        read_only=True,
+        help_text="Healthycode project-health metrics for the scanned repository.",
+    )
+    date_collected = DateTimeField(
+        read_only=True,
+        help_text="When PurlDB stored these metrics.",
+    )
 
     class Meta:
         model = PackageHealthMetrics
