@@ -659,9 +659,7 @@ class HealthMetricsSerializer(Serializer):
     )
     days_since_last_commit = IntegerField(
         min_value=0,
-        help_text=(
-            "Days since the last commit. 99999 is used when there is no last-commit date."
-        ),
+        help_text=("Days since the last commit. 99999 is used when there is no last-commit date."),
     )
     casual_regular_contributors_rate = FloatField(
         min_value=0,
