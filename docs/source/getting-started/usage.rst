@@ -60,3 +60,14 @@ matching indices from the collected Package data:
 ::
 
     make index_packages
+
+
+Package health metrics
+----------------------
+
+Health for a versionless npm PURL (needs a ScanCode.io worker that runs
+``scan_repo_health``). See :ref:`healthycode_how_to`.
+
+::
+
+    curl -X GET "http://localhost:8001/api/health/?purl=pkg:npm/lodash&format=json"

@@ -11,7 +11,7 @@ PurlDB offers:
 - A code matching capability to identify and find similar code to existing indexed FOSS code using
   this knowledge base.
 - Additional utilities to help assess the quality and integrity of software packages as used in the
-  software supply chain.
+  software supply chain, including Healthycode health scores.
 
 Details of the Package URL specification are available `here <https://github.com/package-url>`_.
 
@@ -52,6 +52,7 @@ Learn via practical step-by-step guides.
 - :doc:`how-to-guides/deploy_to_devel`
 - :doc:`how-to-guides/purl_watch_how_to`
 - :doc:`how-to-guides/symbols_and_strings`
+- :doc:`how-to-guides/healthycode`
 
 .. rst-class:: column column2 bottom-left
 
@@ -73,6 +74,8 @@ Consult the reference to understand PurlDB concepts.
 - :doc:`purldb/purl_watch`
 - :doc:`purldb/rest_api`
 - :doc:`purldb/symbol_and_string_collection`
+- :doc:`purldb/healthycode`
+- :doc:`purldb/healthycode_metrics`
 
 .. rst-class:: row clearfix
 

@@ -64,6 +64,8 @@ from packagedb.package_managers import get_version_fetcher
 from packagedb.sbom import to_cyclonedx
 from packagedb.serializers import CollectPackageSerializer
 from packagedb.serializers import DependentPackageSerializer
+from packagedb.serializers import HealthErrorSerializer
+from packagedb.serializers import HealthPendingSerializer
 from packagedb.serializers import IndexPackagesResponseSerializer
 from packagedb.serializers import IndexPackagesSerializer
 from packagedb.serializers import PackageActivitySerializer
@@ -550,12 +552,31 @@ class HealthViewSet(viewsets.ViewSet):
     For the definition of each metric, visit https://github.com/aboutcode-org/healthycode/blob/main/METRICS.md
     """
 
+    serializer_class = PackageHealthMetricsSerializer
+
     def get_view_name(self):
         return "Get project health by Package-URL"
 
     def get_view_description(self, html=True):
         return super().get_view_description(html=html)
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "purl",
+                str,
+                "query",
+                description="Versionless npm Package-URL, for example pkg:npm/lodash",
+                required=True,
+            ),
+        ],
+        responses={
+            200: PackageHealthMetricsSerializer,
+            202: HealthPendingSerializer,
+            400: HealthErrorSerializer,
+            500: HealthErrorSerializer,
+        },
+    )
     def list(self, request, *args, **kwargs):
         serializer = HealthRequestSerializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)

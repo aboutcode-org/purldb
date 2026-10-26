@@ -13,6 +13,11 @@ documentation and API browser at https://public.purldb.io/api/docs/ .
 PurlDB API Endpoints
 -----------------------
 
+* ``api/health``
+
+  * Healthycode health metrics and score for a versionless npm PURL.
+    See :ref:`healthycode`.
+
 * ``api/packages``
 
   * Contains all of the Packages stored in the PackageDB
@@ -1002,6 +1007,45 @@ Then return a mapping containing:
     - The number of vers range that are not supported by the univers or package_manager.
 - unsupported_vers
     - A list of vers range that are not supported by the univers or package_manager.
+
+health
+------
+
+Healthycode metrics and score for a **versionless npm** PURL.
+See :ref:`healthycode` and :ref:`healthycode_metrics`.
+
+``GET /api/health/?purl=pkg:npm/lodash``
+
+- **200**: stored metrics are still fresh (``HEALTH_METRICS_MAX_AGE_DAYS``).
+- **202**: ``scan_repo_health`` is queued or running; call again later.
+- **400**: bad or unsupported PURL.
+
+Example 200 body (``metrics`` shortened):
+
+.. code-block:: json
+
+    {
+        "purl": "pkg:npm/lodash",
+        "source_purl": "pkg:github/lodash/lodash",
+        "vcs_url": "https://github.com/lodash/lodash.git",
+        "scoring_model": "npm-health-0.2",
+        "score": 0.12,
+        "commit_range": {
+            "first_commit": "abc123",
+            "last_commit": "def456",
+            "first_commit_date": "2012-04-23T00:00:00Z",
+            "last_commit_date": "2026-01-15T12:00:00Z"
+        },
+        "run_start_date": "2026-01-15T12:00:00Z",
+        "run_end_date": "2026-01-15T12:05:00Z",
+        "metrics": {
+            "total_commits": 8000,
+            "total_contributors": 300,
+            "pony_factor": 4,
+            "elephant_factor": 2
+        },
+        "date_collected": "2026-01-15T12:05:01Z"
+    }
 
 scan_queue
 ----------

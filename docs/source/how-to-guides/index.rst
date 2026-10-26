@@ -12,4 +12,5 @@ through specific use cases:
    symbols_and_strings
    deploy_to_devel
    purl_watch_how_to
+   healthycode
 
