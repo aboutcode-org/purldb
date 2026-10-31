@@ -16,6 +16,7 @@ from unittest import mock
 from django.test import TestCase
 
 from dateutil.tz import tzlocal
+from dateutil.tz import tzutc
 from packageurl import PackageURL
 
 from packagedb.package_managers import ComposerVersionAPI
@@ -104,6 +105,19 @@ class TestPackageManagers(TestCase):
         mock_response.return_value = {"info": {}}
         results = list(PypiVersionAPI().fetch("django"))
         assert results == []
+
+    def test_pypi_get_latest_date_skips_download_without_upload_time(self):
+        downloads = [
+            {},
+            {"upload_time_iso_8601": "2010-12-23T05:14:23.509436Z"},
+        ]
+        assert PypiVersionAPI().get_latest_date(downloads) == datetime(
+            2010, 12, 23, 5, 14, 23, 509436, tzinfo=tzutc()
+        )
+
+    def test_pypi_get_latest_date_returns_none_without_upload_time(self):
+        downloads = [{}, {"upload_time_iso_8601": None}]
+        assert PypiVersionAPI().get_latest_date(downloads) is None
 
     @mock.patch("packagedb.package_managers.get_response")
     def test_ruby_fetch_with_no_release(self, mock_response):
