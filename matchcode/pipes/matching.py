@@ -21,6 +21,7 @@
 # Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
 from collections import defaultdict
+import json
 
 from django.db.models import Q
 from django.template.defaultfilters import pluralize
@@ -35,8 +36,11 @@ from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateResourceContentIndex
 from matchcode.models import SnippetIndex
 from matchcode.models import StemmedSnippetIndex
+from matchcode.yara_scanner import YaraPackageScanner
 from packagedb.models import Package
 from packagedb.models import Resource
+
+MATCHED_BY_YARA_RULE = "matched_by_yara_rule"
 
 
 def get_project_resources_qs(project, resources):
@@ -527,3 +531,151 @@ def _match_purldb_resources_post_process(directory_path, codebase_resources):
             package.add_resources(unmapped_resources)
 
     return interesting_codebase_resources.count()
+
+
+def populate_symbols_and_strings_from_scans(project):
+    """
+    Populate source_symbols and source_strings into CodebaseResource ``extra_data``.
+    """
+    resources = {resource.path: resource for resource in project.codebaseresources.all()}
+    if not resources:
+        return
+
+    updates = []
+    for input_file in project.inputs(pattern="*.json"):
+        try:
+            scan_data = json.loads(input_file.read_text())
+        except (json.JSONDecodeError, OSError):
+            continue
+
+        for entry in scan_data.get("files", []):
+            syms = entry.get("source_symbols")
+            strs = entry.get("source_strings")
+            if not (syms or strs):
+                continue
+
+            path = entry.get("path", "")
+            resource = resources.get(path)
+            # If not found by exact path, try stripping the root directory
+            # (e.g., "libass-0.17.1/libass/foo.c" -> "libass/foo.c")
+            if not resource and "/" in path:
+                _, _, relative_path = path.partition("/")
+                resource = resources.get(relative_path)
+
+            if not resource:
+                continue
+
+            extra = resource.extra_data or {}
+            if syms and "source_symbols" not in extra:
+                extra["source_symbols"] = [
+                    s.get("name", s) if isinstance(s, dict) else str(s) for s in syms
+                ]
+            if strs and "source_strings" not in extra:
+                extra["source_strings"] = [str(s) for s in strs]
+
+            resource.extra_data = extra
+            updates.append(resource)
+
+    if updates:
+        project.codebaseresources.bulk_update(updates, fields=["extra_data"], batch_size=1000)
+
+
+def scan_resource_with_yara(scanner, resource):
+    """Scan strings and symbols stored in resource ``extra_data`` using YARA."""
+    extra = resource.extra_data or {}
+    strings = []
+    for key in ("source_strings", "source_symbols"):
+        val = extra.get(key)
+        if isinstance(val, list):
+            strings.extend(str(string) for string in val if string)
+        elif isinstance(val, str) and val:
+            strings.append(val)
+
+    if strings:
+        return scanner.scan_data("\n".join(strings).encode("utf-8", errors="ignore"))
+
+    return []
+
+
+def match_resources_by_yara(project, scanner=None, logger=None):
+    """
+    Iterate through codebase files that have not yet been matched to a package,
+    scan each resource with compiled YARA rules, and create ``DiscoveredPackage``
+    records linked to the matched resources.
+    """
+    if scanner is None:
+        scanner = YaraPackageScanner()
+
+    if not scanner.rules:
+        if logger:
+            logger("No YARA rules available for matching.")
+        return 0
+
+    populate_symbols_and_strings_from_scans(project)
+
+    purldb_statuses = [
+        flag.MATCHED_TO_PURLDB_PACKAGE,
+        flag.MATCHED_TO_PURLDB_RESOURCE,
+        flag.MATCHED_TO_PURLDB_DIRECTORY,
+        flag.APPROXIMATE_MATCHED_TO_PURLDB_RESOURCE,
+        MATCHED_BY_YARA_RULE,
+    ]
+
+    # Only scan files not already matched by prior pipeline steps
+    unmatched_files = project.codebaseresources.files().exclude(status__in=purldb_statuses)
+
+    resource_count = unmatched_files.count()
+
+    if logger:
+        logger(f"Scanning {resource_count:,d} resources with YARA rules.")
+
+    progress = LoopProgress(resource_count, logger)
+    matched_count = 0
+
+    for resource in progress.iter(unmatched_files):
+        matches = scan_resource_with_yara(scanner, resource)
+        if not matches:
+            continue
+
+        for match in matches:
+            package_data = match["package_data"]
+            name = package_data["name"]
+            version = package_data.get("version")
+
+            # Reconcile versions across files of the same package
+            if version:
+                project.discoveredpackages.filter(name=name, version="").update(version=version)
+            else:
+                existing = project.discoveredpackages.filter(name=name).exclude(version="").first()
+                if existing:
+                    package_data = {
+                        "type": existing.type,
+                        "namespace": existing.namespace,
+                        "name": existing.name,
+                        "version": existing.version,
+                        "qualifiers": existing.qualifiers or {},
+                    }
+
+            match_extra_data = {
+                "matched_by": "yara",
+                "yara_rule": match["rule"],
+                "yara_confidence": match.get("confidence", "high"),
+                "matched_strings": match.get("matched_strings", []),
+                "rule_strings": match.get("rule_strings", []),
+            }
+            package_data["extra_data"] = match_extra_data
+            resource.update_extra_data(match_extra_data)
+
+            _, count = create_package_from_purldb_data(
+                project=project,
+                resources=[resource],
+                package_data=package_data,
+                status=MATCHED_BY_YARA_RULE,
+            )
+            matched_count += count
+            break
+
+    if logger:
+        logger(f"{matched_count:,d} resource{pluralize(matched_count)} matched via YARA rules.")
+
+    return matched_count

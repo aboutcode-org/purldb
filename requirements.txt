@@ -205,5 +205,6 @@ webencodings==0.5.1
 xlsxwriter==3.2.9
 xmlschema==4.3.2
 xmltodict==1.0.4
+yara-python==4.5.4
 yarl==1.24.2
 zipp==4.1.0
