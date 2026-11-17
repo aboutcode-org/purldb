@@ -15,6 +15,8 @@ from pathlib import Path
 from git import Repo
 import requests
 import saneyaml
+from packageurl import PackageURL
+from univers.version_range import RANGE_CLASS_BY_SCHEMES
 
 from minecode.utils import get_temp_file
 
@@ -158,6 +160,42 @@ def fetch_checkpoint_by_git(cloned_repo, checkpoint_path):
     return os.path.join(cloned_repo.working_dir, checkpoint_path)
 
 
+def get_purl_sort_key(purl):
+    """
+    Return a key to sort a ``purl`` string by package and then by version,
+    using the version scheme of the purl type, so that ``1.10.0`` comes after
+    ``1.9.0``. Versions that cannot be parsed sort after the valid versions of
+    the same package, by their version string.
+    """
+    try:
+        package_url = PackageURL.from_string(purl)
+    except ValueError:
+        return purl, 2, "", purl
+
+    base_purl = PackageURL(
+        type=package_url.type,
+        namespace=package_url.namespace,
+        name=package_url.name,
+    ).to_string()
+    version = package_url.version
+    if not version:
+        return base_purl, 2, "", purl
+
+    range_class = RANGE_CLASS_BY_SCHEMES.get(package_url.type)
+    if range_class:
+        try:
+            return base_purl, 0, range_class.version_class(version), purl
+        except Exception:  # noqa: S110
+            pass
+
+    return base_purl, 1, version, purl
+
+
+def sort_packageurls(packageurls):
+    """Return a list of ``packageurls`` strings sorted by package and version."""
+    return sorted(packageurls, key=get_purl_sort_key)
+
+
 def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=False):
     if not isinstance(packageurls, list):
         raise Exception("`packageurls` needs to be a list")
@@ -167,7 +205,7 @@ def write_packageurls_to_file(repo, relative_datafile_path, packageurls, append=
         existing_purls = load_data_from_yaml_file(purl_file_full_path) or []
         existing_purls.extend(packageurls)
         packageurls = list(set(existing_purls))
-    write_data_to_yaml_file(path=purl_file_full_path, data=sorted(packageurls))
+    write_data_to_yaml_file(path=purl_file_full_path, data=sort_packageurls(packageurls))
     return relative_datafile_path
 
 
