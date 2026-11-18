@@ -9,6 +9,7 @@
 
 from django.urls import reverse_lazy
 
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema_field
 from packageurl import PackageURL
 from rest_framework.exceptions import ValidationError
@@ -238,6 +239,7 @@ class PackageAPISerializer(HyperlinkedModelSerializer):
         )
         read_only_fields = fields
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_package_content(self, obj):
         return obj.get_package_content_display()
 
@@ -331,6 +333,7 @@ class PackageMetadataSerializer(ModelSerializer):
             "file_references",
         )
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_package_content(self, obj):
         return obj.get_package_content_display()
 
@@ -876,3 +879,62 @@ class PackageHealthMetricsRequestSerializer(Serializer):
 
     def validate_purl(self, value):
         return validate_versionless_npm_purl(value)
+
+
+class PackageReindexResponseSerializer(Serializer):
+    status = CharField(help_text="Status message indicating package queued for reindexing.")
+
+
+class PackageHistoryResponseSerializer(Serializer):
+    history = ListField(
+        child=JSONField(),
+        help_text="List of history event mappings associated with the package.",
+    )
+
+
+class PackageChecksumFilterRequestSerializer(Serializer):
+    md5 = ListField(
+        child=CharField(),
+        required=False,
+        help_text="List of MD5 checksum values to filter by.",
+    )
+    sha1 = ListField(
+        child=CharField(),
+        required=False,
+        help_text="List of SHA1 checksum values to filter by.",
+    )
+    sha256 = ListField(
+        child=CharField(),
+        required=False,
+        help_text="List of SHA256 checksum values to filter by.",
+    )
+    sha512 = ListField(
+        child=CharField(),
+        required=False,
+        help_text="List of SHA512 checksum values to filter by.",
+    )
+    enhance_package_data = BooleanField(
+        required=False,
+        default=False,
+        help_text="Whether to enhance returned package data with package set peers.",
+    )
+
+
+class ResourceChecksumFilterRequestSerializer(Serializer):
+    md5 = ListField(
+        child=CharField(),
+        required=False,
+        help_text="List of MD5 checksum values to filter by.",
+    )
+    sha1 = ListField(
+        child=CharField(),
+        required=False,
+        help_text="List of SHA1 checksum values to filter by.",
+    )
+
+
+class PackageActivityListenerRequestSerializer(Serializer):
+    type = CharField(help_text="ActivityPub activity type, e.g. Create.")
+    actor = JSONField(required=False, help_text="Actor initiating the activity.")
+    object = JSONField(help_text="Package activity payload/content.")
+    published = CharField(required=False, help_text="Publication timestamp.")
