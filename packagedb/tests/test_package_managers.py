@@ -19,8 +19,10 @@ from dateutil.tz import tzlocal
 from packageurl import PackageURL
 
 from packagedb.package_managers import ComposerVersionAPI
+from packagedb.package_managers import CratesVersionAPI
 from packagedb.package_managers import DebianVersionAPI
 from packagedb.package_managers import GoproxyVersionAPI
+from packagedb.package_managers import HexVersionAPI
 from packagedb.package_managers import MavenVersionAPI
 from packagedb.package_managers import NugetVersionAPI
 from packagedb.package_managers import PackageVersion
@@ -119,11 +121,115 @@ class TestPackageManagers(TestCase):
 
         assert results == expected
 
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_crates_fetch_data(self, mock_response):
+        mock_response.return_value = {
+            "versions": [
+                {"num": "1.0.0", "updated_at": "2023-01-01T00:00:00Z"},
+                {"num": "0.9.0", "created_at": "2022-01-01T00:00:00Z"},
+            ]
+        }
+        results = list(CratesVersionAPI().fetch("rand"))
+        assert len(results) == 2
+        assert results[0].value == "1.0.0"
+        assert results[0].release_date is not None
+        assert results[1].value == "0.9.0"
+        assert results[1].release_date is not None
+
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_crates_fetch_none_response(self, mock_response):
+        mock_response.return_value = None
+        results = list(CratesVersionAPI().fetch("nonexistent-pkg"))
+        assert results == []
+
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_crates_fetch_error_payload(self, mock_response):
+        mock_response.return_value = {"errors": [{"detail": "Not Found"}]}
+        results = list(CratesVersionAPI().fetch("nonexistent-pkg"))
+        assert results == []
+
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_crates_fetch_missing_date(self, mock_response):
+        mock_response.return_value = {"versions": [{"num": "1.0.0"}]}
+        results = list(CratesVersionAPI().fetch("rand"))
+        assert len(results) == 1
+        assert results[0].value == "1.0.0"
+        assert results[0].release_date is None
+
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_debian_fetch_data(self, mock_response):
+        mock_response.return_value = {
+            "versions": [
+                {"version": "0:1.0.0-1"},
+                {"version": "1:2.0.0-1"},
+            ]
+        }
+        results = list(DebianVersionAPI().fetch("curl"))
+        assert len(results) == 2
+        assert results[0].value == "1.0.0-1"
+        assert results[1].value == "1:2.0.0-1"
+
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_debian_fetch_none_response(self, mock_response):
+        mock_response.return_value = None
+        results = list(DebianVersionAPI().fetch("nonexistent-pkg"))
+        assert results == []
+
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_debian_fetch_error_payload(self, mock_response):
+        mock_response.return_value = {"error": "not found"}
+        results = list(DebianVersionAPI().fetch("nonexistent-pkg"))
+        assert results == []
+
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_debian_fetch_empty_versions(self, mock_response):
+        mock_response.return_value = {"versions": []}
+        results = list(DebianVersionAPI().fetch("curl"))
+        assert results == []
+
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_hex_fetch_data(self, mock_response):
+        mock_response.return_value = {
+            "releases": [
+                {"version": "1.0.0", "inserted_at": "2023-01-01T00:00:00Z"},
+            ]
+        }
+        results = list(HexVersionAPI().fetch("phoenix"))
+        assert len(results) == 1
+        assert results[0].value == "1.0.0"
+        assert results[0].release_date is not None
+
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_hex_fetch_none_response(self, mock_response):
+        mock_response.return_value = None
+        results = list(HexVersionAPI().fetch("nonexistent-pkg"))
+        assert results == []
+
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_hex_fetch_error_payload(self, mock_response):
+        mock_response.return_value = {"message": "Not Found"}
+        results = list(HexVersionAPI().fetch("nonexistent-pkg"))
+        assert results == []
+
+    @mock.patch("packagedb.package_managers.get_response")
+    def test_hex_fetch_missing_date(self, mock_response):
+        mock_response.return_value = {"releases": [{"version": "1.0.0"}]}
+        results = list(HexVersionAPI().fetch("phoenix"))
+        assert len(results) == 1
+        assert results[0].value == "1.0.0"
+        assert results[0].release_date is None
+
     def test_get_version_fetcher(self):
         purl = "pkg:deb/debian/foo@1.2.3"
         purl = PackageURL.from_string(purl)
         fetcher = get_version_fetcher(purl)
         self.assertIs(fetcher, DebianVersionAPI)
+
+        cargo_purl = PackageURL.from_string("pkg:cargo/rand@1.0.0")
+        self.assertIs(get_version_fetcher(cargo_purl), CratesVersionAPI)
+
+        hex_purl = PackageURL.from_string("pkg:hex/phoenix@1.0.0")
+        self.assertIs(get_version_fetcher(hex_purl), HexVersionAPI)
 
 
 class TestComposerVersionAPI(TestCase):

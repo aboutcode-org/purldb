@@ -236,10 +236,19 @@ class CratesVersionAPI(VersionAPI):
     def fetch(self, pkg):
         url = f"https://crates.io/api/v1/crates/{pkg}"
         response = get_response(url=url, content_type="json")
-        for version_info in response["versions"]:
+        if not response or not isinstance(response, dict):
+            return
+        for version_info in response.get("versions") or []:
+            if not isinstance(version_info, dict):
+                continue
+            version = version_info.get("num")
+            if not version:
+                continue
+            date_str = version_info.get("updated_at") or version_info.get("created_at")
+            release_date = dateparser.parse(date_str) if date_str else None
             yield PackageVersion(
-                value=version_info["num"],
-                release_date=dateparser.parse(version_info["updated_at"]),
+                value=version,
+                release_date=release_date,
             )
 
 
@@ -297,11 +306,15 @@ class DebianVersionAPI(VersionAPI):
             headers={"Connection": "keep-alive"},
             content_type="json",
         )
-        if response and (response.get("error") or not response.get("versions")):
+        if not response or not isinstance(response, dict) or response.get("error") or not response.get("versions"):
             return
 
-        for release in response["versions"]:
-            version = release["version"]
+        for release in response.get("versions") or []:
+            if not isinstance(release, dict):
+                continue
+            version = release.get("version")
+            if not version:
+                continue
             version = remove_debian_default_epoch(version)
             yield PackageVersion(value=version)
 
@@ -415,12 +428,20 @@ class HexVersionAPI(VersionAPI):
             url=f"https://hex.pm/api/packages/{pkg}",
             content_type="json",
         )
-        if response:
-            for release in response["releases"]:
-                yield PackageVersion(
-                    value=release["version"],
-                    release_date=dateparser.parse(release["inserted_at"]),
-                )
+        if not response or not isinstance(response, dict):
+            return
+        for release in response.get("releases") or []:
+            if not isinstance(release, dict):
+                continue
+            version = release.get("version")
+            if not version:
+                continue
+            inserted_at = release.get("inserted_at")
+            release_date = dateparser.parse(inserted_at) if inserted_at else None
+            yield PackageVersion(
+                value=version,
+                release_date=release_date,
+            )
 
 
 class GoproxyVersionAPI(VersionAPI):
