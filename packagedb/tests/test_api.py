@@ -2227,3 +2227,33 @@ class PackageHealthMetricsAPITestCase(TransactionTestCase):
                 version="18.2.0",
             ).exists()
         )
+
+
+class APISchemaTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+    def test_api_schema_endpoint(self):
+        response = self.client.get(reverse("schema"), {"format": "json"})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        schema = (
+            response.data
+            if hasattr(response, "data") and response.data
+            else json.loads(response.content)
+        )
+        self.assertIn("openapi", schema)
+        self.assertIn("paths", schema)
+
+        paths = schema["paths"]
+        self.assertIn("/api/update_packages/", paths)
+        update_packages_post = paths["/api/update_packages/"]["post"]
+        self.assertIn("requestBody", update_packages_post)
+        self.assertIn("200", update_packages_post["responses"])
+
+        self.assertIn("/api/packages/filter_by_checksums/", paths)
+        pkg_checksum_post = paths["/api/packages/filter_by_checksums/"]["post"]
+        self.assertIn("requestBody", pkg_checksum_post)
+
+        self.assertIn("/api/resources/filter_by_checksums/", paths)
+        res_checksum_post = paths["/api/resources/filter_by_checksums/"]["post"]
+        self.assertIn("requestBody", res_checksum_post)

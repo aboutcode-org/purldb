@@ -14,6 +14,9 @@ from django.forms.fields import MultipleChoiceField
 
 from django_filters.filters import MultipleChoiceFilter
 from django_filters.rest_framework import FilterSet
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema_field
 from matchcode.models import ApproximateDirectoryContentIndex
 from matchcode.models import ApproximateDirectoryStructureIndex
 from matchcode.models import ExactFileIndex
@@ -394,10 +397,12 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             },
         }
 
+    @extend_schema_field(OpenApiTypes.OBJECT)
     def get_codebase_resources_summary(self, project):
         queryset = project.codebaseresources.all()
         return count_group_by(queryset, "status")
 
+    @extend_schema_field(OpenApiTypes.OBJECT)
     def get_discovered_packages_summary(self, project):
         base_qs = project.discoveredpackages
         return {
@@ -406,6 +411,7 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "with_modified_resources": base_qs.exclude(modified_resources=[]).count(),
         }
 
+    @extend_schema_field(OpenApiTypes.OBJECT)
     def get_discovered_dependencies_summary(self, project):
         base_qs = project.discovereddependencies
         return {
@@ -415,6 +421,7 @@ class MatchingSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "is_pinned": base_qs.filter(is_pinned=True).count(),
         }
 
+    @extend_schema_field(OpenApiTypes.OBJECT)
     def get_codebase_relations_summary(self, project):
         queryset = project.codebaserelations.all()
         return count_group_by(queryset, "map_type")
@@ -501,16 +508,19 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             },
         }
 
+    @extend_schema_field(OpenApiTypes.OBJECT)
     def get_codebase_resources_summary(self, project):
         queryset = project.codebaseresources.all()
         return count_group_by(queryset, "status")
 
+    @extend_schema_field(OpenApiTypes.OBJECT)
     def get_codebase_resources_discrepancies(self, project):
         queryset = project.codebaseresources.filter(status="requires-review")
         return {
             "total": queryset.count(),
         }
 
+    @extend_schema_field(OpenApiTypes.OBJECT)
     def get_discovered_packages_summary(self, project):
         base_qs = project.discoveredpackages
         return {
@@ -519,6 +529,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "with_modified_resources": base_qs.exclude(modified_resources=[]).count(),
         }
 
+    @extend_schema_field(OpenApiTypes.OBJECT)
     def get_discovered_dependencies_summary(self, project):
         base_qs = project.discovereddependencies
         return {
@@ -528,6 +539,7 @@ class D2DSerializer(ExcludeFromListViewMixin, serializers.ModelSerializer):
             "is_pinned": base_qs.filter(is_pinned=True).count(),
         }
 
+    @extend_schema_field(OpenApiTypes.OBJECT)
     def get_codebase_relations_summary(self, project):
         queryset = project.codebaserelations.all()
         return count_group_by(queryset, "map_type")
@@ -620,6 +632,11 @@ class MatchingViewSet(
             )
         )
 
+    @extend_schema(
+        responses={
+            200: OpenApiTypes.OBJECT,
+        },
+    )
     @action(detail=True, renderer_classes=[renderers.JSONRenderer])
     def results(self, request, *args, **kwargs):
         """
@@ -676,6 +693,11 @@ class D2DViewSet(
             )
         )
 
+    @extend_schema(
+        responses={
+            200: OpenApiTypes.OBJECT,
+        },
+    )
     @action(detail=True, renderer_classes=[renderers.JSONRenderer])
     def results(self, request, *args, **kwargs):
         """

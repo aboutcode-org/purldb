@@ -68,9 +68,13 @@ from packagedb.serializers import HealthErrorSerializer
 from packagedb.serializers import HealthPendingSerializer
 from packagedb.serializers import IndexPackagesResponseSerializer
 from packagedb.serializers import IndexPackagesSerializer
+from packagedb.serializers import PackageActivityListenerRequestSerializer
 from packagedb.serializers import PackageActivitySerializer
 from packagedb.serializers import PackageAPISerializer
+from packagedb.serializers import PackageChecksumFilterRequestSerializer
 from packagedb.serializers import PackageHealthMetricsSerializer
+from packagedb.serializers import PackageHistoryResponseSerializer
+from packagedb.serializers import PackageReindexResponseSerializer
 from packagedb.serializers import PackageSetAPISerializer
 from packagedb.serializers import PackageWatchAPISerializer
 from packagedb.serializers import PackageWatchCreateSerializer
@@ -80,6 +84,7 @@ from packagedb.serializers import PurlUpdateResponseSerializer
 from packagedb.serializers import PurlValidateResponseSerializer
 from packagedb.serializers import PurlValidateSerializer
 from packagedb.serializers import ResourceAPISerializer
+from packagedb.serializers import ResourceChecksumFilterRequestSerializer
 from packagedb.serializers import UpdatePackagesSerializer
 from packagedb.serializers import is_supported_addon_pipeline
 from packagedb.serializers import validate_versionless_npm_purl
@@ -209,6 +214,13 @@ class ResourceViewSet(viewsets.ReadOnlyModelViewSet):
     throttle_classes = [StaffUserRateThrottle, AnonRateThrottle]
     lookup_field = "sha1"
 
+    @extend_schema(
+        request=ResourceChecksumFilterRequestSerializer,
+        responses={
+            200: ResourceAPISerializer(many=True),
+            400: OpenApiTypes.OBJECT,
+        },
+    )
     @action(detail=False, methods=["post"])
     def filter_by_checksums(self, request, *args, **kwargs):
         """
@@ -389,6 +401,11 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = PackageFilterSet
     throttle_classes = [StaffUserRateThrottle, AnonRateThrottle]
 
+    @extend_schema(
+        responses={
+            200: PackageAPISerializer,
+        },
+    )
     @action(detail=True, methods=["get"])
     def latest_version(self, request, *args, **kwargs):
         """
@@ -403,12 +420,22 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
 
         return Response({})
 
+    @extend_schema(
+        responses={
+            200: PackageHistoryResponseSerializer,
+        },
+    )
     @action(detail=True, methods=["get"])
     def history(self, request, *args, **kwargs):
         """Return the History field associated with the current Package."""
         package = self.get_object()
         return Response({"history": package.history})
 
+    @extend_schema(
+        responses={
+            200: ResourceAPISerializer(many=True),
+        },
+    )
     @action(detail=True, methods=["get"])
     def resources(self, request, *args, **kwargs):
         """Return the Resources associated with the current Package."""
@@ -420,6 +447,11 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = ResourceAPISerializer(paginated_qs, many=True, context={"request": request})
         return self.get_paginated_response(serializer.data)
 
+    @extend_schema(
+        responses={
+            200: PackageAPISerializer,
+        },
+    )
     @action(detail=True)
     def get_enhanced_package_data(self, request, *args, **kwargs):
         """Return a mapping of enhanced Package data for a given Package"""
@@ -427,6 +459,13 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
         package_data = get_enhanced_package(package)
         return Response(package_data)
 
+    @extend_schema(
+        request=PackageChecksumFilterRequestSerializer,
+        responses={
+            200: PackageAPISerializer(many=True),
+            400: OpenApiTypes.OBJECT,
+        },
+    )
     @action(detail=False, methods=["post"])
     def filter_by_checksums(self, request, *args, **kwargs):
         """
@@ -512,6 +551,11 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
             serialized_package_data = serializer.data
         return self.get_paginated_response(serialized_package_data)
 
+    @extend_schema(
+        responses={
+            200: OpenApiTypes.OBJECT,
+        },
+    )
     @action(detail=True)
     def sbom(self, request, *args, **kwargs):
         """Return a CycloneDX JSON SBOM for this Package"""
@@ -520,7 +564,13 @@ class PackagePublicViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class PackageViewSet(PackagePublicViewSet):
-    @action(detail=True)
+    @extend_schema(
+        request=None,
+        responses={
+            200: PackageReindexResponseSerializer,
+        },
+    )
+    @action(detail=True, methods=["get", "post"])
     def reindex_package(self, request, *args, **kwargs):
         """Reindex this package instance"""
         package = self.get_object()
@@ -626,6 +676,15 @@ class PackageUpdateSet(viewsets.ViewSet):
         }
     """
 
+    serializer_class = UpdatePackagesSerializer
+
+    @extend_schema(
+        request=UpdatePackagesSerializer,
+        responses={
+            200: PurlUpdateResponseSerializer(many=True),
+            400: OpenApiTypes.OBJECT,
+        },
+    )
     def create(self, request):
         res = []
 
@@ -1479,6 +1538,13 @@ class PackageActivityViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = "uuid"
 
 
+@extend_schema(
+    request=PackageActivityListenerRequestSerializer,
+    responses={
+        200: OpenApiTypes.OBJECT,
+        400: OpenApiTypes.OBJECT,
+    },
+)
 class PackageActivityListenerView(APIView):
     def post(self, request):
         activity_type = utils.get_package_activity_type(request.data)
