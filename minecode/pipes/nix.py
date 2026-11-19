@@ -88,6 +88,14 @@ def get_all_nix_packages_name(packages_dict, logger=None):
     return {"packages": all_package_names}
 
 
+def get_nix_base_purl(name):
+    """
+    Return the base PackageURL string (without version) for a nix package ``name``.
+    This is the format stored in the packages_mined checkpoint.
+    """
+    return PackageURL(type=NIX_TYPE, namespace=NIXPKGS, name=name).to_string()
+
+
 def load_nix_packages(packages_file):
     with open(packages_file) as f:
         packages_data = json.load(f)
@@ -309,14 +317,18 @@ def get_nix_packages_to_sync(packages_file, state, logger=None):
             config_repo=MINECODE_PIPELINES_CONFIG_REPO,
             checkpoint_path=NIX_PACKAGES_CHECKPOINT_PATH,
         )
-        if state == INITIAL_SYNC_STATE:
-            packages_to_sync = synced_packages
-        else:
-            packages_to_sync = list(set(packages).difference(set(synced_packages)))
-            if logger:
-                logger(
-                    f"Starting initial package mining for {len(packages_to_sync)} packages from checkpoint"
-                )
+        # The checkpoint stores base PURLs, while ``packages`` holds package names,
+        # so convert the names before comparing.
+        synced_purls = set(synced_packages)
+        packages_to_sync = [
+            name
+            for name in packages
+            if get_nix_base_purl(name) not in synced_purls and name not in synced_purls
+        ]
+        if logger:
+            logger(
+                f"Starting initial package mining for {len(packages_to_sync)} packages from checkpoint"
+            )
 
     return packages_to_sync, synced_packages
 
@@ -339,8 +351,8 @@ def mine_and_publish_nix_packageurls(packages_dict, packages_to_sync, packages_m
         purls_and_package_data = yield_nix_package_data(package_name, packageurls)
         # We currently only work with the official nixpkgs repository, so
         # we can set the namespace to "nixpkgs"
-        base_purl = PackageURL(type=NIX_TYPE, namespace="nixpkgs", name=package_name).to_string()
-        packages_mined.append(package_name)
+        base_purl = get_nix_base_purl(package_name)
+        packages_mined.append(base_purl)
         if purls_and_package_data:
             yield base_purl, packageurls, purls_and_package_data
         else:
