@@ -54,7 +54,8 @@ services:
 
   priority_queue:
     build: .
-    command: python manage.py priority_queue
+    # Ensure that potential db migrations run first by waiting until "web" is up
+    command: wait-for-it --strict --timeout=600 web:8000 -- python manage.py priority_queue
     env_file:
       - docker.env
     volumes:
@@ -70,7 +71,8 @@ services:
 
   scheduler:
     build: .
-    command: python manage.py run_scheduler
+    # Ensure that potential db migrations run first by waiting until "web" is up
+    command: wait-for-it --strict --timeout=600 web:8000 -- python manage.py run_scheduler
     env_file:
       - docker.env
     volumes:
@@ -86,7 +88,8 @@ services:
 
   rq_worker:
     build: .
-    command: python manage.py rqworker default
+    # Ensure that potential db migrations run first by waiting until "web" is up
+    command: wait-for-it --strict --timeout=600 web:8000 -- python manage.py rqworker default
     env_file:
       - docker.env
     volumes:
