@@ -521,9 +521,10 @@ class PackageApiTestCase(JsonBasedTesting, TestCase):
         }
         response = self.client.post("/api/packages/filter_by_checksums/", data=data)
         self.assertEqual(5, response.data["count"])
+        results = sorted(response.data["results"], key=lambda x: x["filename"])
         expected = self.get_test_loc("api/package-filter_by_checksums-expected.json")
         self.check_expected_results(
-            response.data["results"],
+            results,
             expected,
             fields_to_remove=["url", "uuid", "resources", "package_sets", "history"],
             regen=FIXTURES_REGEN,
